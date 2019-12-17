@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -122,7 +121,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $form->getFromDB($form->getID());
 
       // Answer the form
-      $form->saveForm(['formcreator_form' => $form->getID()]);
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add(['plugin_formcreator_forms_id' => $form->getID()]);
 
       // Check a notification was created with the expected template
       $result = $DB->request([
@@ -194,18 +194,27 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $formAnswer_table = \PluginFormcreatorFormAnswer::getTable();
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
-      $maxId = $DB->fetch_assoc($result);
+      if (version_compare(GLPI_VERSION, '9.5') < 0) { 
+         $maxId = $DB->fetch_assoc($result);
+      } else {
+         $maxId = $DB->fetchAssoc($result);
+      }
       $maxId = $maxId['max_id'];
       $maxId === null ? 0 : $maxId;
 
-      $form->saveForm([
-         'formcreator_form'      => $form->getID(),
-         'status'                => 'waiting',
-         'formcreator_validator' => $_SESSION['glpiID'],
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'status'                      => 'waiting',
+         'formcreator_validator'       => $_SESSION['glpiID'],
       ]);
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
-      $newId = $DB->fetch_assoc($result);
+      if (version_compare(GLPI_VERSION, '9.5') < 0) {
+         $fa = 'fetch_assoc';
+      } else {
+         $fa = 'fetchAssoc';
+      }
+      $newId = $DB->$fa($result);
       $newId = $newId['max_id'];
 
       $this->integer((int) $newId)->isGreaterThan((int) $maxId);

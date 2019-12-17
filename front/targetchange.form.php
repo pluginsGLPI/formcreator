@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -55,42 +53,33 @@ if (isset($_POST["update"])) {
    $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
    $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
    $targetChange_actor->add([
-         'plugin_formcreator_targetchanges_id'  => $id,
-         'actor_role'                           => $_POST['actor_role'],
-         'actor_type'                           => $_POST['actor_type'],
-         'actor_value'                          => $actor_value,
-         'use_notification'                     => $use_notification
+      'plugin_formcreator_targetchanges_id'  => $id,
+      'actor_role'                           => $_POST['actor_role'],
+      'actor_type'                           => $_POST['actor_type'],
+      'actor_value'                          => $actor_value,
+      'use_notification'                     => $use_notification
    ]);
    Html::back();
 
 } else if (isset($_GET['delete_actor'])) {
    $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
    $targetChange_actor->delete([
-         'id'                                   => (int) $_GET['delete_actor']
+      'id'  => (int) $_GET['delete_actor']
    ]);
    Html::back();
 
    // Show target ticket form
 } else {
    Html::header(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF'],
-         'admin',
-         'PluginFormcreatorForm'
-         );
+      __('Form Creator', 'formcreator'),
+      $_SERVER['PHP_SELF'],
+      'admin',
+      'PluginFormcreatorForm'
+   );
 
-   $itemtype = "PluginFormcreatorTargetChange";
-   $iterator = $DB->request([
-      'SELECT' => ['plugin_formcreator_forms_id'],
-      'FROM'   => PluginFormcreatorTarget::getTable(),
-      'WHERE'  => [
-         'itemtype' => $itemtype,
-         'items_id' => (int) $_REQUEST['id'],
-      ]
-   ]);
-   $first = $iterator->next();
-   $form     = new PluginFormcreatorForm;
-   $form->getFromDB($first['plugin_formcreator_forms_id']);
+   $itemtype = PluginFormcreatorTargetChange::class;
+   $targetchange->getFromDB((int) $_REQUEST['id']);
+   $form = $targetchange->getForm();
 
    $_SESSION['glpilisttitle'][$itemtype] = sprintf(__('%1$s = %2$s'),
          $form->getTypeName(1), $form->getName());

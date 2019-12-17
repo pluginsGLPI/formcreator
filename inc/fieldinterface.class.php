@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -43,14 +41,19 @@ interface PluginFormcreatorFieldInterface
     */
    public static function getName();
 
-   public static function getPrefs();
-
-   public static function getJSFields();
+   public static function canRequire();
 
    /**
     * Are the prerequisites met to use this field ?
     */
    public function isPrerequisites();
+
+   /**
+    * get HTML for specific properties of the field type at design time
+    *
+    * @return array
+    */
+   public function getDesignSpecializationField();
 
    /**
     * Is the field valid for the given value?
@@ -91,10 +94,10 @@ interface PluginFormcreatorFieldInterface
    /**
     * Get the value of the field for display in a target
     *
-    * @param  boolean $disableRichText    Disable rich text mode for field rendering
+    * @param  boolean $richText    Enable rich text mode for field rendering
     * @return string
     */
-   public function getValueForTargetText($disableRichText);
+   public function getValueForTargetText($richText);
 
    /**
     * Gets the documents IDs
@@ -193,4 +196,9 @@ interface PluginFormcreatorFieldInterface
     * @return boolean true if the field can work with anonymous forms
     */
    public function isAnonymousFormCompatible();
+
+   /**
+    * Gets HTML code for the icon of a field
+    */
+   public function getHtmlIcon();
 }

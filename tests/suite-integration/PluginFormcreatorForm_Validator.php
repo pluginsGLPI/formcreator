@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -55,7 +54,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->boolean($group->isNewItem())->isFalse();
 
       $form = new \PluginFormcreatorForm();
-      $formId = $form->add([
+      $form->add([
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => 'a form for group validator',
          'description'           => 'form description',
@@ -77,7 +76,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->boolean($user->isNewItem())->isFalse();
 
       $form = new \PluginFormcreatorForm();
-      $formId = $form->add([
+      $form->add([
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => 'a form for user validator',
          'description'           => 'form description',

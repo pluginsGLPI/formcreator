@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,9 +35,60 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= Html::textarea([
+         'name'             => 'default_values',
+         'id'               => 'default_values',
+         'value'            => $this->question->fields['default_values'],
+         'cols'             => '50',
+         'display'          => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '<label for="values'.$rand.'">';
+      $additions .= __('Values');
+      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= Html::textarea([
+         'name'             => 'values',
+         'id'               => 'values',
+         'value'            => $this->question->fields['values'],
+         'cols'             => '50',
+         'display'          => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id    = $this->fields['id'];
+         $id    = $this->question->getID();
          $rand  = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
@@ -52,7 +101,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
-                  $current_value = $this->value;
                   echo "<div class='checkbox'>";
                   echo Html::getCheckbox([
                      'title'         => htmlentities($value, ENT_QUOTES),
@@ -88,7 +136,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
     * @return array available values
     */
    public function getAvailableValues() {
-      return explode("\r\n", $this->fields['values']);
+      return explode("\r\n", $this->question->fields['values']);
    }
 
    public function serializeValue() {
@@ -100,7 +148,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function deserializeValue($value) {
-      $deserialized  = [];
       $this->value = ($value !== null && $value !== '')
                   ? explode("\r\n", $value)
                   : [];
@@ -115,7 +162,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
       } else {
@@ -222,24 +269,8 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return [];
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 1,
-         'values'         => 1,
-         'range'          => 1,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['checkboxes'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    public function getEmptyParameters() {
@@ -277,5 +308,9 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-check-square" aria-hidden="true"></i>';
    }
 }

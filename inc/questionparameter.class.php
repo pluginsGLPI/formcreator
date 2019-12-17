@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -74,98 +73,5 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       }
 
       return $input;
-   }
-
-   /**
-    * Export in an array all the data of the current instanciated condition
-    * @param boolean $remove_uuid remove the uuid key
-    *
-    * @return array the array with all data (with sub tables)
-    */
-   public function export($remove_uuid = false) {
-      if (!$this->getID()) {
-         return false;
-      }
-
-      $parameter = $this->fields;
-      unset($parameter['id'],
-            $parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
-
-      if ($remove_uuid) {
-         $parameter['uuid'] = '';
-      }
-
-      return $parameter;
-   }
-
-   public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $fieldName = '', $parameter = []) {
-      global $DB;
-
-      $parameter['plugin_formcreator_questions_id'] = $questions_id;
-
-      // get a built instance of the parameter
-      $question = new PluginFormcreatorquestion();
-      $question->getFromDB($questions_id);
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $question->getField('fieldtype'),
-         $question
-      );
-      $parameters = $field->getEmptyParameters();
-      $item = $parameters[$fieldName];
-      $found = $item->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $questions_id,
-         'fieldname' => $fieldName,
-      ]);
-      if (!$item->convertUuids($parameter)) {
-         $importLinker->postponeImport($parameter['uuid'], $item->getType(), $parameter, $questions_id);
-         return false;
-      }
-
-      // escape text fields
-      foreach (['fieldname'] as $key) {
-         $parameter[$key] = $DB->escape($parameter[$key]);
-      }
-      if ($found) {
-         $parameter['id'] = $item->getID();
-         $item->update($parameter);
-      } else {
-         $item->add($parameter);
-      }
-      $importLinker->addImportedObject($item->fields['uuid'], $item);
-   }
-
-   /**
-    * Covnerts IDs of related objects into their UUID
-    * @param array $parameter
-    */
-   protected function convertIds(&$parameter) {}
-
-   /**
-    * Converts uuids of linked objects into ID
-    * @param array $parameter
-    * @return boolean true if success, or false otherwise
-    */
-   protected function convertUuids(&$parameter) {
-      return true;
-   }
-
-   /**
-    * Duplicates a parameter
-    * @param PluginFormcreatorQuestion $newQuestion question which will contain the new parameter
-    * @param array $tab_questions map old question ID => new question ID
-    * @return PluginFormcreatorQuestionParameter new isntance (not saved in DB)
-    */
-   public function duplicate(PluginFormcreatorQuestion $newQuestion, array $tab_questions) {
-      $parameter = new static($this->field, ['fieldName' => $this->fieldName, 'label' => $this->label]);
-      $row = $this->fields;
-      unset($row['id']);
-
-      // Update the question ID linked to the parameter with the old/new question ID map
-      $questionKey = PluginFormcreatorQuestion::getForeignKeyField();
-      $row[$questionKey] = $tab_questions[$this->fields[$questionKey]];
-
-      // return  the new instance, not saved yet in DB
-      $parameter->fields = $row;
-      return $parameter;
    }
 }

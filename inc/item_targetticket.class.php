@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -40,7 +38,7 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
 
    static public $itemtype_1           = 'itemtype';
    static public $items_id_1           = 'items_id';
-   static public $itemtype_2           = 'PluginFormcreatorTargetTicket';
+   static public $itemtype_2           = PluginFormcreatorTargetTicket::class;
    static public $items_id_2           = 'plugin_formcreator_targettickets_id';
 
    static public $logs_for_item_1        = false;
@@ -53,28 +51,25 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
       $item_targetTicket = $this->fields;
 
       // remove non needed keys
-      unset($item_targetTicket['id'],
-            $item_targetTicket['plugin_formcreator_targettickets_id']);
+      $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
+      $this->convertIds($item_targetTicket);
+      unset($item_targetTicket[$targetTicketFk]);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $item_targetTicket['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($item_targetTicket[$idToRemove]);
 
-      $exported = $item_targetTicket;
-      if ($item_targetTicket['itemtype'] == PluginFormcreatorTargetTicket::getType()) {
-         $targetTicket = new PluginFormcreatorTargetTicket();
-         $targetTicket->getFromDB($item_targetTicket['items_id']);
-         $exported['items_id'] = $targetTicket->getField('uuid');
-      }
-
-      return $exported;
+      return $item_targetTicket;
    }
 
    public static function import($targetTicket_id, $item_targetTicket = [], $storeOnly = true) {
@@ -120,5 +115,24 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
       }
 
       return $input;
+   }
+
+   protected function convertIds(&$parameter) {
+      if ($parameter['itemtype'] == PluginFormcreatorTargetTicket::getType()) {
+         $targetTicket = new PluginFormcreatorTargetTicket();
+         $targetTicket->getFromDB($parameter['items_id']);
+         $parameter['items_id'] = $targetTicket->fields['uuid'];
+      }
+   }
+
+   protected function convertUuids(&$parameter) {
+      if ($questionId2
+          = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
+                                                  'uuid',
+                                                  $parameter['plugin_formcreator_questions_id_2'])) {
+         $parameter['plugin_formcreator_questions_id_2'] = $questionId2;
+         return true;
+      }
+      return false;
    }
 }

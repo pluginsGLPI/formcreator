@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -138,6 +136,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $condition = Search::addDefaultWhere(Ticket::class);
          $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+         $condition = "($condition OR `glpi_plugin_formcreator_issues`.`validator_id` = '" . Session::getLoginUserID() . "')";
          break;
 
       case PluginFormcreatorFormAnswer::class:
@@ -237,7 +236,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   foreach ($item->getClosedStatusArray() as $status) {
                      unset($tocheck[$status]);
                   }
-                  unset($tocheck['refused']);
+                  unset($tocheck[PluginFormcreatorFormAnswer::STATUS_REFUSED]);
 
                   $tocheck = array_keys($tocheck);
                   break;
@@ -428,6 +427,14 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
          'sub_itemtype' => 'Ticket'
       ], 1);
    }
+}
+
+function plugin_formcreator_hook_pre_purge_targetTicket(CommonDBTM $item) {
+   $item->pre_purgeItem();
+}
+
+function plugin_formcreator_hook_pre_purge_targetChange(CommonDBTM $item) {
+   $item->pre_purgeItem();
 }
 
 function plugin_formcreator_dynamicReport($params) {

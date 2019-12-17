@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -52,6 +50,8 @@ class PluginFormcreatorFormList extends CommonGLPI
       global $CFG_GLPI;
 
       $menu = parent::getMenuContent();
+      $menu['title'] = static::getTypeName(2);
+      $menu['page'] = '/plugins/formcreator/front/formlist.php';
       $image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
                   title="' . __('Forms waiting for validation', 'formcreator') . '"
                   alt="' . __('Forms waiting for validation', 'formcreator') . '">';

@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -61,5 +60,18 @@ class PluginFormcreatorFormList extends CommonTestCase {
       $instance = new $this->newTestedInstance();
       $output = $instance->getTypeName($nb);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetMenuContent() {
+      $output = \PluginFormcreatorFormList::getMenuContent();
+      $this->string($output['links']['search'])->isEqualTo('/plugins/formcreator/front/formlist.php');
+      $this->array($output['links'])->notHasKey('add');
+      $this->string($output['links']['config'])->isEqualTo('/plugins/formcreator/front/form.php');
+
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorFormList::getMenuContent();
+      $this->string($output['links']['search'])->isEqualTo('/plugins/formcreator/front/formlist.php');
+      $this->string($output['links']['add'])->isEqualTo('/plugins/formcreator/front/form.form.php');
+      $this->string($output['links']['config'])->isEqualTo('/plugins/formcreator/front/form.php');
    }
 }

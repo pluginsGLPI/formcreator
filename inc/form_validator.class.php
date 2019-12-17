@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use tests\units\PluginFormcreatorForm_Validator as TestsPluginFormcreatorForm_Validator;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -38,16 +38,19 @@ if (!defined('GLPI_ROOT')) {
 /**
  * @since 0.90-1.5
  */
-class PluginFormcreatorForm_Validator extends CommonDBRelation {
+class PluginFormcreatorForm_Validator extends CommonDBRelation implements
+PluginFormcreatorExportableInterface
+{
 
-      // From CommonDBRelation
-   static public $itemtype_1          = 'PluginFormcreatorForm';
+   // From CommonDBRelation
+   static public $itemtype_1          = PluginFormcreatorForm::class;
    static public $items_id_1          = 'plugin_formcreator_forms_id';
 
    static public $itemtype_2          = 'itemtype';
    static public $items_id_2          = 'items_id';
    static public $checkItem_2_Rights  = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
+   const VALIDATION_NONE  = 0;
    const VALIDATION_USER  = 1;
    const VALIDATION_GROUP = 2;
 
@@ -61,46 +64,56 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       return $input;
    }
 
-   /**
-    * Import a form's validator into the db
-    * @see PluginFormcreatorForm::importJson
-    *
-    * @param  integer $forms_id  id of the parent form
-    * @param  array   $validator the validator data (match the validator table)
-    * @return integer the validator's id
-    */
-   public static function import($forms_id = 0, $validator = []) {
-      $item = new self;
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $forms_id;
 
-      $validator['plugin_formcreator_forms_id'] = $forms_id;
-
+      $item = new self();
+       /** @var string $idKey key to use as ID (id or uuid) */
+       $idKey = 'id';
+      if (isset($input['uuid'])) {
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
       // Find the validator
-      if (!in_array($validator['itemtype'], [User::class, Group::class])) {
+      if (!in_array($input['itemtype'], [User::class, Group::class])) {
          return false;
       }
-      $linkedItemtype = $validator['itemtype'];
+      $linkedItemtype = $input['itemtype'];
       $linkedItem = new $linkedItemtype();
       $crit = [
-         'name' => $validator['_item'],
+         'name' => $input['_item'],
       ];
       if (!$linkedItem->getFromDBByCrit($crit)) {
          // validator not found. Let's ignore it
          return false;
       }
-      $validator['items_id'] = $linkedItem->getID();
+      $input['items_id'] = $linkedItem->getID();
 
-      if ($validators_id = plugin_formcreator_getFromDBByField($item, 'uuid', $validator['uuid'])) {
-         // add id key
-         $validator['id'] = $validators_id;
-
-         // update section
-         $item->update($validator);
+      // Add or update the form validator
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
       } else {
-         //create section
-         $validators_id = $item->add($validator);
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException();
       }
 
-      return $validators_id;
+      // add the item to the linker
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
+      }
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 
    /**
@@ -110,17 +123,16 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
       $validator = $this->fields;
 
       // remove key and fk
-      unset($validator['id'],
-            $validator['plugin_formcreator_forms_id']);
+      unset($validator['plugin_formcreator_forms_id']);
 
-      if (is_subclass_of($validator['itemtype'], 'CommonDBTM')) {
+      if (is_subclass_of($validator['itemtype'], CommonDBTM::class)) {
          $validator_obj = new $validator['itemtype'];
          if ($validator_obj->getFromDB($validator['items_id'])) {
 
@@ -133,10 +145,60 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       }
       unset($validator['items_id']);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $validator['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($validator[$idToRemove]);
 
       return $validator;
+   }
+
+   /**
+    * Get validators of type $itemtype associated to a form 
+    *
+    * @param PluginFormcreatorForm $form
+    * @param string $itemtype
+    * @return array array of User or Group objects
+    */
+   public function getValidatorsForForm(PluginFormcreatorForm $form, $itemtype) {
+      global $DB;
+
+      if (!in_array($itemtype, [User::class, Group::class])) {
+         return [];
+      }
+
+      $formValidatorTable = PluginFormcreatorForm_Validator::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $itemTable = $itemtype::getTable();
+
+      $rows = $DB->request([
+         'SELECT' => [
+            $itemTable => ['*']
+         ],
+         'FROM' => $itemTable,
+         'LEFT JOIN' => [
+            $formValidatorTable => [
+               'FKEY' => [
+                  $formValidatorTable => 'items_id',
+                  $itemTable => 'id'
+               ]
+            ],
+         ],
+         'WHERE' => [
+            "$formValidatorTable.itemtype" => $itemtype,
+            "$formValidatorTable.$formFk" => $form->getID(),
+         ],
+      ]);
+      $result = [];
+      foreach ($rows as $row) {
+         $item = new $itemtype();
+         if ($item->getFromDB($row['id'])) {
+            $result[$row['id']] = $item;
+         }
+      }
+
+      return $result;
    }
 }

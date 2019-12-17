@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -43,7 +41,7 @@ if (!$plugin->isActivated('formcreator')) {
 $targetticket = new PluginFormcreatorTargetTicket();
 
 // Edit an existing target ticket
-if (isset($_POST["update"])) {
+if (isset($_POST['update'])) {
    $targetticket->update($_POST);
    Html::back();
 
@@ -79,21 +77,14 @@ if (isset($_POST["update"])) {
       'PluginFormcreatorForm'
    );
 
-   $itemtype = "PluginFormcreatorTargetTicket";
-   $iterator = $DB->request([
-      'SELECT' => ['plugin_formcreator_forms_id'],
-      'FROM'   => PluginFormcreatorTarget::getTable(),
-      'WHERE'  => [
-         'itemtype' => $itemtype,
-         'items_id' => (int) $_REQUEST['id'],
-      ]
-   ]);
-   $first = $iterator->next();
-   $form     = new PluginFormcreatorForm;
-   $form->getFromDB($first['plugin_formcreator_forms_id']);
+   $itemtype = PluginFormcreatorTargetTicket::class;
+   $targetticket->getFromDB((int) $_REQUEST['id']);
+   $form = $targetticket->getForm();
 
-   $_SESSION['glpilisttitle'][$itemtype] = sprintf(__('%1$s = %2$s'),
-                                                   $form->getTypeName(1), $form->getName());
+   $_SESSION['glpilisttitle'][$itemtype] = sprintf(
+      __('%1$s = %2$s'),
+      $form->getTypeName(1), $form->getName()
+   );
    $_SESSION['glpilisturl'][$itemtype]   = $form->getFormURL()."?id=".$form->getID();
 
    $targetticket->display($_REQUEST);

@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,8 +35,43 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $value = Html::entities_deep($this->question->fields['default_values']);
+      $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
+         .'style="width: 90%" value="'.$value.'">';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
@@ -115,7 +148,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $regex = $parameters['regex']->fields['regex'];
       if ($regex !== null && strlen($regex) > 0) {
          if (!preg_match($regex, $value)) {
-            Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+            Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
             return false;
          }
       }
@@ -124,12 +157,12 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $rangeMin = $parameters['range']->fields['range_min'];
       $rangeMax = $parameters['range']->fields['range_max'];
       if ($rangeMin > 0 && strlen($value) < $rangeMin) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters): %s', 'formcreator'), $rangeMin, $this->question->fields['name']), false, ERROR);
          return false;
       }
 
       if ($rangeMax > 0 && strlen($value) > $rangeMax) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters): %s', 'formcreator'), $rangeMax, $this->question->fields['name']), false, ERROR);
          return false;
       }
 
@@ -159,28 +192,12 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return $input;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 1,
-         'values'         => 0,
-         'range'          => 1,
-         'show_empty'     => 0,
-         'regex'          => 1,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          return false;
       }
@@ -236,5 +253,11 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-text-field.png" title="" />';
    }
 }

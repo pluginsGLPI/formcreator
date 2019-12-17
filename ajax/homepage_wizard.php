@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -41,7 +39,7 @@ if ($_REQUEST['wizard'] == 'categories') {
    plugin_formcreator_showWizardCategories();
 } else if ($_REQUEST['wizard'] == 'forms') {
    if (isset($_REQUEST['categoriesId'])) {
-      $categoriesId = intval($_REQUEST['categoriesId']);
+      $categoriesId = (int) $_REQUEST['categoriesId'];
    } else {
       $categoriesId = 0;
    }

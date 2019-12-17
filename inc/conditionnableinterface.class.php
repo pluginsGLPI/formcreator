@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,34 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-class PluginFormcreatorQuestion_Condition extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
-
-      self::login('glpi', 'glpi');
-   }
-
-   public function testGetConditionsFromQuestion() {
-      // crete a question with some conditions
-      $question = $this->getQuestion();
-
-      $questionFk = \PluginFormcreatorQuestion::getForeignKeyField();
-      $questionCondition = $this->newTestedInstance();
-      $questionCondition->add([
-         $questionFk => $question->getID(),
-      ]);
-      $this->boolean($questionCondition->isNewItem())->isFalse();
-
-      $questionCondition = $this->newTestedInstance();
-      $questionCondition->add([
-         $questionFk => $question->getID(),
-      ]);
-      $this->boolean($questionCondition->isNewItem())->isFalse();
-
-      // Check that all conditions are retrieved
-      $output = $questionCondition->getConditionsFromQuestion($question->getID());
-      $this->array($output)->hasSize(2);
-   }
+interface PluginFormcreatorConditionnableInterface
+{
+      /**
+    * Updates the conditions of the question
+    * @param array $input
+    * @return boolean true if success, false otherwise
+    */
+  public function updateConditions($input);
 }

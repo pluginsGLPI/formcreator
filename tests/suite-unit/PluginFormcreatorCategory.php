@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -65,7 +64,6 @@ class PluginFormcreatorCategory extends CommonTestCase {
 
    public function testGetCategoryTree() {
       $this->login('glpi', 'glpi');
-      $_SESSION["glpicronuserrunning"] = true;
 
       // create a sub entity which will take in the forms and cateory for this test
       // and not conflict with previous data

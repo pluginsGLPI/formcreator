@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -43,9 +42,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->login('glpi', 'glpi');
    }
 
-   /**
-    * @engine inline
-    */
    public function testTargetTicketActors() {
       $form = new \PluginFormcreatorForm();
       $form->add([
@@ -58,25 +54,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $this->boolean($form->isNewItem())->isFalse();
 
-      $target = new \PluginFormcreatorTarget();
-      $target->add([
-         'name'                  => 'a target',
-         'itemtype'              => \PluginFormcreatorTargetTicket::class,
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->add([
+         'name'                        => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
-      $this->boolean($target->isNewItem())->isFalse();
-      $this->integer((int) $target->getField('plugin_formcreator_forms_id'))
-         ->isEqualTo((int) $form->getID());
-      $this->string($target->getField('itemtype'))
-         ->isEqualTo(\PluginFormcreatorTargetTicket::class);
-
-      $targetTicket = $target->getField('items_id');
-      $targetTicket = new \PluginFormcreatorTargetTicket();
-      $targetTicket->getFromDB($target->getField('items_id'));
+      $targetTicket->getFromDB($targetTicket->getID());
       $this->boolean($targetTicket->isNewItem())->isFalse();
-      $this->string($targetTicket
-         ->getField('name'))
-         ->isEqualTo($target->getField('name'));
 
       $requesterActor = new \PluginFormcreatorTargetTicket_Actor();
       $observerActor = new \PluginFormcreatorTargetTicket_Actor();
@@ -85,15 +69,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $requesterActor->getFromDBByCrit([
          'AND' => [
             'plugin_formcreator_targettickets_id' => $targetTicketId,
-            'actor_role' => 'requester',
-            'actor_type' => 'creator'
+            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([
          'AND' => [
             'plugin_formcreator_targettickets_id' => $targetTicketId,
-            'actor_role' => 'observer',
-            'actor_type' => 'validator'
+            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
          ]
       ]);
 
@@ -150,7 +134,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
             $question->updateParameters($questionData);
             $questionData['id'] = $question->getID();
-            if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
+            if (isset($questionData['show_rule']) && $questionData['show_rule'] !=\PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
                $showFieldName = $questionData['show_field'];
                $showfield = new \PluginFormcreatorQuestion();
                $showfield->getFromDBByCrit([
@@ -169,32 +153,28 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicketsData = [
          [
             'name'                  => 'target 1',
+            'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
-            'itemtype'              => 'PluginFormcreatorTargetTicket',
-            'urgency_rule'          => 'answer',
+            'itemtype'              => \PluginFormcreatorTargetTicket::class,
+            'urgency_rule'          => \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER,
             'urgency_question'      => 'custom urgency',
             'expected'              => '5'
          ],
          [
             'name'                  => 'target 2',
+            'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
-            'itemtype'              => 'PluginFormcreatorTargetTicket',
-            'urgency_rule'          => 'none',
+            'itemtype'              => \PluginFormcreatorTargetTicket::class,
+            'urgency_rule'          => \PluginFormcreatorTargetBase::URGENCY_RULE_NONE,
             'urgency_question'      => '',
             'expected'              => '3'
          ]
       ];
       foreach ($targetTicketsData as $targetData) {
-         // Create target
-         $targetData['plugin_formcreator_forms_id'] = $formId;
-         $target = new \PluginFormcreatorTarget();
-         $target->add($targetData);
-         $this->boolean($target->isNewItem())->isFalse();
-
          // Create target ticket
-         $itemtype = $target->getField('itemtype');
+         $itemtype = $targetData['itemtype'];
          $targetTicket = new $itemtype();
-         $targetTicket->getFromDB($target->getField('items_id'));
+         $targetTicket->add($targetData);
          $this->boolean($targetTicket->isNewItem())->isFalse();
 
          // Find urgency question
@@ -232,9 +212,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             ];
          } else {
             $urgencyQuestions[] = [
-                  'question'     => null,
-                  'targetTicket' => $targetTicket,
-                  'expected'     => $targetData['expected']
+               'question'     => null,
+               'targetTicket' => $targetTicket,
+               'expected'     => $targetData['expected']
             ];
          }
 
@@ -244,6 +224,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $targetTicketData['title'] = $targetTicketData['name'];
          $targetTicketData['urgency_rule'] = $targetData['urgency_rule'];
          $targetTicketData['_urgency_question'] = $questionId;
+         $targetTicketData['destination_entity'] = 'NULL';
+         $targetTicketData['category_rule'] = '';
+         $targetTicketData['location_rule'] = '';
          $this->boolean($targetTicket->update($targetTicketData))->isTrue();
       }
 
@@ -253,10 +236,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             $saveFormData['formcreator_field_' . $question['question']->getID()] = $question['expected'];
          }
       }
-      $saveFormData['formcreator_form'] = $form->getID();
-      $form->getFromDB($form->getID());
-      $form->saveForm($saveFormData);
+      $saveFormData['plugin_formcreator_forms_id'] = $form->getID();
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $form->getFromDB($form->getID());
+      $formAnswer->add($saveFormData);
       $formAnswer->getFromDbByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -270,10 +253,11 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'SELECT' => ['tickets_id'],
             'FROM'   => \Item_Ticket::getTable(),
             'WHERE'  => [
-               'itemtype' => 'PluginFormcreatorFormAnswer',
+               'itemtype' => \PluginFormcreatorFormAnswer::class,
                'items_id' => $formAnswer->getID()
             ]
          ]);
+         $this->integer($rows->count())->isGreaterThan(0);
          foreach ($rows as $row) {
             $tickets[] = $row['tickets_id'];
          }

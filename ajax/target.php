@@ -32,7 +32,7 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight("entity", UPDATE);
+Session::checkRight('entity', UPDATE);
 
-$target = new PluginFormcreatorTarget();
-$target->showSubForm(0);
+$target = new PluginFormcreatorForm();
+$target->showAddTargetForm();

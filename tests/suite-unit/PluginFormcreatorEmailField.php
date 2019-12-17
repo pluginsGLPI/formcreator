@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -36,8 +35,143 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorEmailField extends CommonTestCase {
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function getName() {
+      $output = \PluginFormcreatorEmailField::getName();
+      $this->string($output)->isEqualTo('Email');
+   }
+
+   public function providerParseAnswerValue() {
+      return [
+         [
+            'input' => 42,
+            'expected' => false,
+         ],
+         [
+            'input' => '',
+            'expected' => true,
+         ],
+         [
+            'input' => 'foo@bar.baz',
+            'expected' => true,
+         ],
+         [
+            'input' => 'not an email',
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerParseAnswerValue
+    */
+   public function testParseAnswerValue($input, $expected) {
+      $question = $this->getQuestion();
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $input
+      ]);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerSerializeValue() {
+      return $this->providerParseAnswerValue();
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
+      $output = $instance->serializeValue();
+
+      $this->string($output)->isEqualTo($expected ? $value : '');
+   }
+
+   public function  testIsAnonymousFormCompatible() {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value' => 'foo@bar.baz',
+            'answer' => '',
+            'expected' => false,
+         ],
+         [
+            'value' => 'foo@bar.baz',
+            'answer' => 'foo@bar.baz',
+            'expected' => true,
+         ],
+         [
+            'value' => 'foo@bar.baz',
+            'answer' => 'foo@bar.com',
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return $this->providerEquals();
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question, $answer);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo(!$expected);
+   }
+
+   public function testGreaterThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorEmailField($this->getQuestion());
+            $instance->greaterThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testLessThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorEmailField($this->getQuestion());
+            $instance->lessThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorEmailField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
+
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

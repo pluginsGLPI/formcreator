@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -30,20 +28,21 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorForm_Profile extends CommonDBRelation
+class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFormcreatorExportableInterface
 {
-   static public $itemtype_1 = 'PluginFormcreatorForm';
+   static public $itemtype_1 = PluginFormcreatorForm::class;
    static public $items_id_1 = 'plugin_formcreator_forms_id';
-   static public $itemtype_2 = 'Profile';
+   static public $itemtype_2 = Profile::class;
    static public $items_id_2 = 'profiles_id';
 
    static function getTypeName($nb = 0) {
-      return _n('Target', 'Targets', $nb, 'formcreator');
+      return _n('Access type', 'Access types', $nb, 'formcreator');
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -68,6 +67,14 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
    }
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      switch (get_class($item)) {
+         case PluginFormcreatorForm::class:
+            static::showForForm($item, $withtemplate);
+            break;
+      }
+   }
+
+   public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       global $DB, $CFG_GLPI;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
@@ -75,7 +82,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
 
-      echo '<tr><th colspan="2">'.__('Access type', 'formcreator').'</th>';
+      echo '<tr><th colspan="2">'._n('Access type', 'Access types', 1, 'formcreator').'</th>';
       echo '</tr>';
       echo '<td>';
       Dropdown::showFromArray(
@@ -106,19 +113,31 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
          echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
 
-         $table         = getTableForItemType(__CLASS__);
-         $table_profile = getTableForItemType('Profile');
-         $query = "SELECT p.`id`, p.`name`, IF(f.`profiles_id` IS NOT NULL, 1, 0) AS `profile`
-                   FROM $table_profile p
-                   LEFT JOIN $table f
-                     ON p.`id` = f.`profiles_id`
-                     AND f.`plugin_formcreator_forms_id` = ".$item->fields['id'];
-         $result = $DB->query($query);
-         while (list($id, $name, $profile) = $DB->fetch_array($result)) {
-            $checked = $profile ? ' checked' : '';
+         $formProfileTable = getTableForItemType(__CLASS__);
+         $profileTable     = getTableForItemType(Profile::class);
+         $formFk = PluginFormcreatorForm::getForeignKeyField();
+         $result = $DB->request([
+            'SELECT' => [
+               'p'     => ['id', 'name'],
+               'f'     => ['profiles_id'],
+               new QueryExpression('IF(f.`profiles_id` IS NOT NULL, 1, 0) AS `is_enabled`')
+            ],
+            'FROM' => "$profileTable as p",
+            'LEFT JOIN' => [
+               "$formProfileTable as f" => [
+                  'FKEY' => [
+                     "p"     => 'id',
+                     "f" => 'profiles_id',
+                     ['AND' => ["f.$formFk" => $item->getID()]]
+                  ]
+               ]
+            ],
+         ]);
+         foreach ($result as $row) {
+            $checked = $row['is_enabled'] !== '0' ? ' checked' : '';
             echo '<tr><td colspan="2"><label>';
-            echo '<input type="checkbox" name="profiles_id[]" value="'.$id.'" '.$checked.'> ';
-            echo $name;
+            echo '<input type="checkbox" name="profiles_id[]" value="'.$row['id'].'" '.$checked.'> ';
+            echo $row['name'];
             echo '</label></td></tr>';
          }
       }
@@ -143,20 +162,54 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
     * @param  array   $form_profile the validator data (match the validator table)
     * @return integer|false the form_Profile ID or false on error
     */
-   public static function import($forms_id = 0, $form_profile = []) {
-      $item    = new self;
-      $profile = new Profile;
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form_profile[$formFk] = $forms_id;
-
-      if ($form_profiles_id = plugin_formcreator_getFromDBByField($profile, 'name', $form_profile['_profile'])) {
-         $form_profile[Profile::getForeignKeyField()] = $form_profiles_id;
-         $item->add($form_profile);
-
-         return $item->getID();
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
       }
 
-      return false;
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $containerId;
+      $item = new self();
+      // Find an existing form to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id';
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
+
+      // Set the profile of the form_profile
+      $profile = new Profile;
+      $formFk  = PluginFormcreatorForm::getForeignKeyField();
+      if (!plugin_formcreator_getFromDBByField($profile, 'name', $input['_profile'])) {
+         // Profile not found, lets ignore this import
+         return true;
+      }
+      $input[Profile::getForeignKeyField()] = $profile->getID();
+
+      // Add or update the form_profile
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
+      } else {
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
+      }
+
+      // add the form_profile to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 
    /**
@@ -166,7 +219,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
@@ -179,13 +232,15 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       }
 
       // remove fk
-      unset($form_profile['id'],
-            $form_profile['profiles_id'],
+      unset($form_profile['profiles_id'],
             $form_profile['plugin_formcreator_forms_id']);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $form_profile['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($form_profile[$idToRemove]);
 
       return $form_profile;
    }

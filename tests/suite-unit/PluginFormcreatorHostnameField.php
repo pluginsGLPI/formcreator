@@ -34,8 +34,248 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorHostnameField extends CommonTestCase {
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isFalse();
+   }
+
+   public function testGetDesignSpecializationField() {
+      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $output = $instance->getDesignSpecializationField();
+      $this->array($output)->isIdenticalTo([
+         'label' => '',
+         'field' => '',
+         'additions' => '',
+         'may_be_empty' => false,
+         'may_be_required' => false,
+      ]);
+   }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value' => '',
+            'expected' => '',
+         ],
+         [
+            'value' => "foo",
+            'expected' => "foo",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function serializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance->prepareQuestionInputForSave([
+         'default_values' => $value,
+      ]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      return [
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => 'foo',
+            'expected'  => 'foo' ,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetValueForDesign() {
+      $value = 'foo';
+      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo('');
+   }
+
+   public function providerGetValueForTargetText() {
+      return [
+         [
+            'fields' => [
+               'values' => ''
+            ],
+            'value' => "",
+            'expected' => ''
+         ],
+         [
+            'fields' => [
+               'values' => ""
+            ],
+            'value' => "foo",
+            'expected' => 'foo'
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerGetValueForTargetText
+    */
+   public function testGetValueForTargetText($fields, $value, $expected) {
+      $question = $this->getQuestion($fields);
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($value);
+
+      $output = $instance->getValueForTargetText(true);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'bar',
+            'expected'  => false,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'foo',
+            'expected'  => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorHostnameField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'bar',
+            'expected'  => true,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'foo',
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorHostnameField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
+   public function providerGreaterThan() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'bar',
+            'expected'  => false,
+         ],
+         [
+            'value'     => 'bar',
+            'answer'    => 'foo',
+            'expected'  => true,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'foo',
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGreaterThan
+    */
+   public function testGreaterThan($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorHostnameField($question, $answer);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->greaterThan($value))->isEqualTo($expected);
+   }
+
+   public function providerLessThan() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'bar',
+            'expected'  => true,
+         ],
+         [
+            'value'     => 'bar',
+            'answer'    => 'foo',
+            'expected'  => false,
+         ],
+         [
+            'value'     => 'foo',
+            'answer'    => 'foo',
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerLessThan
+    */
+   public function testLessThan($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorHostnameField($question, $answer);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->lessThan($value))->isEqualTo($expected);
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

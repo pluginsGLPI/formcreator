@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -41,10 +39,8 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $required = $this->isRequired() ? ' required' : '';
-
          echo Html::file([
-            'name'    => 'formcreator_field_' . $this->fields['id'],
+            'name'    => 'formcreator_field_' . $this->question->getID(),
             'display' => false,
             'multiple' => 'multiple',
          ]);
@@ -95,7 +91,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       }
 
       if (!$this->isValidValue($this->value)) {
-         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
          return false;
       }
 
@@ -111,24 +107,8 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return __('File');
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['file'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    /**
@@ -141,8 +121,6 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
     * @return integer|NULL
     */
    private function saveDocument($file, $prefix) {
-      global $DB;
-
       $sectionTable = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questionTable = PluginFormcreatorQuestion::getTable();
@@ -165,7 +143,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
            ]
         ],
         'WHERE' => [
-           "$questionTable.id" => $this->fields['id'],
+           "$questionTable.id" => $this->question->getID(),
         ],
       ]);
       if ($form->isNewItem()) {
@@ -175,7 +153,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
       $doc                             = new Document();
       $file_data                       = [];
-      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
+      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->question->fields['name']);
       $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
                                        ? $_SESSION['glpiactive_entity']
                                        : $form->getField('entities_id');
@@ -189,7 +167,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input["_$key"])) {
          if (!is_array($input["_$key"])) {
             return false;
@@ -203,7 +181,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             foreach ($input["_$key"] as $document) {
                $document = Toolbox::stripslashes_deep($document);
                if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-                  $prefix = $input['_prefix_formcreator_field_' . $this->fields['id']][$index];
+                  $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
                   $answer_value[] = $this->saveDocument($document, $prefix);
                }
                $index++;
@@ -236,5 +214,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-file" aria-hidden="true"></i>';
    }
 }

@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -40,18 +38,27 @@ require_once(realpath(dirname(__FILE__ ) . '/../../../inc/includes.php'));
 abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 {
    /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
-   protected $fields = [];
+   protected $question = null;
 
    /** @var mixed $answer Value of the field */
    protected $value = null;
 
    /**
     *
-    * @param array $fields fields of a PluginFormcreatorQuestion instance
-    * @param array $data value of all fields
+    * @param array $question PluginFormcreatorQuestion instance
     */
-   public function __construct($fields) {
-      $this->fields  = $fields;
+   public function __construct(PluginFormcreatorQuestion $question) {
+      $this->question  = $question;
+   }
+
+   public function getDesignSpecializationField() {
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $this->getParametersHtmlForDesign(),
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -68,16 +75,16 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param boolean $canEdit is the field editable ?
     */
    public function show($canEdit = true) {
-      $required = ($canEdit && $this->fields['required']) ? ' required' : '';
+      $required = ($canEdit && $this->question->fields['required']) ? ' required' : '';
 
-      echo '<div class="form-group ' . $required . '" id="form-group-field-' . $this->fields['id'] . '">';
-      echo '<label for="formcreator_field_' . $this->fields['id'] . '">';
+      echo '<div class="form-group ' . $required . '" id="form-group-field-' . $this->question->getID() . '">';
+      echo '<label for="formcreator_field_' . $this->question->getID() . '">';
       echo $this->getLabel();
-      if ($canEdit && $this->fields['required']) {
+      if ($canEdit && $this->question->fields['required']) {
          echo ' <span class="red">*</span>';
       }
       echo '</label>';
-      echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
+      echo '<div class="help-block">' . html_entity_decode($this->question->fields['description']) . '</div>';
 
       echo '<div class="form_field">';
       $this->displayField($canEdit);
@@ -90,7 +97,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param string $canEdit
     */
    public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
@@ -114,7 +121,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return string
     */
    public function getLabel() {
-      return $this->fields['name'];
+      return $this->question->fields['name'];
    }
 
    /**
@@ -122,11 +129,11 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return array available values
     */
    public function getAvailableValues() {
-      return explode("\r\n", $this->fields['values']);
+      return explode("\r\n", $this->question->fields['values']);
    }
 
    public function isRequired() {
-      return $this->fields['required'];
+      return $this->question->fields['required'];
    }
 
    /**
@@ -155,7 +162,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id'   => $this->fields['id'],
+            'plugin_formcreator_questions_id'   => $this->question->getID(),
             'fieldname'                         => $fieldname,
          ]);
          if ($parameter->isNewItem()) {
@@ -207,8 +214,75 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return true;
    }
 
-   public function getQuestionId() {
-      return $this->fields['id'];
+   /**
+    * get HTML of parameters for question design
+    *
+    * @return string
+    */
+   protected function getParametersHtmlForDesign() {
+      $parameters = $this->getParameters();
+      if (count($parameters) == 0) {
+         return '';
+      }
+
+      $question = new PluginFormcreatorQuestion();
+      $question->getFromDB($this->question->getID());
+      $form = new PluginFormcreatorForm();
+      $form->getByQuestionId($question->getID());
+
+      /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
+      $column = 0;
+      $rowSize = 2;
+      $additions = '';
+      foreach ($parameters as $fieldname => $parameter) {
+         if ($column == 0) {
+            $additions .= '<tr class="plugin_formcreator_question_specific">';
+         }
+         $parameterSize = 1 + $parameter->getParameterFormSize();
+         if ($column + $parameterSize > $rowSize) {
+            // The parameter needs more room than available in the current row
+            if ($column < $rowSize) {
+               // fill the remaining of the row
+               $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
+               // Close current row and open an new one
+               $additions .= '</tr><tr class="plugin_formcreator_question_specific">';
+               $column = 0;
+            }
+         }
+         $additions .= $parameter->getParameterForm($form, $question);
+         $column += $parameterSize;
+         if ($column == $rowSize) {
+            // Finish the row
+            $additions .= '</tr>';
+            $column = 0;
+         }
+      }
+      if ($column < $rowSize) {
+         // fill the remaining of the row
+         $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
+         // Close current row and open an new one
+         $additions .= "</tr>";
+      }
+      return $additions;
+   }
+
+   public function getQuestion() {
+      return $this->question;
+   }
+
+   /**
+    * Validate a regular expression
+    *
+    * @param string $regex
+    * @return boolean true if the regex is valid, false otherwise
+    */
+   protected function checkRegex($regex) {
+      // Avoid php notice when validating the regular expression
+      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
+      $isValid = !(preg_match($regex, null) === false);
+      restore_error_handler();
+
+      return $isValid;
    }
 
    /**

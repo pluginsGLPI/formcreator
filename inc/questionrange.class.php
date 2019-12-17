@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -29,6 +28,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
 
 /**
  * A question parameter to handle a depdency to an other question. For example
@@ -97,30 +102,80 @@ extends PluginFormcreatorQuestionParameter
    }
 
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
       $parameter = $this->fields;
-      $this->convertIds($parameter);
-      unset($parameter['id'],
-            $parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
 
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      unset($parameter[$questionFk]);
+
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $parameter['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($parameter[$idToRemove]);
 
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorImportLinker $importLinker, $question_id = 0, $fieldName = '', $parameter = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
+
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
+
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $input[$questionFk] = $containerId;
+
+      $question = new PluginFormcreatorQuestion();
+      $question->getFromDB($containerId);
+      $field = PluginFormcreatorFields::getFieldInstance(
+         $question->fields['fieldtype'],
+         $question
+      );
+
+      $item = $field->getEmptyParameters();
+      $item = $item[$input['fieldname']];
+
+      // Find an existing condition to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id';
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
 
       // escape text fields
       foreach (['range_min', 'range_max'] as $key) {
-         $parameter[$key] = $DB->escape($parameter[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      parent::import($importLinker, $question_id, $fieldName, $parameter);
+      // Add or update condition
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
+      } else {
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
+      }
+
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 }

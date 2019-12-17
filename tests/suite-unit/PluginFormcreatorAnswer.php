@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -33,16 +32,6 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorAnswer extends CommonTestCase {
-   public function testCanCreate() {
-      $output = \PluginFormcreatorAnswer::canCreate();
-      $this->boolean($output)->isTrue();
-   }
-
-   public function testCanView() {
-      $output = \PluginFormcreatorAnswer::canView();
-      $this->boolean($output)->isTrue();
-   }
-
    public function providerGetTypeName() {
       return [
          [
@@ -69,35 +58,4 @@ class PluginFormcreatorAnswer extends CommonTestCase {
       $output = \PluginFormcreatorAnswer::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
    }
-
-   public function providerPrepareInputForAdd() {
-      return [
-         [
-
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForAdd
-    */
-   public function testPrepareInputForAdd() {
-
-   }
-
-   public function providerPrepareInputForUpdate() {
-      return [
-         [
-
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForUpdate
-    */
-   public function testPrepareInputForUpdate() {
-
-   }
-
 }

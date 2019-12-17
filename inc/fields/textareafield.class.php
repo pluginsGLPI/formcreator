@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -33,15 +31,47 @@
 
 class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
 {
-   public function displayField($canEdit = true) {
-      global $CFG_GLPI;
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
 
-      $id           = $this->fields['id'];
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td width="80%" colspan="3">';
+      $additions .= Html::textarea([
+         'name'             => 'default_values',
+         'id'               => 'default_values',
+         'value'            => $this->getValueForDesign(),
+         'enable_rich_text' => true,
+         'display'          => false,
+      ]);
+      $additions .= Html::initEditorSystem('default_values', '', false);
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = PluginFormcreatorField::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
+   public function displayField($canEdit = true) {
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $required = $this->fields['required'] ? ' required' : '';
-      $useRichText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
+      $useRichText = true;
       if ($canEdit) {
          if ($useRichText) {
             $value = nl2br($this->value);
@@ -118,11 +148,6 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return $this->value;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['textarea'] = 'showFields(".implode(', ', $prefs).");';";
-   }
-
    public function equals($value) {
       return $this->value == $value;
    }
@@ -141,5 +166,11 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-textarea-field.png" title="" />';
    }
 }

@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -45,6 +43,9 @@ class PluginFormcreatorCommon {
          $type = $data['Type'];
          $matches = null;
          preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
+         if (!isset($matches[1])) {
+            return [];
+         }
          $enum = explode("','", $matches[1]);
       }
 
@@ -172,5 +173,60 @@ class PluginFormcreatorCommon {
       }
 
       return implode(' ', $matches);
+   }
+
+   /**
+    * get the list of pictograms available for the current version of GLPI
+    *
+    * @return array
+    */
+   public static function getFontAwesomePictoNames() {
+      $list = require_once(__DIR__ . '/../' . self::getPictoFilename(GLPI_VERSION));
+      return $list;
+   }
+
+   /**
+    * get the name of the php file containing the pictogram list depending on the version of GLPI
+    *
+    * @param $version string GLPI version
+    * @return string
+    */
+   public static function getPictoFilename($version) {
+      if (version_compare($version, '9.4') < 0) {
+         return 'data/font-awesome_9.3.php';
+      }
+      if (version_compare($version, '9.5') < 0) {
+         return 'data/font-awesome_9.4.php';
+      }
+      if (version_compare($version, '9.6') < 0) {
+         return 'data/font-awesome_9.5.php';
+      }
+
+      return '';
+   }
+
+   /**
+    * Show a dropdown with Font Awesome pictograms
+    *
+    * @param string $name name of the HTML input
+    * @param array $options
+    * @return mixed
+    */
+   public static function showFontAwesomeDropdown($name, $options = []) {
+      $items = [];
+      foreach (static::getFontAwesomePictoNames() as $key => $value) {
+         $items[$key] = /* '<i class="' . $key . '"></i>' . */ $value;
+      }
+
+      $previewId = $name . '_preview';
+      $options['on_change'] = 'plugin_formceator_showPictogram(this, "' . $previewId . '")';
+      $options['display'] = false;
+      $options['display_emptychoice'] = true;
+      if (!isset($options['value'])) {
+         $options['value'] = '';
+      }
+      $output = Dropdown::showFromArray($name, $items, $options);
+      $output .= '<i id="' . $previewId . '" class="'. $options['value'] . '"></i>';
+      echo $output;
    }
 }

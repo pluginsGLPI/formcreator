@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -45,5 +43,45 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
 
    public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false) {
       return $this->prepareTemplate($template, $formAnswer, $disableRichText);
+   }
+
+   public function publicGetItem_User() {
+      return $this->getItem_User();
+   }
+
+   public function publicGetItem_Group() {
+      return $this->getItem_Group();
+   }
+
+   public function publicGetItem_Supplier() {
+      return $this->getItem_Supplier();
+   }
+
+   public function publicGetItem_Item() {
+      return $this->getItem_Item();
+   }
+
+   public function publicGetItem_Actor() {
+      return $this->getItem_Actor();
+   }
+
+   public function publicGetCategoryFilter() {
+      return $this->getCategoryFilter();
+   }
+
+   public function publicGetTaggableFields() {
+      return $this->getTaggableFields();
+   }
+
+   public function publicGetTargetItemtypeName() {
+      return $this->getTargetItemtypeName();
+   }
+
+   public function publicSetTargetCategory($data, $formanswer) {
+      return $this->setTargetCategory($data, $formanswer);
+   }
+
+   public function publicSetTargetAssociatedItem($data, $formanswer) {
+      return $this->setTargetAssociatedItem($data, $formanswer);
    }
 }

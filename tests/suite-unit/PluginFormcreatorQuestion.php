@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -43,10 +42,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $form           = new \PluginFormcreatorForm;
       $form_section   = new \PluginFormcreatorSection;
       $form_question  = new \PluginFormcreatorQuestion;
-      $form_condition = new \PluginFormcreatorQuestion_Condition;
-      $form_validator = new \PluginFormcreatorForm_Validator;
-      $form_target    = new \PluginFormcreatorTarget;
-      $form_profile   = new \PluginFormcreatorForm_Profile;
 
       // create objects
       $forms_id = $form->add([
@@ -60,12 +55,12 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'plugin_formcreator_forms_id' => $forms_id
       ]);
 
-      $questions_id_1 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 1",
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $sections_id
       ]);
-      $questions_id_2 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 2",
          'fieldtype'                      => 'textarea',
          'plugin_formcreator_sections_id' => $sections_id
@@ -75,6 +70,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       switch ($method) {
+         case 'testImport':
+            self::login('glpi', 'glpi');
+            break;
+
          case 'testPrepareInputForAdd':
          case 'testPrepareInputForUpdate':
             $this->form = new \PluginFormcreatorForm;
@@ -91,8 +90,35 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       }
    }
 
+   public function providerGetTypeName() {
+      return [
+         [
+            'input' => 0,
+            'expected' => 'Questions',
+         ],
+         [
+            'input' => 1,
+            'expected' => 'Question',
+         ],
+         [
+            'input' => 2,
+            'expected' => 'Questions',
+         ],
+      ];
+   }
+
    /**
-    * @cover PluginFormcreatorQuestion::clone
+    * @dataProvider providerGetTypeName
+    * @param integer $number
+    * @param string $expected
+    */
+   public function testGetTypeName($number, $expected) {
+      $output = \PluginFormcreatorQuestion::getTypeName($number);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   /**
+    *
     */
    public function testDuplicate() {
       $question = $this->getQuestion();
@@ -132,7 +158,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -155,7 +181,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -168,7 +194,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                   ]
                ],
             ],
-            'expecetedError' => null,
+            'expectedError' => null,
          ],
          'field type incompatible' => [
             'input' => [
@@ -181,7 +207,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -195,7 +221,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                ],
             ],
             'expected' => [],
-            'expecetedError' => 'This type of question is not compatible with public forms.',
+            'expectedError' => 'This type of question is not compatible with public forms.',
          ],
          'non existent field type' => [
             'input' => [
@@ -208,7 +234,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -222,11 +248,45 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                ],
             ],
             'expected' => [],
-            'expecetedError' => 'Field type nonexistent is not available for question question-name.',
+            'expectedError' => 'Field type nonexistent is not available for question question-name.',
          ],
       ];
 
       return $dataset;
+   }
+
+   public function testImport() {
+      $section = $this->getSection();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         'name' => $this->getUniqueString(),
+         'fieldtype' => 'text',
+         'required' => '0',
+         'show_empty' => '1',
+         'default_values' => '',
+         'values' => '',
+         'description' => '',
+         'order' => '1',
+         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $questionId = \PluginFormcreatorQuestion::import($linker, $input, $section->getID());
+      $this->integer($questionId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input, $section) {
+            \PluginFormcreatorQuestion::import($linker, $input, $section->getID());
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $questionId;
+      $questionId2 = \PluginFormcreatorQuestion::import($linker, $input, $section->getID());
+      $this->integer((int) $questionId)->isNotEqualTo($questionId2);
    }
 
    /**
@@ -326,5 +386,71 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $question->getFromDB($question->getID());
       $this->integer((int) $question->fields['order'])
          ->isEqualTo($expectedOrder);
+   }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $instance = $this->getQuestion();
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'fieldtype',
+         'required',
+         'show_empty',
+         'default_values',
+         'values',
+         'description',
+         'order',
+         'show_rule',
+      ];
+      $extraFields = [
+         '_conditions',
+         '_parameters',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
+
+   public function testMoveTop() {
+      $section = $this->getSection();
+      $question1 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+      $question3 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+
+      $this->integer((int) $question1->fields['order'])->isEqualTo(1);
+      $this->integer((int) $question2->fields['order'])->isEqualTo(2);
+      $this->integer((int) $question3->fields['order'])->isEqualTo(3);
+      $question3->moveTop();
+      // Reload questions
+      $question1->getFromDB($question1->getID());
+      $question2->getFromDB($question2->getID());
+      $question3->getFromDB($question3->getID());
+      $this->integer((int) $question3->fields['order'])->isEqualTo(1);
+      $this->integer((int) $question1->fields['order'])->isEqualTo(2);
+      $this->integer((int) $question2->fields['order'])->isEqualTo(3);
    }
 }

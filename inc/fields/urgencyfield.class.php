@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,13 +35,50 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= Ticket::dropdownUrgency([
+         'name'     => 'default_values',
+         'value'    => $this->question->fields['default_values'],
+         'comments' => false,
+         'rand'     => $rand,
+         'display'  => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = PluginFormcreatorField::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
-         $required = $this->fields['required'] ? ' required' : '';
          Ticket::dropdownUrgency(['name'     => $fieldName,
                                   'value'    => $this->value,
                                   'comments' => false,
@@ -70,7 +105,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '3';
       } else {
@@ -83,19 +118,8 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 1,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
+   public static function canRequire() {
+      return true;
    }
 
    public function getAvailableValues() {
@@ -153,11 +177,6 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['urgency'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) === 0;
@@ -178,5 +197,9 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
    }
 }

@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -42,13 +40,51 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= Html::textarea([
+         'name'             => 'default_values',
+         'id'               => 'default_values',
+         'value'            => Html::entities_deep($this->getValueForDesign()),
+         'cols'             => '50',
+         'display'          => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public static function getName() {
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
    public function displayField($canEdit = true) {
-      global $CFG_GLPI;
-
       if ($canEdit) {
          $value = $this->sanitizeValue($this->value);
          $initialValue = [];
@@ -59,7 +95,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             ];
          }
          $initialValue = json_encode($initialValue);
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
@@ -169,7 +205,6 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    protected function sanitizeValue($value) {
       $unknownUsers = [];
       $knownUsers = [];
-      $idToCheck = [];
       foreach ($value as $item) {
          $item = trim($item);
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
@@ -203,24 +238,8 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 1,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 0,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -250,7 +269,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $this->value = [];
          return true;
@@ -304,5 +323,9 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return false;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-user" aria-hidden="true"></i>';
    }
 }

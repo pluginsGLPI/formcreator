@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -33,14 +31,14 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.8.6');
+define('PLUGIN_FORMCREATOR_VERSION', '2.9.0');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.8');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.9');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.3.0');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.4');
 // Maximum GLPI version, exclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.5');
 
@@ -83,7 +81,23 @@ function plugin_version_formcreator() {
  * @return boolean
  */
 function plugin_formcreator_check_prerequisites() {
-   return true;
+   $prerequisitesSuccess = true;
+
+   if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')
+       || PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE && version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MAX_VERSION, 'ge')) {
+      echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . " and GLPI < " . PLUGIN_FORMCREATOR_GLPI_MAX_VERSION . "<br>";
+      $prerequisitesSuccess = false;
+   }
+
+   $fi = new FilesystemIterator(__DIR__ . '/data/', FilesystemIterator::SKIP_DOTS);
+   if (iterator_count($fi) < 2) {
+      // There is index.html at least in  the directory, then 2 files must estxist
+      // to validate the existence of data files
+      echo "You must run vendor/bin/robo build:fa-data in the directory of the plugin";
+      $prerequisitesSuccess = false;
+   }
+
+   return $prerequisitesSuccess;
 }
 
 /**
@@ -120,19 +134,23 @@ function plugin_init_formcreator() {
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_add_ticket'
+      Ticket::class => 'plugin_formcreator_hook_add_ticket'
    ];
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_update_ticket'
+      Ticket::class => 'plugin_formcreator_hook_update_ticket'
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_delete_ticket'
+      Ticket::class => 'plugin_formcreator_hook_delete_ticket'
    ];
    $PLUGIN_HOOKS['item_restore']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_restore_ticket'
+      Ticket::class => 'plugin_formcreator_hook_restore_ticket'
    ];
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+      Ticket::class => 'plugin_formcreator_hook_purge_ticket'
+   ];
+   $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
+      PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
+      PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
    ];
 
    $plugin = new Plugin();
@@ -199,9 +217,7 @@ function plugin_init_formcreator() {
          }
 
          if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/targetticket.form.php') !== false) {
-            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-               Html::requireJs('tinymce');
-            }
+            Html::requireJs('tinymce');
          }
 
          if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
@@ -229,9 +245,6 @@ function plugin_init_formcreator() {
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
             $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-         $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
 
          // Add specific JavaScript
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
@@ -281,6 +294,8 @@ function plugin_formcreator_decode($string) {
 
 /**
  * Tells if helpdesk replacement is enabled for the current user
+ * 
+ * @return boolean|integer
  */
 function plugin_formcreator_replaceHelpdesk() {
    if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -300,7 +315,6 @@ function plugin_formcreator_replaceHelpdesk() {
  * Generate unique id for form based on server name, glpi directory and basetime
  **/
 function plugin_formcreator_getUuid() {
-
    //encode uname -a, ex Linux localhost 2.4.21-0.13mdk #1 Fri Mar 14 15:08:06 EST 2003 i686
    $serverSubSha1 = substr(sha1(php_uname('a')), 0, 8);
    // encode script current dir, ex : /var/www/glpi_X

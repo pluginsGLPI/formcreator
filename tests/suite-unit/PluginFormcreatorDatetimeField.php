@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,90 +36,58 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    public function providerGetValue() {
       $dataset = [
          [
-            'fields'          => [
+            'question'           => $this->getQuestion([
                'fieldtype'       => 'datetime',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               '_parameters'     => [],
+            ]),
             'expectedValue'   => null,
             'expectedIsValid' => true
          ],
          [
-            'fields'          => [
+            'question'           => $this->getQuestion([
                'fieldtype'       => 'datetime',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '2018-08-16 08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               '_parameters'     => [],
+            ]),
             'expectedValue'   => '2018-08-16 08:12:34',
             'expectedIsValid' => true
          ],
          [
-            'fields'          => [
+            'question'           => $this->getQuestion([
                'fieldtype'       => 'datetime',
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               '_parameters'     => [],
+            ]),
             'expectedValue'   => null,
             'expectedIsValid' => false
          ],
          [
-            'fields'          => [
+            'question'           => $this->getQuestion([
                'fieldtype'       => 'datetime',
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => '2018-08-16 08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               '_parameters'     => [],
+            ]),
             'expectedValue'   => '2018-08-16 08:12:34',
             'expectedIsValid' => true
          ],
@@ -136,9 +103,9 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
-      $instance->deserializeValue($fields['default_values']);
+   public function testIsValid($question, $expectedValue, $expectedValidity) {
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($question->fields['default_values']);
 
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
@@ -149,21 +116,17 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $this->string($output)->isEqualTo('Date & time');
    }
 
-   public function providerparseAnswerValues() {
+   public function providerParseAnswerValues() {
       return [
          [
-            'id' => '1',
-            'input' => [
-               'formcreator_field_1' => ''
-            ],
+            'question' => $this->getQuestion(),
+            'value' => '',
             'expected' => true,
             'expectedValue' => ' ',
          ],
          [
-            'id' => '1',
-            'input' => [
-               'formcreator_field_1' => '2018-12-25 23:00:00',
-            ],
+            'question' => $this->getQuestion(),
+            'value' => '2018-12-25 23:00:00',
             'expected' => true,
             'expectedValue' => '2018-12-25 23:00',
          ],
@@ -171,19 +134,13 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    }
 
    /**
-    * Undocumented function
-    *
-    * @dataProvider providerparseAnswerValues
-    *
-    * @param [type] $id
-    * @param [type] $input
-    * @param [type] $expected
-    * @param [type] $expectedValue
-    * @return void
+    * @dataProvider providerParseAnswerValues
     */
-   public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
-      $instance = $this->newTestedInstance(['id' => $id]);
-      $output = $instance->parseAnswerValues($input);
+   public function testParseAnswerValues($question, $value, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_' . $question->getID() => $value
+      ]);
       $this->boolean($output)->isEqualTo($expected);
 
       $outputValue = $instance->getValueForTargetText(false);
@@ -206,15 +163,16 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
 
    public function testSerializeValue() {
       $value = $expected = '2019-01-01 12:00:00';
-      $instance = $this->newTestedInstance(['id' => 1]);
-      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $question = $this->getQuestion();
+      $instance = $this->newTestedInstance($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testGetValueForDesign() {
       $value = $expected = '2019-01-01 12:00:00';
-      $instance = new \PluginFormcreatorDatetimeField([]);
+      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
@@ -244,8 +202,9 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
     * @dataProvider providerEquals
     */
    public function testEquals($value, $answer, $expected) {
-      $instance = new \PluginFormcreatorDatetimeField(['id' => '1']);
-      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorDatetimeField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
 
@@ -273,25 +232,32 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
     * @dataProvider providerNotEquals
     */
    public function testNotEquals($value, $answer, $expected) {
-      $instance = new \PluginFormcreatorDatetimeField(['id' => '1'], $answer);
-      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorDatetimeField($question, $answer);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDatetimeField([]);
+      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
    }
 }

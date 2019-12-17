@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -46,5 +45,74 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
 
       $this->array($output)->HasKey('uuid');
       $this->string($output['uuid']);
+   }
+
+   public function testExport() {
+      $user = new \User;
+      $user->getFromDBbyName('glpi');
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users' => [
+            $user->getID(),
+         ],
+      ]);
+
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      $instance->getFromDBByCrit([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => \User::class,
+         'items_id' => $user->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'itemtype',
+      ];
+      $extraFields = [
+         '_item',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+      $this->array($output)->isEqualTo([
+         'itemtype' => \User::class,
+         '_item' => $user->fields['name'],
+         'uuid'  => $instance->fields['uuid'],
+      ]);
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+      $this->array($output)->isEqualTo([
+         'itemtype' => \User::class,
+         '_item' => $user->fields['name'],
+         'id'  => $instance->fields['id'],
+      ]);
+   }
+
+   public function testImport() {
+      $linker = new \PluginFormcreatorLinker();
+      $input = [
+         'itemtype' => \User::class,
+         '_item' => 'normal',
+         'uuid' => plugin_formcreator_getUuid(),
+      ];
+      $form = $this->getForm();
+      $formId = $form->getID();
+      $formValidatorId = \PluginFormcreatorForm_Validator::import($linker, $input, $formId);
+      $validId = \PluginFormcreatorForm_Validator::isNewId($formValidatorId);
+      $this->boolean($validId)->isFalse();
+
    }
 }

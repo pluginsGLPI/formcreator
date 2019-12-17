@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -35,24 +33,40 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginFormcreatorExportableInterface
+abstract class PluginFormcreatorTargetBase extends CommonDBChild implements
+PluginFormcreatorExportableInterface,
+PluginFormcreatorTargetInterface
 {
+   static public $itemtype = PluginFormcreatorForm::class;
+   static public $items_id = 'plugin_formcreator_forms_id';
 
+   /** @var array $requesters requester actors of the target */
    protected $requesters;
 
+   /** @var array $observers watcher actors of the target */
    protected $observers;
 
+   /** @var array $assigned assigned actors of the target */
    protected $assigned;
 
+   /** @var array $assignedSuppliers assigned suppliers actors of the target */
    protected $assignedSuppliers;
 
+   /** @var array $requesterGroups requester groups of the target */
    protected $requesterGroups;
 
+   /** @var array $observerGroups watcher groups of the target */
    protected $observerGroups;
 
+   /** @var array $assignedGroups assigned groups of the target */
    protected $assignedGroups;
 
    protected $attachedDocuments = [];
+
+   protected $form = null;
+
+   /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
+   protected $skipCreateActors = false;
 
    abstract public function export($remove_uuid = false);
 
@@ -97,109 +111,137 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
     */
    abstract protected function getTargetItemtypeName();
 
+   /**
+    * get an instance of the itemtype storing the actors if the target
+    *
+    * @return PluginFormcreatorTarget_Actor
+    */
    abstract public function getItem_Actor();
 
+   /**
+    * Get the query criterias to query the ITIL categories
+    * for the target
+    *
+    * @return array
+    */
    abstract protected function getCategoryFilter();
 
-   static function getEnumDestinationEntity() {
-      return [
-         'current'   => __("Current active entity", 'formcreator'),
-         'requester' => __("Default requester user's entity", 'formcreator'),
-         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'form'      => __('The form entity', 'formcreator'),
-         'validator' => __('Default entity of the validator', 'formcreator'),
-         'specific'  => __('Specific entity', 'formcreator'),
-         'user'      => __('Default entity of a user type question answer', 'formcreator'),
-         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
-      ];
-   }
-
-   static function getEnumTagType() {
-      return [
-         'none'                   => __("None"),
-         'questions'              => __('Tags from questions', 'formcreator'),
-         'specifics'              => __('Specific tags', 'formcreator'),
-         'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-         'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
-      ];
-   }
-
-   static function getEnumDueDateRule() {
-      return [
-         'answer' => __('equals to the answer to the question', 'formcreator'),
-         'ticket' => __('calculated from the ticket creation date', 'formcreator'),
-         'calcul' => __('calculated from the answer to the question', 'formcreator'),
-      ];
-   }
-
-   static function getEnumUrgencyRule() {
-      return [
-         'none'      => __('Urgency from template or Medium', 'formcreator'),
-         'specific'  => __('Specific urgency', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
-   static function getEnumCategoryRule() {
-      return [
-         'none'      => __('Category from template or none', 'formcreator'),
-         'specific'  => __('Specific category', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
-   static function getEnumLocationRule() {
-      return [
-         'none'      => __('Location from template or none', 'formcreator'),
-         'specific'  => __('Specific location', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
    /**
-    * Check if current user have the right to create and modify requests
+    * get fields containing tags for target generation
+    * the tags are replaced when target is  generated
+    * with label of questions and answers to questions
     *
-    * @return boolean True if he can create and modify requests
+    * @return array field names used as templates
     */
-   public static function canCreate() {
-      return true;
+   abstract protected function getTaggableFields();
+
+   const DUE_DATE_RULE_NONE = 1;
+   const DUE_DATE_RULE_ANSWER = 2;
+   const DUE_DATE_RULE_TICKET = 3;
+   const DUE_DATE_RULE_CALC = 4;
+
+   const DUE_DATE_PERIOD_MINUTE = 1;
+   const DUE_DATE_PERIOD_HOUR = 2;
+   const DUE_DATE_PERIOD_DAY = 3;
+   const DUE_DATE_PERIOD_MONTH = 4;
+
+   const URGENCY_RULE_NONE = 1;
+   const URGENCY_RULE_SPECIFIC = 2;
+   const URGENCY_RULE_ANSWER = 3;
+
+   const DESTINATION_ENTITY_CURRENT = 1;
+   const DESTINATION_ENTITY_REQUESTER = 2;
+   const DESTINATION_ENTITY_REQUESTER_DYN_FIRST = 3;
+   const DESTINATION_ENTITY_REQUESTER_DYN_LAST = 4;
+   const DESTINATION_ENTITY_FORM = 5;
+   const DESTINATION_ENTITY_VALIDATOR = 6;
+   const DESTINATION_ENTITY_SPECIFIC = 7;
+   const DESTINATION_ENTITY_USER = 8;
+   const DESTINATION_ENTITY_ENTITY = 9;
+
+   const TAG_TYPE_NONE = 1;
+   const TAG_TYPE_QUESTIONS = 2;
+   const TAG_TYPE_SPECIFICS = 3;
+   const TAG_TYPE_QUESTIONS_AND_SPECIFIC = 4;
+   const TAG_TYPE_QUESTIONS_OR_SPECIFIC = 5;
+
+   const CATEGORY_RULE_NONE = 1;
+   const CATEGORY_RULE_SPECIFIC = 2;
+   const CATEGORY_RULE_ANSWER = 3;
+
+   const LOCATION_RULE_NONE = 1;
+   const LOCATION_RULE_SPECIFIC = 2;
+   const LOCATION_RULE_ANSWER = 3;
+
+   public static function getEnumDestinationEntity() {
+      return [
+         self::DESTINATION_ENTITY_CURRENT   => __('Current active entity', 'formcreator'),
+         self::DESTINATION_ENTITY_REQUESTER => __("Default requester user's entity", 'formcreator'),
+         self::DESTINATION_ENTITY_REQUESTER_DYN_FIRST => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
+         self::DESTINATION_ENTITY_REQUESTER_DYN_LAST => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
+         self::DESTINATION_ENTITY_FORM      => __('The form entity', 'formcreator'),
+         self::DESTINATION_ENTITY_VALIDATOR => __('Default entity of the validator', 'formcreator'),
+         self::DESTINATION_ENTITY_SPECIFIC  => __('Specific entity', 'formcreator'),
+         self::DESTINATION_ENTITY_USER      => __('Default entity of a user type question answer', 'formcreator'),
+         self::DESTINATION_ENTITY_ENTITY    => __('From a GLPI object > Entity type question answer', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumTagType() {
+      return [
+         self::TAG_TYPE_NONE                   => __('None'),
+         self::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
+         self::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
+         self::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
+         self::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
+      ];
+   }
+
+   public static function getEnumDueDateRule() {
+      return [
+         self::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
+         self::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
+         self::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumUrgencyRule() {
+      return [
+         self::URGENCY_RULE_NONE      => __('Urgency from template or Medium', 'formcreator'),
+         self::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
+         self::URGENCY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumCategoryRule() {
+      return [
+         self::CATEGORY_RULE_NONE      => __('Category from template or none', 'formcreator'),
+         self::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
+         self::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumLocationRule() {
+      return [
+         self::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
+         self::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
+         self::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+      ];
    }
 
    /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
-   public static function canView() {
-      return true;
-   }
-
-   /**
-    *
+    * get the associated form
     */
    public function getForm() {
-      $targetItemId = $this->getID();
-      $targetItemtype = static::getType();
-
-      $target = new PluginFormcreatorTarget();
-      $request = [
-         'AND' => [
-            'itemtype' => $targetItemtype,
-            'items_id' => $targetItemId
-         ]
-      ];
-      if (!$target->getFromDBByCrit($request)) {
-         return null;
-      } else {
+      if ($this->form === null) {
          $form = new PluginFormcreatorForm();
-         if (!$form->getFromDB($target->getField('plugin_formcreator_forms_id'))) {
+         if (!$form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()])) {
             return null;
          }
-         return $form;
+         $this->form = $form;
       }
 
-      return null;
+      return $this->form;
    }
 
    /**
@@ -217,32 +259,50 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       $entityFk = Entity::getForeignKeyField();
       switch ($this->fields['destination_entity']) {
          // Requester's entity
-         case 'current' :
+         case self::DESTINATION_ENTITY_CURRENT :
             $entityId = $formanswer->fields[$entityFk];
             break;
 
-         case 'requester' :
+         case self::DESTINATION_ENTITY_REQUESTER :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
             $entityId = $userObj->fields[$entityFk];
             break;
 
          // Requester's first dynamic entity
-         case 'requester_dynamic_first' :
-            $order_entities = "`glpi_profiles`.`name` ASC";
-         case 'requester_dynamic_last' :
+         case self::DESTINATION_ENTITY_REQUESTER_DYN_FIRST :
+            $order_entities = "glpi_profiles.name ASC";
+         case self::DESTINATION_ENTITY_REQUESTER_DYN_LAST :
             if (!isset($order_entities)) {
-               $order_entities = "`glpi_profiles`.`name` DESC";
+               $order_entities = "glpi_profiles.name DESC";
             }
-            $query_entities = "SELECT `glpi_profiles_users`.`entities_id`
-                      FROM `glpi_profiles_users`
-                      LEFT JOIN `glpi_profiles`
-                        ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
-                      WHERE `glpi_profiles_users`.`users_id` = $requesters_id
-                     ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
-            $res_entities = $DB->query($query_entities);
+            $profileUserTable = Profile_User::getTable();
+            $profileTable = Profile::getTable();
+            $profileFk  = Profile::getForeignKeyField();
+            $res_entities = $DB->request([
+               'SELECT' => [
+                  $profileUserTable => [Entity::getForeignKeyField()]
+               ],
+               'FROM' => $profileUserTable,
+               'LEFT JOIN' => [
+                  $profileTable => [
+                     'FKEY' => [
+                        $profileTable => 'id',
+                        $profileUserTable => $profileFk
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  "$profileUserTable.users_id" => $requesters_id
+               ],
+               'ORDER' => [
+                  "$profileUserTable.is_dynamic DSC",
+                  $order_entities
+               ]
+            ]);
+
             $data_entities = [];
-            while ($entity = $DB->fetch_array($res_entities)) {
+            foreach ($res_entities as $entity) {
                $data_entities[] = $entity;
             }
             $first_entity = array_shift($data_entities);
@@ -250,24 +310,24 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             break;
 
          // Specific entity
-         case 'specific' :
+         case self::DESTINATION_ENTITY_SPECIFIC :
             $entityId = $this->fields['destination_entity_value'];
             break;
 
          // The form entity
-         case 'form' :
+         case self::DESTINATION_ENTITY_FORM :
             $entityId = $formanswer->getForm()->fields[$entityFk];
             break;
 
          // The validator entity
-         case 'validator' :
+         case self::DESTINATION_ENTITY_VALIDATOR :
             $userObj = new User();
             $userObj->getFromDB($formanswer->fields['users_id_validator']);
             $entityId = $userObj->fields[$entityFk];
             break;
 
          // Default entity of a user from the answer of a user's type question
-         case 'user' :
+         case self::DESTINATION_ENTITY_USER :
             $user = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -286,7 +346,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             break;
 
          // Entity from the answer of an entity's type question
-         case 'entity' :
+         case self::DESTINATION_ENTITY_ENTITY :
             $entity = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -307,7 +367,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       global $DB;
 
       switch ($this->fields['category_rule']) {
-         case 'answer':
+         case self::CATEGORY_RULE_ANSWER:
             $category = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -318,7 +378,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             ])->next();
             $category = $category['answer'];
             break;
-         case 'specific':
+         case self::CATEGORY_RULE_SPECIFIC:
             $category = $this->fields['category_question'];
             break;
          default:
@@ -326,6 +386,33 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       }
       if ($category !== null) {
          $data['itilcategories_id'] = $category;
+      }
+
+      return $data;
+   }
+
+   protected function setTargetUrgency($data, $formanswer) {
+      global $DB;
+
+      $urgency = null;
+      switch ($this->fields['urgency_rule']) {
+         case PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER:
+            $urgency = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->getID(),
+                  'plugin_formcreator_questions_id'   => $this->fields['urgency_question']
+               ]
+            ])->next();
+            $urgency = $urgency['answer'];
+            break;
+         case PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC:
+            $urgency = $this->fields['urgency_question'];
+            break;
+      }
+      if (!is_null($urgency)) {
+         $data['urgency'] = $urgency;
       }
 
       return $data;
@@ -348,28 +435,28 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       ]);
       foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
+         if ($actor['actor_type'] == PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR && !$form->fields['validation_required']) {
             continue;
          }
 
          switch ($actor['actor_type']) {
-            case 'creator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
                $userIds = [$formanswer->fields['requester_id']];
                $notify  = $actor['use_notification'];
                break;
-            case 'validator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                $userIds = [$_SESSION['glpiID']];
                $notify  = $actor['use_notification'];
                break;
-            case 'person' :
-            case 'group' :
-            case 'supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
                $userIds = [$actor['actor_value']];
                $notify  = $actor['use_notification'];
                break;
-            case 'question_person' :
-            case 'question_group' :
-            case 'question_supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
@@ -383,11 +470,11 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                if ($answer->isNewItem()) {
                   continue 2;
                } else {
-                  $userIds = [$answer->getField('answer')];
+                  $userIds = [$answer->fields['answer']];
                }
                $notify  = $actor['use_notification'];
                break;
-            case 'question_actors':
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
@@ -408,25 +495,25 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          }
 
          switch ($actor['actor_type']) {
-            case 'creator' :
-            case 'validator' :
-            case 'person' :
-            case 'question_person' :
-            case 'question_actors':
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
                foreach ($userIds as $userIdOrEmail) {
                   $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
                }
                break;
-            case 'group' :
-            case 'question_group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                foreach ($userIds as $groupId) {
                   $this->addGroupActor($actor['actor_role'], $groupId);
                }
                break;
-            case 'supplier' :
-            case 'question_supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
                foreach ($userIds as $userId) {
-                  $this->addActor('supplier', $userId, $notify);
+                  $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_SUPPLIER, $userId, $notify);
                }
                break;
          }
@@ -457,19 +544,19 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       $actorType = null;
       $actorTypeNotif = null;
       switch ($role) {
-         case 'requester':
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
             $actorType = &$this->requesters['_users_id_requester'];
             $actorTypeNotif = &$this->requesters['_users_id_requester_notif'];
             break;
-         case 'observer':
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER:
             $actorType = &$this->observers['_users_id_observer'];
             $actorTypeNotif = &$this->observers['_users_id_observer_notif'];
             break;
-         case 'assigned' :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED :
             $actorType = &$this->assigned['_users_id_assign'];
             $actorTypeNotif = &$this->assigned['_users_id_assign_notif'];
             break;
-         case 'supplier' :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_SUPPLIER :
             $actorType = &$this->assignedSuppliers['_suppliers_id_assign'];
             $actorTypeNotif = &$this->assignedSuppliers['_suppliers_id_assign_notif'];
             break;
@@ -503,13 +590,13 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    protected function addGroupActor($role, $group) {
       $actorType = null;
       switch ($role) {
-         case 'requester':
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
             $actorType = &$this->requesterGroups['_groups_id_requester'];
             break;
-         case 'observer' :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER :
             $actorType = &$this->observerGroups['_groups_id_observer'];
             break;
-         case 'assigned' :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED :
             $actorType = &$this->assignedGroups['_groups_id_assign'];
             break;
          default:
@@ -560,8 +647,6 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    }
 
    protected function showDestinationEntitySetings($rand) {
-      global $DB;
-
       echo '<tr class="line1">';
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
@@ -570,39 +655,12 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          self::getEnumDestinationEntity(),
          [
             'value'     => $this->fields['destination_entity'],
-            'on_change' => 'change_entity()',
+            'on_change' => "plugin_formcreator_change_entity($rand)",
             'rand'      => $rand,
          ]
       );
 
-      $script = <<<EOS
-         function change_entity() {
-            $('#entity_specific_title').hide();
-            $('#entity_user_title').hide();
-            $('#entity_entity_title').hide();
-            $('#entity_specific_value').hide();
-            $('#entity_user_value').hide();
-            $('#entity_entity_value').hide();
-
-            switch($('#dropdown_destination_entity$rand').val()) {
-               case 'specific' :
-                  $('#entity_specific_title').show();
-                  $('#entity_specific_value').show();
-                  break;
-               case 'user' :
-                  $('#entity_user_title').show();
-                  $('#entity_user_value').show();
-                  break;
-               case 'entity' :
-                  $('#entity_entity_title').show();
-                  $('#entity_entity_value').show();
-                  break;
-            }
-         }
-         change_entity();
-EOS;
-
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_change_entity($rand)");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
@@ -619,51 +677,37 @@ EOS;
       echo '</div>';
 
       echo '<div id="entity_user_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'User'";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, [
-         'value' => $this->fields['destination_entity_value'],
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => User::class,
+         ],
+         '_destination_entity_value_user',
+         [
+            'value' => $this->fields['destination_entity_value']
+         ]
+      );
       echo '</div>';
 
       echo '<div id="entity_entity_value" style="display: none">';
-      // select all entity questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'Entity'";
-      $result2 = $DB->query($query2);
-      $entities_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $entities_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, [
-         'value' => $this->fields['destination_entity_value'],
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => Entity::class,
+         ],
+         '_destination_entity_value_entity',
+         [
+            'value' => $this->fields['destination_entity_value']
+         ]
+      );
       echo '</div>';
       echo '</td>';
       echo '</tr>';
    }
 
-   protected function showTemplateSettins($rand) {
+   protected function showTemplateSettings($rand) {
       echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
       echo '<td width="25%">';
       Dropdown::show('TicketTemplate', [
@@ -673,9 +717,7 @@ EOS;
       echo '</td>';
    }
 
-   protected  function showDueDateSettings($rand) {
-      global $DB;
-
+   protected  function showDueDateSettings(PluginFormcreatorForm $form, $rand) {
       echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
@@ -683,50 +725,43 @@ EOS;
       Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
          [
             'value'     => $this->fields['due_date_rule'],
-            'on_change' => 'formcreatorChangeDueDate(this.value)',
+            'on_change' => 'plugin_formcreator_formcreatorChangeDueDate(this.value)',
             'display_emptychoice' => true
          ]
       );
 
-      // for each section ...
-      $questions_list = [Dropdown::EMPTY_VALUE];
-      $query = "SELECT s.id, s.name
-                FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . $this->getID() . "
-                ORDER BY s.order";
-      $result = $DB->query($query);
-      while ($section = $DB->fetch_array($result)) {
-         // select all date and datetime questions
-         $query2 = "SELECT q.id, q.name
-         FROM glpi_plugin_formcreator_questions q
-         INNER JOIN glpi_plugin_formcreator_sections s
-         ON s.id = q.plugin_formcreator_sections_id
-         WHERE s.id = {$section['id']}
-         AND q.fieldtype IN ('date', 'datetime')";
-         $result2 = $DB->query($query2);
-         $section_questions = [];
-         while ($question = $DB->fetch_array($result2)) {
-            $section_questions[$question['id']] = $question['name'];
-         }
-         if (count($section_questions) > 0) {
-            $questions_list[$section['name']] = $section_questions;
-         }
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $questions = (new PluginFormcreatorQuestion)->getQuestionsFromForm(
+         $this->getForm()->getID(),
+         [
+            "$questionTable.fieldtype" => ['date', 'datetime'],
+         ]
+      );
+      $questions_list = [];
+      foreach ($questions as $question) {
+         $questions_list[$question->getID()] = $question->fields['name'];
       }
       // List questions
-      if ($this->fields['due_date_rule'] != 'answer'
+      if ($this->fields['due_date_rule'] != PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
             && $this->fields['due_date_rule'] != 'calcul') {
          echo '<div id="due_date_questions" style="display:none">';
       } else {
          echo '<div id="due_date_questions">';
       }
-      Dropdown::showFromArray('due_date_question', $questions_list, [
-         'value' => $this->fields['due_date_question']
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['date', 'datetime'],
+         ],
+         'due_date_question',
+         [
+            'value' => $this->fields['due_date_question']
+         ]
+      );
       echo '</div>';
 
-      if ($this->fields['due_date_rule'] != 'ticket'
-            && $this->fields['due_date_rule'] != 'calcul') {
+      if ($this->fields['due_date_rule'] != '2'
+            && $this->fields['due_date_rule'] != '3') {
          echo '<div id="due_date_time" style="display:none">';
       } else {
          echo '<div id="due_date_time">';
@@ -737,10 +772,10 @@ EOS;
          'max'   => 30
       ]);
       Dropdown::showFromArray('due_date_period', [
-         'minute' => _n('Minute', 'Minutes', 2),
-         'hour'   => _n('Hour', 'Hours', 2),
-         'day'    => _n('Day', 'Days', 2),
-         'month'  => __('Month'),
+         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_MINUTE => _n('Minute', 'Minutes', 2),
+         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_HOUR   => _n('Hour', 'Hours', 2),
+         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_DAY    => _n('Day', 'Days', 2),
+         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_MONTH  => _n('Month', 'Months', 2),
       ], [
          'value' => $this->fields['due_date_period']
       ]);
@@ -748,41 +783,20 @@ EOS;
       echo '</td>';
    }
 
-   protected function showCategorySettings($rand) {
-      global $DB;
-
+   protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
-            'category_rule',
-            static::getEnumCategoryRule(),
-            [
-               'value'     => $this->fields['category_rule'],
-               'on_change' => 'change_category()',
-               'rand'      => $rand,
-            ]);
-      $script = <<<EOS
-         function change_category() {
-            $('#category_specific_title').hide();
-            $('#category_specific_value').hide();
-            $('#category_question_title').hide();
-            $('#category_question_value').hide();
-
-            switch($('#dropdown_category_rule$rand').val()) {
-               case 'answer' :
-                  $('#category_question_title').show();
-                  $('#category_question_value').show();
-                  break;
-               case 'specific' :
-                  $('#category_specific_title').show();
-                  $('#category_specific_value').show();
-                  break;
-            }
-         }
-         change_category();
-EOS;
-      echo Html::scriptBlock($script);
+         'category_rule',
+         static::getEnumCategoryRule(),
+         [
+            'value'     => $this->fields['category_rule'],
+            'on_change' => "plugin_formcreator_changeCategory($rand)",
+            'rand'      => $rand,
+         ]
+      );
+      echo Html::scriptBlock("plugin_formcreator_changeCategory($rand);");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
@@ -790,26 +804,16 @@ EOS;
       echo '</td>';
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT `q`.`id`, `q`.`name`, `q`.`values`
-                FROM `glpi_plugin_formcreator_questions` `q`
-                INNER JOIN `glpi_plugin_formcreator_sections` `s`
-                  ON `s`.`id` = `q`.`plugin_formcreator_sections_id`
-                INNER JOIN `glpi_plugin_formcreator_targets` `t`
-                  ON `s`.`plugin_formcreator_forms_id` = `t`.`plugin_formcreator_forms_id`
-                WHERE `t`.`items_id` = ".$this->getID()."
-                AND `q`.`fieldtype` = 'dropdown'";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
-         if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'ITILCategory') {
-            $users_questions[$question['id']] = $question['name'];
-         }
-      }
-      Dropdown::showFromArray('_category_question', $users_questions, [
-         'value' => $this->fields['category_question'],
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['dropdown'],
+         ],
+         '_category_question',
+         [
+            $this->fields['category_question']
+         ]
+      );
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
       ITILCategory::dropdown([
@@ -822,38 +826,16 @@ EOS;
       echo '</tr>';
    }
 
-   protected function showUrgencySettings($rand) {
-      global $DB;
-
+   protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
       Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), [
          'value'                 => $this->fields['urgency_rule'],
-         'on_change'             => 'change_urgency()',
+         'on_change'             => "plugin_formcreator_changeUrgency($rand)",
          'rand'                  => $rand
       ]);
-      $script = <<<EOS
-         function change_urgency() {
-            $('#urgency_specific_title').hide();
-            $('#urgency_specific_value').hide();
-            $('#urgency_question_title').hide();
-            $('#urgency_question_value').hide();
-
-            switch($('#dropdown_urgency_rule$rand').val()) {
-               case 'answer' :
-                  $('#urgency_question_title').show();
-                  $('#urgency_question_value').show();
-                  break;
-               case 'specific':
-                  $('#urgency_specific_title').show();
-                  $('#urgency_specific_value').show();
-                  break;
-            }
-         }
-         change_urgency();
-EOS;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_changeUrgency($rand);");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="urgency_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
@@ -868,29 +850,22 @@ EOS;
       ]);
       echo '</div>';
       echo '<div id="urgency_question_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'urgency'";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_urgency_question', $users_questions, [
-         'value' => $this->fields['urgency_question'],
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['urgency'],
+         ],
+         '_urgency_question',
+         [
+            'value' => $this->fields['urgency_question']
+         ]
+      );
       echo '</div>';
       echo '</td>';
       echo '</tr>';
    }
 
-   protected function showPluginTagsSettings($rand) {
+   protected function showPluginTagsSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       $plugin = new Plugin();
@@ -906,7 +881,11 @@ EOS;
             ]
          );
 
-         $script = <<<EOS
+         $tagTypeQuestions = self::TAG_TYPE_QUESTIONS;
+         $tagTypeSpecifics = self::TAG_TYPE_SPECIFICS;
+         $tagTypeQuestionAndSpecific = self::TAG_TYPE_QUESTIONS_AND_SPECIFIC;
+         $tagTypeQuestinOrSpecific = self::TAG_TYPE_QUESTIONS_OR_SPECIFIC;
+         $script = <<<SCRIPT
             function change_tag_type() {
                $('#tag_question_title').hide();
                $('#tag_specific_title').hide();
@@ -914,16 +893,16 @@ EOS;
                $('#tag_specific_value').hide();
 
                switch($('#dropdown_tag_type$rand').val()) {
-                  case 'questions' :
+                  case '$tagTypeQuestions' :
                      $('#tag_question_title').show();
                      $('#tag_question_value').show();
                      break;
-                  case 'specifics' :
+                  case '$tagTypeSpecifics' :
                      $('#tag_specific_title').show();
                      $('#tag_specific_value').show();
                      break;
-                  case 'questions_and_specific' :
-                  case 'questions_or_specific' :
+                  case '$tagTypeQuestionAndSpecific' :
+                  case '$tagTypeQuestinOrSpecific' :
                      $('#tag_question_title').show();
                      $('#tag_specific_title').show();
                      $('#tag_question_value').show();
@@ -932,7 +911,7 @@ EOS;
                }
             }
             change_tag_type();
-EOS;
+SCRIPT;
 
          echo Html::scriptBlock($script);
          echo '</td>';
@@ -944,23 +923,17 @@ EOS;
 
          // Tag questions
          echo '<div id="tag_question_value" style="display: none">';
-         $query2 = "SELECT q.id, q.name, q.values
-                   FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s
-                     ON s.id = q.plugin_formcreator_sections_id
-                   INNER JOIN glpi_plugin_formcreator_targets t
-                     ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                   WHERE t.items_id = ".$this->getID()."
-                   AND q.fieldtype = 'tag'";
-         $result2 = $DB->query($query2);
-         $entities_questions = [];
-         while ($question = $DB->fetch_array($result2)) {
-            $entities_questions[$question['id']] = $question['name'];
-         }
-         Dropdown::showFromArray('_tag_questions', $entities_questions, [
-            'values'   => explode(',', $this->fields['tag_questions']),
-            'multiple' => true,
-         ]);
+         PluginFormcreatorQuestion::dropdownForForm(
+            $this->getForm()->getID(),
+            [
+               'fieldtype' => ['tag'],
+            ],
+            '_tag_questions',
+            [
+               'values' => explode(',', $this->fields['tag_questions']),
+               'multiple' => true,
+            ]
+         );
          echo '</div>';
 
          // Specific tags
@@ -996,64 +969,527 @@ EOS;
       }
    }
 
-   /**
-    * Parse target content to replace TAGS like ##FULLFORM## by the values
-    *
-    * @param  string $content                            String to be parsed
-    * @param  PluginFormcreatorFormAnswer $formanswer   Formanswer object where answers are stored
-    * @param  boolean $richText                          Disable rich text mode for field rendering
-    * @return string                                     Parsed string with tags replaced by form values
-    */
-   protected function parseTags($content, PluginFormcreatorFormAnswer $formanswer, $richText = false) {
+   protected function showActorsSettings() {
       global $DB;
 
-      // retrieve answers
-      $answers_values = $formanswer->getAnswers($formanswer->getID());
-
-      // Retrieve questions
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $questions = (new PluginFormcreatorQuestion())
-         ->getQuestionsFromForm($formanswer->getField($formFk));
-
-      $fields = [];
-
-      // Prepare all fields of the form
-      foreach ($questions as $questionId => $question) {
-         $answer = $answers_values['formcreator_field_' . $questionId];
-         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
-            $question->getField('fieldtype'),
-            $question
-         );
-         $fields[$questionId]->deserializeValue($answer);
+      // Get available questions for actors lists
+      $itemActor = $this->getItem_Actor();
+      $itemActorTable = $itemActor::getTable();
+      $actors = [
+         PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER => [],
+         PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER => [],
+         PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED => [],
+      ];
+      $result = $DB->request([
+         'SELECT' => ['id', 'actor_role', 'actor_type', 'actor_value', 'use_notification'],
+         'FROM' => $itemActorTable,
+         'WHERE' => [
+            self::getForeignKeyField() => [$this->getID()]
+         ]
+      ]);
+      foreach ($result as $actor) {
+         $actors[$actor['actor_role']][$actor['id']] = [
+            'actor_type'       => $actor['actor_type'],
+            'actor_value'      => $actor['actor_value'],
+            'use_notification' => $actor['use_notification'],
+         ];
       }
 
-      foreach ($questions as $questionId => $question) {
-         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {
-            $name = '';
-            $value = '';
-         } else {
-            $name  = $question->getField('name');
-            $value = $fields[$questionId]->getValueForTargetText($richText);
-         }
+      $img_user     = '<img src="../../../pics/users.png" alt="' . __('User') . '" title="' . __('User') . '" width="20" />';
+      $img_group    = '<img src="../../../pics/groupes.png" alt="' . __('Group') . '" title="' . __('Group') . '" width="20" />';
+      $img_supplier = '<img src="../../../pics/supplier.png" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20" />';
+      $img_mail     = '<img src="../pics/email.png" alt="' . __('Yes') . '" title="' . __('Email followup') . ' ' . __('Yes') . '" />';
+      $img_nomail   = '<img src="../pics/email-no.png" alt="' . __('No') . '" title="' . __('Email followup') . ' ' . __('No') . '" />';
 
-         $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
-         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
-         foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
-            $this->addAttachedDocument($documentId);
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th colspan="3">' . __('Actors', 'formcreator') . '</th></tr>';
+
+      echo '<tr>';
+
+      // Requester header
+      echo '<th width="33%">';
+      echo _n('Requester', 'Requesters', 1) . ' &nbsp;';
+      echo '<img title="Ajouter" alt="Ajouter" onclick="plugin_formcreator_displayRequesterForm()" class="pointer"
+               id="btn_add_requester" src="../../../pics/add_dropdown.png">';
+      echo '<img title="Annuler" alt="Annuler" onclick="plugin_formcreator_hideRequesterForm()" class="pointer"
+               id="btn_cancel_requester" src="../../../pics/delete.png" style="display:none">';
+      echo '</th>';
+
+      // Watcher header
+      echo '<th width="34%">';
+      echo _n('Watcher', 'Watchers', 1) . ' &nbsp;';
+      echo '<img title="Ajouter" alt="Ajouter" onclick="plugin_formcreator_displayWatcherForm()" class="pointer"
+               id="btn_add_watcher" src="../../../pics/add_dropdown.png">';
+      echo '<img title="Annuler" alt="Annuler" onclick="plugin_formcreator_hideWatcherForm()" class="pointer"
+               id="btn_cancel_watcher" src="../../../pics/delete.png" style="display:none">';
+      echo '</th>';
+
+      // Assigned header
+      echo '<th width="33%">';
+      echo __('Assigned to') . ' &nbsp;';
+      echo '<img title="Ajouter" alt="Ajouter" onclick="plugin_formcreator_displayAssignedForm()" class="pointer"
+               id="btn_add_assigned" src="../../../pics/add_dropdown.png">';
+      echo '<img title="Annuler" alt="Annuler" onclick="plugin_formcreator_hideAssignedForm()" class="pointer"
+               id="btn_cancel_assigned" src="../../../pics/delete.png" style="display:none">';
+      echo '</th>';
+
+      echo '</tr>';
+
+      echo '<tr>';
+
+      // Requester
+      echo '<td valign="top">';
+
+      // => Add requester form
+      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="'
+           . static::getFormURL() . '">';
+
+      $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
+      unset($dropdownItems['supplier']);
+      unset($dropdownItems['question_supplier']);
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems, [
+            'on_change'         => 'plugin_formcreator_ChangeActorRequester(this.value)'
+         ]
+      );
+
+      echo '<div id="block_requester_user" style="display:none">';
+      User::dropdown([
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
+         'right' => 'all',
+         'all'   => 0,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_requester_group" style="display:none">';
+      Group::dropdown([
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_requester_question_user" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'OR' => [
+               'AND' => [
+                  'fieldtype' => ['glpiselect'],
+                  'values' => User::class,
+               ],
+               [
+                  'fieldtype' => ['email'],
+               ]
+            ],
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_requester_question_group" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => Group::class,
+         ],
+         'actor_value_question_person',
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_requester_question_actors" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['actor'],
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div>';
+      echo __('Email followup');
+      Dropdown::showYesNo('use_notification', 1);
+      echo '</div>';
+
+      echo '<p align="center">';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="hidden" name="actor_role" value="' . PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER . '" />';
+      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
+      echo '</p>';
+
+      echo "<hr>";
+
+      Html::closeForm();
+
+      // => List of saved requesters
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER] as $id => $values) {
+         echo '<div>';
+         switch ($values['actor_type']) {
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
+               echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+               $user = new User();
+               $user->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+               $group = new Group();
+               $group->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
          }
-         if ($question->getField('fieldtype') === 'file') {
-            if (strpos($content, '##answer_' . $questionId . '##') !== false) {
-               if (!is_array($value)) {
-                  $value = [$value];
-               }
-            }
-         }
+         echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
+         echo self::getDeleteImage($id);
+         echo '</div>';
       }
 
-      return $content;
+      echo '</td>';
+
+      // Observer
+      echo '<td valign="top">';
+
+      // => Add observer form
+      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'
+           . static::getFormURL() . '">';
+
+      $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
+      unset($dropdownItems['supplier']);
+      unset($dropdownItems['question_supplier']);
+      Dropdown::showFromArray('actor_type',
+         $dropdownItems, ['on_change' => 'plugin_formcreator_ChangeActorWatcher(this.value)']
+      );
+
+      echo '<div id="block_watcher_user" style="display:none">';
+      User::dropdown([
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
+         'right' => 'all',
+         'all'   => 0,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_watcher_group" style="display:none">';
+      Group::dropdown([
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_watcher_question_user" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'OR' => [
+               'AND' => [
+                  'fieldtype' => ['glpiselect'],
+                  'values' => User::class,
+               ],
+               [
+                  'fieldtype' => ['email'],
+               ]
+            ],
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_watcher_question_group" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => Group::class,
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_watcher_question_actors" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['actor'],
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div>';
+      echo __('Email followup');
+      Dropdown::showYesNo('use_notification', 1);
+      echo '</div>';
+
+      echo '<p align="center">';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="hidden" name="actor_role" value="' . PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER . '" />';
+      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
+      echo '</p>';
+
+      echo "<hr>";
+
+      Html::closeForm();
+
+      // => List of saved observers
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER] as $id => $values) {
+         echo '<div>';
+         switch ($values['actor_type']) {
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
+               echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+               $user = new User();
+               $user->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+               $group = new Group();
+               $group->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+         }
+         echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
+         echo self::getDeleteImage($id);
+         echo '</div>';
+      }
+
+      echo '</td>';
+
+      // Assigned to
+      echo '<td valign="top">';
+
+      // => Add assigned to form
+      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="'
+            . static::getFormURL() . '">';
+
+      $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems, [
+           'on_change'         => 'plugin_formcreator_ChangeActorAssigned(this.value)'
+         ]
+      );
+
+      echo '<div id="block_assigned_user" style="display:none">';
+      User::dropdown([
+            'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
+            'right' => 'all',
+            'all'   => 0,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_assigned_group" style="display:none">';
+      Group::dropdown([
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_assigned_supplier" style="display:none">';
+      Supplier::dropdown([
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER,
+      ]);
+      echo '</div>';
+
+      echo '<div id="block_assigned_question_user" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'OR' => [
+               'AND' => [
+                  'fieldtype' => ['glpiselect'],
+                  'values' => User::class,
+               ],
+               [
+                  'fieldtype' => ['email'],
+               ]
+            ],
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_assigned_question_group" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => Group::class,
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_assigned_question_actors" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['actor'],
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div id="block_assigned_question_supplier" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => Supplier::class,
+         ],
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
+      echo '<div>';
+      echo __('Email followup');
+      Dropdown::showYesNo('use_notification', 1);
+      echo '</div>';
+
+      echo '<p align="center">';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="hidden" name="actor_role" value="' . PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED . '" />';
+      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
+      echo '</p>';
+
+      echo "<hr>";
+
+      Html::closeForm();
+
+      // => List of saved assigned to
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED] as $id => $values) {
+         echo '<div>';
+         switch ($values['actor_type']) {
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
+               echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+               $user = new User();
+               $user->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+               $group = new Group();
+               $group->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
+               $supplier = new Supplier();
+               $supplier->getFromDB($values['actor_value']);
+               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $supplier->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_supplier . ' <b>' . __('Supplier from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+         }
+         echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
+         echo self::getDeleteImage($id);
+         echo '</div>';
+      }
+
+      echo '</td>';
+
+      echo '</tr>';
+
+      echo '</table>';
    }
 
-   protected function showLocationSettings($rand) {
+   protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       echo '<tr class="line0">';
@@ -1061,30 +1497,11 @@ EOS;
       echo '<td width="45%">';
       Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), [
          'value'                 => $this->fields['location_rule'],
-         'on_change'             => 'change_location()',
+         'on_change'             => "plugin_formcreator_change_location($rand)",
          'rand'                  => $rand
       ]);
-      $script = <<<JAVASCRIPT
-         function change_location() {
-            $('#location_specific_title').hide();
-            $('#location_specific_value').hide();
-            $('#location_question_title').hide();
-            $('#location_question_value').hide();
 
-            switch($('#dropdown_location_rule$rand').val()) {
-               case 'answer' :
-                  $('#location_question_title').show();
-                  $('#location_question_value').show();
-                  break;
-               case 'specific':
-                  $('#location_specific_title').show();
-                  $('#location_specific_value').show();
-                  break;
-            }
-         }
-         change_location();
-JAVASCRIPT;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_change_location($rand)");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="location_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
@@ -1100,25 +1517,40 @@ JAVASCRIPT;
       echo '</div>';
       echo '<div id="location_question_value" style="display: none">';
       // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'dropdown'";
-      $result2 = $DB->query($query2);
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $result = $DB->request([
+         'SELECT' => [
+            $questionTable => ['id', 'name', 'values'],
+            $sectionTable => ['name as sname'],
+         ],
+         'FROM' => $questionTable,
+         'INNER JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $sectionTable => 'id',
+                  $questionTable => $sectionFk
+               ]
+            ],
+         ],
+         'WHERE' => [
+            "$formFk" => $this->getForm()->getID(),
+            "$questionTable.fieldtype" => 'dropdown'
+         ]
+      ]);
       $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
+      foreach ($result as $question) {
          $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
          if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'Location') {
-            $users_questions[$question['id']] = $question['name'];
+            $users_questions[$question['sname']][$question['id']] = $question['name'];
          }
       }
       Dropdown::showFromArray('_location_question', $users_questions, [
          'value' => $this->fields['location_question'],
       ]);
+
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -1153,16 +1585,32 @@ JAVASCRIPT;
       } else {
          $date = null;
       }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+
+      $period = '';
+      switch ($this->fields['due_date_period']) {
+         case self::DUE_DATE_PERIOD_MINUTE:
+            $period = "minute";
+            break;
+         case self::DUE_DATE_PERIOD_HOUR:
+            $period = "hour";
+            break;
+         case self::DUE_DATE_PERIOD_DAY:
+            $period = "day";
+            break;
+         case self::DUE_DATE_PERIOD_MONTH:
+            $period = "month";
+            break;
+      }
+      $str    = "+" . $this->fields['due_date_value'] . " $period";
 
       switch ($this->fields['due_date_rule']) {
-         case 'answer':
+         case PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER:
             $due_date = $date['answer'];
             break;
-         case 'ticket':
+         case PluginFormcreatorTargetBase::DUE_DATE_RULE_TICKET:
             $due_date = date('Y-m-d H:i:s', strtotime($str));
             break;
-         case 'calcul':
+         case PluginFormcreatorTargetBase::DUE_DATE_RULE_CALC:
             $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
             break;
          default:
@@ -1176,8 +1624,28 @@ JAVASCRIPT;
       return $data;
    }
 
-   public function prepareInputForUpdate($input) {
-      global $DB;
+   public function prepareInputForAdd($input) {
+      if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
+         $this->skipCreateActors = true;
+      }
+
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input[$formFk])) {
+         Session::addMEssageAfterRedirect(__('A target must be associated to a form.', 'formcreator'));
+         return false;
+      }
+      $form = new PluginFormcreatorForm();
+      if (!$form->getFromDB((int) $input[$formFk])) {
+         Session::addMEssageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'));
+         return false;
+      }
+
+      $input['target_name'] = $input['name'];
+
+      // Set default content
+      if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
+         $input['content'] = '##FULLFORM##';
+      }
 
       // generate a unique id
       if (!isset($input['uuid'])
@@ -1185,26 +1653,79 @@ JAVASCRIPT;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (isset($input['name'])) {
-         $target = new PluginFormcreatorTarget();
-         $target->getFromDBByCrit([
-            'itemtype' => static ::class,
-            'items_id' => $this->getID()
-         ]);
-         if (!$target->isNewItem()) {
-            $target->update([
-               'id' => $target->getID(),
-               'name' => $input['name'],
-            ]);
+      return $input;
+   }
+
+   public function prepareInputForUpdate($input) {
+      if (!isset($input['_skip_checks'])
+            || !$input['_skip_checks']) {
+         if (isset($input['name'])
+            && empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+            return [];
+         }
+
+         // - content is required
+         if (strlen($input['content']) < 1) {
+            Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
+            return [];
          }
       }
 
-      if (isset($input['title'])) {
-         $input['name'] = $input['title'];
-         unset($input['title']);
+      if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
+         $this->skipCreateActors = true;
+      }
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
       }
 
       return $input;
+   }
+
+   public function post_addItem() {
+      if ($this->skipCreateActors) {
+         return;
+      }
+
+      $target_actor = $this->getItem_Actor();
+      $myFk = self::getForeignKeyField();
+      $target_actor->add([
+         $myFk                 => $this->getID(),
+         'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+         'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
+         'use_notification'    => '1',
+      ]);
+      $target_actor = $this->getItem_Actor();
+      $target_actor->add([
+         $myFk                 => $this->getID(),
+         'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+         'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
+         'use_notification'    => '1',
+      ]);
+   }
+
+   protected static function getDeleteImage($id) {
+      global $CFG_GLPI;
+
+      $link  = ' &nbsp;<a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
+      $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
+      $link .= '</a>';
+      return $link;
+   }
+
+   public function pre_purgeItem() {
+      $myFk = static::getForeignKeyField();
+      // delete actors related to this instance
+      $targetItemActor = $this->getItem_Actor();
+      if (!$targetItemActor->deleteByCriteria([$myFk => $this->getID()])) {
+         $this->input = false;
+         return false;
+      }
+
+      return true;
    }
 
    /**
@@ -1226,5 +1747,148 @@ JAVASCRIPT;
       }
 
       return $template;
+   }
+
+   public function showTagsList() {
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
+      echo '<tr>';
+      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . __('Title') . '</th>';
+      echo '<th width="20%">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
+      echo '</tr>';
+
+      echo '<tr class="line0">';
+      echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
+      echo '<td align="center">-</td>';
+      echo '<td align="center"><strong>##FULLFORM##</strong></td>';
+      echo '<td align="center">-</td>';
+      echo '</tr>';
+
+      $question = new PluginFormcreatorQuestion();
+      $formFk   = PluginFormcreatorForm::getForeignKeyField();
+      $result = $question->getQuestionsFromFormBySection($this->fields[$formFk]);
+      $i = 0;
+      foreach ($result as $sectionName => $questions) {
+         foreach ($questions as $questionId => $questionName) {
+            $i++;
+            echo '<tr class="line' . ($i % 2) . '">';
+            echo '<td colspan="2">' . $questionName . '</td>';
+            echo '<td align="center">##question_' . $questionId . '##</td>';
+            echo '<td align="center">##answer_' . $questionId . '##</td>';
+            echo '<td align="center">' . $sectionName . '</td>';
+            echo '</tr>';
+         }
+      }
+
+      echo '</table>';
+   }
+
+   /**
+    * Associate tags to the target item
+    *
+    * @param PluginFormcreatorFormanswer $formanswer the source formanswer
+    * @param integer $targetId ID of the generated target
+    * @return void
+    */
+   protected function saveTags(PluginFormcreatorFormanswer $formanswer, $targetId) {
+      global $DB;
+
+      // Add tag if presents
+      $plugin = new Plugin();
+      if ($plugin->isActivated('tag')) {
+         $tagObj = new PluginTagTagItem();
+         $tags   = [];
+
+         // Add question tags
+         if (($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS
+               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC)
+               && (!empty($this->fields['tag_questions']))) {
+            $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+            $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+            $result = $DB->request([
+               'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
+               'FROM' => PluginFormcreatorAnswer::getTable(),
+               'WHERE' => [
+                  $formAnswerFk => [(int) $formanswer->fields['id']],
+                  $questionFk => $this->fields['tag_questions']
+               ],
+            ]);
+            foreach ($result as $line) {
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($line['plugin_formcreator_questions_id']);
+               $field = PluginFormcreatorFields::getFieldInstance(
+                  $question->fields['fieldtype'],
+                  $question
+               );
+               $field->deserializeValue($line['answer']);
+               $tab = $field->getRawValue();
+               if (is_integer($tab)) {
+                  $tab = [$tab];
+               }
+               if (is_array($tab)) {
+                  $tags = array_merge($tags, $tab);
+               }
+            }
+         }
+
+         // Add specific tags
+         if ($this->fields['tag_type'] == self::TAG_TYPE_SPECIFICS
+                     || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+                     || ($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC && empty($tags))
+                     && (!empty($this->fields['tag_specifics']))) {
+
+            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+         }
+
+         $tags = array_unique($tags);
+
+         // Save tags in DB
+         foreach ($tags as $tag) {
+            $tagObj->add([
+               'plugin_tag_tags_id' => $tag,
+               'items_id'           => $targetId,
+               'itemtype'           => $this->getTargetItemtypeName(),
+            ]);
+         }
+      }
+   }
+
+   /**
+    * Converts tags in template fields from ID to UUID.
+    * Used for export into JSON
+    *
+    * @return array all fields of the object wih converted template fields
+    */
+   protected function convertTags($input) {
+      $question = new PluginFormcreatorQuestion();
+      $questions = $question->getQuestionsFromForm($this->getForm()->getID());
+
+      $taggableFields = $this->getTaggableFields();
+
+      // Prepare array of search / replace
+      $ids = [];
+      $uuids = [];
+      foreach ($questions as $question) {
+         $id      = $question->fields['id'];
+         $uuid    = $question->fields['uuid'];
+         $ids[]   = "##question_$id##";
+         $uuids[] = "##question_$uuid##";
+         $ids[]   = "##answer_$id##";
+         $uuids[] = "##answer_$uuid##";
+      }
+
+      // Replace for each field with tags
+      foreach ($taggableFields as $field) {
+         $content = $this->fields[$field];
+         $content = str_replace($ids, $uuids, $content);
+         $content = str_replace($ids, $uuids, $content);
+         $input[$field] = $content;
+      }
+
+      return $input;
    }
 }

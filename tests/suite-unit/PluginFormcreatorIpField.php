@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,26 +35,124 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorIpField extends CommonTestCase {
 
    public function testGetName() {
-      $instance = new \PluginFormcreatorIpField([]);
+      $instance = new \PluginFormcreatorIpField($this->getQuestion());
       $output = $instance->getName();
       $this->string($output)->isEqualTo('IP address');
    }
 
    public function testIsValid() {
-      $instance = new \PluginFormcreatorIpField([]);
+      $instance = new \PluginFormcreatorIpField($this->getQuestion());
       $output = $instance->isValid('');
       $this->boolean($output)->isTrue();
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorIpField([]);
+      $instance = new \PluginFormcreatorIpField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorIpField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isFalse();
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function testGetDesignSpecializationField() {
+      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $output = $instance->getDesignSpecializationField();
+      $this->string($output['label'])->isEqualTo('');
+      $this->string($output['field'])->isEqualTo('');
+      $this->boolean($output['may_be_empty'])->isEqualTo(false);
+      $this->boolean($output['may_be_required'])->isEqualTo(false);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '127.0.1.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '127.0.0.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorIpField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '127.0.1.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '127.0.0.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorIpField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
+   public function testGreaterThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorIpField($this->getQuestion());
+            $instance->greaterThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testLessThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorIpField($this->getQuestion());
+            $instance->lessThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
    }
 }
