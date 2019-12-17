@@ -35,8 +35,8 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-success">
-                    100%
+                <h1 class="text-warning">
+                    33%
                                             <small>of 3</small>
                                     </h1>
                 <strong>Lines</strong>
@@ -60,14 +60,14 @@ layout: coverage
             <td><a href="#canCreate">PluginFormcreatorAnswer::canCreate()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
-    <span class="label label-success">100%</span>
+    <span class="label label-danger">0%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#canView">PluginFormcreatorAnswer::canView()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
-    <span class="label label-success">100%</span>
+    <span class="label label-danger">0%</span>
 </td>
                                             </tr>
             <tr>
@@ -277,7 +277,7 @@ layout: coverage
                     <th id="L24" class="number ">24</th>
 
                     <td class="" >
-                        <pre> * @author    Thierry Bugier
+                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
 </pre>
                     </td>
                 </tr>
@@ -285,7 +285,7 @@ layout: coverage
                     <th id="L25" class="number ">25</th>
 
                     <td class="" >
-                        <pre> * @author    Jérémy Moreau
+                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
 </pre>
                     </td>
                 </tr>
@@ -293,7 +293,7 @@ layout: coverage
                     <th id="L26" class="number ">26</th>
 
                     <td class="" >
-                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
+                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
 </pre>
                     </td>
                 </tr>
@@ -301,7 +301,7 @@ layout: coverage
                     <th id="L27" class="number ">27</th>
 
                     <td class="" >
-                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
 </pre>
                     </td>
                 </tr>
@@ -309,7 +309,7 @@ layout: coverage
                     <th id="L28" class="number ">28</th>
 
                     <td class="" >
-                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
+                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
 </pre>
                     </td>
                 </tr>
@@ -317,7 +317,7 @@ layout: coverage
                     <th id="L29" class="number ">29</th>
 
                     <td class="" >
-                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
+                        <pre> * ---------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
@@ -325,7 +325,7 @@ layout: coverage
                     <th id="L30" class="number ">30</th>
 
                     <td class="" >
-                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+                        <pre> */
 </pre>
                     </td>
                 </tr>
@@ -333,7 +333,7 @@ layout: coverage
                     <th id="L31" class="number ">31</th>
 
                     <td class="" >
-                        <pre> * ---------------------------------------------------------------------
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -341,7 +341,7 @@ layout: coverage
                     <th id="L32" class="number ">32</th>
 
                     <td class="" >
-                        <pre> */
+                        <pre>if (!defined(&#039;GLPI_ROOT&#039;)) {
 </pre>
                     </td>
                 </tr>
@@ -349,7 +349,7 @@ layout: coverage
                     <th id="L33" class="number ">33</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>   die(&quot;Sorry. You can&#039;t access this file directly&quot;);
 </pre>
                     </td>
                 </tr>
@@ -357,7 +357,7 @@ layout: coverage
                     <th id="L34" class="number ">34</th>
 
                     <td class="" >
-                        <pre>if (!defined(&#039;GLPI_ROOT&#039;)) {
+                        <pre>}
 </pre>
                     </td>
                 </tr>
@@ -365,7 +365,7 @@ layout: coverage
                     <th id="L35" class="number ">35</th>
 
                     <td class="" >
-                        <pre>   die(&quot;Sorry. You can&#039;t access this file directly&quot;);
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -373,7 +373,7 @@ layout: coverage
                     <th id="L36" class="number ">36</th>
 
                     <td class="" >
-                        <pre>}
+                        <pre>class PluginFormcreatorAnswer extends CommonDBChild
 </pre>
                     </td>
                 </tr>
@@ -381,7 +381,7 @@ layout: coverage
                     <th id="L37" class="number ">37</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>{
 </pre>
                     </td>
                 </tr>
@@ -389,7 +389,7 @@ layout: coverage
                     <th id="L38" class="number ">38</th>
 
                     <td class="" >
-                        <pre>class PluginFormcreatorAnswer extends CommonDBChild
+                        <pre>   static public $itemtype = PluginFormcreatorFormAnswer::class;
 </pre>
                     </td>
                 </tr>
@@ -397,7 +397,7 @@ layout: coverage
                     <th id="L39" class="number ">39</th>
 
                     <td class="" >
-                        <pre>{
+                        <pre>   static public $items_id = &quot;plugin_formcreator_formanswers_id&quot;;
 </pre>
                     </td>
                 </tr>
@@ -405,7 +405,7 @@ layout: coverage
                     <th id="L40" class="number ">40</th>
 
                     <td class="" >
-                        <pre>   static public $itemtype = PluginFormcreatorFormAnswer::class;
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -413,7 +413,7 @@ layout: coverage
                     <th id="L41" class="number ">41</th>
 
                     <td class="" >
-                        <pre>   static public $items_id = &quot;plugin_formcreator_formanswers_id&quot;;
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -421,7 +421,7 @@ layout: coverage
                     <th id="L42" class="number ">42</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>    * Check if current user have the right to create and modify requests
 </pre>
                     </td>
                 </tr>
@@ -429,7 +429,7 @@ layout: coverage
                     <th id="L43" class="number ">43</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>    *
 </pre>
                     </td>
                 </tr>
@@ -437,7 +437,7 @@ layout: coverage
                     <th id="L44" class="number ">44</th>
 
                     <td class="" >
-                        <pre>    * Check if current user have the right to create and modify requests
+                        <pre>    * @return boolean True if he can create and modify requests
 </pre>
                     </td>
                 </tr>
@@ -445,49 +445,33 @@ layout: coverage
                     <th id="L45" class="number ">45</th>
 
                     <td class="" >
-                        <pre>    *
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L46" class="number ">46</th>
-
-                    <td class="" >
-                        <pre>    * @return boolean True if he can create and modify requests
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L47" class="number ">47</th>
-
-                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="canCreate">
-                    <th id="L48" class="number ">48</th>
+                    <th id="L46" class="number ">46</th>
 
                     <td class="" id="canCreate">
-                        <pre>   public static function canCreate() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function canCreate() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L49" class="number covered">49</th>
+                    <th id="L47" class="number uncovered">47</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L50" class="number unreach">50</th>
+                    <th id="L48" class="number unreach">48</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L51" class="number ">51</th>
+                    <th id="L49" class="number ">49</th>
 
                     <td class="" >
                         <pre>
@@ -495,7 +479,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L52" class="number ">52</th>
+                    <th id="L50" class="number ">50</th>
 
                     <td class="" >
                         <pre>   /**
@@ -503,7 +487,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L53" class="number ">53</th>
+                    <th id="L51" class="number ">51</th>
 
                     <td class="" >
                         <pre>    * Check if current user have the right to read requests
@@ -511,7 +495,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L54" class="number ">54</th>
+                    <th id="L52" class="number ">52</th>
 
                     <td class="" >
                         <pre>    *
@@ -519,7 +503,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L55" class="number ">55</th>
+                    <th id="L53" class="number ">53</th>
 
                     <td class="" >
                         <pre>    * @return boolean True if he can read requests
@@ -527,7 +511,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L56" class="number ">56</th>
+                    <th id="L54" class="number ">54</th>
 
                     <td class="" >
                         <pre>    */
@@ -535,28 +519,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="canView">
-                    <th id="L57" class="number ">57</th>
+                    <th id="L55" class="number ">55</th>
 
                     <td class="" id="canView">
-                        <pre>   public static function canView() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function canView() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L58" class="number covered">58</th>
+                    <th id="L56" class="number uncovered">56</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L59" class="number unreach">59</th>
+                    <th id="L57" class="number unreach">57</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L60" class="number ">60</th>
+                    <th id="L58" class="number ">58</th>
 
                     <td class="" >
                         <pre>
@@ -564,7 +548,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L61" class="number ">61</th>
+                    <th id="L59" class="number ">59</th>
 
                     <td class="" >
                         <pre>   /**
@@ -572,7 +556,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L62" class="number ">62</th>
+                    <th id="L60" class="number ">60</th>
 
                     <td class="" >
                         <pre>    * Returns the type name with consideration of plural
@@ -580,7 +564,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L63" class="number ">63</th>
+                    <th id="L61" class="number ">61</th>
 
                     <td class="" >
                         <pre>    *
@@ -588,7 +572,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L64" class="number ">64</th>
+                    <th id="L62" class="number ">62</th>
 
                     <td class="" >
                         <pre>    * @param number $nb Number of item(s)
@@ -596,7 +580,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L65" class="number ">65</th>
+                    <th id="L63" class="number ">63</th>
 
                     <td class="" >
                         <pre>    * @return string Itemtype name
@@ -604,7 +588,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L66" class="number ">66</th>
+                    <th id="L64" class="number ">64</th>
 
                     <td class="" >
                         <pre>    */
@@ -612,28 +596,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getTypeName">
-                    <th id="L67" class="number ">67</th>
+                    <th id="L65" class="number ">65</th>
 
                     <td class="" id="getTypeName">
                         <pre>   public static function getTypeName($nb = 0) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L68" class="number covered">68</th>
+                    <th id="L66" class="number covered">66</th>
 
                     <td class="covered" >
                         <pre>      return _n(&#039;Answer&#039;, &#039;Answers&#039;, $nb, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L69" class="number unreach">69</th>
+                    <th id="L67" class="number unreach">67</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L70" class="number ">70</th>
+                    <th id="L68" class="number ">68</th>
 
                     <td class="" >
                         <pre>}

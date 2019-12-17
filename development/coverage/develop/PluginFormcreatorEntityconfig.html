@@ -284,7 +284,7 @@ layout: coverage
                     <th id="L24" class="number ">24</th>
 
                     <td class="" >
-                        <pre> * @author    Thierry Bugier
+                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
 </pre>
                     </td>
                 </tr>
@@ -292,7 +292,7 @@ layout: coverage
                     <th id="L25" class="number ">25</th>
 
                     <td class="" >
-                        <pre> * @author    Jérémy Moreau
+                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
 </pre>
                     </td>
                 </tr>
@@ -300,7 +300,7 @@ layout: coverage
                     <th id="L26" class="number ">26</th>
 
                     <td class="" >
-                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
+                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
 </pre>
                     </td>
                 </tr>
@@ -308,7 +308,7 @@ layout: coverage
                     <th id="L27" class="number ">27</th>
 
                     <td class="" >
-                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
 </pre>
                     </td>
                 </tr>
@@ -316,7 +316,7 @@ layout: coverage
                     <th id="L28" class="number ">28</th>
 
                     <td class="" >
-                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
+                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
 </pre>
                     </td>
                 </tr>
@@ -324,7 +324,7 @@ layout: coverage
                     <th id="L29" class="number ">29</th>
 
                     <td class="" >
-                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
+                        <pre> * ---------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
@@ -332,7 +332,7 @@ layout: coverage
                     <th id="L30" class="number ">30</th>
 
                     <td class="" >
-                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+                        <pre> */
 </pre>
                     </td>
                 </tr>
@@ -340,7 +340,7 @@ layout: coverage
                     <th id="L31" class="number ">31</th>
 
                     <td class="" >
-                        <pre> * ---------------------------------------------------------------------
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -348,7 +348,7 @@ layout: coverage
                     <th id="L32" class="number ">32</th>
 
                     <td class="" >
-                        <pre> */
+                        <pre>if (!defined(&#039;GLPI_ROOT&#039;)) {
 </pre>
                     </td>
                 </tr>
@@ -356,7 +356,7 @@ layout: coverage
                     <th id="L33" class="number ">33</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>   die(&quot;Sorry. You can&#039;t access this file directly&quot;);
 </pre>
                     </td>
                 </tr>
@@ -364,7 +364,7 @@ layout: coverage
                     <th id="L34" class="number ">34</th>
 
                     <td class="" >
-                        <pre>if (!defined(&#039;GLPI_ROOT&#039;)) {
+                        <pre>}
 </pre>
                     </td>
                 </tr>
@@ -372,7 +372,7 @@ layout: coverage
                     <th id="L35" class="number ">35</th>
 
                     <td class="" >
-                        <pre>   die(&quot;Sorry. You can&#039;t access this file directly&quot;);
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -380,7 +380,7 @@ layout: coverage
                     <th id="L36" class="number ">36</th>
 
                     <td class="" >
-                        <pre>}
+                        <pre>/**
 </pre>
                     </td>
                 </tr>
@@ -388,7 +388,7 @@ layout: coverage
                     <th id="L37" class="number ">37</th>
 
                     <td class="" >
-                        <pre>
+                        <pre> *
 </pre>
                     </td>
                 </tr>
@@ -396,7 +396,7 @@ layout: coverage
                     <th id="L38" class="number ">38</th>
 
                     <td class="" >
-                        <pre>/**
+                        <pre> * @since 0.1.0
 </pre>
                     </td>
                 </tr>
@@ -404,7 +404,7 @@ layout: coverage
                     <th id="L39" class="number ">39</th>
 
                     <td class="" >
-                        <pre> *
+                        <pre> */
 </pre>
                     </td>
                 </tr>
@@ -412,7 +412,7 @@ layout: coverage
                     <th id="L40" class="number ">40</th>
 
                     <td class="" >
-                        <pre> * @since 0.1.0
+                        <pre>class PluginFormcreatorEntityconfig extends CommonDBTM {
 </pre>
                     </td>
                 </tr>
@@ -420,7 +420,7 @@ layout: coverage
                     <th id="L41" class="number ">41</th>
 
                     <td class="" >
-                        <pre> */
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -428,7 +428,7 @@ layout: coverage
                     <th id="L42" class="number ">42</th>
 
                     <td class="" >
-                        <pre>class PluginFormcreatorEntityconfig extends CommonDBTM {
+                        <pre>   const CONFIG_PARENT = -2;
 </pre>
                     </td>
                 </tr>
@@ -436,7 +436,7 @@ layout: coverage
                     <th id="L43" class="number ">43</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>   const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
 </pre>
                     </td>
                 </tr>
@@ -444,7 +444,7 @@ layout: coverage
                     <th id="L44" class="number ">44</th>
 
                     <td class="" >
-                        <pre>   const CONFIG_PARENT = -2;
+                        <pre>   const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
 </pre>
                     </td>
                 </tr>
@@ -452,7 +452,7 @@ layout: coverage
                     <th id="L45" class="number ">45</th>
 
                     <td class="" >
-                        <pre>   const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -460,7 +460,7 @@ layout: coverage
                     <th id="L46" class="number ">46</th>
 
                     <td class="" >
-                        <pre>   const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -468,7 +468,7 @@ layout: coverage
                     <th id="L47" class="number ">47</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>    * @var bool $dohistory maintain history
 </pre>
                     </td>
                 </tr>
@@ -476,7 +476,7 @@ layout: coverage
                     <th id="L48" class="number ">48</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>    */
 </pre>
                     </td>
                 </tr>
@@ -484,7 +484,7 @@ layout: coverage
                     <th id="L49" class="number ">49</th>
 
                     <td class="" >
-                        <pre>    * @var bool $dohistory maintain history
+                        <pre>   public $dohistory                   = true;
 </pre>
                     </td>
                 </tr>
@@ -492,63 +492,47 @@ layout: coverage
                     <th id="L50" class="number ">50</th>
 
                     <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L51" class="number ">51</th>
-
-                    <td class="" >
-                        <pre>   public $dohistory                   = true;
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L52" class="number ">52</th>
-
-                    <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getTabNameForItem">
-                    <th id="L53" class="number ">53</th>
+                    <th id="L51" class="number ">51</th>
 
                     <td class="" id="getTabNameForItem">
                         <pre>   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L54" class="number covered">54</th>
+                    <th id="L52" class="number covered">52</th>
 
                     <td class="covered" >
                         <pre>      $tabNames = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L55" class="number covered">55</th>
+                    <th id="L53" class="number covered">53</th>
 
                     <td class="covered" >
                         <pre>      if (!$withtemplate) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L56" class="number covered">56</th>
+                    <th id="L54" class="number covered">54</th>
 
                     <td class="covered" >
                         <pre>         if ($item-&gt;getType() == &#039;Entity&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L57" class="number covered">57</th>
+                    <th id="L55" class="number covered">55</th>
 
                     <td class="covered" >
                         <pre>            $tabNames[1] = _n(&#039;Form&#039;, &#039;Forms&#039;, 2, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L58" class="number ">58</th>
+                    <th id="L56" class="number ">56</th>
 
                     <td class="" >
                         <pre>         }
@@ -556,7 +540,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L59" class="number ">59</th>
+                    <th id="L57" class="number ">57</th>
 
                     <td class="" >
                         <pre>      }
@@ -564,21 +548,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L60" class="number covered">60</th>
+                    <th id="L58" class="number covered">58</th>
 
                     <td class="covered" >
                         <pre>      return $tabNames;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L61" class="number unreach">61</th>
+                    <th id="L59" class="number unreach">59</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L62" class="number ">62</th>
+                    <th id="L60" class="number ">60</th>
 
                     <td class="" >
                         <pre>
@@ -586,35 +570,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="displayTabContentForItem">
-                    <th id="L63" class="number ">63</th>
+                    <th id="L61" class="number ">61</th>
 
                     <td class="" id="displayTabContentForItem">
                         <pre>   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L64" class="number uncovered">64</th>
+                    <th id="L62" class="number uncovered">62</th>
 
                     <td class="uncovered" >
                         <pre>      if ($item-&gt;getType() == &#039;Entity&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L65" class="number uncovered">65</th>
+                    <th id="L63" class="number uncovered">63</th>
 
                     <td class="uncovered" >
                         <pre>         $config = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L66" class="number uncovered">66</th>
+                    <th id="L64" class="number uncovered">64</th>
 
                     <td class="uncovered" >
                         <pre>         $config-&gt;showFormForEntity($item);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L67" class="number ">67</th>
+                    <th id="L65" class="number ">65</th>
 
                     <td class="" >
                         <pre>      }
@@ -622,14 +606,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L68" class="number uncovered">68</th>
+                    <th id="L66" class="number uncovered">66</th>
 
                     <td class="uncovered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L69" class="number ">69</th>
+                    <th id="L67" class="number ">67</th>
 
                     <td class="" >
                         <pre>
@@ -637,42 +621,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="showFormForEntity">
-                    <th id="L70" class="number ">70</th>
+                    <th id="L68" class="number ">68</th>
 
                     <td class="" id="showFormForEntity">
                         <pre>   public function showFormForEntity(Entity $entity) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L71" class="number uncovered">71</th>
+                    <th id="L69" class="number uncovered">69</th>
 
                     <td class="uncovered" >
                         <pre>      $ID = $entity-&gt;getField(&#039;id&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L72" class="number uncovered">72</th>
+                    <th id="L70" class="number uncovered">70</th>
 
                     <td class="uncovered" >
                         <pre>      if (!$entity-&gt;can($ID, READ)</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L73" class="number uncovered">73</th>
+                    <th id="L71" class="number uncovered">71</th>
 
                     <td class="uncovered" >
                         <pre>            || !Notification::canView()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L74" class="number uncovered">74</th>
+                    <th id="L72" class="number uncovered">72</th>
 
                     <td class="uncovered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L75" class="number ">75</th>
+                    <th id="L73" class="number ">73</th>
 
                     <td class="" >
                         <pre>      }
@@ -680,7 +664,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L76" class="number ">76</th>
+                    <th id="L74" class="number ">74</th>
 
                     <td class="" >
                         <pre>
@@ -688,28 +672,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L77" class="number uncovered">77</th>
+                    <th id="L75" class="number uncovered">75</th>
 
                     <td class="uncovered" >
                         <pre>      if (!$this-&gt;getFromDB($ID)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L78" class="number uncovered">78</th>
+                    <th id="L76" class="number uncovered">76</th>
 
                     <td class="uncovered" >
                         <pre>         $this-&gt;add([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L79" class="number uncovered">79</th>
+                    <th id="L77" class="number uncovered">77</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;id&#039;                 =&gt; $ID,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L80" class="number ">80</th>
+                    <th id="L78" class="number ">78</th>
 
                     <td class="" >
                         <pre>               &#039;replace_helpdesk&#039;   =&gt; self::CONFIG_PARENT
@@ -717,7 +701,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L81" class="number ">81</th>
+                    <th id="L79" class="number ">79</th>
 
                     <td class="" >
                         <pre>         ]);
@@ -725,7 +709,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L82" class="number ">82</th>
+                    <th id="L80" class="number ">80</th>
 
                     <td class="" >
                         <pre>      }
@@ -733,7 +717,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L83" class="number ">83</th>
+                    <th id="L81" class="number ">81</th>
 
                     <td class="" >
                         <pre>
@@ -741,35 +725,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L84" class="number uncovered">84</th>
+                    <th id="L82" class="number uncovered">82</th>
 
                     <td class="uncovered" >
                         <pre>      $canedit = $entity-&gt;canUpdateItem();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L85" class="number uncovered">85</th>
+                    <th id="L83" class="number uncovered">83</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;div class=&#039;spaced&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L86" class="number uncovered">86</th>
+                    <th id="L84" class="number uncovered">84</th>
 
                     <td class="uncovered" >
                         <pre>      if ($canedit) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L87" class="number uncovered">87</th>
+                    <th id="L85" class="number uncovered">85</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;form method=&#039;post&#039; name=form action=&#039;&quot;.Toolbox::getItemTypeFormURL(__CLASS__).&quot;&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L88" class="number ">88</th>
+                    <th id="L86" class="number ">86</th>
 
                     <td class="" >
                         <pre>      }
@@ -777,7 +761,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L89" class="number ">89</th>
+                    <th id="L87" class="number ">87</th>
 
                     <td class="" >
                         <pre>
@@ -785,21 +769,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L90" class="number uncovered">90</th>
+                    <th id="L88" class="number uncovered">88</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;table class=&#039;tab_cadre_fixe&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L91" class="number uncovered">91</th>
+                    <th id="L89" class="number uncovered">89</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;tr&gt;&lt;th colspan=&#039;2&#039;&gt;&quot;.__(&#039;Helpdesk&#039;, &#039;formcreator&#039;).&quot;&lt;/th&gt;&lt;/tr&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L92" class="number ">92</th>
+                    <th id="L90" class="number ">90</th>
 
                     <td class="" >
                         <pre>
@@ -807,14 +791,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L93" class="number uncovered">93</th>
+                    <th id="L91" class="number uncovered">91</th>
 
                     <td class="uncovered" >
                         <pre>      if ($ID != 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L94" class="number ">94</th>
+                    <th id="L92" class="number ">92</th>
 
                     <td class="" >
                         <pre>         $elements = [
@@ -822,14 +806,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L95" class="number uncovered">95</th>
+                    <th id="L93" class="number uncovered">93</th>
 
                     <td class="uncovered" >
                         <pre>            self::CONFIG_PARENT =&gt; __(&#039;Inheritance of the parent entity&#039;)</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L96" class="number ">96</th>
+                    <th id="L94" class="number ">94</th>
 
                     <td class="" >
                         <pre>         ];
@@ -837,10 +821,25 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L97" class="number ">97</th>
+                    <th id="L95" class="number ">95</th>
 
                     <td class="" >
                         <pre>      } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L96" class="number uncovered">96</th>
+
+                    <td class="uncovered" >
+                        <pre>         $elements = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L97" class="number ">97</th>
+
+                    <td class="" >
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -848,40 +847,25 @@ layout: coverage
                     <th id="L98" class="number uncovered">98</th>
 
                     <td class="uncovered" >
-                        <pre>         $elements = [];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L99" class="number ">99</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L100" class="number uncovered">100</th>
-
-                    <td class="uncovered" >
                         <pre>      $elements[0] = __(&#039;GLPi\&#039;s helpdesk&#039;, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L101" class="number uncovered">101</th>
+                    <th id="L99" class="number uncovered">99</th>
 
                     <td class="uncovered" >
                         <pre>      $elements[1] = __(&#039;Service catalog simplified&#039;, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L102" class="number uncovered">102</th>
+                    <th id="L100" class="number uncovered">100</th>
 
                     <td class="uncovered" >
                         <pre>      $elements[2] = __(&#039;Service catalog extended&#039;, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L103" class="number ">103</th>
+                    <th id="L101" class="number ">101</th>
 
                     <td class="" >
                         <pre>
@@ -889,73 +873,88 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L104" class="number uncovered">104</th>
+                    <th id="L102" class="number uncovered">102</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;tr class=&#039;tab_bg_1&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L105" class="number uncovered">105</th>
+                    <th id="L103" class="number uncovered">103</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;td&gt;&quot;.__(&#039;Helpdesk mode&#039;, &#039;formcreator&#039;).&quot;&lt;/td&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L106" class="number uncovered">106</th>
+                    <th id="L104" class="number uncovered">104</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;td&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L107" class="number uncovered">107</th>
+                    <th id="L105" class="number uncovered">105</th>
 
                     <td class="uncovered" >
                         <pre>      Dropdown::showFromArray(&#039;replace_helpdesk&#039;, $elements, [&#039;value&#039; =&gt; $this-&gt;fields[&#039;replace_helpdesk&#039;]]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L108" class="number uncovered">108</th>
+                    <th id="L106" class="number uncovered">106</th>
 
                     <td class="uncovered" >
                         <pre>      if ($this-&gt;fields[&#039;replace_helpdesk&#039;] == self::CONFIG_PARENT) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L109" class="number uncovered">109</th>
+                    <th id="L107" class="number uncovered">107</th>
 
                     <td class="uncovered" >
                         <pre>         $tid = self::getUsedConfig(&#039;replace_helpdesk&#039;, $ID);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L110" class="number uncovered">110</th>
+                    <th id="L108" class="number uncovered">108</th>
 
                     <td class="uncovered" >
                         <pre>         echo &#039;&lt;div class=&quot;green&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L111" class="number uncovered">111</th>
+                    <th id="L109" class="number uncovered">109</th>
 
                     <td class="uncovered" >
                         <pre>         echo $elements[$tid];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L112" class="number uncovered">112</th>
+                    <th id="L110" class="number uncovered">110</th>
 
                     <td class="uncovered" >
                         <pre>         echo &#039;&lt;/div&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L113" class="number ">113</th>
+                    <th id="L111" class="number ">111</th>
 
                     <td class="" >
                         <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L112" class="number uncovered">112</th>
+
+                    <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&lt;/tr&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L113" class="number ">113</th>
+
+                    <td class="" >
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -963,75 +962,60 @@ layout: coverage
                     <th id="L114" class="number uncovered">114</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&lt;/tr&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L115" class="number ">115</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L116" class="number uncovered">116</th>
-
-                    <td class="uncovered" >
                         <pre>      if ($canedit) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L117" class="number uncovered">117</th>
+                    <th id="L115" class="number uncovered">115</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;tr&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L118" class="number uncovered">118</th>
+                    <th id="L116" class="number uncovered">116</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;td class=&#039;tab_bg_2 center&#039; colspan=&#039;4&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L119" class="number uncovered">119</th>
+                    <th id="L117" class="number uncovered">117</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;input type=&#039;hidden&#039; name=&#039;id&#039; value=&#039;&quot;.$entity-&gt;fields[&quot;id&quot;].&quot;&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L120" class="number uncovered">120</th>
+                    <th id="L118" class="number uncovered">118</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;input type=&#039;submit&#039; name=&#039;update&#039; value=\&quot;&quot;._sx(&#039;button&#039;, &#039;Save&#039;).&quot;\&quot; class=&#039;submit&#039;&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L121" class="number uncovered">121</th>
+                    <th id="L119" class="number uncovered">119</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;/td&gt;&lt;/tr&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L122" class="number uncovered">122</th>
+                    <th id="L120" class="number uncovered">120</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;/table&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L123" class="number uncovered">123</th>
+                    <th id="L121" class="number uncovered">121</th>
 
                     <td class="uncovered" >
                         <pre>         Html::closeForm();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L124" class="number ">124</th>
+                    <th id="L122" class="number ">122</th>
 
                     <td class="" >
                         <pre>
@@ -1039,7 +1023,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L125" class="number ">125</th>
+                    <th id="L123" class="number ">123</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -1047,14 +1031,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L126" class="number uncovered">126</th>
+                    <th id="L124" class="number uncovered">124</th>
 
                     <td class="uncovered" >
                         <pre>         echo &quot;&lt;/table&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L127" class="number ">127</th>
+                    <th id="L125" class="number ">125</th>
 
                     <td class="" >
                         <pre>      }
@@ -1062,7 +1046,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L128" class="number ">128</th>
+                    <th id="L126" class="number ">126</th>
 
                     <td class="" >
                         <pre>
@@ -1070,21 +1054,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L129" class="number uncovered">129</th>
+                    <th id="L127" class="number uncovered">127</th>
 
                     <td class="uncovered" >
                         <pre>      echo &quot;&lt;/div&gt;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L130" class="number uncovered">130</th>
+                    <th id="L128" class="number uncovered">128</th>
 
                     <td class="uncovered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L131" class="number ">131</th>
+                    <th id="L129" class="number ">129</th>
 
                     <td class="" >
                         <pre>
@@ -1092,7 +1076,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L132" class="number ">132</th>
+                    <th id="L130" class="number ">130</th>
 
                     <td class="" >
                         <pre>   /**
@@ -1100,10 +1084,26 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L133" class="number ">133</th>
+                    <th id="L131" class="number ">131</th>
 
                     <td class="" >
                         <pre>    * Retrieve data of current entity or parent entity
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L132" class="number ">132</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L133" class="number ">133</th>
+
+                    <td class="" >
+                        <pre>    * @since version 0.84 (before in entitydata.class)
 </pre>
                     </td>
                 </tr>
@@ -1119,7 +1119,7 @@ layout: coverage
                     <th id="L135" class="number ">135</th>
 
                     <td class="" >
-                        <pre>    * @since version 0.84 (before in entitydata.class)
+                        <pre>    * @param $fieldref        string   name of the referent field to know if we look at parent entity
 </pre>
                     </td>
                 </tr>
@@ -1127,7 +1127,7 @@ layout: coverage
                     <th id="L136" class="number ">136</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>    * @param $entities_id
 </pre>
                     </td>
                 </tr>
@@ -1135,7 +1135,7 @@ layout: coverage
                     <th id="L137" class="number ">137</th>
 
                     <td class="" >
-                        <pre>    * @param $fieldref        string   name of the referent field to know if we look at parent entity
+                        <pre>    * @param $fieldval        string   name of the field that we want value (default &#039;&#039;)
 </pre>
                     </td>
                 </tr>
@@ -1143,7 +1143,7 @@ layout: coverage
                     <th id="L138" class="number ">138</th>
 
                     <td class="" >
-                        <pre>    * @param $entities_id
+                        <pre>    * @param $default_value   integer  value to return (default -2)
 </pre>
                     </td>
                 </tr>
@@ -1151,35 +1151,19 @@ layout: coverage
                     <th id="L139" class="number ">139</th>
 
                     <td class="" >
-                        <pre>    * @param $fieldval        string   name of the field that we want value (default &#039;&#039;)
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L140" class="number ">140</th>
-
-                    <td class="" >
-                        <pre>    * @param $default_value   integer  value to return (default -2)
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L141" class="number ">141</th>
-
-                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getUsedConfig">
-                    <th id="L142" class="number ">142</th>
+                    <th id="L140" class="number ">140</th>
 
                     <td class="" id="getUsedConfig">
                         <pre>   static function getUsedConfig($fieldref, $entities_id, $fieldval = &#039;&#039;, $default_value = -2) {<span class="label label-success">88%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L143" class="number ">143</th>
+                    <th id="L141" class="number ">141</th>
 
                     <td class="" >
                         <pre>
@@ -1187,7 +1171,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L144" class="number ">144</th>
+                    <th id="L142" class="number ">142</th>
 
                     <td class="" >
                         <pre>      // for calendar
@@ -1195,21 +1179,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L145" class="number covered">145</th>
+                    <th id="L143" class="number covered">143</th>
 
                     <td class="covered" >
                         <pre>      if (empty($fieldval)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L146" class="number covered">146</th>
+                    <th id="L144" class="number covered">144</th>
 
                     <td class="covered" >
                         <pre>         $fieldval = $fieldref;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L147" class="number ">147</th>
+                    <th id="L145" class="number ">145</th>
 
                     <td class="" >
                         <pre>      }
@@ -1217,7 +1201,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L148" class="number ">148</th>
+                    <th id="L146" class="number ">146</th>
 
                     <td class="" >
                         <pre>
@@ -1225,21 +1209,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L149" class="number covered">149</th>
+                    <th id="L147" class="number covered">147</th>
 
                     <td class="covered" >
                         <pre>      $entity = new Entity();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L150" class="number covered">150</th>
+                    <th id="L148" class="number covered">148</th>
 
                     <td class="covered" >
                         <pre>      $entityConfig = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L151" class="number ">151</th>
+                    <th id="L149" class="number ">149</th>
 
                     <td class="" >
                         <pre>      // Search in entity data of the current entity
@@ -1247,14 +1231,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L152" class="number covered">152</th>
+                    <th id="L150" class="number covered">150</th>
 
                     <td class="covered" >
                         <pre>      if ($entity-&gt;getFromDB($entities_id)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L153" class="number ">153</th>
+                    <th id="L151" class="number ">151</th>
 
                     <td class="" >
                         <pre>         // Value is defined : use it
@@ -1262,35 +1246,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L154" class="number covered">154</th>
+                    <th id="L152" class="number covered">152</th>
 
                     <td class="covered" >
                         <pre>         if ($entityConfig-&gt;getFromDB($entities_id)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L155" class="number covered">155</th>
+                    <th id="L153" class="number covered">153</th>
 
                     <td class="covered" >
                         <pre>            if (is_numeric($default_value)</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L156" class="number covered">156</th>
+                    <th id="L154" class="number covered">154</th>
 
                     <td class="covered" >
                         <pre>                  &amp;&amp; ($entityConfig-&gt;fields[$fieldref] != self::CONFIG_PARENT)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L157" class="number covered">157</th>
+                    <th id="L155" class="number covered">155</th>
 
                     <td class="covered" >
                         <pre>                     return $entityConfig-&gt;fields[$fieldval];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L158" class="number ">158</th>
+                    <th id="L156" class="number ">156</th>
 
                     <td class="" >
                         <pre>            }
@@ -1298,24 +1282,40 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L159" class="number covered">159</th>
+                    <th id="L157" class="number covered">157</th>
 
                     <td class="covered" >
                         <pre>            if (!is_numeric($default_value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L160" class="number uncovered">160</th>
+                    <th id="L158" class="number uncovered">158</th>
 
                     <td class="uncovered" >
                         <pre>               return $entityConfig-&gt;fields[$fieldval];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number ">161</th>
+                    <th id="L159" class="number ">159</th>
 
                     <td class="" >
                         <pre>            }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L160" class="number ">160</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L161" class="number ">161</th>
+
+                    <td class="" >
+                        <pre>         }
 </pre>
                     </td>
                 </tr>
@@ -1323,7 +1323,7 @@ layout: coverage
                     <th id="L162" class="number ">162</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -1331,7 +1331,7 @@ layout: coverage
                     <th id="L163" class="number ">163</th>
 
                     <td class="" >
-                        <pre>         }
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1339,23 +1339,22 @@ layout: coverage
                     <th id="L164" class="number ">164</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>      // Entity data not found or not defined : search in parent one
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L165" class="number ">165</th>
+                    <th id="L165" class="number covered">165</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>      if ($entities_id &gt; 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L166" class="number ">166</th>
 
                     <td class="" >
-                        <pre>      // Entity data not found or not defined : search in parent one
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1363,47 +1362,32 @@ layout: coverage
                     <th id="L167" class="number covered">167</th>
 
                     <td class="covered" >
-                        <pre>      if ($entities_id &gt; 0) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L168" class="number ">168</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L169" class="number covered">169</th>
-
-                    <td class="covered" >
                         <pre>         if ($entity-&gt;getFromDB($entities_id)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L170" class="number covered">170</th>
+                    <th id="L168" class="number covered">168</th>
 
                     <td class="covered" >
                         <pre>            $ret = self::getUsedConfig($fieldref, $entity-&gt;fields[&#039;entities_id&#039;], $fieldval,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number covered">171</th>
+                    <th id="L169" class="number covered">169</th>
 
                     <td class="covered" >
                         <pre>                  $default_value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number covered">172</th>
+                    <th id="L170" class="number covered">170</th>
 
                     <td class="covered" >
                         <pre>            return $ret;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L173" class="number ">173</th>
+                    <th id="L171" class="number ">171</th>
 
                     <td class="" >
                         <pre>
@@ -1411,7 +1395,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L174" class="number ">174</th>
+                    <th id="L172" class="number ">172</th>
 
                     <td class="" >
                         <pre>         }
@@ -1419,7 +1403,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number ">175</th>
+                    <th id="L173" class="number ">173</th>
 
                     <td class="" >
                         <pre>      }
@@ -1427,7 +1411,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number ">176</th>
+                    <th id="L174" class="number ">174</th>
 
                     <td class="" >
                         <pre>      /*
@@ -1435,7 +1419,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L177" class="number ">177</th>
+                    <th id="L175" class="number ">175</th>
 
                     <td class="" >
                         <pre>       switch ($fieldval) {
@@ -1443,7 +1427,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L178" class="number ">178</th>
+                    <th id="L176" class="number ">176</th>
 
                     <td class="" >
                         <pre>       case &quot;tickettype&quot; :
@@ -1451,7 +1435,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L179" class="number ">179</th>
+                    <th id="L177" class="number ">177</th>
 
                     <td class="" >
                         <pre>       // Default is Incident if not set
@@ -1459,7 +1443,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L180" class="number ">180</th>
+                    <th id="L178" class="number ">178</th>
 
                     <td class="" >
                         <pre>       return Ticket::INCIDENT_TYPE;
@@ -1467,7 +1451,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L181" class="number ">181</th>
+                    <th id="L179" class="number ">179</th>
 
                     <td class="" >
                         <pre>       }
@@ -1475,7 +1459,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L182" class="number ">182</th>
+                    <th id="L180" class="number ">180</th>
 
                     <td class="" >
                         <pre>       */
@@ -1483,21 +1467,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L183" class="number uncovered">183</th>
+                    <th id="L181" class="number uncovered">181</th>
 
                     <td class="uncovered" >
                         <pre>      return $default_value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L184" class="number unreach">184</th>
+                    <th id="L182" class="number unreach">182</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L185" class="number ">185</th>
+                    <th id="L183" class="number ">183</th>
 
                     <td class="" >
                         <pre>}
