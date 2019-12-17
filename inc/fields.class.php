@@ -380,10 +380,10 @@ class PluginFormcreatorFields
     * @return null|PluginFormcreatorFieldInterface
     */
    public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
-      $className = self::getFieldClassname($type);
       if (!self::fieldTypeExists($type)) {
          return null;
       }
+      $className = self::getFieldClassname($type);
       return new $className($question);
    }
 }

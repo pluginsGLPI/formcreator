@@ -112,8 +112,8 @@ class PluginFormcreatorTimeField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorDatetimeField::getName();
-      $this->string($output)->isEqualTo('Date & time');
+      $output = \PluginFormcreatorTimeField::getName();
+      $this->string($output)->isEqualTo('Time');
    }
 
    public function providerParseAnswerValues() {

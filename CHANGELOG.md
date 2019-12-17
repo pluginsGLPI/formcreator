@@ -1,3 +1,62 @@
+<a name="2.9.0"></a>
+# [2.9.0](https://github.com/pluginsglpi/formcreator/compare/v2.9.0-beta.1...v2.9.0) (2019-12-17)
+
+
+### Bug Fixes
+
+* compatibility with GLPI 9.5 ([f818178](https://github.com/pluginsglpi/formcreator/commit/f818178))
+* **targetticket:** missing JS code, typo ([072258f](https://github.com/pluginsglpi/formcreator/commit/072258f))
+* duplicate menu entry ([c4d4792](https://github.com/pluginsglpi/formcreator/commit/c4d4792))
+* **actorsfield:** dropdown does not show all items ([95a3a51](https://github.com/pluginsglpi/formcreator/commit/95a3a51))
+* **category:** bad sub categories count ([ef68bb6](https://github.com/pluginsglpi/formcreator/commit/ef68bb6))
+* **category:** translation support ([495c8dc](https://github.com/pluginsglpi/formcreator/commit/495c8dc))
+* **condition:** misordered display on edit ([2e33592](https://github.com/pluginsglpi/formcreator/commit/2e33592))
+* **dropdown:** show ID in items ([dc402d9](https://github.com/pluginsglpi/formcreator/commit/dc402d9))
+* **dropdownfield:** root and limit miscomputations ([9e8cc73](https://github.com/pluginsglpi/formcreator/commit/9e8cc73))
+* **faq:** errors in FAQ list ([380e9ca](https://github.com/pluginsglpi/formcreator/commit/380e9ca))
+* **field:** width of textareas in fields settings ([1e2c07b](https://github.com/pluginsglpi/formcreator/commit/1e2c07b))
+* **floatfield,integerfield,textfield:** fix escaping in regex ([4a12235](https://github.com/pluginsglpi/formcreator/commit/4a12235))
+* **form:** deny access if form not enabled ([5d4489d](https://github.com/pluginsglpi/formcreator/commit/5d4489d))
+* **form:** obey redirect setting after creation ([314ff9c](https://github.com/pluginsglpi/formcreator/commit/314ff9c))
+* **form:** tile height shall not be fixed ([bfb273f](https://github.com/pluginsglpi/formcreator/commit/bfb273f))
+* **form:** undefined var used ([1b70a25](https://github.com/pluginsglpi/formcreator/commit/1b70a25))
+* **form:** uninitialized var ([542f686](https://github.com/pluginsglpi/formcreator/commit/542f686))
+* **formanswer:** always check for ticket validation ([24faaf7](https://github.com/pluginsglpi/formcreator/commit/24faaf7))
+* **formanswer:** bad key for form ID ([58dc3d3](https://github.com/pluginsglpi/formcreator/commit/58dc3d3))
+* **formanswer:** bad sql ([b7a78b4](https://github.com/pluginsglpi/formcreator/commit/b7a78b4))
+* **formanswer:** canViewItem with group ([e770b08](https://github.com/pluginsglpi/formcreator/commit/e770b08))
+* unexpected redirection while editing a ticket as post-only + service catalog ([266d9d3](https://github.com/pluginsglpi/formcreator/commit/266d9d3)), closes [#1557](https://github.com/pluginsglpi/formcreator/issues/1557)
+* **formanswer:** missing icon for form valisation status ([2f8b533](https://github.com/pluginsglpi/formcreator/commit/2f8b533))
+* **formanswer:** restore lost method ([dddf830](https://github.com/pluginsglpi/formcreator/commit/dddf830))
+* **install:** loss of condition on upgrade ([b9de3fd](https://github.com/pluginsglpi/formcreator/commit/b9de3fd))
+* **install:** remove deletes answers when dropping is_deleted ([3ed1515](https://github.com/pluginsglpi/formcreator/commit/3ed1515)), closes [#1513](https://github.com/pluginsglpi/formcreator/issues/1513)
+* **install:** reorder key changes on conditions table ([701abee](https://github.com/pluginsglpi/formcreator/commit/701abee))
+* **install:** schema mismatch betwheen install and upgrade ([fd99d93](https://github.com/pluginsglpi/formcreator/commit/fd99d93))
+* **issue:** size of text content for issue ([a72ce86](https://github.com/pluginsglpi/formcreator/commit/a72ce86))
+* **locales:** plural problem ([d3e06ae](https://github.com/pluginsglpi/formcreator/commit/d3e06ae))
+* **question:** locale issue cause tests to fail ([51148a3](https://github.com/pluginsglpi/formcreator/commit/51148a3))
+* **question_condition:** better performance ([8a54258](https://github.com/pluginsglpi/formcreator/commit/8a54258))
+* **qusetion:** remove strict comparison ([fe25682](https://github.com/pluginsglpi/formcreator/commit/fe25682))
+* **target:** bad constants ([78c12a8](https://github.com/pluginsglpi/formcreator/commit/78c12a8))
+* **textfield,actorsfield:** missing default value on edit ([d9327ac](https://github.com/pluginsglpi/formcreator/commit/d9327ac))
+* **wizard:** fix inconsistencies in counters ([ee0b987](https://github.com/pluginsglpi/formcreator/commit/ee0b987))
+* extended service catalog ([8d5879b](https://github.com/pluginsglpi/formcreator/commit/8d5879b))
+* fa data prerequisite check ([74c83bb](https://github.com/pluginsglpi/formcreator/commit/74c83bb))
+* local problem in menu ([861a736](https://github.com/pluginsglpi/formcreator/commit/861a736)), closes [#1516](https://github.com/pluginsglpi/formcreator/issues/1516)
+* not loaded resource for anonymous form ([bea27a1](https://github.com/pluginsglpi/formcreator/commit/bea27a1)), closes [#1536](https://github.com/pluginsglpi/formcreator/issues/1536)
+
+
+### Features
+
+* compatibility with GLPI 9.5 ([135ec44](https://github.com/pluginsglpi/formcreator/commit/135ec44))
+* **form:** auto select validator if only one avaialble ([79ad2f9](https://github.com/pluginsglpi/formcreator/commit/79ad2f9))
+* **question:** bring a question to 1st position ([9ed109e](https://github.com/pluginsglpi/formcreator/commit/9ed109e))
+* **question:** use font awesome ([bf7b274](https://github.com/pluginsglpi/formcreator/commit/bf7b274))
+* **section:** show conditions ([0d41650](https://github.com/pluginsglpi/formcreator/commit/0d41650))
+* **timefield:** time field ([e4a430e](https://github.com/pluginsglpi/formcreator/commit/e4a430e))
+
+
+
 <a name="2.9.0-beta.1"></a>
 # [2.9.0-beta.1](https://github.com/pluginsglpi/formcreator/compare/v2.8.3...v2.9.0-beta.1) (2019-10-02)
 
