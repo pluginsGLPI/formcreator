@@ -104,47 +104,46 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             'uuid',
             $input['uuid']
          );
-      }
+         // Convert UUIDs or names into IDs
+         switch ($input['actor_type']) {
+            case self::ACTOR_TYPE_QUESTION_PERSON :
+            case self::ACTOR_TYPE_QUESTION_GROUP :
+            case self::ACTOR_TYPE_QUESTION_SUPPLIER :
+               $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
+               if ($question === false) {
+                  $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+                  return false;
+               }
+               $input['actor_value'] = $question->getID();
+               break;
 
-      // set ID for linked objects
-      switch ($input['actor_type']) {
-         case self::ACTOR_TYPE_QUESTION_PERSON :
-         case self::ACTOR_TYPE_QUESTION_GROUP :
-         case self::ACTOR_TYPE_QUESTION_SUPPLIER :
-            $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
-            if ($question === false) {
-               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-               return false;
-            }
-            $input['actor_value'] = $question->getID();
-            break;
+            case self::ACTOR_TYPE_PERSON:
+               $user = new User;
+               $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
+               if ($users_id === false) {
+                  throw new ImportFailureException('failed to find a user');
+               }
+               $input['actor_value'] = $users_id;
+               break;
 
-         case self::ACTOR_TYPE_PERSON:
-            $user = new User;
-            $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user']);
-            if ($users_id === false) {
-               throw new ImportFailureException('failed to find a user');
-            }
-            $input['actor_value'] = $users_id;
-            break;
+            case self::ACTOR_TYPE_GROUP:
+               $group = new Group;
+               $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
+               if ($groups_id === false) {
+                  throw new ImportFailureException('failed to find a group');
+               }
+               $input['actor_value'] = $groups_id;
+               break;
 
-         case self::ACTOR_TYPE_GROUP:
-            $group = new Group;
-            $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group']);
-            if ($groups_id === false) {
-               throw new ImportFailureException('failed to find a group');
-            }
-            $input['actor_value'] = $groups_id;
-            break;
-
-         case self::ACTOR_TYPE_SUPPLIER:
-            $supplier = new Supplier;
-            $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
-            if ($suppliers_id === false) {
-               throw new ImportFailureException('failed to find a supplier');
-            }
-            $input['actor_value'] = $suppliers_id;
-            break;
+            case self::ACTOR_TYPE_SUPPLIER:
+               $supplier = new Supplier;
+               $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
+               if ($suppliers_id === false) {
+                  throw new ImportFailureException('failed to find a supplier');
+               }
+               $input['actor_value'] = $suppliers_id;
+               break;
+         }
       }
 
       $originalId = $input[$idKey];
@@ -186,7 +185,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
       if ($remove_uuid) {
          $idToRemove = 'uuid';
       } else {
-         // Convert IDs into UUIDs
+         // Convert IDs into UUIDs or names
          switch ($target_actor['actor_type']) {
             case self::ACTOR_TYPE_QUESTION_PERSON:
             case self::ACTOR_TYPE_QUESTION_GROUP:
