@@ -35,9 +35,9 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-danger">
-                    26%
-                                            <small>of 239</small>
+                <h1 class="text-warning">
+                    39%
+                                            <small>of 340</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -64,8 +64,15 @@ layout: coverage
 </td>
                                             </tr>
             <tr>
+            <td><a href="#getDesignSpecializationField">PluginFormcreatorDropdownField::getDesignSpecializationField()</a></td>
+                                        <td style="text-align: center">66</td>
+                <td style="text-align: center">    
+    <span class="label label-success">94%</span>
+</td>
+                                            </tr>
+            <tr>
             <td><a href="#displayField">PluginFormcreatorDropdownField::displayField()</a></td>
-                                        <td style="text-align: center">117</td>
+                                        <td style="text-align: center">111</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -95,7 +102,7 @@ layout: coverage
             <td><a href="#getValueForTargetText">PluginFormcreatorDropdownField::getValueForTargetText()</a></td>
                                         <td style="text-align: center">9</td>
                 <td style="text-align: center">    
-    <span class="label label-success">89%</span>
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -116,28 +123,21 @@ layout: coverage
             <td><a href="#isValid">PluginFormcreatorDropdownField::isValid()</a></td>
                                         <td style="text-align: center">12</td>
                 <td style="text-align: center">    
-    <span class="label label-warning">50%</span>
+    <span class="label label-success">92%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#prepareQuestionInputForSave">PluginFormcreatorDropdownField::prepareQuestionInputForSave()</a></td>
-                                        <td style="text-align: center">32</td>
+                                        <td style="text-align: center">35</td>
                 <td style="text-align: center">    
-    <span class="label label-warning">63%</span>
+    <span class="label label-warning">69%</span>
 </td>
                                             </tr>
             <tr>
-            <td><a href="#getPrefs">PluginFormcreatorDropdownField::getPrefs()</a></td>
+            <td><a href="#canRequire">PluginFormcreatorDropdownField::canRequire()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
-</td>
-                                            </tr>
-            <tr>
-            <td><a href="#getJSFields">PluginFormcreatorDropdownField::getJSFields()</a></td>
-                                        <td style="text-align: center">2</td>
-                <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -189,6 +189,20 @@ layout: coverage
     <span class="label label-success">100%</span>
 </td>
                                             </tr>
+            <tr>
+            <td><a href="#parseObjectProperties">PluginFormcreatorDropdownField::parseObjectProperties()</a></td>
+                                        <td style="text-align: center">39</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getHtmlIcon">PluginFormcreatorDropdownField::getHtmlIcon()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
         </tbody>
 </table>
 
@@ -212,6 +226,33 @@ layout: coverage
 
             <script>
                 var g = graph('PluginFormcreatorDropdownField', 'isPrerequisites');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getDesignSpecializationField">
+                <div class="panel-heading">
+                    PluginFormcreatorDropdownField::getDesignSpecializationField()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./PluginFormcreatorDropdownField.html#getDesignSpecializationField" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('PluginFormcreatorDropdownField', 'getDesignSpecializationField');
 
                 
                 g.addEnd().roundNodes();
@@ -415,7 +456,7 @@ layout: coverage
     <span class="label label-default">N/A</span>
 
                         <div class="btn-group">
-                                <a href="./PluginFormcreatorDropdownField.html#isValid" class="btn btn-sm btn-warning" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+                                <a href="./PluginFormcreatorDropdownField.html#isValid" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
         
         
             </div>
@@ -462,14 +503,14 @@ layout: coverage
                 
                 g.render();
             </script>
-                    <div class="panel panel-default" id="getPrefs">
+                    <div class="panel panel-default" id="canRequire">
                 <div class="panel-heading">
-                    PluginFormcreatorDropdownField::getPrefs()
+                    PluginFormcreatorDropdownField::canRequire()
                         
     <span class="label label-default">N/A</span>
 
                         <div class="btn-group">
-                                <a href="./PluginFormcreatorDropdownField.html#getPrefs" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+                                <a href="./PluginFormcreatorDropdownField.html#canRequire" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
         
         
             </div>
@@ -481,34 +522,7 @@ layout: coverage
             </div>
 
             <script>
-                var g = graph('PluginFormcreatorDropdownField', 'getPrefs');
-
-                
-                g.addEnd().roundNodes();
-
-                
-                g.render();
-            </script>
-                    <div class="panel panel-default" id="getJSFields">
-                <div class="panel-heading">
-                    PluginFormcreatorDropdownField::getJSFields()
-                        
-    <span class="label label-default">N/A</span>
-
-                        <div class="btn-group">
-                                <a href="./PluginFormcreatorDropdownField.html#getJSFields" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
-        
-        
-            </div>
-
-                </div>
-                <div class="panel-body">
-                    <div class="graph"><svg></svg></div>
-                </div>
-            </div>
-
-            <script>
-                var g = graph('PluginFormcreatorDropdownField', 'getJSFields');
+                var g = graph('PluginFormcreatorDropdownField', 'canRequire');
 
                 
                 g.addEnd().roundNodes();
@@ -698,6 +712,60 @@ layout: coverage
 
             <script>
                 var g = graph('PluginFormcreatorDropdownField', 'isAnonymousFormCompatible');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="parseObjectProperties">
+                <div class="panel-heading">
+                    PluginFormcreatorDropdownField::parseObjectProperties()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./PluginFormcreatorDropdownField.html#parseObjectProperties" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('PluginFormcreatorDropdownField', 'parseObjectProperties');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getHtmlIcon">
+                <div class="panel-heading">
+                    PluginFormcreatorDropdownField::getHtmlIcon()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./PluginFormcreatorDropdownField.html#getHtmlIcon" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('PluginFormcreatorDropdownField', 'getHtmlIcon');
 
                 
                 g.addEnd().roundNodes();

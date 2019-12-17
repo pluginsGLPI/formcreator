@@ -1,0 +1,1832 @@
+---
+layout: coverage
+---
+<html>
+
+<head>
+    <script src="assets/d3.js" charset="utf-8"></script>
+    <script src="assets/dagre-d3.js"></script>
+    <script src="assets/jquery.js"></script>
+    <script src="assets/jquery.tablesorter.js"></script>
+    <script src="assets/report.js"></script>
+
+    <link rel="stylesheet" href="assets/font-awesome.min.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html"><img src="assets/logo.png" alt="atoum"/> Code coverage report</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="col-lg-12">
+            <div class="row">
+        <h1>PluginFormcreatorQuestionDependency: lines coverage</h1>
+
+        
+
+
+<table class="table table-bordered">
+    <tr>
+        
+                    <td style="text-align: center; width: 100%">
+                <h1 class="text-warning">
+                    50%
+                                            <small>of 82</small>
+                                    </h1>
+                <strong>Lines</strong>
+            </td>
+        
+        
+            </tr>
+</table>
+
+<table class="table table-bordered table-striped table-hover sort">
+    <thead>
+    <tr>
+        <th>Method <i class="fa"></i></th>
+                            <th style="text-align: center">Lines <i class="fa"></i></th>
+            <th style="text-align: center">Line % <i class="fa"></i></th>
+                            </tr>
+    </thead>
+
+    <tbody>
+            <tr>
+            <td><a href="#__construct">PluginFormcreatorQuestionDependency::__construct()</a></td>
+                                        <td style="text-align: center">3</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getParameterFormSize">PluginFormcreatorQuestionDependency::getParameterFormSize()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getParameterForm">PluginFormcreatorQuestionDependency::getParameterForm()</a></td>
+                                        <td style="text-align: center">22</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getJsShowHideSelector">PluginFormcreatorQuestionDependency::getJsShowHideSelector()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#prepareInputForAdd">PluginFormcreatorQuestionDependency::prepareInputForAdd()</a></td>
+                                        <td style="text-align: center">3</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getFieldName">PluginFormcreatorQuestionDependency::getFieldName()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#post_getEmpty">PluginFormcreatorQuestionDependency::post_getEmpty()</a></td>
+                                        <td style="text-align: center">2</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#import">PluginFormcreatorQuestionDependency::import()</a></td>
+                                        <td style="text-align: center">36</td>
+                <td style="text-align: center">    
+    <span class="label label-success">86%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#export">PluginFormcreatorQuestionDependency::export()</a></td>
+                                        <td style="text-align: center">13</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+        </tbody>
+</table>
+
+        <table class="table table-bordered table-stripped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+                            <tr class="line" id="">
+                    <th id="L1" class="number ">1</th>
+
+                    <td class="" >
+                        <pre>&lt;?php
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2" class="number ">2</th>
+
+                    <td class="" >
+                        <pre>/**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L3" class="number ">3</th>
+
+                    <td class="" >
+                        <pre> * ---------------------------------------------------------------------
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L4" class="number ">4</th>
+
+                    <td class="" >
+                        <pre> * Formcreator is a plugin which allows creation of custom forms of
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L5" class="number ">5</th>
+
+                    <td class="" >
+                        <pre> * easy access.
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L6" class="number ">6</th>
+
+                    <td class="" >
+                        <pre> * ---------------------------------------------------------------------
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L7" class="number ">7</th>
+
+                    <td class="" >
+                        <pre> * LICENSE
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L8" class="number ">8</th>
+
+                    <td class="" >
+                        <pre> *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L9" class="number ">9</th>
+
+                    <td class="" >
+                        <pre> * This file is part of Formcreator.
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L10" class="number ">10</th>
+
+                    <td class="" >
+                        <pre> *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L11" class="number ">11</th>
+
+                    <td class="" >
+                        <pre> * Formcreator is free software; you can redistribute it and/or modify
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L12" class="number ">12</th>
+
+                    <td class="" >
+                        <pre> * it under the terms of the GNU General Public License as published by
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L13" class="number ">13</th>
+
+                    <td class="" >
+                        <pre> * the Free Software Foundation; either version 2 of the License, or
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L14" class="number ">14</th>
+
+                    <td class="" >
+                        <pre> * (at your option) any later version.
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L15" class="number ">15</th>
+
+                    <td class="" >
+                        <pre> *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L16" class="number ">16</th>
+
+                    <td class="" >
+                        <pre> * Formcreator is distributed in the hope that it will be useful,
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L17" class="number ">17</th>
+
+                    <td class="" >
+                        <pre> * but WITHOUT ANY WARRANTY; without even the implied warranty of
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L18" class="number ">18</th>
+
+                    <td class="" >
+                        <pre> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L19" class="number ">19</th>
+
+                    <td class="" >
+                        <pre> * GNU General Public License for more details.
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L20" class="number ">20</th>
+
+                    <td class="" >
+                        <pre> *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L21" class="number ">21</th>
+
+                    <td class="" >
+                        <pre> * You should have received a copy of the GNU General Public License
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L22" class="number ">22</th>
+
+                    <td class="" >
+                        <pre> * along with Formcreator. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L23" class="number ">23</th>
+
+                    <td class="" >
+                        <pre> * ---------------------------------------------------------------------
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L24" class="number ">24</th>
+
+                    <td class="" >
+                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L25" class="number ">25</th>
+
+                    <td class="" >
+                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L26" class="number ">26</th>
+
+                    <td class="" >
+                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L27" class="number ">27</th>
+
+                    <td class="" >
+                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L28" class="number ">28</th>
+
+                    <td class="" >
+                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L29" class="number ">29</th>
+
+                    <td class="" >
+                        <pre> * ---------------------------------------------------------------------
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L30" class="number ">30</th>
+
+                    <td class="" >
+                        <pre> */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L31" class="number ">31</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L32" class="number ">32</th>
+
+                    <td class="" >
+                        <pre>use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L33" class="number ">33</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L34" class="number ">34</th>
+
+                    <td class="" >
+                        <pre>if (!defined(&#039;GLPI_ROOT&#039;)) {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L35" class="number ">35</th>
+
+                    <td class="" >
+                        <pre>   die(&quot;Sorry. You can&#039;t access this file directly&quot;);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L36" class="number ">36</th>
+
+                    <td class="" >
+                        <pre>}
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L37" class="number ">37</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L38" class="number ">38</th>
+
+                    <td class="" >
+                        <pre>/**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L39" class="number ">39</th>
+
+                    <td class="" >
+                        <pre> * A question parameter to handle a depdency to an other question. For example
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L40" class="number ">40</th>
+
+                    <td class="" >
+                        <pre> * the content og the question A is computed from the content of the question B. In
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L41" class="number ">41</th>
+
+                    <td class="" >
+                        <pre> * this case the question A has this parameter to maitnain the dependency to the
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L42" class="number ">42</th>
+
+                    <td class="" >
+                        <pre> * question B
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L43" class="number ">43</th>
+
+                    <td class="" >
+                        <pre> */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L44" class="number ">44</th>
+
+                    <td class="" >
+                        <pre>class PluginFormcreatorQuestionDependency
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L45" class="number ">45</th>
+
+                    <td class="" >
+                        <pre>extends PluginFormcreatorQuestionParameter
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L46" class="number ">46</th>
+
+                    <td class="" >
+                        <pre>{
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L47" class="number ">47</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L48" class="number ">48</th>
+
+                    <td class="" >
+                        <pre>   /** @var string $fieldtype type of field useable for the dependency */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L49" class="number ">49</th>
+
+                    <td class="" >
+                        <pre>   protected $fieldType;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L50" class="number ">50</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L51" class="number ">51</th>
+
+                    <td class="" >
+                        <pre>   protected $domId = &#039;plugin_formcreator_questionDependency&#039;;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L52" class="number ">52</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L53" class="number ">53</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L54" class="number ">54</th>
+
+                    <td class="" >
+                        <pre>    * @param PluginFormcreatorFieldInterface $field Field
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L55" class="number ">55</th>
+
+                    <td class="" >
+                        <pre>    * @param array $options
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L56" class="number ">56</th>
+
+                    <td class="" >
+                        <pre>    *                - fieldName: name of the HTML input tag
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L57" class="number ">57</th>
+
+                    <td class="" >
+                        <pre>    *                - label    : label for the parameter
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L58" class="number ">58</th>
+
+                    <td class="" >
+                        <pre>    *                - fieldType: array of field types the dependency should filter
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L59" class="number ">59</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="__construct">
+                    <th id="L60" class="number ">60</th>
+
+                    <td class="" id="__construct">
+                        <pre>   public function __construct(PluginFormcreatorFieldInterface $field, array $options) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L61" class="number covered">61</th>
+
+                    <td class="covered" >
+                        <pre>      parent::__construct($field, $options);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L62" class="number covered">62</th>
+
+                    <td class="covered" >
+                        <pre>      $this-&gt;fieldtype = isset($options[&#039;fieldType&#039;]) ? $options[&#039;fieldType&#039;] : [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L63" class="number covered">63</th>
+
+                    <td class="covered" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L64" class="number ">64</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getParameterFormSize">
+                    <th id="L65" class="number ">65</th>
+
+                    <td class="" id="getParameterFormSize">
+                        <pre>   public function getParameterFormSize() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L66" class="number covered">66</th>
+
+                    <td class="covered" >
+                        <pre>      return 0;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L67" class="number unreach">67</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L68" class="number ">68</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getParameterForm">
+                    <th id="L69" class="number ">69</th>
+
+                    <td class="" id="getParameterForm">
+                        <pre>   public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L70" class="number ">70</th>
+
+                    <td class="" >
+                        <pre>      // get questions of type text in the form
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L71" class="number uncovered">71</th>
+
+                    <td class="uncovered" >
+                        <pre>      $eligibleQuestions = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L72" class="number uncovered">72</th>
+
+                    <td class="uncovered" >
+                        <pre>      $criteria = [&#039;fieldtype&#039; =&gt; $this-&gt;fieldtype];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L73" class="number uncovered">73</th>
+
+                    <td class="uncovered" >
+                        <pre>      foreach ($question-&gt;getQuestionsFromForm($form-&gt;getID(), $criteria) as $item) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L74" class="number uncovered">74</th>
+
+                    <td class="uncovered" >
+                        <pre>         $eligibleQuestions[$item-&gt;getID()] = $item-&gt;getField(&#039;name&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L75" class="number ">75</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L76" class="number ">76</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L77" class="number ">77</th>
+
+                    <td class="" >
+                        <pre>      // get the name of the HTML input field
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L78" class="number uncovered">78</th>
+
+                    <td class="uncovered" >
+                        <pre>      $name = &#039;_parameters[&#039; . $this-&gt;field-&gt;getFieldTypeName() . &#039;][&#039; . $this-&gt;fieldName . &#039;]&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L79" class="number ">79</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L80" class="number ">80</th>
+
+                    <td class="" >
+                        <pre>      //  get the selected value in the dropdown
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L81" class="number uncovered">81</th>
+
+                    <td class="uncovered" >
+                        <pre>      $selected = 0;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L82" class="number uncovered">82</th>
+
+                    <td class="uncovered" >
+                        <pre>      if (!$question-&gt;isNewItem()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L83" class="number uncovered">83</th>
+
+                    <td class="uncovered" >
+                        <pre>         $this-&gt;getFromDBByCrit([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L84" class="number uncovered">84</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;plugin_formcreator_questions_id&#039; =&gt; $question-&gt;getID(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L85" class="number uncovered">85</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;fieldname&#039; =&gt; $this-&gt;fieldName,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L86" class="number ">86</th>
+
+                    <td class="" >
+                        <pre>         ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L87" class="number uncovered">87</th>
+
+                    <td class="uncovered" >
+                        <pre>         if (!$this-&gt;isNewItem()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L88" class="number uncovered">88</th>
+
+                    <td class="uncovered" >
+                        <pre>            $selected = $this-&gt;fields[&#039;plugin_formcreator_questions_id_2&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L89" class="number ">89</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L90" class="number ">90</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L91" class="number ">91</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L92" class="number ">92</th>
+
+                    <td class="" >
+                        <pre>      // get the HTML for the dropdown
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L93" class="number uncovered">93</th>
+
+                    <td class="uncovered" >
+                        <pre>      $questionsDropdown = Dropdown::showFromArray(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L94" class="number uncovered">94</th>
+
+                    <td class="uncovered" >
+                        <pre>         $name . &#039;[plugin_formcreator_questions_id_2]&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L95" class="number ">95</th>
+
+                    <td class="" >
+                        <pre>         $eligibleQuestions,
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L96" class="number ">96</th>
+
+                    <td class="" >
+                        <pre>         [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L97" class="number uncovered">97</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;display&#039;               =&gt; false,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L98" class="number ">98</th>
+
+                    <td class="" >
+                        <pre>            &#039;display_emptychoice&#039;   =&gt; true,
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L99" class="number uncovered">99</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;value&#039;                 =&gt; $selected,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L100" class="number uncovered">100</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;used&#039;                  =&gt; [$question-&gt;getID() =&gt; &#039;&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L101" class="number ">101</th>
+
+                    <td class="" >
+                        <pre>         ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L102" class="number ">102</th>
+
+                    <td class="" >
+                        <pre>      );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L103" class="number ">103</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L104" class="number ">104</th>
+
+                    <td class="" >
+                        <pre>      // build HTML code
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L105" class="number uncovered">105</th>
+
+                    <td class="uncovered" >
+                        <pre>      $selector = $this-&gt;domId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L106" class="number uncovered">106</th>
+
+                    <td class="uncovered" >
+                        <pre>      $out = &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L107" class="number uncovered">107</th>
+
+                    <td class="uncovered" >
+                        <pre>      $out.= &#039;&lt;td id=&quot;&#039; . $selector . &#039;&quot;&gt;&#039; . $this-&gt;label . &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L108" class="number uncovered">108</th>
+
+                    <td class="uncovered" >
+                        <pre>      $out.= &#039;&lt;td&gt;&#039; . $questionsDropdown . &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L109" class="number ">109</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L110" class="number uncovered">110</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $out;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L111" class="number unreach">111</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L112" class="number ">112</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getJsShowHideSelector">
+                    <th id="L113" class="number ">113</th>
+
+                    <td class="" id="getJsShowHideSelector">
+                        <pre>   public function getJsShowHideSelector() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L114" class="number uncovered">114</th>
+
+                    <td class="uncovered" >
+                        <pre>      return &quot;#&quot; . $this-&gt;domId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L115" class="number unreach">115</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L116" class="number ">116</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="prepareInputForAdd">
+                    <th id="L117" class="number ">117</th>
+
+                    <td class="" id="prepareInputForAdd">
+                        <pre>   public function prepareInputForAdd($input) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L118" class="number covered">118</th>
+
+                    <td class="covered" >
+                        <pre>      $input = parent::prepareInputForAdd($input);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L119" class="number covered">119</th>
+
+                    <td class="covered" >
+                        <pre>      $input[&#039;fieldname&#039;] = $this-&gt;fieldName;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L120" class="number ">120</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L121" class="number covered">121</th>
+
+                    <td class="covered" >
+                        <pre>      return $input;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L122" class="number unreach">122</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L123" class="number ">123</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getFieldName">
+                    <th id="L124" class="number ">124</th>
+
+                    <td class="" id="getFieldName">
+                        <pre>   public function getFieldName() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L125" class="number covered">125</th>
+
+                    <td class="covered" >
+                        <pre>      return $this-&gt;fieldName;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L126" class="number unreach">126</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L127" class="number ">127</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="post_getEmpty">
+                    <th id="L128" class="number ">128</th>
+
+                    <td class="" id="post_getEmpty">
+                        <pre>   public function post_getEmpty() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L129" class="number covered">129</th>
+
+                    <td class="covered" >
+                        <pre>      $this-&gt;fields[&#039;plugin_formcreator_questions_id_2&#039;] = &#039;0&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L130" class="number covered">130</th>
+
+                    <td class="covered" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L131" class="number ">131</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="import">
+                    <th id="L132" class="number ">132</th>
+
+                    <td class="" id="import">
+                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-success">86%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L133" class="number covered">133</th>
+
+                    <td class="covered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L134" class="number ">134</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L135" class="number covered">135</th>
+
+                    <td class="covered" >
+                        <pre>      if (!isset($input[&#039;uuid&#039;]) &amp;&amp; !isset($input[&#039;id&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L136" class="number covered">136</th>
+
+                    <td class="covered" >
+                        <pre>         throw new ImportFailureException(&#039;UUID or ID is mandatory&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L137" class="number ">137</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L138" class="number ">138</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L139" class="number covered">139</th>
+
+                    <td class="covered" >
+                        <pre>      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L140" class="number covered">140</th>
+
+                    <td class="covered" >
+                        <pre>      $input[$questionFk] = $containerId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L141" class="number ">141</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L142" class="number covered">142</th>
+
+                    <td class="covered" >
+                        <pre>      $question = new PluginFormcreatorQuestion();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L143" class="number covered">143</th>
+
+                    <td class="covered" >
+                        <pre>      $question-&gt;getFromDB($containerId);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L144" class="number covered">144</th>
+
+                    <td class="covered" >
+                        <pre>      $field = PluginFormcreatorFields::getFieldInstance(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L145" class="number covered">145</th>
+
+                    <td class="covered" >
+                        <pre>         $question-&gt;fields[&#039;fieldtype&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L146" class="number ">146</th>
+
+                    <td class="" >
+                        <pre>         $question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L147" class="number ">147</th>
+
+                    <td class="" >
+                        <pre>      );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L148" class="number ">148</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L149" class="number covered">149</th>
+
+                    <td class="covered" >
+                        <pre>      $item = $field-&gt;getEmptyParameters();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L150" class="number covered">150</th>
+
+                    <td class="covered" >
+                        <pre>      $item = $item[$input[&#039;fieldname&#039;]];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L151" class="number ">151</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L152" class="number ">152</th>
+
+                    <td class="" >
+                        <pre>      // Find an existing condition to update, only if an UUID is available
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L153" class="number covered">153</th>
+
+                    <td class="covered" >
+                        <pre>      $itemId = false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L154" class="number ">154</th>
+
+                    <td class="" >
+                        <pre>      /** @var string $idKey key to use as ID (id or uuid) */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L155" class="number covered">155</th>
+
+                    <td class="covered" >
+                        <pre>      $idKey = &#039;id&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L156" class="number covered">156</th>
+
+                    <td class="covered" >
+                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L157" class="number ">157</th>
+
+                    <td class="" >
+                        <pre>         // Try to find an existing item to update
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L158" class="number covered">158</th>
+
+                    <td class="covered" >
+                        <pre>         $idKey = &#039;uuid&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L159" class="number covered">159</th>
+
+                    <td class="covered" >
+                        <pre>         $itemId = plugin_formcreator_getFromDBByField(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L160" class="number covered">160</th>
+
+                    <td class="covered" >
+                        <pre>            $item,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L161" class="number covered">161</th>
+
+                    <td class="covered" >
+                        <pre>            &#039;uuid&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L162" class="number covered">162</th>
+
+                    <td class="covered" >
+                        <pre>            $input[&#039;plugin_formcreator_questions_id_2&#039;]</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L163" class="number ">163</th>
+
+                    <td class="" >
+                        <pre>         );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L164" class="number ">164</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L165" class="number ">165</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L166" class="number ">166</th>
+
+                    <td class="" >
+                        <pre>      // escape text fields
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L167" class="number covered">167</th>
+
+                    <td class="covered" >
+                        <pre>      foreach ([&#039;fieldname&#039;] as $key) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L168" class="number covered">168</th>
+
+                    <td class="covered" >
+                        <pre>         $input[$key] = $DB-&gt;escape($input[$key]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L169" class="number ">169</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L170" class="number ">170</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L171" class="number ">171</th>
+
+                    <td class="" >
+                        <pre>      // set ID for linked objects
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L172" class="number covered">172</th>
+
+                    <td class="covered" >
+                        <pre>      $linked = $linker-&gt;getObject($input[&#039;plugin_formcreator_questions_id_2&#039;], PluginFormcreatorQuestion::class);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L173" class="number covered">173</th>
+
+                    <td class="covered" >
+                        <pre>      if ($linked === false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L174" class="number uncovered">174</th>
+
+                    <td class="uncovered" >
+                        <pre>         $linker-&gt;postpone($input[$idKey], $item-&gt;getType(), $input, $containerId);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L175" class="number uncovered">175</th>
+
+                    <td class="uncovered" >
+                        <pre>         return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L176" class="number ">176</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L177" class="number covered">177</th>
+
+                    <td class="covered" >
+                        <pre>      $input[&#039;plugin_formcreator_questions_id_2&#039;] = $linked-&gt;getID();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L178" class="number ">178</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L179" class="number ">179</th>
+
+                    <td class="" >
+                        <pre>      // Add or update condition
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L180" class="number covered">180</th>
+
+                    <td class="covered" >
+                        <pre>      $originalId = $input[$idKey];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L181" class="number covered">181</th>
+
+                    <td class="covered" >
+                        <pre>      if ($itemId !== false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L182" class="number uncovered">182</th>
+
+                    <td class="uncovered" >
+                        <pre>         $input[&#039;id&#039;] = $itemId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L183" class="number uncovered">183</th>
+
+                    <td class="uncovered" >
+                        <pre>         $item-&gt;update($input);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L184" class="number ">184</th>
+
+                    <td class="" >
+                        <pre>      } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L185" class="number covered">185</th>
+
+                    <td class="covered" >
+                        <pre>         unset($input[&#039;id&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L186" class="number covered">186</th>
+
+                    <td class="covered" >
+                        <pre>         $itemId = $item-&gt;add($input);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L187" class="number ">187</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L188" class="number covered">188</th>
+
+                    <td class="covered" >
+                        <pre>      if ($itemId === false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L189" class="number uncovered">189</th>
+
+                    <td class="uncovered" >
+                        <pre>         throw new ImportFailureException(&#039;failed to add or update the item&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L190" class="number ">190</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L191" class="number ">191</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L192" class="number ">192</th>
+
+                    <td class="" >
+                        <pre>      // add the parameter to the linker
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L193" class="number covered">193</th>
+
+                    <td class="covered" >
+                        <pre>      $linker-&gt;addObject($originalId, $item);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L194" class="number ">194</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L195" class="number covered">195</th>
+
+                    <td class="covered" >
+                        <pre>      return $itemId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L196" class="number unreach">196</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L197" class="number ">197</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="export">
+                    <th id="L198" class="number ">198</th>
+
+                    <td class="" id="export">
+                        <pre>   public function export($remove_uuid = false) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L199" class="number uncovered">199</th>
+
+                    <td class="uncovered" >
+                        <pre>      if ($this-&gt;isNewItem()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L200" class="number uncovered">200</th>
+
+                    <td class="uncovered" >
+                        <pre>         return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L201" class="number ">201</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L202" class="number ">202</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L203" class="number uncovered">203</th>
+
+                    <td class="uncovered" >
+                        <pre>      $parameter = $this-&gt;fields;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L204" class="number ">204</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L205" class="number uncovered">205</th>
+
+                    <td class="uncovered" >
+                        <pre>      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L206" class="number uncovered">206</th>
+
+                    <td class="uncovered" >
+                        <pre>      unset($parameter[$questionFk]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L207" class="number ">207</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L208" class="number ">208</th>
+
+                    <td class="" >
+                        <pre>      // remove ID or UUID
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L209" class="number uncovered">209</th>
+
+                    <td class="uncovered" >
+                        <pre>      $idToRemove = &#039;id&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L210" class="number uncovered">210</th>
+
+                    <td class="uncovered" >
+                        <pre>      if ($remove_uuid) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L211" class="number uncovered">211</th>
+
+                    <td class="uncovered" >
+                        <pre>         $idToRemove = &#039;uuid&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L212" class="number ">212</th>
+
+                    <td class="" >
+                        <pre>      } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L213" class="number ">213</th>
+
+                    <td class="" >
+                        <pre>         // Convert IDs into UUIDs
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L214" class="number uncovered">214</th>
+
+                    <td class="uncovered" >
+                        <pre>         $question = new PluginFormcreatorQuestion();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L215" class="number uncovered">215</th>
+
+                    <td class="uncovered" >
+                        <pre>         $question-&gt;getFromDB($parameter[&#039;plugin_formcreator_questions_id_2&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L216" class="number uncovered">216</th>
+
+                    <td class="uncovered" >
+                        <pre>         $parameter[&#039;plugin_formcreator_questions_id_2&#039;] = $question-&gt;fields[&#039;uuid&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L217" class="number ">217</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L218" class="number uncovered">218</th>
+
+                    <td class="uncovered" >
+                        <pre>      unset($parameter[$idToRemove]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L219" class="number ">219</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L220" class="number uncovered">220</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $parameter;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L221" class="number unreach">221</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L222" class="number ">222</th>
+
+                    <td class="" >
+                        <pre>}
+</pre>
+                    </td>
+                </tr>
+                        </tbody>
+        </table>
+    </div>
+    </div>
+
+    <footer class="row">
+        <div class="col-lg-12">
+            <small class="pull-right">Powered by <a href="http://atoum.org"><img src="assets/logo.png" alt="atoum"/></a></small>
+        </div>
+    </footer>
+</div>
+
+<script>
+    $(function() {
+        $('table.sort').tablesorter();
+    })
+</script>
+
+</body>
+
+</html>

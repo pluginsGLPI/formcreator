@@ -35,9 +35,9 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-danger">
-                    11%
-                                            <small>of 35</small>
+                <h1 class="text-warning">
+                    64%
+                                            <small>of 70</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -65,14 +65,21 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#import">PluginFormcreatorForm_Validator::import()</a></td>
-                                        <td style="text-align: center">15</td>
+                                        <td style="text-align: center">30</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">83%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#export">PluginFormcreatorForm_Validator::export()</a></td>
-                                        <td style="text-align: center">16</td>
+                                        <td style="text-align: center">17</td>
+                <td style="text-align: center">    
+    <span class="label label-success">94%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getValidatorsForForm">PluginFormcreatorForm_Validator::getValidatorsForForm()</a></td>
+                                        <td style="text-align: center">19</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -277,7 +284,7 @@ layout: coverage
                     <th id="L24" class="number ">24</th>
 
                     <td class="" >
-                        <pre> * @author    Thierry Bugier
+                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
 </pre>
                     </td>
                 </tr>
@@ -285,7 +292,7 @@ layout: coverage
                     <th id="L25" class="number ">25</th>
 
                     <td class="" >
-                        <pre> * @author    Jérémy Moreau
+                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
 </pre>
                     </td>
                 </tr>
@@ -293,7 +300,7 @@ layout: coverage
                     <th id="L26" class="number ">26</th>
 
                     <td class="" >
-                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
+                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
 </pre>
                     </td>
                 </tr>
@@ -301,7 +308,7 @@ layout: coverage
                     <th id="L27" class="number ">27</th>
 
                     <td class="" >
-                        <pre> * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
 </pre>
                     </td>
                 </tr>
@@ -309,7 +316,7 @@ layout: coverage
                     <th id="L28" class="number ">28</th>
 
                     <td class="" >
-                        <pre> * @link      https://github.com/pluginsGLPI/formcreator/
+                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
 </pre>
                     </td>
                 </tr>
@@ -317,7 +324,7 @@ layout: coverage
                     <th id="L29" class="number ">29</th>
 
                     <td class="" >
-                        <pre> * @link      https://pluginsglpi.github.io/formcreator/
+                        <pre> * ---------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
@@ -325,7 +332,7 @@ layout: coverage
                     <th id="L30" class="number ">30</th>
 
                     <td class="" >
-                        <pre> * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+                        <pre> */
 </pre>
                     </td>
                 </tr>
@@ -333,7 +340,7 @@ layout: coverage
                     <th id="L31" class="number ">31</th>
 
                     <td class="" >
-                        <pre> * ---------------------------------------------------------------------
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -341,7 +348,7 @@ layout: coverage
                     <th id="L32" class="number ">32</th>
 
                     <td class="" >
-                        <pre> */
+                        <pre>use tests\units\PluginFormcreatorForm_Validator as TestsPluginFormcreatorForm_Validator;
 </pre>
                     </td>
                 </tr>
@@ -413,7 +420,7 @@ layout: coverage
                     <th id="L41" class="number ">41</th>
 
                     <td class="" >
-                        <pre>class PluginFormcreatorForm_Validator extends CommonDBRelation {
+                        <pre>class PluginFormcreatorForm_Validator extends CommonDBRelation implements
 </pre>
                     </td>
                 </tr>
@@ -421,7 +428,7 @@ layout: coverage
                     <th id="L42" class="number ">42</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>PluginFormcreatorExportableInterface
 </pre>
                     </td>
                 </tr>
@@ -429,7 +436,7 @@ layout: coverage
                     <th id="L43" class="number ">43</th>
 
                     <td class="" >
-                        <pre>      // From CommonDBRelation
+                        <pre>{
 </pre>
                     </td>
                 </tr>
@@ -437,7 +444,7 @@ layout: coverage
                     <th id="L44" class="number ">44</th>
 
                     <td class="" >
-                        <pre>   static public $itemtype_1          = &#039;PluginFormcreatorForm&#039;;
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -445,7 +452,7 @@ layout: coverage
                     <th id="L45" class="number ">45</th>
 
                     <td class="" >
-                        <pre>   static public $items_id_1          = &#039;plugin_formcreator_forms_id&#039;;
+                        <pre>   // From CommonDBRelation
 </pre>
                     </td>
                 </tr>
@@ -453,7 +460,7 @@ layout: coverage
                     <th id="L46" class="number ">46</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>   static public $itemtype_1          = PluginFormcreatorForm::class;
 </pre>
                     </td>
                 </tr>
@@ -461,7 +468,7 @@ layout: coverage
                     <th id="L47" class="number ">47</th>
 
                     <td class="" >
-                        <pre>   static public $itemtype_2          = &#039;itemtype&#039;;
+                        <pre>   static public $items_id_1          = &#039;plugin_formcreator_forms_id&#039;;
 </pre>
                     </td>
                 </tr>
@@ -469,7 +476,7 @@ layout: coverage
                     <th id="L48" class="number ">48</th>
 
                     <td class="" >
-                        <pre>   static public $items_id_2          = &#039;items_id&#039;;
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -477,7 +484,7 @@ layout: coverage
                     <th id="L49" class="number ">49</th>
 
                     <td class="" >
-                        <pre>   static public $checkItem_2_Rights  = self::HAVE_VIEW_RIGHT_ON_ITEM;
+                        <pre>   static public $itemtype_2          = &#039;itemtype&#039;;
 </pre>
                     </td>
                 </tr>
@@ -485,7 +492,7 @@ layout: coverage
                     <th id="L50" class="number ">50</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>   static public $items_id_2          = &#039;items_id&#039;;
 </pre>
                     </td>
                 </tr>
@@ -493,7 +500,7 @@ layout: coverage
                     <th id="L51" class="number ">51</th>
 
                     <td class="" >
-                        <pre>   const VALIDATION_USER  = 1;
+                        <pre>   static public $checkItem_2_Rights  = self::HAVE_VIEW_RIGHT_ON_ITEM;
 </pre>
                     </td>
                 </tr>
@@ -501,7 +508,7 @@ layout: coverage
                     <th id="L52" class="number ">52</th>
 
                     <td class="" >
-                        <pre>   const VALIDATION_GROUP = 2;
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -509,19 +516,43 @@ layout: coverage
                     <th id="L53" class="number ">53</th>
 
                     <td class="" >
+                        <pre>   const VALIDATION_NONE  = 0;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L54" class="number ">54</th>
+
+                    <td class="" >
+                        <pre>   const VALIDATION_USER  = 1;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L55" class="number ">55</th>
+
+                    <td class="" >
+                        <pre>   const VALIDATION_GROUP = 2;
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L56" class="number ">56</th>
+
+                    <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="prepareInputForAdd">
-                    <th id="L54" class="number ">54</th>
+                    <th id="L57" class="number ">57</th>
 
                     <td class="" id="prepareInputForAdd">
                         <pre>   public function prepareInputForAdd($input) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L55" class="number ">55</th>
+                    <th id="L58" class="number ">58</th>
 
                     <td class="" >
                         <pre>      // generate a unique id
@@ -529,54 +560,32 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L56" class="number covered">56</th>
+                    <th id="L59" class="number covered">59</th>
 
                     <td class="covered" >
                         <pre>      if (!isset($input[&#039;uuid&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L57" class="number covered">57</th>
+                    <th id="L60" class="number covered">60</th>
 
                     <td class="covered" >
                         <pre>          || empty($input[&#039;uuid&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L58" class="number covered">58</th>
+                    <th id="L61" class="number covered">61</th>
 
                     <td class="covered" >
                         <pre>         $input[&#039;uuid&#039;] = plugin_formcreator_getUuid();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L59" class="number ">59</th>
+                    <th id="L62" class="number ">62</th>
 
                     <td class="" >
                         <pre>      }
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L60" class="number ">60</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L61" class="number covered">61</th>
-
-                    <td class="covered" >
-                        <pre>      return $input;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L62" class="number unreach">62</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -588,108 +597,138 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L64" class="number ">64</th>
+                    <th id="L64" class="number covered">64</th>
 
-                    <td class="" >
-                        <pre>   /**
-</pre>
+                    <td class="covered" >
+                        <pre>      return $input;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L65" class="number ">65</th>
+                    <th id="L65" class="number unreach">65</th>
 
-                    <td class="" >
-                        <pre>    * Import a form&#039;s validator into the db
-</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L66" class="number ">66</th>
 
                     <td class="" >
-                        <pre>    * @see PluginFormcreatorForm::importJson
+                        <pre>
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="">
+                            <tr class="line" id="import">
                     <th id="L67" class="number ">67</th>
 
-                    <td class="" >
-                        <pre>    *
-</pre>
+                    <td class="" id="import">
+                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {<span class="label label-success">83%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L68" class="number ">68</th>
+                    <th id="L68" class="number covered">68</th>
 
-                    <td class="" >
-                        <pre>    * @param  integer $forms_id  id of the parent form
-</pre>
+                    <td class="covered" >
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L69" class="number ">69</th>
+                    <th id="L69" class="number covered">69</th>
 
-                    <td class="" >
-                        <pre>    * @param  array   $validator the validator data (match the validator table)
-</pre>
+                    <td class="covered" >
+                        <pre>      $input[$formFk] = $forms_id;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L70" class="number ">70</th>
 
                     <td class="" >
-                        <pre>    * @return integer the validator&#039;s id
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L71" class="number ">71</th>
+                    <th id="L71" class="number covered">71</th>
 
-                    <td class="" >
-                        <pre>    */
-</pre>
+                    <td class="covered" >
+                        <pre>      $item = new self();</pre>
                     </td>
                 </tr>
-                            <tr class="line" id="import">
+                            <tr class="line" id="">
                     <th id="L72" class="number ">72</th>
 
-                    <td class="" id="import">
-                        <pre>   public static function import($forms_id = 0, $validator = []) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L73" class="number uncovered">73</th>
-
-                    <td class="uncovered" >
-                        <pre>      $item = new self;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L74" class="number ">74</th>
-
                     <td class="" >
-                        <pre>
+                        <pre>       /** @var string $idKey key to use as ID (id or uuid) */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L75" class="number uncovered">75</th>
+                    <th id="L73" class="number covered">73</th>
 
-                    <td class="uncovered" >
-                        <pre>      $validator[&#039;plugin_formcreator_forms_id&#039;] = $forms_id;</pre>
+                    <td class="covered" >
+                        <pre>       $idKey = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L76" class="number ">76</th>
+                    <th id="L74" class="number covered">74</th>
+
+                    <td class="covered" >
+                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L75" class="number covered">75</th>
+
+                    <td class="covered" >
+                        <pre>         $idKey = &#039;uuid&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L76" class="number covered">76</th>
+
+                    <td class="covered" >
+                        <pre>         $itemId = plugin_formcreator_getFromDBByField(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L77" class="number covered">77</th>
+
+                    <td class="covered" >
+                        <pre>            $item,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L78" class="number covered">78</th>
+
+                    <td class="covered" >
+                        <pre>            &#039;uuid&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L79" class="number covered">79</th>
+
+                    <td class="covered" >
+                        <pre>            $input[&#039;uuid&#039;]</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L80" class="number ">80</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         );
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L77" class="number ">77</th>
+                    <th id="L81" class="number ">81</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L82" class="number ">82</th>
 
                     <td class="" >
                         <pre>      // Find the validator
@@ -697,21 +736,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L78" class="number uncovered">78</th>
+                    <th id="L83" class="number covered">83</th>
 
-                    <td class="uncovered" >
-                        <pre>      if (!in_array($validator[&#039;itemtype&#039;], [User::class, Group::class])) {</pre>
+                    <td class="covered" >
+                        <pre>      if (!in_array($input[&#039;itemtype&#039;], [User::class, Group::class])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L79" class="number uncovered">79</th>
+                    <th id="L84" class="number uncovered">84</th>
 
                     <td class="uncovered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L80" class="number ">80</th>
+                    <th id="L85" class="number ">85</th>
 
                     <td class="" >
                         <pre>      }
@@ -719,21 +758,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L81" class="number uncovered">81</th>
+                    <th id="L86" class="number covered">86</th>
 
-                    <td class="uncovered" >
-                        <pre>      $linkedItemtype = $validator[&#039;itemtype&#039;];</pre>
+                    <td class="covered" >
+                        <pre>      $linkedItemtype = $input[&#039;itemtype&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L82" class="number uncovered">82</th>
+                    <th id="L87" class="number covered">87</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      $linkedItem = new $linkedItemtype();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L83" class="number ">83</th>
+                    <th id="L88" class="number ">88</th>
 
                     <td class="" >
                         <pre>      $crit = [
@@ -741,14 +780,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L84" class="number uncovered">84</th>
+                    <th id="L89" class="number covered">89</th>
 
-                    <td class="uncovered" >
-                        <pre>         &#039;name&#039; =&gt; $validator[&#039;_item&#039;],</pre>
+                    <td class="covered" >
+                        <pre>         &#039;name&#039; =&gt; $input[&#039;_item&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L85" class="number ">85</th>
+                    <th id="L90" class="number ">90</th>
 
                     <td class="" >
                         <pre>      ];
@@ -756,14 +795,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L86" class="number uncovered">86</th>
+                    <th id="L91" class="number covered">91</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      if (!$linkedItem-&gt;getFromDBByCrit($crit)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L87" class="number ">87</th>
+                    <th id="L92" class="number ">92</th>
 
                     <td class="" >
                         <pre>         // validator not found. Let&#039;s ignore it
@@ -771,14 +810,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L88" class="number uncovered">88</th>
+                    <th id="L93" class="number uncovered">93</th>
 
                     <td class="uncovered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L89" class="number ">89</th>
+                    <th id="L94" class="number ">94</th>
 
                     <td class="" >
                         <pre>      }
@@ -786,67 +825,58 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L90" class="number uncovered">90</th>
+                    <th id="L95" class="number covered">95</th>
 
-                    <td class="uncovered" >
-                        <pre>      $validator[&#039;items_id&#039;] = $linkedItem-&gt;getID();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L91" class="number ">91</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L92" class="number uncovered">92</th>
-
-                    <td class="uncovered" >
-                        <pre>      if ($validators_id = plugin_formcreator_getFromDBByField($item, &#039;uuid&#039;, $validator[&#039;uuid&#039;])) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L93" class="number ">93</th>
-
-                    <td class="" >
-                        <pre>         // add id key
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L94" class="number uncovered">94</th>
-
-                    <td class="uncovered" >
-                        <pre>         $validator[&#039;id&#039;] = $validators_id;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L95" class="number ">95</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>      $input[&#039;items_id&#039;] = $linkedItem-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L96" class="number ">96</th>
 
                     <td class="" >
-                        <pre>         // update section
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L97" class="number uncovered">97</th>
+                    <th id="L97" class="number ">97</th>
 
-                    <td class="uncovered" >
-                        <pre>         $item-&gt;update($validator);</pre>
+                    <td class="" >
+                        <pre>      // Add or update the form validator
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L98" class="number ">98</th>
+                    <th id="L98" class="number covered">98</th>
+
+                    <td class="covered" >
+                        <pre>      $originalId = $input[$idKey];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L99" class="number covered">99</th>
+
+                    <td class="covered" >
+                        <pre>      if ($itemId !== false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L100" class="number uncovered">100</th>
+
+                    <td class="uncovered" >
+                        <pre>         $input[&#039;id&#039;] = $itemId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L101" class="number uncovered">101</th>
+
+                    <td class="uncovered" >
+                        <pre>         $item-&gt;update($input);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L102" class="number ">102</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -854,22 +884,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L99" class="number ">99</th>
+                    <th id="L103" class="number covered">103</th>
 
-                    <td class="" >
-                        <pre>         //create section
-</pre>
+                    <td class="covered" >
+                        <pre>         unset($input[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L100" class="number uncovered">100</th>
+                    <th id="L104" class="number covered">104</th>
 
-                    <td class="uncovered" >
-                        <pre>         $validators_id = $item-&gt;add($validator);</pre>
+                    <td class="covered" >
+                        <pre>         $itemId = $item-&gt;add($input);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L101" class="number ">101</th>
+                    <th id="L105" class="number ">105</th>
 
                     <td class="" >
                         <pre>      }
@@ -877,56 +906,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L102" class="number ">102</th>
+                    <th id="L106" class="number covered">106</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>      if ($itemId === false) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L103" class="number uncovered">103</th>
+                    <th id="L107" class="number uncovered">107</th>
 
                     <td class="uncovered" >
-                        <pre>      return $validators_id;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L104" class="number unreach">104</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L105" class="number ">105</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L106" class="number ">106</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L107" class="number ">107</th>
-
-                    <td class="" >
-                        <pre>    * Export in an array all the data of the current instanciated validator
-</pre>
+                        <pre>         throw new ImportFailureException();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L108" class="number ">108</th>
 
                     <td class="" >
-                        <pre>    * @param boolean $remove_uuid remove the uuid key
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -934,7 +931,7 @@ layout: coverage
                     <th id="L109" class="number ">109</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -942,41 +939,26 @@ layout: coverage
                     <th id="L110" class="number ">110</th>
 
                     <td class="" >
-                        <pre>    * @return array the array with all data (with sub tables)
+                        <pre>      // add the item to the linker
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L111" class="number ">111</th>
+                    <th id="L111" class="number covered">111</th>
 
-                    <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="export">
-                    <th id="L112" class="number ">112</th>
-
-                    <td class="" id="export">
-                        <pre>   public function export($remove_uuid = false) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="covered" >
+                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L113" class="number uncovered">113</th>
+                    <th id="L112" class="number covered">112</th>
 
-                    <td class="uncovered" >
-                        <pre>      if (!$this-&gt;getID()) {</pre>
+                    <td class="covered" >
+                        <pre>         $originalId = $input[&#039;uuid&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L114" class="number uncovered">114</th>
-
-                    <td class="uncovered" >
-                        <pre>         return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L115" class="number ">115</th>
+                    <th id="L113" class="number ">113</th>
 
                     <td class="" >
                         <pre>      }
@@ -984,7 +966,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L116" class="number ">116</th>
+                    <th id="L114" class="number covered">114</th>
+
+                    <td class="covered" >
+                        <pre>      $linker-&gt;addObject($originalId, $item);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L115" class="number ">115</th>
 
                     <td class="" >
                         <pre>
@@ -992,10 +981,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L117" class="number uncovered">117</th>
+                    <th id="L116" class="number covered">116</th>
 
-                    <td class="uncovered" >
-                        <pre>      $validator = $this-&gt;fields;</pre>
+                    <td class="covered" >
+                        <pre>      return $itemId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L117" class="number unreach">117</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1010,55 +1006,81 @@ layout: coverage
                     <th id="L119" class="number ">119</th>
 
                     <td class="" >
-                        <pre>      // remove key and fk
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L120" class="number uncovered">120</th>
+                    <th id="L120" class="number ">120</th>
 
-                    <td class="uncovered" >
-                        <pre>      unset($validator[&#039;id&#039;],</pre>
+                    <td class="" >
+                        <pre>    * Export in an array all the data of the current instanciated validator
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L121" class="number uncovered">121</th>
+                    <th id="L121" class="number ">121</th>
 
-                    <td class="uncovered" >
-                        <pre>            $validator[&#039;plugin_formcreator_forms_id&#039;]);</pre>
+                    <td class="" >
+                        <pre>    * @param boolean $remove_uuid remove the uuid key
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L122" class="number ">122</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>    *
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L123" class="number uncovered">123</th>
+                    <th id="L123" class="number ">123</th>
 
-                    <td class="uncovered" >
-                        <pre>      if (is_subclass_of($validator[&#039;itemtype&#039;], &#039;CommonDBTM&#039;)) {</pre>
+                    <td class="" >
+                        <pre>    * @return array the array with all data (with sub tables)
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L124" class="number uncovered">124</th>
+                    <th id="L124" class="number ">124</th>
 
-                    <td class="uncovered" >
-                        <pre>         $validator_obj = new $validator[&#039;itemtype&#039;];</pre>
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="export">
+                    <th id="L125" class="number ">125</th>
+
+                    <td class="" id="export">
+                        <pre>   public function export($remove_uuid = false) {<span class="label label-success">94%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L125" class="number uncovered">125</th>
+                    <th id="L126" class="number covered">126</th>
 
-                    <td class="uncovered" >
-                        <pre>         if ($validator_obj-&gt;getFromDB($validator[&#039;items_id&#039;])) {</pre>
+                    <td class="covered" >
+                        <pre>      if ($this-&gt;isNewItem()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L126" class="number ">126</th>
+                    <th id="L127" class="number covered">127</th>
+
+                    <td class="covered" >
+                        <pre>         return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L128" class="number ">128</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L129" class="number ">129</th>
 
                     <td class="" >
                         <pre>
@@ -1066,66 +1088,37 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L127" class="number ">127</th>
+                    <th id="L130" class="number covered">130</th>
+
+                    <td class="covered" >
+                        <pre>      $validator = $this-&gt;fields;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L131" class="number ">131</th>
 
                     <td class="" >
-                        <pre>            // replace id data
+                        <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L128" class="number uncovered">128</th>
-
-                    <td class="uncovered" >
-                        <pre>            $identifier_field = isset($validator_obj-&gt;fields[&#039;completename&#039;])</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L129" class="number uncovered">129</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 ? &#039;completename&#039;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L130" class="number uncovered">130</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 : &#039;name&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L131" class="number uncovered">131</th>
-
-                    <td class="uncovered" >
-                        <pre>            $validator[&#039;_item&#039;] = $validator_obj-&gt;fields[$identifier_field];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L132" class="number ">132</th>
 
                     <td class="" >
-                        <pre>         }
+                        <pre>      // remove key and fk
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L133" class="number ">133</th>
+                    <th id="L133" class="number covered">133</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="covered" >
+                        <pre>      unset($validator[&#039;plugin_formcreator_forms_id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L134" class="number uncovered">134</th>
-
-                    <td class="uncovered" >
-                        <pre>      unset($validator[&#039;items_id&#039;]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L135" class="number ">135</th>
+                    <th id="L134" class="number ">134</th>
 
                     <td class="" >
                         <pre>
@@ -1133,24 +1126,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L136" class="number uncovered">136</th>
+                    <th id="L135" class="number covered">135</th>
 
-                    <td class="uncovered" >
-                        <pre>      if ($remove_uuid) {</pre>
+                    <td class="covered" >
+                        <pre>      if (is_subclass_of($validator[&#039;itemtype&#039;], CommonDBTM::class)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L137" class="number uncovered">137</th>
+                    <th id="L136" class="number covered">136</th>
 
-                    <td class="uncovered" >
-                        <pre>         $validator[&#039;uuid&#039;] = &#039;&#039;;</pre>
+                    <td class="covered" >
+                        <pre>         $validator_obj = new $validator[&#039;itemtype&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L137" class="number covered">137</th>
+
+                    <td class="covered" >
+                        <pre>         if ($validator_obj-&gt;getFromDB($validator[&#039;items_id&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L138" class="number ">138</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1158,26 +1158,492 @@ layout: coverage
                     <th id="L139" class="number ">139</th>
 
                     <td class="" >
+                        <pre>            // replace id data
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L140" class="number covered">140</th>
+
+                    <td class="covered" >
+                        <pre>            $identifier_field = isset($validator_obj-&gt;fields[&#039;completename&#039;])</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L141" class="number uncovered">141</th>
+
+                    <td class="uncovered" >
+                        <pre>                                 ? &#039;completename&#039;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L142" class="number covered">142</th>
+
+                    <td class="covered" >
+                        <pre>                                 : &#039;name&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L143" class="number covered">143</th>
+
+                    <td class="covered" >
+                        <pre>            $validator[&#039;_item&#039;] = $validator_obj-&gt;fields[$identifier_field];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L144" class="number ">144</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L145" class="number ">145</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L146" class="number covered">146</th>
+
+                    <td class="covered" >
+                        <pre>      unset($validator[&#039;items_id&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L147" class="number ">147</th>
+
+                    <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L140" class="number uncovered">140</th>
+                    <th id="L148" class="number ">148</th>
 
-                    <td class="uncovered" >
+                    <td class="" >
+                        <pre>      // remove ID or UUID
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L149" class="number covered">149</th>
+
+                    <td class="covered" >
+                        <pre>      $idToRemove = &#039;id&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L150" class="number covered">150</th>
+
+                    <td class="covered" >
+                        <pre>      if ($remove_uuid) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L151" class="number covered">151</th>
+
+                    <td class="covered" >
+                        <pre>         $idToRemove = &#039;uuid&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L152" class="number ">152</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L153" class="number covered">153</th>
+
+                    <td class="covered" >
+                        <pre>      unset($validator[$idToRemove]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L154" class="number ">154</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L155" class="number covered">155</th>
+
+                    <td class="covered" >
                         <pre>      return $validator;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number unreach">141</th>
+                    <th id="L156" class="number unreach">156</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L142" class="number ">142</th>
+                    <th id="L157" class="number ">157</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L158" class="number ">158</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L159" class="number ">159</th>
+
+                    <td class="" >
+                        <pre>    * Get validators of type $itemtype associated to a form 
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L160" class="number ">160</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L161" class="number ">161</th>
+
+                    <td class="" >
+                        <pre>    * @param PluginFormcreatorForm $form
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L162" class="number ">162</th>
+
+                    <td class="" >
+                        <pre>    * @param string $itemtype
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L163" class="number ">163</th>
+
+                    <td class="" >
+                        <pre>    * @return array array of User or Group objects
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L164" class="number ">164</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getValidatorsForForm">
+                    <th id="L165" class="number ">165</th>
+
+                    <td class="" id="getValidatorsForForm">
+                        <pre>   public function getValidatorsForForm(PluginFormcreatorForm $form, $itemtype) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L166" class="number uncovered">166</th>
+
+                    <td class="uncovered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L167" class="number ">167</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L168" class="number uncovered">168</th>
+
+                    <td class="uncovered" >
+                        <pre>      if (!in_array($itemtype, [User::class, Group::class])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L169" class="number uncovered">169</th>
+
+                    <td class="uncovered" >
+                        <pre>         return [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L170" class="number ">170</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L171" class="number ">171</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L172" class="number uncovered">172</th>
+
+                    <td class="uncovered" >
+                        <pre>      $formValidatorTable = PluginFormcreatorForm_Validator::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L173" class="number uncovered">173</th>
+
+                    <td class="uncovered" >
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L174" class="number uncovered">174</th>
+
+                    <td class="uncovered" >
+                        <pre>      $itemTable = $itemtype::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L175" class="number ">175</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L176" class="number uncovered">176</th>
+
+                    <td class="uncovered" >
+                        <pre>      $rows = $DB-&gt;request([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L177" class="number ">177</th>
+
+                    <td class="" >
+                        <pre>         &#039;SELECT&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L178" class="number uncovered">178</th>
+
+                    <td class="uncovered" >
+                        <pre>            $itemTable =&gt; [&#039;*&#039;]</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L179" class="number ">179</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L180" class="number uncovered">180</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;FROM&#039; =&gt; $itemTable,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L181" class="number ">181</th>
+
+                    <td class="" >
+                        <pre>         &#039;LEFT JOIN&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L182" class="number ">182</th>
+
+                    <td class="" >
+                        <pre>            $formValidatorTable =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L183" class="number ">183</th>
+
+                    <td class="" >
+                        <pre>               &#039;FKEY&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L184" class="number uncovered">184</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $formValidatorTable =&gt; &#039;items_id&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L185" class="number uncovered">185</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $itemTable =&gt; &#039;id&#039;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L186" class="number ">186</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L187" class="number ">187</th>
+
+                    <td class="" >
+                        <pre>            ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L188" class="number ">188</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L189" class="number ">189</th>
+
+                    <td class="" >
+                        <pre>         &#039;WHERE&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L190" class="number uncovered">190</th>
+
+                    <td class="uncovered" >
+                        <pre>            &quot;$formValidatorTable.itemtype&quot; =&gt; $itemtype,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L191" class="number uncovered">191</th>
+
+                    <td class="uncovered" >
+                        <pre>            &quot;$formValidatorTable.$formFk&quot; =&gt; $form-&gt;getID(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L192" class="number ">192</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L193" class="number ">193</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L194" class="number uncovered">194</th>
+
+                    <td class="uncovered" >
+                        <pre>      $result = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L195" class="number uncovered">195</th>
+
+                    <td class="uncovered" >
+                        <pre>      foreach ($rows as $row) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L196" class="number uncovered">196</th>
+
+                    <td class="uncovered" >
+                        <pre>         $item = new $itemtype();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L197" class="number uncovered">197</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($item-&gt;getFromDB($row[&#039;id&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L198" class="number uncovered">198</th>
+
+                    <td class="uncovered" >
+                        <pre>            $result[$row[&#039;id&#039;]] = $item;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L199" class="number ">199</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L200" class="number ">200</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L201" class="number ">201</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L202" class="number uncovered">202</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $result;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L203" class="number unreach">203</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L204" class="number ">204</th>
 
                     <td class="" >
                         <pre>}
