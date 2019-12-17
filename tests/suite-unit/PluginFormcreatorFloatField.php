@@ -247,9 +247,9 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
       ];
 
