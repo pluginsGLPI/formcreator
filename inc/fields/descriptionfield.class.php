@@ -48,10 +48,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       ];
    }
 
-   public function show($canEdit = true) {
-      echo '<div class="description_field form-group" id="form-group-field-' . $this->question->getID() . '">';
-      echo nl2br(html_entity_decode($this->question->fields['description']));
-      echo '</div>' . PHP_EOL;
+   public function getRenderedHtml($canEdit = true) {
+      return nl2br(html_entity_decode($this->question->fields['description']));
    }
 
    public function serializeValue() {
@@ -129,5 +127,15 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       global $CFG_GLPI;
 
       return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-description-field.png" title="" />';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return false;
    }
 }

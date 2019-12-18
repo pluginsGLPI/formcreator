@@ -186,7 +186,7 @@ function plugin_init_formcreator() {
          if (isset($_SESSION['glpiID'])) {
             // If user have acces to one form or more, add link
             if (PluginFormcreatorForm::countAvailableForm() > 0) {
-               $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
+               $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
             }
 
             // Add a link in the main menu plugins for technician and admin panel
@@ -253,6 +253,7 @@ function plugin_init_formcreator() {
 
       //Html::requireJs('gridstack');
       $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
+      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
    }
 }
 

@@ -84,46 +84,50 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $value = $this->sanitizeValue($this->value);
-         $initialValue = [];
-         foreach ($value as $id => $item) {
-            $initialValue[] = [
-               'id'     => $id,
-               'text'   => $item,
-            ];
-         }
-         $initialValue = json_encode($initialValue);
-         $id           = $this->question->getID();
-         $rand         = mt_rand();
-         $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
-
-         // Value needs to be non empty to allow execition of select2's initSelection
-         echo '<select multiple
-            name="' . $fieldName . '[]"
-            id="' . $domId . '"
-            value=""></select>';
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
-         });");
-      } else {
+   public function getRenderedHtml($canEdit = true) {
+      $html = '';
+      if (!$canEdit) {
          if (empty($this->value)) {
-            echo '';
-         } else {
-            foreach ($this->value as $item) {
-               if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-                  $value[] = $item;
-               } else {
-                  $user = new User();
-                  $user->getFromDB($item);
-                  $value[] = $user->getRawName();
-               }
-            }
-            echo implode('<br>', $value);
+            return '';
          }
+
+         foreach ($this->value as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $value[] = $item;
+            } else {
+               $user = new User();
+               $user->getFromDB($item);
+               $value[] = $user->getRawName();
+            }
+         }
+         $html .= implode('<br>', $value);
+         return $html;
       }
+
+      $value = $this->sanitizeValue($this->value);
+      $initialValue = [];
+      foreach ($value as $id => $item) {
+         $initialValue[] = [
+            'id'     => $id,
+            'text'   => $item,
+         ];
+      }
+      $initialValue = json_encode($initialValue);
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+
+      // Value needs to be non empty to allow execition of select2's initSelection
+      $html .= '<select multiple
+         name="' . $fieldName . '[]"
+         id="' . $domId . '"
+         value=""></select>';
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
+      });");
+
+      return $html;
    }
 
    public function serializeValue() {
@@ -327,5 +331,15 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-user" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

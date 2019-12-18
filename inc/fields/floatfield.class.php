@@ -70,23 +70,24 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       ];
    }
 
-   public function displayField($canEdit = true) {
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return $this->value;
+      }
+
+      $html         = '';
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $defaultValue = Html::cleanInputText($this->value);
-      if ($canEdit) {
-         echo '<input type="text" class="form-control"
-                  name="' . $fieldName . '"
-                  id="' . $domId . '"
-                  value="' . $defaultValue . '" />';
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeField('$fieldName', '$rand');
-         });");
-      } else {
-         echo $this->value;
-      }
+      $html .= '<input type="text" class="form-control"
+               name="' . $fieldName . '"
+               id="' . $domId . '"
+               value="' . $defaultValue . '" />';
+      $html .=Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeField('$fieldName', '$rand');
+      });");
    }
 
    public function serializeValue() {
@@ -274,5 +275,15 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       global $CFG_GLPI;
 
       return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-float-field.png" title="" />';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

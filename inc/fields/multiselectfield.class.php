@@ -87,36 +87,39 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
    }
 
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id           = $this->question->getID();
-         $rand         = mt_rand();
-         $fieldName    = 'formcreator_field_' . $id;
-         $values       = $this->getAvailableValues();
-         $tab_values   = [];
-
-         if (!empty($this->question->fields['values'])) {
-            foreach ($values as $value) {
-               if ((trim($value) != '')) {
-                  $tab_values[$value] = $value;
-               }
-            }
-
-            Dropdown::showFromArray($fieldName, $tab_values, [
-               'display_emptychoice' => $this->question->fields['show_empty'] == 1,
-               'value'     => '',
-               'values'    => $this->value,
-               'rand'      => $rand,
-               'multiple'  => true,
-            ]);
-         }
-         echo PHP_EOL;
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
-         });");
-      } else {
-         echo empty($this->value) ? '' : implode('<br />', $this->value);
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return empty($this->value) ? '' : implode('<br />', $this->value);
       }
+      
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $values       = $this->getAvailableValues();
+      $tab_values   = [];
+
+      if (!empty($this->question->fields['values'])) {
+         foreach ($values as $value) {
+            if ((trim($value) != '')) {
+               $tab_values[$value] = $value;
+            }
+         }
+
+         $html .= Dropdown::showFromArray($fieldName, $tab_values, [
+            'display_emptychoice' => $this->question->fields['show_empty'] == 1,
+            'value'     => '',
+            'values'    => $this->value,
+            'rand'      => $rand,
+            'multiple'  => true,
+            'display'   => false,
+         ]);
+      }
+      $html .= PHP_EOL;
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
+      });");
+         
+      return $html;
    }
 
    public function serializeValue() {
@@ -318,5 +321,15 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       global $CFG_GLPI;
 
       return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-multiselect-field.png" title="" />';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

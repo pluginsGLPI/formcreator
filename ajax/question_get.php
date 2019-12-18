@@ -30,7 +30,11 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+$designMode = isset($_REQUEST['design']) ? $_REQUEST['design'] === 'true' : false;
+Session::checkLoginUser();
+if ($designMode) {
+    Session::checkRight('entity', UPDATE);
+}
 
 if (!isset($_REQUEST['id'])) {
    http_response_code(400);
@@ -42,12 +46,11 @@ $questions = (new PluginFormcreatorQuestion())->getQuestionsFromSection($section
 $json = [];
 foreach ($questions as $question) {
     $json[$question->getID()] = [
-        'y' => $question->fields['row'],
-        'x' => $question->fields['col'],
-        'width' => $question->fields['width'],
+        'y'      => $question->fields['row'],
+        'x'      => $question->fields['col'],
+        'width'  => $question->fields['width'],
         'height' => '1',
-        'name'  => $question->fields['name'],
-        'html'  => $question->getDesignHtml(),
+        'html'   => $designMode ? $question->getDesignHtml() : $question->getRenderedHtml(),
     ];
 }
 

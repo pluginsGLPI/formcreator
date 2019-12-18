@@ -276,4 +276,14 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    public function getHtmlIcon() {
       return '<i class="fa fa-sitemap" aria-hidden="true"></i>';
    }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
+   }
 }

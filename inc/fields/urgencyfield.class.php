@@ -74,23 +74,28 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       ];
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id           = $this->question->getID();
-         $rand         = mt_rand();
-         $fieldName    = 'formcreator_field_' . $id;
-         Ticket::dropdownUrgency(['name'     => $fieldName,
-                                  'value'    => $this->value,
-                                  'comments' => false,
-                                  'rand'     => $rand
-         ]);
-         echo PHP_EOL;
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
-         });");
-      } else {
-         echo Ticket::getPriorityName($this->value);
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return Ticket::getPriorityName($this->value);
       }
+
+      $html         = '';
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $html .= Ticket::dropdownUrgency([
+         'name'     => $fieldName,
+         'value'    => $this->value,
+         'comments' => false,
+         'rand'     => $rand,
+         'display'  => false,
+      ]);
+      $html .= PHP_EOL;
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
+      });");
+      
+      return $html;
    }
 
    public static function getName() {
@@ -201,5 +206,15 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

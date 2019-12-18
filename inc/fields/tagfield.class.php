@@ -50,47 +50,12 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       ];
    }
    
-   public function displayField($canEdit = true) {
+   public function getRenderedHtml($canEdit = true) {
       global $DB;
 
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      if ($canEdit) {
-         if (!class_exists(PluginTagTag::class)) {
-            // Plugin Tag not available
-            echo '';
-            return;
-         }
-         $result = $DB->request([
-            'SELECT' => ['id', 'name'],
-            'FROM'   => PluginTagTag::getTable(),
-            'WHERE'  => [
-               'OR' => [
-                  ['type_menu' => ['LIKE', '%\"Ticket\"%']],
-                  ['type_menu' => ['LIKE', '%\"Change\"%']],
-                  ['type_menu' => ['LIKE', '0']],
-               ]
-            ] + getEntitiesRestrictCriteria(PluginTagTag::getTable(), '', '', true),
-            'ORDER'  => 'name'
-         ]);
-         $values = [];
-         foreach ($result AS $id => $data) {
-            $values[$id] = $data['name'];
-         }
-
-         Dropdown::showFromArray($fieldName, $values, [
-            'values'              => $this->value,
-            'comments'            => false,
-            'rand'                => $rand,
-            'multiple'            => true,
-         ]);
-         echo PHP_EOL;
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeTag('$fieldName', '$rand');
-         });");
-      } else {
-         echo '<div class="form_field">';
+      $html         = '';
+      if (!$canEdit) {
+         $html .= '<div class="form_field">';
          $tagNames = [];
          if (count($this->value) > 0) {
             foreach ($this->value as $tagId) {
@@ -101,9 +66,49 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
                $tagNames[] = $tag->fields['name'];
             }
          }
-         echo implode(', ', $tagNames);
-         echo '</div>';
+         $html .= implode(', ', $tagNames);
+         $html .= '</div>';
+         return $html;
       }
+
+      if (!class_exists(PluginTagTag::class)) {
+         // Plugin Tag not available
+         return '';
+      }
+
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $result = $DB->request([
+         'SELECT' => ['id', 'name'],
+         'FROM'   => PluginTagTag::getTable(),
+         'WHERE'  => [
+            'OR' => [
+               ['type_menu' => ['LIKE', '%\"Ticket\"%']],
+               ['type_menu' => ['LIKE', '%\"Change\"%']],
+               ['type_menu' => ['LIKE', '0']],
+            ]
+         ] + getEntitiesRestrictCriteria(PluginTagTag::getTable(), '', '', true),
+         'ORDER'  => 'name'
+      ]);
+      $values = [];
+      foreach ($result AS $id => $data) {
+         $values[$id] = $data['name'];
+      }
+
+      $html .=Dropdown::showFromArray($fieldName, $values, [
+         'values'              => $this->value,
+         'comments'            => false,
+         'rand'                => $rand,
+         'multiple'            => true,
+         'display'             => false,
+      ]);
+      $html .= PHP_EOL;
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeTag('$fieldName', '$rand');
+      });");
+      
+      return $html;
    }
 
    public function serializeValue() {
@@ -223,5 +228,15 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       global $CFG_GLPI;
 
       return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-tag-field.png" title="" />';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

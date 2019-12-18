@@ -73,10 +73,10 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $defaultValue = Html::cleanInputText($this->question->fields['default_values']);
-      echo '<input type="hidden" class="form-control"
-         name="' . $fieldName . '"
-         id="' . $domId . '"
-         value="' . $defaultValue . '" />' . PHP_EOL;
+      return Html::hidden($fieldName, [
+         'id'    => $domId,
+         'value' => $defaultValue,
+      ]);
    }
 
    public function serializeValue() {
@@ -143,5 +143,15 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return false;
+   }
+
+   public function isEditableField()
+   {
+      return false;
    }
 }

@@ -67,35 +67,28 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       ];
    }
 
-   public function displayField($canEdit = true) {
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return Toolbox::getHtmlToDisplay($this->value);
+      }
+
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $useRichText = true;
-      if ($canEdit) {
-         if ($useRichText) {
-            $value = nl2br($this->value);
-         } else {
-            $value = $this->value;
-         }
-         echo Html::textarea([
-            'name'            => $fieldName,
-            'rand'            => $rand,
-            'value'           => $value,
-            'rows'            => 5,
-            'display'         => false,
-            'enable_richtext' => $useRichText,
-         ]);
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
-         });");
-      } else {
-         if ($useRichText) {
-            echo Toolbox::getHtmlToDisplay($this->value);
-         } else {
-            echo nl2br($this->value);
-         }
-      }
+      $value        = nl2br($this->value);
+      $html .= Html::textarea([
+         'name'            => $fieldName,
+         'rand'            => $rand,
+         'value'           => $value,
+         'rows'            => 5,
+         'display'         => false,
+         'enable_richtext' => true,
+      ]);
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    public static function getName() {

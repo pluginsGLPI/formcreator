@@ -55,7 +55,7 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       $domId        = $fieldName . '_' . $rand;
       $ip = Toolbox::getRemoteIpAddress();
       $ip = Html::cleanInputText($ip);
-      echo Html::hidden($fieldName, [
+      return Html::hidden($fieldName, [
          'id'     => $domId,
          'value'  => $ip,
       ]);
@@ -135,5 +135,15 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-desktop" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return false;
+   }
+
+   public function isEditableField()
+   {
+      return false;
    }
 }

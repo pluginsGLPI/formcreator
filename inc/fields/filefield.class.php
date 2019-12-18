@@ -37,14 +37,8 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return true;
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         echo Html::file([
-            'name'    => 'formcreator_field_' . $this->question->getID(),
-            'display' => false,
-            'multiple' => 'multiple',
-         ]);
-      } else {
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
          $doc = new Document();
          $answer = $this->value;
          if (!is_array($this->value)) {
@@ -52,10 +46,17 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          }
          foreach ($answer as $item) {
             if (is_numeric($item) && $doc->getFromDB($item)) {
-               echo $doc->getDownloadLink();
+               $html .= $doc->getDownloadLink();
             }
          }
+         return $html;
       }
+      
+      return Html::file([
+         'name'    => 'formcreator_field_' . $this->question->getID(),
+         'display' => false,
+         'multiple' => 'multiple',
+      ]);
    }
 
    public function serializeValue() {
@@ -218,5 +219,15 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-file" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

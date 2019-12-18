@@ -125,15 +125,15 @@ PluginFormcreatorConditionnableInterface
       $token  = Session::getNewCSRFToken();
       $formId = $item->getID();
 
-      echo '<div id="plugin_formcreator_formDesign">';
-      echo '<ol class="plugin_formcreator_sortable_sections_list">';
-      $sections      = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
+      echo '<div id="plugin_formcreator_form" class="plugin_formcreator_form_design" data-itemtype="' . PluginFormcreatorForm::class . '">';
+      echo '<ol>';
+      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
       foreach ($sections as $section) {
          $sectionId = $section->getID();
 
          // Section header
          $onclick = 'onclick="plugin_formcreator_editSection(' . $formId . ', \'' . $token . '\', ' . $sectionId . ')"';
-         echo '<li class="plugin_formcreator_section" data-id="' . $sectionId . '" data-order="' . $section->fields['order'] . '">';
+         echo '<li class="plugin_formcreator_section" data-itemtype="' . PluginFormcreatorSection::class . '" data-id="' . $sectionId . '" data-order="' . $section->fields['order'] . '">';
          echo '<i class="plugin_formcreator_section_handle fas fa-grip-vertical"></i> &nbsp;';
 
          // section name
@@ -154,15 +154,11 @@ PluginFormcreatorConditionnableInterface
 
          // Section content
          $columns = PluginFormcreatorSection::COLUMNS;
-         $questions = (new static())->getQuestionsFromSection($sectionId);
          echo '<div class="grid-stack grid-stack-'.$columns.'"'
          . ' data-gs-animate="yes" '
          . ' data-gs-width="'.$columns.'"'
          . 'data-id="'.$sectionId.'"'
          .'>';
-         // foreach ($questions as $question) {
-         //    $question->getDesignHtml();
-         // }
          echo '</div>';
 
          // Add a question
@@ -187,7 +183,7 @@ PluginFormcreatorConditionnableInterface
       echo '</ol>';
       echo '</div>';
 
-      echo Html::scriptBlock("$(plugin_formcreator.initGridStacks('$token'))");
+      echo Html::scriptBlock("$(plugin_formcreator.initGridStacks(true))");
    }
 
    /**
@@ -202,20 +198,12 @@ PluginFormcreatorConditionnableInterface
 
       $html = '';
 
-      $columns = PluginFormcreatorSection::COLUMNS;
       $questionId = $this->getID();
       $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
-      $onclick = 'onclick="plugin_formcreator_editQuestion(' . $questionId . ', ' . $sectionId . ');"';
       $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
       $field = new $fieldType($this);
       
       $html .= '<div class="grid-stack-item"'
-      // . ' data-gs-x="'.($this->fields['col']).'"'
-      // . ' data-gs-y="'.($this->fields['row']).'"'
-      // . ' data-gs-width="'.$this->fields['width'].'"'
-      // . ' data-gs-height="1"'
-      // . ' data-gs-max-width="'.$columns.'"'
-      // . ' data-gs-max-height="1"'
       . ' data-id="'.$questionId.'"'
       . '>';
 
@@ -224,7 +212,8 @@ PluginFormcreatorConditionnableInterface
       // Question name
       $html .= '<i class="handle fas fa-grip-vertical"></i>&nbsp;';
       $html .= $field->getHtmlIcon() . '&nbsp;';
-      $html .= '<a href="#" ' . $onclick . '>';
+      $onclick = 'plugin_formcreator_editQuestion(' . $questionId . ', ' . $sectionId . ');';
+      $html .= '<a href="javascript:' . $onclick . '">';
       $html .= empty($this->fields['name']) ? '(' . $questionId . ')' : $this->fields['name'];
       $html .= '</a>';
 
@@ -246,6 +235,48 @@ PluginFormcreatorConditionnableInterface
       $html .= '</div>'; // grid stack item content
 
       $html .= '</div>'; // grid stack item
+
+      return $html;
+   }
+
+   public function getRenderedHtml() {
+      if ($this->isNewItem()) {
+         return '';
+      }
+
+      $html = '';
+
+      $field = PluginFormcreatorFields::getFieldInstance(
+         $this->fields['fieldtype'],
+         $this
+      );
+      if (!$field->isPrerequisites()) {
+         return '';
+      }
+      if (isset($_SESSION['formcreator']['data']['formcreator_field_' . $this->getID()])) {
+         $field->parseAnswerValues($_SESSION['formcreator']['data']['formcreator_field_' . $this->getID()]);
+      } else {
+         $field->deserializeValue($this->fields['default_values']);
+      }
+
+      $required = ($this->fields['required']) ? ' required' : '';
+      $x = $this->fields['col'];
+      // $y = $this->fields['col'];
+      $width = $this->fields['width'];
+      // $height = '1';
+      $html .= '<div'
+         // . ' class="grid-stack-item"'
+         . ' data-gs-x="' . $x . '"'
+         // . ' data-gs-y="' . $y . '"'
+         . ' data-gs-width="' . $width . '"'
+         // . ' data-gs-height="' . $height . '"'
+         . ' data-itemtype="' . static::class . '"'
+         . ' data-id="' . $this->getID() . '"'
+         . ' >';
+      $html .= '<div class="grid-stack-item-content form-group ' . $required . '" id="form-group-field-' . $this->getID() . '">';
+      $html .= $field->show();
+      $html .= '</div>';
+      $html .= '</div>';
 
       return $html;
    }

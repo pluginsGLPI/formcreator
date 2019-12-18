@@ -1205,21 +1205,40 @@ PluginFormcreatorDuplicatableInterface
    public function displayUserForm() {
       global $CFG_GLPI;
 
-      if (isset($_SESSION['formcreator']['data'])) {
-         $data = $_SESSION['formcreator']['data'];
-         unset($_SESSION['formcreator']['data']);
-      } else {
-         $data = null;
-      }
-
       // Print css media
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
-      // Display form
+      $style = "<style>";
+      // force colums width
+      $width_percent = 100 / PluginFormcreatorSection::COLUMNS;
+      for ($i = 0; $i < PluginFormcreatorSection::COLUMNS; $i++) {
+         $left  = $i * $width_percent;
+         $width = ($i+1) * $width_percent;
+         $style.= '
+         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-x="' . $i . '"] {
+            // left: ' . $left . '%;
+         }
+         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
+         #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
+         {
+            min-width: $width_percent%;
+            width: ' . $width . '%;
+         }
+         ';
+      }
+      $style.= "</style>";
+      echo $style;
+
       $formName = 'plugin_formcreator_form';
-      echo "<form name='$formName' method='post' role='form' enctype='multipart/form-data'
-               action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
-               class='formcreator_form form_horizontal'>";
+      $formId = $this->getID();
+      self::getFormURL();
+      echo '<form name="' . $formName . '" method="post" role="form" enctype="multipart/form-data"'
+      . ' class="plugin_formcreator_form"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' id="plugin_formcreator_form"'
+      . '>';
+
+      // form title
       echo "<h1 class='form-title'>";
       echo $this->fields['name'] . "&nbsp;";
       echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
@@ -1231,34 +1250,51 @@ PluginFormcreatorDuplicatableInterface
          echo html_entity_decode($this->fields['content']);
          echo '</div>';
       }
-
-      // Get and display sections of the form
-      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($this->getID());
+         
+      echo '<ol>';
+      $sections      = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
       foreach ($sections as $section) {
-         echo '<div class="form_section" data-section-id="'. $section->getID().'">';
-         echo '<h2>' . $section->fields['name'] . '</h2>';
+         $sectionId = $section->getID();
+
+         // Section header
+         echo '<li'
+         . ' class="plugin_formcreator_section"'
+         . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
+         . ' data-id="' . $sectionId . '"'
+         . ' data-order="' . $section->fields['order'] 
+         . '">';
+
+         // section name
+         echo '<h2>';
+         echo empty($section->fields['name']) ? '(' . $sectionId . ')' : $section->fields['name'];
+         echo '</h2>';
+
+         // Section content
+         echo '<div>';
          // Display all fields of the section
          $questions = (new PluginFormcreatorQuestion())->getQuestionsFromSection($section->getID());
+         $lastQuestion = null;
          foreach ($questions as $question) {
-            $field = PluginFormcreatorFields::getFieldInstance(
-               $question->fields['fieldtype'],
-               $question
-            );
-            if (!$field->isPrerequisites()) {
-               continue;
+            if ($lastQuestion !== null) {
+               if ($lastQuestion->fields['row'] < $question->fields['row']) {
+                  // the question begins a new line
+                  echo '<div class="plugin_formcreator_newRow"></div>';
+               } else {
+                  $x = $lastQuestion->fields['col'] + $lastQuestion->fields['width'];
+                  $width = $question->fields['col'] - $x;
+                  if ($x < $question->fields['col']) {
+                     // there is an horizontal gap between previous question and current one
+                     echo '<div class="plugin_formcreator_gap" data-gs-x="' . $x . '" data-gs-width="' . $width . '"></div>';
+                  }
+               }
             }
-            if (isset($data['formcreator_field_' . $question->getID()])) {
-               $field->parseAnswerValues($data);
-            } else {
-               $field->deserializeValue($question->fields['default_values']);
-            }
-            $field->show();
+            echo $question->getRenderedHtml();
+            $lastQuestion = $question;
          }
          echo '</div>';
+
+         echo '</li>';
       }
-      echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
-      })');
 
       // Show validator selector
       if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
@@ -1293,7 +1329,15 @@ PluginFormcreatorDuplicatableInterface
             $validatorId = key($validators);
             echo Html::hidden('formcreator_validator', $validatorId);
          }
+         
       }
+
+      echo Html::scriptBlock('$(function() {
+         // plugin_formcreator.initGridStacks(false);
+         plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
+      })');
+
+      unset($_SESSION['formcreator']['data']);
 
       // Display submit button
       echo '<div class="center">';

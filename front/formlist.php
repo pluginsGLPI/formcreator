@@ -52,7 +52,7 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
       __('Form list', 'formcreator'),
       $_SERVER['PHP_SELF'],
       'helpdesk',
-      'PluginFormcreatorFormlist'
+      PluginFormcreatorFormlist::class
    );
 }
 

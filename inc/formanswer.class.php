@@ -592,7 +592,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       if ($canEdit) {
          echo Html::scriptBlock('$(function() {
-            formcreatorShowFields($("form[name=\'form\']"));
+            plugin_formcreator.showFields($("form[name=\'form\']"));
          })');
       }
 

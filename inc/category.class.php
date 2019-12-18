@@ -92,7 +92,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'faq'      => '1',
          'contains' => ''
       ]);
-      if (version_compare(GLPI_VERSION, "9.4") > 0) {
+      if (version_compare(GLPI_VERSION, "9.5") >= 0) {
          // GLPI 9.5 returns an array
          $subQuery = new DBMysqlIterator($DB);
          $subQuery->buildQuery($query_faqs);
