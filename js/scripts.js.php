@@ -797,7 +797,6 @@ function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
 var formcreatorQuestions = new Object();
 
 function formcreatorShowFields(form) {
-   debugger;
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/showfields.php',
       type: "POST",
