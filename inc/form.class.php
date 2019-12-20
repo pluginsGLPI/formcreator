@@ -585,7 +585,7 @@ PluginFormcreatorDuplicatableInterface
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
-      echo '<th colspan="3">'._n('Destinations', 'Destinations', 2, 'formcreator').'</th>';
+      echo '<th colspan="3">'._n('Target', 'Targets', 2, 'formcreator').'</th>';
       echo '</tr>';
 
       $allTargets = $this->getTargetsFromForm();
