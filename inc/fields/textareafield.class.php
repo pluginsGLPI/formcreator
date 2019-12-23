@@ -76,6 +76,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $value        = nl2br($this->value);
+      $html = '';
       $html .= Html::textarea([
          'name'            => $fieldName,
          'rand'            => $rand,

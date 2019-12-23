@@ -646,21 +646,10 @@ PluginFormcreatorDuplicatableInterface
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
-            $nb = 0;
-            foreach ($this->getTargetTypes() as $targetType) {
-               $nb += (new DbUtils())->countElementsInTable(
-                  $targetType::getTable(),
-                  [
-                     'WHERE' => [
-                        'plugin_formcreator_forms_id' => $item->getID(),
-                     ]
-                  ]
-               );
-            }
             return [
                1 => self::createTabEntry(
                   _n('Target', 'Targets', Session::getPluralNumber(), 'formcreator'),
-                  $nb
+                  $item->countTargets()
                ),
                2 => __('Preview'),
             ];
@@ -1203,8 +1192,6 @@ PluginFormcreatorDuplicatableInterface
     * @return Null                     Nothing, just display the form
     */
    public function displayUserForm() {
-      global $CFG_GLPI;
-
       // Print css media
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
@@ -1212,12 +1199,8 @@ PluginFormcreatorDuplicatableInterface
       // force colums width
       $width_percent = 100 / PluginFormcreatorSection::COLUMNS;
       for ($i = 0; $i < PluginFormcreatorSection::COLUMNS; $i++) {
-         $left  = $i * $width_percent;
          $width = ($i+1) * $width_percent;
          $style.= '
-         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-x="' . $i . '"] {
-            // left: ' . $left . '%;
-         }
          #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
          #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
          {
@@ -1333,7 +1316,6 @@ PluginFormcreatorDuplicatableInterface
       }
 
       echo Html::scriptBlock('$(function() {
-         // plugin_formcreator.initGridStacks(false);
          plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
       })');
 
@@ -2603,5 +2585,23 @@ PluginFormcreatorDuplicatableInterface
       if (isAPI()) {
          $this->fields += \PluginFormcreatorSection::getFullData($this->fields['id']);
       }
+   }
+
+   /**
+    * Get the count of targets for this item
+    */
+   public function countTargets() {
+      $nb = 0;
+      foreach ($this->getTargetTypes() as $targetType) {
+         $nb += (new DbUtils())->countElementsInTable(
+            $targetType::getTable(),
+            [
+               'WHERE' => [
+                  self::getForeignKeyField() => $this->getID(),
+               ]
+            ]
+         );
+      }
+      return $nb;
    }
 }

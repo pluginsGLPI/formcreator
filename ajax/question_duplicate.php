@@ -40,14 +40,32 @@ $questionId = (int) $_REQUEST['id'];
 $question = new PluginFormcreatorQuestion();
 if (!$question->getFromDB($questionId)) {
     http_response_code(404);
+    echo __('Source question not found', 'formcreator');
     exit();
 }
+
+if (!$question->canCreate()) {
+    http_response_code(403);
+    echo __('You don\'t have right for this action', 'formcreator');
+    exit;
+}
+
 if (($newId = $question->duplicate()) === false) {
-    http_response_code(400);
+    http_response_code(500);
     exit;
 }
+
+$question = new PluginFormcreatorQuestion();
 if (!$question->getFromDB($newId)) {
-    http_response_code(400);
+    http_response_code(500);
     exit;
 }
-$question->getDesignHtml();
+$json = [
+    'y'      => $question->fields['row'],
+    'x'      => $question->fields['col'],
+    'width'  => $question->fields['width'],
+    'height' => '1',
+    'html'   => $question->getDesignHtml(),
+];
+
+echo json_encode($json);

@@ -447,7 +447,6 @@ function buildTiles(list) {
 // === QUESTIONS ===
 var urlQuestion               = rootDoc + "/plugins/formcreator/ajax/question.php";
 var urlFrontQuestion          = rootDoc + "/plugins/formcreator/front/question.form.php";
-var urlQuestionMove           = rootDoc + '/plugins/formcreator/ajax/question_move.php';
 var urlQuestionToggleRequired = rootDoc + '/plugins/formcreator/ajax/question_toggle_required.php';
 var urlQuestionDelete         = rootDoc + '/plugins/formcreator/ajax/question_delete.php';
 var urlQuestionDuplicate      = rootDoc + '/plugins/formcreator/ajax/question_duplicate.php';
@@ -458,35 +457,45 @@ var plugin_formcreator = new function() {
    this.changingItemId = 0;
    this.questionsColumns = <?php echo PluginFormcreatorSection::COLUMNS; ?>;
 
-   /**
-    * Initialize all grid stacks in form designer
-   * @param boolean true to render question for design mode 
-    */
-   this.initGridStacks = function(designMode) {
-      /**
-       * get questions for a section
-       */
-      var getQuestions = function(group, sectionId, designMode) {
-         $.get({
-            url: rootDoc + '/plugins/formcreator/ajax/question_get.php',
-            dataType: 'json',
-            data: {
-               id: sectionId,
-               design: designMode
-            }
-         }).success(function(data, httpCode) {
-            populateGrid(group.data('gridstack'), data);
-         });
-      };
+   this.setupGridStack = function (group) {
+      group
+      .on('resizestart', this.startChangeItem)
+      .on('dragstart', this.startChangeItem)
+      .on('change', this.changeItems)
+      .on('dragstop', function(event, item) {
+         setTimeout(function() {
+            item.helper.find('a').off('click.prevent');
+         },
+         300); 
+         // Remove empty rows
+         plugin_formcreator.moveUpItems(group);
+      });
+   };
 
-      /**
-       * populate a section with questions
-       */
-      var populateGrid = function(grid, data) {
+   this.initGridStack = function (sectionId) {
+      var group = $('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
+      group.gridstack({
+         width:          this.questionsColumns,
+         column:         this.questionsColumns,
+         cellHeight:     '32px',
+         verticalMargin: '5px',
+         float:          true,
+         resizeable:     {
+            handles: 'e, w'
+         }
+      });
+      $.get({
+         url: rootDoc + '/plugins/formcreator/ajax/question_get.php',
+         dataType: 'json',
+         data: {
+            id: sectionId,
+            design: true
+         }
+      }).success(function(data, httpCode) {
+         var grid = group.data('gridstack');
          $.each(data, function(index, question) {
-            var item = question.html;
             grid.addWidget(
-               item,
+               question.html,
                Number(question.x),
                Number(question.y),
                Number(question.width),
@@ -498,44 +507,13 @@ var plugin_formcreator = new function() {
                1
             );
          });
-      };
-      
-      var questionGroups = $('#plugin_formcreator_form .grid-stack');
-      var that = this;
-
-      $.each(questionGroups, function(index, item) {
-         var group = $(item);
-         var sectionId = group.attr('data-id');
-         group.gridstack({
-            width:          this.questionsColumns,
-            column:         this.questionsColumns,
-            cellHeight:     '32px',
-            verticalMargin: '5px',
-            //handle:         '.grid-stack-item-content .handle',
-            resizeable:     {
-               handles: 'e, w'
-            }
-         });
-         if (designMode) {
-            group
-            .on('resizestart', function(event, item) { that.startChangeItem(event, item); })
-            .on('dragstart', function(event, item) { that.startChangeItem(event, item); })
-            .on('change', function(event, items) { that.changeItems(event, items); })
-            .on('dragstop', function(event, item) {
-               setTimeout(function() {
-                  item.helper.find('a').off('click.prevent');
-               },
-               300); 
-            })
-         }
-         getQuestions(group, sectionId, designMode);
-      });
+      }).complete(this.setupGridStack(group));
    };
 
    /**
    * Event handler : when an item is about to move or resize
    */
-  this.startChangeItem = function(event, item) {
+  this.startChangeItem = function (event, item) {
       item.helper.find('a').on('click.prevent', function(event) {
          return false;
       });
@@ -560,35 +538,40 @@ var plugin_formcreator = new function() {
     */
    this.changeItems = function (event, items) {
       if (this.dirty === true) {
-         return;
+         //return;
       }
       this.dirty = true;
       var that = this;
       var changes = {};
       $.each(items, function(index, item) {
          var id     = $(item.el).attr('data-id');
-         changes[id] = {
-            width:  item.width,
-            height: item.height,
-            x:      item.x,
-            y:      item.y
-         };
+         if (typeof(id) !== 'undefined') {
+            changes[id] = {
+               width:  item.width,
+               height: item.height,
+               x:      item.x,
+               y:      item.y
+            };
+         }
       });
+      if (changes.length < 1) {
+         return;
+      }
       $.ajax({
-         'url': urlQuestionMove,
+         'url': rootDoc + '/plugins/formcreator/ajax/question_move.php',
          type: 'POST',
          data: {
             move: changes,
          }
       }).fail(function() { 
-         that.cancelChangeItems(event, items); 
-         that.dirty = false;
-      }).done(function() {
-         that.dirty = false;
+         plugin_formcreator.cancelChangeItems(event, items); 
+         plugin_formcreator.dirty = false;
+      }).done(function(response) {
+         plugin_formcreator.dirty = false;
       });
-   ;}
+   };
 
-   this.cancelChangeItems = function(event, items) {
+   this.cancelChangeItems = function (event, items) {
       var that = this;
       $.each(items, function(index, item) {
          var id = $(item.el).attr('data-id');
@@ -609,7 +592,7 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.deleteQuestion = function(target) {
+   this.deleteQuestion = function (target) {
       var item = $(target).closest('.grid-stack-item');
       var id = item.attr('data-id');
       if (typeof(id) === 'undefined') {
@@ -622,29 +605,34 @@ var plugin_formcreator = new function() {
          data: {
                id: id,
             }
-         }).fail(function() {
-            alert("<?php echo Toolbox::addslashes_deep(__('Failed to delete this question', 'formcreator')); ?> ")
+         }).fail(function(data) {
+            alert(data);
          }).done(function() {
             var container = item.closest('.grid-stack');
             var gridstack = container.data('gridstack');
             var row = $(item).attr('data-gs-y');
             gridstack.removeWidget(item);
-            // move up items below the deleted item 
-            // to drop empty rows
-            if (gridstack.isAreaEmpty(0, row, this.questionsColumns - 1, 1)) {
-               movable = container.find('grid-stack-item').filter(function(index, element) {
-                  if (element.attr('data-gs-y') > row) {
-                     return true;
-                  }
-                  return false;
-               });
-            }
-            $.each(movable, function(index, item) {
-               var x = item.attr('data-gs-x');
-               var y = item.attr('data-gs-y');
-               gridstack.move(item, x, y - 1);
-            });
+            //plugin_formcreator.moveUpItems(container);
          });
+      }
+   };
+
+   /** 
+    * Move up items in a grid when row is empty
+    * @param grid stack container 
+    * @param row  row to fill with items after it
+    */
+   this.moveUpItems = function (grid) {
+      return;
+      // Disabled cause it does not fully works with dropped elements
+      var lastRow = grid.find('.grid-stack-item:not(.grid-stack-placeholder)').last().attr('data-gs-y');
+      for (let y = 0; y < lastRow; y++) {
+         var movable = grid.find('.grid-stack-item:not(.grid-stack-placeholder)').filter(function(index, element) {
+            return ($(element).attr('data-gs-y') > y);
+         }).first();
+         if (movable.length > 0) {
+            grid.data('gridstack').move(movable, Number(movable.attr('data-gs-x')), y)
+         }
       }
    };
 
@@ -662,8 +650,8 @@ var plugin_formcreator = new function() {
             id: id,
             required: required ? '0' : '1'
          }
-      }).fail(function() {
-         alert("<?php echo Toolbox::addslashes_deep(__('Failed to toggle requirement for this question', 'formcreator')); ?> ")
+      }).fail(function(data) {
+         alert(data);
       }).done(function() {
          $(target)
             .removeClass('fa-circle fa-dot-circle')
@@ -671,30 +659,41 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.duplicateQuestion = function(target) {
+   this.duplicateQuestion = function (target) {
       var item = $(target).closest('.grid-stack-item');
       var id = item.attr('data-id');
       if (typeof(id) === 'undefined') {
          return;
       }
 
-      jQuery.ajax({
+      $.ajax({
          url: urlQuestionDuplicate,
          type: "POST",
+         dataType: 'json',
          data: {
             id: id
          }
-      }).fail(function() {
-         alert("<?php echo Toolbox::addslashes_deep(__('Failed to duplicate this question', 'formcreator')); ?> ")
-      }).done(function(newItem) {
+      }).fail(function(data) {
+         alert(data);
+      }).done(function(question) {
          var container = item.closest('.grid-stack');
-         var gridstack = container.data('gridstack');
-         container.append(newItem);
-         gridstack.makeWidget(newItem);
+         var grid = container.data('gridstack');
+         grid.addWidget(
+            question.html,
+            Number(question.x),
+            Number(question.y),
+            Number(question.width),
+            Number(question.height),
+            false,
+            1,
+            this.questionColumns,
+            1,
+            1
+         );
       });
-   }
+   };
 
-   this.showFields = function(form) {
+   this.showFields = function (form) {
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/showfields.php',
          type: "POST",
@@ -730,10 +729,80 @@ var plugin_formcreator = new function() {
             }
          }
       });
-   }
+   };
+
+   this.deleteSection = function (item) {
+      if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
+         var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
+         var sectionId = section.attr('data-id');
+         $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/section_delete.php',
+         type: "POST",
+         data: {
+               id: sectionId
+            }
+         }).done(function() {
+            section.remove();
+         }).fail(function(data) {
+            alert(data);
+         });
+      }
+   };
+
+   this.moveSection = function (item, action) {
+      var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
+      var sectionId = section.attr('data-id');
+      $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/section_move.php',
+         type: "POST",
+         data: {
+            id: sectionId,
+            way: action
+         }
+      }).done(function() {
+         if (action == 'up') {
+            var otherSection = section.prev('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]').detach();
+            section.after(otherSection);
+         }
+         if (action == 'down') {
+            var otherSection = section.next('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]').detach();
+            section.before(otherSection);
+         }
+         $.each([section, otherSection], function(index, section) {
+            if (section.prev('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]').length < 1) {
+               section.children('.moveUp').hide();
+            } else {
+               section.children('.moveUp').show();
+            }
+            if (section.next('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]').length < 1) {
+               section.children('.moveDown').hide();
+            } else {
+               section.children('.moveDown').show();
+            }
+         });
+      });
+   };
+
+   this.duplicateSection = function (item) {
+      var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
+      var sectionId = section.attr('data-id');
+      $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/section_duplicate.php',
+      type: "POST",
+      data: {
+         id: sectionId
+      },
+      dataType: 'html'
+      }).done(function(data) {
+         var lastSection = $('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]').last();
+         lastSection.after(data);
+      }).fail(function(data) {
+         alert(data);
+      });
+   };
 }
 
-function plugin_formcreator_addQuestion(items_id, token, section) {
+function plugin_formcreator_addQuestion (items_id, token, section) {
    modalWindow.load(urlQuestion, {
       section_id: section,
       _glpi_csrf_token: token
@@ -766,48 +835,6 @@ function plugin_formcreator_editSection(items_id, token ,section) {
       _glpi_csrf_token: token
    }).dialog("open");
 }
-
-function plugin_formcreator_duplicateSection(items_id, token, section_id) {
-   jQuery.ajax({
-     url: urlFrontSection,
-     type: "POST",
-     data: {
-         duplicate_section: 1,
-         id: section_id,
-         plugin_formcreator_forms_id: items_id,
-         _glpi_csrf_token: token
-      }
-   }).done(reloadTab);
-}
-
-function plugin_formcreator_deleteSection(items_id, token, section_id) {
-   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
-      jQuery.ajax({
-        url: urlFrontSection,
-        type: "POST",
-        data: {
-            delete_section: 1,
-            id: section_id,
-            plugin_formcreator_forms_id: items_id,
-            _glpi_csrf_token: token
-         }
-      }).done(reloadTab);
-   }
-}
-
-function plugin_formcreator_moveSection(token, section_id, action) {
-   jQuery.ajax({
-     url: urlFrontSection,
-     type: "POST",
-     data: {
-         move: 1,
-         id: section_id,
-         way: action,
-         _glpi_csrf_token: token
-      }
-   }).done(reloadTab);
-}
-
 
 // === TARGETS ===
 function plugin_formcreator_addTarget(items_id, token) {

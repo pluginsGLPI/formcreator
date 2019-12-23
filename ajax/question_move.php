@@ -37,21 +37,35 @@ if (!isset($_REQUEST['move']) || !is_array($_REQUEST['move'])) {
    exit();
 }
 
-$error = false;
-$question = new PluginFormcreatorQuestion();
+$questions = [];
 foreach($_REQUEST['move'] as $id => $item) {
+    $question = new PluginFormcreatorQuestion();
     if (!$question->getFromDB((int) $id)) {
-        continue;
+        http_response_code(404);
+        echo __('Question not found', 'formcreator');
+        exit;
     }
+    if (!$question->canUpdate()) {
+        http_response_code(403);
+        echo __('You don\'t have right for this action', 'formcreator');
+        exit;
+    } 
+    $questions[$id] = $question;
+}
 
-    $item['row'] = $item['y'];
-    $item['col'] = $item['x'];
-    $success = $question->change($item);
+$error = false;
+foreach($questions as $id => $item) {
+    $question = $questions[$id];
+    $question->fields['row'] = (int) $_REQUEST['move'][$id]['y'];
+    $question->fields['col'] = (int) $_REQUEST['move'][$id]['x'];
+    $question->fields['width'] = (int) $_REQUEST['move'][$id]['width'];
+    $success = $question->change($question->fields);
     if (!$success) {
         $error = true;
     }
 }
 
 if ($error) {
-    http_response_code(400);
+    http_response_code(500);
+    echo __('Could not move some questions', 'formcreator');
 }

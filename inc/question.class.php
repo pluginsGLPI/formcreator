@@ -129,47 +129,7 @@ PluginFormcreatorConditionnableInterface
       echo '<ol>';
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
       foreach ($sections as $section) {
-         $sectionId = $section->getID();
-
-         // Section header
-         $onclick = 'onclick="plugin_formcreator_editSection(' . $formId . ', \'' . $token . '\', ' . $sectionId . ')"';
-         echo '<li class="plugin_formcreator_section" data-itemtype="' . PluginFormcreatorSection::class . '" data-id="' . $sectionId . '" data-order="' . $section->fields['order'] . '">';
-         echo '<i class="plugin_formcreator_section_handle fas fa-grip-vertical"></i> &nbsp;';
-
-         // section name
-         echo '<a href="#" ' . $onclick . '>';
-         echo empty($section->fields['name']) ? '(' . $sectionId . ')' : $section->fields['name'];
-         echo '</a>';
-
-         // actions on the section
-         echo "<span class='form_control pointer'>";
-         echo '<i class="far fa-trash-alt"
-                  onclick="plugin_formcreator_deleteSection(' . $formId . ', \'' . $token . '\', ' . $sectionId . ')"></i> ';
-         echo "</span>";
-
-         echo "<span class='form_control pointer'>";
-         echo '<i class="far fa-clone"
-                  onclick="plugin_formcreator_duplicateSection(' . $formId . ', \'' . $token . '\', ' . $sectionId . ')"></i> ';
-         echo "</span>";
-
-         // Section content
-         $columns = PluginFormcreatorSection::COLUMNS;
-         echo '<div class="grid-stack grid-stack-'.$columns.'"'
-         . ' data-gs-animate="yes" '
-         . ' data-gs-width="'.$columns.'"'
-         . 'data-id="'.$sectionId.'"'
-         .'>';
-         echo '</div>';
-
-         // Add a question
-         echo '<div class="plugin_formcreator_question">';
-         echo '<a href="javascript:plugin_formcreator_addQuestion(' . $formId . ', \'' . $token . '\', ' . $sectionId . ');">';
-         echo '<i class="fas fa-plus"></i>&nbsp;';
-         echo __('Add a question', 'formcreator');
-         echo '</a>';
-         echo '</div>';
-
-         echo '</li>';
+         echo $section->getDesignHtml();
       }
 
       // add a section
@@ -182,8 +142,6 @@ PluginFormcreatorConditionnableInterface
 
       echo '</ol>';
       echo '</div>';
-
-      echo Html::scriptBlock("$(plugin_formcreator.initGridStacks(true))");
    }
 
    /**
@@ -210,24 +168,27 @@ PluginFormcreatorConditionnableInterface
       $html .= '<div class="grid-stack-item-content">';
 
       // Question name
-      $html .= '<i class="handle fas fa-grip-vertical"></i>&nbsp;';
       $html .= $field->getHtmlIcon() . '&nbsp;';
       $onclick = 'plugin_formcreator_editQuestion(' . $questionId . ', ' . $sectionId . ');';
       $html .= '<a href="javascript:' . $onclick . '">';
       $html .= empty($this->fields['name']) ? '(' . $questionId . ')' : $this->fields['name'];
       $html .= '</a>';
 
-      // actions on the question
+      // Delete the question
       $html .= "<span class='form_control pointer'>";
       $html .= '<i class="far fa-trash-alt"
                onclick="plugin_formcreator.deleteQuestion(this)"></i> ';
       $html .= "</span>";
+
+      // Clone the question
       $html .= "<span class='form_control pointer'>";
       $html .= '<i class="far fa-clone"
                onclick="plugin_formcreator.duplicateQuestion(this)"></i> ';
       $html .= "</span>";
+
+      // Toggle mandatory for the question
       $html .= "<span class='form_control pointer'>";
-      $required = $this->fields['required'] ? 'far fa-circle' : 'far fa-dot-circle';
+      $required = ($this->fields['required'] == '0') ? 'far fa-circle' : 'far fa-dot-circle';
       $html .= '<i class="' . $required .'"
                onclick="plugin_formcreator.toggleRequired(this)"></i> ';
       $html .= "</span>";

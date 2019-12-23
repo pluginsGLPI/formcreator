@@ -33,23 +33,26 @@ include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
 if (!isset($_REQUEST['id'])) {
-   http_response_code(400);
-   exit();
+    http_response_code(400);
+    exit;
 }
-$questionId = (int) $_REQUEST['id'];
-$question = new PluginFormcreatorQuestion();
-if (!$question->getFromDB($questionId)) {
+$sectionId = (int) $_REQUEST['id'];
+
+$section = new PluginFormcreatorSection();
+if (!$section->getFromDB($sectionId)) {
     http_response_code(404);
+    echo __('Source section not found', 'formcreator');
     exit;
 }
 
-if (!$question->canDeleteItem()) {
+if (!$section->canDeleteItem()) {
     http_response_code(403);
     echo __('You don\'t have right for this action', 'formcreator');
     exit;
 }
 
-if (!$question->delete(['id' => $questionId])) {
+if (!$section->delete(['id' => $sectionId])) {
     http_response_code(500);
+    echo __('Could not delete the section', 'formcreator');
+    exit;
 }
-http_response_code(204);

@@ -85,7 +85,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          }
          $html .= '</label>';
       }
-      if ($this->isEditableField()) {
+      if ($this->isEditableField() && !empty($this->question->fields['description'])) {
          $html .= '<div class="help-block">' . html_entity_decode($this->question->fields['description']) . '</div>';
       }
       $html .= '<div class="form_field">';

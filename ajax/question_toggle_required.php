@@ -36,19 +36,32 @@ if (!isset($_REQUEST['id'])) {
    http_response_code(400);
    exit();
 }
+$questionId = (int) $_REQUEST['id'];
 
 if (!isset($_REQUEST['required'])) {
     http_response_code(400);
     exit();
- }
+}
  
 $question = new PluginFormcreatorQuestion();
+if (!$question->getFromDB($questionId)) {
+    http_response_code(404);
+    echo __('Question not found', 'formcreator');
+    exit;
+}
+
+if (!$question->canUpdate()) {
+    http_response_code(403);
+    echo __('You don\'t have right for this action', 'formcreator');
+    exit;
+}
+
 $success = $question->update([
-    'id'           => (int) $_REQUEST['id'],
+    'id'           => $questionId,
     '_skip_checks' => true,
     'required'     => ($_REQUEST['required'] ? '1' : '0'),
 ]);
 if (!$success) {
-    http_response_code(400);
+    http_response_code(500);
     exit(); 
 }

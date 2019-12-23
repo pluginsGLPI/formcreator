@@ -325,7 +325,6 @@ input.submit_button:focus {
 }
 
 #plugin_formcreator_form .form-group .form_field {
-   display: inline-block;
    text-align: justify;
    word-wrap: break-word;
 }
@@ -353,7 +352,7 @@ input.submit_button:focus {
    height: 32px;
    padding: 1px 10px;
    margin: 0;
-   width: 650px;
+   width: 100%;
    color: #333;
    font-size: 1.1em;
    box-sizing: border-box;
