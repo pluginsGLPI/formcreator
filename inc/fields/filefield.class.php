@@ -39,6 +39,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function getRenderedHtml($canEdit = true) {
       if (!$canEdit) {
+         $html = '';
          $doc = new Document();
          $answer = $this->value;
          if (!is_array($this->value)) {

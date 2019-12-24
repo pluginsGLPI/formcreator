@@ -120,4 +120,12 @@ class PluginFormcreatorQuestionDependency extends CommonTestCase {
       $this->variable($parameterId2)->isNotFalse();
       $this->integer((int) $parameterId)->isNotEqualTo($parameterId2);
    }
+
+   public function isEditableField() {
+      return true;
+   }
+
+   public function isVisibleField() {
+      return true;
+   }
 }

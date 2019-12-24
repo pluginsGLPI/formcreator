@@ -525,7 +525,7 @@ PluginFormcreatorConditionnableInterface
       $sectionId = $this->getID();
       $lastSectionOrder = PluginFormcreatorCommon::getMax(
          new PluginFormcreatorSection(), 
-         [PluginFormcreatorSection::$itemtype::getForeignKeyField() => $formId], 
+         [PluginFormcreatorForm::getForeignKeyField() => $formId], 
          'order'
       );
 
@@ -587,5 +587,35 @@ PluginFormcreatorConditionnableInterface
       $html .= '</li>';
 
       return $html;
+   }
+
+   /**
+    * Is the given row empty ? 
+    * 
+    * @return boolean true if empty
+    */
+   public function isRowEmpty($row) {
+      // TODO: handle multiple consecutive empty rows
+      $dbUtil = new DBUtils();
+      $sectionFk = static::getForeignKeyField();
+      $count = $dbUtil->countElementsInTable(
+         PluginFormcreatorQuestion::getTable(), [
+            $sectionFk => $this->getID(),
+            // Items where row is the same as the current item
+            'OR' => [
+               'row' => $row,
+            // Items where row is less than the first row of this question
+            // and overlap first row of this item
+               'AND' => [
+                  'row' => ['<', $row],
+                  // To support variable height the expressin  below should be
+                  // row + height - 1
+                  new QueryExpression("`row` >= " . $row), 
+               ],
+            ],
+         ]
+      );
+
+      return ($count < 1);
    }
 }

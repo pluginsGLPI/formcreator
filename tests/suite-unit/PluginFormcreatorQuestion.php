@@ -161,7 +161,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -187,7 +187,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -216,7 +216,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -246,7 +246,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'col'                            => '0',
                'width'                          => '4',
                'height'                         => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -368,7 +368,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'row',
          'col',
          'width',
-         'height',
          'show_rule',
       ];
       $extraFields = [
@@ -413,8 +412,8 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       ]);
 
       // reload questions
-      $questions[1]->getFromDB(['id' => $questions[1]->getID()]);
-      $questions[2]->getFromDB(['id' => $questions[1]->getID()]);
+      $questions[1]->getFromDB($questions[1]->getID());
+      $questions[2]->getFromDB($questions[2]->getID());
 
       // Check 1 and 2 moved up
       $this->integer((int) $questions[1]->fields['row'])->isEqualTo(0);
@@ -446,38 +445,11 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       ]);
 
       // reload questions
-      $questions[0]->getFromDB(['id' => $questions[1]->getID()]);
-      $questions[1]->getFromDB(['id' => $questions[1]->getID()]);
+      $questions[0]->getFromDB($questions[0]->getID());
+      $questions[1]->getFromDB($questions[1]->getID());
 
       // Check 1 and 2 moved up
       $this->integer((int) $questions[0]->fields['row'])->isEqualTo(0);
       $this->integer((int) $questions[1]->fields['row'])->isEqualTo(1);
-   }
-
-   public function testIsRowEmpty() {
-      $section = $this->getSection();
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
-      $questions = [
-         0 => $this->getQuestion([
-            $sectionFk => $section->getID(),
-            'row' => 0,
-         ]),
-         1 => $this->getQuestion([
-            $sectionFk => $section->getID(),
-            'row' => 2,
-         ]),
-         2 => $this->getQuestion([
-            $sectionFk => $section->getID(),
-            'row' => 4,
-         ]),
-      ];
-
-      $question = $this->newTestedInstance();
-      $this->boolean($question->testIsRowEmpty(0))->isFalse();
-      $this->boolean($question->testIsRowEmpty(1))->isFalse();
-      $this->boolean($question->testIsRowEmpty(2))->isFalse();
-      $this->boolean($question->testIsRowEmpty(3))->isTrue();
-      $this->boolean($question->testIsRowEmpty(4))->isFalse();
-      $this->boolean($question->testIsRowEmpty(5))->isTrue();
    }
 }

@@ -97,7 +97,8 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $values       = $this->getAvailableValues();
       $tab_values   = [];
-
+      $html         = '';
+      
       if (!empty($this->question->fields['values'])) {
          foreach ($values as $value) {
             if ((trim($value) != '')) {

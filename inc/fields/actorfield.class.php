@@ -91,6 +91,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             return '';
          }
 
+         $value = [];
          foreach ($this->value as $item) {
             if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
                $value[] = $item;

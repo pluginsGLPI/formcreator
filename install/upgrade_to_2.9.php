@@ -330,31 +330,6 @@ class PluginFormcreatorUpgradeTo2_9 {
       // make sections hideable by condition
       $table = 'glpi_plugin_formcreator_sections';
       $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'order']);
-
-      // rows / columns for sections
-      $table = 'glpi_plugin_formcreator_questions';
-      $migration->changeField($table, 'order', 'row', 'integer');
-      $migration->addField($table, 'col', 'integer', ['after' => 'row']);
-      $migration->addField($table, 'width', 'integer', ['after' => 'col']);
-      $migration->addPostQuery("UPDATE `$table` SET `width`='4' WHERE `width` < '1'");
-      // Reorder questions from 0 instead of 1
-      $migration->migrationOneTable($table);
-      $result = $DB->query("SELECT glpi_plugin_formcreator_sections.id FROM glpi_plugin_formcreator_sections
-         INNER JOIN glpi_plugin_formcreator_questions ON (glpi_plugin_formcreator_sections.id = glpi_plugin_formcreator_questions.plugin_formcreator_sections_id)
-         GROUP BY glpi_plugin_formcreator_sections.id
-         HAVING MIN(glpi_plugin_formcreator_questions.`row`) > 0");
-      $fetchFunction = "fetch_assoc";
-      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
-         $fetchFunction = "fetchAssoc";
-      }
-      while (($row = $result->$fetchFunction()) !== null) {
-         $DB->update($table, [
-            'row' => new QueryExpression("`row` - 1")
-         ],
-         [
-            'plugin_formcreator_sections_id' => $row['id']
-         ]);
-      }
    }
 
    /**

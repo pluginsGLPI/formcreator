@@ -367,29 +367,18 @@ PluginFormcreatorConditionnableInterface
          $sectionFk => $input[$sectionFk]
       ], 'row');
       if ($maxRow === null) {
-         $input['row'] = 1;
+         $input['row'] = 0;
       } else {
          $input['row'] = $maxRow + 1;
       }
-      if (!isset($input['height'])) {
-         $input['height'] = '1';
-      }
+      // if (!isset($input['height'])) {
+      //    $input['height'] = '1';
+      // }
 
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
-      }
-
-      // Get next order
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $maxRow = PluginFormcreatorCommon::getMax($this, [
-         $sectionFk => $input[$sectionFk]
-      ], 'row');
-      if ($maxRow === null) {
-         $input['row'] = 1;
-      } else {
-         $input['row'] = $maxRow + 1;
       }
 
       return $input;
@@ -683,17 +672,25 @@ PluginFormcreatorConditionnableInterface
       // Move up questions under this one, if row is empty
       // TODO: handle multiple consecutive empty rows
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      if ($this->isRowEmpty($this->fields['row']) == 0) {
+      $section = new PluginFormcreatorSection();
+      $section->getFromDB($this->fields[$sectionFk]);
+      if ($section->isRowEmpty($this->fields['row'])) {
          // Rows of the item are empty
          $row = $this->fields['row'];
-         $DB->update(
-            $table,
-            new QueryExpression("`row` = `row` - 1"),
-           [
-              'row' => ['>', $row],
-              $sectionFk => $this->fields[$sectionFk]
-           ]
-         );   
+         $sectionId = $this->fields[$sectionFk];
+         $DB->query("
+            UPDATE `$table`
+            SET `row` = `row` - 1
+            WHERE `row` > '$row' AND `$sectionFk` = '$sectionId'
+         ");
+         // $DB->update(
+         //    $table,
+         //    new QueryExpression("`row` = `row` - 1"),
+         //   [
+         //      'row' => ['>', $row],
+         //      $sectionFk => $this->fields[$sectionFk]
+         //   ]
+         // );   
       }
 
       // Always show questions with conditional display on the question being deleted
@@ -721,34 +718,6 @@ PluginFormcreatorConditionnableInterface
             ]
          ]
       );
-   }
-
-   /**
-    * Is the given row empty ? 
-    * 
-    * @return boolean true if empty
-    */
-   public function isRowEmpty($row) {
-      // TODO: handle multiple consecutive empty rows
-      $dbUtil = new DBUtils();
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $count = $dbUtil->countElementsInTable(
-         self::getTable(), [
-            $sectionFk => $this->fields[$sectionFk],
-            // Items where row is the same as the current item
-            'row' => $row,
-            // Items where row is less than the first row of this question
-            // and overlap first row of this item
-            'OR' => [
-               'AND' => [
-                  'row' => ['<', $row],
-                  new QueryExpression("`row` + `height` >= " . $row),
-               ],
-            ],
-         ]
-      );
-
-      return ($count < 1);
    }
 
    public function showForm($ID, $options = []) {
