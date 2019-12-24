@@ -157,7 +157,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'show_empty'                     => '0',
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
-               'order'                          => '1',
+               'row'                            => '1',
+               'col'                            => '0',
+               'width'                          => '4',
+               'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
@@ -180,7 +183,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'show_empty'                     => '0',
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
-               'order'                          => '1',
+               'row'                            => '1',
+               'col'                            => '0',
+               'width'                          => '4',
+               'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
@@ -206,7 +212,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'show_empty'                     => '0',
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
-               'order'                          => '1',
+               'row'                            => '1',
+               'col'                            => '0',
+               'width'                          => '4',
+               'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
@@ -233,7 +242,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'show_empty'                     => '0',
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
-               'order'                          => '1',
+               'row'                            => '1',
+               'col'                            => '0',
+               'width'                          => '4',
+               'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
@@ -330,64 +342,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->array($output)->size->isEqualTo(count($expected));
    }
 
-   public function testMoveUp() {
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
-      $section = $this->getSection();
-      $question = $this->getQuestion(
-         [
-            $sectionFk => $section->getID(),
-         ]
-      );
-      $questionToMove = $this->getQuestion(
-         [
-            $sectionFk => $section->getID(),
-         ]
-      );
-
-      // Move up the question
-      $expectedOrder = $questionToMove->fields['order'] - 1;
-      $questionToMove->moveUp();
-
-      // Check the order of the question
-      $this->integer((int) $questionToMove->fields['order'])
-         ->isEqualTo($expectedOrder);
-
-      // check the order of the other question
-      $expectedOrder = $question->fields['order'] + 1;
-      $question->getFromDB($question->getID());
-      $this->integer((int) $question->fields['order'])
-         ->isEqualTo($expectedOrder);
-   }
-
-   public function testMoveDown() {
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
-      $section = $this->getSection();
-      $questionToMove = $this->getQuestion(
-         [
-            $sectionFk => $section->getID(),
-         ]
-      );
-      $question = $this->getQuestion(
-         [
-            $sectionFk => $section->getID(),
-         ]
-      );
-
-      // Move down the question
-      $expectedOrder = $questionToMove->fields['order'] + 1;
-      $questionToMove->moveDown();
-
-      // Check the order of the question
-      $this->integer((int) $questionToMove->fields['order'])
-         ->isEqualTo($expectedOrder);
-
-      // check the order of the other question
-      $expectedOrder = $question->fields['order'] - 1;
-      $question->getFromDB($question->getID());
-      $this->integer((int) $question->fields['order'])
-         ->isEqualTo($expectedOrder);
-   }
-
    public function testExport() {
       $instance = $this->newTestedInstance();
 
@@ -411,7 +365,9 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'default_values',
          'values',
          'description',
-         'order',
+         'row',
+         'col',
+         'width',
          'show_rule',
       ];
       $extraFields = [
@@ -429,28 +385,71 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
 
-   public function testMoveTop() {
+   public function testPost_purgeItem() {
+      /**
+       * Test 2 questions move up
+       */
       $section = $this->getSection();
-      $question1 = $this->getQuestion([
-         'plugin_formcreator_sections_id' => $section->getID(),
-      ]);
-      $question2 = $this->getQuestion([
-         'plugin_formcreator_sections_id' => $section->getID(),
-      ]);
-      $question3 = $this->getQuestion([
-         'plugin_formcreator_sections_id' => $section->getID(),
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $questions = [
+         0 => $toDelete = $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 0,
+         ]),
+         1 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 1,
+         ]),
+         2 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 2,
+         ]),
+      ];
+
+      // call to post_purgeItem() done here
+      $toDelete->delete([
+         'id' => $toDelete->getID(),
       ]);
 
-      $this->integer((int) $question1->fields['order'])->isEqualTo(1);
-      $this->integer((int) $question2->fields['order'])->isEqualTo(2);
-      $this->integer((int) $question3->fields['order'])->isEqualTo(3);
-      $question3->moveTop();
-      // Reload questions
-      $question1->getFromDB($question1->getID());
-      $question2->getFromDB($question2->getID());
-      $question3->getFromDB($question3->getID());
-      $this->integer((int) $question3->fields['order'])->isEqualTo(1);
-      $this->integer((int) $question1->fields['order'])->isEqualTo(2);
-      $this->integer((int) $question2->fields['order'])->isEqualTo(3);
+      // reload questions
+      $questions[1]->getFromDB($questions[1]->getID());
+      $questions[2]->getFromDB($questions[2]->getID());
+
+      // Check 1 and 2 moved up
+      $this->integer((int) $questions[1]->fields['row'])->isEqualTo(0);
+      $this->integer((int) $questions[2]->fields['row'])->isEqualTo(1);
+
+      /**
+       * Test no questions moved
+       */
+      $section = $this->getSection();
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $questions = [
+         0 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 0,
+         ]),
+         1 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 1,
+         ]),
+         2 => $toDelete = $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 2,
+         ]),
+      ];
+
+      // call to post_purgeItem() done here
+      $toDelete->delete([
+         'id' => $toDelete->getID(),
+      ]);
+
+      // reload questions
+      $questions[0]->getFromDB($questions[0]->getID());
+      $questions[1]->getFromDB($questions[1]->getID());
+
+      // Check 1 and 2 moved up
+      $this->integer((int) $questions[0]->fields['row'])->isEqualTo(0);
+      $this->integer((int) $questions[1]->fields['row'])->isEqualTo(1);
    }
 }

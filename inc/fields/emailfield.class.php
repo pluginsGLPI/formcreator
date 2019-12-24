@@ -35,24 +35,26 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       return true;
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id           = $this->question->getID();
-         $rand         = mt_rand();
-         $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
-         $defaultValue = Html::cleanInputText($this->value);
-
-         echo Html::input($fieldName, [
-            'id'    => $domId,
-            'value' => $defaultValue,
-         ]);
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeEmail('$fieldName', '$rand');
-         });");
-      } else {
-         echo $this->value;
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return $this->value;
       }
+      $html = '';
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
+
+      $html .= Html::input($fieldName, [
+         'id'    => $domId,
+         'value' => $defaultValue,
+      ]);
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeEmail('$fieldName', '$rand');
+      });");
+      
+      return $html;
    }
 
    public function serializeValue() {
@@ -157,5 +159,15 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-envelope" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

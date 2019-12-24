@@ -75,44 +75,50 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param boolean $canEdit is the field editable ?
     */
    public function show($canEdit = true) {
-      $required = ($canEdit && $this->question->fields['required']) ? ' required' : '';
+      $html = '';
 
-      echo '<div class="form-group ' . $required . '" id="form-group-field-' . $this->question->getID() . '">';
-      echo '<label for="formcreator_field_' . $this->question->getID() . '">';
-      echo $this->getLabel();
-      if ($canEdit && $this->question->fields['required']) {
-         echo ' <span class="red">*</span>';
+      if ($this->isVisibleField()) {
+         $html .= '<label for="formcreator_field_' . $this->question->getID() . '">';
+         $html .= $this->getLabel();
+         if ($canEdit && $this->question->fields['required']) {
+            $html .= ' <span class="red">*</span>';
+         }
+         $html .= '</label>';
       }
-      echo '</label>';
-      echo '<div class="help-block">' . html_entity_decode($this->question->fields['description']) . '</div>';
+      if ($this->isEditableField() && !empty($this->question->fields['description'])) {
+         $html .= '<div class="help-block">' . html_entity_decode($this->question->fields['description']) . '</div>';
+      }
+      $html .= '<div class="form_field">';
+      $html .= $this->getRenderedHtml($canEdit);
+      $html .= '</div>';
 
-      echo '<div class="form_field">';
-      $this->displayField($canEdit);
-      echo '</div>';
-      echo '</div>';
+      return $html;
    }
 
    /**
     * Outputs the HTML representing the field
     * @param string $canEdit
     */
-   public function displayField($canEdit = true) {
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return $this->value;
+      }
+
+      $html         = '';
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $defaultValue = Html::cleanInputText($this->value);
-      if ($canEdit) {
-         echo '<input type="text" class="form-control"
-                  name="' . $fieldName . '"
-                  id="' . $domId . '"
-                  value="' . $defaultValue . '" />';
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeField('$fieldName', '$rand');
-         });");
-      } else {
-         echo $this->value;
-      }
+      $html .= Html::input($fieldName, [
+         'id'    => $domId,
+         'value' => $defaultValue
+      ]);
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeField('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    /**

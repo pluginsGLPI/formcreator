@@ -35,37 +35,40 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return true;
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id           = $this->question->getID();
-         $rand         = mt_rand();
-         $fieldName    = 'formcreator_field_' . $id;
-         $values       = $this->getAvailableValues();
-         $tab_values   = [];
-
-         if (!empty($this->question->fields['values'])) {
-            foreach ($values as $value) {
-               if ((trim($value) != '')) {
-                  $tab_values[$value] = $value;
-               }
-            }
-
-            Dropdown::showFromArray($fieldName, $tab_values, [
-               'display_emptychoice' => $this->question->fields['show_empty'] == 1,
-               'value'     => $this->value,
-               'values'    => [],
-               'rand'      => $rand,
-               'multiple'  => false,
-            ]);
-         }
-         echo PHP_EOL;
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeSelect('$fieldName', '$rand');
-         });");
-      } else {
-         echo nl2br($this->value);
-         echo PHP_EOL;
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return nl2br($this->value) . PHP_EOL;
       }
+
+      $html         = '';
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $values       = $this->getAvailableValues();
+      $tab_values   = [];
+
+      if (!empty($this->question->fields['values'])) {
+         foreach ($values as $value) {
+            if ((trim($value) != '')) {
+               $tab_values[$value] = $value;
+            }
+         }
+
+         $html .= Dropdown::showFromArray($fieldName, $tab_values, [
+            'display_emptychoice' => $this->question->fields['show_empty'] == 1,
+            'value'     => $this->value,
+            'values'    => [],
+            'rand'      => $rand,
+            'multiple'  => false,
+            'display'   => false,
+         ]);
+      }
+      $html .=  PHP_EOL;
+      $html .=  Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeSelect('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    public static function getName() {

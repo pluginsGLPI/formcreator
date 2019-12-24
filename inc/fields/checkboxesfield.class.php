@@ -86,7 +86,8 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       ];
    }
 
-   public function displayField($canEdit = true) {
+   public function getRenderedHtml($canEdit = true) {
+      $html = '';
       if ($canEdit) {
          $id    = $this->question->getID();
          $rand  = mt_rand();
@@ -96,13 +97,13 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          $values = [];
          $values = $this->getAvailableValues();
          if (!empty($values)) {
-            echo '<div class="checkboxes">';
+            $html .= '<div class="checkboxes">';
             $i = 0;
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
-                  echo "<div class='checkbox'>";
-                  echo Html::getCheckbox([
+                  $html .= "<div class='checkbox'>";
+                  $html .= Html::getCheckbox([
                      'title'         => htmlentities($value, ENT_QUOTES),
                      'id'            => $domId.'_'.$i,
                      'name'          => htmlentities($fieldName, ENT_QUOTES) . '[]',
@@ -110,25 +111,27 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                      'zero_on_empty' => false,
                      'checked'       => in_array($value, $this->value)
                   ]);
-                  echo '<label for="' . $domId . '_' . $i . '">';
-                  echo '&nbsp;' . $value;
-                  echo '</label>';
-                  echo "</div>";
+                  $html .= '<label for="' . $domId . '_' . $i . '">';
+                  $html .= '&nbsp;' . $value;
+                  $html .= '</label>';
+                  $html .= "</div>";
                }
             }
-            echo '</div>';
+            $html .= '</div>';
          }
-         echo Html::scriptBlock("$(function() {
+         $html .= Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeCheckboxes('$fieldName', '$rand');
          });");
 
       } else {
          if (count($this->value)) {
-            echo implode('<br />', $this->value);
+            $html .= implode('<br />', $this->value);
          } else {
-            echo '';
+            $html .= '';
          }
       }
+      
+      return $html;
    }
 
    /**
@@ -312,5 +315,15 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-check-square" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

@@ -35,31 +35,34 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
       return true;
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id        = $this->question->getID();
-         $rand      = mt_rand();
-         $fieldName = 'formcreator_field_' . $id;
-
-         if (version_compare(GLPI_VERSION, '9.5') >= 0 && method_exists(Html::class, 'showTimeField')) {
-            Html::showTimeField($fieldName, [
-               'value' => (strtotime($this->value) != '') ? $this->value : '',
-               'rand'  => $rand,
-            ]);
-         } else {
-            // TODO : drop when GLPI 9.4 compatibility is dropped
-            static::showTimeField($fieldName, [
-               'value' => (strtotime($this->value) != '') ? $this->value : '',
-               'rand'  => $rand,
-            ]);
-         }
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeTime('$fieldName', '$rand');
-         });");
-
-      } else {
-         echo $this->value;
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return $this->value;
       }
+
+      $html      = '';
+      $id        = $this->question->getID();
+      $rand      = mt_rand();
+      $fieldName = 'formcreator_field_' . $id;
+      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
+         $html .= Html::showTimeField($fieldName, [
+            'value'   => (strtotime($this->value) != '') ? $this->value : '',
+            'rand'    => $rand,
+            'display' => false,
+         ]);
+      } else {
+         // TODO : drop when GLPI 9.4 compatibility is dropped
+         $html .= static::showTimeField($fieldName, [
+            'value' => (strtotime($this->value) != '') ? $this->value : '',
+            'rand'  => $rand,
+            'display' => false,
+         ]);
+      }
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeTime('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    public function serializeValue() {
@@ -294,5 +297,15 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-clock" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

@@ -201,4 +201,30 @@ interface PluginFormcreatorFieldInterface
     * Gets HTML code for the icon of a field
     */
    public function getHtmlIcon();
+
+   /**
+    * get HTML code of rendered question for service catalog
+    * @param boolean $canEdit true if the user can edit the answer
+    * @return string HTML code
+    */
+   public function getRenderedHtml($canEdit);
+
+   /**
+    * Is the field editable ?
+    * Must return true if the field is editable by nature (i.e. a text box)
+    * or false if it is not editable by nature (i.e. a description field)
+    *
+    * @return boolean
+    */
+   public function isEditableField();
+
+   /**
+    * Is the field visible ?
+    * Must return trie if the field is visible by nature (i.e. a text botx, a description field)
+    * or false if it is invisible by nature (i.e. a hostname or ip field)
+    *
+    * @return boolean
+    */
+   public function isVisibleField();
+
 }

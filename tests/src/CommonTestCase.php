@@ -217,7 +217,9 @@ abstract class CommonTestCase extends CommonDBTestCase
          'show_empty'                     => '0',
          'default_values'                 => '',
          'desription'                     => '',
-         'order'                          => '1',
+         'row'                            => '0',
+         'col'                            => '0',
+         'width'                          => '4',
          'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          '_parameters'     => [
             'text' => [

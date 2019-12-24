@@ -29,43 +29,43 @@
  * ---------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
-include ("../../../inc/includes.php");
-
+include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-// Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!isset($_REQUEST['id'])) {
+   http_response_code(400);
+   exit();
+}
+$questionId = (int) $_REQUEST['id'];
+$question = new PluginFormcreatorQuestion();
+if (!$question->getFromDB($questionId)) {
+    http_response_code(404);
+    echo __('Source question not found', 'formcreator');
+    exit();
+}
+
+if (!$question->canCreate()) {
+    http_response_code(403);
+    echo __('You don\'t have right for this action', 'formcreator');
+    exit;
+}
+
+if (($newId = $question->duplicate()) === false) {
+    http_response_code(500);
+    exit;
 }
 
 $question = new PluginFormcreatorQuestion();
-
-// force checks in PrepareInputForAdd or PrepareInputrForUpdate
-unset($_POST['_skip_checks']);
-if (isset($_POST['add'])) {
-   // Add a new Question
-   Session::checkRight('entity', UPDATE);
-   if ($newid = $question->add($_POST)) {
-      Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
-      $_POST['id'] = $newid;
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
-   }
-   Html::back();
-
-} else if (isset($_POST['update'])) {
-   // Edit an existing Question
-   Session::checkRight('entity', UPDATE);
-   if ($question->update($_POST)) {
-      Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
-   }
-   Html::back();
-
-} else {
-   // Return to form list
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
+if (!$question->getFromDB($newId)) {
+    http_response_code(500);
+    exit;
 }
+$json = [
+    'y'      => $question->fields['row'],
+    'x'      => $question->fields['col'],
+    'width'  => $question->fields['width'],
+    'height' => '1',
+    'html'   => $question->getDesignHtml(),
+];
+
+echo json_encode($json);

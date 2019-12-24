@@ -79,8 +79,6 @@ html, body {
   }
 }
 
-
-
 a.submit_button, input.submit_button {
    display: inline-block;
    min-width: 150px !important;
@@ -153,36 +151,122 @@ input.submit_button:focus {
    background-color: #FFF;
 }
 
-form.formcreator_form {
+/* 
+ * Form designer
+ */
+
+/* Sections */
+#plugin_formcreator_form.plugin_formcreator_form_design > ol {
+   list-style-type: none;
+   text-align: left;
+   padding-left: 0;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section {
+   line-height: 32px;
+   background: #CCC;
+}
+
+/* questions */
+#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack {
+   list-style-type: none;
+   text-align: left;
+   padding-left: 0;
+   position: relative;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item {
+   line-height: 32px;
+   background: #F0F0F0;
+   position: absolute;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content {
+   text-align: left;
+   padding-left: 16px;
+   padding-right: 24px;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item.ui-draggable-dragging {
+   z-index: 100;
+}
+
+/* GLPI 9.4 : override abusive CSS rules for gridstack */
+/* TODO: drop when GLPI 9.5 is patched */
+.form_section .grid-stack-item:not(.lock-bottom) .grid-stack-item-content {
+   font-size: inherit; 
+   font-weight: inherit; 
+   text-align: inherit; 
+   overflow: inherit; 
+   cursor: inherit; 
+   cursor: inherit; 
+   cursor: inherit; 
+   cursor: inherit; 
+}
+
+.form_section .grid-stack .grid-stack-item .grid-stack-item-content, 
+.form_section .grid-stack .grid-stack-item .placeholder-content {
+	left: 0;
+	right: 0;
+}
+
+/* actions on sections or questions */
+#plugin_formcreator_form.plugin_formcreator_form_design .form_control {
+   font-size: larger;
+}
+
+/*
+* Form Render 
+*/
+#plugin_formcreator_form.plugin_formcreator_form > ol {
+   list-style-type: none;
+   text-align: left;
+   padding-left: 0;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"],
+#plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap {
+      vertical-align: top;
+   display: inline-block;
+}
+
+/* form#plugin_formcreator_form {
    max-width: 950px;
    margin: 10px auto 50px !important;
    display: block;
    position: relative;
    line-height: 1.4em;
-}
-#bloc > .formcreator_form {
+} */
+
+#bloc > #plugin_formcreator_form {
    width: 850px;
 }
 
 .form_answer h1,
-.formcreator_form > h1 {
+#plugin_formcreator_form > h1 {
    text-align: center;
    font-weight: bold;
    font-size: 1.8em;
    margin: 0 0 15px;
 }
 
-.formcreator_form > .form_header {
+#plugin_formcreator_form > .form_header {
    padding: 10px 15px;
 }
-.formcreator_form > .refused_header, .formcreator_form > .accepted_header {
+
+/*
+ * Validation header
+ */
+#plugin_formcreator_form > .refused_header, 
+#plugin_formcreator_form > .accepted_header {
    padding: 10px 15px;
    background: #EED0D0; /*#EEE;*/
    border-radius: 4px;
    box-shadow: 2px 2px 2px #CCC;
    margin: 0 0 10px;
 }
-.formcreator_form > .refused_header > div, .formcreator_form > .accepted_header > div {
+#plugin_formcreator_form > .refused_header > div, 
+#plugin_formcreator_form > .accepted_header > div {
    padding: 3px 10px;
    border-left: 5px solid #A00;
    color: #C00;
@@ -190,29 +274,29 @@ form.formcreator_form {
    font-weight: bold;
    margin: 0 4px;
 }
-.formcreator_form > .accepted_header {
+#plugin_formcreator_form > .accepted_header {
    background: #C0DDC0; /*#EEE;*/
 }
-.formcreator_form > .accepted_header > div {
+#plugin_formcreator_form > .accepted_header > div {
    border-left: 5px solid #060;
    color: #060;
 }
 
-.formcreator_form > .form_header, .formcreator_form > .form_section {
-   background: #EEE; /*#EEE;*/
-   background: rgba(232, 232, 232, .8); /*#EEE;*/
+#plugin_formcreator_form > .form_header, 
+#plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"] {
+   background: #EEE;
    box-shadow: 2px 2px 2px #CCC;
    margin: 0 0 10px;
 }
 
 
-.formcreator_form > .form_header > h1 {
+#plugin_formcreator_form > .form_header > h1 {
    font-size: 1.2em;
    margin: 0 0 10px;
 }
 
-.formcreator_form  .form_section > h2 {
-   background: #1B2F62; /*#E1D39E;*/
+#plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"] > h2 {
+   background: #1B2F62;
    color: #FFF;
    margin:  0 0 10px;
    padding: 5px 10px;
@@ -222,47 +306,45 @@ form.formcreator_form {
    line-height: 24px;
 }
 
-.formcreator_form .form-group {
+#plugin_formcreator_form .form-group {
    padding: 5px 15px;
 }
 
-.formcreator_form .form-group > label {
+#plugin_formcreator_form .form-group > label {
    display: block;
    font-size: 1.2em;
    line-height: 32px;
    font-weight: bold;
 }
-.formcreator_form .form-group:after {
+#plugin_formcreator_form .form-group:after {
    content: '';
    display: block;
 }
-.formcreator_form .form-group .form_field > input[type="file"] {
+#plugin_formcreator_form .form-group .form_field > input[type="file"] {
    height: 32px;
 }
 
-.formcreator_form .form-group .form_field {
-   width: 650px;
-   display: inline-block;
+#plugin_formcreator_form .form-group .form_field {
    text-align: justify;
    word-wrap: break-word;
 }
-#bloc > .formcreator_form .form-group .form_field {
+#bloc > #plugin_formcreator_form .form-group .form_field {
    width: 415px;
 }
-.formcreator_form .form-group .form_field .select2-container {
+#plugin_formcreator_form .form-group .form_field .select2-container {
    width: 100% !important;
 }
 
 
-.formcreator_form .description_field {
+#plugin_formcreator_form .description_field {
    border-left: 4px solid #999;
    margin: 10px 15px;
 }
 
-.formcreator_form .form-group .form_field > input,
-.formcreator_form textarea,
-.formcreator_form select,
-.formcreator_form .form-group .form_field input.hasDatepicker {
+#plugin_formcreator_form .form-group .form_field > input,
+#plugin_formcreator_form textarea,
+#plugin_formcreator_form select,
+#plugin_formcreator_form .form-group .form_field input.hasDatepicker {
    background: #FFF;
    border-radius: 3px;
    line-height: 18px;
@@ -270,19 +352,19 @@ form.formcreator_form {
    height: 32px;
    padding: 1px 10px;
    margin: 0;
-   width: 650px;
+   width: 100%;
    color: #333;
    font-size: 1.1em;
    box-sizing: border-box;
 }
-.formcreator_form .form-group .form_field input.hasDatepicker {
+#plugin_formcreator_form .form-group .form_field input.hasDatepicker {
    width: 125px;
 }
-.formcreator_form .form-group img {
+#plugin_formcreator_form .form-group img {
    vertical-align: middle;
    margin: 4px;
 }
-.formcreator_form .select2-container .select2-choice {
+#plugin_formcreator_form .select2-container .select2-choice {
    height: 24px;
    line-height: 24px;
    padding-top: 3px;
@@ -290,10 +372,10 @@ form.formcreator_form {
    width: 637px;
    max-width: 637px;
 }
-#bloc > .formcreator_form .select2-container .select2-choice {
+#bloc > #plugin_formcreator_form .select2-container .select2-choice {
    width: 395px;
 }
-.formcreator_form .select2-container .select2-choice > .select2-chosen {
+#plugin_formcreator_form .select2-container .select2-choice > .select2-chosen {
    margin: 1px 0;
    line-height: 24px;
    color: #333;
@@ -302,37 +384,37 @@ form.formcreator_form {
 .select2-container .select2-choice .select2-arrow b {
    margin-top: 3px;
 }
-.formcreator_form textarea:focus,
-.formcreator_form select:focus,
-.formcreator_form .form-group .form_field > input:focus
+#plugin_formcreator_form textarea:focus,
+#plugin_formcreator_form select:focus,
+#plugin_formcreator_form .form-group .form_field > input:focus
 {
    border-color: #66afe9;
    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
 
-.formcreator_form input[type = checkbox]:focus + label,
-.formcreator_form input[type = radio]:focus + label,
-.formcreator_form input[type = file]:focus {
+#plugin_formcreator_form input[type = checkbox]:focus + label,
+#plugin_formcreator_form input[type = radio]:focus + label,
+#plugin_formcreator_form input[type = file]:focus {
    color: #66afe9;
    color: rgba(102,175,233, 1);
    border-bottom: #66afe9 dotted 1px !important;
    border-bottom: rgba(102,175,233,.8) dotted 1px !important;
 }
 
-.formcreator_form textarea {
+#plugin_formcreator_form textarea {
    min-height: 105px;
 }
 
-.formcreator_form div.checkbox {
+#plugin_formcreator_form div.checkbox {
    padding: 5px 0;
 }
-.formcreator_form div.checkbox label {
+#plugin_formcreator_form div.checkbox label {
    cursor: pointer;
 }
-.formcreator_form div.checkbox .form-group-checkbox {
+#plugin_formcreator_form div.checkbox .form-group-checkbox {
    margin-right: 4px;
 }
-.formcreator_form div.checkbox .label-checkbox .box {
+#plugin_formcreator_form div.checkbox .label-checkbox .box {
    background-color: #FFF;
    border: 2px solid #727272;
 }
@@ -383,7 +465,7 @@ form.formcreator_form {
 }
 
 
-.formcreator_form .select2-container-multi .select2-choices  {
+#plugin_formcreator_form .select2-container-multi .select2-choices  {
    width: 650px;
    min-height: 24px;
    background: #FFF;
@@ -395,33 +477,33 @@ form.formcreator_form {
 .select2-drop {
     max-width: 650px;
 }
-#bloc > .formcreator_form .select2-container-multi .select2-choices  {
+#bloc > #plugin_formcreator_form .select2-container-multi .select2-choices  {
    width: 415px;
 }
-.formcreator_form .form-group option {
+#plugin_formcreator_form .form-group option {
    background: none;
    border: none;
 }
-.formcreator_form .form-group .form_field > input[type = file] {
+#plugin_formcreator_form .form-group .form_field > input[type = file] {
    background: none;
    border: none;
    box-shadow: none;
    width: auto;
 }
-.formcreator_form .form-group > .help-block {
+#plugin_formcreator_form .form-group > .help-block {
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
 }
-.formcreator_form .form-group > .help-block p {
+#plugin_formcreator_form .form-group > .help-block p {
    margin: 0;
    padding: 3px 0;
 }
 
-#bloc > .formcreator_form .form-group .form_field > input, #bloc > .formcreator_form textarea {
+#bloc > #plugin_formcreator_form .form-group .form_field > input, #bloc > #plugin_formcreator_form textarea {
    width: 545px;
 }
-#bloc > .formcreator_form select {
+#bloc > #plugin_formcreator_form select {
    width: 567px;
 }
 #footer-login {
@@ -430,18 +512,18 @@ form.formcreator_form {
    margin: 0 15px 0 0;
 }
 
-.formcreator_form .liste input[type = text] {
+#plugin_formcreator_form .liste input[type = text] {
    width: 100px;
 }
 
-.formcreator_form .liste span > select {
+#plugin_formcreator_form .liste span > select {
    width: 534px;
 }
 
-#bloc > .formcreator_form .liste input[type = text]  {
+#bloc > #plugin_formcreator_form .liste input[type = text]  {
    width: 60px;
 }
-#bloc > .formcreator_form .liste select  {
+#bloc > #plugin_formcreator_form .liste select  {
    width: 330px;
 }
 
@@ -459,7 +541,6 @@ form.formcreator_form {
 .div_show_condition_field, .div_show_condition_operator,
 .div_show_condition_value, .div_show_condition_logic,
 .div_show_condition_add, .div_show_condition_remove {
-   //float: left;
    display: inline-block;
 }
 .div_show_condition_field .select2-container,
@@ -1386,23 +1467,23 @@ span.fc_list_icon {
 
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
-   form.formcreator_form {
+   form#plugin_formcreator_form {
        width: 100%;
    }
 
-   .formcreator_form .form-group > label,
-   .formcreator_form .form-group .form_field,
-   .formcreator_form .form-group .form_field > input,
-   .formcreator_form textarea,
-   .formcreator_form select {
+   #plugin_formcreator_form .form-group > label,
+   #plugin_formcreator_form .form-group .form_field,
+   #plugin_formcreator_form .form-group .form_field > input,
+   #plugin_formcreator_form textarea,
+   #plugin_formcreator_form select {
       width: 100%;
    }
-   .formcreator_form .form-group .form_field input.hasDatepicker  {
+   #plugin_formcreator_form .form-group .form_field input.hasDatepicker  {
       width: 88%;
    }
 
-   .formcreator_form .select2-container .select2-choice,
-   .formcreator_form .select2-container-multi .select2-choices {
+   #plugin_formcreator_form .select2-container .select2-choice,
+   #plugin_formcreator_form .select2-container-multi .select2-choices {
       width: 96%;
    }
 

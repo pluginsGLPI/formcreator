@@ -256,4 +256,30 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer((int) $section->fields['order'])
          ->isEqualTo($expectedOrder);
    }
+
+   public function testIsEmptyRow() {
+      $section = $this->getSection();
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      [
+         0 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 0,
+         ]),
+         1 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 2,
+         ]),
+         2 => $this->getQuestion([
+            $sectionFk => $section->getID(),
+            'row' => 4,
+         ]),
+      ];
+
+      $this->boolean($section->isRowEmpty(0))->isFalse();
+      $this->boolean($section->isRowEmpty(1))->isFalse();
+      $this->boolean($section->isRowEmpty(2))->isFalse();
+      $this->boolean($section->isRowEmpty(3))->isTrue();
+      $this->boolean($section->isRowEmpty(4))->isTrue();
+      $this->boolean($section->isRowEmpty(5))->isTrue();
+   }
 }

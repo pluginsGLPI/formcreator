@@ -35,23 +35,26 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       return true;
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id        = $this->question->getID();
-         $rand      = mt_rand();
-         $fieldName = 'formcreator_field_' . $id;
-
-         Html::showDateField($fieldName, [
-            'value' => (strtotime($this->value) != '') ? $this->value : '',
-            'rand'  => $rand,
-         ]);
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeDate('$fieldName', '$rand');
-         });");
-
-      } else {
-         echo $this->value;
+   public function getRenderedHtml($canEdit = true) {
+      if (!$canEdit) {
+         return $this->value;
       }
+      
+      $html = '';
+      $id        = $this->question->getID();
+      $rand      = mt_rand();
+      $fieldName = 'formcreator_field_' . $id;
+
+      Html::showDateField($fieldName, [
+         'value'   => (strtotime($this->value) != '') ? $this->value : '',
+         'rand'    => $rand,
+         'display' => false,
+      ]);
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeDate('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    public function serializeValue() {
@@ -143,5 +146,15 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-calendar" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
    }
 }

@@ -234,4 +234,12 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
    public function getHtmlIcon() {
       return '';
    }
+
+   public function isEditableField() {
+      return true;
+   }
+
+   public function isVisibleField() {
+      return true;
+   }
 }
