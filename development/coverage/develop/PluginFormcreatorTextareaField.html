@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
-                    17%
-                                            <small>of 70</small>
+                    18%
+                                            <small>of 65</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -64,8 +64,8 @@ layout: coverage
 </td>
                                             </tr>
             <tr>
-            <td><a href="#displayField">PluginFormcreatorTextareaField::displayField()</a></td>
-                                        <td style="text-align: center">20</td>
+            <td><a href="#getRenderedHtml">PluginFormcreatorTextareaField::getRenderedHtml()</a></td>
+                                        <td style="text-align: center">15</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -701,212 +701,29 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="displayField">
+                            <tr class="line" id="getRenderedHtml">
                     <th id="L70" class="number ">70</th>
 
-                    <td class="" id="displayField">
-                        <pre>   public function displayField($canEdit = true) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="getRenderedHtml">
+                        <pre>   public function getRenderedHtml($canEdit = true) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L71" class="number uncovered">71</th>
 
                     <td class="uncovered" >
-                        <pre>      $id           = $this-&gt;question-&gt;getID();</pre>
+                        <pre>      if (!$canEdit) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L72" class="number uncovered">72</th>
 
                     <td class="uncovered" >
-                        <pre>      $rand         = mt_rand();</pre>
+                        <pre>         return Toolbox::getHtmlToDisplay($this-&gt;value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L73" class="number uncovered">73</th>
-
-                    <td class="uncovered" >
-                        <pre>      $fieldName    = &#039;formcreator_field_&#039; . $id;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L74" class="number uncovered">74</th>
-
-                    <td class="uncovered" >
-                        <pre>      $useRichText = true;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L75" class="number uncovered">75</th>
-
-                    <td class="uncovered" >
-                        <pre>      if ($canEdit) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L76" class="number uncovered">76</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($useRichText) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L77" class="number uncovered">77</th>
-
-                    <td class="uncovered" >
-                        <pre>            $value = nl2br($this-&gt;value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L78" class="number ">78</th>
-
-                    <td class="" >
-                        <pre>         } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L79" class="number uncovered">79</th>
-
-                    <td class="uncovered" >
-                        <pre>            $value = $this-&gt;value;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L80" class="number ">80</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L81" class="number uncovered">81</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo Html::textarea([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L82" class="number uncovered">82</th>
-
-                    <td class="uncovered" >
-                        <pre>            &#039;name&#039;            =&gt; $fieldName,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L83" class="number uncovered">83</th>
-
-                    <td class="uncovered" >
-                        <pre>            &#039;rand&#039;            =&gt; $rand,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L84" class="number uncovered">84</th>
-
-                    <td class="uncovered" >
-                        <pre>            &#039;value&#039;           =&gt; $value,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L85" class="number uncovered">85</th>
-
-                    <td class="uncovered" >
-                        <pre>            &#039;rows&#039;            =&gt; 5,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L86" class="number ">86</th>
-
-                    <td class="" >
-                        <pre>            &#039;display&#039;         =&gt; false,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L87" class="number uncovered">87</th>
-
-                    <td class="uncovered" >
-                        <pre>            &#039;enable_richtext&#039; =&gt; $useRichText,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L88" class="number ">88</th>
-
-                    <td class="" >
-                        <pre>         ]);
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L89" class="number uncovered">89</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo Html::scriptBlock(&quot;$(function() {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L90" class="number uncovered">90</th>
-
-                    <td class="uncovered" >
-                        <pre>            pluginFormcreatorInitializeTextarea(&#039;$fieldName&#039;, &#039;$rand&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L91" class="number ">91</th>
-
-                    <td class="" >
-                        <pre>         });&quot;);
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L92" class="number ">92</th>
-
-                    <td class="" >
-                        <pre>      } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L93" class="number uncovered">93</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($useRichText) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L94" class="number uncovered">94</th>
-
-                    <td class="uncovered" >
-                        <pre>            echo Toolbox::getHtmlToDisplay($this-&gt;value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L95" class="number ">95</th>
-
-                    <td class="" >
-                        <pre>         } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L96" class="number uncovered">96</th>
-
-                    <td class="uncovered" >
-                        <pre>            echo nl2br($this-&gt;value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L97" class="number ">97</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L98" class="number ">98</th>
+                    <th id="L73" class="number ">73</th>
 
                     <td class="" >
                         <pre>      }
@@ -914,14 +731,153 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L99" class="number uncovered">99</th>
+                    <th id="L74" class="number ">74</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L75" class="number uncovered">75</th>
 
                     <td class="uncovered" >
+                        <pre>      $id           = $this-&gt;question-&gt;getID();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L76" class="number uncovered">76</th>
+
+                    <td class="uncovered" >
+                        <pre>      $rand         = mt_rand();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L77" class="number uncovered">77</th>
+
+                    <td class="uncovered" >
+                        <pre>      $fieldName    = &#039;formcreator_field_&#039; . $id;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L78" class="number uncovered">78</th>
+
+                    <td class="uncovered" >
+                        <pre>      $value        = nl2br($this-&gt;value);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L79" class="number uncovered">79</th>
+
+                    <td class="uncovered" >
+                        <pre>      $html = &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L80" class="number uncovered">80</th>
+
+                    <td class="uncovered" >
+                        <pre>      $html .= Html::textarea([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L81" class="number uncovered">81</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;name&#039;            =&gt; $fieldName,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L82" class="number uncovered">82</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;rand&#039;            =&gt; $rand,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L83" class="number uncovered">83</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;value&#039;           =&gt; $value,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L84" class="number uncovered">84</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;rows&#039;            =&gt; 5,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L85" class="number ">85</th>
+
+                    <td class="" >
+                        <pre>         &#039;display&#039;         =&gt; false,
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L86" class="number ">86</th>
+
+                    <td class="" >
+                        <pre>         &#039;enable_richtext&#039; =&gt; true,
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L87" class="number ">87</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L88" class="number uncovered">88</th>
+
+                    <td class="uncovered" >
+                        <pre>      $html .= Html::scriptBlock(&quot;$(function() {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L89" class="number uncovered">89</th>
+
+                    <td class="uncovered" >
+                        <pre>         pluginFormcreatorInitializeTextarea(&#039;$fieldName&#039;, &#039;$rand&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L90" class="number ">90</th>
+
+                    <td class="" >
+                        <pre>      });&quot;);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L91" class="number ">91</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L92" class="number uncovered">92</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $html;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L93" class="number unreach">93</th>
+
+                    <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L100" class="number ">100</th>
+                    <th id="L94" class="number ">94</th>
 
                     <td class="" >
                         <pre>
@@ -929,28 +885,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getName">
-                    <th id="L101" class="number ">101</th>
+                    <th id="L95" class="number ">95</th>
 
                     <td class="" id="getName">
                         <pre>   public static function getName() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L102" class="number covered">102</th>
+                    <th id="L96" class="number covered">96</th>
 
                     <td class="covered" >
                         <pre>      return __(&#039;Textarea&#039;, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L103" class="number unreach">103</th>
+                    <th id="L97" class="number unreach">97</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L104" class="number ">104</th>
+                    <th id="L98" class="number ">98</th>
 
                     <td class="" >
                         <pre>
@@ -958,28 +914,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="serializeValue">
-                    <th id="L105" class="number ">105</th>
+                    <th id="L99" class="number ">99</th>
 
                     <td class="" id="serializeValue">
                         <pre>   public function serializeValue() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L106" class="number covered">106</th>
+                    <th id="L100" class="number covered">100</th>
 
                     <td class="covered" >
                         <pre>      if ($this-&gt;value === null || $this-&gt;value === &#039;&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L107" class="number covered">107</th>
+                    <th id="L101" class="number covered">101</th>
 
                     <td class="covered" >
                         <pre>         return &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L108" class="number ">108</th>
+                    <th id="L102" class="number ">102</th>
 
                     <td class="" >
                         <pre>      }
@@ -987,7 +943,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L109" class="number ">109</th>
+                    <th id="L103" class="number ">103</th>
 
                     <td class="" >
                         <pre>
@@ -995,21 +951,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L110" class="number covered">110</th>
+                    <th id="L104" class="number covered">104</th>
 
                     <td class="covered" >
                         <pre>      return Toolbox::addslashes_deep($this-&gt;value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L111" class="number unreach">111</th>
+                    <th id="L105" class="number unreach">105</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L112" class="number ">112</th>
+                    <th id="L106" class="number ">106</th>
 
                     <td class="" >
                         <pre>
@@ -1017,35 +973,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="deserializeValue">
-                    <th id="L113" class="number ">113</th>
+                    <th id="L107" class="number ">107</th>
 
                     <td class="" id="deserializeValue">
                         <pre>   public function deserializeValue($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L114" class="number covered">114</th>
+                    <th id="L108" class="number covered">108</th>
 
                     <td class="covered" >
                         <pre>      $this-&gt;value = ($value !== null &amp;&amp; $value !== &#039;&#039;)</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L115" class="number covered">115</th>
+                    <th id="L109" class="number covered">109</th>
 
                     <td class="covered" >
                         <pre>                  ? $value</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L116" class="number covered">116</th>
+                    <th id="L110" class="number covered">110</th>
 
                     <td class="covered" >
                         <pre>                  : &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L117" class="number ">117</th>
+                    <th id="L111" class="number ">111</th>
 
                     <td class="" >
                         <pre>      //$this-&gt;value = str_replace(&#039;\r\n&#039;, &quot;\r\n&quot;, $this-&gt;value);
@@ -1053,14 +1009,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L118" class="number covered">118</th>
+                    <th id="L112" class="number covered">112</th>
 
                     <td class="covered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L119" class="number ">119</th>
+                    <th id="L113" class="number ">113</th>
 
                     <td class="" >
                         <pre>
@@ -1068,28 +1024,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getValueForDesign">
-                    <th id="L120" class="number ">120</th>
+                    <th id="L114" class="number ">114</th>
 
                     <td class="" id="getValueForDesign">
                         <pre>   public function getValueForDesign() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L121" class="number uncovered">121</th>
+                    <th id="L115" class="number uncovered">115</th>
 
                     <td class="uncovered" >
                         <pre>      if ($this-&gt;value === null) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L122" class="number uncovered">122</th>
+                    <th id="L116" class="number uncovered">116</th>
 
                     <td class="uncovered" >
                         <pre>         return &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L123" class="number ">123</th>
+                    <th id="L117" class="number ">117</th>
 
                     <td class="" >
                         <pre>      }
@@ -1097,7 +1053,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L124" class="number ">124</th>
+                    <th id="L118" class="number ">118</th>
 
                     <td class="" >
                         <pre>
@@ -1105,21 +1061,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L125" class="number uncovered">125</th>
+                    <th id="L119" class="number uncovered">119</th>
 
                     <td class="uncovered" >
                         <pre>      return $this-&gt;value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L126" class="number unreach">126</th>
+                    <th id="L120" class="number unreach">120</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L127" class="number ">127</th>
+                    <th id="L121" class="number ">121</th>
 
                     <td class="" >
                         <pre>
@@ -1127,14 +1083,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="isValid">
-                    <th id="L128" class="number ">128</th>
+                    <th id="L122" class="number ">122</th>
 
                     <td class="" id="isValid">
                         <pre>   public function isValid() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L129" class="number ">129</th>
+                    <th id="L123" class="number ">123</th>
 
                     <td class="" >
                         <pre>      // If the field is required it can&#039;t be empty
@@ -1142,49 +1098,49 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L130" class="number uncovered">130</th>
+                    <th id="L124" class="number uncovered">124</th>
 
                     <td class="uncovered" >
                         <pre>      if ($this-&gt;isRequired() &amp;&amp; $this-&gt;value == &#039;&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L131" class="number uncovered">131</th>
+                    <th id="L125" class="number uncovered">125</th>
 
                     <td class="uncovered" >
                         <pre>         Session::addMessageAfterRedirect(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L132" class="number uncovered">132</th>
+                    <th id="L126" class="number uncovered">126</th>
 
                     <td class="uncovered" >
                         <pre>            __(&#039;A required field is empty:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $this-&gt;getLabel(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L133" class="number uncovered">133</th>
+                    <th id="L127" class="number uncovered">127</th>
 
                     <td class="uncovered" >
                         <pre>            false,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L134" class="number uncovered">134</th>
+                    <th id="L128" class="number uncovered">128</th>
 
                     <td class="uncovered" >
                         <pre>            ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L135" class="number uncovered">135</th>
+                    <th id="L129" class="number uncovered">129</th>
 
                     <td class="uncovered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L136" class="number ">136</th>
+                    <th id="L130" class="number ">130</th>
 
                     <td class="" >
                         <pre>      }
@@ -1192,7 +1148,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L137" class="number ">137</th>
+                    <th id="L131" class="number ">131</th>
 
                     <td class="" >
                         <pre>
@@ -1200,7 +1156,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L138" class="number ">138</th>
+                    <th id="L132" class="number ">132</th>
 
                     <td class="" >
                         <pre>      // All is OK
@@ -1208,21 +1164,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L139" class="number uncovered">139</th>
+                    <th id="L133" class="number uncovered">133</th>
 
                     <td class="uncovered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L140" class="number unreach">140</th>
+                    <th id="L134" class="number unreach">134</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number ">141</th>
+                    <th id="L135" class="number ">135</th>
 
                     <td class="" >
                         <pre>
@@ -1230,35 +1186,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="prepareQuestionInputForSave">
-                    <th id="L142" class="number ">142</th>
+                    <th id="L136" class="number ">136</th>
 
                     <td class="" id="prepareQuestionInputForSave">
                         <pre>   public function prepareQuestionInputForSave($input) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L143" class="number covered">143</th>
+                    <th id="L137" class="number covered">137</th>
 
                     <td class="covered" >
                         <pre>      $this-&gt;value = str_replace(&#039;\r\n&#039;, &quot;\r\n&quot;, $input[&#039;default_values&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L144" class="number covered">144</th>
+                    <th id="L138" class="number covered">138</th>
 
                     <td class="covered" >
                         <pre>      return $input;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L145" class="number unreach">145</th>
+                    <th id="L139" class="number unreach">139</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L146" class="number ">146</th>
+                    <th id="L140" class="number ">140</th>
 
                     <td class="" >
                         <pre>
@@ -1266,28 +1222,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getValueForTargetText">
-                    <th id="L147" class="number ">147</th>
+                    <th id="L141" class="number ">141</th>
 
                     <td class="" id="getValueForTargetText">
                         <pre>   public function getValueForTargetText($richText) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L148" class="number covered">148</th>
+                    <th id="L142" class="number covered">142</th>
 
                     <td class="covered" >
                         <pre>      return $this-&gt;value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L149" class="number unreach">149</th>
+                    <th id="L143" class="number unreach">143</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L150" class="number ">150</th>
+                    <th id="L144" class="number ">144</th>
 
                     <td class="" >
                         <pre>
@@ -1295,28 +1251,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="equals">
-                    <th id="L151" class="number ">151</th>
+                    <th id="L145" class="number ">145</th>
 
                     <td class="" id="equals">
                         <pre>   public function equals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L152" class="number uncovered">152</th>
+                    <th id="L146" class="number uncovered">146</th>
 
                     <td class="uncovered" >
                         <pre>      return $this-&gt;value == $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L153" class="number unreach">153</th>
+                    <th id="L147" class="number unreach">147</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L154" class="number ">154</th>
+                    <th id="L148" class="number ">148</th>
 
                     <td class="" >
                         <pre>
@@ -1324,28 +1280,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="notEquals">
-                    <th id="L155" class="number ">155</th>
+                    <th id="L149" class="number ">149</th>
 
                     <td class="" id="notEquals">
                         <pre>   public function notEquals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L156" class="number uncovered">156</th>
+                    <th id="L150" class="number uncovered">150</th>
 
                     <td class="uncovered" >
                         <pre>      return !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L157" class="number unreach">157</th>
+                    <th id="L151" class="number unreach">151</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L158" class="number ">158</th>
+                    <th id="L152" class="number ">152</th>
 
                     <td class="" >
                         <pre>
@@ -1353,28 +1309,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="greaterThan">
-                    <th id="L159" class="number ">159</th>
+                    <th id="L153" class="number ">153</th>
 
                     <td class="" id="greaterThan">
                         <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L160" class="number uncovered">160</th>
+                    <th id="L154" class="number uncovered">154</th>
 
                     <td class="uncovered" >
                         <pre>      return $this-&gt;value &gt; $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number unreach">161</th>
+                    <th id="L155" class="number unreach">155</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L162" class="number ">162</th>
+                    <th id="L156" class="number ">156</th>
 
                     <td class="" >
                         <pre>
@@ -1382,28 +1338,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="lessThan">
-                    <th id="L163" class="number ">163</th>
+                    <th id="L157" class="number ">157</th>
 
                     <td class="" id="lessThan">
                         <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L164" class="number uncovered">164</th>
+                    <th id="L158" class="number uncovered">158</th>
 
                     <td class="uncovered" >
                         <pre>      return !$this-&gt;greaterThan($value) &amp;&amp; !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L165" class="number unreach">165</th>
+                    <th id="L159" class="number unreach">159</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L166" class="number ">166</th>
+                    <th id="L160" class="number ">160</th>
 
                     <td class="" >
                         <pre>
@@ -1411,17 +1367,61 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="isAnonymousFormCompatible">
-                    <th id="L167" class="number ">167</th>
+                    <th id="L161" class="number ">161</th>
 
                     <td class="" id="isAnonymousFormCompatible">
                         <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L168" class="number covered">168</th>
+                    <th id="L162" class="number covered">162</th>
 
                     <td class="covered" >
                         <pre>      return true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L163" class="number unreach">163</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L164" class="number ">164</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getHtmlIcon">
+                    <th id="L165" class="number ">165</th>
+
+                    <td class="" id="getHtmlIcon">
+                        <pre>   public function getHtmlIcon() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L166" class="number uncovered">166</th>
+
+                    <td class="uncovered" >
+                        <pre>      global $CFG_GLPI;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L167" class="number ">167</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L168" class="number uncovered">168</th>
+
+                    <td class="uncovered" >
+                        <pre>      return &#039;&lt;img src=&quot;&#039; . $CFG_GLPI[&#039;root_doc&#039;] . &#039;/plugins/formcreator/pics/ui-textarea-field.png&quot; title=&quot;&quot; /&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1433,50 +1433,6 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L170" class="number ">170</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getHtmlIcon">
-                    <th id="L171" class="number ">171</th>
-
-                    <td class="" id="getHtmlIcon">
-                        <pre>   public function getHtmlIcon() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L172" class="number uncovered">172</th>
-
-                    <td class="uncovered" >
-                        <pre>      global $CFG_GLPI;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L173" class="number ">173</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L174" class="number uncovered">174</th>
-
-                    <td class="uncovered" >
-                        <pre>      return &#039;&lt;img src=&quot;&#039; . $CFG_GLPI[&#039;root_doc&#039;] . &#039;/plugins/formcreator/pics/ui-textarea-field.png&quot; title=&quot;&quot; /&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L175" class="number unreach">175</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L176" class="number ">176</th>
 
                     <td class="" >
                         <pre>}

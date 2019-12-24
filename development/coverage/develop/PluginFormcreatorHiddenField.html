@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-success">
-                    76%
-                                            <small>of 51</small>
+                    75%
+                                            <small>of 52</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -72,7 +72,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#show">PluginFormcreatorHiddenField::show()</a></td>
-                                        <td style="text-align: center">9</td>
+                                        <td style="text-align: center">8</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -177,6 +177,20 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#getHtmlIcon">PluginFormcreatorHiddenField::getHtmlIcon()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isVisibleField">PluginFormcreatorHiddenField::isVisibleField()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isEditableField">PluginFormcreatorHiddenField::isEditableField()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
@@ -763,38 +777,38 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L76" class="number ">76</th>
+                    <th id="L76" class="number uncovered">76</th>
 
-                    <td class="" >
-                        <pre>      echo &#039;&lt;input type=&quot;hidden&quot; class=&quot;form-control&quot;
-</pre>
+                    <td class="uncovered" >
+                        <pre>      return Html::hidden($fieldName, [</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L77" class="number uncovered">77</th>
 
                     <td class="uncovered" >
-                        <pre>         name=&quot;&#039; . $fieldName . &#039;&quot;</pre>
+                        <pre>         &#039;id&#039;    =&gt; $domId,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L78" class="number uncovered">78</th>
 
                     <td class="uncovered" >
-                        <pre>         id=&quot;&#039; . $domId . &#039;&quot;</pre>
+                        <pre>         &#039;value&#039; =&gt; $defaultValue,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L79" class="number uncovered">79</th>
+                    <th id="L79" class="number ">79</th>
 
-                    <td class="uncovered" >
-                        <pre>         value=&quot;&#039; . $defaultValue . &#039;&quot; /&gt;&#039; . PHP_EOL;</pre>
+                    <td class="" >
+                        <pre>      ]);
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L80" class="number uncovered">80</th>
+                    <th id="L80" class="number unreach">80</th>
 
-                    <td class="uncovered" >
+                    <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
@@ -1279,6 +1293,80 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L147" class="number ">147</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="isVisibleField">
+                    <th id="L148" class="number ">148</th>
+
+                    <td class="" id="isVisibleField">
+                        <pre>   public function isVisibleField()<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L149" class="number ">149</th>
+
+                    <td class="" >
+                        <pre>   {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L150" class="number uncovered">150</th>
+
+                    <td class="uncovered" >
+                        <pre>      return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L151" class="number unreach">151</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L152" class="number ">152</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="isEditableField">
+                    <th id="L153" class="number ">153</th>
+
+                    <td class="" id="isEditableField">
+                        <pre>   public function isEditableField()<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L154" class="number ">154</th>
+
+                    <td class="" >
+                        <pre>   {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L155" class="number uncovered">155</th>
+
+                    <td class="uncovered" >
+                        <pre>      return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L156" class="number unreach">156</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L157" class="number ">157</th>
 
                     <td class="" >
                         <pre>}

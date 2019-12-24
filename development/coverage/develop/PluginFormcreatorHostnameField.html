@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    51%
-                                            <small>of 37</small>
+                    50%
+                                            <small>of 38</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -72,7 +72,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#show">PluginFormcreatorHostnameField::show()</a></td>
-                                        <td style="text-align: center">12</td>
+                                        <td style="text-align: center">11</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -177,6 +177,20 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#getHtmlIcon">PluginFormcreatorHostnameField::getHtmlIcon()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isVisibleField">PluginFormcreatorHostnameField::isVisibleField()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isEditableField">PluginFormcreatorHostnameField::isEditableField()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
@@ -348,97 +362,18 @@ layout: coverage
                     <th id="L21" class="number uncovered">21</th>
 
                     <td class="uncovered" >
-                        <pre>      $id           = $this-&gt;question-&gt;getID();</pre>
+                        <pre>      if (!$canEdit) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L22" class="number uncovered">22</th>
 
                     <td class="uncovered" >
-                        <pre>      $rand         = mt_rand();</pre>
+                        <pre>         return parent::show($canEdit);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L23" class="number uncovered">23</th>
-
-                    <td class="uncovered" >
-                        <pre>      $fieldName    = &#039;formcreator_field_&#039; . $id;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L24" class="number uncovered">24</th>
-
-                    <td class="uncovered" >
-                        <pre>      $domId        = $fieldName . &#039;_&#039; . $rand;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L25" class="number uncovered">25</th>
-
-                    <td class="uncovered" >
-                        <pre>      if ($canEdit) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L26" class="number uncovered">26</th>
-
-                    <td class="uncovered" >
-                        <pre>         $hostname = gethostbyaddr(Toolbox::getRemoteIpAddress());</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L27" class="number uncovered">27</th>
-
-                    <td class="uncovered" >
-                        <pre>         $hostname = Html::cleanInputText($hostname);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L28" class="number ">28</th>
-
-                    <td class="" >
-                        <pre>         echo &#039;&lt;input type=&quot;hidden&quot; class=&quot;form-control&quot;
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L29" class="number uncovered">29</th>
-
-                    <td class="uncovered" >
-                        <pre>            name=&quot;&#039; . $fieldName . &#039;&quot;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L30" class="number uncovered">30</th>
-
-                    <td class="uncovered" >
-                        <pre>            id=&quot;&#039; . $domId . &#039;&quot;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L31" class="number uncovered">31</th>
-
-                    <td class="uncovered" >
-                        <pre>            value=&quot;&#039; . $hostname . &#039;&quot; /&gt;&#039; . PHP_EOL;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L32" class="number ">32</th>
-
-                    <td class="" >
-                        <pre>      } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L33" class="number uncovered">33</th>
-
-                    <td class="uncovered" >
-                        <pre>         parent::show($canEdit);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L34" class="number ">34</th>
+                    <th id="L23" class="number ">23</th>
 
                     <td class="" >
                         <pre>      }
@@ -446,9 +381,88 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L35" class="number uncovered">35</th>
+                    <th id="L24" class="number ">24</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L25" class="number uncovered">25</th>
 
                     <td class="uncovered" >
+                        <pre>      $id           = $this-&gt;question-&gt;getID();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L26" class="number uncovered">26</th>
+
+                    <td class="uncovered" >
+                        <pre>      $rand         = mt_rand();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L27" class="number uncovered">27</th>
+
+                    <td class="uncovered" >
+                        <pre>      $fieldName    = &#039;formcreator_field_&#039; . $id;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L28" class="number uncovered">28</th>
+
+                    <td class="uncovered" >
+                        <pre>      $domId        = $fieldName . &#039;_&#039; . $rand;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L29" class="number uncovered">29</th>
+
+                    <td class="uncovered" >
+                        <pre>      $hostname = gethostbyaddr(Toolbox::getRemoteIpAddress());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L30" class="number uncovered">30</th>
+
+                    <td class="uncovered" >
+                        <pre>      $hostname = Html::cleanInputText($hostname);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L31" class="number uncovered">31</th>
+
+                    <td class="uncovered" >
+                        <pre>      return Html::hidden($fieldName, [</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L32" class="number uncovered">32</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;id&#039;    =&gt; $domId,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L33" class="number uncovered">33</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;value&#039; =&gt; $hostname</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L34" class="number ">34</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L35" class="number unreach">35</th>
+
+                    <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
@@ -933,6 +947,80 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L102" class="number ">102</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="isVisibleField">
+                    <th id="L103" class="number ">103</th>
+
+                    <td class="" id="isVisibleField">
+                        <pre>   public function isVisibleField()<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L104" class="number ">104</th>
+
+                    <td class="" >
+                        <pre>   {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L105" class="number uncovered">105</th>
+
+                    <td class="uncovered" >
+                        <pre>      return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L106" class="number unreach">106</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L107" class="number ">107</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="isEditableField">
+                    <th id="L108" class="number ">108</th>
+
+                    <td class="" id="isEditableField">
+                        <pre>   public function isEditableField()<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L109" class="number ">109</th>
+
+                    <td class="" >
+                        <pre>   {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L110" class="number uncovered">110</th>
+
+                    <td class="uncovered" >
+                        <pre>      return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L111" class="number unreach">111</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L112" class="number ">112</th>
 
                     <td class="" >
                         <pre>}
