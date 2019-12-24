@@ -46,7 +46,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Number of columns in a section
     */
-   public const COLUMNS = 4;
+   const COLUMNS = 4;
 
    /**
     * Returns the type name with consideration of plural

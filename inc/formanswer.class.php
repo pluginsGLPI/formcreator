@@ -1052,7 +1052,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'ORDER' => [
             "$sectionTable.order ASC",
             "$sectionTable.id ASC",
-            "$questionTable.order *ASC",
+            "$questionTable.row *ASC",
+            "$questionTable.col *ASC",
          ],
       ]);
       $last_section = "";
