@@ -40,6 +40,8 @@ PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
+   use PluginFormcreatorConditionnable;
+
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
 
@@ -120,6 +122,20 @@ PluginFormcreatorConditionnableInterface
       return $input;
    }
 
+   public function pre_deleteItem() {
+      return (new PluginFormcreatorCondition())->deleteByCriteria([
+         'itemtype' => self::class,
+         'items_id' => $this->getID(),
+      ]);
+   }
+
+   public function post_addItem() {
+      $this->updateConditions($this->input);
+   }
+
+   public function post_updateItem($history = 1) {
+      $this->updateConditions($this->input);
+   }
 
    /**
     * Actions done after the PURGE of the item in the database
@@ -365,10 +381,16 @@ PluginFormcreatorConditionnableInterface
    public function showForm($ID, $options = []) {
       if ($ID == 0) {
          $title =  __('Add a section', 'formcreator');
+         $action = 'plugin_formcreator.addSection()';
       } else {
          $title =  __('Edit a section', 'formcreator');
+         $action = 'plugin_formcreator.editSection()';
       }
-      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
+      echo '<form name="form"'
+      . ' method="post"'
+      . ' action="javascript:' . $action . '"'
+      . ' data-itemtype="' . self::class . '"'
+      . '>';
       echo '<table class="tab_cadre_fixe">';
      
       echo '<tr>';
@@ -384,10 +406,17 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
       echo '</tr>';
 
+      // List of conditions 
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the section', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
       $form = new PluginFormcreatorForm();
       $form->getFromDBBySection($this);
       $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($form, $this);
+      $condition->showConditionsForItem($this);
 
       echo '<tr>';
       echo '<td colspan="4" class="center">';
@@ -484,7 +513,7 @@ PluginFormcreatorConditionnableInterface
       $condition = new PluginFormcreatorCondition();
       $condition->deleteByCriteria([
          'itemtype' => static::class,
-         'items_id' => $input['id'],
+         'items_id' => $this->getID(),
       ]);
 
       // Arrays all have the same count and have at least one item
@@ -498,7 +527,7 @@ PluginFormcreatorConditionnableInterface
          $condition = new PluginFormcreatorCondition();
          $condition->add([
             'itemtype'                        => static::class,
-            'items_id'                        => $input['id'],
+            'items_id'                        => $this->getID(),
             'plugin_formcreator_questions_id' => $questionID,
             'show_condition'                  => $showCondition,
             'show_value'                      => $value,
@@ -532,11 +561,14 @@ PluginFormcreatorConditionnableInterface
       $html = '';
 
       // Section header
-      $onclick = 'onclick="plugin_formcreator_editSection(' . $formId . ', \'' . $token . '\', ' . $sectionId . ')"';
-      $html .= '<li class="plugin_formcreator_section" data-itemtype="' . PluginFormcreatorSection::class . '" data-id="' . $sectionId . '" data-order="' . $this->fields['order'] . '">';
+      $onclick = 'onclick="plugin_formcreator.showSectionForm(' . $formId . ', ' . $sectionId . ')"';
+      $html .= '<li class="plugin_formcreator_section"'
+      . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
+      . '* data-id="' . $sectionId . '"'
+      . '>';
 
       // section name
-      $html .= '<a href="#" ' . $onclick . '>';
+      $html .= '<a href="#" ' . $onclick . ' data-field="name">';
       $html .= empty($this->fields['name']) ? '(' . $sectionId . ')' : $this->fields['name'];
       $html .= '</a>';
 
@@ -573,7 +605,7 @@ PluginFormcreatorConditionnableInterface
 
       // Add a question
       $html .= '<div class="plugin_formcreator_question">';
-      $html .= '<a href="javascript:plugin_formcreator_addQuestion(' . $formId . ', \'' . $token . '\', ' . $sectionId . ');">';
+      $html .= '<a href="javascript:plugin_formcreator.showQuestionForm('. $sectionId . ');">';
       $html .= '<i class="fas fa-plus"></i>&nbsp;';
       $html .= __('Add a question', 'formcreator');
       $html .= '</a>';

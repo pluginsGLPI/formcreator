@@ -341,12 +341,12 @@ class PluginFormcreatorFields
       $sectionToShow = [];
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach($sections as $section) {
-         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);;
+         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);
       }
 
       return [
          PluginFormcreatorQuestion::class => $questionToShow,
-         PluginFormcreatorSection::class => $sectionToShow,
+         PluginFormcreatorSection::class  => $sectionToShow,
       ];
    }
 

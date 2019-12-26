@@ -48,6 +48,10 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       ];
    }
 
+   public function prepareQuestionInputForSave($input) {
+      return $input;
+   }
+
    public function show($canEdit = true) {
       $id           = $this->question->getID();
       $rand         = mt_rand();

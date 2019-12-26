@@ -32,14 +32,29 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-$question = new PluginFormcreatorQuestion();
-if (empty($_REQUEST['question_id'])) {
-   $question_id = 0;
-   $question->getEmpty();
-   $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
-} else {
-   $question_id = (int) $_REQUEST['question_id'];
-   $question->getFromDB($question_id);
+if (!isset($_REQUEST['id'])) {
+    echo __('Bad request', 'formcreator');
+   http_response_code(400);
+   exit();
 }
-$question->showForm($question_id);
+$questionId = (int) $_REQUEST['id'];
+
+$question = new PluginFormcreatorQuestion();
+if (!$question->getFromDB($questionId)) {
+    http_response_code(404);
+    echo __('Question not found', 'formcreator');
+    exit;
+}
+
+if (!$question->canUpdate()) {
+    http_response_code(403);
+    echo __('You don\'t have right for this action', 'formcreator');
+    exit;
+}
+
+$success = $question->update($_REQUEST);
+if (!$success) {
+    http_response_code(500);
+    exit(); 
+}
+echo $question->fields['name'];

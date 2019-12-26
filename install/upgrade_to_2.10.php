@@ -59,5 +59,31 @@ class PluginFormcreatorUpgradeTo2_10 {
             'plugin_formcreator_sections_id' => $row['id']
          ]);
       }
+
+      // add uuid to taretchanges
+      $table = 'glpi_plugin_formcreator_targetchanges';
+      $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
+      $migration->migrationOneTable($table);
+
+      $request = [
+         '*SELECT' => 'id',
+         'FROM' => $table,
+      ];
+      foreach ($DB->request($request) as $row) {
+         $id = $row['id'];
+         $uuid = plugin_formcreator_getUuid();
+         $DB->query("UPDATE INTO `$table`
+            SET `uuid`='$uuid'"
+         ) or plugin_formcreator_upgrade_error($migration);
+      }
+
+      // conditions on targets 
+      $tables = [
+         'glpi_plugin_formcreator_targetchanges',
+         'glpi_plugin_formcreator_targettickets',
+      ];
+      foreach ($tables as $table) {
+         $migration->addField($table, 'show_rule', 'integer', ['before' => 'uuid']);
+      }
    }
 }

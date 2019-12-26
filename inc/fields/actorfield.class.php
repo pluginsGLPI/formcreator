@@ -281,7 +281,10 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       }
 
       if (!is_array($input[$key])) {
-         return false;
+         $input[$key] = json_decode($input[$key]);
+         if ($input[$key] === false) {
+            return false;
+         }
       }
 
       $this->value = $input[$key];

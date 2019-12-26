@@ -186,7 +186,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
 
       foreach ($this->getEmptyParameters() as $fieldName => $parameter) {
-         $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $question->getID();
+         $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $this->question->getID();
          $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
       }
    }
@@ -197,15 +197,18 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          return;
       }
 
-      $parameters = $this->getParameters();
-      foreach ($parameters as $fieldName => $parameter) {
-         $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $question->getID();
+      foreach ($this->getParameters() as $fieldName => $parameter) {
+         if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
+            continue;
+         }
+         $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
+         $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
          if ($parameter->isNewItem()) {
             // In case of the parameter vanished in DB, just recreate it
-            $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
+            $parameter->add($parameterInput);
          } else {
-            $input['_parameters'][$fieldTypeName][$fieldName]['id'] = $parameter->getID();
-            $parameter->update($input['_parameters'][$fieldTypeName][$fieldName]);
+            $parameterInput['id'] = $parameter->getID();
+            $parameter->update($parameterInput);
          }
       }
    }

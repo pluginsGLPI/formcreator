@@ -501,6 +501,7 @@ PluginFormcreatorDuplicatableInterface
             'name' => '_validator_users',
             'value' => $validatorUser ? $validatorUser->getID() : 0,
             'condition' => $usersCondition,
+            'multiple'  => true,
          ]
       );
       echo '</div>';
@@ -1258,7 +1259,6 @@ PluginFormcreatorDuplicatableInterface
          . ' class="plugin_formcreator_section"'
          . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
          . ' data-id="' . $sectionId . '"'
-         . ' data-order="' . $section->fields['order'] 
          . '">';
 
          // section name
@@ -1328,7 +1328,6 @@ PluginFormcreatorDuplicatableInterface
                Dropdown::showFromArray('formcreator_validator', $validators);
                break;
          }
-         
       }
 
       echo Html::scriptBlock('$(function() {
@@ -2400,11 +2399,18 @@ PluginFormcreatorDuplicatableInterface
     * @param PluginFormcreatorSection $section
     * @return boolean true if success else false
     */
-   public function getFromDBBySection(PluginFormcreatorSection $section) {
-      if ($section->isNewItem()) {
+   public function getFromDBBySection(PluginFormcreatorSection $item) {
+      if ($item->isNewItem()) {
          return false;
       }
-      return $this->getFromDB($section->getField(self::getForeignKeyField()));
+      return $this->getFromDB($item->fields[self::getForeignKeyField()]);
+   }
+
+   public function getFromDBByTarget(CommonDBTM $item) {
+      if ($item->isNewItem()) {
+         return false;
+      }
+      return $this->getFromDB($item->fields[self::getForeignKeyField()]);
    }
 
    public function getFromDBByQuestion(PluginFormcreatorQuestion $question) {

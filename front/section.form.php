@@ -43,14 +43,14 @@ if ($plugin->isActivated('formcreator')) {
       // Add a new Section
       Session::checkRight('entity', UPDATE);
       $section->add($_POST);
-      $section->updateConditions($_POST);
+      //$section->updateConditions($_POST);
       Html::back();
 
    } else if (isset($_POST['update'])) {
       // Edit an existing section
       Session::checkRight('entity', UPDATE);
       $section->update($_POST);
-      $section->updateConditions($_POST);
+      //$section->updateConditions($_POST);
       Html::back();
 
    } else {

@@ -86,19 +86,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       ];
    }
 
-   /**
-    * Show the Form for the adminsitrator to edit in the config page
-    *
-    * @param  array  $options Optional options
-    * @return void
-    */
    public function showForm($ID, $options = []) {
       $rand = mt_rand();
 
       $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
+      echo '<form name="form"'
+      . ' method="post"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' data-itemtype="' . self::class . '"'
+      . '>';
 
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
@@ -188,6 +186,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          echo '</tr>';
       }
 
+      // -------------------------------------------------------------------------------------------
+      //  Conditions to generate the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the target', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+      $this->showConditionsSettings($rand);
       echo '</table>';
 
       // Buttons
@@ -439,7 +447,23 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          return false;
       }
 
+      // delete conditions
+      if (! (new PluginFormcreatorCondition())->deleteByCriteria([
+         'itemtype' => self::class,
+         'items_id' => $this->getID(),
+      ])) {
+         return false;
+      }
+
       return true;
+   }
+
+   public function post_addItem() {
+      $this->updateConditions($this->input);
+   }
+
+   public function post_updateItem($history = 1) {
+      $this->updateConditions($this->input);
    }
 
    /**

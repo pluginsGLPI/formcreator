@@ -33,13 +33,22 @@ include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
 $question = new PluginFormcreatorQuestion();
-if (empty($_REQUEST['question_id'])) {
-   $question_id = 0;
-   $question->getEmpty();
-   $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
-} else {
-   $question_id = (int) $_REQUEST['question_id'];
-   $question->getFromDB($question_id);
+if (!$question->canCreate()) {
+    http_response_code(403);
+    echo __('You don\'t have right for this action', 'formcreator');
+    exit;
 }
-$question->showForm($question_id);
+
+if (!$question->add($_REQUEST)) {
+    http_response_code(500);
+    echo __('Could not add the question', 'formcreator');
+    exit;
+}
+$json = [
+    'y'      => $question->fields['row'],
+    'x'      => $question->fields['col'],
+    'width'  => $question->fields['width'],
+    'height' => '1',
+    'html'   => $question->getDesignHtml(),
+];
+echo json_encode($json);

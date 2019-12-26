@@ -32,14 +32,22 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-$question = new PluginFormcreatorQuestion();
-if (empty($_REQUEST['question_id'])) {
-   $question_id = 0;
-   $question->getEmpty();
-   $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
-} else {
-   $question_id = (int) $_REQUEST['question_id'];
-   $question->getFromDB($question_id);
+if (!isset($_REQUEST['id'])) {
+    http_response_code(400);
+    exit;
 }
-$question->showForm($question_id);
+$sectionId = (int) $_REQUEST['id'];
+
+$section = new PluginFormcreatorSection();
+if (!$section->canUpdate()) {
+    http_response_code(403);
+    echo __('You don\'t have right for this action', 'formcreator');
+    exit;
+}
+
+if (!$section->update($_REQUEST)) {
+    http_response_code(500);
+    echo __('Could not update the section', 'formcreator');
+    exit;
+}
+echo $section->fields['name'];
