@@ -1281,17 +1281,19 @@ PluginFormcreatorDuplicatableInterface
                break;
          }
 
-         if ($result->count() > 1) {
-            $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
-            echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
-            echo '<div class="form-group required liste" id="form-validator">';
-            echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-            Dropdown::showFromArray('formcreator_validator', $validators);
-         }
-         if ($result->count() == 1) {
-            reset($validators);
-            $validatorId = key($validators);
-            echo Html::hidden('formcreator_validator', $validatorId);
+         switch (count($result)) {
+            case 1:
+               reset($validators);
+               $validatorId = key($validators);
+               echo Html::hidden('formcreator_validator', ['value' => $validatorId]);
+               break;
+            case 2:
+               $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
+               echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
+               echo '<div class="form-group required liste" id="form-validator">';
+               echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+               Dropdown::showFromArray('formcreator_validator', $validators);
+               break;
          }
       }
 
