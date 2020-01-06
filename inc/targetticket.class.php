@@ -610,7 +610,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['content'] = $formanswer->parseTags($data['content'], $this, $richText);
 
-      $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
       $this->prepareActors($form, $formanswer);
@@ -632,6 +631,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             $this->requesters['_users_id_requester'] = array_pop($this->requesters['_users_id_requester']);
          }
       }
+
+      $data['_users_id_recipient'] = $requesters_id;
+      $data['users_id_lastupdater'] = Session::getLoginUserID();
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
@@ -665,6 +667,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       // Create the target ticket
+      $data['_auto_import'] = true;
       if (!$ticketID = $ticket->add($data)) {
          return null;
       }
