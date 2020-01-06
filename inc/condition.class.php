@@ -347,7 +347,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_add">';
-      $html.= '<i class="fas fa-plus-circle" style="cursor: pointer;" onclick="plugin_formcreator_addEmptyCondition(this)"></i>&nbsp;</div>';
+      $html.= '<i class="fas fa-plus-circle" style="cursor: pointer;" onclick="plugin_formcreator_addEmptyCondition(this, \'' . $itemtype . '\')"></i>&nbsp;</div>';
       $html.= '<div class="div_show_condition_remove">';
       $html.= '<i class="fas fa-minus-circle"  style="cursor: pointer;" onclick="plugin_formcreator_removeNextCondition(this)"></i>&nbsp;</div>';
       $html.= '</div>';
