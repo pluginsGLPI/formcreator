@@ -570,11 +570,21 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
       echo '</tr>';
 
+      echo '<tr>';
       echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
       echo '<td>';
       Dropdown::showYesNo("is_default", $this->fields["is_default"]);
       echo '</td>';
       echo '</tr>';
+
+      if (!$this->canPurgeItem()) {
+         echo '<tr>';
+         echo '<td colspan="4">'
+         . '<i class="fas fa-exclamation-triangle"></i>&nbsp;'
+         . __('To delete this form you must delete all its answers first.', 'formcreator')
+         . '</td>';
+         echo '</tr>';
+      }
 
       $this->showFormButtons($options);
    }
