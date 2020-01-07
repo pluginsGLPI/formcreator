@@ -1167,6 +1167,10 @@ PluginFormcreatorDuplicatableInterface
                   ]
                ]
             ],
+            'ORDER' => [
+               "$formAnswerTable.status ASC",
+               "$formAnswerTable.request_date DESC",
+            ],
             'LIMIT' => 5,
          ]);
          if ($result->count() == 0) {

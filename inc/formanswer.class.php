@@ -749,14 +749,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public function saveAnswers(PluginFormcreatorForm $form, $data, $fields) {
       $formanswers_id = isset($data['id'])
-                        ? intval($data['id'])
+                        ? (int) $data['id']
                         : -1;
 
       $question = new PluginFormcreatorQuestion();
       $questions = $question->getQuestionsFromForm($form->getID());
 
-      // Update form answers
       if (isset($data['save_formanswer'])) {
+         // Update form answers
          $status = $data['status'];
          $this->update([
             'id'        => $formanswers_id,
