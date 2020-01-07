@@ -51,11 +51,7 @@ class PluginFormcreatorUpgradeTo2_10 {
          INNER JOIN glpi_plugin_formcreator_questions ON (glpi_plugin_formcreator_sections.id = glpi_plugin_formcreator_questions.plugin_formcreator_sections_id)
          GROUP BY glpi_plugin_formcreator_sections.id
          HAVING MIN(glpi_plugin_formcreator_questions.`row`) > 0");
-      $fetchFunction = "fetch_assoc";
-      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
-         $fetchFunction = "fetchAssoc";
-      }
-      while (($row = $result->$fetchFunction()) !== null) {
+      foreach($result as $row) {
          $DB->update($table, [
             'row' => new QueryExpression("`row` - 1")
          ],
