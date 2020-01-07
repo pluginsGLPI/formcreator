@@ -238,7 +238,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
@@ -249,12 +249,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"></td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -265,7 +265,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Impacts') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -276,7 +276,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Control list') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -287,7 +287,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -298,7 +298,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -309,7 +309,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Checklist') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -323,7 +323,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $rand = mt_rand();
       $this->showDestinationEntitySetings($rand);
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       $this->showDueDateSettings($form, $rand);
       echo '<td colspan="2"></td>';
       echo '</tr>';
@@ -343,17 +343,27 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($form, $rand);
 
+
+      // -------------------------------------------------------------------------------------------
+      //  Conditions to generate the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the target', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+      $this->showConditionsSettings($rand);
+
       echo '</table>';
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td colspan="5" class="center">';
-      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
       echo '</td>';
       echo '</tr>';
 

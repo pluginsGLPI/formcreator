@@ -650,7 +650,7 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showDestinationEntitySetings($rand) {
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
@@ -787,7 +787,7 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
@@ -830,7 +830,7 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
       Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), [
@@ -873,7 +873,7 @@ PluginFormcreatorConditionnableInterface
 
       $plugin = new Plugin();
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-         echo '<tr class="line1">';
+         echo '<tr>';
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
          Dropdown::showFromArray('tag_type', self::getEnumTagType(),
@@ -1495,7 +1495,7 @@ SCRIPT;
    protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Location') . '</td>';
       echo '<td width="45%">';
       Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), [
@@ -1763,7 +1763,7 @@ SCRIPT;
       echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
       echo '<td align="center">-</td>';
       echo '<td align="center"><strong>##FULLFORM##</strong></td>';
@@ -1777,7 +1777,7 @@ SCRIPT;
       foreach ($result as $sectionName => $questions) {
          foreach ($questions as $questionId => $questionName) {
             $i++;
-            echo '<tr class="line' . ($i % 2) . '">';
+            echo '<tr>';
             echo '<td colspan="2">' . $questionName . '</td>';
             echo '<td align="center">##question_' . $questionId . '##</td>';
             echo '<td align="center">##answer_' . $questionId . '##</td>';

@@ -101,7 +101,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
@@ -112,12 +112,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr><th colspan="4">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"/></td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -132,7 +132,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $rand = mt_rand();
       $this->showDestinationEntitySetings($rand);
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       $this->showTemplateSettings($rand);
       $this->showDueDateSettings($form, $rand);
       echo '</tr>';
@@ -171,7 +171,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       //  Validation as ticket followup
       // -------------------------------------------------------------------------------------------
       if ($form->fields['validation_required']) {
-         echo '<tr class="line1">';
+         echo '<tr>';
          echo '<td colspan="4">';
          echo '<input type="hidden" name="validation_followup" value="0" />';
          echo '<input type="checkbox" name="validation_followup" id="validation_followup" value="1" ';
@@ -196,17 +196,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</th>';
       echo '</tr>';
       $this->showConditionsSettings($rand);
+
       echo '</table>';
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td colspan="5" class="center">';
-      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
       echo '</td>';
       echo '</tr>';
 
@@ -226,7 +225,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    protected function showCompositeTicketSettings($rand) {
       global $DB;
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td>';
       echo __('Link to an other ticket', 'formcreator');
       echo "<span class='fa fa-plus pointer' onClick=\"".Html::jsShow("plugin_formcreator_linked_items$rand")."\"
@@ -767,7 +766,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected  function showTypeSettings($rand) {
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Type') . '</td>';
       echo '<td width="25%">';
       Ticket::dropdownType('type', ['value' => $this->fields['type'], 'rand' => $rand]);
@@ -780,7 +779,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    protected function showAssociateSettings($rand) {
       global $CFG_GLPI;
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Associated elements') . '</td>';
       echo '<td width="45%">';
       Dropdown::showFromArray('associate_rule', static::getEnumAssociateRule(), [
