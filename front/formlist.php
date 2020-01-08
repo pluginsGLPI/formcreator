@@ -38,7 +38,7 @@ if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+if (Session::getCurrentInterface() == 'helpdesk') {
    if (plugin_formcreator_replaceHelpdesk()) {
       Html::redirect('issue.php');
    } else {

@@ -76,7 +76,7 @@ if (isset($_POST['update'])) {
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+      if (Session::getCurrentInterface() == 'helpdesk') {
          Html::helpHeader(
             __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF']

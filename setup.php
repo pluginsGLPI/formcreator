@@ -162,7 +162,7 @@ function plugin_init_formcreator() {
          if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
             if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
                // Not changing profile or active entity
-               if (isset($_SESSION['glpiactiveprofile']['interface'])
+               if (Session::getCurrentInterface() !== false
                      && isset($_SESSION['glpiactive_entity'])) {
                   // Interface and active entity are set in session
                   if (plugin_formcreator_replaceHelpdesk()) {
@@ -245,7 +245,7 @@ function plugin_init_formcreator() {
       if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
-            $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+            Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
@@ -303,12 +303,10 @@ function plugin_formcreator_decode($string) {
  * @return boolean|integer
  */
 function plugin_formcreator_replaceHelpdesk() {
-   if (isset($_SESSION['glpiactiveprofile']['interface'])
-         && isset($_SESSION['glpiactive_entity'])) {
+   if (Session::getCurrentInterface() !== false && isset($_SESSION['glpiactive_entity'])) {
       // Interface and active entity are set in session
       $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
-      if ($helpdeskMode != '0'
-            && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+      if ($helpdeskMode != '0' && Session::getCurrentInterface() == 'helpdesk') {
          return $helpdeskMode;
       }
    }
