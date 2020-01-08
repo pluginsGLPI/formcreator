@@ -445,7 +445,7 @@ PluginFormcreatorDuplicatableInterface
          self::VALIDATION_USER  => User::getTypeName(1),
          self::VALIDATION_GROUP => Group::getTypeName(1),
       ], [
-         'value'     =>  $this->fields["validation_required"],
+         'value'     =>  $this->fields['validation_required'],
          'on_change' => 'plugin_formcreator_changeValidators(this.value)'
       ]);
       echo '</td>';
