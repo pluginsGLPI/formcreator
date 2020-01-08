@@ -35,9 +35,9 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-danger">
-                    28%
-                                            <small>of 109</small>
+                <h1 class="text-warning">
+                    38%
+                                            <small>of 111</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -135,9 +135,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#updateParameters">PluginFormcreatorField::updateParameters()</a></td>
-                                        <td style="text-align: center">11</td>
+                                        <td style="text-align: center">13</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">92%</span>
 </td>
                                             </tr>
             <tr>
@@ -389,7 +389,7 @@ layout: coverage
                     <th id="L24" class="number ">24</th>
 
                     <td class="" >
-                        <pre> * @copyright Copyright © 2011 - 2019 Teclib&#039;
+                        <pre> * @copyright Copyright © 2011 - 2020 Teclib&#039;
 </pre>
                     </td>
                 </tr>
@@ -1625,7 +1625,7 @@ layout: coverage
                     <th id="L189" class="number uncovered">189</th>
 
                     <td class="uncovered" >
-                        <pre>         $input[&#039;_parameters&#039;][$fieldTypeName][$fieldName][&#039;plugin_formcreator_questions_id&#039;] = $question-&gt;getID();</pre>
+                        <pre>         $input[&#039;_parameters&#039;][$fieldTypeName][$fieldName][&#039;plugin_formcreator_questions_id&#039;] = $this-&gt;question-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1662,27 +1662,27 @@ layout: coverage
                     <th id="L194" class="number ">194</th>
 
                     <td class="" id="updateParameters">
-                        <pre>   public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {<span class="label label-success">92%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L195" class="number uncovered">195</th>
+                    <th id="L195" class="number covered">195</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      $fieldTypeName = $this-&gt;getFieldTypeName();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L196" class="number uncovered">196</th>
+                    <th id="L196" class="number covered">196</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      if (!isset($input[&#039;_parameters&#039;][$fieldTypeName])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L197" class="number uncovered">197</th>
+                    <th id="L197" class="number covered">197</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>         return;</pre>
                     </td>
                 </tr>
@@ -1703,35 +1703,57 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L200" class="number uncovered">200</th>
+                    <th id="L200" class="number covered">200</th>
 
-                    <td class="uncovered" >
-                        <pre>      $parameters = $this-&gt;getParameters();</pre>
+                    <td class="covered" >
+                        <pre>      foreach ($this-&gt;getParameters() as $fieldName =&gt; $parameter) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L201" class="number uncovered">201</th>
+                    <th id="L201" class="number covered">201</th>
 
-                    <td class="uncovered" >
-                        <pre>      foreach ($parameters as $fieldName =&gt; $parameter) {</pre>
+                    <td class="covered" >
+                        <pre>         if (!isset($input[&#039;_parameters&#039;][$fieldTypeName][$fieldName])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L202" class="number uncovered">202</th>
 
                     <td class="uncovered" >
-                        <pre>         $input[&#039;_parameters&#039;][$fieldTypeName][$fieldName][&#039;plugin_formcreator_questions_id&#039;] = $question-&gt;getID();</pre>
+                        <pre>            continue;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L203" class="number uncovered">203</th>
+                    <th id="L203" class="number ">203</th>
 
-                    <td class="uncovered" >
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L204" class="number covered">204</th>
+
+                    <td class="covered" >
+                        <pre>         $parameterInput = $input[&#039;_parameters&#039;][$fieldTypeName][$fieldName];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L205" class="number covered">205</th>
+
+                    <td class="covered" >
+                        <pre>         $parameterInput[&#039;plugin_formcreator_questions_id&#039;] = $this-&gt;question-&gt;getID();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L206" class="number covered">206</th>
+
+                    <td class="covered" >
                         <pre>         if ($parameter-&gt;isNewItem()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L204" class="number ">204</th>
+                    <th id="L207" class="number ">207</th>
 
                     <td class="" >
                         <pre>            // In case of the parameter vanished in DB, just recreate it
@@ -1739,14 +1761,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L205" class="number uncovered">205</th>
+                    <th id="L208" class="number covered">208</th>
 
-                    <td class="uncovered" >
-                        <pre>            $parameter-&gt;add($input[&#039;_parameters&#039;][$fieldTypeName][$fieldName]);</pre>
+                    <td class="covered" >
+                        <pre>            $parameter-&gt;add($parameterInput);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L206" class="number ">206</th>
+                    <th id="L209" class="number ">209</th>
 
                     <td class="" >
                         <pre>         } else {
@@ -1754,21 +1776,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number uncovered">207</th>
+                    <th id="L210" class="number covered">210</th>
 
-                    <td class="uncovered" >
-                        <pre>            $input[&#039;_parameters&#039;][$fieldTypeName][$fieldName][&#039;id&#039;] = $parameter-&gt;getID();</pre>
+                    <td class="covered" >
+                        <pre>            $parameterInput[&#039;id&#039;] = $parameter-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L208" class="number uncovered">208</th>
+                    <th id="L211" class="number covered">211</th>
 
-                    <td class="uncovered" >
-                        <pre>            $parameter-&gt;update($input[&#039;_parameters&#039;][$fieldTypeName][$fieldName]);</pre>
+                    <td class="covered" >
+                        <pre>            $parameter-&gt;update($parameterInput);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L209" class="number ">209</th>
+                    <th id="L212" class="number ">212</th>
 
                     <td class="" >
                         <pre>         }
@@ -1776,7 +1798,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L210" class="number ">210</th>
+                    <th id="L213" class="number ">213</th>
 
                     <td class="" >
                         <pre>      }
@@ -1784,14 +1806,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L211" class="number uncovered">211</th>
+                    <th id="L214" class="number covered">214</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L212" class="number ">212</th>
+                    <th id="L215" class="number ">215</th>
 
                     <td class="" >
                         <pre>
@@ -1799,28 +1821,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="deleteParameters">
-                    <th id="L213" class="number ">213</th>
+                    <th id="L216" class="number ">216</th>
 
                     <td class="" id="deleteParameters">
                         <pre>   public final function deleteParameters(PluginFormcreatorQuestion $question) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L214" class="number uncovered">214</th>
+                    <th id="L217" class="number uncovered">217</th>
 
                     <td class="uncovered" >
                         <pre>      foreach ($this-&gt;getEmptyParameters() as $parameter) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L215" class="number uncovered">215</th>
+                    <th id="L218" class="number uncovered">218</th>
 
                     <td class="uncovered" >
                         <pre>         if (!$parameter-&gt;deleteByCriteria([&#039;plugin_formcreator_questions_id&#039; =&gt; $question-&gt;getID()])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L216" class="number ">216</th>
+                    <th id="L219" class="number ">219</th>
 
                     <td class="" >
                         <pre>            // Don&#039;t make  this error fatal, but log it anyway
@@ -1828,14 +1850,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L217" class="number uncovered">217</th>
+                    <th id="L220" class="number uncovered">220</th>
 
                     <td class="uncovered" >
                         <pre>            Toolbox::logInFile(&#039;php-errors&#039;, &#039;failed to delete parameter for question &#039; . $question-&gt;getID() . PHP_EOL);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L218" class="number ">218</th>
+                    <th id="L221" class="number ">221</th>
 
                     <td class="" >
                         <pre>         }
@@ -1843,7 +1865,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L219" class="number ">219</th>
+                    <th id="L222" class="number ">222</th>
 
                     <td class="" >
                         <pre>      }
@@ -1851,48 +1873,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L220" class="number uncovered">220</th>
+                    <th id="L223" class="number uncovered">223</th>
 
                     <td class="uncovered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L221" class="number unreach">221</th>
+                    <th id="L224" class="number unreach">224</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L222" class="number ">222</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L223" class="number ">223</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L224" class="number ">224</th>
-
-                    <td class="" >
-                        <pre>    * get HTML of parameters for question design
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L225" class="number ">225</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1900,7 +1898,7 @@ layout: coverage
                     <th id="L226" class="number ">226</th>
 
                     <td class="" >
-                        <pre>    * @return string
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -1908,403 +1906,12 @@ layout: coverage
                     <th id="L227" class="number ">227</th>
 
                     <td class="" >
-                        <pre>    */
+                        <pre>    * get HTML of parameters for question design
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getParametersHtmlForDesign">
+                            <tr class="line" id="">
                     <th id="L228" class="number ">228</th>
-
-                    <td class="" id="getParametersHtmlForDesign">
-                        <pre>   protected function getParametersHtmlForDesign() {<span class="label label-danger">11%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L229" class="number covered">229</th>
-
-                    <td class="covered" >
-                        <pre>      $parameters = $this-&gt;getParameters();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L230" class="number covered">230</th>
-
-                    <td class="covered" >
-                        <pre>      if (count($parameters) == 0) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L231" class="number covered">231</th>
-
-                    <td class="covered" >
-                        <pre>         return &#039;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L232" class="number ">232</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L233" class="number ">233</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L234" class="number uncovered">234</th>
-
-                    <td class="uncovered" >
-                        <pre>      $question = new PluginFormcreatorQuestion();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L235" class="number uncovered">235</th>
-
-                    <td class="uncovered" >
-                        <pre>      $question-&gt;getFromDB($this-&gt;question-&gt;getID());</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L236" class="number uncovered">236</th>
-
-                    <td class="uncovered" >
-                        <pre>      $form = new PluginFormcreatorForm();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L237" class="number uncovered">237</th>
-
-                    <td class="uncovered" >
-                        <pre>      $form-&gt;getByQuestionId($question-&gt;getID());</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L238" class="number ">238</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L239" class="number ">239</th>
-
-                    <td class="" >
-                        <pre>      /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L240" class="number uncovered">240</th>
-
-                    <td class="uncovered" >
-                        <pre>      $column = 0;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L241" class="number uncovered">241</th>
-
-                    <td class="uncovered" >
-                        <pre>      $rowSize = 2;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L242" class="number uncovered">242</th>
-
-                    <td class="uncovered" >
-                        <pre>      $additions = &#039;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L243" class="number uncovered">243</th>
-
-                    <td class="uncovered" >
-                        <pre>      foreach ($parameters as $fieldname =&gt; $parameter) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L244" class="number uncovered">244</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($column == 0) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L245" class="number uncovered">245</th>
-
-                    <td class="uncovered" >
-                        <pre>            $additions .= &#039;&lt;tr class=&quot;plugin_formcreator_question_specific&quot;&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L246" class="number ">246</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L247" class="number uncovered">247</th>
-
-                    <td class="uncovered" >
-                        <pre>         $parameterSize = 1 + $parameter-&gt;getParameterFormSize();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L248" class="number uncovered">248</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($column + $parameterSize &gt; $rowSize) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L249" class="number ">249</th>
-
-                    <td class="" >
-                        <pre>            // The parameter needs more room than available in the current row
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L250" class="number uncovered">250</th>
-
-                    <td class="uncovered" >
-                        <pre>            if ($column &lt; $rowSize) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L251" class="number ">251</th>
-
-                    <td class="" >
-                        <pre>               // fill the remaining of the row
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L252" class="number uncovered">252</th>
-
-                    <td class="uncovered" >
-                        <pre>               $additions .= str_repeat(&#039;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&#039;, $rowSize - $column);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L253" class="number ">253</th>
-
-                    <td class="" >
-                        <pre>               // Close current row and open an new one
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L254" class="number uncovered">254</th>
-
-                    <td class="uncovered" >
-                        <pre>               $additions .= &#039;&lt;/tr&gt;&lt;tr class=&quot;plugin_formcreator_question_specific&quot;&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L255" class="number uncovered">255</th>
-
-                    <td class="uncovered" >
-                        <pre>               $column = 0;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L256" class="number ">256</th>
-
-                    <td class="" >
-                        <pre>            }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L257" class="number ">257</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L258" class="number uncovered">258</th>
-
-                    <td class="uncovered" >
-                        <pre>         $additions .= $parameter-&gt;getParameterForm($form, $question);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L259" class="number uncovered">259</th>
-
-                    <td class="uncovered" >
-                        <pre>         $column += $parameterSize;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L260" class="number uncovered">260</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($column == $rowSize) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L261" class="number ">261</th>
-
-                    <td class="" >
-                        <pre>            // Finish the row
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L262" class="number uncovered">262</th>
-
-                    <td class="uncovered" >
-                        <pre>            $additions .= &#039;&lt;/tr&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L263" class="number uncovered">263</th>
-
-                    <td class="uncovered" >
-                        <pre>            $column = 0;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L264" class="number ">264</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L265" class="number ">265</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L266" class="number uncovered">266</th>
-
-                    <td class="uncovered" >
-                        <pre>      if ($column &lt; $rowSize) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L267" class="number ">267</th>
-
-                    <td class="" >
-                        <pre>         // fill the remaining of the row
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L268" class="number uncovered">268</th>
-
-                    <td class="uncovered" >
-                        <pre>         $additions .= str_repeat(&#039;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&#039;, $rowSize - $column);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L269" class="number ">269</th>
-
-                    <td class="" >
-                        <pre>         // Close current row and open an new one
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L270" class="number uncovered">270</th>
-
-                    <td class="uncovered" >
-                        <pre>         $additions .= &quot;&lt;/tr&gt;&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L271" class="number ">271</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L272" class="number uncovered">272</th>
-
-                    <td class="uncovered" >
-                        <pre>      return $additions;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L273" class="number unreach">273</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L274" class="number ">274</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getQuestion">
-                    <th id="L275" class="number ">275</th>
-
-                    <td class="" id="getQuestion">
-                        <pre>   public function getQuestion() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L276" class="number uncovered">276</th>
-
-                    <td class="uncovered" >
-                        <pre>      return $this-&gt;question;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L277" class="number unreach">277</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L278" class="number ">278</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L279" class="number ">279</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L280" class="number ">280</th>
-
-                    <td class="" >
-                        <pre>    * Validate a regular expression
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L281" class="number ">281</th>
 
                     <td class="" >
                         <pre>    *
@@ -2312,67 +1919,59 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L282" class="number ">282</th>
+                    <th id="L229" class="number ">229</th>
 
                     <td class="" >
-                        <pre>    * @param string $regex
+                        <pre>    * @return string
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L283" class="number ">283</th>
-
-                    <td class="" >
-                        <pre>    * @return boolean true if the regex is valid, false otherwise
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L284" class="number ">284</th>
+                    <th id="L230" class="number ">230</th>
 
                     <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="checkRegex">
-                    <th id="L285" class="number ">285</th>
+                            <tr class="line" id="getParametersHtmlForDesign">
+                    <th id="L231" class="number ">231</th>
 
-                    <td class="" id="checkRegex">
-                        <pre>   protected function checkRegex($regex) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="getParametersHtmlForDesign">
+                        <pre>   protected function getParametersHtmlForDesign() {<span class="label label-danger">11%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L286" class="number ">286</th>
+                    <th id="L232" class="number covered">232</th>
+
+                    <td class="covered" >
+                        <pre>      $parameters = $this-&gt;getParameters();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L233" class="number covered">233</th>
+
+                    <td class="covered" >
+                        <pre>      if (count($parameters) == 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L234" class="number covered">234</th>
+
+                    <td class="covered" >
+                        <pre>         return &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L235" class="number ">235</th>
 
                     <td class="" >
-                        <pre>      // Avoid php notice when validating the regular expression
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L287" class="number covered">287</th>
-
-                    <td class="covered" >
-                        <pre>      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L288" class="number covered">288</th>
-
-                    <td class="covered" >
-                        <pre>      $isValid = !(preg_match($regex, null) === false);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L289" class="number covered">289</th>
-
-                    <td class="covered" >
-                        <pre>      restore_error_handler();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L290" class="number ">290</th>
+                    <th id="L236" class="number ">236</th>
 
                     <td class="" >
                         <pre>
@@ -2380,21 +1979,444 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L291" class="number covered">291</th>
+                    <th id="L237" class="number uncovered">237</th>
 
-                    <td class="covered" >
-                        <pre>      return $isValid;</pre>
+                    <td class="uncovered" >
+                        <pre>      $question = new PluginFormcreatorQuestion();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L292" class="number unreach">292</th>
+                    <th id="L238" class="number uncovered">238</th>
+
+                    <td class="uncovered" >
+                        <pre>      $question-&gt;getFromDB($this-&gt;question-&gt;getID());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L239" class="number uncovered">239</th>
+
+                    <td class="uncovered" >
+                        <pre>      $form = new PluginFormcreatorForm();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L240" class="number uncovered">240</th>
+
+                    <td class="uncovered" >
+                        <pre>      $form-&gt;getByQuestionId($question-&gt;getID());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L241" class="number ">241</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L242" class="number ">242</th>
+
+                    <td class="" >
+                        <pre>      /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L243" class="number uncovered">243</th>
+
+                    <td class="uncovered" >
+                        <pre>      $column = 0;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L244" class="number uncovered">244</th>
+
+                    <td class="uncovered" >
+                        <pre>      $rowSize = 2;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L245" class="number uncovered">245</th>
+
+                    <td class="uncovered" >
+                        <pre>      $additions = &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L246" class="number uncovered">246</th>
+
+                    <td class="uncovered" >
+                        <pre>      foreach ($parameters as $fieldname =&gt; $parameter) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L247" class="number uncovered">247</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($column == 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L248" class="number uncovered">248</th>
+
+                    <td class="uncovered" >
+                        <pre>            $additions .= &#039;&lt;tr class=&quot;plugin_formcreator_question_specific&quot;&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L249" class="number ">249</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L250" class="number uncovered">250</th>
+
+                    <td class="uncovered" >
+                        <pre>         $parameterSize = 1 + $parameter-&gt;getParameterFormSize();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L251" class="number uncovered">251</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($column + $parameterSize &gt; $rowSize) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L252" class="number ">252</th>
+
+                    <td class="" >
+                        <pre>            // The parameter needs more room than available in the current row
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L253" class="number uncovered">253</th>
+
+                    <td class="uncovered" >
+                        <pre>            if ($column &lt; $rowSize) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L254" class="number ">254</th>
+
+                    <td class="" >
+                        <pre>               // fill the remaining of the row
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L255" class="number uncovered">255</th>
+
+                    <td class="uncovered" >
+                        <pre>               $additions .= str_repeat(&#039;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&#039;, $rowSize - $column);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L256" class="number ">256</th>
+
+                    <td class="" >
+                        <pre>               // Close current row and open an new one
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L257" class="number uncovered">257</th>
+
+                    <td class="uncovered" >
+                        <pre>               $additions .= &#039;&lt;/tr&gt;&lt;tr class=&quot;plugin_formcreator_question_specific&quot;&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L258" class="number uncovered">258</th>
+
+                    <td class="uncovered" >
+                        <pre>               $column = 0;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L259" class="number ">259</th>
+
+                    <td class="" >
+                        <pre>            }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L260" class="number ">260</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L261" class="number uncovered">261</th>
+
+                    <td class="uncovered" >
+                        <pre>         $additions .= $parameter-&gt;getParameterForm($form, $question);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L262" class="number uncovered">262</th>
+
+                    <td class="uncovered" >
+                        <pre>         $column += $parameterSize;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L263" class="number uncovered">263</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($column == $rowSize) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L264" class="number ">264</th>
+
+                    <td class="" >
+                        <pre>            // Finish the row
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L265" class="number uncovered">265</th>
+
+                    <td class="uncovered" >
+                        <pre>            $additions .= &#039;&lt;/tr&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L266" class="number uncovered">266</th>
+
+                    <td class="uncovered" >
+                        <pre>            $column = 0;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L267" class="number ">267</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L268" class="number ">268</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L269" class="number uncovered">269</th>
+
+                    <td class="uncovered" >
+                        <pre>      if ($column &lt; $rowSize) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L270" class="number ">270</th>
+
+                    <td class="" >
+                        <pre>         // fill the remaining of the row
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L271" class="number uncovered">271</th>
+
+                    <td class="uncovered" >
+                        <pre>         $additions .= str_repeat(&#039;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&#039;, $rowSize - $column);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L272" class="number ">272</th>
+
+                    <td class="" >
+                        <pre>         // Close current row and open an new one
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L273" class="number uncovered">273</th>
+
+                    <td class="uncovered" >
+                        <pre>         $additions .= &quot;&lt;/tr&gt;&quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L274" class="number ">274</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L275" class="number uncovered">275</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $additions;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L276" class="number unreach">276</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L277" class="number ">277</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getQuestion">
+                    <th id="L278" class="number ">278</th>
+
+                    <td class="" id="getQuestion">
+                        <pre>   public function getQuestion() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L279" class="number uncovered">279</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $this-&gt;question;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L280" class="number unreach">280</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L281" class="number ">281</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L282" class="number ">282</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L283" class="number ">283</th>
+
+                    <td class="" >
+                        <pre>    * Validate a regular expression
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L284" class="number ">284</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L285" class="number ">285</th>
+
+                    <td class="" >
+                        <pre>    * @param string $regex
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L286" class="number ">286</th>
+
+                    <td class="" >
+                        <pre>    * @return boolean true if the regex is valid, false otherwise
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L287" class="number ">287</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="checkRegex">
+                    <th id="L288" class="number ">288</th>
+
+                    <td class="" id="checkRegex">
+                        <pre>   protected function checkRegex($regex) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L289" class="number ">289</th>
+
+                    <td class="" >
+                        <pre>      // Avoid php notice when validating the regular expression
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L290" class="number covered">290</th>
+
+                    <td class="covered" >
+                        <pre>      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L291" class="number covered">291</th>
+
+                    <td class="covered" >
+                        <pre>      $isValid = !(preg_match($regex, null) === false);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L292" class="number covered">292</th>
+
+                    <td class="covered" >
+                        <pre>      restore_error_handler();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L293" class="number ">293</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L294" class="number covered">294</th>
+
+                    <td class="covered" >
+                        <pre>      return $isValid;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L295" class="number unreach">295</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L296" class="number ">296</th>
 
                     <td class="" >
                         <pre>}

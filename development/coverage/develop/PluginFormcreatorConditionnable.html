@@ -26,7 +26,7 @@ layout: coverage
 <div class="container-fluid">
     <div class="col-lg-12">
             <div class="row">
-        <h1>PluginFormcreatorAnswer: lines coverage</h1>
+        <h1>PluginFormcreatorConditionnable: lines coverage</h1>
 
         
 
@@ -35,9 +35,9 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-warning">
-                    33%
-                                            <small>of 3</small>
+                <h1 class="text-danger">
+                    8%
+                                            <small>of 38</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -57,24 +57,10 @@ layout: coverage
 
     <tbody>
             <tr>
-            <td><a href="#canCreate">PluginFormcreatorAnswer::canCreate()</a></td>
-                                        <td style="text-align: center">1</td>
+            <td><a href="#updateConditions">PluginFormcreatorConditionnable::updateConditions()</a></td>
+                                        <td style="text-align: center">38</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
-</td>
-                                            </tr>
-            <tr>
-            <td><a href="#canView">PluginFormcreatorAnswer::canView()</a></td>
-                                        <td style="text-align: center">1</td>
-                <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
-</td>
-                                            </tr>
-            <tr>
-            <td><a href="#getTypeName">PluginFormcreatorAnswer::getTypeName()</a></td>
-                                        <td style="text-align: center">1</td>
-                <td style="text-align: center">    
-    <span class="label label-success">100%</span>
+    <span class="label label-danger">8%</span>
 </td>
                                             </tr>
         </tbody>
@@ -341,7 +327,7 @@ layout: coverage
                     <th id="L32" class="number ">32</th>
 
                     <td class="" >
-                        <pre>if (!defined(&#039;GLPI_ROOT&#039;)) {
+                        <pre>trait PluginFormcreatorConditionnable
 </pre>
                     </td>
                 </tr>
@@ -349,7 +335,7 @@ layout: coverage
                     <th id="L33" class="number ">33</th>
 
                     <td class="" >
-                        <pre>   die(&quot;Sorry. You can&#039;t access this file directly&quot;);
+                        <pre>{
 </pre>
                     </td>
                 </tr>
@@ -357,7 +343,7 @@ layout: coverage
                     <th id="L34" class="number ">34</th>
 
                     <td class="" >
-                        <pre>}
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -365,7 +351,7 @@ layout: coverage
                     <th id="L35" class="number ">35</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>    * Updates the conditions of the question
 </pre>
                     </td>
                 </tr>
@@ -373,7 +359,7 @@ layout: coverage
                     <th id="L36" class="number ">36</th>
 
                     <td class="" >
-                        <pre>class PluginFormcreatorAnswer extends CommonDBChild
+                        <pre>    * @param array $input
 </pre>
                     </td>
                 </tr>
@@ -381,7 +367,7 @@ layout: coverage
                     <th id="L37" class="number ">37</th>
 
                     <td class="" >
-                        <pre>{
+                        <pre>    * @return boolean true if success, false otherwise
 </pre>
                     </td>
                 </tr>
@@ -389,47 +375,43 @@ layout: coverage
                     <th id="L38" class="number ">38</th>
 
                     <td class="" >
-                        <pre>   static public $itemtype = PluginFormcreatorFormAnswer::class;
+                        <pre>    */
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="">
+                            <tr class="line" id="updateConditions">
                     <th id="L39" class="number ">39</th>
 
-                    <td class="" >
-                        <pre>   static public $items_id = &quot;plugin_formcreator_formanswers_id&quot;;
-</pre>
+                    <td class="" id="updateConditions">
+                        <pre>   public function updateConditions($input) {<span class="label label-danger">8%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L40" class="number ">40</th>
+                    <th id="L40" class="number covered">40</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>      if (!isset($input[&#039;plugin_formcreator_questions_id&#039;]) || !isset($input[&#039;show_condition&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L41" class="number ">41</th>
+                    <th id="L41" class="number covered">41</th>
 
-                    <td class="" >
-                        <pre>   /**
-</pre>
+                    <td class="covered" >
+                        <pre>         || !isset($input[&#039;show_value&#039;]) || !isset($input[&#039;show_logic&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L42" class="number ">42</th>
+                    <th id="L42" class="number covered">42</th>
 
-                    <td class="" >
-                        <pre>    * Check if current user have the right to create and modify requests
-</pre>
+                    <td class="covered" >
+                        <pre>         return  false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L43" class="number ">43</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -437,37 +419,37 @@ layout: coverage
                     <th id="L44" class="number ">44</th>
 
                     <td class="" >
-                        <pre>    * @return boolean True if he can create and modify requests
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L45" class="number ">45</th>
+                    <th id="L45" class="number uncovered">45</th>
 
-                    <td class="" >
-                        <pre>    */
-</pre>
+                    <td class="uncovered" >
+                        <pre>      if (!is_array($input[&#039;plugin_formcreator_questions_id&#039;]) || !is_array($input[&#039;show_condition&#039;])</pre>
                     </td>
                 </tr>
-                            <tr class="line" id="canCreate">
-                    <th id="L46" class="number ">46</th>
+                            <tr class="line" id="">
+                    <th id="L46" class="number uncovered">46</th>
 
-                    <td class="" id="canCreate">
-                        <pre>   public static function canCreate() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="uncovered" >
+                        <pre>         || !is_array($input[&#039;show_value&#039;]) || !is_array($input[&#039;show_logic&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L47" class="number uncovered">47</th>
 
                     <td class="uncovered" >
-                        <pre>      return true;</pre>
+                        <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L48" class="number unreach">48</th>
+                    <th id="L48" class="number ">48</th>
 
-                    <td class="unreach" >
-                        <pre>   }</pre>
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -482,31 +464,29 @@ layout: coverage
                     <th id="L50" class="number ">50</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>      // All arrays of condition exists
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L51" class="number ">51</th>
+                    <th id="L51" class="number uncovered">51</th>
 
-                    <td class="" >
-                        <pre>    * Check if current user have the right to read requests
-</pre>
+                    <td class="uncovered" >
+                        <pre>      if ($input[&#039;show_rule&#039;] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L52" class="number ">52</th>
+                    <th id="L52" class="number uncovered">52</th>
 
-                    <td class="" >
-                        <pre>    *
-</pre>
+                    <td class="uncovered" >
+                        <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L53" class="number ">53</th>
 
                     <td class="" >
-                        <pre>    * @return boolean True if he can read requests
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -514,44 +494,43 @@ layout: coverage
                     <th id="L54" class="number ">54</th>
 
                     <td class="" >
-                        <pre>    */
+                        <pre>
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="canView">
-                    <th id="L55" class="number ">55</th>
+                            <tr class="line" id="">
+                    <th id="L55" class="number uncovered">55</th>
 
-                    <td class="" id="canView">
-                        <pre>   public static function canView() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="uncovered" >
+                        <pre>      if (!(count($input[&#039;plugin_formcreator_questions_id&#039;]) == count($input[&#039;show_condition&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L56" class="number uncovered">56</th>
 
                     <td class="uncovered" >
-                        <pre>      return true;</pre>
+                        <pre>            &amp;&amp; count($input[&#039;show_value&#039;]) == count($input[&#039;show_logic&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L57" class="number unreach">57</th>
+                    <th id="L57" class="number uncovered">57</th>
 
-                    <td class="unreach" >
-                        <pre>   }</pre>
+                    <td class="uncovered" >
+                        <pre>            &amp;&amp; count($input[&#039;plugin_formcreator_questions_id&#039;]) == count($input[&#039;show_value&#039;]))) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L58" class="number ">58</th>
+                    <th id="L58" class="number uncovered">58</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="uncovered" >
+                        <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L59" class="number ">59</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -559,31 +538,29 @@ layout: coverage
                     <th id="L60" class="number ">60</th>
 
                     <td class="" >
-                        <pre>    * Returns the type name with consideration of plural
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L61" class="number ">61</th>
+                    <th id="L61" class="number uncovered">61</th>
 
-                    <td class="" >
-                        <pre>    *
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $itemtype = static::class;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L62" class="number ">62</th>
+                    <th id="L62" class="number uncovered">62</th>
 
-                    <td class="" >
-                        <pre>    * @param number $nb Number of item(s)
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $itemId = $this-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L63" class="number ">63</th>
 
                     <td class="" >
-                        <pre>    * @return string Itemtype name
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -591,33 +568,243 @@ layout: coverage
                     <th id="L64" class="number ">64</th>
 
                     <td class="" >
-                        <pre>    */
+                        <pre>      // Delete all existing conditions for the question
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getTypeName">
-                    <th id="L65" class="number ">65</th>
+                            <tr class="line" id="">
+                    <th id="L65" class="number uncovered">65</th>
 
-                    <td class="" id="getTypeName">
-                        <pre>   public static function getTypeName($nb = 0) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="uncovered" >
+                        <pre>      $condition = new PluginFormcreatorCondition();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L66" class="number covered">66</th>
+                    <th id="L66" class="number uncovered">66</th>
 
-                    <td class="covered" >
-                        <pre>      return _n(&#039;Answer&#039;, &#039;Answers&#039;, $nb, &#039;formcreator&#039;);</pre>
+                    <td class="uncovered" >
+                        <pre>      $condition-&gt;deleteByCriteria([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L67" class="number unreach">67</th>
+                    <th id="L67" class="number uncovered">67</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;itemtype&#039; =&gt; $itemtype,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L68" class="number uncovered">68</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;items_id&#039; =&gt; $itemId,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L69" class="number ">69</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L70" class="number ">70</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L71" class="number ">71</th>
+
+                    <td class="" >
+                        <pre>      // Arrays all have the same count and have at least one item
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L72" class="number uncovered">72</th>
+
+                    <td class="uncovered" >
+                        <pre>      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L73" class="number uncovered">73</th>
+
+                    <td class="uncovered" >
+                        <pre>      $order = 0;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L74" class="number uncovered">74</th>
+
+                    <td class="uncovered" >
+                        <pre>      while (count($input[$questionFk]) &gt; 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L75" class="number uncovered">75</th>
+
+                    <td class="uncovered" >
+                        <pre>         $order++;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L76" class="number uncovered">76</th>
+
+                    <td class="uncovered" >
+                        <pre>         $value            = array_shift($input[&#039;show_value&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L77" class="number uncovered">77</th>
+
+                    <td class="uncovered" >
+                        <pre>         $questionID       = (int) array_shift($input[$questionFk]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L78" class="number uncovered">78</th>
+
+                    <td class="uncovered" >
+                        <pre>         $showCondition    = html_entity_decode(array_shift($input[&#039;show_condition&#039;]));</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L79" class="number uncovered">79</th>
+
+                    <td class="uncovered" >
+                        <pre>         $showLogic        = array_shift($input[&#039;show_logic&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L80" class="number uncovered">80</th>
+
+                    <td class="uncovered" >
+                        <pre>         $condition = new PluginFormcreatorCondition();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L81" class="number uncovered">81</th>
+
+                    <td class="uncovered" >
+                        <pre>         $condition-&gt;add([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L82" class="number uncovered">82</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;itemtype&#039;                        =&gt; $itemtype,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L83" class="number uncovered">83</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;items_id&#039;                        =&gt; $itemId,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L84" class="number uncovered">84</th>
+
+                    <td class="uncovered" >
+                        <pre>            $questionFk                       =&gt; $questionID,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L85" class="number uncovered">85</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;show_condition&#039;                  =&gt; $showCondition,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L86" class="number uncovered">86</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;show_value&#039;                      =&gt; $value,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L87" class="number uncovered">87</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;show_logic&#039;                      =&gt; $showLogic,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L88" class="number uncovered">88</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;order&#039;                           =&gt; $order,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L89" class="number ">89</th>
+
+                    <td class="" >
+                        <pre>         ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L90" class="number uncovered">90</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($condition-&gt;isNewItem()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L91" class="number uncovered">91</th>
+
+                    <td class="uncovered" >
+                        <pre>            return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L92" class="number ">92</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L93" class="number ">93</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L94" class="number ">94</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L95" class="number uncovered">95</th>
+
+                    <td class="uncovered" >
+                        <pre>      return true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L96" class="number unreach">96</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L68" class="number ">68</th>
+                    <th id="L97" class="number ">97</th>
 
                     <td class="" >
                         <pre>}
