@@ -442,15 +442,6 @@ function buildTiles(list) {
    return html;
 }
 
-// === SEARCH BAR ===
-
-// === QUESTIONS ===
-var urlQuestion               = rootDoc + "/plugins/formcreator/ajax/question.php";
-var urlFrontQuestion          = rootDoc + "/plugins/formcreator/front/question.form.php";
-var urlQuestionToggleRequired = rootDoc + '/plugins/formcreator/ajax/question_toggle_required.php';
-var urlQuestionDelete         = rootDoc + '/plugins/formcreator/ajax/question_delete.php';
-var urlQuestionDuplicate      = rootDoc + '/plugins/formcreator/ajax/question_duplicate.php';
-
 var plugin_formcreator = new function() {
    // Properties of the item when the user begins to change it
    this.initialPosition = {};
@@ -592,6 +583,8 @@ var plugin_formcreator = new function() {
       });
    };
 
+   // === QUESTIONS ===
+
    this.deleteQuestion = function (target) {
       var item = $(target).closest('.grid-stack-item');
       var id = item.attr('data-id');
@@ -600,7 +593,7 @@ var plugin_formcreator = new function() {
       }
       if (confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
          jQuery.ajax({
-         url: urlQuestionDelete,
+         url: rootDoc + '/plugins/formcreator/ajax/question_delete.php',
          type: "POST",
          data: {
                id: id,
@@ -644,7 +637,7 @@ var plugin_formcreator = new function() {
       }
       var required = $(target).hasClass('fa-dot-circle');
       jQuery.ajax({
-         url: urlQuestionToggleRequired,
+         url: rootDoc + '/plugins/formcreator/ajax/question_toggle_required.php',
          type: "POST",
          data: {
             id: id,
@@ -689,7 +682,7 @@ var plugin_formcreator = new function() {
    }
 
    this.editQuestion = function () {
-      form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
+      var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = form.find('[name="id"]').val();
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/question_update.php',
@@ -713,7 +706,7 @@ var plugin_formcreator = new function() {
       }
 
       $.ajax({
-         url: urlQuestionDuplicate,
+         url: rootDoc + '/plugins/formcreator/ajax/question_duplicate.php',
          type: "POST",
          dataType: 'json',
          data: {
@@ -921,8 +914,14 @@ var plugin_formcreator = new function() {
 
 function plugin_formcreator_addTarget(items_id, token) {
    modalWindow.load(rootDoc + '/plugins/formcreator/ajax/target.php', {
-      form_id: items_id,
-      _glpi_csrf_token: token
+      plugin_formcreator_forms_id: items_id
+   }).dialog("open");
+}
+
+function plugin_formcreator_editTarget(itemtype, items_id) {
+   modalWindow.load(rootDoc + '/plugins/formcreator/ajax/target_edit.php', {
+      itemtype: itemtype,
+      id: items_id
    }).dialog("open");
 }
 

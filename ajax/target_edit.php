@@ -34,15 +34,25 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
+if (!isset($_REQUEST['id'])) {
     http_response_code(400);
     exit;
 }
-$formId = $_REQUEST['plugin_formcreator_forms_id'];
+$itemId = $_REQUEST['id'];
 
-$form = new PluginFormcreatorForm();
-if (!$form->getFromDB($formId)) {
+if (!isset($_REQUEST['itemtype'])) {
     http_response_code(400);
     exit;
 }
-$form->showAddTargetForm();
+$itemtype = $_REQUEST['itemtype'];
+if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
+    http_response_code(400);
+    exit;
+}
+
+$target = new $itemtype();
+if (!$target->getFromDB($itemId)) {
+    http_response_code(404);
+    exit;
+}
+$target->showForm($itemId);

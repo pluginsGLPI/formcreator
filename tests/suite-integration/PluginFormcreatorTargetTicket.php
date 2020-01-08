@@ -43,17 +43,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    public function testTargetTicketActors() {
-      $form = new \PluginFormcreatorForm();
-      $form->add([
+      $form = $this->getForm([
          'entities_id'           => $_SESSION['glpiactive_entity'],
-         'name'                  => __METHOD__,
          'description'           => 'form description',
          'content'               => 'a content',
          'is_active'             => 1,
          'validation_required'   => 0
       ]);
-      $this->boolean($form->isNewItem())->isFalse();
-
       $targetTicket = new \PluginFormcreatorTargetTicket();
       $targetTicket->add([
          'name'                        => 'a target',

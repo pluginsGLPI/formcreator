@@ -607,7 +607,9 @@ PluginFormcreatorDuplicatableInterface
             $i++;
             echo '<tr class="line'.($i % 2).'">';
             $targetItemUrl = Toolbox::getItemTypeFormURL($targetType) . '?id=' . $targetId;
-            echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
+            // echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
+            $onclick = "plugin_formcreator_editTarget('$targetType', $targetId)";
+            echo '<td onclick="' . $onclick . '" style="cursor: pointer">';
 
             echo $target->fields['name'];
             echo '</td>';
@@ -2063,7 +2065,7 @@ PluginFormcreatorDuplicatableInterface
 
       // import form's targets
       if (isset($input['_targets'])) {
-         foreach ((new self())->getTargetTypes() as $targetType) {
+         foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
             // import targets
             $importedItems = [];
             if (isset($input['_targets'][$targetType])) {
@@ -2470,7 +2472,7 @@ PluginFormcreatorDuplicatableInterface
     *
     * @return array
     */
-   public function getTargetTypes() {
+   public static function getTargetTypes() {
       return [
          PluginFormcreatorTargetTicket::class,
          PluginFormcreatorTargetChange::class
@@ -2491,7 +2493,7 @@ PluginFormcreatorDuplicatableInterface
          return [];
       }
 
-      foreach ($this->getTargetTypes() as $targetType) {
+      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
          $request = [
             'SELECT' => 'id',
             'FROM' => $targetType::getTable(),
@@ -2509,7 +2511,7 @@ PluginFormcreatorDuplicatableInterface
       return $targets;
    }
 
-   public  function showAddTargetForm() {
+   public function showAddTargetForm() {
       echo '<form name="form_target" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
 
@@ -2521,7 +2523,7 @@ PluginFormcreatorDuplicatableInterface
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $targetTypes = [];
-      foreach ($this->getTargetTypes() as $targetType) {
+      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
          $targetTypes[$targetType] = $targetType::getTypeName(1);
       }
       Dropdown::showFromArray(
@@ -2536,8 +2538,8 @@ PluginFormcreatorDuplicatableInterface
 
       echo '<tr class="line0">';
       echo '<td colspan="4" class="center">';
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.(int) $_REQUEST['form_id'].'" />';
-      echo '<input type="submit" name="add_target" class="submit_button" value="'.__('Add').'" />';
+      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $this->getID()]);
+      echo Html::submit(__('Add'), ['name' => 'add_target']);
       echo '</td>';
       echo '</tr>';
 
@@ -2553,7 +2555,7 @@ PluginFormcreatorDuplicatableInterface
     */
    public function addTarget($input) {
       $itemtype = $input['itemtype'];
-      if (!in_array($itemtype, $this->getTargetTypes())) {
+      if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
          Session::addMessageAfterRedirect(
             __('Unsupported target type.', 'formcreator'),
             false,
@@ -2588,7 +2590,7 @@ PluginFormcreatorDuplicatableInterface
     */
    public function deleteTarget($input) {
       $itemtype = $input['itemtype'];
-      if (!in_array($itemtype, $this->getTargetTypes())) {
+      if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
          Session::addMessageAfterRedirect(
             __('Unsuported target type.', 'formcreator'),
             false,
@@ -2614,7 +2616,7 @@ PluginFormcreatorDuplicatableInterface
     */
    public function countTargets() {
       $nb = 0;
-      foreach ($this->getTargetTypes() as $targetType) {
+      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
          $nb += (new DbUtils())->countElementsInTable(
             $targetType::getTable(),
             [

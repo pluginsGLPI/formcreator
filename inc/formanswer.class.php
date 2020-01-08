@@ -457,8 +457,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function showForm($ID, $options = []) {
-      global $DB;
-
       if (!isset($ID) || !$this->getFromDB($ID)) {
          Html::displayNotFoundError();
       }

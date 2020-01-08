@@ -548,7 +548,6 @@ PluginFormcreatorConditionnableInterface
     * @return string HTML 
     */
     public function getDesignHtml() {
-      $token  = Session::getNewCSRFToken();
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $formId = $this->fields[$formFk];
       $sectionId = $this->getID();

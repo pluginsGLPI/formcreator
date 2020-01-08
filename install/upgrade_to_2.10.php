@@ -60,7 +60,7 @@ class PluginFormcreatorUpgradeTo2_10 {
          ]);
       }
 
-      // add uuid to taretchanges
+      // add uuid to targetchanges
       $table = 'glpi_plugin_formcreator_targetchanges';
       $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
       $migration->migrationOneTable($table);
@@ -73,17 +73,19 @@ class PluginFormcreatorUpgradeTo2_10 {
          $id = $row['id'];
          $uuid = plugin_formcreator_getUuid();
          $DB->query("UPDATE INTO `$table`
-            SET `uuid`='$uuid'"
+            SET `uuid`='$uuid'
+            WHERE `id`='$id'"
          ) or plugin_formcreator_upgrade_error($migration);
       }
 
       // conditions on targets 
-      $tables = [
-         'glpi_plugin_formcreator_targetchanges',
-         'glpi_plugin_formcreator_targettickets',
-      ];
-      foreach ($tables as $table) {
-         $migration->addField($table, 'show_rule', 'integer', ['before' => 'uuid']);
-      }
+      $table = 'glpi_plugin_formcreator_targetchanges';
+      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
+
+      // Move uuid field at last position
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
    }
 }

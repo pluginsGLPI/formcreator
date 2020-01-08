@@ -87,10 +87,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    public function showForm($ID, $options = []) {
+      if ($ID == 0) {
+         // Not used for now
+         $title =  __('Add a target ', 'formcreator');
+      } else {
+         $title =  __('Edit a target', 'formcreator');
+      }
       $rand = mt_rand();
 
       $form = $this->getForm();
 
+      // TODO: remive the fixed width
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form"'
       . ' method="post"'
@@ -100,9 +107,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
-      echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
+      echo '<tr><th colspan="2">' . $title . '</th></tr>';
       echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
+      // TODO: remive the fixed width
       echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
       echo '</table>';
@@ -204,7 +212,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr>';
       echo '<td colspan="5" class="center">';
-      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo Html::hidden('id', ['value' => $this->getID()]);
+      echo '&nbsp;';
       echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
       echo '</td>';
       echo '</tr>';
@@ -458,10 +467,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    public function post_addItem() {
+      parent::post_addItem();
       $this->updateConditions($this->input);
    }
 
    public function post_updateItem($history = 1) {
+      parent::post_updateItem();
       $this->updateConditions($this->input);
    }
 

@@ -29,9 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include ('../../../inc/includes.php');
 
-Session::checkRight("entity", UPDATE);
+Session::checkRight('entity', UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
