@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -35,8 +35,11 @@ if (!defined('GLPI_ROOT')) {
 
 abstract class PluginFormcreatorTargetBase extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
-PluginFormcreatorTargetInterface
+PluginFormcreatorTargetInterface,
+PluginFormcreatorConditionnableInterface
 {
+   use PluginFormcreatorConditionnable;
+
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
 
@@ -647,7 +650,7 @@ PluginFormcreatorTargetInterface
    }
 
    protected function showDestinationEntitySetings($rand) {
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
@@ -784,7 +787,7 @@ PluginFormcreatorTargetInterface
    }
 
    protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
@@ -827,7 +830,7 @@ PluginFormcreatorTargetInterface
    }
 
    protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
       Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), [
@@ -870,7 +873,7 @@ PluginFormcreatorTargetInterface
 
       $plugin = new Plugin();
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-         echo '<tr class="line1">';
+         echo '<tr>';
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
          Dropdown::showFromArray('tag_type', self::getEnumTagType(),
@@ -1492,7 +1495,7 @@ SCRIPT;
    protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="15%">' . __('Location') . '</td>';
       echo '<td width="45%">';
       Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), [
@@ -1760,7 +1763,7 @@ SCRIPT;
       echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
       echo '<td align="center">-</td>';
       echo '<td align="center"><strong>##FULLFORM##</strong></td>';
@@ -1774,7 +1777,7 @@ SCRIPT;
       foreach ($result as $sectionName => $questions) {
          foreach ($questions as $questionId => $questionName) {
             $i++;
-            echo '<tr class="line' . ($i % 2) . '">';
+            echo '<tr>';
             echo '<td colspan="2">' . $questionName . '</td>';
             echo '<td align="center">##question_' . $questionId . '##</td>';
             echo '<td align="center">##answer_' . $questionId . '##</td>';
@@ -1890,5 +1893,13 @@ SCRIPT;
       }
 
       return $input;
+   }
+
+   protected function showConditionsSettings($rand) {
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields[$formFk]);
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($this);
    }
 }

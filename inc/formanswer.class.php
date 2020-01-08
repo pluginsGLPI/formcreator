@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -430,9 +430,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $form = new PluginFormcreatorForm();
-      $formId = $this->fields[PluginFormcreatorForm::getForeignKeyField()];
-      $form->getFromDB($formId);
+      $form = $this->getForm();
       switch ($form->fields['validation_required']) {
          case PluginFormcreatorForm_Validator::VALIDATION_USER:
             return (Session::getLoginUserID() == $this->fields['users_id_validator']);
@@ -446,7 +444,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   'FROM'   => PluginFormcreatorForm_Validator::getTable(),
                   'WHERE'  => [
                      'itemtype'                    => Group::class,
-                     'plugin_formcreator_forms_id' => $formId
+                     'plugin_formcreator_forms_id' => $form->getID()
                   ]
                ])
             ];
@@ -459,41 +457,114 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function showForm($ID, $options = []) {
-      global $DB;
-
       if (!isset($ID) || !$this->getFromDB($ID)) {
          Html::displayNotFoundError();
       }
       $options = ['canedit' => false];
 
       // Print css media
-      echo Html::css(FORMCREATOR_ROOTDOC."/css/print_form_answer.css", ['media' => 'print']);
+      echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
-      // start form
-      echo "<div class='form_answer'>";
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
+      $style = "<style>";
+      // force colums width
+      $width_percent = 100 / PluginFormcreatorSection::COLUMNS;
+      for ($i = 0; $i < PluginFormcreatorSection::COLUMNS; $i++) {
+         $width = ($i+1) * $width_percent;
+         $style.= '
+         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
+         #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
+         {
+            min-width: $width_percent%;
+            width: ' . $width . '%;
+         }
+         ';
+      }
+      $style.= "</style>";
+      echo $style;
 
-      $form = new PluginFormcreatorForm();
-      $formId = $this->fields['plugin_formcreator_forms_id'];
-      $form->getFromDB($formId);
+      $formName = 'plugin_formcreator_form';
+      self::getFormURL();
+      echo '<form name="' . $formName . '" method="post" role="form" enctype="multipart/form-data"'
+      . ' class="plugin_formcreator_form"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' id="plugin_formcreator_form"'
+      . '>';
+
+      $form = $this->getForm();
 
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
 
-      echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
+      // form title
+      echo "<h1 class='form-title'>";
+      echo $this->fields['name'] . "&nbsp;";
+      echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
+      echo '</h1>';
 
       // Form Header
-      echo '<div class="form_header">';
-      echo "<h1>";
-      echo $form->fields['name']."&nbsp;";
-      echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
-                 title='".__("Print this form", 'formcreator')."' onclick='window.print();'>";
-      echo "</h1>";
-      if (!empty($form->fields['content'])) {
-         echo html_entity_decode($form->fields['content']);
+      if (!empty($this->fields['content'])) {
+         echo '<div class="form_header">';
+         echo html_entity_decode($this->fields['content']);
+         echo '</div>';
       }
-      echo '</div>';
+      
+      echo '<ol>';
+      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
+      foreach ($sections as $section) {
+         $sectionId = $section->getID();
+
+         // Section header
+         echo '<li'
+         . ' class="plugin_formcreator_section"'
+         . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
+         . ' data-id="' . $sectionId . '"'
+         . '">';
+
+         // section name
+         echo '<h2>';
+         echo empty($section->fields['name']) ? '(' . $sectionId . ')' : $section->fields['name'];
+         echo '</h2>';
+
+         // Section content
+         echo '<div>';
+
+         // Get fields populated with answers
+         $answers = $this->getAnswers(
+            $this->getID(), 
+            [
+               PluginFormcreatorSection::getForeignKeyField() => $section->getID(),
+            ]
+         );
+
+         // Display all fields of the section
+         $lastQuestion = null;
+         $questions = (new PluginFormcreatorQuestion)->getQuestionsFromSection($sectionId);
+         foreach ($questions as $question) {
+            if ($lastQuestion !== null) {
+               if ($lastQuestion->fields['row'] < $question->fields['row']) {
+                  // the question begins a new line
+                  echo '<div class="plugin_formcreator_newRow"></div>';
+               } else {
+                  $x = $lastQuestion->fields['col'] + $lastQuestion->fields['width'];
+                  $width = $question->fields['col'] - $x;
+                  if ($x < $question->fields['col']) {
+                     // there is an horizontal gap between previous question and current one
+                     echo '<div class="plugin_formcreator_gap" data-gs-x="' . $x . '" data-gs-width="' . $width . '"></div>';
+                  }
+               }
+            }
+            echo $question->getRenderedHtml($canEdit, $answers);
+            $lastQuestion = $question;
+         }
+         echo '</div>';
+
+         echo '</li>';
+      }
+      if ($canEdit) {
+         echo Html::scriptBlock('$(function() {
+            plugin_formcreator.showFields($("form[name=\'form\']"));
+         })');
+      }
 
       if ($this->fields['status'] == self::STATUS_REFUSED) {
          echo '<div class="refused_header">';
@@ -513,89 +584,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
       }
 
-      echo '<div class="form_section">';
-
-      // TODO: code very close to PluginFormcreatorTargetBase::getFullForm() (factorizable ?)
-      // compute all questions
-      $questionTable = PluginFormcreatorQuestion::getTable();
-      $sectionTable = PluginFormcreatorSection::getTable();
-      $answerTable = PluginFormcreatorAnswer::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
-      $request = [
-         'SELECT' => [
-            $sectionTable => ['name as section_name'],
-            $questionTable => ['*'],
-            $answerTable => ['answer'],
-         ],
-         'FROM' => [
-            $questionTable,
-         ],
-         'LEFT JOIN' => [
-            $answerTable => [
-               'FKEY' => [
-                  $answerTable => $questionFk,
-                  $questionTable => 'id',
-               ],
-            ],
-         ],
-         'INNER JOIN' => [
-            $sectionTable => [
-               'FKEY' => [
-                  $questionTable => $sectionFk,
-                  $sectionTable => 'id',
-               ],
-            ],
-         ],
-         'WHERE' => [
-            'AND' => [
-               "$answerTable.$formAnswerFk" => $ID,
-               "$sectionTable.$formFk" => $form->getID(),
-            ],
-         ],
-         'GROUPBY' => [
-            "$questionTable.id",
-         ],
-         'ORDER' => [
-            "$sectionTable.order ASC",
-            "$sectionTable.id ASC",
-            "$questionTable.order *ASC",
-         ],
-      ];
-      $questions = $DB->request($request);
-      $last_section = '';
-      $questionsCount = $questions->count();
-      $fields = $form->getFields();
-      foreach ($questions as $question_line) {
-         $question = new PluginFormcreatorQuestion();
-         $question->getFromDB($question_line['id']);
-         $fields[$question_line['id']]->deserializeValue($question_line['answer']);
-      }
-      foreach ($questions as $question_line) {
-         // Get and display current section if needed
-         if ($last_section != $question_line['section_name']) {
-            echo '<h2>'.$question_line['section_name'].'</h2>';
-            $last_section = $question_line['section_name'];
-         }
-
-         if ($canEdit) {
-            $fields[$question_line['id']]->show($canEdit);
-         } else {
-            if (($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               if (PluginFormcreatorFields::isVisible($fields[$question_line['id']], $fields)) {
-                  $fields[$question_line['id']]->show($canEdit);
-               }
-            }
-         }
-      }
-      if ($canEdit) {
-         echo Html::scriptBlock('$(function() {
-            plugin_formcreator.showFields($("form[name=\'form\']"));
-         })');
-      }
-
       //add requester info
       echo '<div class="form-group">';
       echo '<label for="requester">' . __('Requester', 'formcreator') . '</label>';
@@ -604,7 +592,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Display submit button
       if (($this->fields['status'] == self::STATUS_REFUSED) && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
-         echo '<div class="form-group line'.(($questionsCount + 1) % 2).'">';
+         echo '<div class="form-group">';
          echo '<div class="center">';
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
          echo '</div>';
@@ -908,11 +896,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $fields = $form->getFields();
-      foreach ($fields as $id => $question) {
-         $fields[$id]->parseAnswerValues($input);
+      $this->questionFields = $form->getFields();
+      foreach ($this->questionFields as $id => $question) {
+         $this->questionFields[$id]->parseAnswerValues($input);
       }
-      return $this->saveAnswers($form, $input, $fields);
+      return $this->saveAnswers($form, $input, $this->questionFields);
    }
 
    /**
@@ -924,8 +912,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $success = true;
 
       // Get all targets
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $form = $this->getForm();
       $all_targets = $form->getTargetsFromForm();
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
@@ -934,6 +921,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
       foreach ($all_targets as $targetType => $targets) {
          foreach ($targets as $targetObject) {
+            // Check the condition of the target
+            $this->questionFields = $form->getFields();
+            $answers_values = $this->getAnswers($this->getID());
+            foreach ($this->questionFields as $id => $field) {
+               $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
+            }
+
+            if (!PluginFormcreatorFields::isVisible($targetObject, $this->questionFields)) {
+               // The target shall not be generated
+               continue;
+            }
+      
+            // Generate the target
             $generatedTarget = $targetObject->save($this);
             if ($generatedTarget === null) {
                $success = false;
@@ -1011,12 +1011,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // retrieve answers
       $answers_values = $this->getAnswers($this->getID());
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $form = $this->getForm();
       $fields = $form->getFields();
       foreach ($fields as $questionId => $question) {
-         $answer = $answers_values['formcreator_field_' . $questionId];
-         $fields[$questionId]->deserializeValue($answer);
+         $fields[$questionId]->deserializeValue($answers_values['formcreator_field_' . $questionId]);
       }
 
       // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
@@ -1192,8 +1190,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ->getQuestionsFromForm($this->fields[$formFk]);
 
       // Prepare all fields of the form
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields[$formFk]);
+      $form = $this->getForm();
       $fields = $form->getFields();
       foreach ($questions as $questionId => $question) {
          $answer = $answers_values['formcreator_field_' . $questionId];
@@ -1294,8 +1291,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             break;
          case self::STATUS_ACCEPTED :
             // Notify the requester
-            $form = new PluginFormcreatorForm();
-            $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+            $form = $this->getForm();
             if ($form->fields['validation_required'] != PluginFormcreatorForm::VALIDATION_NONE) {
                NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
             } else {

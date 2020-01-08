@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -223,26 +223,31 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       return $itemId;
    }
 
-   /**
-    * Show the Form for the adminsitrator to edit in the config page
-    *
-    * @param  Array  $options Optional options
-    *
-    * @return NULL         Nothing, just display the form
-    */
-   public function showForm($options = []) {
+   public function showForm($ID, $options = []) {
+      if ($ID == 0) {
+         // Not used for now
+         $title =  __('Add a target ', 'formcreator');
+      } else {
+         $title =  __('Edit a target', 'formcreator');
+      }
       $rand = mt_rand();
 
       $form = $this->getForm();
 
+      // TODO: remive the fixed width
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
+      echo '<form name="form_"'
+      . ' method="post"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' data-itemtype="' . self::class . '"'
+      . '>';
 
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
-      echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
-      echo '<tr class="line1">';
+      echo '<tr><th colspan="2">' . $title . '</th></tr>';
+      echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
+      // TODO: remive the fixed width
       echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
       echo '</table>';
@@ -252,12 +257,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"></td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -268,7 +273,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Impacts') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -279,7 +284,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Control list') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -290,7 +295,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -301,7 +306,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -312,7 +317,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td><strong>' . __('Checklist') . ' </strong></td>';
       echo '<td colspan="3">';
       echo Html::textarea([
@@ -326,7 +331,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $rand = mt_rand();
       $this->showDestinationEntitySetings($rand);
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       $this->showDueDateSettings($form, $rand);
       echo '<td colspan="2"></td>';
       echo '</tr>';
@@ -346,17 +351,28 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($form, $rand);
 
+
+      // -------------------------------------------------------------------------------------------
+      //  Conditions to generate the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the target', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+      $this->showConditionsSettings($rand);
+
       echo '</table>';
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td colspan="5" class="center">';
-      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
-      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
+      echo Html::hidden('id', ['value' => $this->getID()]);
+      // echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
       echo '</td>';
       echo '</tr>';
 
@@ -470,7 +486,25 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          return false;
       }
 
+      // delete conditions
+      if (! (new PluginFormcreatorCondition())->deleteByCriteria([
+         'itemtype' => self::class,
+         'items_id' => $this->getID(),
+      ])) {
+         return false;
+      }
+
       return true;
+   }
+
+   public function post_addItem() {
+      parent::post_addItem();
+      $this->updateConditions($this->input);
+   }
+
+   public function post_updateItem($history = 1) {
+      parent::post_updateItem();
+      $this->updateConditions($this->input);
    }
 
    /**

@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -43,17 +43,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    public function testTargetTicketActors() {
-      $form = new \PluginFormcreatorForm();
-      $form->add([
+      $form = $this->getForm([
          'entities_id'           => $_SESSION['glpiactive_entity'],
-         'name'                  => __METHOD__,
          'description'           => 'form description',
          'content'               => 'a content',
          'is_active'             => 1,
          'validation_required'   => 0
       ]);
-      $this->boolean($form->isNewItem())->isFalse();
-
       $targetTicket = new \PluginFormcreatorTargetTicket();
       $targetTicket->add([
          'name'                        => 'a target',

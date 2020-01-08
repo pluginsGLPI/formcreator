@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -40,32 +40,7 @@ if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-$question = new PluginFormcreatorQuestion();
 
-// force checks in PrepareInputForAdd or PrepareInputrForUpdate
-unset($_POST['_skip_checks']);
-if (isset($_POST['add'])) {
-   // Add a new Question
-   Session::checkRight('entity', UPDATE);
-   if ($newid = $question->add($_POST)) {
-      Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
-      $_POST['id'] = $newid;
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
-   }
-   Html::back();
+// Return to form list
+Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
 
-} else if (isset($_POST['update'])) {
-   // Edit an existing Question
-   Session::checkRight('entity', UPDATE);
-   if ($question->update($_POST)) {
-      Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
-   }
-   Html::back();
-
-} else {
-   // Return to form list
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
-}
