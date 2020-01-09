@@ -870,8 +870,8 @@ var plugin_formcreator = new function() {
       }).fail(function(data) {
          alert(data.responseText);
       }).done(function(data) {
-         var lastSection = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last();
-         lastSection.after(data);
+         var addSectionRow = $('[data-itemtype="PluginFormcreatorForm"] li').last();
+         addSectionRow.before(data);
          var sectionId = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last().attr('data-id');
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
