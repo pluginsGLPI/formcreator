@@ -95,6 +95,12 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       return __('Date');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      $this->value = '';
+      return $input;
+   }
+
+
    public static function canRequire() {
       return true;
    }
