@@ -134,7 +134,6 @@ PluginFormcreatorConditionnableInterface
    // }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      $token  = Session::getNewCSRFToken();
       $formId = $item->getID();
 
       echo '<div id="plugin_formcreator_form" class="plugin_formcreator_form_design" data-itemtype="' . PluginFormcreatorForm::class . '" data-id="' . $formId . '">';
