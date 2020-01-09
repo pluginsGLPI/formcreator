@@ -49,8 +49,16 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '<td>';
       $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
-         .'style="width: 90%" value="'.$value.'">';
+      // $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
+      //    .'style="width: 90%" value="'.$value.'">';
+      $additions .= Html::input(
+         'default_values', [
+            'type' => 'text', 
+            'value' => $value, 
+            'rows' => 4,
+            'cols' => 40
+         ]
+      );
       $additions .= '</td>';
       $additions .= '<td>';
       $additions .= '</td>';
