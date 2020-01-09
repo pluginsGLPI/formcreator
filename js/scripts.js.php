@@ -654,9 +654,9 @@ var plugin_formcreator = new function() {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/question_add.php',
-      type: "POST",
-      data: form.serializeArray(),
-      dataType: 'json'
+         type: "POST",
+         data: form.serializeArray(),
+         dataType: 'json'
       }).fail(function(data) {
          alert(data.responseText);
       }).done(function(data) {
@@ -864,9 +864,9 @@ var plugin_formcreator = new function() {
       form = $('form[data-itemtype="PluginFormcreatorSection"]');
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/section_add.php',
-      type: "POST",
-      data: form.serializeArray(),
-      dataType: 'html'
+         type: "POST",
+         data: form.serializeArray(),
+         dataType: 'html'
       }).fail(function(data) {
          alert(data.responseText);
       }).done(function(data) {
