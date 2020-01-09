@@ -498,7 +498,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // form title
       echo "<h1 class='form-title'>";
       echo $this->fields['name'] . "&nbsp;";
-      echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
+      echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
       echo '</h1>';
 
       // Form Header
