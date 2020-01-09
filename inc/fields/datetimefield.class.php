@@ -48,7 +48,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       $rand      = mt_rand();
       $fieldName = 'formcreator_field_' . $id;
 
-      Html::showDateTimeField($fieldName, [
+      $html .= Html::showDateTimeField($fieldName, [
          'value'   => strtotime($this->value) != '' ? $this->value : '',
          'rand'    => $rand,
          'display' => false,
