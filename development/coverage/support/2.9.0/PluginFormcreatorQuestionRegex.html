@@ -35,9 +35,9 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-success">
-                    70%
-                                            <small>of 64</small>
+                <h1 class="text-warning">
+                    69%
+                                            <small>of 65</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -107,9 +107,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#import">PluginFormcreatorQuestionRegex::import()</a></td>
-                                        <td style="text-align: center">31</td>
+                                        <td style="text-align: center">32</td>
                 <td style="text-align: center">    
-    <span class="label label-success">90%</span>
+    <span class="label label-success">88%</span>
 </td>
                                             </tr>
         </tbody>
@@ -1026,7 +1026,7 @@ layout: coverage
                     <th id="L119" class="number ">119</th>
 
                     <td class="" id="import">
-                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-success">90%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-success">88%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1389,11 +1389,18 @@ layout: coverage
                     <th id="L168" class="number uncovered">168</th>
 
                     <td class="uncovered" >
-                        <pre>         throw new ImportFailureException(&#039;failed to add or update the item&#039;);</pre>
+                        <pre>         $typeName = strtolower(self::getTypeName());</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L169" class="number ">169</th>
+                    <th id="L169" class="number uncovered">169</th>
+
+                    <td class="uncovered" >
+                        <pre>         throw new ImportFailureException(sprintf(__(&#039;failed to add or update the %1$s %2$s&#039;, &#039;formceator&#039;), $typeName, $input[&#039;name&#039;]));</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L170" class="number ">170</th>
 
                     <td class="" >
                         <pre>      }
@@ -1401,7 +1408,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L170" class="number ">170</th>
+                    <th id="L171" class="number ">171</th>
 
                     <td class="" >
                         <pre>
@@ -1409,7 +1416,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number ">171</th>
+                    <th id="L172" class="number ">172</th>
 
                     <td class="" >
                         <pre>      // add the question to the linker
@@ -1417,14 +1424,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number covered">172</th>
+                    <th id="L173" class="number covered">173</th>
 
                     <td class="covered" >
                         <pre>      $linker-&gt;addObject($originalId, $item);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L173" class="number ">173</th>
+                    <th id="L174" class="number ">174</th>
 
                     <td class="" >
                         <pre>
@@ -1432,21 +1439,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L174" class="number covered">174</th>
+                    <th id="L175" class="number covered">175</th>
 
                     <td class="covered" >
                         <pre>      return $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number unreach">175</th>
+                    <th id="L176" class="number unreach">176</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number ">176</th>
+                    <th id="L177" class="number ">177</th>
 
                     <td class="" >
                         <pre>}

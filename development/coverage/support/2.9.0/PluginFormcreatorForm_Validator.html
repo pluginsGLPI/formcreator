@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    64%
-                                            <small>of 70</small>
+                    63%
+                                            <small>of 71</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -65,9 +65,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#import">PluginFormcreatorForm_Validator::import()</a></td>
-                                        <td style="text-align: center">30</td>
+                                        <td style="text-align: center">31</td>
                 <td style="text-align: center">    
-    <span class="label label-success">83%</span>
+    <span class="label label-success">81%</span>
 </td>
                                             </tr>
             <tr>
@@ -630,7 +630,7 @@ layout: coverage
                     <th id="L68" class="number ">68</th>
 
                     <td class="" id="import">
-                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {<span class="label label-success">83%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {<span class="label label-success">81%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -924,22 +924,21 @@ layout: coverage
                     <th id="L108" class="number uncovered">108</th>
 
                     <td class="uncovered" >
-                        <pre>         throw new ImportFailureException();</pre>
+                        <pre>         $typeName = strtolower(self::getTypeName());</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L109" class="number ">109</th>
+                    <th id="L109" class="number uncovered">109</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="uncovered" >
+                        <pre>         throw new ImportFailureException(sprintf(__(&#039;failed to add or update the %1$s %2$s&#039;, &#039;formceator&#039;), $typeName, $input[&#039;name&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L110" class="number ">110</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -947,26 +946,34 @@ layout: coverage
                     <th id="L111" class="number ">111</th>
 
                     <td class="" >
-                        <pre>      // add the item to the linker
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L112" class="number covered">112</th>
+                    <th id="L112" class="number ">112</th>
 
-                    <td class="covered" >
-                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
+                    <td class="" >
+                        <pre>      // add the item to the linker
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L113" class="number covered">113</th>
 
                     <td class="covered" >
+                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L114" class="number covered">114</th>
+
+                    <td class="covered" >
                         <pre>         $originalId = $input[&#039;uuid&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L114" class="number ">114</th>
+                    <th id="L115" class="number ">115</th>
 
                     <td class="" >
                         <pre>      }
@@ -974,14 +981,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L115" class="number covered">115</th>
+                    <th id="L116" class="number covered">116</th>
 
                     <td class="covered" >
                         <pre>      $linker-&gt;addObject($originalId, $item);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L116" class="number ">116</th>
+                    <th id="L117" class="number ">117</th>
 
                     <td class="" >
                         <pre>
@@ -989,32 +996,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L117" class="number covered">117</th>
+                    <th id="L118" class="number covered">118</th>
 
                     <td class="covered" >
                         <pre>      return $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L118" class="number unreach">118</th>
+                    <th id="L119" class="number unreach">119</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L119" class="number ">119</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L120" class="number ">120</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1022,7 +1021,7 @@ layout: coverage
                     <th id="L121" class="number ">121</th>
 
                     <td class="" >
-                        <pre>    * Export in an array all the data of the current instanciated validator
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -1030,7 +1029,7 @@ layout: coverage
                     <th id="L122" class="number ">122</th>
 
                     <td class="" >
-                        <pre>    * @param boolean $remove_uuid remove the uuid key
+                        <pre>    * Export in an array all the data of the current instanciated validator
 </pre>
                     </td>
                 </tr>
@@ -1038,7 +1037,7 @@ layout: coverage
                     <th id="L123" class="number ">123</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>    * @param boolean $remove_uuid remove the uuid key
 </pre>
                     </td>
                 </tr>
@@ -1046,7 +1045,7 @@ layout: coverage
                     <th id="L124" class="number ">124</th>
 
                     <td class="" >
-                        <pre>    * @return array the array with all data (with sub tables)
+                        <pre>    *
 </pre>
                     </td>
                 </tr>
@@ -1054,33 +1053,41 @@ layout: coverage
                     <th id="L125" class="number ">125</th>
 
                     <td class="" >
+                        <pre>    * @return array the array with all data (with sub tables)
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L126" class="number ">126</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="export">
-                    <th id="L126" class="number ">126</th>
+                    <th id="L127" class="number ">127</th>
 
                     <td class="" id="export">
                         <pre>   public function export($remove_uuid = false) {<span class="label label-success">94%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L127" class="number covered">127</th>
+                    <th id="L128" class="number covered">128</th>
 
                     <td class="covered" >
                         <pre>      if ($this-&gt;isNewItem()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L128" class="number covered">128</th>
+                    <th id="L129" class="number covered">129</th>
 
                     <td class="covered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L129" class="number ">129</th>
+                    <th id="L130" class="number ">130</th>
 
                     <td class="" >
                         <pre>      }
@@ -1088,7 +1095,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L130" class="number ">130</th>
+                    <th id="L131" class="number ">131</th>
 
                     <td class="" >
                         <pre>
@@ -1096,14 +1103,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L131" class="number covered">131</th>
+                    <th id="L132" class="number covered">132</th>
 
                     <td class="covered" >
                         <pre>      $validator = $this-&gt;fields;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L132" class="number ">132</th>
+                    <th id="L133" class="number ">133</th>
 
                     <td class="" >
                         <pre>
@@ -1111,7 +1118,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L133" class="number ">133</th>
+                    <th id="L134" class="number ">134</th>
 
                     <td class="" >
                         <pre>      // remove key and fk
@@ -1119,43 +1126,43 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L134" class="number covered">134</th>
+                    <th id="L135" class="number covered">135</th>
 
                     <td class="covered" >
                         <pre>      unset($validator[&#039;plugin_formcreator_forms_id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L135" class="number ">135</th>
+                    <th id="L136" class="number ">136</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L136" class="number covered">136</th>
-
-                    <td class="covered" >
-                        <pre>      if (is_subclass_of($validator[&#039;itemtype&#039;], CommonDBTM::class)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L137" class="number covered">137</th>
 
                     <td class="covered" >
-                        <pre>         $validator_obj = new $validator[&#039;itemtype&#039;];</pre>
+                        <pre>      if (is_subclass_of($validator[&#039;itemtype&#039;], CommonDBTM::class)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L138" class="number covered">138</th>
 
                     <td class="covered" >
+                        <pre>         $validator_obj = new $validator[&#039;itemtype&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L139" class="number covered">139</th>
+
+                    <td class="covered" >
                         <pre>         if ($validator_obj-&gt;getFromDB($validator[&#039;items_id&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L139" class="number ">139</th>
+                    <th id="L140" class="number ">140</th>
 
                     <td class="" >
                         <pre>
@@ -1163,7 +1170,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L140" class="number ">140</th>
+                    <th id="L141" class="number ">141</th>
 
                     <td class="" >
                         <pre>            // replace id data
@@ -1171,35 +1178,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number covered">141</th>
+                    <th id="L142" class="number covered">142</th>
 
                     <td class="covered" >
                         <pre>            $identifier_field = isset($validator_obj-&gt;fields[&#039;completename&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L142" class="number uncovered">142</th>
+                    <th id="L143" class="number uncovered">143</th>
 
                     <td class="uncovered" >
                         <pre>                                 ? &#039;completename&#039;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L143" class="number covered">143</th>
+                    <th id="L144" class="number covered">144</th>
 
                     <td class="covered" >
                         <pre>                                 : &#039;name&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L144" class="number covered">144</th>
+                    <th id="L145" class="number covered">145</th>
 
                     <td class="covered" >
                         <pre>            $validator[&#039;_item&#039;] = $validator_obj-&gt;fields[$identifier_field];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L145" class="number ">145</th>
+                    <th id="L146" class="number ">146</th>
 
                     <td class="" >
                         <pre>         }
@@ -1207,7 +1214,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L146" class="number ">146</th>
+                    <th id="L147" class="number ">147</th>
 
                     <td class="" >
                         <pre>      }
@@ -1215,14 +1222,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L147" class="number covered">147</th>
+                    <th id="L148" class="number covered">148</th>
 
                     <td class="covered" >
                         <pre>      unset($validator[&#039;items_id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L148" class="number ">148</th>
+                    <th id="L149" class="number ">149</th>
 
                     <td class="" >
                         <pre>
@@ -1230,7 +1237,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L149" class="number ">149</th>
+                    <th id="L150" class="number ">150</th>
 
                     <td class="" >
                         <pre>      // remove ID or UUID
@@ -1238,28 +1245,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L150" class="number covered">150</th>
+                    <th id="L151" class="number covered">151</th>
 
                     <td class="covered" >
                         <pre>      $idToRemove = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L151" class="number covered">151</th>
+                    <th id="L152" class="number covered">152</th>
 
                     <td class="covered" >
                         <pre>      if ($remove_uuid) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L152" class="number covered">152</th>
+                    <th id="L153" class="number covered">153</th>
 
                     <td class="covered" >
                         <pre>         $idToRemove = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L153" class="number ">153</th>
+                    <th id="L154" class="number ">154</th>
 
                     <td class="" >
                         <pre>      }
@@ -1267,14 +1274,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L154" class="number covered">154</th>
+                    <th id="L155" class="number covered">155</th>
 
                     <td class="covered" >
                         <pre>      unset($validator[$idToRemove]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L155" class="number ">155</th>
+                    <th id="L156" class="number ">156</th>
 
                     <td class="" >
                         <pre>
@@ -1282,32 +1289,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L156" class="number covered">156</th>
+                    <th id="L157" class="number covered">157</th>
 
                     <td class="covered" >
                         <pre>      return $validator;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L157" class="number unreach">157</th>
+                    <th id="L158" class="number unreach">158</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L158" class="number ">158</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L159" class="number ">159</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1315,7 +1314,7 @@ layout: coverage
                     <th id="L160" class="number ">160</th>
 
                     <td class="" >
-                        <pre>    * Get validators of type $itemtype associated to a form 
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -1323,7 +1322,7 @@ layout: coverage
                     <th id="L161" class="number ">161</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>    * Get validators of type $itemtype associated to a form 
 </pre>
                     </td>
                 </tr>
@@ -1331,7 +1330,7 @@ layout: coverage
                     <th id="L162" class="number ">162</th>
 
                     <td class="" >
-                        <pre>    * @param PluginFormcreatorForm $form
+                        <pre>    *
 </pre>
                     </td>
                 </tr>
@@ -1339,7 +1338,7 @@ layout: coverage
                     <th id="L163" class="number ">163</th>
 
                     <td class="" >
-                        <pre>    * @param string $itemtype
+                        <pre>    * @param PluginFormcreatorForm $form
 </pre>
                     </td>
                 </tr>
@@ -1347,7 +1346,7 @@ layout: coverage
                     <th id="L164" class="number ">164</th>
 
                     <td class="" >
-                        <pre>    * @return array array of User or Group objects
+                        <pre>    * @param string $itemtype
 </pre>
                     </td>
                 </tr>
@@ -1355,26 +1354,34 @@ layout: coverage
                     <th id="L165" class="number ">165</th>
 
                     <td class="" >
+                        <pre>    * @return array array of User or Group objects
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L166" class="number ">166</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getValidatorsForForm">
-                    <th id="L166" class="number ">166</th>
+                    <th id="L167" class="number ">167</th>
 
                     <td class="" id="getValidatorsForForm">
                         <pre>   public function getValidatorsForForm(PluginFormcreatorForm $form, $itemtype) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L167" class="number uncovered">167</th>
+                    <th id="L168" class="number uncovered">168</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L168" class="number ">168</th>
+                    <th id="L169" class="number ">169</th>
 
                     <td class="" >
                         <pre>
@@ -1382,21 +1389,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L169" class="number uncovered">169</th>
+                    <th id="L170" class="number uncovered">170</th>
 
                     <td class="uncovered" >
                         <pre>      if (!in_array($itemtype, [User::class, Group::class])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L170" class="number uncovered">170</th>
+                    <th id="L171" class="number uncovered">171</th>
 
                     <td class="uncovered" >
                         <pre>         return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number ">171</th>
+                    <th id="L172" class="number ">172</th>
 
                     <td class="" >
                         <pre>      }
@@ -1404,36 +1411,36 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number ">172</th>
+                    <th id="L173" class="number ">173</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L173" class="number uncovered">173</th>
-
-                    <td class="uncovered" >
-                        <pre>      $formValidatorTable = PluginFormcreatorForm_Validator::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L174" class="number uncovered">174</th>
 
                     <td class="uncovered" >
-                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
+                        <pre>      $formValidatorTable = PluginFormcreatorForm_Validator::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L175" class="number uncovered">175</th>
 
                     <td class="uncovered" >
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L176" class="number uncovered">176</th>
+
+                    <td class="uncovered" >
                         <pre>      $itemTable = $itemtype::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number ">176</th>
+                    <th id="L177" class="number ">177</th>
 
                     <td class="" >
                         <pre>
@@ -1441,14 +1448,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L177" class="number uncovered">177</th>
+                    <th id="L178" class="number uncovered">178</th>
 
                     <td class="uncovered" >
                         <pre>      $rows = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L178" class="number ">178</th>
+                    <th id="L179" class="number ">179</th>
 
                     <td class="" >
                         <pre>         &#039;SELECT&#039; =&gt; [
@@ -1456,14 +1463,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L179" class="number uncovered">179</th>
+                    <th id="L180" class="number uncovered">180</th>
 
                     <td class="uncovered" >
                         <pre>            $itemTable =&gt; [&#039;*&#039;]</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L180" class="number ">180</th>
+                    <th id="L181" class="number ">181</th>
 
                     <td class="" >
                         <pre>         ],
@@ -1471,14 +1478,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L181" class="number uncovered">181</th>
+                    <th id="L182" class="number uncovered">182</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;FROM&#039; =&gt; $itemTable,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L182" class="number ">182</th>
+                    <th id="L183" class="number ">183</th>
 
                     <td class="" >
                         <pre>         &#039;LEFT JOIN&#039; =&gt; [
@@ -1486,7 +1493,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L183" class="number ">183</th>
+                    <th id="L184" class="number ">184</th>
 
                     <td class="" >
                         <pre>            $formValidatorTable =&gt; [
@@ -1494,7 +1501,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L184" class="number ">184</th>
+                    <th id="L185" class="number ">185</th>
 
                     <td class="" >
                         <pre>               &#039;FKEY&#039; =&gt; [
@@ -1502,21 +1509,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L185" class="number uncovered">185</th>
+                    <th id="L186" class="number uncovered">186</th>
 
                     <td class="uncovered" >
                         <pre>                  $formValidatorTable =&gt; &#039;items_id&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L186" class="number uncovered">186</th>
+                    <th id="L187" class="number uncovered">187</th>
 
                     <td class="uncovered" >
                         <pre>                  $itemTable =&gt; &#039;id&#039;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L187" class="number ">187</th>
+                    <th id="L188" class="number ">188</th>
 
                     <td class="" >
                         <pre>               ]
@@ -1524,7 +1531,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L188" class="number ">188</th>
+                    <th id="L189" class="number ">189</th>
 
                     <td class="" >
                         <pre>            ],
@@ -1532,7 +1539,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L189" class="number ">189</th>
+                    <th id="L190" class="number ">190</th>
 
                     <td class="" >
                         <pre>         ],
@@ -1540,7 +1547,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L190" class="number ">190</th>
+                    <th id="L191" class="number ">191</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039; =&gt; [
@@ -1548,21 +1555,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L191" class="number uncovered">191</th>
+                    <th id="L192" class="number uncovered">192</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$formValidatorTable.itemtype&quot; =&gt; $itemtype,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L192" class="number uncovered">192</th>
+                    <th id="L193" class="number uncovered">193</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$formValidatorTable.$formFk&quot; =&gt; $form-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L193" class="number ">193</th>
+                    <th id="L194" class="number ">194</th>
 
                     <td class="" >
                         <pre>         ],
@@ -1570,7 +1577,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L194" class="number ">194</th>
+                    <th id="L195" class="number ">195</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -1578,42 +1585,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L195" class="number uncovered">195</th>
+                    <th id="L196" class="number uncovered">196</th>
 
                     <td class="uncovered" >
                         <pre>      $result = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L196" class="number uncovered">196</th>
+                    <th id="L197" class="number uncovered">197</th>
 
                     <td class="uncovered" >
                         <pre>      foreach ($rows as $row) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L197" class="number uncovered">197</th>
+                    <th id="L198" class="number uncovered">198</th>
 
                     <td class="uncovered" >
                         <pre>         $item = new $itemtype();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L198" class="number uncovered">198</th>
+                    <th id="L199" class="number uncovered">199</th>
 
                     <td class="uncovered" >
                         <pre>         if ($item-&gt;getFromDB($row[&#039;id&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L199" class="number uncovered">199</th>
+                    <th id="L200" class="number uncovered">200</th>
 
                     <td class="uncovered" >
                         <pre>            $result[$row[&#039;id&#039;]] = $item;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L200" class="number ">200</th>
+                    <th id="L201" class="number ">201</th>
 
                     <td class="" >
                         <pre>         }
@@ -1621,7 +1628,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L201" class="number ">201</th>
+                    <th id="L202" class="number ">202</th>
 
                     <td class="" >
                         <pre>      }
@@ -1629,7 +1636,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L202" class="number ">202</th>
+                    <th id="L203" class="number ">203</th>
 
                     <td class="" >
                         <pre>
@@ -1637,21 +1644,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L203" class="number uncovered">203</th>
+                    <th id="L204" class="number uncovered">204</th>
 
                     <td class="uncovered" >
                         <pre>      return $result;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L204" class="number unreach">204</th>
+                    <th id="L205" class="number unreach">205</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L205" class="number ">205</th>
+                    <th id="L206" class="number ">206</th>
 
                     <td class="" >
                         <pre>}

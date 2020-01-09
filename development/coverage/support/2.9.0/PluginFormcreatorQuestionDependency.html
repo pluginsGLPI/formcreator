@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    50%
-                                            <small>of 82</small>
+                    49%
+                                            <small>of 83</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -107,9 +107,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#import">PluginFormcreatorQuestionDependency::import()</a></td>
-                                        <td style="text-align: center">36</td>
+                                        <td style="text-align: center">37</td>
                 <td style="text-align: center">    
-    <span class="label label-success">86%</span>
+    <span class="label label-success">84%</span>
 </td>
                                             </tr>
             <tr>
@@ -1138,7 +1138,7 @@ layout: coverage
                     <th id="L132" class="number ">132</th>
 
                     <td class="" id="import">
-                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-success">86%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-success">84%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1560,22 +1560,21 @@ layout: coverage
                     <th id="L189" class="number uncovered">189</th>
 
                     <td class="uncovered" >
-                        <pre>         throw new ImportFailureException(&#039;failed to add or update the item&#039;);</pre>
+                        <pre>         $typeName = strtolower(self::getTypeName());</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L190" class="number ">190</th>
+                    <th id="L190" class="number uncovered">190</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="uncovered" >
+                        <pre>         throw new ImportFailureException(sprintf(__(&#039;failed to add or update the %1$s %2$s&#039;, &#039;formceator&#039;), $typeName, $input[&#039;name&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L191" class="number ">191</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -1583,19 +1582,27 @@ layout: coverage
                     <th id="L192" class="number ">192</th>
 
                     <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L193" class="number ">193</th>
+
+                    <td class="" >
                         <pre>      // add the parameter to the linker
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L193" class="number covered">193</th>
+                    <th id="L194" class="number covered">194</th>
 
                     <td class="covered" >
                         <pre>      $linker-&gt;addObject($originalId, $item);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L194" class="number ">194</th>
+                    <th id="L195" class="number ">195</th>
 
                     <td class="" >
                         <pre>
@@ -1603,21 +1610,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L195" class="number covered">195</th>
+                    <th id="L196" class="number covered">196</th>
 
                     <td class="covered" >
                         <pre>      return $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L196" class="number unreach">196</th>
+                    <th id="L197" class="number unreach">197</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L197" class="number ">197</th>
+                    <th id="L198" class="number ">198</th>
 
                     <td class="" >
                         <pre>
@@ -1625,28 +1632,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="export">
-                    <th id="L198" class="number ">198</th>
+                    <th id="L199" class="number ">199</th>
 
                     <td class="" id="export">
                         <pre>   public function export($remove_uuid = false) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L199" class="number uncovered">199</th>
+                    <th id="L200" class="number uncovered">200</th>
 
                     <td class="uncovered" >
                         <pre>      if ($this-&gt;isNewItem()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L200" class="number uncovered">200</th>
+                    <th id="L201" class="number uncovered">201</th>
 
                     <td class="uncovered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L201" class="number ">201</th>
+                    <th id="L202" class="number ">202</th>
 
                     <td class="" >
                         <pre>      }
@@ -1654,7 +1661,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L202" class="number ">202</th>
+                    <th id="L203" class="number ">203</th>
 
                     <td class="" >
                         <pre>
@@ -1662,36 +1669,36 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L203" class="number uncovered">203</th>
+                    <th id="L204" class="number uncovered">204</th>
 
                     <td class="uncovered" >
                         <pre>      $parameter = $this-&gt;fields;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L204" class="number ">204</th>
+                    <th id="L205" class="number ">205</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L205" class="number uncovered">205</th>
-
-                    <td class="uncovered" >
-                        <pre>      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L206" class="number uncovered">206</th>
 
                     <td class="uncovered" >
+                        <pre>      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L207" class="number uncovered">207</th>
+
+                    <td class="uncovered" >
                         <pre>      unset($parameter[$questionFk]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number ">207</th>
+                    <th id="L208" class="number ">208</th>
 
                     <td class="" >
                         <pre>
@@ -1699,7 +1706,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L208" class="number ">208</th>
+                    <th id="L209" class="number ">209</th>
 
                     <td class="" >
                         <pre>      // remove ID or UUID
@@ -1707,28 +1714,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L209" class="number uncovered">209</th>
+                    <th id="L210" class="number uncovered">210</th>
 
                     <td class="uncovered" >
                         <pre>      $idToRemove = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L210" class="number uncovered">210</th>
+                    <th id="L211" class="number uncovered">211</th>
 
                     <td class="uncovered" >
                         <pre>      if ($remove_uuid) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L211" class="number uncovered">211</th>
+                    <th id="L212" class="number uncovered">212</th>
 
                     <td class="uncovered" >
                         <pre>         $idToRemove = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L212" class="number ">212</th>
+                    <th id="L213" class="number ">213</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -1736,7 +1743,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L213" class="number ">213</th>
+                    <th id="L214" class="number ">214</th>
 
                     <td class="" >
                         <pre>         // Convert IDs into UUIDs
@@ -1744,28 +1751,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L214" class="number uncovered">214</th>
+                    <th id="L215" class="number uncovered">215</th>
 
                     <td class="uncovered" >
                         <pre>         $question = new PluginFormcreatorQuestion();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L215" class="number uncovered">215</th>
+                    <th id="L216" class="number uncovered">216</th>
 
                     <td class="uncovered" >
                         <pre>         $question-&gt;getFromDB($parameter[&#039;plugin_formcreator_questions_id_2&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L216" class="number uncovered">216</th>
+                    <th id="L217" class="number uncovered">217</th>
 
                     <td class="uncovered" >
                         <pre>         $parameter[&#039;plugin_formcreator_questions_id_2&#039;] = $question-&gt;fields[&#039;uuid&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L217" class="number ">217</th>
+                    <th id="L218" class="number ">218</th>
 
                     <td class="" >
                         <pre>      }
@@ -1773,14 +1780,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L218" class="number uncovered">218</th>
+                    <th id="L219" class="number uncovered">219</th>
 
                     <td class="uncovered" >
                         <pre>      unset($parameter[$idToRemove]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L219" class="number ">219</th>
+                    <th id="L220" class="number ">220</th>
 
                     <td class="" >
                         <pre>
@@ -1788,21 +1795,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L220" class="number uncovered">220</th>
+                    <th id="L221" class="number uncovered">221</th>
 
                     <td class="uncovered" >
                         <pre>      return $parameter;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L221" class="number unreach">221</th>
+                    <th id="L222" class="number unreach">222</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L222" class="number ">222</th>
+                    <th id="L223" class="number ">223</th>
 
                     <td class="" >
                         <pre>}
