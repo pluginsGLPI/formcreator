@@ -953,7 +953,7 @@ PluginFormcreatorConditionnableInterface
       }
 
       // escape text fields
-      foreach (['name', 'description'] as $key) {
+      foreach (['name', 'description', 'values', 'default_values', 'description'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
       }
 
