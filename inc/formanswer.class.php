@@ -584,7 +584,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $fields[$question_line['id']]->show($canEdit);
          } else {
             if (($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               if (PluginFormcreatorFields::isVisible($fields[$question_line['id']], $fields)) {
+               if (PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $fields)) {
                   $fields[$question_line['id']]->show($canEdit);
                }
             }
