@@ -42,5 +42,4 @@ if (empty($_REQUEST['section_id'])) {
    $section_id    = (int) $_REQUEST['section_id'];
    $section->getFromDB($section_id);
 }
-
 $section->showForm($section_id);

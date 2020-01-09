@@ -146,7 +146,7 @@ PluginFormcreatorConditionnableInterface
 
       // add a section
       echo '<li class="plugin_formcreator_section not-sortable">';
-      echo '<a href="javascript:plugin_formcreator.showSectionForm(' . $item->getID() . ', \'' . $token . '\');">';
+      echo '<a href="javascript:plugin_formcreator.showSectionForm(' . $item->getID() . ');">';
       echo '<i class="fas fa-plus"></i>&nbsp;';
       echo __('Add a section', 'formcreator');
       echo '</a>';

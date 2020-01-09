@@ -428,7 +428,7 @@ PluginFormcreatorConditionnableInterface
       echo '</tr>';
 
       $this->showFormButtons($options + [
-         'candel' => false
+         'candel' => false,
       ]);
       Html::closeForm();
    }
