@@ -170,7 +170,8 @@ extends PluginFormcreatorQuestionParameter
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
-         throw new ImportFailureException('failed to add or update the item');
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the question to the linker

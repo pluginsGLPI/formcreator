@@ -1897,6 +1897,7 @@ PluginFormcreatorDuplicatableInterface
             continue;
          }
 
+         $success = true;
          foreach ($forms_toimport['forms'] as $form) {
             set_time_limit(30);
             $linker = new PluginFormcreatorLinker();
@@ -1904,6 +1905,8 @@ PluginFormcreatorDuplicatableInterface
                self::import($linker, $form);
             } catch (ImportFailureException $e) {
                // Import failed, give up
+               $sucess = false;
+               Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
                continue;
             }
             if (!$linker->linkPostponed()) {
@@ -1911,8 +1914,10 @@ PluginFormcreatorDuplicatableInterface
                                                            $$form['name']));
             }
          }
-         Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
+         if ($sucess) {
+            Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
                                                       $filename));
+         }
       }
    }
 
@@ -2000,7 +2005,8 @@ PluginFormcreatorDuplicatableInterface
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
-         throw new ImportFailureException('failed to add or update the item');
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the form to the linker
