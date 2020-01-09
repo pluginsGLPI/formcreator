@@ -487,8 +487,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       echo '<div class="form_header">';
       echo "<h1>";
       echo $form->fields['name']."&nbsp;";
-      echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
-                 title='".__("Print this form", 'formcreator')."' onclick='window.print();'>";
+      echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
       echo "</h1>";
       if (!empty($form->fields['content'])) {
          echo html_entity_decode($form->fields['content']);
