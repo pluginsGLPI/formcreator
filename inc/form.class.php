@@ -1905,7 +1905,7 @@ PluginFormcreatorDuplicatableInterface
                self::import($linker, $form);
             } catch (ImportFailureException $e) {
                // Import failed, give up
-               $sucess = false;
+               $success = false;
                Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
                continue;
             }
@@ -1914,7 +1914,7 @@ PluginFormcreatorDuplicatableInterface
                                                            $$form['name']));
             }
          }
-         if ($sucess) {
+         if ($success) {
             Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
                                                       $filename));
          }
