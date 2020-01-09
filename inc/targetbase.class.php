@@ -1643,7 +1643,9 @@ SCRIPT;
          return false;
       }
 
-      $input['target_name'] = $input['name'];
+      if (!isset($input['target_name']) || strlen($input['target_name']) < 1) {
+         $input['target_name'] = $input['name'];
+      }
 
       // Set default content
       if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
