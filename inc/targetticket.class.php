@@ -115,7 +115,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<tr><th colspan="4">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
 
       echo '<tr class="line1">';
-      echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
+      echo '<td><strong>' . __('Ticket title', 'formcreator') . ' </strong></td>';
       echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"/></td>';
       echo '</tr>';
 
