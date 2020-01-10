@@ -555,12 +555,19 @@ PluginFormcreatorConditionnableInterface
     * @param array $input parameters
     */
    public function updateParameters($input) {
+      // The question instance has a field type
       if (!isset($this->fields['fieldtype'])) {
          return;
       }
+      $fieldType = $this->fields['fieldtype'];
+
+      // The fieldtype may change
+      if (isset($input['fieldtype'])) {
+         $fieldType = $input['fieldtype'];
+      }
 
       $this->field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
+         $fieldType,
          $this
       );
       $this->field->updateParameters($this, $input);

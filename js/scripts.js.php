@@ -445,12 +445,16 @@ var plugin_formcreator = new function() {
    this.initialPosition = {};
    this.changingItemId = 0;
    this.questionsColumns = <?php echo PluginFormcreatorSection::COLUMNS; ?>;
+   this.dirty = false;
 
    this.setupGridStack = function (group) {
+      var that = this;
       group
       .on('resizestart', this.startChangeItem)
       .on('dragstart', this.startChangeItem)
-      .on('change', this.changeItems)
+      .on('change', function(event, item) {
+         that.changeItems(event, item)
+      })
       .on('dragstop', function(event, item) {
          setTimeout(function() {
             item.helper.find('a').off('click.prevent');
@@ -462,6 +466,7 @@ var plugin_formcreator = new function() {
    };
 
    this.initGridStack = function (sectionId) {
+      var that = this;
       var group = $('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
       group.gridstack({
          width:          this.questionsColumns,
@@ -482,6 +487,7 @@ var plugin_formcreator = new function() {
          }
       }).success(function(data, httpCode) {
          var grid = group.data('gridstack');
+         that.dirty = true;
          $.each(data, function(index, question) {
             grid.addWidget(
                question.html,
@@ -496,6 +502,7 @@ var plugin_formcreator = new function() {
                1
             );
          });
+         that.dirty = false;
       }).complete(this.setupGridStack(group));
    };
 
@@ -519,7 +526,6 @@ var plugin_formcreator = new function() {
          }
       });
       this.changingItemId = Number($(event.target).attr('data-id'));
-      this.dirty          =  false;
    };
 
    /**
@@ -527,9 +533,8 @@ var plugin_formcreator = new function() {
     */
    this.changeItems = function (event, items) {
       if (this.dirty === true) {
-         //return;
+         return;
       }
-      this.dirty = true;
       var that = this;
       var changes = {};
       $.each(items, function(index, item) {
