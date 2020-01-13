@@ -1,15 +1,15 @@
-<a name="2.9.1-dev"></a>
-## [2.9.1-dev](https://github.com/pluginsglpi/formcreator/compare/v2.8.6...v2.9.1-dev) (2020-01-09)
+<a name="2.9.1"></a>
+## [2.9.1](https://github.com/pluginsglpi/formcreator/compare/v2.8.6...v2.9.1) (2020-01-13)
 
 
 ### Bug Fixes
 
 * compatibility with GLPI 9.5 ([f818178](https://github.com/pluginsglpi/formcreator/commit/f818178))
-* **install:** remove deletes answers when dropping is_deleted ([3ed1515](https://github.com/pluginsglpi/formcreator/commit/3ed1515)), closes [#1513](https://github.com/pluginsglpi/formcreator/issues/1513)
+* **issue:** size of text content for issue ([a72ce86](https://github.com/pluginsglpi/formcreator/commit/a72ce86))
 * duplicate menu entry ([c4d4792](https://github.com/pluginsglpi/formcreator/commit/c4d4792))
 * **actorsfield:** dropdown does not show all items ([95a3a51](https://github.com/pluginsglpi/formcreator/commit/95a3a51))
-* **category:** bad sub categories count ([ef68bb6](https://github.com/pluginsglpi/formcreator/commit/ef68bb6))
 * **category:** bad sub categories count ([40f8071](https://github.com/pluginsglpi/formcreator/commit/40f8071))
+* **category:** bad sub categories count ([ef68bb6](https://github.com/pluginsglpi/formcreator/commit/ef68bb6))
 * **category:** translation support ([495c8dc](https://github.com/pluginsglpi/formcreator/commit/495c8dc))
 * **condition:** inability to add a rows to conditions ([#1598](https://github.com/pluginsglpi/formcreator/issues/1598)) ([bb1f2e4](https://github.com/pluginsglpi/formcreator/commit/bb1f2e4)), closes [#1597](https://github.com/pluginsglpi/formcreator/issues/1597)
 * **condition:** misordered display on edit ([2e33592](https://github.com/pluginsglpi/formcreator/commit/2e33592))
@@ -17,14 +17,15 @@
 * **dropdownfield:** root and limit miscomputations ([9e8cc73](https://github.com/pluginsglpi/formcreator/commit/9e8cc73))
 * **faq:** errors in FAQ list ([380e9ca](https://github.com/pluginsglpi/formcreator/commit/380e9ca))
 * **field:** width of textareas in fields settings ([1e2c07b](https://github.com/pluginsglpi/formcreator/commit/1e2c07b))
-* **floatfield,integerfield,textfield:** fix escaping in regex ([ca0eb4e](https://github.com/pluginsglpi/formcreator/commit/ca0eb4e))
 * **floatfield,integerfield,textfield:** fix escaping in regex ([4a12235](https://github.com/pluginsglpi/formcreator/commit/4a12235))
+* **floatfield,integerfield,textfield:** fix escaping in regex ([ca0eb4e](https://github.com/pluginsglpi/formcreator/commit/ca0eb4e))
 * **form:** bad call to count validators ([e6f4bc8](https://github.com/pluginsglpi/formcreator/commit/e6f4bc8)), closes [#1594](https://github.com/pluginsglpi/formcreator/issues/1594)
 * **form:** deny access if form not enabled ([5d4489d](https://github.com/pluginsglpi/formcreator/commit/5d4489d))
 * **form:** obey redirect setting after creation ([314ff9c](https://github.com/pluginsglpi/formcreator/commit/314ff9c))
 * **form:** purge message if answers exist ([fa0c1dd](https://github.com/pluginsglpi/formcreator/commit/fa0c1dd))
 * **form:** show error if failure in import of a sub item ([8dfab24](https://github.com/pluginsglpi/formcreator/commit/8dfab24))
 * **form:** tile height shall not be fixed ([bfb273f](https://github.com/pluginsglpi/formcreator/commit/bfb273f))
+* **form:** typo in var name ([582d37c](https://github.com/pluginsglpi/formcreator/commit/582d37c))
 * **form:** undefined var used ([1b70a25](https://github.com/pluginsglpi/formcreator/commit/1b70a25))
 * **form:** uninitialized var ([542f686](https://github.com/pluginsglpi/formcreator/commit/542f686))
 * **formanswer:** always check for ticket validation ([24faaf7](https://github.com/pluginsglpi/formcreator/commit/24faaf7))
@@ -36,26 +37,28 @@
 * **formanswer:** restore lost method ([dddf830](https://github.com/pluginsglpi/formcreator/commit/dddf830))
 * **formanswer:** viewing answers causes a fatal error ([5453a92](https://github.com/pluginsglpi/formcreator/commit/5453a92))
 * **install:** loss of condition on upgrade ([b9de3fd](https://github.com/pluginsglpi/formcreator/commit/b9de3fd))
-* **install:** reorder key changes on conditions table ([82838a2](https://github.com/pluginsglpi/formcreator/commit/82838a2))
+* **install:** remove deletes answers when dropping is_deleted ([3ed1515](https://github.com/pluginsglpi/formcreator/commit/3ed1515)), closes [#1513](https://github.com/pluginsglpi/formcreator/issues/1513)
 * **install:** reorder key changes on conditions table ([701abee](https://github.com/pluginsglpi/formcreator/commit/701abee))
+* **install:** reorder key changes on conditions table ([82838a2](https://github.com/pluginsglpi/formcreator/commit/82838a2))
 * **install:** schema mismatch betwheen install and upgrade ([fd99d93](https://github.com/pluginsglpi/formcreator/commit/fd99d93))
-* **issue:** size of text content for issue ([a72ce86](https://github.com/pluginsglpi/formcreator/commit/a72ce86))
 * **locales:** plural problem ([d3e06ae](https://github.com/pluginsglpi/formcreator/commit/d3e06ae))
 * **question:** locale issue cause tests to fail ([51148a3](https://github.com/pluginsglpi/formcreator/commit/51148a3))
 * **question:** quote escaping when importing questions ([bb0d6d2](https://github.com/pluginsglpi/formcreator/commit/bb0d6d2))
 * **question_condition:** better performance ([8a54258](https://github.com/pluginsglpi/formcreator/commit/8a54258))
 * **qusetion:** remove strict comparison ([fe25682](https://github.com/pluginsglpi/formcreator/commit/fe25682))
 * **target:** bad constants ([78c12a8](https://github.com/pluginsglpi/formcreator/commit/78c12a8))
-* extended service catalog ([8d5879b](https://github.com/pluginsglpi/formcreator/commit/8d5879b))
-* fa data prerequisite check ([74c83bb](https://github.com/pluginsglpi/formcreator/commit/74c83bb))
-* local problem in menu ([861a736](https://github.com/pluginsglpi/formcreator/commit/861a736)), closes [#1516](https://github.com/pluginsglpi/formcreator/issues/1516)
-* not loaded resource for anonymous form ([bea27a1](https://github.com/pluginsglpi/formcreator/commit/bea27a1)), closes [#1536](https://github.com/pluginsglpi/formcreator/issues/1536)
-* unexpected redirection while editing a ticket as post-only + service catalog ([266d9d3](https://github.com/pluginsglpi/formcreator/commit/266d9d3)), closes [#1557](https://github.com/pluginsglpi/formcreator/issues/1557)
 * **target_actor,form_validator:** use statement for exception class ([ddbc5b2](https://github.com/pluginsglpi/formcreator/commit/ddbc5b2))
+* **targetticket:** determine requester when answer is valdiated ([19b8232](https://github.com/pluginsglpi/formcreator/commit/19b8232)), closes [#50](https://github.com/pluginsglpi/formcreator/issues/50) [#1545](https://github.com/pluginsglpi/formcreator/issues/1545)
 * **targetticket:** missing JS code, typo ([072258f](https://github.com/pluginsglpi/formcreator/commit/072258f))
 * **targetticket,targetchange:** loss of the target name when duplicating ([897c564](https://github.com/pluginsglpi/formcreator/commit/897c564))
+* fa data prerequisite check ([74c83bb](https://github.com/pluginsglpi/formcreator/commit/74c83bb))
+* **targetticket,targetchange:** obsolete mandatory mark ([1a29a66](https://github.com/pluginsglpi/formcreator/commit/1a29a66))
+* extended service catalog ([8d5879b](https://github.com/pluginsglpi/formcreator/commit/8d5879b))
+* local problem in menu ([861a736](https://github.com/pluginsglpi/formcreator/commit/861a736)), closes [#1516](https://github.com/pluginsglpi/formcreator/issues/1516)
 * **textfield,actorsfield:** missing default value on edit ([d9327ac](https://github.com/pluginsglpi/formcreator/commit/d9327ac))
 * **wizard:** fix inconsistencies in counters ([ee0b987](https://github.com/pluginsglpi/formcreator/commit/ee0b987))
+* not loaded resource for anonymous form ([bea27a1](https://github.com/pluginsglpi/formcreator/commit/bea27a1)), closes [#1536](https://github.com/pluginsglpi/formcreator/issues/1536)
+* unexpected redirection while editing a ticket as post-only + service catalog ([266d9d3](https://github.com/pluginsglpi/formcreator/commit/266d9d3)), closes [#1557](https://github.com/pluginsglpi/formcreator/issues/1557)
 * useless escaping ([812c76d](https://github.com/pluginsglpi/formcreator/commit/812c76d))
 
 
@@ -158,6 +161,26 @@
 * **targetticket:** associate assets to tickets ([c9e3d1e](https://github.com/pluginsglpi/formcreator/commit/c9e3d1e))
 * **targetticket:** ticket type ([fa432f7](https://github.com/pluginsglpi/formcreator/commit/fa432f7))
 * **wizard:** separate faqs and forms ([a08541f](https://github.com/pluginsglpi/formcreator/commit/a08541f))
+
+
+
+<a name="2.9.1"></a>
+## [2.9.1-dev](https://github.com/pluginsglpi/formcreator/compare/v2.9.0...v2.9.1) (2020-01-10)
+
+
+### Bug Fixes
+
+* useless escaping ([812c76d](https://github.com/pluginsglpi/formcreator/commit/812c76d))
+* **condition:** inability to add a rows to conditions ([#1598](https://github.com/pluginsglpi/formcreator/issues/1598)) ([bb1f2e4](https://github.com/pluginsglpi/formcreator/commit/bb1f2e4)), closes [#1597](https://github.com/pluginsglpi/formcreator/issues/1597)
+* **form:** bad call to count validators ([e6f4bc8](https://github.com/pluginsglpi/formcreator/commit/e6f4bc8)), closes [#1594](https://github.com/pluginsglpi/formcreator/issues/1594)
+* **form:** purge message if answers exist ([fa0c1dd](https://github.com/pluginsglpi/formcreator/commit/fa0c1dd))
+* **form:** show error if failure in import of a sub item ([8dfab24](https://github.com/pluginsglpi/formcreator/commit/8dfab24))
+* **form:** typo in var name ([582d37c](https://github.com/pluginsglpi/formcreator/commit/582d37c))
+* **formanswer:** viewing answers causes a fatal error ([5453a92](https://github.com/pluginsglpi/formcreator/commit/5453a92))
+* **formanswer:** print icon ([2d871a3](https://github.com/pluginsglpi/formcreator/commit/2d871a3))
+* **question:** quote escaping when importing questions ([bb0d6d2](https://github.com/pluginsglpi/formcreator/commit/bb0d6d2))
+* **targetticket,targetchange:** loss of the target name when duplicating ([897c564](https://github.com/pluginsglpi/formcreator/commit/897c564))
+* **target_actor,form_validator:** use statement for exception class ([ddbc5b2](https://github.com/pluginsglpi/formcreator/commit/ddbc5b2))
 
 
 
