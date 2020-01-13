@@ -6,7 +6,7 @@
 # Translators:
 # Thierry Bugier <tbugier@teclib.com>, 2019
 # David Stepan <stepand@tiscali.cz>, 2019
-# Pavel Borecki <pavel.borecki@gmail.com>, 2019
+# Pavel Borecki <pavel.borecki@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-10 15:29+0100\n"
 "PO-Revision-Date: 2019-03-12 14:55+0000\n"
-"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2019\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2020\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,7 +118,7 @@ msgstr "Zobrazit dokud"
 #: inc/targetchange.class.php:212 inc/targetticket.class.php:935
 #, php-format
 msgid "failed to add or update the %1$s %2$s"
-msgstr ""
+msgstr "nepodařilo se přidat nebo aktualizovat %1$s%2$s"
 
 #: inc/condition.class.php:223
 msgid "Show field"
@@ -210,7 +210,7 @@ msgstr "Výchozí formulář v katalogu služeb"
 
 #: inc/form.class.php:584
 msgid "To delete this form you must delete all its answers first."
-msgstr ""
+msgstr "Pro smazání tohoto formuláře je nejprve třeba smazat všechny odpovědi"
 
 #: inc/form.class.php:598
 msgid "Destinations"

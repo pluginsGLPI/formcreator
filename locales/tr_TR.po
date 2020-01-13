@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2019
+# Kaya Zeren <kayazeren@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-10 15:29+0100\n"
 "PO-Revision-Date: 2019-03-12 14:55+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2019\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2020\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/teclib/teams/28042/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +110,7 @@ msgstr "Şu olmadan görüntülensin"
 #: inc/targetchange.class.php:212 inc/targetticket.class.php:935
 #, php-format
 msgid "failed to add or update the %1$s %2$s"
-msgstr ""
+msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 
 #: inc/condition.class.php:223
 msgid "Show field"
@@ -200,7 +200,7 @@ msgstr "Hizmet kataloğundaki varsayılan form"
 
 #: inc/form.class.php:584
 msgid "To delete this form you must delete all its answers first."
-msgstr ""
+msgstr "Bu formu silmek için önce tüm yanıtlarını silmelisiniz."
 
 #: inc/form.class.php:598
 msgid "Destinations"
