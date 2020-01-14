@@ -694,8 +694,9 @@ class Git
          $line = explode(' ', $commit, 2);
          $commitObject = new StdClass();
          $commitObject->hash = $line[0];
-         $commitObject->message = $line[1];
+         $commitObject->subject = $line[1];
          $commitObjects[] = $commitObject;
+         $commitObject->body = self::getCommitBody($commitObject->hash);
       }
 
       return $commitObjects;
@@ -767,6 +768,23 @@ class Git
       }
       return $output;
    }
+
+   public static function getCommitBody($hash) {
+      $output = shell_exec("git log $hash --max-count=1 --pretty=format:\"%b\"");
+      if ($output === null) {
+         throw new Exception ("could not get commit body");
+      }
+      return $output;
+   }
+
+   public static function getCurrentBranch() {
+      $output = shell_exec("git rev-parse --abbrev-ref HEAD");
+      if ($output === null) {
+         throw new Exception ("could not get current branch");
+      }
+      return $output;
+
+   }
 }
 
 class ConventionalChangelog
@@ -776,22 +794,22 @@ class ConventionalChangelog
     */
    public static function filterCommits($commits) {
       $types = [
-         'build', 'ci', 'docs', 'fix', 'feat', 'perf', 'refactor', 'style', 'test'
+         'build', 'chore', 'ci', 'docs', 'fix', 'feat', 'perf', 'refactor', 'style', 'test'
       ];
       $types = implode('|', $types);
       $scope = "(\([^\)]*\))?";
-      $message = ".*";
-      $filter = "/^(?P<type>$types)(?P<scope>$scope):(?P<message>$message)$/";
+      $subject = ".*";
+      $filter = "/^(?P<type>$types)(?P<scope>$scope):(?P<subject>$subject)$/";
       $filtered = [];
       $matches = null;
       foreach ($commits as $commit) {
-         if (preg_match($filter, $commit->message, $matches) === 1) {
+         if (preg_match($filter, $commit->subject, $matches) === 1) {
             $commit->type = $matches['type'];
             $commit->scope = '';
             if (isset($matches['scope']) && strlen($matches['scope']) > 0) {
                $commit->scope = $matches['scope'];
             }
-            $commit->message = trim($matches['message']);
+            $commit->subject = trim($matches['subject']);
             $filtered[] = $commit;
          }
       }
@@ -817,12 +835,69 @@ class ConventionalChangelog
       return 0;
    }
 
+
    public static function buildLog($a, $b = 'HEAD') {
+      if (!Git::tagExists($b)) {
+         // $b is not a tag, try to find a matching one
+         if (Git::getTagOfCommit($b) === false) {
+            // throw new Exception("current HEAD does not match a tag");
+         }
+      }
+
+      // get All tags between $a and $b
+      $tags = Git::getAllTags();
+
+      // Remove non semver compliant versions
+      $tags = array_filter($tags, function ($tag) {
+         return Semver::isSemVer($tag);
+      });
+
+      $startVersion = $a;
+      $endVersion = $b;
+      $prefix = 'v';
+      if (substr($startVersion, 0, strlen($prefix)) == $prefix) {
+         $startVersion = substr($startVersion, strlen($prefix));
+      }
+      if (substr($endVersion, 0, strlen($prefix)) == $prefix) {
+         $endVersion = substr($endVersion, strlen($prefix));
+      }
+
+      $tags = array_filter($tags, function ($version) use ($startVersion, $endVersion) {
+         $prefix = 'v';
+         if (substr($version, 0, strlen($prefix)) == $prefix) {
+            $version = substr($version, strlen($prefix));
+         }
+         if (version_compare($version, $startVersion) < 0) {
+            return false;
+         }
+         if ($endVersion !== 'HEAD' && version_compare($version, $endVersion) > 0) {
+            return false;
+         }
+         return true;
+      });
+
+      // sort tags
+      usort($tags, function ($a, $b) {
+         return version_compare($a, $b);
+      });
+
+      $log = [];
+      $tags[] = $b;
+      $startRef = array_shift($tags);
+      while ($endRef = array_shift($tags)) {
+         $log = array_merge($log, self::buildLogOneBump($startRef, $endRef));
+         $startRef = $endRef;
+      }
+
+      return $log;
+   }
+
+   public static function buildLogOneBump($a, $b) {
       $tag = $b;
       if (!Git::tagExists($b)) {
          // $b is not a tag, try to find a matching one
          if ($tag = Git::getTagOfCommit($b) === false) {
-            throw new Exception("current HEAD does not patch a tag");
+            $tag = 'Unreleased';
          }
       }
 
@@ -857,8 +932,14 @@ class ConventionalChangelog
       // generate markdown log
       $log = [];
 
-      $tagDate = Git::getTagDate($tag)->format('-m-d');
-      $compare = "$remote/compare/$a..$tag";
+      $tagDate = (new DateTime())->format('Y-m-d');
+      $compare = "$remote/compare/$a..";
+      if ($tag !== 'Unreleased') {
+         $tagDate = Git::getTagDate($tag)->format('Y-m-d');
+         $compare .= $tag;
+      } else {
+         $compare .= Git::getCurrentBranch();
+      }
       $log[] = '<a name="' . $tag . '"></a>';
       $log[] = '## [' . $tag . '](' . $compare . ') (' . $tagDate . ')';
       $log[] = '';
@@ -868,16 +949,7 @@ class ConventionalChangelog
          $log[] = '### Bug Fixes';
          $log[] = '';
          foreach ($fixes as $commit) {
-            $line = '* ';
-            $scope = $commit->scope;
-            if ($scope !== '') {
-               $scope = "**$scope:**";
-               $line .= " $scope";
-            }
-            $hash = $commit->hash;
-            $line .= " $commit->message"
-            . "([$hash]($remote/commit/$hash))";
-            $log[] = $line;
+            $log[]  = self::buildLogLine($commit, $remote);
          }
       }
 
@@ -885,16 +957,7 @@ class ConventionalChangelog
          $log[] = '### Features';
          $log[] = '';
          foreach ($feats as $commit) {
-            $line = '* ';
-            $scope = $commit->scope;
-            if ($scope !== '') {
-               $scope = "**$scope:**";
-               $line .= " $scope";
-            }
-            $hash = $commit->hash;
-            $line .= " $commit->message"
-            . "([$hash]($remote/commit/$hash))";
-            $log[] = $line;
+            $log[]  = self::buildLogLine($commit, $remote);
          }
       }
 
@@ -905,6 +968,40 @@ class ConventionalChangelog
       return $log;
    }
 
+   public static function buildLogLine($commit, $remote) {
+      $line = '* ';
+      $scope = $commit->scope;
+      if ($scope !== '') {
+         $scope = "**$scope:**";
+         $line .= " $scope";
+      }
+      $hash = $commit->hash;
+      $line .= " $commit->subject"
+      . "([$hash]($remote/commit/$hash))";
+
+      // Search for closed issues
+      $body = explode(PHP_EOL, $commit->body);
+      $pattern = '/^((close|closes|fix|fixed) #(?P<id>\\d+)(,\s+)?)/i';
+      $commit->close = [];
+      foreach ($body as $bodyLine) {
+         $matches = null;
+         if (preg_match($pattern, $bodyLine, $matches)) {
+            if (!is_array($matches['id'])) {
+               $matches['id'] = [$matches['id']];
+            }
+            $commit->close = $matches['id'];
+         }
+      }
+      if (count($commit->close) > 0) {
+         foreach ($commit->close as &$issue) {
+            $issue = "[#$issue]($remote/issues/$issue)";
+         }
+         $line .= ', closes ' . implode(', ', $commit->close);
+
+      }
+
+      return $line;
+   }
 }
 
 class SemVer
@@ -925,5 +1022,4 @@ class SemVer
 
       return true;
    }
-
 }
