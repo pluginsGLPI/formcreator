@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion extends CommonDBChild implements 
+class PluginFormcreatorQuestion extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
@@ -167,7 +167,7 @@ PluginFormcreatorConditionnableInterface
                      onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
          }
          echo "</span>";
-          
+
          echo '</th>';
          echo '</tr>';
 
@@ -233,7 +233,7 @@ PluginFormcreatorConditionnableInterface
             if ($question->fields['order'] != $question_number) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                         title="' . __('Bring down') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'down\');"> ';
+                        onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'down\');"> ';
             }
             echo "</span>";
 
@@ -241,10 +241,10 @@ PluginFormcreatorConditionnableInterface
             if ($question->fields['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/chevron-up.png"
                         title="' . __('Bring top') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'top\');" align="absmiddle"> ';
+                        onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'top\');" align="absmiddle"> ';
             }
             echo "</span>";
-   
+
             echo '</td>';
             echo '</tr>';
          }
