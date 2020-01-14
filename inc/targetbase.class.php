@@ -1712,7 +1712,8 @@ SCRIPT;
    protected static function getDeleteImage($id) {
       global $CFG_GLPI;
 
-      $link  = ' &nbsp;<a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
+      $formUrl = static::getFormURL();
+      $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '">';
       $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
       $link .= '</a>';
       return $link;
