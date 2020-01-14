@@ -892,7 +892,7 @@ class ConventionalChangelog
    }
 
    public static function buildLogOneBump($a, $b) {
-      $tag = $b;
+      $tag = $a;
       if (!Git::tagExists($b)) {
          // $b is not a tag, try to find a matching one
          if ($tag = Git::getTagOfCommit($b) === false) {
@@ -932,14 +932,13 @@ class ConventionalChangelog
       $log = [];
 
       $tagDate = (new DateTime())->format('Y-m-d');
-      $compare = "$remote/compare/";
+      $compare = "$remote/compare/$b..";
       if ($tag !== 'Unreleased') {
          $tagDate = Git::getTagDate($tag)->format('Y-m-d');
          $compare .= $tag;
       } else {
          $compare .= Git::getCurrentBranch();
       }
-      $compare .= "..$a";
       $log[] = '<a name="' . $tag . '"></a>';
       $log[] = '## [' . $tag . '](' . $compare . ') (' . $tagDate . ')';
       $log[] = '';
