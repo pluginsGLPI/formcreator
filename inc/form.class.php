@@ -2254,7 +2254,7 @@ PluginFormcreatorDuplicatableInterface
                      [
                         'OR' => [
                            "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                           "$form_table.'id'" => new QuerySubQuery([
+                           "$form_table.id" => new QuerySubQuery([
                               'SELECT' => $formFk,
                               'FROM' => $table_fp,
                               'WHERE' => [
