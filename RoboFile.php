@@ -771,9 +771,6 @@ class Git
 
    public static function getCommitBody($hash) {
       $output = shell_exec("git log $hash --max-count=1 --pretty=format:\"%b\"");
-      if ($output === null) {
-         throw new Exception ("could not get commit body");
-      }
       return $output;
    }
 
@@ -825,10 +822,10 @@ class ConventionalChangelog
          return 1;
       }
 
-      // then compare message
-      if ($a->message < $b->message) {
+      // then compare subject
+      if ($a->subject < $b->subject) {
          return -1;
-      } else if ($a->message > $b->message) {
+      } else if ($a->subject > $b->subject) {
          return 1;
       }
 
@@ -977,7 +974,7 @@ class ConventionalChangelog
       }
       $hash = $commit->hash;
       $line .= " $commit->subject"
-      . "([$hash]($remote/commit/$hash))";
+      . " ([$hash]($remote/commit/$hash))";
 
       // Search for closed issues
       $body = explode(PHP_EOL, $commit->body);
