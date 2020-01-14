@@ -873,13 +873,15 @@ class ConventionalChangelog
          return true;
       });
 
-      // sort tags
+      // sort tags older DESCENDING
       usort($tags, function ($a, $b) {
-         return version_compare($a, $b);
+         return version_compare($b, $a);
       });
 
       $log = [];
-      $tags[] = $b;
+      if ($b === '"Unreleaased') {
+         array_unshift($tags, $b);
+      }
       $startRef = array_shift($tags);
       while ($endRef = array_shift($tags)) {
          $log = array_merge($log, self::buildLogOneBump($startRef, $endRef));
@@ -903,7 +905,7 @@ class ConventionalChangelog
       $remote = $remotes['origin'];
 
       // Get all commits from A to B
-      $commits = Git::createCommitList(Git::getLog($a, $b));
+      $commits = Git::createCommitList(Git::getLog($b, $a));
 
       // Remove non conventional commits
       $commits = self::filterCommits($commits);
@@ -930,13 +932,14 @@ class ConventionalChangelog
       $log = [];
 
       $tagDate = (new DateTime())->format('Y-m-d');
-      $compare = "$remote/compare/$a..";
+      $compare = "$remote/compare/";
       if ($tag !== 'Unreleased') {
          $tagDate = Git::getTagDate($tag)->format('Y-m-d');
          $compare .= $tag;
       } else {
          $compare .= Git::getCurrentBranch();
       }
+      $compare .= "..$a";
       $log[] = '<a name="' . $tag . '"></a>';
       $log[] = '## [' . $tag . '](' . $compare . ') (' . $tagDate . ')';
       $log[] = '';
