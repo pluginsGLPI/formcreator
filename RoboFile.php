@@ -941,10 +941,10 @@ class ConventionalChangelog
       }
       $log[] = '<a name="' . $tag . '"></a>';
       $log[] = '## [' . $tag . '](' . $compare . ') (' . $tagDate . ')';
-      $log[] = '';
-      $log[] = '';
 
       if (count($fixes) > 0) {
+         $log[] = '';
+         $log[] = '';
          $log[] = '### Bug Fixes';
          $log[] = '';
          foreach ($fixes as $commit) {
@@ -953,6 +953,8 @@ class ConventionalChangelog
       }
 
       if (count($feats) > 0) {
+         $log[] = '';
+         $log[] = '';
          $log[] = '### Features';
          $log[] = '';
          foreach ($feats as $commit) {
@@ -972,7 +974,7 @@ class ConventionalChangelog
       $scope = $commit->scope;
       if ($scope !== '') {
          $scope = "**$scope:**";
-         $line .= " $scope";
+         $line .= $scope;
       }
       $hash = $commit->hash;
       $line .= " $commit->subject"
