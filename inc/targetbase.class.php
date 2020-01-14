@@ -1715,7 +1715,7 @@ SCRIPT;
    protected static function getDeleteImage($id) {
       $formUrl = static::getFormURL();
       $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '">';
-      $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
+      $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
       $link .= '</a>';
       return $link;
    }
