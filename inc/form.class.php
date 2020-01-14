@@ -1047,9 +1047,10 @@ PluginFormcreatorDuplicatableInterface
    protected function showMyLastForms() {
       global $DB;
 
-      $userId = $_SESSION['glpiID'];
+      $userId = Session::getLoginUserID();
+      $limit = 5;
       echo '<div class="plugin_formcreator_card">';
-      echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
+      echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
       $formTable = self::getTable();
       $formFk = self::getForeignKeyField();
@@ -1075,7 +1076,7 @@ PluginFormcreatorDuplicatableInterface
             "$formAnswerTable.status ASC",
             "$formAnswerTable.request_date DESC",
          ],
-         'LIMIT' => 5,
+         'LIMIT' => $limit,
       ];
       $result = $DB->request($request);
       if ($result->count() == 0) {
@@ -1112,7 +1113,7 @@ PluginFormcreatorDuplicatableInterface
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
 
          echo '<div class="plugin_formcreator_card">';
-         echo '<div class="plugin_formcreator_heading">'.__('My last forms (validator)', 'formcreator').'</div>';
+         echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
          $groupList = Group_User::getUserGroups($userId);
          $groupIdList = [];
          foreach ($groupList as $group) {
@@ -1163,7 +1164,7 @@ PluginFormcreatorDuplicatableInterface
                "$formAnswerTable.status ASC",
                "$formAnswerTable.request_date DESC",
             ],
-            'LIMIT' => 5,
+            'LIMIT' => $limit,
          ]);
          if ($result->count() == 0) {
             echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
@@ -1250,9 +1251,9 @@ PluginFormcreatorDuplicatableInterface
          echo html_entity_decode($this->fields['content']);
          echo '</div>';
       }
-         
+
       echo '<ol>';
-      $sections      = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
+      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
       foreach ($sections as $section) {
          $sectionId = $section->getID();
 
