@@ -79,14 +79,17 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             $value = $this->value;
          }
          echo Html::textarea([
-            'name'            => $fieldName,
-            'rand'            => $rand,
-            'value'           => $value,
-            'rows'            => 5,
-            'display'         => false,
-            'enable_richtext' => $useRichText,
-            'enable_fileupload'=> true,
+            'name'              => $fieldName,
+            'rand'              => $rand,
+            'value'             => $value,
+            'rows'              => 5,
+            'display'           => false,
+            'enable_richtext'   => $useRichText,
+            'enable_fileupload' => true,
          ]);
+         if (version_compare(GLPI_VERSION, '9.4.6') < 0) {
+            echo '</div>';
+         }
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
