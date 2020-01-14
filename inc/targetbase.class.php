@@ -1713,8 +1713,6 @@ SCRIPT;
    }
 
    protected static function getDeleteImage($id) {
-      global $CFG_GLPI;
-
       $formUrl = static::getFormURL();
       $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '">';
       $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
