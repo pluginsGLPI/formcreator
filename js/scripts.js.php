@@ -630,7 +630,7 @@ function formcreatorShowFields(form) {
             } else {
                $('div[data-section-id="' + sectionId+ '"]').hide();
             }
-         }         
+         }
       }
       var i = 0;
       for (var questionKey in questionToShow) {
@@ -824,7 +824,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
 
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/commonTree.php',
+         url: rootDoc + '/plugins/formcreator/ajax/commontree.php',
          type: 'GET',
          data: {
             itemtype: dropdown_type,
