@@ -951,13 +951,13 @@ function plugin_formcreator_formcreatorChangeDueDate(value) {
    $('#due_date_questions').hide();
    $('#due_date_time').hide();
    switch (value) {
-      case '1' :
+      case '2' :
          $('#due_date_questions').show();
          break;
-      case '2' :
+      case '3' :
          $('#due_date_time').show();
          break;
-      case '3' :
+      case '4' :
          $('#due_date_questions').show();
          $('#due_date_time').show();
          break;
