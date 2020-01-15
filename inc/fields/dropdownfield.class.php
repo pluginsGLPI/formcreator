@@ -250,14 +250,13 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $emptyItem = new $itemtype();
             $emptyItem->getEmpty();
-            $dparams['displaywith'] = [];
             if (isset($emptyItem->fields['serial'])) {
                $dparams['displaywith'][] = 'serial';
             }
             if (isset($emptyItem->fields['otherserial'])) {
                $dparams['displaywith'][] = 'otherserial';
             }
-            if (count($dparams['displaywith']) > 0) {
+            if (in_array($dparams['displaywith'], ['serial', 'otherserial'])) {
                $dparams['itemtype'] = $itemtype;
                $dparams['table'] = $itemtype::getTable();
                $dparams['multiple'] = false;
