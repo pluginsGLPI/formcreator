@@ -1370,7 +1370,7 @@ function plugin_formcreator_changeQuestionType(rand) {
       }
 
       $('#label_required').toggle(response.may_be_required);
-      $('#plugin_formcreator_required > *').toggle(response.may_be_required);
+      $('#plugin_formcreator_required > [name="required"]').toggle(response.may_be_required);
 
       $('#label_show_empty').toggle(response.may_be_empty);
       $('#plugin_formcreator_show_empty > *').toggle(response.may_be_empty);
