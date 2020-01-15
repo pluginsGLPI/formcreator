@@ -1373,7 +1373,7 @@ function plugin_formcreator_changeQuestionType(rand) {
       $('#plugin_formcreator_required > [name="required"]').toggle(response.may_be_required);
 
       $('#label_show_empty').toggle(response.may_be_empty);
-      $('#plugin_formcreator_show_empty > *').toggle(response.may_be_empty);
+      $('#plugin_formcreator_show_empty > [name="show_empty"]').toggle(response.may_be_empty);
 
       $('#plugin_formcreator_subtype_label').html(response.label);
       $('#plugin_formcreator_subtype_value').html(response.field);
