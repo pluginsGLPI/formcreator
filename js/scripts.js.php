@@ -1458,12 +1458,12 @@ function plugin_formcreator_changeUrgency(rand) {
 
    switch($('#dropdown_urgency_rule' + rand).val()) {
       case '2' :
-         $('#urgency_question_title').show();
-         $('#urgency_question_value').show();
-         break;
-      case '3':
          $('#urgency_specific_title').show();
          $('#urgency_specific_value').show();
+         break;
+      case '3':
+         $('#urgency_question_title').show();
+         $('#urgency_question_value').show();
          break;
    }
 }
