@@ -52,7 +52,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          }
          return $html;
       }
-      
+
       return Html::file([
          'name'    => 'formcreator_field_' . $this->question->getID(),
          'display' => false,

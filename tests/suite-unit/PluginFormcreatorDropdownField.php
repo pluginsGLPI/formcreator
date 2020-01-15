@@ -65,6 +65,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'show_ticket_categories_root' => '0',
                ]),
                'dropdown_values' => \Location::class,
+               'default_values'  => '',
             ]
          ],
          [
@@ -83,6 +84,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'show_ticket_categories_root'  => '',
                ]),
                'dropdown_values' => \ITILCategory::class,
+               'default_values'  => '',
             ]
          ],
       ];
@@ -126,6 +128,12 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    }
 
    public function providerIsValid() {
+      $location = new \Location();
+      $locationId = $location->import([
+         'completename' => 'foo',
+         'entities_id'  => $_SESSION['glpiactive_entity']
+      ]);
+
       return [
          [
             'question' => $this->getQuestion([
@@ -166,6 +174,24 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'itemtype' => \Location::class,
                ]),
                'required' => '1',
+               'default_values' => '',
+            ]),
+            'input' => [
+               'dropdown_values' => \Location::class,
+               'dropdown_default_value' => '42',
+               'show_ticket_categories_depth' => '5',
+               'show_ticket_categories_root' => '0',
+            ],
+            'expected' => false,
+         ],
+         [
+            'question' => $this->getQuestion([
+               'name' =>  'fieldname',
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+               ]),
+               'required' => '1',
+               'default_values' => $locationId,
             ]),
             'input' => [
                'dropdown_values' => \Location::class,
@@ -183,7 +209,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     */
    public function testIsValid($question, $input, $expected) {
       $instance = new \PluginFormcreatorDropdownField($question);
-      $instance->prepareQuestionInputForSave($input);
+      $instance->deserializeValue($question->fields['default_values']);
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expected);
    }

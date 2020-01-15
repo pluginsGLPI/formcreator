@@ -41,8 +41,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => '',
-               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'default_values'  => '[]',
+               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
@@ -63,8 +63,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => '3',
-               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'default_values'  => '["3"]',
+               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
@@ -85,8 +85,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => '3',
-               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'default_values'  => '[3]',
+               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
@@ -107,8 +107,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => "3\r\n4",
-               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'default_values'  => json_encode(['3', '4']),
+               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
@@ -129,8 +129,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => "3\r\n4\r\n2\r\n1\r\n6",
-               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'default_values'  => json_encode(['3', '4', '2', '1', '6']),
+               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
@@ -186,8 +186,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          'fieldtype'       => 'multiselect',
          'name'            => 'question',
          'required'        => '0',
-         'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
-         'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+         'default_values'  => json_encode(['1', '2', '3', '5', '6']),
+         'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
          'order'           => '1',
          'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          '_parameters'     => [
@@ -199,9 +199,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
             ]
          ],
       ];
-      $section = $this->getSection();
-      $fields[$section::getForeignKeyField()] = $section->getID();
-
       $question = $this->getQuestion($fields);
 
       $fieldInstance = new \PluginFormcreatorMultiSelectField($question);
@@ -216,12 +213,12 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
 
       // Test accented chars are kept
       $input = [
-         'values'          => "éè\r\nsomething else",
-         'default_values'  => "éè",
+         'values'          => 'éè\r\nsomething else',
+         'default_values'  => 'éè',
       ];
       $out = $fieldInstance->prepareQuestionInputForSave($input);
-      $this->string($out['values'])->isEqualTo("éè\r\nsomething else");
-      $this->string($out['default_values'])->isEqualTo("éè");
+      $this->string($out['values'])->isEqualTo('[\"éè\",\"something else\"]');
+      $this->string($out['default_values'])->isEqualTo('[\"éè\"]');
 
       // Test values are trimmed
       $input = [
@@ -229,8 +226,8 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          'default_values'  => " something      ",
       ];
       $out = $fieldInstance->prepareQuestionInputForSave($input);
-      $this->string($out['values'])->isEqualTo('something\r\nsomething else');
-      $this->string($out['default_values'])->isEqualTo("something");
+      $this->string($out['values'])->isEqualTo('[\"something\",\"something else\"]');
+      $this->string($out['default_values'])->isEqualTo('[\"something\"]');
    }
 
    public function testGetName() {

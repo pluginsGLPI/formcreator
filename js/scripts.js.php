@@ -663,7 +663,11 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'json'
       }).fail(function(data) {
+         // Closing and opening the modal workarounds
+         // the whole modal being disabled when alert is shown
+         modalWindow.dialog('close');
          alert(data.responseText);
+         modalWindow.dialog('open');
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
          var container = $('[data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
@@ -1067,8 +1071,8 @@ function plugin_formcreator_ChangeActorAssigned(value) {
 // === FIELDS EDITION ===
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
-   var dropdown_type = $('[name="form_question"] [name="dropdown_values"]').val();
-   var dropdown_id   = $('[name="form_question"] [name="id"]').val();
+   var dropdown_type = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
+   var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
@@ -1086,7 +1090,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
 
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/commonTree.php',
+         url: rootDoc + '/plugins/formcreator/ajax/commontree.php',
          type: 'GET',
          data: {
             itemtype: dropdown_type,
@@ -1104,8 +1108,8 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
 }
 
 function plugin_formcreator_changeGlpiObjectItemType() {
-   var glpi_object    = $('[name="form_question"] [name="glpi_objects"]').val();
-   var glpi_object_id = $('[name="form_question"] [name="id"]').val();
+   var glpi_object    = $('[data-itemtype="PluginFormcreatorQuestion"] [name="glpi_objects"]').val();
+   var glpi_object_id = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',

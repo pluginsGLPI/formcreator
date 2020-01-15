@@ -35,6 +35,41 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default value');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td id="dropdown_default_value_field">';
+      $value = Html::entities_deep($this->question->fields['default_values']);
+      $additions .= Html::input('default_values', [
+         'id' => 'default_values',
+         'value' => $value,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function getRenderedHtml($canEdit = true) {
       if (!$canEdit) {
          return $this->value;
@@ -53,7 +88,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeEmail('$fieldName', '$rand');
       });");
-      
+
       return $html;
    }
 

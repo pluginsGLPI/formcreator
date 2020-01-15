@@ -29,86 +29,25 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
+class PluginFormcreatorMultiSelectField extends PluginFormcreatorCheckboxesField
 {
-   public function isPrerequisites() {
-      return true;
-   }
-
-   public function getDesignSpecializationField() {
-      $rand = mt_rand();
-
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
-      $additions .= __('Default values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => $this->question->fields['default_values'],
-         'cols'             => '50',
-         'display'          => false,
-      ]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
-      $additions .= __('Values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'values',
-         'id'               => 'values',
-         'value'            => $this->question->fields['values'],
-         'cols'             => '50',
-         'display'          => false,
-      ]);
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => true,
-         'may_be_required' => true,
-      ];
-   }
-
-
    public function getRenderedHtml($canEdit = true) {
-      if (!$canEdit) {
-         return empty($this->value) ? '' : implode('<br />', $this->value);
-      }
-      
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $values       = $this->getAvailableValues();
-      $tab_values   = [];
       $html         = '';
-      
-      if (!empty($this->question->fields['values'])) {
-         foreach ($values as $value) {
-            if ((trim($value) != '')) {
-               $tab_values[$value] = $value;
-            }
+      if (!$canEdit) {
+         if (count($this->value)) {
+            $html .= implode('<br />', $this->value);
          }
+         return $html;
+      }
 
-         $html .= Dropdown::showFromArray($fieldName, $tab_values, [
+      $id        = $this->question->getID();
+      $rand      = mt_rand();
+      $fieldName = 'formcreator_field_' . $id;
+      $values    = $this->getAvailableValues();
+
+      if (!empty($values)) {
+         $html .= Dropdown::showFromArray($fieldName, $values, [
             'display_emptychoice' => $this->question->fields['show_empty'] == 1,
-            'value'     => '',
             'values'    => $this->value,
             'rand'      => $rand,
             'multiple'  => true,
@@ -119,175 +58,20 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
       });");
-         
+
       return $html;
-   }
-
-   public function serializeValue() {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
-
-      return implode("\r\n", Toolbox::addslashes_deep($this->value));
-   }
-
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
-                  ? explode("\r\n", $value)
-                  : [];
-   }
-
-   public function getValueForDesign() {
-      if ($this->value === null) {
-         return '';
-      }
-
-      return implode("\r\n", $this->value);
-   }
-
-   public function isValid() {
-      if ($this->value == '') {
-         $this->value = [];
-      }
-
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '') {
-         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
-         return false;
-
-      }
-      if (!$this->isValidValue($this->value)) {
-         return false;
-      }
-
-      return true;
-   }
-
-   private function isValidValue($value) {
-      $parameters = $this->getParameters();
-
-      // Check the field matches the format regex
-      $rangeMin = $parameters['range']->fields['range_min'];
-      $rangeMax = $parameters['range']->fields['range_max'];
-      if ($rangeMin > 0 && count($value) < $rangeMin) {
-         $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $rangeMin);
-         Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
-         return false;
-      }
-
-      if ($rangeMax > 0 && count($value) > $rangeMax) {
-         $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $rangeMax);
-         Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
-         return false;
-      }
-
-      return true;
-   }
-
-   public function prepareQuestionInputForSave($input) {
-      if (isset($input['values'])) {
-         if (empty($input['values'])) {
-            Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
-            return [];
-         } else {
-            // trim values
-            $input['values'] = $this->trimValue($input['values']);
-         }
-      }
-      if (isset($input['default_values'])) {
-         // trim values
-         $this->value = explode('\r\n', $input['default_values']);
-         $this->value = array_map('trim', $this->value);
-         $this->value = array_filter($this->value, function($value) {
-            return ($value !== '');
-         });
-         $input['default_values'] = implode('\r\n', $this->value);
-      }
-      return $input;
-   }
-
-   public function getValueForTargetText($richText) {
-      $input = $this->value;
-      $value = [];
-      $values = $this->getAvailableValues();
-
-      if (empty($input)) {
-         return '';
-      }
-
-      if (is_array($input)) {
-         $tab_values = $input;
-      } else if (is_array(json_decode($input))) {
-         $tab_values = json_decode($input);
-      } else {
-         $tab_values = [$input];
-      }
-
-      foreach ($tab_values as $input) {
-         if (in_array($input, $values)) {
-            $value[] = $input;
-         }
-      }
-      if ($richText) {
-         $value = '<br />' . implode('<br />', $value);
-      } else {
-         $value = implode(', ', $value);
-      }
-      return $value;
-   }
-
-   public function getDocumentsForTarget() {
-      return [];
    }
 
    public static function getName() {
       return __('Multiselect', 'formcreator');
    }
 
+   public function getDocumentsForTarget() {
+      return [];
+   }
+
    public static function canRequire() {
       return true;
-   }
-
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!isset($input[$key])) {
-         $input[$key] = [];
-      } else {
-         if (!is_array($input[$key])) {
-            return false;
-         }
-      }
-
-      $this->value = Toolbox::stripslashes_deep($input[$key]);
-      return true;
-   }
-
-   public function getEmptyParameters() {
-      return [
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
-      ];
-   }
-
-   public function equals($value) {
-      if (!is_array( $this->value)) {
-         // No selection
-         return ($value === '');
-      }
-      return in_array($value, $this->value);
-   }
-
-   public function notEquals($value) {
-      return !$this->equals($value);
    }
 
    public function greaterThan($value) {
@@ -314,23 +98,9 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       return true;
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
    public function getHtmlIcon() {
       global $CFG_GLPI;
 
       return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-multiselect-field.png" title="" />';
-   }
-
-   public function isVisibleField()
-   {
-      return true;
-   }
-
-   public function isEditableField()
-   {
-      return true;
    }
 }

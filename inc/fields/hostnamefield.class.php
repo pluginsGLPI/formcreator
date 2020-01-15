@@ -16,9 +16,8 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
          'may_be_required' => false,
       ];
    }
-   
+
    public function prepareQuestionInputForSave($input) {
-      $this->value = $input['default_values'];
       return $input;
    }
 

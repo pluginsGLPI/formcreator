@@ -58,10 +58,6 @@ PluginFormcreatorConditionnableInterface
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
-   function isEntityAssign() {
-      return false;
-   }
-
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}
@@ -129,13 +125,13 @@ PluginFormcreatorConditionnableInterface
 
    /**
     * May be removed when GLPI 9.5 will  be the lowest supported version
-    * workaround use if entity in WHERE when using PluginFormcreatorQuestoin::dropdown
+    * workaround use if entity in WHERE when using PluginFormcreatorQuestion::dropdown
     * (while editing conditions, list of questions is empty + SQL error)
     * @see bug on GLPI #6488, might be related
     */
-   // function isEntityAssign() {
-   //    return false;
-   // }
+   function isEntityAssign() {
+      return false;
+   }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       $formId = $item->getID();
@@ -157,28 +153,6 @@ PluginFormcreatorConditionnableInterface
 
       echo '</ol>';
       echo '</div>';
-
-      echo '<form name="form"'
-      . ' method="post"'
-      . ' action="javascript:' . PluginFormcreatorForm::getFormURL() . '"'
-      . ' data-itemtype="' . PluginFormcreatorForm::class . '"'
-      . ' data-id="' . $item->getID() . '"'
-      . '>';
-      echo '<div>';
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Show submit button', 'formcreator');
-      echo '</th>';
-      echo '</tr>';
-      $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($item, $item);
-
-      // table and div are closed here
-      $item->showFormButtons([
-         'candel' => false
-      ]);
    }
 
    /**
@@ -197,7 +171,7 @@ PluginFormcreatorConditionnableInterface
       $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
       $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
       $field = new $fieldType($this);
-
+      
       $html .= '<div class="grid-stack-item"'
       . ' data-itemtype="' . self::class . '"'
       . ' data-id="'.$questionId.'"'
@@ -493,9 +467,9 @@ PluginFormcreatorConditionnableInterface
       return $input;
    }
 
-   /**
+   /** 
     * Update size or position of the question
-    * @param array $input
+    * @param array $input 
     * @return boolean false on error
     */
    public function change($input) {
@@ -658,7 +632,7 @@ PluginFormcreatorConditionnableInterface
          //      'row' => ['>', $row],
          //      $sectionFk => $this->fields[$sectionFk]
          //   ]
-         // );
+         // );   
       }
 
       // Always show questions with conditional display on the question being deleted
@@ -771,7 +745,6 @@ PluginFormcreatorConditionnableInterface
          'on_change'   => "plugin_formcreator_changeQuestionType($rand)",
          'rand'        => $rand,
       ]);
-      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       echo '</td>';
 
       echo '<td id="plugin_formcreator_subtype_label">';
@@ -853,6 +826,8 @@ PluginFormcreatorConditionnableInterface
       $this->showFormButtons($options + [
          'candel' => false
       ]);
+      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
+      Html::closeForm();
    }
 
    /**

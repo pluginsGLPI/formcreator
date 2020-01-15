@@ -76,8 +76,9 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function prepareQuestionInputForSave($input) {
+      $defaultValue = $input['default_values'];
       $input = parent::prepareQuestionInputForSave($input);
-      $this->value = array_shift($this->value);
+      $input['default_values'] = $defaultValue;
       return $input;
    }
 
