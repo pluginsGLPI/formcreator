@@ -459,7 +459,7 @@ var plugin_formcreator = new function() {
          setTimeout(function() {
             item.helper.find('a').off('click.prevent');
          },
-         300); 
+         300);
          // Remove empty rows
          plugin_formcreator.moveUpItems(group);
       });
@@ -557,8 +557,8 @@ var plugin_formcreator = new function() {
          data: {
             move: changes,
          }
-      }).fail(function() { 
-         plugin_formcreator.cancelChangeItems(event, items); 
+      }).fail(function() {
+         plugin_formcreator.cancelChangeItems(event, items);
          plugin_formcreator.dirty = false;
       }).done(function(response) {
          plugin_formcreator.dirty = false;
@@ -577,11 +577,11 @@ var plugin_formcreator = new function() {
             return;
          }
          $(event.target).data('gridstack').update(
-            item.el, 
-            that.initialPosition[id]['x'], 
-            that.initialPosition[id]['y'], 
-            that.initialPosition[id]['width'], 
-            that.initialPosition[id]['height'], 
+            item.el,
+            that.initialPosition[id]['x'],
+            that.initialPosition[id]['y'],
+            that.initialPosition[id]['width'],
+            that.initialPosition[id]['height'],
          );
       });
    };
@@ -613,9 +613,9 @@ var plugin_formcreator = new function() {
       }
    };
 
-   /** 
+   /**
     * Move up items in a grid when row is empty
-    * @param grid stack container 
+    * @param grid stack container
     * @param row  row to fill with items after it
     */
    this.moveUpItems = function (grid) {
@@ -756,7 +756,7 @@ var plugin_formcreator = new function() {
                } else {
                   $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').hide();
                }
-            }         
+            }
          }
          var i = 0;
          for (var questionKey in questionToShow) {
