@@ -73,7 +73,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       if (!$canEdit) {
          return $this->value;
       }
-      
+
       $html = '';
       $id        = $this->question->getID();
       $rand      = mt_rand();
@@ -164,9 +164,17 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-
       $key = 'formcreator_field_' . $this->question->getID();
+      if (!isset($input[$key])) {
+         $input[$key] = '';
+      }
+
       if (!is_string($input[$key])) {
+         return false;
+      }
+
+      if ($input[$key] != ''
+         && DateTime::createFromFormat("Y-m-d", $input[$key]) === false) {
          return false;
       }
 

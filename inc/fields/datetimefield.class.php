@@ -168,6 +168,9 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
+      if (!isset($input[$key])) {
+         $input[$key] = '';
+      }
       if (!is_string($input[$key])) {
          return false;
       }
