@@ -81,13 +81,15 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $defaultValue = Html::cleanInputText($this->value);
-      $html .= '<input type="text" class="form-control"
-               name="' . $fieldName . '"
-               id="' . $domId . '"
-               value="' . $defaultValue . '" />';
+      $html .= Html::input($fieldName, [
+         'id'    => $domId,
+         'value' => $defaultValue
+      ]);
       $html .=Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeField('$fieldName', '$rand');
       });");
+
+      return $html;
    }
 
    public function serializeValue() {
@@ -139,7 +141,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    private function isValidValue($value) {
       if (strlen($value) == 0) {
          return true;
-      } 
+      }
 
       if (!empty($value) && !is_numeric($value)) {
          Session::addMessageAfterRedirect(sprintf(__('This is not a number: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
@@ -213,12 +215,12 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
-         return false;
+         $this->value = '';
       }
-      $input[$key] != (float) str_replace(',', '.', $input[$key]);
+      // $input[$key] = (float) str_replace(',', '.', $input[$key]);
 
-       $this->value = $input[$key];
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
    public static function canRequire() {
