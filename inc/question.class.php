@@ -171,7 +171,7 @@ PluginFormcreatorConditionnableInterface
       $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
       $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
       $field = new $fieldType($this);
-      
+
       $html .= '<div class="grid-stack-item"'
       . ' data-itemtype="' . self::class . '"'
       . ' data-id="'.$questionId.'"'
@@ -226,10 +226,8 @@ PluginFormcreatorConditionnableInterface
       if (!$field->isPrerequisites()) {
          return '';
       }
-      if (isset($_SESSION['formcreator']['data']['formcreator_field_' . $this->getID()])) {
-         $field->parseAnswerValues($_SESSION['formcreator']['data']['formcreator_field_' . $this->getID()]);
-      } else if (count($value) > 0) {
-         $field->parseAnswerValues($value);
+      if (isset($_SESSION['formcreator']['data'])) {
+         $field->parseAnswerValues($_SESSION['formcreator']['data']);
       } else {
          $field->deserializeValue($this->fields['default_values']);
       }
@@ -340,7 +338,7 @@ PluginFormcreatorConditionnableInterface
 
       // Might need to merge $this->fields and $input, $input having precedence
       // over $this->fields
-      $input['default_values'] = $this->field->serializeValue();
+      //$input['default_values'] = $this->field->serializeValue();
 
       return $input;
    }
@@ -380,9 +378,6 @@ PluginFormcreatorConditionnableInterface
       } else {
          $input['row'] = $maxRow + 1;
       }
-      // if (!isset($input['height'])) {
-      //    $input['height'] = '1';
-      // }
 
       // generate a unique id
       if (!isset($input['uuid'])
@@ -413,7 +408,7 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      // generate a uSnique id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          if (!isset($this->fields['uuid']) && $this->fields['uuid'] != $input['uuid']) {
@@ -467,9 +462,9 @@ PluginFormcreatorConditionnableInterface
       return $input;
    }
 
-   /** 
+   /**
     * Update size or position of the question
-    * @param array $input 
+    * @param array $input
     * @return boolean false on error
     */
    public function change($input) {
@@ -632,7 +627,7 @@ PluginFormcreatorConditionnableInterface
          //      'row' => ['>', $row],
          //      $sectionFk => $this->fields[$sectionFk]
          //   ]
-         // );   
+         // );
       }
 
       // Always show questions with conditional display on the question being deleted

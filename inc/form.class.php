@@ -1299,6 +1299,9 @@ PluginFormcreatorConditionnableInterface
          echo '</li>';
       }
 
+      // Delete saved answers if any
+      unset($_SESSION['formcreator']['data']);
+
       // Show validator selector
       if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
          $validators = [];
