@@ -31,9 +31,9 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.9.2-dev');
+define('PLUGIN_FORMCREATOR_VERSION', '2.10.0-dev');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.9');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.10');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
@@ -294,7 +294,7 @@ function plugin_formcreator_decode($string) {
 
 /**
  * Tells if helpdesk replacement is enabled for the current user
- * 
+ *
  * @return boolean|integer
  */
 function plugin_formcreator_replaceHelpdesk() {
