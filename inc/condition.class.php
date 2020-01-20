@@ -217,18 +217,11 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
     */
    public function showConditionsForItem($form, PluginFormcreatorConditionnableInterface $item) {
       $rand = mt_rand();
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
-      echo __('Show field', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
 
-      echo '<tr">';
+      echo '<tr>';
       echo '<td colspan="4">';
       Dropdown::showFromArray(
-         'show_rule', 
+         'show_rule',
          $this->getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
@@ -239,15 +232,15 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       echo '</td>';
       echo '</tr>';
 
-      // Get conditionsexisting conditions for the item
+      // Get existing conditions for the item
       $conditions = $this->getConditionsFromItem($item);
       reset($conditions);
       $condition = array_shift($conditions);
       if ($condition !== null) {
-         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0, true);
+         echo $condition->getConditionHtml($form, $condition->fields['itemtype'], $condition->fields['items_id'], true);
       }
       foreach ($conditions as $condition) {
-         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0);
+         echo $condition->getConditionHtml($form, $condition->fields['itemtype'], $condition->fields['items_id']);
       }
    }
 
@@ -317,7 +310,6 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       $html.= '<div class="div_show_condition_field">';
       $html.= Dropdown::showFromArray('plugin_formcreator_questions_id[]', $questions_tab, [
          'display'      => false,
-         'used'         => [$itemId => ''],
          'value'        => $show_field,
          'rand'         => $rand,
       ]);

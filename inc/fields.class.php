@@ -138,6 +138,10 @@ class PluginFormcreatorFields
          if ($item instanceof CommonDBChild) {
             if (is_subclass_of($item::$itemtype, PluginFormcreatorConditionnableInterface::class)) {
                if ($parent = $item->getItem(true, false)) {
+                  if ($parent->getType() == PluginFormcreatorForm::class) {
+                     // the condition for form is only for its submit button. A form is always visible
+                     return true;
+                  }
                   // Use visibility of the parent item
                   $evalItem[$itemtype][$itemId] = self::isVisible($parent, $fields);
                   return $evalItem[$itemtype][$itemId];
@@ -331,6 +335,9 @@ class PluginFormcreatorFields
          $fields[$id]->parseAnswerValues($input, true);
       }
 
+      // Get the visibility for the submit button of the form
+      $submitShow = PluginFormcreatorFields::isVisible($form, $fields);
+
       // Get the visibility result of questions
       $questionToShow = [];
       foreach ($fields as $id => $field) {
@@ -341,12 +348,13 @@ class PluginFormcreatorFields
       $sectionToShow = [];
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach($sections as $section) {
-         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);;
+         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);
       }
 
       return [
          PluginFormcreatorQuestion::class => $questionToShow,
          PluginFormcreatorSection::class => $sectionToShow,
+         PluginFormcreatorForm::class => $submitShow,
       ];
    }
 

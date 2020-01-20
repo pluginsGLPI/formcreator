@@ -270,6 +270,24 @@ PluginFormcreatorConditionnableInterface
       echo '</tr>';
 
       echo '</table>';
+
+      echo '<form name="plugin_formcreator_form" method="post" action="'.PluginFormcreatorForm::getFormURL().'">';
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Show submit button', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($item, $item);
+
+      echo '</table>';
+
+      $item->showFormButtons([
+         'candel' => false
+      ]);
+      Html::closeForm();
    }
 
    /**
@@ -585,11 +603,6 @@ PluginFormcreatorConditionnableInterface
       ]);
    }
 
-   /**
-    * Updates the conditions of the question
-    * @param array $input
-    * @return boolean true if success, false otherwise
-    */
    public function updateConditions($input) {
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
@@ -891,6 +904,11 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
       echo '</tr>';
 
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Show field', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
       $condition = new PluginFormcreatorCondition();
       $condition->showConditionsForItem($form, $this);
 

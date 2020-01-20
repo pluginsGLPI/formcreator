@@ -619,6 +619,7 @@ function formcreatorShowFields(form) {
          var itemToShow = JSON.parse(response);
          var questionToShow = itemToShow['PluginFormcreatorQuestion'];
          var sectionToShow = itemToShow['PluginFormcreatorSection'];
+         var submitButtonToShow = itemToShow['PluginFormcreatorForm'];
       } catch (e) {
          // Do nothing for now
       }
@@ -649,6 +650,8 @@ function formcreatorShowFields(form) {
             }
          }
       }
+
+      $('[name="submit_formcreator"]').toggle(submitButtonToShow == true);
    });
 }
 
@@ -789,6 +792,11 @@ function plugin_formcreator_addEmptyCondition(target, itemtype) {
          parentId = $('form[name="plugin_formcreator_form"] [name="plugin_formcreator_forms_id"]').val();
          data.plugin_formcreator_forms_id = parentId;
          break;
+
+      case 'PluginFormcreatorForm':
+         id = $('form[name="plugin_formcreator_form"] [name="id"]').val();
+         data.id = id;
+         break;
    }
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/condition.php',
@@ -858,13 +866,14 @@ function plugin_formcreator_changeGlpiObjectItemType() {
 }
 
 function plugin_formcreator_toggleCondition(field, itemtype) {
+   var form = $(field).closest('form');
    if (field.value == '1') {
-      $('.plugin_formcreator_logicRow').hide();
+      form.find('.plugin_formcreator_logicRow').hide();
    } else {
-      if ($('.plugin_formcreator_logicRow').length < 1) {
+      if (form.find('.plugin_formcreator_logicRow').length < 1) {
          plugin_formcreator_addEmptyCondition(field, itemtype);
       }
-      $('.plugin_formcreator_logicRow').show();
+      form.find('.plugin_formcreator_logicRow').show();
    }
 }
 

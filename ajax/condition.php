@@ -66,12 +66,20 @@ switch ($itemtype) {
       $section->getFromDB($sectionId);
       $form->getFromDBBySection($section);
       break;
-   case PluginFormcreatorSection::class: 
+   case PluginFormcreatorSection::class:
       if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
          http_response_code(400);
          exit;
       }
       $formId = (int) $_REQUEST['plugin_formcreator_forms_id'];
+      $form->getFromDB($formId);
+      break;
+   case PluginFormcreatorForm::class:
+      if (!isset($_REQUEST['id'])) {
+         http_response_code(400);
+         exit;
+      }
+      $formId = (int) $_REQUEST['id'];
       $form->getFromDB($formId);
       break;
 }

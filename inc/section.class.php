@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild implements 
+class PluginFormcreatorSection extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
@@ -350,7 +350,7 @@ PluginFormcreatorConditionnableInterface
       }
       echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
-     
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo $title;
@@ -364,6 +364,11 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
       echo '</tr>';
 
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Show section', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
       $form = new PluginFormcreatorForm();
       $form->getFromDBBySection($this);
       $condition = new PluginFormcreatorCondition();
@@ -433,12 +438,15 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   /**
-    * Updates the conditions of the question
-    * @param array $input
-    * @return boolean true if success, false otherwise
-    */
-    public function updateConditions($input) {
+   public function post_addItem() {
+      $this->updateConditions($this->input);
+   }
+
+   public function post_updateItem($history = 1) {
+      $this->updateConditions($this->input);
+   }
+
+   public function updateConditions($input) {
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
          return  false;
@@ -478,7 +486,7 @@ PluginFormcreatorConditionnableInterface
          $condition = new PluginFormcreatorCondition();
          $condition->add([
             'itemtype'                        => static::class,
-            'items_id'                        => $input['id'],
+            'items_id'                        => $this->getID(),
             'plugin_formcreator_questions_id' => $questionID,
             'show_condition'                  => $showCondition,
             'show_value'                      => $value,

@@ -326,6 +326,7 @@ class PluginFormcreatorFields extends CommonTestCase {
          \PluginFormcreatorSection::class => [
             $section->getID() => true,
          ],
+         \PluginFormcreatorForm::class => true,
       ]);
    }
 }
