@@ -1075,8 +1075,8 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
 }
 
 function plugin_formcreator_changeQuestionType(rand) {
-   var questionId = $('form[name="plugin_formcreator_form"] input[name="id"]').val();
-   var questionType = $ ('form[name="plugin_formcreator_form"] [name="fieldtype"]').val();
+   var questionId = $('form[name="plugin_formcreator_questionform"] input[name="id"]').val();
+   var questionType = $ ('form[name="plugin_formcreator_questionform"] [name="fieldtype"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/question_design.php',

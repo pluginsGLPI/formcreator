@@ -774,7 +774,7 @@ PluginFormcreatorConditionnableInterface
       $form->getFromDBBySection($section);
 
       $rand = mt_rand();
-      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
+      echo '<form name="plugin_formcreator_questionform" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
