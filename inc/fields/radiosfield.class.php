@@ -112,6 +112,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
+                  echo '<br/>';
+                  echo '<br/>';
                }
             }
             echo '</div>';
