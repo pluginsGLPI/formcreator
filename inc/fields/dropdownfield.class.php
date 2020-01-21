@@ -117,7 +117,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $additions .= '</tr>';
       $additions .= Html::scriptBlock("plugin_formcreator_changeDropdownItemtype($rand);");
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [

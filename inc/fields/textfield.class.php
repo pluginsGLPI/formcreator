@@ -61,7 +61,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $additions .= '<td></td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [

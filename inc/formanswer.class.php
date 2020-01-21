@@ -1243,13 +1243,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $this->questionFields = $form->getFields();
       foreach (array_keys($this->questionFields) as $id) {
-         $this->questionFields[$id]->parseAnswerValues($input);
-
          // Test integrity of the value
          $key = "formcreator_field_$id";
-         if (!isset($input[$key])) {
-            continue;
-         }
+         $this->questionFields[$id]->parseAnswerValues($input);
          $fieldValidities[$id] = $this->questionFields[$id]->isValidValue($input[$key]);
       }
       // any invalid field will invalidate the answers

@@ -59,7 +59,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [

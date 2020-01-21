@@ -78,7 +78,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -202,6 +202,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          return true;
       }
 
+      $value = Toolbox::stripslashes_deep($value);
       foreach ($value as $item) {
          if (trim($item) == '') {
             return false;

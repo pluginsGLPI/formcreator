@@ -1256,6 +1256,10 @@ PluginFormcreatorConditionnableInterface
       }
 
       echo '<ol>';
+
+      if (!isset($_SESSION['formcreator']['data'])) {
+         $_SESSION['formcreator']['data'] = [];
+      }
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
       foreach ($sections as $section) {
          $sectionId = $section->getID();
@@ -1291,7 +1295,7 @@ PluginFormcreatorConditionnableInterface
                   }
                }
             }
-            echo $question->getRenderedHtml();
+            echo $question->getRenderedHtml(true, $_SESSION['formcreator']['data']);
             $lastQuestion = $question;
          }
          echo '</div>';
@@ -1342,8 +1346,6 @@ PluginFormcreatorConditionnableInterface
       echo Html::scriptBlock('$(function() {
          plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
       })');
-
-      unset($_SESSION['formcreator']['data']);
 
       // Display submit button
       echo '<div class="center">';

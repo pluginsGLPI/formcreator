@@ -218,6 +218,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function isValidValue($value) {
+      $value = Toolbox::stripslashes_deep($value);
       $value = trim($value);
       return in_array($value, $this->getAvailableValues());
    }

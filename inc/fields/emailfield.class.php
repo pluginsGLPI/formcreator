@@ -55,9 +55,6 @@ class PluginFormcreatorEmailField extends PluginFormcreatorTextField
       $additions .= '<td></td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
       return [
          'label' => $label,
          'field' => $field,

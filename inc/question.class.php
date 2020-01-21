@@ -226,8 +226,10 @@ PluginFormcreatorConditionnableInterface
       if (!$field->isPrerequisites()) {
          return '';
       }
-      if (isset($_SESSION['formcreator']['data'])) {
-         $field->parseAnswerValues($_SESSION['formcreator']['data']);
+
+      $key = 'formcreator_field_' . $this->getID();
+      if (isset($value[$key])) {
+         $field->deserializeValue($value[$key]);
       } else {
          $field->deserializeValue($this->fields['default_values']);
       }

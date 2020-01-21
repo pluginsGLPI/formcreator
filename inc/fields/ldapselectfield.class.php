@@ -92,7 +92,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       $additions .= '<td colspan="2">&nbsp;</td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
