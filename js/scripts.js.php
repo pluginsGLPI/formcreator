@@ -665,9 +665,11 @@ var plugin_formcreator = new function() {
       }).fail(function(data) {
          // Closing and opening the modal workarounds
          // the whole modal being disabled when alert is shown
-         modalWindow.dialog('close');
-         alert(data.responseText);
-         modalWindow.dialog('open');
+         // modalWindow.dialog('close');
+         // alert(data.responseText);
+         // modalWindow.dialog('open');
+         $('#plugin_formcreator_error').text(data.responseText);
+         $('#plugin_formcreator_error').show();
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
          var container = $('[data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
@@ -697,7 +699,8 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'html'
       }).fail(function(data) {
-         alert(data.responseText);
+         $('#plugin_formcreator_error').text(data.responseText);
+         $('#plugin_formcreator_error').show();
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)

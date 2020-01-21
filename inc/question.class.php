@@ -818,9 +818,17 @@ PluginFormcreatorConditionnableInterface
       echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
       echo '</td>';
       echo '</tr>';
+
+      // Area for errors
+      echo '<tr>';
+      echo '<td id="plugin_formcreator_error" colspan="4" class="center">';
+      echo '</td>';
+      echo '</tr>';
+
       $this->showFormButtons($options + [
          'candel' => false
       ]);
+
       echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       Html::closeForm();
    }
