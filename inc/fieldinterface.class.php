@@ -62,6 +62,14 @@ interface PluginFormcreatorFieldInterface
    public function isValid();
 
    /**
+    * Check if a value is valid for the field type
+    *
+    * @param string $value
+    * @return boolean true if valid, false otherwise
+    */
+   public function isValidValue($value);
+
+   /**
     * Is the field required?
     * @return boolean
     */

@@ -192,10 +192,25 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          return false;
       }
 
-      return $this->isValidValue($value);
+      return true;
+
+      //return $this->isValidValue($value);
    }
 
-   private function isValidValue($value) {
+   public function isValidValue($value) {
+      if ($value === '') {
+         return true;
+      }
+
+      foreach ($value as $item) {
+         if (trim($item) == '') {
+            return false;
+         }
+         if (!in_array($item, $this->getAvailableValues())) {
+            return false;
+         }
+      }
+
       $parameters = $this->getParameters();
 
       // Check the field matches the format regex
@@ -298,11 +313,27 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      if (count($this->value) < 1) {
+         return false;
+      }
+      foreach ($this->value as $answer) {
+         if ($answer <= $value) {
+            return false;
+         }
+      }
+      return true;
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      if (count($this->value) < 1) {
+         return false;
+      }
+      foreach ($this->value as $answer) {
+         if ($answer >= $value) {
+            return false;
+         }
+      }
+      return true;
    }
 
    public function isAnonymousFormCompatible() {

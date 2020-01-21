@@ -132,13 +132,13 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expected) {
       $question = $this->getQuestion($fields);
       $instance = new \PluginFormcreatorSelectField($question);
       $instance->deserializeValue($fields['default_values']);
 
       $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
+      $this->boolean((boolean) $isValid)->isEqualTo($expected);
    }
 
    public function testGetName() {

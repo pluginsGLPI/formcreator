@@ -130,7 +130,9 @@ class PluginFormcreatorDateField extends CommonTestCase {
 
    public function testSerializeValue() {
       $value = $expected = '2019-01-01';
-      $question = $this->getQuestion();
+      $question = $this->getQuestion([
+         'fieldtype' => 'Date',
+      ]);
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();

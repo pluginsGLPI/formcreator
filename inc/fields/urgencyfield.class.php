@@ -94,7 +94,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
       });");
-      
+
       return $html;
    }
 
@@ -180,6 +180,10 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
       // All is OK
       return true;
+   }
+
+   public function isValidValue($value) {
+      return in_array($value, array_keys($this->getAvailableValues()));
    }
 
    public function equals($value) {

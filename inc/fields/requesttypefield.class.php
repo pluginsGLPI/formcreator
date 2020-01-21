@@ -170,6 +170,10 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return in_array($value, array_keys($this->getAvailableValues()));
+   }
+
    public function equals($value) {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) === 0;

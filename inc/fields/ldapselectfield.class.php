@@ -191,6 +191,10 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public function prepareQuestionInputForSave($input) {
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
       if (!isset($input['ldap_auth'])) {

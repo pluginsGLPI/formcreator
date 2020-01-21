@@ -99,6 +99,10 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public static function getName() {
       return _n('IP address', 'Adresses IP', 1);
    }

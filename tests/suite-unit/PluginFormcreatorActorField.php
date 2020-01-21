@@ -158,7 +158,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     */
    public function testSerializeValue($value, $expected) {
       $question = $this->getQuestion([
-         'fieldtype' => 'actors'
+         'fieldtype' => 'actor'
       ]);
       $instance = new \PluginFormcreatorActorField($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
@@ -348,7 +348,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerNotEquals
     */
    public function testNotEquals($value, $answer, $expected) {
-      $question = $this->getQuestion(['fieldtype' => 'actors']);
+      $question = $this->getQuestion(['fieldtype' => 'actor']);
       $instance = new \PluginFormcreatorActorField($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
@@ -393,5 +393,60 @@ class PluginFormcreatorActorField extends CommonTestCase {
       $instance = new \PluginFormcreatorActorField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerIsValidValue() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $missingUserId = (new \User())->add([
+         'name' => $this->getUniqueString(),
+      ]);
+      (new \User())->delete([
+         'id' => $missingUserId,
+      ]);
+      return [
+         'empty string' => [
+            'instance' => $instance,
+            'value' => '',
+            'expected' => true,
+         ],
+         'empty array' => [
+            'instance' => $instance,
+            'value' => [],
+            'expected' => true,
+         ],
+         'user ID' => [
+            'instance' => $instance,
+            'value' => ['4'],
+            'expected' => true,
+         ],
+         'email' => [
+            'instance' => $instance,
+            'value' => ['test@foo.com'],
+            'expected' => true,
+         ],
+         'ID and email' => [
+            'instance' => $instance,
+            'value' => ['4', 'test@foo.com'],
+            'expected' => true,
+         ],
+         'invalid email' => [
+            'instance' => $instance,
+            'value' => ['foo'],
+            'expected' => false,
+         ],
+         'invalid user' => [
+            'instance' => $instance,
+            'value' => ["$missingUserId"],
+            'expected' => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerIsValidValue
+    */
+   public function testIsValidValue($instance, $value, $expected) {
+      $output = $instance->isValidValue($value);
+      $this->boolean($output)->isEqualTo($expected);
    }
 }

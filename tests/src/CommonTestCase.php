@@ -221,21 +221,25 @@ abstract class CommonTestCase extends CommonDBTestCase
          'col'                            => '0',
          'width'                          => '4',
          'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-         '_parameters'     => [
-            'text' => [
-               'range' => [
-                  'range_min' => '',
-                  'range_max' => '',
-               ],
-               'regex' => [
-                  'regex' => ''
-               ]
-            ]
-         ],
+         '_parameters'                    => [],
       ];
       $input = array_merge($defaultInput, $input);
+      $defaultParams = [
+         $input['fieldtype'] => [
+            'range' => [
+               'range_min' => '',
+               'range_max' => '',
+            ],
+            'regex' => [
+               'regex' => ''
+            ]
+         ]
+      ];
+      $input['_parameters'] = array_merge($defaultParams, $input['_parameters']);
+
       $question = new \PluginFormcreatorQuestion();
       $question->add($input);
+      $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->getFromDB($question->getID());
 
       return $question;

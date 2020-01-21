@@ -98,20 +98,29 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    }
 
    public function providerSerializeValue() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'radios',
+         'values' => json_encode(['foo', 'bar', 'test d\'apostrophe'])
+      ]);
+      $instance = new \PluginFormcreatorRadiosField($question);
       return [
          [
+            'instance'  => $instance,
             'value'     => null,
             'expected'  => '',
          ],
          [
+            'instance'  => $instance,
             'value'     => '',
             'expected'  => '',
          ],
          [
+            'instance'  => $instance,
             'value'     => 'foo',
             'expected'  => 'foo',
          ],
          [
+            'instance'  => $instance,
             'value'     => "test d'apostrophe",
             'expected'  => 'test d\\\'apostrophe',
          ],
@@ -121,29 +130,36 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    /**
     * @dataProvider providerSerializeValue
     */
-   public function testSerializeValue($value, $expected) {
-      $question = $this->getQuestion(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
-      $instance = new \PluginFormcreatorRadiosField($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
+   public function testSerializeValue($instance, $value, $expected) {
+      $instance->parseAnswerValues(['formcreator_field_' . $instance->getQuestion()->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }
 
    public function providerDeserializeValue() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'radios',
+         'values' => json_encode(['foo', 'bar', 'test d\'apostrophe'])
+      ]);
+      $instance = new \PluginFormcreatorRadiosField($question);
       return [
          [
+            'instance'  => $instance,
             'value'     => null,
             'expected'  => '',
          ],
          [
+            'instance'  => $instance,
             'value'     => '',
             'expected'  => '',
          ],
          [
+            'instance'  => $instance,
             'value'     => "foo",
             'expected'  => 'foo',
          ],
          [
+            'instance'  => $instance,
             'value'     => "test d'apostrophe",
             'expected'  => "test d'apostrophe",
          ],
@@ -153,9 +169,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    /**
     * @dataProvider providerDeserializeValue
     */
-   public function testDeserializeValue($value, $expected) {
-      $question = $this->getQuestion(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
-      $instance = new \PluginFormcreatorRadiosField($question);
+   public function testDeserializeValue($instance, $value, $expected) {
+      $instance->parseAnswerValues(['formcreator_field_' . $instance->getQuestion()->getID() => $value]);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);

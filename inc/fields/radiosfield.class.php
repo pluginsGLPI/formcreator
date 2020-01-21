@@ -49,7 +49,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= Html::input('default_values', [
+      $additions .= Html::input(
+         'default_values', [
          'id'               => 'default_values',
          'value'            => Html::entities_deep($this->getValueForDesign()),
          'cols'             => '50',
@@ -164,10 +165,6 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       return true;
    }
 
-   public static function canRequire() {
-      return true;
-   }
-
    public function parseDefaultValue($defaultValue) {
       $this->value = explode('\r\n', $defaultValue);
       $this->value = array_filter($this->value, function($value) {
@@ -217,6 +214,15 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       }
 
       // All is OK
+      return true;
+   }
+
+   public function isValidValue($value) {
+      $value = trim($value);
+      return in_array($value, $this->getAvailableValues());
+   }
+
+   public static function canRequire() {
       return true;
    }
 

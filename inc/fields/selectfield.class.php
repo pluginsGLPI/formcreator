@@ -29,10 +29,17 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
+class PluginFormcreatorSelectField extends PluginFormcreatorRadiosField
 {
    public function isPrerequisites() {
       return true;
+   }
+
+   public function getDesignSpecializationField() {
+      $specialization = parent::getDesignSpecializationField();
+      $specialization['may_be_empty'] = true;
+
+      return $specialization;
    }
 
    public function getRenderedHtml($canEdit = true) {
@@ -75,49 +82,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return __('Select', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input) {
-      $defaultValue = $input['default_values'];
-      $input = parent::prepareQuestionInputForSave($input);
-      $input['default_values'] = $defaultValue;
-      return $input;
-   }
-
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!is_string($input[$key])) {
-         return false;
-      }
-
-       $this->value = Toolbox::stripslashes_deep($input[$key]);
-       return true;
-   }
-
-   public function serializeValue() {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
-
-      return Toolbox::addslashes_deep($this->value);
-   }
-
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
-   }
-
-   public function getValueForDesign() {
-      if ($this->value === null) {
-         return '';
-      }
-
-      return $this->value;
-   }
-
-   public function getValueForTargetText($richText) {
-      return $this->value;
-   }
-
    public function isValid() {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '0') {
@@ -132,14 +96,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return true;
    }
 
-   public static function canRequire() {
-      return true;
-   }
-
-   public function getEmptyParameters() {
-      return [];
-   }
-
    public function equals($value) {
       if ($value == '') {
          // empty string means no selection
@@ -148,21 +104,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return $this->value == $value;
    }
 
-   public function notEquals($value) {
-      return !$this->equals($value);
-   }
-
-   public function greaterThan($value) {
-      return $this->value > $value;
-   }
-
-   public function lessThan($value) {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
-
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
 
    public function getHtmlIcon() {
       global $CFG_GLPI;

@@ -260,10 +260,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField($this->getQuestion());
-      $instance->prepareQuestionInputForSave([
-         'default_values' => $value,
-      ]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorTextField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }

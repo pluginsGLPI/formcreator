@@ -62,6 +62,10 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public static function getName() {
       return _n('Hostname', 'Hostname', 1);
    }

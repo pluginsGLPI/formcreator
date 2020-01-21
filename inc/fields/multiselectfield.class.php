@@ -66,38 +66,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorCheckboxesField
       return __('Multiselect', 'formcreator');
    }
 
-   public function getDocumentsForTarget() {
-      return [];
-   }
-
-   public static function canRequire() {
-      return true;
-   }
-
-   public function greaterThan($value) {
-      if (count($this->value) < 1) {
-         return false;
-      }
-      foreach ($this->value as $answer) {
-         if ($answer <= $value) {
-            return false;
-         }
-      }
-      return true;
-   }
-
-   public function lessThan($value) {
-      if (count($this->value) < 1) {
-         return false;
-      }
-      foreach ($this->value as $answer) {
-         if ($answer >= $value) {
-            return false;
-         }
-      }
-      return true;
-   }
-
    public function getHtmlIcon() {
       global $CFG_GLPI;
 

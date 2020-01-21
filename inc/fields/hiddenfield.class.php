@@ -95,6 +95,10 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public static function getName() {
       return _n('Hidden field', 'Hidden fields', 1);
    }

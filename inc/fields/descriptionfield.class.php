@@ -76,6 +76,10 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public static function getName() {
       return __('Description');
    }

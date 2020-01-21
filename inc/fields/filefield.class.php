@@ -100,7 +100,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return true;
    }
 
-   private function isValidValue($value) {
+   public function isValidValue($value) {
       // If the field is required it can't be empty
       return (count($this->uploadData) > 0);
    }

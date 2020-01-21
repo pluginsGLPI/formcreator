@@ -29,12 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorEmailField extends PluginFormcreatorField
+class PluginFormcreatorEmailField extends PluginFormcreatorTextField
 {
-   public function isPrerequisites() {
-      return true;
-   }
-
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 
@@ -50,7 +46,8 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       $additions .= '<td id="dropdown_default_value_field">';
       $value = Html::entities_deep($this->question->fields['default_values']);
       $additions .= Html::input('default_values', [
-         'id' => 'default_values',
+         'type'  => 'email',
+         'id'    => 'default_values',
          'value' => $value,
       ]);
       $additions .= '</td>';
@@ -82,6 +79,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       $defaultValue = Html::cleanInputText($this->value);
 
       $html .= Html::input($fieldName, [
+         //'type'  => 'email',
          'id'    => $domId,
          'value' => $defaultValue,
       ]);
@@ -92,53 +90,16 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       return $html;
    }
 
-   public function serializeValue() {
-      if ($this->value === null || $this->value === '') {
-         return '';
+   public function isValidValue($value) {
+      if ($value === '') {
+         return true;
       }
 
-      return $this->value;
-   }
-
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
-   }
-
-   public function getValueForDesign() {
-      if ($this->value === null) {
-         return '';
+      if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+         Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         return false;
       }
 
-      return $this->value;
-   }
-
-   public function getValueForTargetText($richText) {
-      return Toolbox::addslashes_deep($this->value);
-   }
-
-   public function getDocumentsForTarget() {
-      return [];
-   }
-
-   public function isValid() {
-      if ($this->value == '') {
-         if ($this->isRequired()) {
-            Session::addMessageAfterRedirect(
-               __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-               false,
-               ERROR);
-            return false;
-         }
-      } else {
-         if (!filter_var($this->value, FILTER_VALIDATE_EMAIL)) {
-            Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
-            return false;
-         }
-      }
-
-      // All is OK
       return true;
    }
 
@@ -158,18 +119,19 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
 
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
+      if (!isset($input[$key])) {
+         return false;
+      }
+      if (!isset($input[$key])) {
+         $input[$key] = '';
+      }
+
       if (!is_string($input[$key])) {
          return false;
       }
-      if ($input[$key] === '') {
-         return true;
-      }
-      if (!filter_var($input[$key], FILTER_VALIDATE_EMAIL)) {
-         return false;
-      }
 
-       $this->value = $input[$key];
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
    public function equals($value) {

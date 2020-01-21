@@ -139,6 +139,10 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public static function canRequire() {
       return true;
    }

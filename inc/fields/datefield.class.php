@@ -31,6 +31,8 @@
 
 class PluginFormcreatorDateField extends PluginFormcreatorField
 {
+   const DATE_FORMAT = 'Y-m-d';
+
    public function isPrerequisites() {
       return true;
    }
@@ -125,6 +127,11 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      $check = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      return $check !== false;
+   }
+
    public static function getName() {
       return __('Date');
    }
@@ -139,8 +146,8 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("Y-m-d", $answer);
-      $compareDatetime = DateTime::createFromFormat("Y-m-d", $value);
+      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $answerDatetime == $compareDatetime;
    }
 
@@ -154,8 +161,8 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("Y-m-d", $answer);
-      $compareDatetime = DateTime::createFromFormat("Y-m-d", $value);
+      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $answerDatetime > $compareDatetime;
    }
 
@@ -174,7 +181,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       }
 
       if ($input[$key] != ''
-         && DateTime::createFromFormat("Y-m-d", $input[$key]) === false) {
+         && DateTime::createFromFormat(self::DATE_FORMAT, $input[$key]) === false) {
          return false;
       }
 

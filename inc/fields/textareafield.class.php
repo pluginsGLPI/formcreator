@@ -143,15 +143,19 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
+      $key = 'formcreator_field_' . $this->question->getID();
       $input = $this->question->addFiles(
          $input,
          [
             'force_update'  => true,
-            'content_field' => 'formcreator_field_' . $this->question->getID(),
+            'content_field' => $key,
          ]
       );
 
-      return parent::parseAnswerValues($input, $nonDestructive);
+      $this->value = str_replace('\r\n', "\r\n", $input[$key]);
+      $this->value = Toolbox::stripslashes_deep($this->value);
+
+      return true;
    }
 
    public function getValueForTargetText($richText) {

@@ -125,7 +125,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    public function isValid() {
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
             false,
             ERROR);
          return false;
@@ -138,7 +138,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return true;
    }
 
-   private function isValidValue($value) {
+   public function isValidValue($value) {
       if (strlen($value) == 0) {
          return true;
       }

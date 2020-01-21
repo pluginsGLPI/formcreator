@@ -369,6 +369,10 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public function prepareQuestionInputForSave($input) {
       if (!isset($input['dropdown_values']) || empty($input['dropdown_values'])) {
          Session::addMessageAfterRedirect(

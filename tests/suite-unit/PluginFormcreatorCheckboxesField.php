@@ -38,175 +38,101 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    public function providerGetAvailableValues() {
-      $dataset = [
+      return [
          [
-            'fields'          => [
-               'fieldtype'       => 'checkboxes',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
+            'instance'           => $this->newTestedInstance($this->getQuestion([
+               'fieldtype'          => 'checkboxes',
+               'values'             => implode('\r\n', ['2']),
+               '_parameters'        => [
+                  'checkboxes'         => [
+                     'range'              => [
+                        'range_min'          => '',
+                        'range_max'          => '',
                      ]
                   ]
                ],
-            ],
-            'expectedValue'   => [''],
-            'expectedIsValid' => true
+            ])),
+            'expected'   => ['2' => '2'],
          ],
          [
-            'fields'          => [
-               'fieldtype'       => 'checkboxes',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '2',
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
+            'instance'           => $this->newTestedInstance($this->getQuestion([
+               'fieldtype'          => 'checkboxes',
+               'values'             => implode('\r\n', ['3', '5']),
+               '_parameters'        => [
+                  'checkboxes'         => [
+                     'range'              => [
+                        'range_min'          => '',
+                        'range_max'          => '',
                      ]
                   ]
                ],
-            ],
-            'expectedValue'   => ['2'],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'checkboxes',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode(['3', '5']),
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3', '5'],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'checkboxes',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode(['3', '5']),
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '3',
-                        'range_max' => '4',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3', '5'],
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'checkboxes',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode(['3', '5', '6']),
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '3',
-                        'range_max' => '4',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3', '5', '6'],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'checkboxes',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode(['1', '2', '3', '5', '6']),
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '3',
-                        'range_max' => '4',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['1', '2', '3', '5', '6'],
-            'expectedIsValid' => false
+            ])),
+            'expected'   => ['3' => '3', '5' => '5'],
          ],
       ];
-
-      return $dataset;
    }
 
    /**
     * @dataProvider providerGetAvailableValues
     */
-   public function testGetAvailableValues($fields, $expectedValue, $expectedValidity) {
-      $question = $this->getQuestion($fields);
-      $instance = new \PluginFormcreatorCheckboxesField($question);
-      $instance->deserializeValue($fields['default_values']);
-
-      $availableValues = $instance->getAvailableValues();
-      $expectedAvaliableValues = explode("\r\n", $fields['values']);
-
-      $this->array($availableValues)->hasSize(count($expectedAvaliableValues));
-
-      foreach ($expectedAvaliableValues as $expectedValue) {
-         $this->array($availableValues)->contains($expectedValue);
-      }
+   public function testGetAvailableValues($instance, $expected) {
+      $output = $instance->getAvailableValues();
+      $this->array($output)->isEqualTo($expected);
    }
 
-   public function providerIsValid() {
-      return $this->providerGetAvailableValues();
+   public function providerIsValidValue() {
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'fieldtype' => 'checkboxes',
+         'values'    => implode('\r\n', ['1', '2', '3', '4']),
+         '_parameters'        => [
+            'checkboxes'         => [
+               'range'              => [
+                  'range_min'          => '',
+                  'range_max'          => '',
+               ]
+            ]
+         ],
+      ]));
+      return [
+         [
+            'instance' => $instance,
+            'value'    => '',
+            'expected' => true,
+         ],
+         [
+            'instance' => $instance,
+            'value'    => [],
+            'expected' => true,
+         ],
+         [
+            'instance' => $instance,
+            'value'    => ['1'],
+            'expected' => true,
+         ],
+         [
+            'instance' => $instance,
+            'value'    => ['1', '4'],
+            'expected' => true,
+         ],
+         [
+            'instance' => $instance,
+            'value'    => ['1', '9'],
+            'expected' => false,
+         ],
+         [
+            'instance' => $instance,
+            'value'    => ['9'],
+            'expected' => false,
+         ],
+      ];
    }
 
    /**
-    * @dataProvider providerIsValid
+    * @dataProvider providerIsValidValue
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity) {
-      $section = $this->getSection();
-      $fields[$section::getForeignKeyField()] = $section->getID();
-
-      $question = $this->getQuestion($fields);
-      $question->updateParameters($fields);
-
-      $instance = new \PluginFormcreatorCheckboxesField($question);
-      $instance->deserializeValue($fields['default_values']);
-
-      $isValid = $instance->isValid();
-      $this->boolean($isValid)->isEqualTo($expectedValidity);
+   public function testIsValidValue($instance, $value, $expected) {
+      $output = $instance->isValidValue($value);
+      $this->boolean($output)->isEqualTo($expected);
    }
 
    public function providerSerializeValue() {
@@ -249,7 +175,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       return [
          [
             'value'     => null,
-            'expected'  => [''],
+            'expected'  => [],
          ],
          [
             'value'     => '',
@@ -275,7 +201,8 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
     */
    public function testDeserializeValue($value, $expected) {
       $question = $this->getQuestion([
-         'values' => json_encode(["foo", "bar","test d'apostrophe"]),
+         'fieldtype' => 'checkboxes',
+         'values' => implode('\r\n', ["foo", "bar","test d'apostrophe"]),
       ]);
       $instance = new \PluginFormcreatorCheckboxesField($question);
       $instance->deserializeValue($value);
