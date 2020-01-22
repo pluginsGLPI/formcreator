@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-10 15:29+0100\n"
-"PO-Revision-Date: 2019-03-12 14:55+0000\n"
+"POT-Creation-Date: 2020-01-22 11:53+0100\n"
+"PO-Revision-Date: 2020-01-22 11:04+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2020\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/teclib/teams/28042/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -21,42 +21,42 @@ msgstr ""
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: hook.php:67 inc/category.class.php:46 inc/form.class.php:202
+#: hook.php:67 inc/category.class.php:46 inc/form.class.php:203
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] "Form kategorisi"
-msgstr[1] "Form kategorisi"
+msgstr[0] ""
+msgstr[1] ""
 
-#: setup.php:204 inc/form.class.php:97 inc/formlist.class.php:56
+#: setup.php:204 inc/form.class.php:98 inc/formlist.class.php:56
 #: inc/formlist.class.php:57
 msgid "Forms waiting for validation"
 msgstr "Değerlendirilmeyi bekleyen formlar"
 
 #: setup.php:214 ajax/homepage_link.php:37 inc/entityconfig.class.php:55
-#: inc/form.class.php:89 inc/form.class.php:679 inc/form.class.php:2212
+#: inc/form.class.php:90 inc/form.class.php:680 inc/form.class.php:2232
 #: inc/formanswer.class.php:192 inc/formlist.class.php:46 js/scripts.js.php:71
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] "Form"
-msgstr[1] "Form"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ajax/commonTree.php:25
+#: ajax/commontree.php:25
 msgid "Subtree root"
 msgstr "Alt ağacın kökü"
 
-#: ajax/commonTree.php:38
+#: ajax/commontree.php:38
 msgid "Limit subtree depth"
 msgstr "Alt ağaç derinlik sınırı"
 
-#: ajax/commonTree.php:48
+#: ajax/commontree.php:48
 msgid "No limit"
 msgstr "Sınır yok"
 
 #: front/form.php:45 front/formanswer.form.php:81 front/formanswer.form.php:86
 #: front/formanswer.php:46 front/formanswer.php:51 front/issue.php:46
 #: front/issue.php:51 front/targetchange.form.php:74
-#: front/targetticket.form.php:74 inc/form.class.php:2332
-#: inc/form.class.php:2339
+#: front/targetticket.form.php:74 inc/form.class.php:2352
+#: inc/form.class.php:2359
 msgid "Form Creator"
 msgstr "Form Oluşturucu"
 
@@ -64,11 +64,11 @@ msgstr "Form Oluşturucu"
 #: front/issue.form.php:58 front/issue.php:42 front/knowbaseitem.form.php:45
 #: front/reservation.form.php:46 front/reservation.php:46
 #: front/reservationitem.php:42 front/wizard.php:45 front/wizardfeeds.php:46
-#: inc/form.class.php:2327
+#: inc/form.class.php:2347
 msgid "Service catalog"
-msgstr "Hizmet Kataloğu"
+msgstr "Hizmet kataloğu"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2329
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2349
 msgid "Form list"
 msgstr "Form listesi"
 
@@ -80,19 +80,19 @@ msgstr "Soru kaydedildi!"
 msgid "The question has been successfully updated!"
 msgstr "Soru güncellendi!"
 
-#: inc/answer.class.php:66 inc/targetbase.class.php:1761
+#: inc/answer.class.php:66 inc/targetbase.class.php:1760
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] "Yanıt"
-msgstr[1] "Yanıt"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/category.class.php:67
 msgid "Knowbase category"
-msgstr "Bilgi Bankası Kategorisi"
+msgstr "Bilgi bankası kategorisi"
 
 #: inc/condition.class.php:84
 msgid "Always displayed"
-msgstr "Herzaman görüntülensin"
+msgstr "Her zaman görüntülensin"
 
 #: inc/condition.class.php:85
 msgid "Hidden unless"
@@ -102,292 +102,288 @@ msgstr "Şu olmadan gizlensin"
 msgid "Displayed unless"
 msgstr "Şu olmadan görüntülensin"
 
-#: inc/condition.class.php:140 inc/form.class.php:1978
+#: inc/condition.class.php:140 inc/form.class.php:1991
 #: inc/form_profile.class.php:207 inc/form_validator.class.php:109
-#: inc/question.class.php:975 inc/questiondependency.class.php:190
+#: inc/question.class.php:993 inc/questiondependency.class.php:190
 #: inc/questionrange.class.php:174 inc/questionregex.class.php:169
 #: inc/section.class.php:257 inc/target_actor.class.php:160
-#: inc/targetchange.class.php:212 inc/targetticket.class.php:935
+#: inc/targetchange.class.php:212 inc/targetticket.class.php:938
 #, php-format
 msgid "failed to add or update the %1$s %2$s"
 msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 
-#: inc/condition.class.php:223
-msgid "Show field"
-msgstr "Alan görüntülensin"
-
 #: inc/entityconfig.class.php:89
 msgid "Helpdesk"
-msgstr "Destek Merkezi"
+msgstr "Destek merkezi"
 
 #: inc/entityconfig.class.php:98
 msgid "GLPi's helpdesk"
-msgstr "GLPI Destek Merkezi"
+msgstr "GLPI destek merkezi"
 
 #: inc/entityconfig.class.php:99
 msgid "Service catalog simplified"
-msgstr "Basitleştirilmiş Hizmet Kataloğu"
+msgstr "Basitleştirilmiş hizmet kataloğu"
 
 #: inc/entityconfig.class.php:100
 msgid "Service catalog extended"
-msgstr "Genişletilmiş Hizmet Kataloğu"
+msgstr "Genişletilmiş hizmet kataloğu"
 
 #: inc/entityconfig.class.php:103
 msgid "Helpdesk mode"
-msgstr "Destek Merkezi Kipi"
+msgstr "Destek merkezi kipi"
 
-#: inc/form.class.php:99
+#: inc/form.class.php:100
 msgid "Import forms"
 msgstr "Formları içe aktar"
 
-#: inc/form.class.php:176
+#: inc/form.class.php:177
 msgid "Homepage"
 msgstr "Ana sayfa"
 
-#: inc/form.class.php:189
+#: inc/form.class.php:190
 msgid "Access"
 msgstr "Erişim"
 
-#: inc/form.class.php:224
+#: inc/form.class.php:225
 msgid "Icon"
 msgstr "Simge"
 
-#: inc/form.class.php:232
+#: inc/form.class.php:233
 msgid "Icon color"
 msgstr "Simge rengi"
 
-#: inc/form.class.php:240 inc/form.class.php:407
+#: inc/form.class.php:241 inc/form.class.php:408
 msgid "Background color"
 msgstr "Arka plan rengi"
 
-#: inc/form.class.php:279 inc/form.class.php:338 inc/form_profile.class.php:91
+#: inc/form.class.php:280 inc/form.class.php:339 inc/form_profile.class.php:91
 msgid "Public access"
 msgstr "Herkese açık"
 
-#: inc/form.class.php:280 inc/form.class.php:342 inc/form_profile.class.php:92
+#: inc/form.class.php:281 inc/form.class.php:343 inc/form_profile.class.php:92
 msgid "Private access"
-msgstr "Özel"
+msgstr "Özel erişim"
 
-#: inc/form.class.php:281 inc/form.class.php:346 inc/form_profile.class.php:93
+#: inc/form.class.php:282 inc/form.class.php:347 inc/form_profile.class.php:93
 msgid "Restricted access"
-msgstr "Kısıtlı"
+msgstr "Kısıtlı erişim"
 
-#: inc/form.class.php:293 inc/form.class.php:354 inc/form.class.php:422
+#: inc/form.class.php:294 inc/form.class.php:355 inc/form.class.php:423
 msgid "All langages"
 msgstr "Tüm diller"
 
-#: inc/form.class.php:392
+#: inc/form.class.php:393
 msgid "Direct access on homepage"
 msgstr "Ana sayfaya doğrudan erişim"
 
-#: inc/form.class.php:400
+#: inc/form.class.php:401
 msgid "Form icon"
 msgstr "Form simgesi"
 
-#: inc/form.class.php:428
+#: inc/form.class.php:429
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] "Başlık"
-msgstr[1] "Başlık"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/form.class.php:440
+#: inc/form.class.php:441
 msgid "Need to be validate?"
 msgstr "Değerlendirilmesi gerekli"
 
-#: inc/form.class.php:574
+#: inc/form.class.php:575
 msgid "Default form in service catalog"
 msgstr "Hizmet kataloğundaki varsayılan form"
 
-#: inc/form.class.php:584
+#: inc/form.class.php:585
 msgid "To delete this form you must delete all its answers first."
 msgstr "Bu formu silmek için önce tüm yanıtlarını silmelisiniz."
 
-#: inc/form.class.php:598
+#: inc/form.class.php:599
 msgid "Destinations"
 msgid_plural "Destinations"
-msgstr[0] "Hedef"
-msgstr[1] "Hedef"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/form.class.php:622 inc/question.class.php:145
+#: inc/form.class.php:623 inc/question.class.php:145
 #: inc/question.class.php:201
 msgid "Delete"
 msgstr "Sil"
 
-#: inc/form.class.php:635 inc/form.class.php:2486
+#: inc/form.class.php:636 inc/form.class.php:2506
 msgid "Add a target"
-msgstr "Bir hedef ekleyin"
+msgstr "Bir hedef ekle"
 
-#: inc/form.class.php:672
+#: inc/form.class.php:673
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] "Hedef"
-msgstr[1] "Hedef"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/form.class.php:766 inc/targetbase.class.php:802
+#: inc/form.class.php:767 inc/targetbase.class.php:802
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] "Kategori"
-msgstr[1] "Kategori"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/form.class.php:767
+#: inc/form.class.php:768
 msgid "see all"
 msgstr "tümünü görüntüle"
 
-#: inc/form.class.php:785
+#: inc/form.class.php:786
 msgid "Popularity sort"
 msgstr "Sık kullanım sıralaması"
 
-#: inc/form.class.php:789
+#: inc/form.class.php:790
 msgid "Alphabetic sort"
 msgstr "Alfabetik sıralama"
 
-#: inc/form.class.php:1051
+#: inc/form.class.php:1052
 msgid "Please, describe your need here"
 msgstr "Lütfen neye gerek duyduğunuzu yazın"
 
-#: inc/form.class.php:1060
+#: inc/form.class.php:1061
 msgid "My last forms (requester)"
 msgstr "Son formlarım (istekte bulunan)"
 
-#: inc/form.class.php:1090
+#: inc/form.class.php:1091
 msgid "No form posted yet"
 msgstr "Henüz bir form gönderilmemiş"
 
-#: inc/form.class.php:1113
+#: inc/form.class.php:1114
 msgid "All my forms (requester)"
 msgstr "Tüm formlarım (istekte bulunan)"
 
-#: inc/form.class.php:1123
+#: inc/form.class.php:1124
 msgid "My last forms (validator)"
 msgstr "Son formlarım (değerlendirici)"
 
-#: inc/form.class.php:1173
+#: inc/form.class.php:1178
 msgid "No form waiting for validation"
 msgstr "Değerlendirilmeyi bekleyen bir form yok"
 
-#: inc/form.class.php:1202
+#: inc/form.class.php:1207
 msgid "All my forms (validator)"
-msgstr "Tüm formlarım (değerlendirici)"
+msgstr "Tüm formlarım (değerlendiren)"
 
-#: inc/form.class.php:1302
+#: inc/form.class.php:1307
 msgid "Validation"
-msgstr "Doğrulama"
+msgstr "Değerlendirme"
 
-#: inc/form.class.php:1304
+#: inc/form.class.php:1309
 msgid "Choose a validator"
-msgstr "Bir değerlendirici seçin"
+msgstr "Bir değerlendiren seçin"
 
-#: inc/form.class.php:1340 inc/targetbase.class.php:1666
+#: inc/form.class.php:1345 inc/targetbase.class.php:1666
 msgid "The name cannot be empty!"
 msgstr "Ad boş olamaz!"
 
-#: inc/form.class.php:1388
+#: inc/form.class.php:1393
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "%s sorusu herkese açık formlar ile uyumlu değil"
 
-#: inc/form.class.php:1521
+#: inc/form.class.php:1526
 msgid "Duplicate"
 msgstr "Kopyala"
 
-#: inc/form.class.php:1580
+#: inc/form.class.php:1585
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Form kopyalandı: %s"
 
-#: inc/form.class.php:1591
+#: inc/form.class.php:1596
 #, php-format
 msgid "Form Transfered: %s"
-msgstr "Form Aktarıldı: %s"
+msgstr "Form aktarıldı: %s"
 
-#: inc/form.class.php:1776
+#: inc/form.class.php:1789
 msgid "Upload of JSON files not allowed."
 msgstr "JSON dosyalarının yüklenmesine izin verilmiyor."
 
-#: inc/form.class.php:1779
+#: inc/form.class.php:1792
 msgid "You may allow JSON files right now."
 msgstr "JSON dosyalarına şimdi izin verebilirsiniz."
 
-#: inc/form.class.php:1780
+#: inc/form.class.php:1793
 msgctxt "button"
 msgid "Create"
 msgstr "Oluştur"
 
-#: inc/form.class.php:1783 inc/form.class.php:1794
+#: inc/form.class.php:1796 inc/form.class.php:1807
 msgid "Please contact your GLPI administrator."
 msgstr "Lütfen GLPI yöneticiniz ile görüşün."
 
-#: inc/form.class.php:1784 inc/form.class.php:1795
+#: inc/form.class.php:1797 inc/form.class.php:1808
 msgctxt "button"
 msgid "Back"
 msgstr "Geri"
 
-#: inc/form.class.php:1787
+#: inc/form.class.php:1800
 msgid "Upload of JSON files not enabled."
 msgstr "JSON dosyalarını yükleme seçeneği etkinleştirilmemiş."
 
-#: inc/form.class.php:1790 inc/form.class.php:1793
+#: inc/form.class.php:1803 inc/form.class.php:1806
 msgid "You may enable JSON files right now."
-msgstr "JSON dosyalarını yükleme seçeneğini şimdi etkinleştirebilirsiniz."
+msgstr "JSON dosyaları yükleme seçeneğini şimdi etkinleştirebilirsiniz."
 
-#: inc/form.class.php:1791
+#: inc/form.class.php:1804
 msgctxt "button"
 msgid "Enable"
 msgstr "Etkinleştir"
 
-#: inc/form.class.php:1882
+#: inc/form.class.php:1895
 #, php-format
 msgid "Failed to import %s"
 msgstr "%s içe aktarılamadı"
 
-#: inc/form.class.php:1887
+#: inc/form.class.php:1900
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Form %s üzerinden içe aktarıldı"
 
-#: inc/form.class.php:1933
+#: inc/form.class.php:1946
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
-msgstr "%1$s formu zaten var ve değiştirilemez bir varlık."
+msgstr "%1$s formu zaten var ve değiştirilemez bir birim."
 
-#: inc/form.class.php:1941
+#: inc/form.class.php:1954
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
-msgstr "%2$s formu için %1$s varlığı gereklidir"
+msgstr "%2$s formu için %1$s birimi gereklidir"
 
-#: inc/form.class.php:2107
+#: inc/form.class.php:2127
 msgid "Failed to create JSON document type"
 msgstr "JSON belge türü oluşturulamadı"
 
-#: inc/form.class.php:2114
+#: inc/form.class.php:2134
 msgid "JSON document type not found"
 msgstr "JSON belge türü bulunamadı"
 
-#: inc/form.class.php:2121
+#: inc/form.class.php:2141
 msgid "Failed to update JSON document type"
 msgstr "JSON belge türü güncellenemedi"
 
-#: inc/form.class.php:2216
+#: inc/form.class.php:2236
 msgid "Forms without category"
 msgstr "Kategorisi bulunmayan formlar"
 
-#: inc/form.class.php:2528
+#: inc/form.class.php:2548
 msgid "Unsupported target type."
 msgstr "Hedef türü desteklenmiyor."
 
-#: inc/form.class.php:2540
+#: inc/form.class.php:2560
 msgid "The form does not exists."
 msgstr "Form bulunamadı."
 
-#: inc/form.class.php:2563
+#: inc/form.class.php:2583
 msgid "Unsuported target type."
 msgstr "Hedef türü desteklenmiyor."
 
 #: inc/form_profile.class.php:45 inc/form_profile.class.php:85
 msgid "Access type"
 msgid_plural "Access types"
-msgstr[0] "Erişim türü"
-msgstr[1] "Erişim türü"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/form_profile.class.php:100
 msgid "Link to the form"
@@ -412,8 +408,8 @@ msgstr "Onaylandı"
 #: inc/formanswer.class.php:155 inc/issue.class.php:474
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] "Form yanıtı"
-msgstr[1] "Form yanıtı"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/formanswer.class.php:212 inc/issue.class.php:379
 msgid "Form approver"
@@ -466,7 +462,7 @@ msgstr "Form kaydedildi!"
 
 #: inc/formanswer.class.php:879 inc/formanswer.class.php:906
 msgid "You are not the validator of these answers"
-msgstr "Bu yanıtların değerlendiricisi değilsiniz"
+msgstr "Bu yanıtları değerlendiren değilsiniz"
 
 #: inc/formanswer.class.php:1004 inc/formanswer.class.php:1006
 msgid "Form data"
@@ -478,13 +474,13 @@ msgstr "Hedefler oluşturulamadı."
 
 #: inc/formanswer.class.php:1268
 msgid "You must select validator!"
-msgstr "Bir doğrulayıcı seçmelisiniz!"
+msgstr "Bir değerlendiren seçmelisiniz!"
 
 #: inc/issue.class.php:40 inc/issue.class.php:287
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] "Sorun"
-msgstr[1] "Sorun"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/issue.class.php:53
 msgid "Update issue data from tickets and form answers"
@@ -502,25 +498,25 @@ msgstr "Değerlendirilmemiş"
 msgid "The form as been saved"
 msgstr "Form kaydedildi"
 
-#: inc/notificationtargetformanswer.class.php:44 install/install.php:269
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:270
 msgid "A form need to be validate"
 msgstr "Değerlendirilmesi gereken bir form var"
 
-#: inc/notificationtargetformanswer.class.php:45 install/install.php:275
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:276
 msgid "The form is refused"
 msgstr "Form reddedildi"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:281
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:282
 msgid "The form is accepted"
 msgstr "Form onaylandı"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:287
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:288
 msgid "The form is deleted"
 msgstr "Form silindi"
 
 #: inc/notificationtargetformanswer.class.php:78
 msgid "Form #"
-msgstr "Form No"
+msgstr "Form no"
 
 #: inc/notificationtargetformanswer.class.php:79
 msgid "Form name"
@@ -528,7 +524,7 @@ msgstr "Form adı"
 
 #: inc/notificationtargetformanswer.class.php:81
 msgid "Validator"
-msgstr "Değerlendirici"
+msgstr "Değerlendiren"
 
 #: inc/notificationtargetformanswer.class.php:83
 msgid "Full form answers"
@@ -540,26 +536,26 @@ msgstr "Red açıklaması"
 
 #: inc/notificationtargetformanswer.class.php:85
 msgid "Validation link"
-msgstr "Onaylama bağlantısı"
+msgstr "Değerlendirme bağlantısı"
 
 #: inc/notificationtargetformanswer.class.php:86
 msgid "Request #"
-msgstr "İstek No"
+msgstr "İstek no"
 
 #: inc/question.class.php:56 inc/targetbase.class.php:803
 #: inc/targetbase.class.php:841 inc/targetbase.class.php:919
-#: inc/targetbase.class.php:1507 inc/targetbase.class.php:1759
-#: inc/targetticket.class.php:770
+#: inc/targetbase.class.php:1507 inc/targetbase.class.php:1758
+#: inc/targetticket.class.php:773
 msgid "Question"
 msgid_plural "Questions"
-msgstr[0] "Soru"
-msgstr[1] "Soru"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/question.class.php:215 inc/question.class.php:845
+#: inc/question.class.php:215 inc/question.class.php:858
 msgid "Required"
 msgstr "Zorunlu"
 
-#: inc/question.class.php:256 inc/question.class.php:769
+#: inc/question.class.php:256 inc/question.class.php:782
 msgid "Add a question"
 msgstr "Bir soru ekle"
 
@@ -567,50 +563,58 @@ msgstr "Bir soru ekle"
 msgid "Add a section"
 msgstr "Bir bölüm ekle"
 
-#: inc/question.class.php:285 inc/section.class.php:69
+#: inc/question.class.php:279
+msgid "Show submit button"
+msgstr ""
+
+#: inc/question.class.php:303 inc/section.class.php:69
 #: inc/section.class.php:105
 msgid "The title is required"
 msgstr "Başlık zorunludur"
 
-#: inc/question.class.php:293
+#: inc/question.class.php:311
 msgid "The field type is required"
 msgstr "Alan türü zorunludur"
 
-#: inc/question.class.php:300
+#: inc/question.class.php:318
 msgid "The section is required"
 msgstr "Bölüm zorunludur"
 
-#: inc/question.class.php:315
+#: inc/question.class.php:333
 #, php-format
 msgid "Field type %1$s is not available for question %2$s."
 msgstr "%1$s alan türü %2$s sorusu için kullanılamaz."
 
-#: inc/question.class.php:335
+#: inc/question.class.php:353
 msgid "This type of question is not compatible with public forms."
 msgstr "Bu soru türü herkese açık formlar ile uyumlu değil."
 
-#: inc/question.class.php:344
+#: inc/question.class.php:362
 msgid "This type of question requires parameters"
 msgstr "Bu soru türü için parametrelerin belirtilmesi gerekli"
 
-#: inc/question.class.php:350
+#: inc/question.class.php:368
 msgid "A parameter is missing for this question type"
 msgstr "Bu soru türü için bir parametre eksik"
 
-#: inc/question.class.php:769
+#: inc/question.class.php:782
 msgid "Edit a question"
 msgstr "Bir soruyu düzenle"
 
-#: inc/question.class.php:795 inc/section.class.php:53
-#: inc/targetbase.class.php:1762
+#: inc/question.class.php:808 inc/section.class.php:53
+#: inc/targetbase.class.php:1761
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] "Bölüm"
-msgstr[1] "Bölüm"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/question.class.php:858
+#: inc/question.class.php:871
 msgid "Show empty"
 msgstr "Boş görüntülensin"
+
+#: inc/question.class.php:909
+msgid "Show field"
+msgstr "Alan görüntülensin"
 
 #: inc/questionrange.class.php:75
 msgid "Min"
@@ -632,6 +636,10 @@ msgstr ""
 msgid "Edit a section"
 msgstr "Bir bölümü düzenle"
 
+#: inc/section.class.php:369
+msgid "Show section"
+msgstr ""
+
 #: inc/target_actor.class.php:57 inc/targetbase.class.php:1140
 #: inc/targetbase.class.php:1277 inc/targetbase.class.php:1435
 msgid "Form requester"
@@ -644,7 +652,7 @@ msgstr "Formu değerlendiren"
 
 #: inc/target_actor.class.php:59
 msgid "Specific person"
-msgstr "Belirli bir kişi"
+msgstr "Belirli kişi"
 
 #: inc/target_actor.class.php:60 inc/targetbase.class.php:1153
 #: inc/targetbase.class.php:1290 inc/targetbase.class.php:1448
@@ -653,7 +661,7 @@ msgstr "Sorudan kişi"
 
 #: inc/target_actor.class.php:61
 msgid "Specific group"
-msgstr "Belirli bir grup"
+msgstr "Belirli grup"
 
 #: inc/target_actor.class.php:62 inc/targetbase.class.php:1164
 #: inc/targetbase.class.php:1301 inc/targetbase.class.php:1459
@@ -675,39 +683,39 @@ msgstr "Sorudan aktörler"
 
 #: inc/targetbase.class.php:178
 msgid "Current active entity"
-msgstr "Geçerli etkin varlık"
+msgstr "Geçerli etkin birim"
 
 #: inc/targetbase.class.php:179
 msgid "Default requester user's entity"
-msgstr "Varsayılan istekte bulunan kullanıcının varlığı"
+msgstr "Varsayılan İstekte bulunan kullanıcı birimi"
 
 #: inc/targetbase.class.php:180
 msgid "First dynamic requester user's entity (alphabetical)"
-msgstr "İlk devingen istekte bulunan kullanıcının varlığı (alfabetik)"
+msgstr "İlk devingen istekte bulunan kullanıcı birimi (alfabetik)"
 
 #: inc/targetbase.class.php:181
 msgid "Last dynamic requester user's entity (alphabetical)"
-msgstr "Son devingen istekte bulunan kullanıcının varlığı (alfabetik)"
+msgstr "Son devingen istekte bulunan kullanıcı birimi (alfabetik)"
 
 #: inc/targetbase.class.php:182
 msgid "The form entity"
-msgstr "Form varlığı"
+msgstr "Form birimi"
 
 #: inc/targetbase.class.php:183
 msgid "Default entity of the validator"
-msgstr "Onaylayan kişinin varsayılan varlığı"
+msgstr "Varsayılan değerlendiren kişi birimi"
 
 #: inc/targetbase.class.php:184
 msgid "Specific entity"
-msgstr "Belirli varlık"
+msgstr "Belirli birim"
 
 #: inc/targetbase.class.php:185
 msgid "Default entity of a user type question answer"
-msgstr "Soruyu yanıtlayan kullanıcı türünün varsayılan varlığı"
+msgstr "Varsayılan soruyu yanıtlayan kullanıcı türü birimi"
 
 #: inc/targetbase.class.php:186
 msgid "From a GLPI object > Entity type question answer"
-msgstr "Bir GLPI nesnesinden > Varlık türü soru yanıtı"
+msgstr "Bir GLPI nesnesinden > Birim türü soru yanıtı"
 
 #: inc/targetbase.class.php:193
 msgid "Tags from questions"
@@ -727,7 +735,7 @@ msgstr "Sorulardan etiketler ya da belirli etiketler"
 
 #: inc/targetbase.class.php:202
 msgid "equals to the answer to the question"
-msgstr "sorunun yanıtına eşit"
+msgstr "sorunun yanıtına eşit olan"
 
 #: inc/targetbase.class.php:203
 msgid "calculated from the ticket creation date"
@@ -739,17 +747,17 @@ msgstr "sorunun yanıtından hesaplanan"
 
 #: inc/targetbase.class.php:210
 msgid "Urgency from template or Medium"
-msgstr "Kalıp ya da Ortamdan Önem"
+msgstr "Önem düzeyi kalıp ya da ortamdan"
 
 #: inc/targetbase.class.php:211 inc/targetchange.class.php:47
 msgid "Specific urgency"
-msgstr "Özel önem"
+msgstr "Belirli önem düzeyi"
 
 #: inc/targetbase.class.php:212 inc/targetbase.class.php:220
 #: inc/targetbase.class.php:228 inc/targetchange.class.php:48
 #: inc/targetchange.class.php:56 inc/targetticket.class.php:85
 msgid "Equals to the answer to the question"
-msgstr "Sorunun yanıtına eşit"
+msgstr "Sorunun yanıtına eşit olan"
 
 #: inc/targetbase.class.php:218
 msgid "Category from template or none"
@@ -769,11 +777,11 @@ msgstr "Belirli konum"
 
 #: inc/targetbase.class.php:667
 msgid "User type question"
-msgstr "Kullanıcı türü soru"
+msgstr "Kullanıcı türü sorusu"
 
 #: inc/targetbase.class.php:668
 msgid "Entity type question"
-msgstr "Varlık türü soru"
+msgstr "Birim türü sorusu"
 
 #: inc/targetbase.class.php:788
 msgid "Ticket category"
@@ -781,7 +789,7 @@ msgstr "Çağrı kategorisi"
 
 #: inc/targetbase.class.php:842
 msgid "Urgency "
-msgstr "Önem"
+msgstr "Önem düzeyi"
 
 #: inc/targetbase.class.php:874
 msgid "Ticket tags"
@@ -811,15 +819,15 @@ msgstr "Var olan bir forma bir hedef atanmalıdır."
 msgid "The description cannot be empty!"
 msgstr "Açıklama boş olamaz!"
 
-#: inc/targetbase.class.php:1766
+#: inc/targetbase.class.php:1765
 msgid "Full form"
 msgstr "Tam form"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:254
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] "Hedef değişikliği"
-msgstr[1] "Hedef değişikliği"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/targetchange.class.php:46
 msgid "Medium"
@@ -844,8 +852,8 @@ msgstr "İptal"
 #: inc/targetticket.class.php:45 inc/targetticket.class.php:115
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] "Hedef çağrı"
-msgstr[1] "Hedef çağrı"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/targetticket.class.php:84
 msgid "Specific asset"
@@ -877,7 +885,7 @@ msgstr "Bağlantı türü geçersiz"
 
 #: inc/targetticket.class.php:471
 msgid "Invalid linked item type"
-msgstr "Bağlantı ögesi türü geçersiz"
+msgstr "Bağlantılı öge türü geçersiz"
 
 #: inc/targetticket.class.php:484
 msgid "Linked item does not exists"
@@ -887,33 +895,33 @@ msgstr "Bağlantılı öge bulunamadı"
 msgid "Failed to link the item"
 msgstr "Öge bağlantısı kurulamadı"
 
-#: inc/targetticket.class.php:687 install/install.php:282
+#: inc/targetticket.class.php:690 install/install.php:283
 msgid "Your form has been accepted by the validator"
-msgstr "Formunuz değerlendirici tarafından onaylandı"
+msgstr "Formunuz değerlendiren tarafından onaylandı"
 
-#: inc/targetticket.class.php:771
+#: inc/targetticket.class.php:774
 msgid "Item "
 msgstr "Öge"
 
 #: inc/wizard.class.php:97 inc/wizard.class.php:98
 msgid "Seek assistance"
-msgstr "Destek İsteyin"
+msgstr "Destek iste"
 
 #: inc/wizard.class.php:103 inc/wizard.class.php:104
 msgid "My requests for assistance"
-msgstr "Destek İsteklerim"
+msgstr "Destek isteklerim"
 
 #: inc/wizard.class.php:116 inc/wizard.class.php:117
 msgid "Book an asset"
-msgstr "Bir varlığı ayırtın"
+msgstr "Bir varlığı ayırt"
 
 #: inc/wizard.class.php:125 inc/wizard.class.php:126
 msgid "Consult feeds"
-msgstr "Akışlara bakın"
+msgstr "Akışlara bak"
 
 #: inc/wizard.class.php:269
 msgid "To validate"
-msgstr "Değerlendirmek için"
+msgstr "Değerlendirilecek"
 
 #: inc/wizard.class.php:279
 msgid "Closed"
@@ -930,8 +938,8 @@ msgstr "Her satıra bir tane"
 #: inc/fields/actorfield.class.php:84
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] "Aktör"
-msgstr[1] "Aktör"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/fields/actorfield.class.php:229
 #: inc/fields/checkboxesfield.class.php:187 inc/fields/datefield.class.php:81
@@ -942,8 +950,8 @@ msgstr[1] "Aktör"
 #: inc/fields/integerfield.class.php:126
 #: inc/fields/ldapselectfield.class.php:184
 #: inc/fields/multiselectfield.class.php:151
-#: inc/fields/radiosfield.class.php:218 inc/fields/selectfield.class.php:121
-#: inc/fields/tagfield.class.php:140 inc/fields/textareafield.class.php:133
+#: inc/fields/radiosfield.class.php:220 inc/fields/selectfield.class.php:121
+#: inc/fields/tagfield.class.php:140 inc/fields/textareafield.class.php:136
 #: inc/fields/textfield.class.php:126 inc/fields/timefield.class.php:93
 #: inc/fields/urgencyfield.class.php:170
 msgid "A required field is empty:"
@@ -973,7 +981,7 @@ msgstr "İşaret kutuları"
 #: inc/fields/dropdownfield.class.php:373
 #: inc/fields/glpiselectfield.class.php:114
 #: inc/fields/multiselectfield.class.php:187
-#: inc/fields/radiosfield.class.php:136
+#: inc/fields/radiosfield.class.php:138
 msgid "The field value is required:"
 msgstr "Alan değeri zorunludur:"
 
@@ -1067,8 +1075,8 @@ msgstr "Ek değerlendirme"
 #: inc/fields/glpiselectfield.class.php:107
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] "GLPI nesnesi"
-msgstr[1] "GLPI nesnesi"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/fields/integerfield.class.php:145
 msgid "This is not an integer:"
@@ -1120,7 +1128,7 @@ msgstr "LDAP bilgileri geri yüklenemedi."
 msgid "Multiselect"
 msgstr "Çoklu seçim"
 
-#: inc/fields/radiosfield.class.php:129
+#: inc/fields/radiosfield.class.php:131
 msgid "Radios"
 msgstr "Radyo düğmeleri"
 
@@ -1131,10 +1139,10 @@ msgstr "Seçin"
 #: inc/fields/tagfield.class.php:169
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] "Etiket"
-msgstr[1] "Etiket"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/fields/textareafield.class.php:103
+#: inc/fields/textareafield.class.php:106
 msgid "Textarea"
 msgstr "Metin alanı"
 
@@ -1156,15 +1164,15 @@ msgstr "Metin"
 msgid "Time"
 msgstr "Zaman"
 
-#: install/install.php:263
+#: install/install.php:264
 msgid "A form has been created"
 msgstr "Bir form eklendi"
 
-#: install/install.php:264
+#: install/install.php:265
 msgid "Your request has been saved"
 msgstr "İsteğiniz kaydedildi"
 
-#: install/install.php:265
+#: install/install.php:266
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -1174,11 +1182,11 @@ msgstr ""
 "kaydedilerek destek ekibimize iletildi.\\nİsteğinize verilen yanıtları şu "
 "bağlantıdan görebilirsiniz:\\n##formcreator.validation_link##"
 
-#: install/install.php:270
+#: install/install.php:271
 msgid "A form from GLPI need to be validate"
 msgstr "Değerlendirilmesi gereken bir GLPI formu var"
 
-#: install/install.php:271
+#: install/install.php:272
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
@@ -1188,12 +1196,12 @@ msgstr ""
 "üzere seçildiniz.\\nAşağıdaki bağlantıya tıklayarak forma "
 "erişebilirsiniz:\\n##formcreator.validation_link##"
 
-#: install/install.php:276
+#: install/install.php:277
 msgid "Your form has been refused by the validator"
 msgstr ""
 "Formunuzdaki bilgiler hatalı olduğundan değerlendiren tarafından reddedildi"
 
-#: install/install.php:277
+#: install/install.php:278
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1205,26 +1213,26 @@ msgstr ""
 "düzenleyip yeniden göndermek için şu bağlantıyı "
 "kullanabilirsiniz:\\n##formcreator.validation_link##"
 
-#: install/install.php:283
+#: install/install.php:284
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr ""
-"Merhaba,\\nFormunuz kabul edildi.\\nİsteğiniz kısa süre içinde "
-"değerlendirilecek."
+"Merhaba,\\nFormunuz değerlendiren tarafından kabul edildi.\\nİsteğiniz kısa "
+"süre içinde değerlendirilecek."
 
-#: install/install.php:288
+#: install/install.php:289
 msgid "Your form has been deleted by an administrator"
 msgstr "Formunuz bir yönetici tarafından silindi"
 
-#: install/install.php:289
+#: install/install.php:290
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr ""
 "Merhaba,\\nİsteğiniz dikkate alınmadı ve bir yönetici tarafından silindi."
 
-#: install/install.php:501 install/upgrade_to_2.5.php:409
+#: install/install.php:502 install/upgrade_to_2.5.php:409
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Eşitleme hizmeti katalog sorunları"
 
