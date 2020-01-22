@@ -385,7 +385,7 @@ class PluginFormcreatorFields
     * @param string $type type of field to get
     * @param PluginFormcreatorQuestion $question question representing the field
     * @param array $data additional data
-    * @return null|PluginFormcreatorFieldInterface
+    * @return null|PluginFormcreatorField
     */
    public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
       if (!self::fieldTypeExists($type)) {
