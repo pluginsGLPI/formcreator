@@ -136,7 +136,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * Gets parameters of the field with their settings
-    * @return PluginFormcreatorQuestionParameterInterface[]
+    * @return PluginFormcreatorQuestionParameter[]
     */
    public function getParameters();
 
