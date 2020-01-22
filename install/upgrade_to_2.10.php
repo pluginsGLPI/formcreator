@@ -35,8 +35,6 @@ class PluginFormcreatorUpgradeTo2_10 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $this->migration = $migration;
 
       // Add conditions on the submit button for a form
