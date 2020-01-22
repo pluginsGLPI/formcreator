@@ -77,7 +77,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                [
                   $formFk => $target[$formFk],
                   'uuid'  => $target['uuid'],
-                  'name'  => $target['name'],
+                  'name'  => Toolbox::addslashes_deep($target['name']),
                ],
                [
                   'id' => $target['items_id'],
