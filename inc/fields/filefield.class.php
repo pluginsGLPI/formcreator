@@ -46,9 +46,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          ]);
       } else {
          $doc = new Document();
-         $answer = $this->value;
-         if (!is_array($this->value)) {
-            $answer = [$this->value];
+         $answer = $this->uploadData;
+         if (!is_array($this->uploadData)) {
+            $answer = [$this->uploadData];
          }
          foreach ($answer as $item) {
             if (is_numeric($item) && $doc->getFromDB($item)) {
