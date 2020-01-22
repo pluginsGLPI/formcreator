@@ -450,20 +450,6 @@ PluginFormcreatorConditionnableInterface
       return $input;
    }
 
-   protected function serializeDefaultValue($input) {
-      // Might need to merge $this->fields and $input, $input having precedence
-      // over $this->fields
-      $question = new self();
-      $question->fields = $input;
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $question
-      );
-      $field->parseDefaultValue($input['default_values']);
-      $input['default_values'] = $field->serializeValue();
-      return $input;
-   }
-
    /**
     * Update size or position of the question
     * @param array $input
