@@ -41,6 +41,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    const ASSOCIATE_RULE_SPECIFIC = 2;
    const ASSOCIATE_RULE_ANSWER = 3;
 
+   const REQUESTTYPE_SPECIFIC = 1;
+   const REQUESTTYPE_ANSWER = 2;
+
+
    public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
    }
@@ -86,6 +90,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       ];
    }
 
+   public static function getEnumRequestTypeRule() {
+      return [
+         self::REQUESTTYPE_SPECIFIC  => __('Specific type', 'formcreator'),
+         self::REQUESTTYPE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+      ];
+   }
    /**
     * Show the Form for the adminsitrator to edit in the config page
     *
@@ -371,6 +381,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                break;
             default:
                $input['urgency_question'] = '0';
+         }
+
+         $input['type_question'] = '0';
+         switch ($input['type_rule']) {
+            case self::REQUESTTYPE_ANSWER:
+               $input['type_question'] = $input['_type_question'];
+               break;
+            case self::REQUESTTYPE_SPECIFIC:
+               $input['type_question'] = $input['_type_specific'];
+               break;
          }
 
          switch ($input['category_rule']) {
@@ -745,14 +765,72 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return $data;
    }
 
+   protected function setTargetType($data, $formanswer) {
+      global $DB;
+
+      $type = null;
+      switch ($this->fields['type_rule']) {
+         case self::REQUESTTYPE_ANSWER:
+            $type = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->getID(),
+                  'plugin_formcreator_questions_id'   => $this->fields['type_question']
+               ]
+            ])->next();
+            $type = $type['answer'];
+            break;
+         case self::REQUESTTYPE_SPECIFIC:
+            $type = $this->fields['type_question'];
+            break;
+         default:
+            $type = null;
+      }
+      if (!is_null($type)) {
+         $data['type'] = $type;
+      }
+
+      return $data;
+   }
+
    protected  function showTypeSettings($rand) {
       echo '<tr class="line0">';
-      echo '<td width="15%">' . __('Type') . '</td>';
+      echo '<td width="15%">' . __('Request type') . '</td>';
       echo '<td width="25%">';
-      Ticket::dropdownType('type', ['value' => $this->fields['type'], 'rand' => $rand]);
+      Dropdown::showFromArray('type_rule', static::getEnumRequestTypeRule(), [
+            'value' => $this->fields['type_rule'],
+            'rand' => $rand,
+            'on_change' => "plugin_formcreator_changeRequestType($rand)",
+         ]
+      );
+      echo Html::scriptBlock("plugin_formcreator_changeRequestType($rand);");
       echo '</td>';
-      echo '<td></td>';
-      echo '<td></td>';
+      echo '<td width="15%">';
+      echo '<span id="requesttype_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="requesttype_specific_title" style="display: none">' . __('Type ', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+      echo '<div id="requesttype_specific_value" style="display: none">';
+      Ticket::dropdownType('_type_specific',
+         [
+            'value'   => $this->fields['type_question'],
+         ]
+      );
+      echo '</div>';
+      echo '<div id="requesttype_question_value" style="display: none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['requesttype'],
+         ],
+         '_type_question',
+         [
+            'value' => $this->fields['type_question']
+         ]
+      );
+      echo '</div>';
+      echo '</td>';
       echo '</tr>';
    }
 
@@ -852,20 +930,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             foreach ($rows as $row) {
                $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
             }
-            break;
-      }
-
-      return $data;
-   }
-
-   protected function setTargetType($data, $formanswer) {
-      switch ($this->fields['type']) {
-         case Ticket::INCIDENT_TYPE:
-            $data['type'] = Ticket::INCIDENT_TYPE;
-            break;
-
-         case Ticket::DEMAND_TYPE:
-            $data['type'] = Ticket::DEMAND_TYPE;
             break;
       }
 
