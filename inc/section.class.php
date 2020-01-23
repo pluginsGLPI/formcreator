@@ -297,6 +297,7 @@ PluginFormcreatorConditionnableInterface
       // add the section to the linker
       $linker->addObject($originalId, $item);
 
+      // Import the questions
       if (isset($input['_questions'])) {
          // sort questions by order
          usort($input['_questions'], function ($a, $b) {
@@ -311,6 +312,13 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
+      // Import conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+         }
+      }
+
       return $itemId;
    }
 
@@ -321,7 +329,7 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      $section       = $this->fields;
+      $section = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -341,6 +349,14 @@ PluginFormcreatorConditionnableInterface
          if ($form_question->getFromDB($question['id'])) {
             $section['_questions'][] = $form_question->export($remove_uuid);
          }
+      }
+
+      // get question conditions
+      $section['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $section['_conditions'][] = $condition->export($remove_uuid);
       }
 
       // remove ID or UUID

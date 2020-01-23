@@ -94,8 +94,6 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
-      //$itemtypeFk = $input['itemtype']::getForeignKeyField();
-      //$questionFk = PluginFormcreatorQuestion::getForeignKeyField();
       $input['items_id'] = $containerId;
 
       $item = new self();
@@ -119,10 +117,16 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       }
 
       // set ID for linked objects
-      $linked = $linker->getObject($input['plugin_formcreator_questions_id'], $input['itemtype']);
+      $linked = $linker->getObject($input['plugin_formcreator_questions_id'], PluginFormcreatorQuestion::class);
       if ($linked === false) {
-         $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-         return false;
+         $linked = new PluginFormcreatorQuestion();
+         $linked->getFromDBByCrit([
+            $idKey => $input['plugin_formcreator_questions_id']
+         ]);
+         if ($linked->isNewItem()) {
+            $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+            return false;
+         }
       }
       $input['plugin_formcreator_questions_id'] = $linked->getID();
 
@@ -170,6 +174,13 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          $question = new PluginFormcreatorQuestion();
          $question->getFromDB($condition['plugin_formcreator_questions_id']);
          $condition['plugin_formcreator_questions_id'] = $question->fields['uuid'];
+         $containerType = $input['itemtype'];
+         if (!class_exists($containerType) || !is_subclass_of($containerType, PluginFormcreatorConditionnableInterface::class)) {
+            return false;
+         }
+         $container = new $containerType();
+         $container->getFromDB($condition['items_id']);
+         $condition['items_id'] = $container->fields['uuid'];
       }
       unset($condition[$idToRemove]);
 
