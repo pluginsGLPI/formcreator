@@ -1298,6 +1298,16 @@ function pluginFormcreatorInitializeMultiselect(fieldName, rand) {
 }
 
 /**
+ * Initialize a request type field
+ */
+function pluginFormcreatorInitializeRequestType(fieldName, rand) {
+   var field = $('select[name="' + fieldName + '"]');
+   field.on("change", function(e) {
+      formcreatorShowFields($(field[0].form));
+   });
+}
+
+/**
  * Initialize a select field
  */
 function pluginFormcreatorInitializeSelect(fieldName, rand) {
@@ -1443,6 +1453,27 @@ function plugin_formcreator_updateCompositePeerType(rand) {
       case '2' :
          $('#category_specific_title').show();
          $('#category_specific_value').show();
+         break;
+   }
+}
+
+/**
+ * change request type of a target item (design mode)
+ */
+function plugin_formcreator_changeRequestType(rand) {
+   $('#requesttype_specific_title').hide();
+   $('#requesttype_specific_value').hide();
+   $('#requesttype_question_title').hide();
+   $('#requesttype_question_value').hide();
+
+   switch($('#dropdown_type_rule' + rand).val()) {
+      case '1': // PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC
+         $('#requesttype_specific_title').show();
+         $('#requesttype_specific_value').show();
+         break;
+      case '2': // PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER
+         $('#requesttype_question_title').show();
+         $('#requesttype_question_value').show();
          break;
    }
 }

@@ -35,8 +35,6 @@ use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy;
 
 class PluginFormcreatorTargetTicket extends CommonTestCase {
 
-   private $use_notifications;
-
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       switch ($method) {
@@ -275,7 +273,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    /**
-    * 
+    *
     * @return void
     */
    public function  testSetTargetEntity() {
@@ -444,6 +442,117 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
    }
 
+   public function providerSetTargetType() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
+      $question = $this->getQuestion([
+         'fieldtype' => 'requesttype',
+      ]);
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form1 = new \PluginFormcreatorForm();
+      $form1->getFromDBByQuestion($question);
+      $form1->update([
+         'id' => $form1->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => [2] // Glpi user
+      ]);
+      $targetTicket1 = $this->getTargetTicket([
+         $formFk     => $form1->getID(),
+         'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
+         'type_question' => \Ticket::INCIDENT_TYPE,
+      ]);
+
+      $question = $this->getQuestion([
+         'fieldtype' => 'requesttype',
+      ]);
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form2 = new \PluginFormcreatorForm();
+      $form2->getFromDBByQuestion($question);
+      $form2->update([
+         'id' => $form2->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => [2] // Glpi user
+      ]);
+      $targetTicket2 = $this->getTargetTicket([
+         $formFk     => $form2->getID(),
+         'type_rule' => \PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER,
+         'type_question' => $question->getID(),
+      ]);
+      return [
+         [
+            'instance'   => $targetTicket1,
+            'formanswer' => (new \PluginFormcreatorFormAnswer())->add([
+               \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+               'name' => $form1->fields['name'],
+               'requester_id' => 2, // glpi user id
+               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_field_' . $question->getID() => (string) \Ticket::INCIDENT_TYPE,
+            ]),
+            'expected'   => \Ticket::INCIDENT_TYPE,
+         ],
+         [
+            'instance'   => $targetTicket1,
+            'formanswer' => (new \PluginFormcreatorFormAnswer())->add([
+               \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+               'name' => $form1->fields['name'],
+               'requester_id' => 2, // glpi user id
+               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_field_' . $question->getID() => (string) \Ticket::DEMAND_TYPE,
+            ]),
+            'expected'   => \Ticket::INCIDENT_TYPE,
+         ],
+         [
+            'instance'   => $targetTicket2,
+            'formanswer' => (new \PluginFormcreatorFormAnswer())->add([
+               \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
+               'name' => $form2->fields['name'],
+               'requester_id' => 2, // glpi user id
+               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_field_' . $question->getID() => (string) \Ticket::DEMAND_TYPE,
+            ]),
+            'expected'   => \Ticket::DEMAND_TYPE,
+         ],
+         [
+            'instance'   => $targetTicket2,
+            'formanswer' => (new \PluginFormcreatorFormAnswer())->add([
+               \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
+               'name' => $form2->fields['name'],
+               'requester_id' => 2, // glpi user id
+               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_field_' . $question->getID() => (string) \Ticket::INCIDENT_TYPE,
+            ]),
+            'expected'   => \Ticket::INCIDENT_TYPE,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSetTargetType
+    */
+   public function testSetTargetType(\PluginFormcreatorTargetTicket $originalInstance, $originalformAnswer, $expected) {
+      // reload the instance with the helper class
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $instance->getFromDB($originalInstance->getID());
+
+      // load the form answer
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->getFromDB($originalformAnswer);
+
+      $output = $instance->publicSetTargetType(
+         [
+         ],
+         $formAnswer
+      );
+      $this->integer((int) $output['type'])->isEqualTo($expected);
+   }
+
    public function providerPrepareTemplate() {
       global $CFG_GLPI;
 
@@ -531,7 +640,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $fieldsWithoutID = [
          'name',
          'target_name',
-         'type',
+         'type_rule',
+         'type_question',
          'content',
          'due_date_rule',
          'due_date_question',

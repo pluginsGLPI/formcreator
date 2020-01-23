@@ -39,53 +39,23 @@ class PluginFormcreatorUpgradeTo2_10 {
 
       $this->migration = $migration;
 
-      // rows / columns for sections
-      $table = 'glpi_plugin_formcreator_questions';
-      $migration->changeField($table, 'order', 'row', 'integer');
-      $migration->addField($table, 'col', 'integer', ['after' => 'row']);
-      $migration->addField($table, 'width', 'integer', ['after' => 'col']);
-      $migration->addPostQuery("UPDATE `$table` SET `width`='4' WHERE `width` < '1'");
-      // Reorder questions from 0 instead of 1
-      $migration->migrationOneTable($table);
-      $result = $DB->query("SELECT glpi_plugin_formcreator_sections.id FROM glpi_plugin_formcreator_sections
-         INNER JOIN glpi_plugin_formcreator_questions ON (glpi_plugin_formcreator_sections.id = glpi_plugin_formcreator_questions.plugin_formcreator_sections_id)
-         GROUP BY glpi_plugin_formcreator_sections.id
-         HAVING MIN(glpi_plugin_formcreator_questions.`row`) > 0");
-      foreach($result as $row) {
-         $DB->update($table, [
-            'row' => new QueryExpression("`row` - 1")
-         ],
+      // Add conditions on the submit button for a form
+      $table = 'glpi_plugin_formcreator_forms';
+      $migration->addField(
+         $table,
+         'show_rule',
+         'integer',
          [
-            'plugin_formcreator_sections_id' => $row['id']
-         ]);
-      }
+            'value'   => '1',
+            'after'   => 'is_default',
+            'comment' => 'Conditions setting to show the submit button'
+         ]
+      );
 
-      // add uuid to targetchanges
-      $table = 'glpi_plugin_formcreator_targetchanges';
-      $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
+      // Add request type specific question
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->changeField($table, 'type', 'type_question', 'integer', ['after' => 'target_name', 'value' => '0']);
       $migration->migrationOneTable($table);
-
-      $request = [
-         '*SELECT' => 'id',
-         'FROM' => $table,
-      ];
-      foreach ($DB->request($request) as $row) {
-         $id = $row['id'];
-         $uuid = plugin_formcreator_getUuid();
-         $DB->query("UPDATE INTO `$table`
-            SET `uuid`='$uuid'
-            WHERE `id`='$id'"
-         ) or plugin_formcreator_upgrade_error($migration);
-      }
-
-      // conditions on targets 
-      $table = 'glpi_plugin_formcreator_targetchanges';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
-
-      // Move uuid field at last position
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
+      $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '1']);
    }
 }
