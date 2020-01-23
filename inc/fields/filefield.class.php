@@ -109,6 +109,10 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return __('File');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      return $input;
+   }
+
    public static function canRequire() {
       return true;
    }
