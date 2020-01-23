@@ -185,6 +185,7 @@ PluginFormcreatorConditionnableInterface
             echo '<td onclick="plugin_formcreator_editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ', ' . $section->getID() . ')">';
             echo "<a href='#'>";
             echo $field->getHtmlIcon();
+            echo '&nbsp;';
             echo $question->fields['name'];
             echo "<a>";
             echo '</td>';
