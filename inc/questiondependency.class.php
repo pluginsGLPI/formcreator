@@ -171,8 +171,14 @@ extends PluginFormcreatorQuestionParameter
       // set ID for linked objects
       $linked = $linker->getObject($input['plugin_formcreator_questions_id_2'], PluginFormcreatorQuestion::class);
       if ($linked === false) {
-         $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-         return false;
+         $linked = new PluginFormcreatorQuestion();
+         $linked->getFromDBByCrit([
+            $idKey => $input['plugin_formcreator_questions_id']
+         ]);
+         if ($linked->isNewItem()) {
+            $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+            return false;
+         }
       }
       $input['plugin_formcreator_questions_id_2'] = $linked->getID();
 
