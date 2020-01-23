@@ -175,7 +175,7 @@ class PluginFormcreatorFields
       $evalItem[$itemtype][$itemId] = null;
 
       // Force the first logic operator to OR
-      $conditions[0]['logic']       = 'OR';
+      $conditions[0]['logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;
 
       $return                       = false;
       $lowPrecedenceReturnPart      = false;
@@ -186,7 +186,7 @@ class PluginFormcreatorFields
             $nextLogic = $conditions[$order + 1]['logic'];
          } else {
             // To ensure the low precedence return part is used at the end of the whole evaluation
-            $nextLogic = 'OR';
+            $nextLogic = PluginFormcreatorCondition::SHOW_LOGIC_OR;
          }
 
          // TODO: find the best behavior if the question does not exists
