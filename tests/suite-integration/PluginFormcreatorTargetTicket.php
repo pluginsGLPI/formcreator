@@ -88,8 +88,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testUrgency() {
       global $DB;
 
-      $form = new \PluginFormcreatorForm();
-      $formId = $form->add([
+      $form = $this->getForm([
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => __METHOD__,
          'description'           => 'form description',
@@ -97,6 +96,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'is_active'             => 1,
          'validation_required'   => 0
       ]);
+      $formId = $form->getID();
       $this->boolean($form->isNewItem())->isFalse();
 
       $sectionsData = [
@@ -223,6 +223,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $targetTicketData['destination_entity'] = 'NULL';
          $targetTicketData['category_rule'] = '';
          $targetTicketData['location_rule'] = '';
+         $targetTicketData['type_rule'] = \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC;
+         $targetTicketData['_type_specific'] = \Ticket::INCIDENT_TYPE;
          $this->boolean($targetTicket->update($targetTicketData))->isTrue();
       }
 
