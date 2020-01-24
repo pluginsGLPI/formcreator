@@ -58,6 +58,10 @@ PluginFormcreatorConditionnableInterface
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
+   function isEntityAssign() {
+      return false;
+   }
+
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}

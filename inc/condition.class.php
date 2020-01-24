@@ -334,14 +334,23 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
             throw new RuntimeException("Unsupported conditionnable");
 
       }
-      $questionsInForm = (new PluginFormcreatorQuestion())->getQuestionsFromFormBySection($form->getID(), $questionListExclusion);
+      $sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
+      $sectionsList = [];
+      foreach ($sections as $section) {
+         $sectionsList[] = $section->getID();
+      }
+      $questionListExclusion[] = [
+         PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
+      ];
       $html.= '<div class="div_show_condition_field">';
-      $html.= Dropdown::showFromArray(
-         '_conditions[plugin_formcreator_questions_id][]',
-         $questionsInForm, [
-            'display'      => false,
-            'value'        => $questionId,
-            'rand'         => $rand,
+      $html.= PluginFormcreatorQuestion::dropdown(
+         [
+            'name' => '_conditions[plugin_formcreator_questions_id][]',
+            'value'     => $questionId,
+            'comments'  => false,
+            'condition' => $questionListExclusion,
+            'rand'      => $rand,
+            'display'   => false,
          ]
       );
       $html.= '</div>';
