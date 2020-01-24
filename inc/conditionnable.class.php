@@ -32,6 +32,9 @@
 trait PluginFormcreatorConditionnable
 {
    public function updateConditions(CommonDBTM $item, $input) {
+      if (!isset($input['show_rule'])) {
+         return false;
+      }
       $showRule = $input['show_rule'];
       if ($showRule == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          return false;
