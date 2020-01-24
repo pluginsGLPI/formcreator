@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild implements 
+class PluginFormcreatorSection extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
@@ -130,11 +130,11 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function post_addItem() {
-      $this->updateConditions($this->input);
+      $this->updateConditions($this, $this->input);
    }
 
    public function post_updateItem($history = 1) {
-      $this->updateConditions($this->input);
+      $this->updateConditions($this, $this->input);
    }
 
    /**
@@ -408,8 +408,9 @@ PluginFormcreatorConditionnableInterface
       . ' action="javascript:' . $action . '"'
       . ' data-itemtype="' . self::class . '"'
       . '>';
+      echo '<div>';
       echo '<table class="tab_cadre_fixe">';
-     
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo $title;
@@ -423,7 +424,7 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
       echo '</tr>';
 
-      // List of conditions 
+      // List of conditions
       echo '<tr>';
       echo '<th colspan="4">';
       echo __('Condition to show the section', 'formcreator');
@@ -444,10 +445,10 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
       echo '</tr>';
 
+      // table and div are closed here
       $this->showFormButtons($options + [
          'candel' => false,
       ]);
-      Html::closeForm();
    }
 
    /**
@@ -500,77 +501,17 @@ PluginFormcreatorConditionnableInterface
    }
 
    /**
-    * Updates the conditions of the question
-    * @param array $input
-    * @return boolean true if success, false otherwise
-    */
-    public function updateConditions($input) {
-      if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
-         || !isset($input['show_value']) || !isset($input['show_logic'])) {
-         return  false;
-      }
-
-      if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
-         || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
-         return false;
-      }
-
-      // All arrays of condition exists
-      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         return false;
-      }
-
-      if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
-            && count($input['show_value']) == count($input['show_logic'])
-            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
-         return false;
-      }
-
-      // Delete all existing conditions for the question
-      $condition = new PluginFormcreatorCondition();
-      $condition->deleteByCriteria([
-         'itemtype' => static::class,
-         'items_id' => $this->getID(),
-      ]);
-
-      // Arrays all have the same count and have at least one item
-      $order = 0;
-      while (count($input['plugin_formcreator_questions_id']) > 0) {
-         $order++;
-         $value            = array_shift($input['show_value']);
-         $questionID       = (int) array_shift($input['plugin_formcreator_questions_id']);
-         $showCondition    = html_entity_decode(array_shift($input['show_condition']));
-         $showLogic        = array_shift($input['show_logic']);
-         $condition = new PluginFormcreatorCondition();
-         $condition->add([
-            'itemtype'                        => static::class,
-            'items_id'                        => $this->getID(),
-            'plugin_formcreator_questions_id' => $questionID,
-            'show_condition'                  => $showCondition,
-            'show_value'                      => $value,
-            'show_logic'                      => $showLogic,
-            'order'                           => $order,
-         ]);
-         if ($condition->isNewItem()) {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
-   /**
     * Get HTML for section at design time of a form
     *
-    * @return string HTML 
+    * @return string HTML
     */
     public function getDesignHtml() {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $formId = $this->fields[$formFk];
       $sectionId = $this->getID();
       $lastSectionOrder = PluginFormcreatorCommon::getMax(
-         new PluginFormcreatorSection(), 
-         [PluginFormcreatorForm::getForeignKeyField() => $formId], 
+         new PluginFormcreatorSection(),
+         [PluginFormcreatorForm::getForeignKeyField() => $formId],
          'order'
       );
 
@@ -609,7 +550,7 @@ PluginFormcreatorConditionnableInterface
       $html .= '<span class="form_control pointer moveUp" style="display: ' . $display . '">';
       $html .= '<i class="fas fa-sort-up" onclick="plugin_formcreator.moveSection(this, \'up\')"></i>';
       $html .= "</span>";
-      
+
       // Section content
       $columns = PluginFormcreatorSection::COLUMNS;
       $html .= '<div class="grid-stack grid-stack-'.$columns.'"'
@@ -638,8 +579,8 @@ PluginFormcreatorConditionnableInterface
    }
 
    /**
-    * Is the given row empty ? 
-    * 
+    * Is the given row empty ?
+    *
     * @return boolean true if empty
     */
    public function isRowEmpty($row) {
@@ -658,7 +599,7 @@ PluginFormcreatorConditionnableInterface
                   'row' => ['<', $row],
                   // To support variable height the expressin  below should be
                   // row + height - 1
-                  new QueryExpression("`row` >= " . $row), 
+                  new QueryExpression("`row` >= " . $row),
                ],
             ],
          ]

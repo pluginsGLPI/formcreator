@@ -31,10 +31,11 @@
 
 interface PluginFormcreatorConditionnableInterface
 {
-  /**
-   * Updates the conditions of the question
-   * @param array $input
-   * @return boolean true if success, false otherwise
-   */
-  public function updateConditions($input);
+   /**
+    * Updates the conditions of the question
+    * @param  CommonDBTM $item the item on which applies the conditions
+    * @param  array $input
+    * @return boolean true if success, false otherwise
+    */
+    public function updateConditions(CommonDBTM $item, $input);
 }

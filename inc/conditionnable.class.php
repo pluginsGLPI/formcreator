@@ -31,12 +31,15 @@
 
 trait PluginFormcreatorConditionnable
 {
-   /**
-    * Updates the conditions of the question
-    * @param array $input
-    * @return boolean true if success, false otherwise
-    */
-   public function updateConditions($input) {
+   public function updateConditions(CommonDBTM $item, $input) {
+      $showRule = $input['show_rule'];
+      if ($showRule == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         return false;
+      }
+
+      $input = $input['_conditions'];
+
+      // All arrays of condition exists
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
          return  false;
@@ -47,18 +50,13 @@ trait PluginFormcreatorConditionnable
          return false;
       }
 
-      // All arrays of condition exists
-      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         return false;
-      }
-
       if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
             && count($input['show_value']) == count($input['show_logic'])
             && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
          return false;
       }
 
-      $itemtype = static::class;
+      $itemtype = $item->getType();
       $itemId = $this->getID();
 
       // Delete all existing conditions for the question
@@ -77,7 +75,7 @@ trait PluginFormcreatorConditionnable
          $questionID       = (int) array_shift($input[$questionFk]);
          $showCondition    = html_entity_decode(array_shift($input['show_condition']));
          $showLogic        = array_shift($input['show_logic']);
-         $condition = new PluginFormcreatorCondition();
+         $condition        = new PluginFormcreatorCondition();
          $condition->add([
             'itemtype'                        => $itemtype,
             'items_id'                        => $itemId,

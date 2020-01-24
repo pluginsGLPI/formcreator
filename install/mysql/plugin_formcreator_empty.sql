@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `validation_required` tinyint(1) NOT NULL DEFAULT '0',
   `usage_count` int(11) NOT NULL DEFAULT '0',
   `is_default` tinyint(1) NOT NULL DEFAULT '0',
+  `show_rule` INT(11) NOT NULL DEFAULT '1' COMMENT 'Conditions setting to show the submit button',
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `entities_id` (`entities_id`),

@@ -195,4 +195,14 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
    public function getHtmlIcon() {
       return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
    }
+
+   public function isVisibleField()
+   {
+      return true;
+   }
+
+   public function isEditableField()
+   {
+      return true;
+   }
 }

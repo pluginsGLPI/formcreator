@@ -689,9 +689,9 @@ var plugin_formcreator = new function() {
       var questionId = form.find('[name="id"]').val();
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/question_update.php',
-      type: "POST",
-      data: form.serializeArray(),
-      dataType: 'html'
+         type: "POST",
+         data: form.serializeArray(),
+         dataType: 'html'
       }).fail(function(data) {
          alert(data.responseText);
       }).done(function(data) {
@@ -745,6 +745,7 @@ var plugin_formcreator = new function() {
             var itemToShow = JSON.parse(response);
             var questionToShow = itemToShow['PluginFormcreatorQuestion'];
             var sectionToShow = itemToShow['PluginFormcreatorSection'];
+            var submitButtonToShow = itemToShow['PluginFormcreatorForm'];
          } catch (e) {
             // Do nothing for now
          }
@@ -770,6 +771,8 @@ var plugin_formcreator = new function() {
                }
             }
          }
+
+         $('[name="submit_formcreator"]').toggle(submitButtonToShow == true);
       });
    };
 
@@ -889,9 +892,9 @@ var plugin_formcreator = new function() {
       var sectionId = form.find('[name="id"]').val();
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/section_update.php',
-      type: "POST",
-      data: form.serializeArray(),
-      dataType: 'html'
+         type: "POST",
+         data: form.serializeArray(),
+         dataType: 'html'
       }).fail(function(data) {
          alert(data.responseText);
       }).done(function(data) {
@@ -1118,33 +1121,43 @@ function plugin_formcreator_changeGlpiObjectItemType() {
 
 // === CONDITIONS ===
 
-function plugin_formcreator_toggleCondition(field) {
-   var item = $(field).closest('[data-itemtype]');
-   var itemtype = item.attr('data-itemtype');
-   var itemId = item.find('[name="id"]').attr('value');
+function plugin_formcreator_toggleCondition(target) {
+   var form = $(target).closest('form');
 
-   if (field.value == '1') {
-      $('[data-itemtype="PluginFormcreatorCondition"]').hide();
+   var selector = 'tr[data-itemtype="PluginFormcreatorCondition"]';
+   if (target.value == '1') {
+      form.find(selector).hide();
    } else {
-      $('[data-itemtype="PluginFormcreatorCondition"]').show();
-      if ($('[data-itemtype="PluginFormcreatorCondition"]').length < 1) {
-         plugin_formcreator_addEmptyCondition(field, itemtype, itemId);
+      if (form.find(selector).length < 1) {
+         plugin_formcreator_addEmptyCondition(target);
       }
-      $('[data-itemtype="PluginFormcreatorCondition"]').show();
+      form.find(selector).show();
    }
 }
 
-function plugin_formcreator_addEmptyCondition(target, itemtype, itemId) {
-   var data = $(target).closest('form').serializeArray();
-   var data = [];
-   data.push({name: 'itemtype', value: itemtype});
-   data.push({name: 'items_id', value: itemId});
+function plugin_formcreator_addEmptyCondition(target) {
+   var form     = $(target).closest('form');
+   var itemtype = form.attr('data-itemtype');
+   // value if the hidden id input field
+   var id       = form.find('[name="id"]').val();
+   var parentKey;
+   var parentId;
+   var data = form.serializeArray();
+   data.push({
+      name: 'itemtype',
+      value: itemtype
+   });
+   data.push({
+      name: 'items_id',
+      value: id
+   });
    $.ajax({
+      type: 'POST',
       url: rootDoc + '/plugins/formcreator/ajax/condition.php',
       data: data
    }).done(function (data) {
-      $(target).closest('tr').after(data);
-      $('[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic').first().hide();
+      $(target).parents('tr').after(data);
+      $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
    });
 }
 

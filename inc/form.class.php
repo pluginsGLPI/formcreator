@@ -37,8 +37,11 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorForm extends CommonDBTM implements
 PluginFormcreatorExportableInterface,
-PluginFormcreatorDuplicatableInterface
+PluginFormcreatorDuplicatableInterface,
+PluginFormcreatorConditionnableInterface
 {
+   use PluginFormcreatorConditionnable;
+
    static $rightname = 'entity';
 
    public $dohistory         = true;
@@ -1393,7 +1396,17 @@ PluginFormcreatorDuplicatableInterface
     */
    public function post_addItem() {
       $this->updateValidators();
-      return true;
+      $this->updateConditions($this, $this->input);
+   }
+
+   /**
+    * Actions done after the UPDATE of the item in the database
+    *
+    * @return void
+    */
+    public function post_updateItem($history = 1) {
+      $this->updateValidators();
+      $this->updateConditions($this, $this->input);
    }
 
    /**
@@ -1746,6 +1759,14 @@ PluginFormcreatorDuplicatableInterface
          $form['_sections'][] = $form_section->export($remove_uuid);
       }
 
+      // get submit conditions
+      $form['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $form['_conditions'][] = $condition->export($remove_uuid);
+      }
+
       // get validators
       $form['_validators'] = [];
       $all_validators = $DB->request([
@@ -2068,6 +2089,13 @@ PluginFormcreatorDuplicatableInterface
             $formFk => $itemId,
             ['NOT' => ['id' => $importedItems]]
          ]);
+      }
+
+      // Import submit conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+         }
       }
 
       // import form's targets
