@@ -772,33 +772,38 @@ function plugin_formcreator_ChangeActorAssigned(value) {
 
 // === FIELDS EDITION ===
 
-function plugin_formcreator_addEmptyCondition(target, itemtype) {
-   var itemId = $('form[name="plugin_formcreator_form"] input[name="id"]').val();
+function plugin_formcreator_toggleCondition(target) {
+   var form = $(target).closest('form');
+
+   var selector = 'tr[data-itemtype="PluginFormcreatorCondition"]';
+   if (target.value == '1') {
+      form.find(selector).hide();
+   } else {
+      if (form.find(selector).length < 1) {
+         plugin_formcreator_addEmptyCondition(target);
+      }
+      form.find(selector).show();
+   }
+}
+
+function plugin_formcreator_addEmptyCondition(target) {
+   var form     = $(target).closest('form');
+   var itemtype = form.attr('data-itemtype');
+   // value if the hidden id input field
+   var id       = form.find('[name="id"]').val();
    var parentKey;
    var parentId;
-   var data;
-
-   data = {
-         itemtype: itemtype,
-         items_id: itemId,
-      };
-   switch (itemtype) {
-      case 'PluginFormcreatorQuestion':
-         parentId = $('form[name="plugin_formcreator_form"] [name="plugin_formcreator_sections_id"]').val();
-         data.plugin_formcreator_sections_id = parentId;
-         break;
-
-      case 'PluginFormcreatorSection':
-         parentId = $('form[name="plugin_formcreator_form"] [name="plugin_formcreator_forms_id"]').val();
-         data.plugin_formcreator_forms_id = parentId;
-         break;
-
-      case 'PluginFormcreatorForm':
-         id = $('form[name="plugin_formcreator_form"] [name="id"]').val();
-         data.id = id;
-         break;
-   }
+   var data = form.serializeArray();
+   data.push({
+      name: 'itemtype',
+      value: itemtype
+   });
+   data.push({
+      name: 'items_id',
+      value: id
+   });
    $.ajax({
+      type: 'POST',
       url: rootDoc + '/plugins/formcreator/ajax/condition.php',
       data: data
    }).done(function (data) {

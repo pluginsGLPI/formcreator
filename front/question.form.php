@@ -50,8 +50,6 @@ if (isset($_POST["add"])) {
    if ($newid = $question->add($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
       $_POST['id'] = $newid;
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
    }
    Html::back();
 
@@ -60,8 +58,6 @@ if (isset($_POST["add"])) {
    Session::checkRight("entity", UPDATE);
    if ($question->update($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
    }
    Html::back();
 

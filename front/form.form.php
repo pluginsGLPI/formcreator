@@ -50,7 +50,6 @@ if (isset($_POST['add'])) {
    // Edit an existing form
    Session::checkRight('entity', UPDATE);
    $form->update($_POST);
-   $form->updateConditions($_POST);
    Html::back();
 
 } else if (isset($_POST['delete'])) {
