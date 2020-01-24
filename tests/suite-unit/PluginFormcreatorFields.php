@@ -285,7 +285,7 @@ class PluginFormcreatorFields extends CommonTestCase {
          ]
       ];
       $question->update($input);
-      $question->updateConditions($input);
+      $question->updateConditions($question, $input);
       $isVisible = \PluginFormcreatorFields::isVisible($question, $realAnswers);
       $this->boolean((boolean) $isVisible)->isEqualTo($expectedVisibility);
    }

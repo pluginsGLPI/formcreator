@@ -31,7 +31,7 @@
 
 trait PluginFormcreatorConditionnable
 {
-   public function updateConditions(CommonDBTM $item, $input) {
+   public function updateConditions($input) {
       if (!isset($input['show_rule'])) {
          return false;
       }
@@ -59,14 +59,11 @@ trait PluginFormcreatorConditionnable
          return false;
       }
 
-      $itemtype = $item->getType();
-      $itemId = $this->getID();
-
       // Delete all existing conditions for the question
       $condition = new PluginFormcreatorCondition();
       $condition->deleteByCriteria([
-         'itemtype' => $itemtype,
-         'items_id' => $itemId,
+         'itemtype' => $this->getType(),
+         'items_id' => $this->getID(),
       ]);
 
       // Arrays all have the same count and have at least one item

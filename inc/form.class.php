@@ -1368,7 +1368,7 @@ PluginFormcreatorConditionnableInterface
     */
    public function post_addItem() {
       $this->updateValidators();
-      $this->updateConditions($this, $this->input);
+      $this->updateConditions($this->input);
       return true;
    }
 
@@ -1379,7 +1379,7 @@ PluginFormcreatorConditionnableInterface
     */
     public function post_updateItem($history = 1) {
       $this->updateValidators();
-      $this->updateConditions($this, $this->input);
+      $this->updateConditions($this->input);
    }
 
    /**
