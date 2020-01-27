@@ -267,7 +267,7 @@ class PluginFormcreatorFields extends CommonTestCase {
          );
          $realAnswers[$questionPool[$id]->getID()]->deserializeValue($answer);
       }
-      $input = $conditions + [
+      $input = [
          'id'        => $question->getID(),
          'fieldtype' => 'text',
          'show_rule' => $show_rule,
@@ -282,7 +282,8 @@ class PluginFormcreatorFields extends CommonTestCase {
                   'regex' => ''
                ]
             ]
-         ]
+         ],
+         '_conditions' => $conditions,
       ];
       $question->update($input);
       $question->updateConditions($input);
