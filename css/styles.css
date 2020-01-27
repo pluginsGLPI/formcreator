@@ -427,7 +427,7 @@ input.submit_button:focus {
    cursor: pointer;
    padding-left: 22px;
    position: relative;
-   display: block;
+   display: inline-block;
    height: 26px;
 }
 .formcreator_radios input[type = radio] + label:before,

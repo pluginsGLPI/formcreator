@@ -104,6 +104,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             if ((trim($value) != '')) {
                $i++;
                $checked = ($this->value == $value) ? ['checked' => ''] : [];
+               $html .= '<p>';
                $html .= Html::input($fieldName, [
                   'type'    => 'radio',
                   'class'   => 'form-control',
@@ -113,6 +114,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                $html .= '<label for="' . $domId . '_' . $i . '">';
                $html .= $value;
                $html .= '</label>';
+               $html .= '</p>';
             }
          }
          $html .= '</div>';
