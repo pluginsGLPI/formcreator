@@ -151,7 +151,7 @@ input.submit_button:focus {
    background-color: #FFF;
 }
 
-/* 
+/*
  * Form designer
  */
 
@@ -194,17 +194,17 @@ input.submit_button:focus {
 /* GLPI 9.4 : override abusive CSS rules for gridstack */
 /* TODO: drop when GLPI 9.5 is patched */
 .form_section .grid-stack-item:not(.lock-bottom) .grid-stack-item-content {
-   font-size: inherit; 
-   font-weight: inherit; 
-   text-align: inherit; 
-   overflow: inherit; 
-   cursor: inherit; 
-   cursor: inherit; 
-   cursor: inherit; 
-   cursor: inherit; 
+   font-size: inherit;
+   font-weight: inherit;
+   text-align: inherit;
+   overflow: inherit;
+   cursor: inherit;
+   cursor: inherit;
+   cursor: inherit;
+   cursor: inherit;
 }
 
-.form_section .grid-stack .grid-stack-item .grid-stack-item-content, 
+.form_section .grid-stack .grid-stack-item .grid-stack-item-content,
 .form_section .grid-stack .grid-stack-item .placeholder-content {
 	left: 0;
 	right: 0;
@@ -216,7 +216,7 @@ input.submit_button:focus {
 }
 
 /*
-* Form Render 
+* Form Render
 */
 #plugin_formcreator_form.plugin_formcreator_form > ol {
    list-style-type: none;
@@ -257,7 +257,7 @@ input.submit_button:focus {
 /*
  * Validation header
  */
-#plugin_formcreator_form > .refused_header, 
+#plugin_formcreator_form > .refused_header,
 #plugin_formcreator_form > .accepted_header {
    padding: 10px 15px;
    background: #EED0D0; /*#EEE;*/
@@ -265,7 +265,7 @@ input.submit_button:focus {
    box-shadow: 2px 2px 2px #CCC;
    margin: 0 0 10px;
 }
-#plugin_formcreator_form > .refused_header > div, 
+#plugin_formcreator_form > .refused_header > div,
 #plugin_formcreator_form > .accepted_header > div {
    padding: 3px 10px;
    border-left: 5px solid #A00;
@@ -282,7 +282,7 @@ input.submit_button:focus {
    color: #060;
 }
 
-#plugin_formcreator_form > .form_header, 
+#plugin_formcreator_form > .form_header,
 #plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"] {
    background: #EEE;
    box-shadow: 2px 2px 2px #CCC;
