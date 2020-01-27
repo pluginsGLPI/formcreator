@@ -59,6 +59,9 @@ trait PluginFormcreatorConditionnable
          return false;
       }
 
+      $itemtype = $this->getType();
+      $itemId = $this->getID();
+
       // Delete all existing conditions for the question
       $condition = new PluginFormcreatorCondition();
       $condition->deleteByCriteria([

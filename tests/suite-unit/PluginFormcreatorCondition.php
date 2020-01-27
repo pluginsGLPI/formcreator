@@ -142,20 +142,22 @@ class PluginFormcreatorCondition extends CommonTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $question2->updateConditions([
-         'id' => $question2->getID(),
          'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-         'plugin_formcreator_questions_id' => [
-            $question1->getID(),
-         ],
-         'show_condition' =>[
-            \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-         ],
-         'show_value' => [
-            'foo',
-         ],
-         'show_logic' => [
-            \PluginFormcreatorCondition::SHOW_LOGIC_AND,
-         ]
+         '_conditions' => [
+            'id' => $question2->getID(),
+            'plugin_formcreator_questions_id' => [
+               $question1->getID(),
+            ],
+            'show_condition' =>[
+               \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+            ],
+            'show_value' => [
+               'foo',
+            ],
+            'show_logic' => [
+               \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+            ]
+            ],
       ]);
       $instance = $this->getTargetTicket();
       $instance->getFromDB($instance->getID());
@@ -172,7 +174,6 @@ class PluginFormcreatorCondition extends CommonTestCase {
 
       // Test the exported data
       $fieldsWithoutID = [
-         'itemtype',
          'plugin_formcreator_questions_id',
          'show_condition',
          'show_value',
