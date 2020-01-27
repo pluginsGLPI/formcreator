@@ -616,12 +616,12 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function post_addItem() {
-      $this->updateConditions($this, $this->input );
+      $this->updateConditions($this->input );
       $this->updateParameters($this->input);
    }
 
    public function post_updateItem($history = 1) {
-      $this->updateConditions($this, $this->input);
+      $this->updateConditions($this->input);
       $this->updateParameters($this->input);
    }
 

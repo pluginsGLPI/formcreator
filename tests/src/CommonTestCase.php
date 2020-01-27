@@ -237,7 +237,6 @@ abstract class CommonTestCase extends CommonDBTestCase
       $question = new \PluginFormcreatorQuestion();
       $question->add($input);
       $question->getFromDB($question->getID());
-      $question->updateParameters($input);
 
       return $question;
    }

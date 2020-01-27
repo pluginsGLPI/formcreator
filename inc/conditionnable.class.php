@@ -31,7 +31,7 @@
 
 trait PluginFormcreatorConditionnable
 {
-   public function updateConditions(CommonDBTM $item, $input) {
+   public function updateConditions($input) {
       if (!isset($input['show_rule'])) {
          return false;
       }
@@ -59,7 +59,7 @@ trait PluginFormcreatorConditionnable
          return false;
       }
 
-      $itemtype = $item->getType();
+      $itemtype = $this->getType();
       $itemId = $this->getID();
 
       // Delete all existing conditions for the question
