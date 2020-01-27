@@ -666,14 +666,13 @@ PluginFormcreatorConditionnableInterface
       // Update order of questions
       $order = $this->fields['order'];
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $DB->update(
-         $table,
-         new QueryExpression("`order` = `order` - 1"),
-        [
-           'order' => ['>', $order],
-           $sectionFk => $this->fields[$sectionFk]
-        ]
-      );
+      $sectionId = $this->fields[$sectionFk];
+      $order = $this->fields['order'];
+      $DB->query("
+         UPDATE `$table`
+         SET `order` = `order` - 1
+         WHERE `order` > '$order' AND `$sectionFk` = '$sectionId'
+      ");
 
       // Always show questions with conditional display on the question being deleted
       $questionId = $this->fields['id'];
@@ -686,7 +685,7 @@ PluginFormcreatorConditionnableInterface
             'id' => new QuerySubquery([
                'SELECT' => self::getForeignKeyField(),
                'FROM' => $condition_table,
-               'WHERE' => ['show_field' => $questionId]
+               'WHERE' => ['plugin_formcreator_questions_id' => $questionId]
             ])
          ]
       );
@@ -696,7 +695,7 @@ PluginFormcreatorConditionnableInterface
          [
             'OR' => [
                self::getForeignKeyField() => $questionId,
-               'show_field' => $questionId
+               'plugin_formcreator_questions_id' => $questionId
             ]
          ]
       );
