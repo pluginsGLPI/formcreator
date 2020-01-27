@@ -92,10 +92,6 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
-         // echo '<input type="hidden" class="form-control"
-         //    name="' . $fieldName . '"
-         //    id="' . $domId . '"
-         //    value="" />' . PHP_EOL;
 
          $values = $this->getAvailableValues();
          if (!empty($values)) {
@@ -105,6 +101,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                if ((trim($value) != '')) {
                   $i++;
                   $checked = ($this->value == $value) ? ' checked' : '';
+                  echo '<p>';
                   echo '<input type="radio" class="form-control"
                         name="' . $fieldName . '"
                         id="' . $domId . '_' . $i . '"
@@ -112,8 +109,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
-                  echo '<br/>';
-                  echo '<br/>';
+                  echo '</p>';
                }
             }
             echo '</div>';
