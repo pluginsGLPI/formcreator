@@ -611,7 +611,7 @@ PluginFormcreatorConditionnableInterface
     * @param array $input parameters
     */
    public function updateParameters($input) {
-      if (!isset($this->fields['fieldtype'])) {
+      if (!isset($input['fieldtype'])) {
          return;
       }
 
