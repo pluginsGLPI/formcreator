@@ -129,6 +129,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          }
       }
       $input['plugin_formcreator_questions_id'] = $linked->getID();
+      $input['itemtype'] = $linked->getType();
 
       // Add or update condition
       $originalId = $input[$idKey];
