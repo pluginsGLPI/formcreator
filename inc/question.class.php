@@ -672,7 +672,7 @@ PluginFormcreatorConditionnableInterface
             'id' => new QuerySubquery([
                'SELECT' => self::getForeignKeyField(),
                'FROM' => $condition_table,
-               'WHERE' => ['show_field' => $questionId]
+               'WHERE' => ['plugin_formcreator_questions_id' => $questionId]
             ])
          ]
       );
@@ -682,7 +682,7 @@ PluginFormcreatorConditionnableInterface
          [
             'OR' => [
                self::getForeignKeyField() => $questionId,
-               'show_field' => $questionId
+               'plugin_formcreator_questions_id' => $questionId
             ]
          ]
       );
