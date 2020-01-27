@@ -234,7 +234,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -266,7 +266,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
-      $question->updateParameters($fields);
 
       $instance = new \PluginFormcreatorFloatField($question);
       $instance->deserializeValue($fields['default_values']);

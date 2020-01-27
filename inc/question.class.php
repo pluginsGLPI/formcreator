@@ -616,7 +616,7 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function post_addItem() {
-      $this->updateConditions($this->input );
+      $this->updateConditions($this->input);
       $this->updateParameters($this->input);
    }
 
