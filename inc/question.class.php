@@ -780,10 +780,10 @@ PluginFormcreatorConditionnableInterface
       ]);
       echo '</td>';
 
-      echo '<td id="plugin_formcreator_subtype_label">';
+      echo '<td>';
       echo '</td>';
 
-      echo '<td id="plugin_formcreator_subtype_value">';
+      echo '<td>';
       echo '</td>';
       echo '</tr>';
 
