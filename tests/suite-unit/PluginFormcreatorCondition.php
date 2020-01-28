@@ -174,6 +174,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
 
       // Test the exported data
       $fieldsWithoutID = [
+         'itemtype',
          'plugin_formcreator_questions_id',
          'show_condition',
          'show_value',
