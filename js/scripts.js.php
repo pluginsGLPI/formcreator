@@ -1399,15 +1399,8 @@ function plugin_formcreator_changeQuestionType(rand) {
          return;
       }
 
-      $('#label_required').toggle(response.may_be_required);
-      $('#plugin_formcreator_required > [name="required"]').toggle(response.may_be_required);
-
-      $('#label_show_empty').toggle(response.may_be_empty);
-      $('#plugin_formcreator_show_empty > [name="show_empty"]').toggle(response.may_be_empty);
-
-      $('#plugin_formcreator_subtype_label').html(response.label);
-      $('#plugin_formcreator_subtype_value').html(response.field);
-
+      $('.plugin_formcreator_required').toggle(response.may_be_required);
+      $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
       plugin_formcreator_updateQuestionSpecific(response.additions);
    });
 }
