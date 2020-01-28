@@ -36,7 +36,7 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getDesignSpecializationField() {
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions = $common['additions'];
 
       return [
@@ -73,6 +73,10 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function isValid() {
+      return true;
+   }
+
+   public function isValidValue($value) {
       return true;
    }
 

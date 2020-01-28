@@ -117,7 +117,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $additions .= '</tr>';
       $additions .= Html::scriptBlock("plugin_formcreator_changeDropdownItemtype($rand);");
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -369,56 +369,61 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['dropdown_values'])) {
-         if (empty($input['dropdown_values'])) {
-            Session::addMessageAfterRedirect(
-                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
-            return [];
-         }
-         $allowedDropdownValues = [];
-         $stdtypes = Dropdown::getStandardDropdownItemTypes();
-         foreach ($stdtypes as $categoryOfTypes) {
-            $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
-         }
-         if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
-            Session::addMessageAfterRedirect(
-                  __('Invalid dropdown type:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
-            return [];
-         }
-         $input['values'] = [
-            'itemtype' => $input['dropdown_values'],
-         ];
-
-         // Params for CommonTreeDropdown fields
-         if (is_a($input['dropdown_values'], "CommonTreeDropdown", true)) {
-            // Specific param for ITILCategory
-            if ($input['dropdown_values'] == ITILCategory::class) {
-               $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
-            }
-
-            if ($input['show_ticket_categories_depth'] != (int) $input['show_ticket_categories_depth']) {
-               $input['values']['show_ticket_categories_depth'] = 0;
-            } else {
-               $input['values']['show_ticket_categories_depth'] = $input['show_ticket_categories_depth'];
-            }
-            $input['values']['show_ticket_categories_root'] = isset($input['show_ticket_categories_root'])
-                                                              ? $input['show_ticket_categories_root']
-                                                              : '';
-         }
-         $input['values'] = json_encode($input['values']);
-
-         if ($input['dropdown_values'] == ITILCategory::class) {
-            unset($input['show_ticket_categories']);
-         }
-         unset($input['show_ticket_categories_depth']);
-         unset($input['show_ticket_categories_root']);
-         $this->value = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      if (!isset($input['dropdown_values']) || empty($input['dropdown_values'])) {
+         Session::addMessageAfterRedirect(
+            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            false,
+            ERROR);
+         return [];
       }
+      $allowedDropdownValues = [];
+      $stdtypes = Dropdown::getStandardDropdownItemTypes();
+      foreach ($stdtypes as $categoryOfTypes) {
+         $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
+      }
+      if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
+         Session::addMessageAfterRedirect(
+               __('Invalid dropdown type:', 'formcreator') . ' ' . $input['name'],
+               false,
+               ERROR);
+         return [];
+      }
+      $input['values'] = [
+         'itemtype' => $input['dropdown_values'],
+      ];
+
+      // Params for CommonTreeDropdown fields
+      if (is_a($input['dropdown_values'], CommonTreeDropdown::class, true)) {
+         // Specific param for ITILCategory
+         if ($input['dropdown_values'] == ITILCategory::class) {
+            $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
+         }
+
+         if ($input['show_ticket_categories_depth'] != (int) $input['show_ticket_categories_depth']) {
+            $input['values']['show_ticket_categories_depth'] = 0;
+         } else {
+            $input['values']['show_ticket_categories_depth'] = $input['show_ticket_categories_depth'];
+         }
+         $input['values']['show_ticket_categories_root'] = isset($input['show_ticket_categories_root'])
+                                                            ? $input['show_ticket_categories_root']
+                                                            : '';
+      }
+
+      $input['values'] = json_encode($input['values']);
+
+      if ($input['dropdown_values'] == ITILCategory::class) {
+         unset($input['show_ticket_categories']);
+      }
+      unset($input['show_ticket_categories_depth']);
+      unset($input['show_ticket_categories_root']);
+
+      $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      unset($input['dropdown_default_value']);
 
       return $input;
    }

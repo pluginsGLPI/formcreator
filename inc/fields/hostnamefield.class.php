@@ -16,9 +16,8 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
          'may_be_required' => false,
       ];
    }
-   
+
    public function prepareQuestionInputForSave($input) {
-      $this->value = $input['default_values'];
       return $input;
    }
 
@@ -60,6 +59,10 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
    }
 
    public function isValid() {
+      return true;
+   }
+
+   public function isValidValue($value) {
       return true;
    }
 

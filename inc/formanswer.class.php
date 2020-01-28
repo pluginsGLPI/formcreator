@@ -507,7 +507,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo html_entity_decode($this->fields['content']);
          echo '</div>';
       }
-      
+
       echo '<ol>';
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach ($sections as $section) {
@@ -530,7 +530,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Get fields populated with answers
          $answers = $this->getAnswers(
-            $this->getID(), 
+            $this->getID(),
             [
                PluginFormcreatorSection::getForeignKeyField() => $section->getID(),
             ]
@@ -603,7 +603,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '<div class="form-group required line1">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
          Html::textarea([
-            'name' => 'comment', 
+            'name' => 'comment',
             'value' => $this->fields['comment']
          ]);
          echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
@@ -697,7 +697,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
                             ? $_SESSION['glpiactive_entity']
                             : $form->fields['entities_id'];
-      
+
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
       $input['requester_id']                = isset($_SESSION['glpiID'])
@@ -708,7 +708,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['status']                      = $status;
       $input['request_date']                = date('Y-m-d H:i:s');
       $input['comment']                     = '';
-                
+
       return $input;
    }
 
@@ -932,7 +932,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                // The target shall not be generated
                continue;
             }
-      
+
             // Generate the target
             $generatedTarget = $targetObject->save($this);
             if ($generatedTarget === null) {
@@ -1129,7 +1129,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       $this->createIssue();
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
-   } 
+   }
 
    public function post_updateItem($history = 1) {
       $this->sendNotification();
@@ -1242,8 +1242,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $fieldValidities = [];
 
       $this->questionFields = $form->getFields();
-      foreach ($this->questionFields as $id => $question) {
-         $fieldValidities[$id] = $this->questionFields[$id]->parseAnswerValues($input);
+      foreach (array_keys($this->questionFields) as $id) {
+         // Test integrity of the value
+         $key = "formcreator_field_$id";
+         $this->questionFields[$id]->parseAnswerValues($input);
+         $fieldValidities[$id] = $this->questionFields[$id]->isValidValue($input[$key]);
       }
       // any invalid field will invalidate the answers
       $valid = !in_array(false, $fieldValidities, true);

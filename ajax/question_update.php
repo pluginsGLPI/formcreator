@@ -54,7 +54,9 @@ if (!$question->canUpdate()) {
 
 $success = $question->update($_REQUEST);
 if (!$success) {
+    echo array_shift($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+    unset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
     http_response_code(500);
-    exit(); 
+    exit();
 }
 echo $question->fields['name'];

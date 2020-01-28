@@ -52,7 +52,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          }
          return $html;
       }
-      
+
       return Html::file([
          'name'    => 'formcreator_field_' . $this->question->getID(),
          'display' => false,
@@ -100,9 +100,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return true;
    }
 
-   private function isValidValue($value) {
+   public function isValidValue($value) {
       // If the field is required it can't be empty
-      return (count($this->uploadData) > 0);
+      return (!$this->isRequired() || count($this->uploadData) > 0);
    }
 
    public static function getName() {

@@ -58,10 +58,6 @@ PluginFormcreatorConditionnableInterface
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
-   function isEntityAssign() {
-      return false;
-   }
-
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}
@@ -129,13 +125,13 @@ PluginFormcreatorConditionnableInterface
 
    /**
     * May be removed when GLPI 9.5 will  be the lowest supported version
-    * workaround use if entity in WHERE when using PluginFormcreatorQuestoin::dropdown
+    * workaround use if entity in WHERE when using PluginFormcreatorQuestion::dropdown
     * (while editing conditions, list of questions is empty + SQL error)
     * @see bug on GLPI #6488, might be related
     */
-   // function isEntityAssign() {
-   //    return false;
-   // }
+   function isEntityAssign() {
+      return false;
+   }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       $formId = $item->getID();
@@ -157,28 +153,6 @@ PluginFormcreatorConditionnableInterface
 
       echo '</ol>';
       echo '</div>';
-
-      echo '<form name="form"'
-      . ' method="post"'
-      . ' action="javascript:' . PluginFormcreatorForm::getFormURL() . '"'
-      . ' data-itemtype="' . PluginFormcreatorForm::class . '"'
-      . ' data-id="' . $item->getID() . '"'
-      . '>';
-      echo '<div>';
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Show submit button', 'formcreator');
-      echo '</th>';
-      echo '</tr>';
-      $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($item, $item);
-
-      // table and div are closed here
-      $item->showFormButtons([
-         'candel' => false
-      ]);
    }
 
    /**
@@ -252,10 +226,10 @@ PluginFormcreatorConditionnableInterface
       if (!$field->isPrerequisites()) {
          return '';
       }
-      if (isset($_SESSION['formcreator']['data']['formcreator_field_' . $this->getID()])) {
-         $field->parseAnswerValues($_SESSION['formcreator']['data']['formcreator_field_' . $this->getID()]);
-      } else if (count($value) > 0) {
-         $field->parseAnswerValues($value);
+
+      $key = 'formcreator_field_' . $this->getID();
+      if (isset($value[$key])) {
+         $field->deserializeValue($value[$key]);
       } else {
          $field->deserializeValue($this->fields['default_values']);
       }
@@ -366,7 +340,7 @@ PluginFormcreatorConditionnableInterface
 
       // Might need to merge $this->fields and $input, $input having precedence
       // over $this->fields
-      $input['default_values'] = $this->field->serializeValue();
+      //$input['default_values'] = $this->field->serializeValue();
 
       return $input;
    }
@@ -406,9 +380,6 @@ PluginFormcreatorConditionnableInterface
       } else {
          $input['row'] = $maxRow + 1;
       }
-      // if (!isset($input['height'])) {
-      //    $input['height'] = '1';
-      // }
 
       // generate a unique id
       if (!isset($input['uuid'])
@@ -439,7 +410,7 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      // generate a uSnique id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          if (!isset($this->fields['uuid']) && $this->fields['uuid'] != $input['uuid']) {
@@ -476,20 +447,6 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      return $input;
-   }
-
-   protected function serializeDefaultValue($input) {
-      // Might need to merge $this->fields and $input, $input having precedence
-      // over $this->fields
-      $question = new self();
-      $question->fields = $input;
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $question
-      );
-      $field->parseDefaultValue($input['default_values']);
-      $input['default_values'] = $field->serializeValue();
       return $input;
    }
 
@@ -771,7 +728,6 @@ PluginFormcreatorConditionnableInterface
          'on_change'   => "plugin_formcreator_changeQuestionType($rand)",
          'rand'        => $rand,
       ]);
-      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       echo '</td>';
 
       echo '<td id="plugin_formcreator_subtype_label">';
@@ -850,9 +806,19 @@ PluginFormcreatorConditionnableInterface
       echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
       echo '</td>';
       echo '</tr>';
+
+      // Area for errors
+      echo '<tr>';
+      echo '<td id="plugin_formcreator_error" colspan="4" class="center">';
+      echo '</td>';
+      echo '</tr>';
+
       $this->showFormButtons($options + [
          'candel' => false
       ]);
+
+      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
+      Html::closeForm();
    }
 
    /**

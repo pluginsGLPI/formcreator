@@ -180,7 +180,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
     * Checks the value of the field is in the expected form
     * @param string $value the value of the field
     */
-   private function isValidValue($value) {
+   public function isValidValue($value) {
       // TODO: use all fields of the form to check the scheme of the string
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {

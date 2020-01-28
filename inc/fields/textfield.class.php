@@ -49,24 +49,19 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '<td>';
       $value = Html::entities_deep($this->question->fields['default_values']);
-      // $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
-      //    .'style="width: 90%" value="'.$value.'">';
       $additions .= Html::input(
          'default_values', [
-            'type' => 'text', 
-            'value' => $value, 
-            'rows' => 4,
-            'cols' => 40
+            'type'  => 'text',
+            'id'    => 'default_values',
+            'value' => $value,
          ]
       );
       $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -89,6 +84,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $defaultValue = Html::cleanInputText($this->value);
+
       $html .= Html::input($fieldName, [
          'type'  => 'text',
          'id'    => $domId,
@@ -124,7 +120,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return $this->value;
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function getDocumentsForTarget() {
@@ -141,15 +137,10 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
          return false;
       }
 
-      if (!$this->isValidValue($this->value)) {
-         return false;
-      }
-
-       // All is OK
-      return true;
+      return $this->isValidValue($this->value);
    }
 
-   private function isValidValue($value) {
+   public function isValidValue($value) {
       if (strlen($value) == 0) {
          return true;
       }
@@ -199,7 +190,6 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       if (!$success) {
          return [];
       }
-      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
 
       return $input;
    }
@@ -217,8 +207,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
          return false;
       }
 
-      $this->value = str_replace('\r\n', "\r\n", $input[$key]);
-      $this->value = Toolbox::stripslashes_deep($this->value);
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 

@@ -1256,6 +1256,10 @@ PluginFormcreatorConditionnableInterface
       }
 
       echo '<ol>';
+
+      if (!isset($_SESSION['formcreator']['data'])) {
+         $_SESSION['formcreator']['data'] = [];
+      }
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
       foreach ($sections as $section) {
          $sectionId = $section->getID();
@@ -1291,13 +1295,16 @@ PluginFormcreatorConditionnableInterface
                   }
                }
             }
-            echo $question->getRenderedHtml();
+            echo $question->getRenderedHtml(true, $_SESSION['formcreator']['data']);
             $lastQuestion = $question;
          }
          echo '</div>';
 
          echo '</li>';
       }
+
+      // Delete saved answers if any
+      unset($_SESSION['formcreator']['data']);
 
       // Show validator selector
       if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
@@ -1339,8 +1346,6 @@ PluginFormcreatorConditionnableInterface
       echo Html::scriptBlock('$(function() {
          plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
       })');
-
-      unset($_SESSION['formcreator']['data']);
 
       // Display submit button
       echo '<div class="center">';

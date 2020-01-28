@@ -135,7 +135,14 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return array available values
     */
    public function getAvailableValues() {
-      return explode("\r\n", $this->question->fields['values']);
+      $values = json_decode($this->question->fields['values']);
+      $tab_values = [];
+      foreach ($values as $value) {
+         if ((trim($value) != '')) {
+            $tab_values[$value] = $value;
+         }
+      }
+      return $tab_values;
    }
 
    public function isRequired() {
@@ -148,9 +155,21 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return string
     */
    protected function trimValue($value) {
+      global $DB;
+
       $value = explode('\r\n', $value);
-      $value = array_map('trim', $value);
-      return implode('\r\n', $value);
+      // input has escpaed single quotes
+      $value = Toolbox::stripslashes_deep($value);
+      $value = array_filter($value, function($value) {
+         return ($value !== '');
+      });
+      $value = array_map(
+         function ($value) {
+            return trim($value);
+         }, $value
+      );
+
+      return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
    }
 
    public function getFieldTypeName() {

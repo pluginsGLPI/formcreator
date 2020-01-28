@@ -31,6 +31,8 @@
 
 class PluginFormcreatorDateField extends PluginFormcreatorField
 {
+   const DATE_FORMAT = 'Y-m-d';
+
    public function isPrerequisites() {
       return true;
    }
@@ -57,7 +59,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -73,7 +75,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       if (!$canEdit) {
          return $this->value;
       }
-      
+
       $html = '';
       $id        = $this->question->getID();
       $rand      = mt_rand();
@@ -125,6 +127,11 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      $check = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      return $check !== false;
+   }
+
    public static function getName() {
       return __('Date');
    }
@@ -139,8 +146,8 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("Y-m-d", $answer);
-      $compareDatetime = DateTime::createFromFormat("Y-m-d", $value);
+      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $answerDatetime == $compareDatetime;
    }
 
@@ -154,8 +161,8 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("Y-m-d", $answer);
-      $compareDatetime = DateTime::createFromFormat("Y-m-d", $value);
+      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $answerDatetime > $compareDatetime;
    }
 
@@ -164,9 +171,17 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-
       $key = 'formcreator_field_' . $this->question->getID();
+      if (!isset($input[$key])) {
+         $input[$key] = '';
+      }
+
       if (!is_string($input[$key])) {
+         return false;
+      }
+
+      if ($input[$key] != ''
+         && DateTime::createFromFormat(self::DATE_FORMAT, $input[$key]) === false) {
          return false;
       }
 

@@ -108,17 +108,18 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['glpi_objects'])) {
-         if (empty($input['glpi_objects'])) {
-            Session::addMessageAfterRedirect(
-                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
-            return [];
-         }
-         $input['values']         = $input['glpi_objects'];
-         $this->value = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      if (!isset($input['glpi_objects']) || empty($input['glpi_objects'])) {
+         Session::addMessageAfterRedirect(
+               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+               false,
+               ERROR);
+         return [];
       }
+
+      $input['values']         = $input['glpi_objects'];
+      $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      unset($input['dropdown_default_value']);
+
       return $input;
    }
 
@@ -135,6 +136,10 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       }
 
       // All is OK
+      return true;
+   }
+
+   public function isValidValue($value) {
       return true;
    }
 

@@ -55,7 +55,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       $additions .= '<td></td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -92,6 +92,10 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    }
 
    public function isValid() {
+      return true;
+   }
+
+   public function isValidValue($value) {
       return true;
    }
 

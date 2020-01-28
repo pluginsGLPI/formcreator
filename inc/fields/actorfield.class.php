@@ -68,7 +68,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -243,6 +243,31 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      if ($value === '') {
+         return true;
+      }
+
+      foreach ($value as $item) {
+         $item = trim($item);
+         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+            continue;
+         } else if (!empty($item)) {
+            $user = new User();
+            if (!$user->getFromDB($item)) {
+               Session::addMessageAfterRedirect(
+                  sprintf(__('User not found or invalid email address: %s', 'formcreator'), $this->getLabel()),
+                  false,
+                  ERROR
+               );
+               return false;
+            }
+         }
+      }
+
+      return true;
+   }
+
    public static function canRequire() {
       return true;
    }
@@ -281,10 +306,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       }
 
       if (!is_array($input[$key])) {
-         $input[$key] = json_decode($input[$key]);
-         if ($input[$key] === false) {
-            return false;
-         }
+         return false;
       }
 
       $this->value = $input[$key];

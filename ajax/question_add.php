@@ -35,13 +35,15 @@ Session::checkRight('entity', UPDATE);
 $question = new PluginFormcreatorQuestion();
 if (!$question->canCreate()) {
     http_response_code(403);
-    echo __('You don\'t have right for this action', 'formcreator');
+    echo array_shift($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+    unset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
     exit;
 }
 
 if (!$question->add($_REQUEST)) {
     http_response_code(500);
-    echo __('Could not add the question', 'formcreator');
+    echo array_shift($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+    unset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
     exit;
 }
 $json = [

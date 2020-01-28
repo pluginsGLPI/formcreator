@@ -103,6 +103,10 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
       return true;
    }
 
+   public function isValidValue($value) {
+      return true;
+   }
+
    public static function getName() {
       return __('Time', 'formcreator');
    }
@@ -157,7 +161,7 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
    }
 
    /**
-    * Display TimeField form 
+    * Display TimeField form
     * @see Html::dateTime()
     *
     * @param string $name
@@ -197,7 +201,7 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
          $p['timestep'] = $CFG_GLPI['time_step'];
       }
 
-      // Those vars are set but not used ... 
+      // Those vars are set but not used ...
       // check Hml::showDateTimeField()
 
       // $minHour   = 0;

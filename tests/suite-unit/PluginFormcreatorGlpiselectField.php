@@ -35,6 +35,15 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorGlpiselectField extends CommonTestCase {
 
+   public function beforeTestMethod($method)
+   {
+      switch ($method) {
+         case 'testIsValid':
+            $this->login('glpi', 'glpi');
+            break;
+      }
+   }
+
    public function testGetName() {
       $output = \PluginFormcreatorGlpiselectField::getName();
       $this->string($output)->isEqualTo('GLPI object');
@@ -59,11 +68,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       $dataset = [
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $user->getID(),
-               'values'          => \User::class,
+               'glpi_objects'     => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -74,11 +83,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => '',
-               'values'          => \User::class,
+               'glpi_objects'    => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -89,11 +98,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => $user->getID(),
-               'values'          => \User::class,
+               'glpi_objects'    => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -104,11 +113,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'values'          => \User::class,
+               'glpi_objects'    => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -120,11 +129,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
 
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $computer->getID(),
-               'values'          => \Computer::class,
+               'glpi_objects'    => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -135,11 +144,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'values'          => \Computer::class,
+               'glpi_objects'    => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -150,11 +159,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $computer->getID(),
-               'values'          => \Computer::class,
+               'glpi_objects'    => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -165,11 +174,11 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'dropdown',
+               'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'values'          => \Computer::class,
+               'glpi_objects'    => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -220,8 +229,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
 
       // Create a question glpi Object / computer
       $question = $this->getQuestion([
-         'fieldtype' => 'glpiselect',
-         'values'    => \Computer::class,
+         'fieldtype'    => 'glpiselect',
+         'glpi_objects' => \Computer::class,
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($computer->getID());
@@ -241,8 +250,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
 
       // Create a question glpi Object / User
       $question = $this->getQuestion([
-         'fieldtype' => 'glpiselect',
-         'values'    => \User::class,
+         'fieldtype'    => 'glpiselect',
+         'glpi_objects' => \User::class,
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($user->getID());

@@ -49,19 +49,19 @@ class PluginFormcreatorEmailField extends CommonTestCase {
       return [
          [
             'input' => 42,
-            'expected' => false,
+            'expected' => '',
          ],
          [
             'input' => '',
-            'expected' => true,
+            'expected' => '',
          ],
          [
             'input' => 'foo@bar.baz',
-            'expected' => true,
+            'expected' => 'foo@bar.baz',
          ],
          [
             'input' => 'not an email',
-            'expected' => false,
+            'expected' => 'not an email',
          ],
       ];
    }
@@ -75,7 +75,8 @@ class PluginFormcreatorEmailField extends CommonTestCase {
       $output = $instance->parseAnswerValues([
          'formcreator_field_' . $question->getID() => $input
       ]);
-      $this->boolean($output)->isEqualTo($expected);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
    }
 
    public function providerSerializeValue() {

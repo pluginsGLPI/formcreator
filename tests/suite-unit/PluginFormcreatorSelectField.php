@@ -44,7 +44,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '0',
                   'show_empty'      => '0',
                   'default_values'  => '',
-                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -58,7 +58,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '0',
                   'show_empty'      => '1',
                   'default_values'  => '',
-                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -72,7 +72,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '0',
                   'show_empty'      => '0',
                   'default_values'  => '3',
-                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -86,7 +86,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '1',
                   'show_empty'      => '0',
                   'default_values'  => '',
-                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -100,7 +100,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '1',
                   'show_empty'      => '1',
                   'default_values'  => '',
-                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -132,13 +132,13 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expected) {
       $question = $this->getQuestion($fields);
       $instance = new \PluginFormcreatorSelectField($question);
       $instance->deserializeValue($fields['default_values']);
 
       $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
+      $this->boolean((boolean) $isValid)->isEqualTo($expected);
    }
 
    public function testGetName() {
@@ -179,11 +179,15 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    public function providerSerializeValue() {
       return [
          [
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
             'value' => '',
             'expected' => '',
          ],
          [
-            'value' => "foo",
+            'value' => 'foo',
             'expected' => "foo",
          ],
          [
@@ -197,16 +201,19 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorSelectField($this->getQuestion());
-      $instance->prepareQuestionInputForSave([
-         'default_values' => $value,
-      ]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorSelectField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }
 
    public function providerDeserializeValue() {
       return [
+         [
+            'value'     => null,
+            'expected'  => '',
+         ],
          [
             'value'     => '',
             'expected'  => '',
@@ -226,7 +233,8 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorSelectField($this->getQuestion());
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorSelectField($question);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);

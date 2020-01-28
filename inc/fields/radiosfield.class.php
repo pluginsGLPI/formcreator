@@ -49,10 +49,10 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
+      $additions .= Html::input(
+         'default_values', [
          'id'               => 'default_values',
-         'value'            => $this->question->fields['default_values'],
+         'value'            => Html::entities_deep($this->getValueForDesign()),
          'cols'             => '50',
          'display'          => false,
       ]);
@@ -64,10 +64,14 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
+      $value = json_decode($this->question->fields['values']);
+      if ($value === null) {
+         $value = [];
+      }
       $additions .= Html::textarea([
          'name'             => 'values',
          'id'               => 'values',
-         'value'            => $this->question->fields['values'],
+         'value'            => implode("\r\n", $value),
          'cols'             => '50',
          'display'          => false,
       ]);
@@ -131,27 +135,18 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['values'])) {
-         if (empty($input['values'])) {
-            Session::addMessageAfterRedirect(
-                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
-            return [];
-         }
-         // trim values
-         $input['values'] = $this->trimValue($input['values']);
+      if (!isset($input['values']) || empty($input['values'])) {
+         Session::addMessageAfterRedirect(
+            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            false,
+            ERROR);
+         return [];
       }
-      if (isset($input['default_values'])) {
-         // trim values
-         $this->value = explode('\r\n', $input['default_values']);
-         $this->value = array_map('trim', $this->value);
-         $this->value = array_filter($this->value, function($value) {
-            return ($value !== '');
-         });
-         $this->value = array_shift($this->value);
-         $input['default_values'] = $this->value;
-      }
+
+      // trim values
+      $input['values'] = $this->trimValue($input['values']);
+      $input['default_values'] = trim($input['default_values']);
+
       return $input;
    }
 
@@ -166,11 +161,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          return true;
       }
 
-       $this->value = Toolbox::stripslashes_deep($input[$key]);
-       return true;
-   }
-
-   public static function canRequire() {
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 
@@ -223,6 +214,16 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       }
 
       // All is OK
+      return true;
+   }
+
+   public function isValidValue($value) {
+      $value = Toolbox::stripslashes_deep($value);
+      $value = trim($value);
+      return in_array($value, $this->getAvailableValues());
+   }
+
+   public static function canRequire() {
       return true;
    }
 

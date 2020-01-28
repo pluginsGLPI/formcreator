@@ -71,14 +71,10 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $use_notifications = $CFG_GLPI['use_notifications'];
       $CFG_GLPI['use_notifications'] = 0;
 
-      $answer = 'test answer to question';
-
-      // prepare a fake form with targets
+      // prepare a form with targets
       $question = $this->getQuestion();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
       $form = new \PluginFormcreatorForm();
-      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
+      $form->getFromDBByQuestion($question);
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $this->getTargetTicket([
          $formFk => $form->getID(),
@@ -88,8 +84,9 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
 
       // prepare input
+      $answer = 'test answer to question';
       $input = [
-         'plugin_formcreator_forms_id' => $form->getID(),
+         $formFk => $form->getID(),
          'formcreator_field_'.$question->getID() => $answer
       ];
 
@@ -136,14 +133,14 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'name' => $this->getUniqueString(),
       ]);
       $form1 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER, 
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users' => $validatorUserId
-      ]); 
+      ]);
 
       $form2 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP, 
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
          '_validator_groups' => $group->getID()
-      ]); 
+      ]);
       $groupUser = new \Group_User();
       $groupUser->add([
          'users_id' => $validatorUserId,
