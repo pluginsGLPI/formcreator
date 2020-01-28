@@ -841,28 +841,36 @@ PluginFormcreatorConditionnableInterface
       echo '<tr>';
       // required
       echo '<td>';
-      echo '<label for="dropdown_required'.$rand.'" id="label_required">';
+      echo '<div class="plugin_formcreator_required">';
+      echo '<label for="dropdown_required'.$rand.'">';
       echo __('Required', 'formcreator');
       echo '</label>';
+      echo '</div>';
       echo '</td>';
 
-      echo '<td id="plugin_formcreator_required">';
+      echo '<td>';
+      echo '<div class="plugin_formcreator_required">';
       dropdown::showYesNo('required', $this->fields['required'], -1, [
          'rand'  => $rand,
       ]);
+      echo '</div>';
       echo '</td>';
 
       // show empty
       echo '<td>';
-      echo '<label for="dropdown_show_empty'.$rand.'" id="label_show_empty">';
+      echo '<div class="plugin_formcreator_mayBeEmpty">';
+      echo '<label for="dropdown_show_empty'.$rand.'">';
       echo __('Show empty', 'formcreator');
       echo '</label>';
+      echo '</div>';
       echo '</td>';
 
-      echo '<td id="plugin_formcreator_show_empty">';
+      echo '<td>';
+      echo '<div class="plugin_formcreator_mayBeEmpty">';
       dropdown::showYesNo('show_empty', $this->fields['show_empty'], -1, [
          'rand'  => $rand,
       ]);
+      echo '</div>';
       echo '</td>';
       echo '</tr>';
 
