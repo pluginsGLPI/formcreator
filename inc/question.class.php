@@ -897,13 +897,13 @@ PluginFormcreatorConditionnableInterface
          foreach ($input['_conditions'] as $condition) {
             PluginFormcreatorCondition::import($linker, $condition, $itemId);
          }
-         $field = PluginFormcreatorFields::getFieldInstance(
-            $input['fieldtype'],
-            $item
-         );
       }
 
       // Import parameters
+      $field = PluginFormcreatorFields::getFieldInstance(
+         $input['fieldtype'],
+         $item
+      );
       if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
