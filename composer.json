@@ -19,7 +19,7 @@
     "require-dev": {
       "ext-bz2": "*",
       "pear/archive_tar": "^1.4",
-      "atoum/atoum": "^3.3",
+      "atoum/atoum": "^3.4",
       "atoum/stubs": "^2.5",
       "glpi-project/tools": "^0.1.0",
       "glpi-project/coding-standard": "0.7.1",
