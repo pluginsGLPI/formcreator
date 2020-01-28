@@ -23,6 +23,7 @@ install_glpi() {
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
    composer install --no-dev --no-interaction
    if [ -e bin/console ]; then php bin/console dependencies install; fi
+   if [ -e bin/console ]; then php bin/console glpi:system:check_requirements; fi
    if [ ! -e bin/console ]; then composer install --no-dev; fi
    mkdir -p tests/files/_cache
    cp -r ../formcreator plugins/$PLUGINNAME

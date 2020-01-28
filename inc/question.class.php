@@ -495,7 +495,7 @@ PluginFormcreatorConditionnableInterface
          if ($input['width'] > (PluginFormcreatorSection::COLUMNS - $x)) {
             return false;
          }
-         $width = $input{'width'};
+         $width = $input['width'];
       }
 
       if (isset($input['height'])) {
