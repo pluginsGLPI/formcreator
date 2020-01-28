@@ -316,7 +316,7 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      // get question conditions
+      // get section conditions
       $section['_conditions'] = [];
       $condition = new PluginFormcreatorCondition();
       $all_conditions = $condition->getConditionsFromItem($this);
