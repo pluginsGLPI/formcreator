@@ -869,7 +869,7 @@ var plugin_formcreator = new function() {
    }
 
    this.addSection = function () {
-      form = $('form[data-itemtype="PluginFormcreatorSection"]');
+      var form = $('form[data-itemtype="PluginFormcreatorSection"]');
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/section_add.php',
          type: "POST",
@@ -888,7 +888,7 @@ var plugin_formcreator = new function() {
    }
 
    this.editSection = function () {
-      form = $('form[data-itemtype="PluginFormcreatorSection"]');
+      var form = $('form[data-itemtype="PluginFormcreatorSection"]');
       var sectionId = form.find('[name="id"]').val();
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/section_update.php',
