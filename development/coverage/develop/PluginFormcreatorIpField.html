@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    32%
-                                            <small>of 44</small>
+                    31%
+                                            <small>of 45</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -124,6 +124,13 @@ layout: coverage
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
     <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isValidValue">PluginFormcreatorIpField::isValidValue()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
 </td>
                                             </tr>
             <tr>
@@ -519,7 +526,7 @@ layout: coverage
                     <th id="L39" class="number uncovered">39</th>
 
                     <td class="uncovered" >
-                        <pre>      $common = $common = parent::getDesignSpecializationField();</pre>
+                        <pre>      $common = parent::getDesignSpecializationField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -975,18 +982,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getName">
+                            <tr class="line" id="isValidValue">
                     <th id="L102" class="number ">102</th>
 
-                    <td class="" id="getName">
-                        <pre>   public static function getName() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="isValidValue">
+                        <pre>   public function isValidValue($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L103" class="number covered">103</th>
+                    <th id="L103" class="number uncovered">103</th>
 
-                    <td class="covered" >
-                        <pre>      return _n(&#039;IP address&#039;, &#039;Adresses IP&#039;, 1);</pre>
+                    <td class="uncovered" >
+                        <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1004,18 +1011,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="canRequire">
+                            <tr class="line" id="getName">
                     <th id="L106" class="number ">106</th>
 
-                    <td class="" id="canRequire">
-                        <pre>   public static function canRequire() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="getName">
+                        <pre>   public static function getName() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L107" class="number covered">107</th>
 
                     <td class="covered" >
-                        <pre>      return false;</pre>
+                        <pre>      return _n(&#039;IP address&#039;, &#039;Adresses IP&#039;, 1);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1033,69 +1040,69 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="parseAnswerValues">
+                            <tr class="line" id="canRequire">
                     <th id="L110" class="number ">110</th>
 
-                    <td class="" id="parseAnswerValues">
-                        <pre>   public function parseAnswerValues($input, $nonDestructive = false) {<span class="label label-success">80%</span><div class="btn-group"></div></pre>
+                    <td class="" id="canRequire">
+                        <pre>   public static function canRequire() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L111" class="number covered">111</th>
 
                     <td class="covered" >
-                        <pre>      $key = &#039;formcreator_field_&#039; . $this-&gt;question-&gt;getID();</pre>
+                        <pre>      return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L112" class="number covered">112</th>
+                    <th id="L112" class="number unreach">112</th>
 
-                    <td class="covered" >
-                        <pre>      if (!is_string($input[$key])) {</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L113" class="number uncovered">113</th>
-
-                    <td class="uncovered" >
-                        <pre>         return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L114" class="number ">114</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L115" class="number ">115</th>
+                    <th id="L113" class="number ">113</th>
 
                     <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
+                            <tr class="line" id="parseAnswerValues">
+                    <th id="L114" class="number ">114</th>
+
+                    <td class="" id="parseAnswerValues">
+                        <pre>   public function parseAnswerValues($input, $nonDestructive = false) {<span class="label label-success">80%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L115" class="number covered">115</th>
+
+                    <td class="covered" >
+                        <pre>      $key = &#039;formcreator_field_&#039; . $this-&gt;question-&gt;getID();</pre>
+                    </td>
+                </tr>
                             <tr class="line" id="">
                     <th id="L116" class="number covered">116</th>
 
                     <td class="covered" >
-                        <pre>      $this-&gt;value = $input[$key];</pre>
+                        <pre>      if (!is_string($input[$key])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L117" class="number covered">117</th>
+                    <th id="L117" class="number uncovered">117</th>
 
-                    <td class="covered" >
-                        <pre>      return true;</pre>
+                    <td class="uncovered" >
+                        <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L118" class="number unreach">118</th>
+                    <th id="L118" class="number ">118</th>
 
-                    <td class="unreach" >
-                        <pre>   }</pre>
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1106,18 +1113,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="equals">
-                    <th id="L120" class="number ">120</th>
+                            <tr class="line" id="">
+                    <th id="L120" class="number covered">120</th>
 
-                    <td class="" id="equals">
-                        <pre>   public function equals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="covered" >
+                        <pre>      $this-&gt;value = $input[$key];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L121" class="number covered">121</th>
 
                     <td class="covered" >
-                        <pre>      return $this-&gt;value == $value;</pre>
+                        <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1135,18 +1142,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="notEquals">
+                            <tr class="line" id="equals">
                     <th id="L124" class="number ">124</th>
 
-                    <td class="" id="notEquals">
-                        <pre>   public function notEquals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="equals">
+                        <pre>   public function equals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L125" class="number covered">125</th>
 
                     <td class="covered" >
-                        <pre>      return !$this-&gt;equals($value);</pre>
+                        <pre>      return $this-&gt;value == $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1164,18 +1171,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="greaterThan">
+                            <tr class="line" id="notEquals">
                     <th id="L128" class="number ">128</th>
 
-                    <td class="" id="greaterThan">
-                        <pre>   public function greaterThan($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="notEquals">
+                        <pre>   public function notEquals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L129" class="number covered">129</th>
 
                     <td class="covered" >
-                        <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
+                        <pre>      return !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1193,11 +1200,11 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="lessThan">
+                            <tr class="line" id="greaterThan">
                     <th id="L132" class="number ">132</th>
 
-                    <td class="" id="lessThan">
-                        <pre>   public function lessThan($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="greaterThan">
+                        <pre>   public function greaterThan($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1222,18 +1229,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="isAnonymousFormCompatible">
+                            <tr class="line" id="lessThan">
                     <th id="L136" class="number ">136</th>
 
-                    <td class="" id="isAnonymousFormCompatible">
-                        <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="lessThan">
+                        <pre>   public function lessThan($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L137" class="number covered">137</th>
 
                     <td class="covered" >
-                        <pre>      return true;</pre>
+                        <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1251,18 +1258,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getHtmlIcon">
+                            <tr class="line" id="isAnonymousFormCompatible">
                     <th id="L140" class="number ">140</th>
 
-                    <td class="" id="getHtmlIcon">
-                        <pre>   public function getHtmlIcon() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="isAnonymousFormCompatible">
+                        <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number uncovered">141</th>
+                    <th id="L141" class="number covered">141</th>
 
-                    <td class="uncovered" >
-                        <pre>      return &#039;&lt;i class=&quot;fa fa-desktop&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&#039;;</pre>
+                    <td class="covered" >
+                        <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1280,15 +1287,44 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="isVisibleField">
+                            <tr class="line" id="getHtmlIcon">
                     <th id="L144" class="number ">144</th>
+
+                    <td class="" id="getHtmlIcon">
+                        <pre>   public function getHtmlIcon() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L145" class="number uncovered">145</th>
+
+                    <td class="uncovered" >
+                        <pre>      return &#039;&lt;i class=&quot;fa fa-desktop&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L146" class="number unreach">146</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L147" class="number ">147</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="isVisibleField">
+                    <th id="L148" class="number ">148</th>
 
                     <td class="" id="isVisibleField">
                         <pre>   public function isVisibleField()<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L145" class="number ">145</th>
+                    <th id="L149" class="number ">149</th>
 
                     <td class="" >
                         <pre>   {
@@ -1296,21 +1332,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L146" class="number uncovered">146</th>
+                    <th id="L150" class="number uncovered">150</th>
 
                     <td class="uncovered" >
                         <pre>      return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L147" class="number unreach">147</th>
+                    <th id="L151" class="number unreach">151</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L148" class="number ">148</th>
+                    <th id="L152" class="number ">152</th>
 
                     <td class="" >
                         <pre>
@@ -1318,14 +1354,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="isEditableField">
-                    <th id="L149" class="number ">149</th>
+                    <th id="L153" class="number ">153</th>
 
                     <td class="" id="isEditableField">
                         <pre>   public function isEditableField()<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L150" class="number ">150</th>
+                    <th id="L154" class="number ">154</th>
 
                     <td class="" >
                         <pre>   {
@@ -1333,21 +1369,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L151" class="number uncovered">151</th>
+                    <th id="L155" class="number uncovered">155</th>
 
                     <td class="uncovered" >
                         <pre>      return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L152" class="number unreach">152</th>
+                    <th id="L156" class="number unreach">156</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L153" class="number ">153</th>
+                    <th id="L157" class="number ">157</th>
 
                     <td class="" >
                         <pre>}

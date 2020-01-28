@@ -644,7 +644,7 @@ layout: coverage
                     <th id="L55" class="number ">55</th>
 
                     <td class="" >
-                        <pre>      
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -996,7 +996,7 @@ layout: coverage
                     <th id="L103" class="number ">103</th>
 
                     <td class="" id="isValidValue">
-                        <pre>   private function isValidValue($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public function isValidValue($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1011,7 +1011,7 @@ layout: coverage
                     <th id="L105" class="number uncovered">105</th>
 
                     <td class="uncovered" >
-                        <pre>      return (count($this-&gt;uploadData) &gt; 0);</pre>
+                        <pre>      return (!$this-&gt;isRequired() || count($this-&gt;uploadData) &gt; 0);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
