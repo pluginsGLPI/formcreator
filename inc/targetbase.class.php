@@ -445,17 +445,14 @@ PluginFormcreatorConditionnableInterface
          switch ($actor['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
                $userIds = [$formanswer->fields['requester_id']];
-               $notify  = $actor['use_notification'];
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                $userIds = [$_SESSION['glpiID']];
-               $notify  = $actor['use_notification'];
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
                $userIds = [$actor['actor_value']];
-               $notify  = $actor['use_notification'];
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
@@ -465,7 +462,7 @@ PluginFormcreatorConditionnableInterface
                $formanswerId = $formanswer->getID();
                $answer->getFromDBByCrit([
                   'AND' => [
-                     'plugin_formcreator_questions_id'     => $actorValue,
+                     'plugin_formcreator_questions_id'   => $actorValue,
                      'plugin_formcreator_formanswers_id' => $formanswerId
                   ]
                ]);
@@ -475,7 +472,6 @@ PluginFormcreatorConditionnableInterface
                } else {
                   $userIds = [$answer->fields['answer']];
                }
-               $notify  = $actor['use_notification'];
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
                $answer  = new PluginFormcreatorAnswer();
@@ -483,7 +479,7 @@ PluginFormcreatorConditionnableInterface
                $formanswerId = $formanswer->getID();
                $answer->getFromDBByCrit([
                   'AND' => [
-                     'plugin_formcreator_questions_id'     => $actorValue,
+                     'plugin_formcreator_questions_id'   => $actorValue,
                      'plugin_formcreator_formanswers_id' => $formanswerId
                   ]
                ]);
@@ -493,9 +489,53 @@ PluginFormcreatorConditionnableInterface
                } else {
                   $userIds = json_decode($answer->fields['answer'], JSON_OBJECT_AS_ARRAY);
                }
-               $notify = $actor['use_notification'];
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT:
+               // Get the object from the question
+               $answer  = new PluginFormcreatorAnswer();
+               $actorValue = $actor['actor_value'];
+               $formanswerId = $formanswer->getID();
+               $answer->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_questions_id'   => $actorValue,
+                     'plugin_formcreator_formanswers_id' => $formanswerId
+                  ]
+               ]);
+               if ($answer->isNewItem()) {
+                  continue 2;
+               }
+               // Get the itemtype of the object
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($answer->fields[PluginFormcreatorQuestion::getForeignKeyField()]);
+               if ($question->isNewItem()) {
+                  continue 2;
+               }
+               $itemtype = $question->fields['values'];
+               if (!is_subclass_of($itemtype, CommonDBTM::class)) {
+                  continue 2;
+               }
+
+               // Check the object has a group FK
+               $groupFk = Group::getForeignKeyField();
+               $object = new $itemtype();
+               if (!$DB->fieldExists($object->getTable(), $groupFk)) {
+                  continue 2;
+               }
+
+               // get the group
+               if (!$object->getFromDB($answer->fields['answer'])) {
+                  continue 2;
+               }
+
+               // ignore invalid ID
+               if (Group::isNewId($object->fields[$groupFk])) {
+                  continue 2;
+               }
+
+               $userIds = [$object->fields[$groupFk]];
                break;
          }
+         $notify = $actor['use_notification'];
 
          switch ($actor['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
@@ -509,7 +549,8 @@ PluginFormcreatorConditionnableInterface
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
-               foreach ($userIds as $groupId) {
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT:
+                  foreach ($userIds as $groupId) {
                   $this->addGroupActor($actor['actor_role'], $groupId);
                }
                break;
@@ -1107,6 +1148,19 @@ SCRIPT;
       );
       echo '</div>';
 
+      echo '<div id="block_requester_group_from_object" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+         ],
+         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
       echo '<div id="block_requester_question_actors" style="display:none">';
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
@@ -1165,6 +1219,12 @@ SCRIPT;
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT:
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the object', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
@@ -1244,6 +1304,19 @@ SCRIPT;
       );
       echo '</div>';
 
+      echo '<div id="block_watcher_group_from_object" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+         ],
+         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
       echo '<div id="block_watcher_question_actors" style="display:none">';
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
@@ -1302,6 +1375,12 @@ SCRIPT;
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT:
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the object', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS :
@@ -1388,6 +1467,19 @@ SCRIPT;
       );
       echo '</div>';
 
+      echo '<div id="block_assigned_group_from_object" style="display:none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+         ],
+         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
+         [
+            'value' => 0
+         ]
+      );
+      echo '</div>';
+
       echo '<div id="block_assigned_question_actors" style="display:none">';
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
@@ -1460,6 +1552,12 @@ SCRIPT;
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT:
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the object', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS :
