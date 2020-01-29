@@ -1056,39 +1056,10 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showMyLastForms() {
-      global $DB;
-
       $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
-      $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
-      $formTable = self::getTable();
-      $formFk = self::getForeignKeyField();
-      $request = [
-         'SELECT' => [
-            $formTable => ['name'],
-            $formAnswerTable => ['id', 'status', 'request_date'],
-         ],
-         'FROM' => $formTable,
-         'INNER JOIN' => [
-            $formAnswerTable => [
-               'FKEY' => [
-                  $formTable => 'id',
-                  $formAnswerTable => self::getForeignKeyField(),
-               ]
-            ]
-         ],
-         'WHERE' => [
-            "$formAnswerTable.requester_id" => $userId,
-            "$formTable.is_deleted" => 0,
-         ],
-         'ORDER' => [
-            "$formAnswerTable.status ASC",
-            "$formAnswerTable.request_date DESC",
-         ],
-         'LIMIT' => 5,
-      ];
-      $result = $DB->request($request);
+      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester();
       if ($result->count() == 0) {
          echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
          echo "<ul>";
@@ -1129,53 +1100,7 @@ PluginFormcreatorConditionnableInterface
          foreach ($groupList as $group) {
             $groupIdList[] = $group['id'];
          }
-         $validatorTable = PluginFormcreatorForm_Validator::getTable();
-         $result = $DB->request([
-            'SELECT' => [
-               $formTable => ['name'],
-               $formAnswerTable => ['id', 'status', 'request_date'],
-            ],
-            'FROM' => $formTable,
-            'INNER JOIN' => [
-               $formAnswerTable => [
-                  'FKEY' => [
-                     $formTable => 'id',
-                     $formAnswerTable => self::getForeignKeyField(),
-                  ]
-               ],
-               $validatorTable => [
-                  'FKEY' => [
-                     $validatorTable => $formFk,
-                     $formTable => 'id'
-                  ]
-               ]
-            ],
-            'WHERE' => [
-               'OR' => [
-                  [
-                     'AND' => [
-                        "$formTable.validation_required" => 1,
-                        "$validatorTable.itemtype" => User::class,
-                        "$validatorTable.items_id" => $userId,
-                        "$formAnswerTable.users_id_validator" => $userId
-                     ]
-                  ],
-                  [
-                     'AND' => [
-                        "$formTable.validation_required" => 2,
-                        "$validatorTable.itemtype" => Group::class,
-                        "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
-                        "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
-                     ]
-                  ]
-               ]
-            ],
-            'ORDER' => [
-               "$formAnswerTable.status ASC",
-               "$formAnswerTable.request_date DESC",
-            ],
-            'LIMIT' => 5,
-         ]);
+         $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator();
          if ($result->count() == 0) {
             echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
          } else {
