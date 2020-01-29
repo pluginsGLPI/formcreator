@@ -1110,12 +1110,14 @@ function plugin_formcreator_changeQuestionType(rand) {
 
       $('.plugin_formcreator_required').toggle(response.may_be_required);
       $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
+      $('#plugin_formcreator_subtype_label').html(response.label);
+      $('#plugin_formcreator_subtype_value').html(response.field);
       plugin_formcreator_updateQuestionSpecific(response.additions);
    });
 }
 
 function plugin_formcreator_updateQuestionSpecific(html) {
-   $('.plugin_formcreator_question_specific:gt(0)').remove();
+   $('.plugin_formcreator_question_specific').slice(1).remove();
    if (html == '') {
       $('.plugin_formcreator_question_specific').hide();
       return;
