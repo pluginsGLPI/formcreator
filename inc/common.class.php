@@ -148,7 +148,7 @@ class PluginFormcreatorCommon {
          'LIMIT'  => 1
       ])->next();
 
-      if ($line === false) {
+      if (!isset($line[$fieldName])) {
          return null;
       }
       return (int) $line[$fieldName];
