@@ -998,9 +998,9 @@ SCRIPT;
          ];
       }
 
-      $img_user     = '<img src="../../../pics/users.png" alt="' . __('User') . '" title="' . __('User') . '" width="20" />';
-      $img_group    = '<img src="../../../pics/groupes.png" alt="' . __('Group') . '" title="' . __('Group') . '" width="20" />';
-      $img_supplier = '<img src="../../../pics/supplier.png" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20" />';
+      $img_user     = '<i class="fas fa-user" alt="' . __('User') . '" title="' . __('User') . '" width="20"></i>';
+      $img_group    = '<i class="fas fa-users" alt="' . __('Group') . '" title="' . __('Group') . '" width="20"></i>';
+      $img_supplier = '<i class="fas fa-suitcase" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20"></i>';
       $img_mail     = '<img src="../pics/email.png" alt="' . __('Yes') . '" title="' . __('Email followup') . ' ' . __('Yes') . '" />';
       $img_nomail   = '<img src="../pics/email-no.png" alt="' . __('No') . '" title="' . __('Email followup') . ' ' . __('No') . '" />';
 
@@ -1159,7 +1159,7 @@ SCRIPT;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
-               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
+               echo $img_group . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                $question = new PluginFormcreatorQuestion();
@@ -1296,7 +1296,7 @@ SCRIPT;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
-               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
+               echo $img_group . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                $question = new PluginFormcreatorQuestion();
@@ -1454,7 +1454,7 @@ SCRIPT;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
-               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
+               echo $img_group . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                $question = new PluginFormcreatorQuestion();
