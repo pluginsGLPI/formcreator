@@ -43,13 +43,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    public function testTargetTicketActors() {
-      $form = $this->getForm([
-         'entities_id'           => $_SESSION['glpiactive_entity'],
-         'description'           => 'form description',
-         'content'               => 'a content',
-         'is_active'             => 1,
-         'validation_required'   => 0
-      ]);
+      // Create a form with a target ticket
+      $form = $this->getForm();
+
       $targetTicket = new \PluginFormcreatorTargetTicket();
       $targetTicket->add([
          'name'                        => 'a target',
@@ -58,6 +54,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->getFromDB($targetTicket->getID());
       $this->boolean($targetTicket->isNewItem())->isFalse();
 
+      // find the actors created by default
       $requesterActor = new \PluginFormcreatorTargetTicket_Actor();
       $observerActor = new \PluginFormcreatorTargetTicket_Actor();
       $targetTicketId = $targetTicket->getID();
@@ -76,9 +73,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
          ]
       ]);
-
       $this->boolean($requesterActor->isNewItem())->isFalse();
       $this->boolean($observerActor->isNewItem())->isFalse();
+
+      // check the settings of the default actors
       $this->integer((int) $requesterActor->getField('use_notification'))
          ->isEqualTo(1);
       $this->integer((int) $observerActor->getField('use_notification'))
