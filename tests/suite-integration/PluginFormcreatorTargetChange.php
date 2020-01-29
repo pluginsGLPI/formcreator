@@ -48,7 +48,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'description'           => 'form description',
          'content'               => 'a content',
          'is_active'             => 1,
-         'validation_required'   => 0
+         'validation_required'   => \PluginFormcreatorForm::VALIDATION_NONE,
       ]);
       $this->boolean($form->isNewItem())->isFalse();
 
