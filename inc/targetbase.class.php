@@ -1528,19 +1528,19 @@ SCRIPT;
    /**
     * Show header for actors edition
     *
-    * @param integer $type see CommonITILActor constants
+    * @param integer $actorType see CommonITILActor constants
     * @param array $actors actors to show
     * @return void
     */
-   protected function showActorSettingsForType($type, array $actors) {
+   protected function showActorSettingsForType($actorType, array $actors) {
       $itemActor = $this->getItem_Actor();
       $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
 
-      switch ($type) { // Values from CommonITILObject::getSearchOptionsActors()
+      switch ($actorType) { // Values from CommonITILObject::getSearchOptionsActors()
          case CommonITILActor::REQUESTER:
             $type = 'requester';
-            unset($dropdownItems['supplier']);
-            unset($dropdownItems['question_supplier']);
+            unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER]);
+            unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER]);
             $changeActorJSFunction = 'plugin_formcreator_ChangeActorRequester(this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER;
             break;
@@ -1654,6 +1654,28 @@ SCRIPT;
       );
       echo '</div>';
 
+      if ($actorType == CommonITILActor::ASSIGN) {
+         echo '<div id="block_' . $type . '_supplier" style="display:none">';
+         Supplier::dropdown([
+            'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER,
+         ]);
+         echo '</div>';
+
+         echo '<div id="block_' . $type . '_question_supplier" style="display:none">';
+         PluginFormcreatorQuestion::dropdownForForm(
+            $this->getForm()->getID(),
+            [
+               'fieldtype' => ['glpiselect'],
+               'values' => Supplier::class,
+            ],
+            'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
+            [
+               'value' => 0
+            ]
+         );
+         echo '</div>';
+      }
+
       echo '<div>';
       echo __('Email followup');
       Dropdown::showYesNo('use_notification', 1);
@@ -1722,6 +1744,17 @@ SCRIPT;
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
+               $supplier = new Supplier();
+               $supplier->getFromDB($values['actor_value']);
+               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $supplier->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_supplier . ' <b>' . __('Supplier from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
          }
