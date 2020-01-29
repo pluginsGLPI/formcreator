@@ -7,7 +7,15 @@
 # no matter they have the same if block
 
 # please set $TX_USER and $TX_TOKEN in your travis dashboard
-if [ "$TRAVIS_BRANCH" = "develop" ] && [ "$TRAVIS_PULL_REQUEST" = false ]; then
+
+# find if we are in a valid branch to build docs and locales
+GENERATE_LOCALES=false
+GENERATE_DOCS=false
+if echo "$TRAVIS_BRANCH" | grep -q -P '^(master|develop|support/|release/)'; then
+    GENERATE_LOCALES=true
+    GENERATE_DOCS=true
+fi
+if [ "$GENERATE_LOCALES" = true ] && [ "$TRAVIS_PULL_REQUEST" = false ]; then
     echo "updating source language"
     sudo apt install transifex-client
     echo "[https://www.transifex.com]" > ~/.transifexrc
@@ -19,12 +27,6 @@ if [ "$TRAVIS_BRANCH" = "develop" ] && [ "$TRAVIS_PULL_REQUEST" = false ]; then
     # php vendor/bin/robo locales:send
 else
     echo "skipping source language update"
-fi
-
-# find if we are in a valid branch to build docs
-GENERATE_DOCS=false
-if echo "$TRAVIS_BRANCH" | grep -q -P '^(master|develop|support/|release/)'; then
-    GENERATE_DOCS=true
 fi
 
 if [ "$GENERATE_DOCS" = true ] && [ "$TRAVIS_PULL_REQUEST" = false ]; then
