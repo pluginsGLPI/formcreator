@@ -47,6 +47,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
    const ACTOR_TYPE_QUESTION_SUPPLIER = 8;
    const ACTOR_TYPE_QUESTION_ACTORS = 9;
    const ACTOR_TYPE_GROUP_FROM_OBJECT = 10;
+   const ACTOR_TYPE_TECH_GROUP_FROM_OBJECT = 11;
 
    const ACTOR_ROLE_REQUESTER = 1;
    const ACTOR_ROLE_OBSERVER = 2;
@@ -55,16 +56,17 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
    static function getEnumActorType() {
       return [
-         self::ACTOR_TYPE_CREATOR            => __('Form requester', 'formcreator'),
-         self::ACTOR_TYPE_VALIDATOR          => __('Form validator', 'formcreator'),
-         self::ACTOR_TYPE_PERSON             => __('Specific person', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_PERSON    => __('Person from the question', 'formcreator'),
-         self::ACTOR_TYPE_GROUP              => __('Specific group', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_GROUP     => __('Group from the question', 'formcreator'),
-         self::ACTOR_TYPE_GROUP_FROM_OBJECT  => __('Group from an object', 'formcreator'),
-         self::ACTOR_TYPE_SUPPLIER           => __('Specific supplier', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_SUPPLIER  => __('Supplier from the question', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_ACTORS    => __('Actors from the question', 'formcreator'),
+         self::ACTOR_TYPE_CREATOR                => __('Form requester', 'formcreator'),
+         self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
+         self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
+         self::ACTOR_TYPE_GROUP                  => __('Specific group', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_GROUP         => __('Group from the question', 'formcreator'),
+         self::ACTOR_TYPE_GROUP_FROM_OBJECT      => __('Group from an object', 'formcreator'),
+         self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT => __('Tech group from an object', 'formcreator'),
+         self::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
       ];
    }
 
