@@ -135,7 +135,7 @@ class PluginFormcreatorCommon {
     * @param CommonDBTM $item
     * @param array $condition
     * @param string $fieldName
-    * @return NULL|integer
+    * @return null|integer
     */
    public static function getMax(CommonDBTM $item, array $condition, $fieldName) {
       global $DB;
