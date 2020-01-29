@@ -714,18 +714,22 @@ function plugin_formcreator_ChangeActorRequester(value) {
    $('#block_requester_question_user').hide();
    $('#block_requester_group').hide();
    $('#block_requester_question_group').hide();
+   $('#block_requester_group_from_object').hide();
+   $('#block_requester_tech_group_from_object').hide();
    $('#block_requester_question_actors').hide();
    $('#block_requester_supplier').hide();
    $('#block_requester_question_supplier').hide();
 
    switch (value) {
-      case '3' : $('#block_requester_user').show();               break;
-      case '4' : $('#block_requester_question_user').show();      break;
-      case '5' : $('#block_requester_group').show();              break;
-      case '6' : $('#block_requester_question_group').show();     break;
-      case '9' : $('#block_requester_question_actors').show();    break;
-      case '7' : $('#block_requester_supplier').show();           break;
-      case '8' : $('#block_requester_question_supplier').show();  break;
+      case '3' : $('#block_requester_user').show();                   break;
+      case '4' : $('#block_requester_question_user').show();          break;
+      case '5' : $('#block_requester_group').show();                  break;
+      case '6' : $('#block_requester_question_group').show();         break;
+      case '10': $('#block_requester_group_from_object').show();      break;
+      case '11': $('#block_requester_tech_group_from_object').show(); break;
+      case '9' : $('#block_requester_question_actors').show();        break;
+      case '7' : $('#block_requester_supplier').show();               break;
+      case '8' : $('#block_requester_question_supplier').show();      break;
    }
 }
 
@@ -734,18 +738,23 @@ function plugin_formcreator_ChangeActorWatcher(value) {
    $('#block_watcher_question_user').hide();
    $('#block_watcher_group').hide();
    $('#block_watcher_question_group').hide();
+   $('#block_watcher_group_from_object').hide();
+   $('#block_watcher_tech_group_from_object').hide();
    $('#block_watcher_question_actors').hide();
    $('#block_watcher_supplier').hide();
    $('#block_watcher_question_supplier').hide();
 
    switch (value) {
-      case '3' : $('#block_watcher_user').show();               break;
-      case '4' : $('#block_watcher_question_user').show();      break;
-      case '5' : $('#block_watcher_group').show();              break;
-      case '6' : $('#block_watcher_question_group').show();     break;
-      case '9' : $('#block_watcher_question_actors').show();    break;
-      case '7' : $('#block_watcher_supplier').show();           break;
-      case '8' : $('#block_watcher_question_supplier').show();  break;
+      case '3' : $('#block_watcher_user').show();                   break;
+      case '4' : $('#block_watcher_question_user').show();          break;
+      case '5' : $('#block_watcher_group').show();                  break;
+      case '6' : $('#block_watcher_question_group').show();         break;
+      case '9' : $('#block_watcher_question_actors').show();        break;
+      case '10': $('#block_watcher_group_from_object').show();      break;
+      case '11': $('#block_watcher_tech_group_from_object').show(); break;
+      case '9' : $('#block_watcher_question_actors').show();        break;
+      case '7' : $('#block_watcher_supplier').show();               break;
+      case '8' : $('#block_watcher_question_supplier').show();      break;
    }
 }
 
@@ -754,19 +763,24 @@ function plugin_formcreator_ChangeActorAssigned(value) {
    $('#block_assigned_question_user').hide();
    $('#block_assigned_group').hide();
    $('#block_assigned_question_group').hide();
+   $('#block_assigned_group_from_object').hide();
+   $('#block_assigned_tech_group_from_object').hide();
    $('#block_assigned_question_actors').hide();
    $('#block_assigned_supplier').hide();
    $('#block_assigned_question_supplier').hide();
 
    // The numbers match PluginFormcreatorTarget_Actor::ACTOR_TYPE_* constants
    switch (value) {
-      case '3' : $('#block_assigned_user').show();               break;
-      case '4' : $('#block_assigned_question_user').show();      break;
-      case '5' : $('#block_assigned_group').show();              break;
-      case '6' : $('#block_assigned_question_group').show();     break;
-      case '9' : $('#block_assigned_question_actors').show();    break;
-      case '7' : $('#block_assigned_supplier').show();           break;
-      case '8' : $('#block_assigned_question_supplier').show();  break;
+      case '3' : $('#block_assigned_user').show();                   break;
+      case '4' : $('#block_assigned_question_user').show();          break;
+      case '5' : $('#block_assigned_group').show();                  break;
+      case '6' : $('#block_assigned_question_group').show();         break;
+      case '9' : $('#block_assigned_question_actors').show();        break;
+      case '10': $('#block_assigned_group_from_object').show();      break;
+      case '11': $('#block_assigned_tech_group_from_object').show(); break;
+      case '9' : $('#block_assigned_question_actors').show();        break;
+      case '7' : $('#block_assigned_supplier').show();               break;
+      case '8' : $('#block_assigned_question_supplier').show();      break;
    }
 }
 
@@ -1110,12 +1124,14 @@ function plugin_formcreator_changeQuestionType(rand) {
 
       $('.plugin_formcreator_required').toggle(response.may_be_required);
       $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
+      $('#plugin_formcreator_subtype_label').html(response.label);
+      $('#plugin_formcreator_subtype_value').html(response.field);
       plugin_formcreator_updateQuestionSpecific(response.additions);
    });
 }
 
 function plugin_formcreator_updateQuestionSpecific(html) {
-   $('.plugin_formcreator_question_specific:gt(0)').remove();
+   $('.plugin_formcreator_question_specific').slice(1).remove();
    if (html == '') {
       $('.plugin_formcreator_question_specific').hide();
       return;
