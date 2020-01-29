@@ -1100,7 +1100,7 @@ SCRIPT;
             'fieldtype' => ['glpiselect'],
             'values' => Group::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
          [
             'value' => 0
          ]
