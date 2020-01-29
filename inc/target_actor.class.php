@@ -116,6 +116,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
          case self::ACTOR_TYPE_QUESTION_GROUP :
          case self::ACTOR_TYPE_QUESTION_SUPPLIER :
          case self::ACTOR_TYPE_GROUP_FROM_OBJECT :
+         case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
             $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
             if ($question === false) {
                $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
@@ -199,6 +200,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             case self::ACTOR_TYPE_SUPPLIER:
             case self::ACTOR_TYPE_QUESTION_ACTORS:
             case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
+            case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
                $question = new PluginFormcreatorQuestion;
                if ($question->getFromDB($target_actor['actor_value'])) {
                   $target_actor['actor_value'] = $question->fields['uuid'];
