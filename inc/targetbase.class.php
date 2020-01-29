@@ -514,6 +514,9 @@ PluginFormcreatorTargetInterface
 
                // Check the object has a group FK
                $groupFk = Group::getForeignKeyField();
+               if ($actor['actor_type'] == PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT) {
+                  $groupFk = $groupFk . '_tech';
+               }
                $object = new $itemtype();
                if (!$DB->fieldExists($object->getTable(), $groupFk)) {
                   continue 2;
@@ -547,7 +550,8 @@ PluginFormcreatorTargetInterface
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT:
-                  foreach ($userIds as $groupId) {
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT:
+               foreach ($userIds as $groupId) {
                   $this->addGroupActor($actor['actor_role'], $groupId);
                }
                break;
