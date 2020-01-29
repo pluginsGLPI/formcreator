@@ -1447,4 +1447,109 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ]);
       }
    }
+
+   /**
+    * @param integer $limit The N last answers found
+    * @return DBMysqlIterator
+    */
+   public static function getMyLastAnswersAsRequester($limit = 5) {
+      global $DB;
+
+      $formAnswerTable = self::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $request = [
+         'SELECT' => [
+            $formTable => ['name'],
+            $formAnswerTable => ['id', 'status', 'request_date'],
+         ],
+         'FROM' => $formTable,
+         'INNER JOIN' => [
+            $formAnswerTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ]
+         ],
+         'WHERE' => [
+            "$formAnswerTable.requester_id" => Session::getLoginUserID(),
+            "$formTable.is_deleted" => 0,
+         ],
+         'ORDER' => [
+            "$formAnswerTable.status ASC",
+            "$formAnswerTable.request_date DESC",
+         ],
+         'LIMIT' => $limit,
+      ];
+
+      return $DB->request($request);
+   }
+
+   /**
+    * @param integer $limit The N last answers found
+    * @return DBMysqlIterator
+    */
+   public static function getMyLastAnswersAsValidator($limit = 5) {
+      global $DB;
+
+      $userId = Session::getLoginUserID();
+      $groupList = Group_User::getUserGroups($userId);
+      $groupIdList = [];
+      foreach ($groupList as $group) {
+         $groupIdList[] = $group['id'];
+      }
+
+      $formAnswerTable = self::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $validatorTable = PluginFormcreatorForm_Validator::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $request = [
+         'SELECT' => [
+            $formTable => ['name'],
+            $formAnswerTable => ['id', 'status', 'request_date'],
+         ],
+         'FROM' => $formTable,
+         'INNER JOIN' => [
+            $formAnswerTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ],
+            $validatorTable => [
+               'FKEY' => [
+                  $validatorTable => $formFk,
+                  $formTable => 'id'
+               ]
+            ]
+         ],
+         'WHERE' => [
+            'OR' => [
+               [
+                  'AND' => [
+                     "$formTable.validation_required" => 1,
+                     "$validatorTable.itemtype" => User::class,
+                     "$validatorTable.items_id" => $userId,
+                     "$formAnswerTable.users_id_validator" => $userId
+                  ]
+               ],
+               [
+                  'AND' => [
+                     "$formTable.validation_required" => 2,
+                     "$validatorTable.itemtype" => Group::class,
+                     "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
+                     "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
+                  ]
+               ]
+            ]
+         ],
+         'ORDER' => [
+            "$formAnswerTable.status ASC",
+            "$formAnswerTable.request_date DESC",
+         ],
+         'LIMIT' => $limit,
+      ];
+
+      return $DB->request($request);
+   }
 }

@@ -144,6 +144,35 @@ abstract class CommonTestCase extends CommonDBTestCase
       return $this->getUniqueString() . "@example.com";
    }
 
+   /**
+    * Create a new user in the DB
+    *
+    * @param string $name
+    * @param string $password
+    * @param string $profileName
+    * @param integer $entityId
+    * @return \User
+    */
+   protected function getUser($name, $password = 'p@ssw0rd', $profileName = 'Super-Admin', $entityId = 0) {
+      $profile = new \Profile();
+      $profile->getFromDBByRequest([
+         'name' => $profileName
+      ]);
+      $this->boolean($profile->isNewItem())->isFalse('Profile not found to create a user');
+
+      $user = new \User();
+      $user->add([
+         'name' => $name,
+         'password' => $password,
+         'password2' => $password,
+         '_profiles_id' => $profile->getID(),
+         '_entities_id' => $entityId // Root entity
+      ]);
+      $this->boolean($user->isNewItem())->isFalse('Failed to create a user');
+
+      return $user;
+   }
+
    public function getMockForItemtype($classname, $methods = []) {
       // create mock
       $mock = $this->getMockBuilder($classname)
