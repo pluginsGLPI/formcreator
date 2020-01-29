@@ -730,10 +730,11 @@ PluginFormcreatorConditionnableInterface
       ]);
       echo '</td>';
 
-      echo '<td>';
+      // Dynamically filled for questions with a itemtype parameter (glpi select field)
+      echo '<td id="plugin_formcreator_subtype_label">';
       echo '</td>';
 
-      echo '<td>';
+      echo '<td id="plugin_formcreator_subtype_value">';
       echo '</td>';
       echo '</tr>';
 
@@ -774,7 +775,7 @@ PluginFormcreatorConditionnableInterface
       echo '</tr>';
 
       // Empty row for question-specific settings
-      // To be replaced bydynamically
+      // To be replaced dynamically
       echo '<tr class="plugin_formcreator_question_specific">';
       echo '<td></td><td></td><td></td><td></td>';
       echo '</tr>';
