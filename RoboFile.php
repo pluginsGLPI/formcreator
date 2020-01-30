@@ -147,16 +147,10 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $this->taskGitStack()
-         ->stopOnFail()
-         ->add('data/font-awesome.php')
-         ->commit('docs(changelog): update changelog')
-         ->run();
-
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
 
-      $this->updateChangelog();
+      //$this->updateChangelog();
 
       $diff = $this->gitDiff(['package.json']);
       $diff = implode("\n", $diff);
@@ -611,7 +605,7 @@ class RoboFile extends RoboFilePlugin
       }
    }
 
-   public function buildLog($a, $b) {
+   public function buildLog($a, $b = 'HEAD') {
       $log = ConventionalChangelog::buildLog($a, $b);
       echo implode(PHP_EOL, $log);
    }
@@ -794,9 +788,9 @@ class ConventionalChangelog
          'build', 'chore', 'ci', 'docs', 'fix', 'feat', 'perf', 'refactor', 'style', 'test'
       ];
       $types = implode('|', $types);
-      $scope = "(\([^\)]*\))?";
+      $scope = "(\((?P<scope>[^\)]*)\))?";
       $subject = ".*";
-      $filter = "/^(?P<type>$types)(?P<scope>$scope):(?P<subject>$subject)$/";
+      $filter = "/^(?P<type>$types)$scope:(?P<subject>$subject)$/";
       $filtered = [];
       $matches = null;
       foreach ($commits as $commit) {
@@ -879,10 +873,13 @@ class ConventionalChangelog
       });
 
       $log = [];
-      if ($b === '"Unreleaased') {
+      if ($b === 'HEAD') {
          array_unshift($tags, $b);
       }
       $startRef = array_shift($tags);
+      if ($startRef === null) {
+         throw new RuntimeException("$a not found");
+      }
       while ($endRef = array_shift($tags)) {
          $log = array_merge($log, self::buildLogOneBump($startRef, $endRef));
          $startRef = $endRef;
