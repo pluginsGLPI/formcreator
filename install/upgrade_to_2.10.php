@@ -28,13 +28,33 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_10 {
 
-interface PluginFormcreatorConditionnableInterface
-{
+   protected $migration;
+
    /**
-    * Updates the conditions of the question
-    * @param  array $input
-    * @return boolean true if success, false otherwise
+    * @param Migration $migration
     */
-    public function updateConditions($input);
+   public function upgrade(Migration $migration) {
+      $this->migration = $migration;
+
+      // Add conditions on the submit button for a form
+      $table = 'glpi_plugin_formcreator_forms';
+      $migration->addField(
+         $table,
+         'show_rule',
+         'integer',
+         [
+            'value'   => '1',
+            'after'   => 'is_default',
+            'comment' => 'Conditions setting to show the submit button'
+         ]
+      );
+
+      // Add request type specific question
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->changeField($table, 'type', 'type_question', 'integer', ['after' => 'target_name', 'value' => '0']);
+      $migration->migrationOneTable($table);
+      $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '1']);
+   }
 }

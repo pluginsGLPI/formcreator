@@ -8,7 +8,7 @@ services:
 env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
-    - CS=7.3
+    - CS=7.4
     - DB_HOST=127.0.0.1
     - MYSQL_ROOT_USER=root
     - DB_USER=glpi
@@ -16,9 +16,9 @@ env:
     - DB_NAME=glpitest
     - OLD_DB_NAME=glpiupgradetest
     - PLUGINNAME=formcreator
-    - AFTER_SUCCESS_BRANCH=9.4.0
+    - AFTER_SUCCESS_BRANCH=9.4/bugfixes
   matrix:
-    - GLPI_BRANCH=9.4.0
+    - GLPI_BRANCH=9.4/bugfixes
     - GLPI_BRANCH=9.5/bugfixes
     # - GLPI_BRANCH=master
 
@@ -28,16 +28,23 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
   - nightly
 
 matrix:
-  exclude:
-    - php: 5.6
-      env: GLPI_BRANCH=9.5/bugfixes
   allow_failures:
     - php: nightly
     - env: GLPI_BRANCH=9.5/bugfixes
 #    - env: GLPI_BRANCH=master
+
+jobs:
+  exclude:
+    - php: 5.6
+      env: GLPI_BRANCH=9.5/bugfixes
+    - php: 7.0
+      env: GLPI_BRANCH=9.5/bugfixes
+    - php: 7.1
+      env: GLPI_BRANCH=9.5/bugfixes
 
 before_script:
   - |

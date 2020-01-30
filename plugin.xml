@@ -297,6 +297,14 @@ Features
          <num>2.9.0</num>
          <compatibility>9.4</compatibility>
       </version>
+      <version>
+         <num>2.9.1</num>
+         <compatibility>9.4</compatibility>
+      </version>
+      <version>
+         <num>2.10.0-beta.1</num>
+         <compatibility>9.4</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>ca_ES</lang>

@@ -28,17 +28,45 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 namespace tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorQuestion extends CommonTestCase {
+// No autoload for the tested file
+require_once __DIR__ . '/../../RoboFile.php';
 
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
-      switch ($method) {
-         case 'testCreateQuestionText':
-            $this->login('glpi', 'glpi');
-            break;
-      }
-   }
+class Semver extends CommonTestCase {
+    public  function providerIsSemver() {
+        return [
+            [
+                'foo',
+                false
+            ],
+            [
+                '0.0.1',
+                true
+            ],
+            [
+                '1.0.0-dev',
+                true
+            ],
+            [
+                '1.0.0-nightly',
+                true
+            ],
+            [
+                '1.0.0-beta.1',
+                true
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider providerIsSemver
+     */
+    public function testIsSemver($version, $expected) {
+        $output = \Semver::isSemver($version);
+        $this->boolean($output)->isEqualTo($expected);
+    }
 }

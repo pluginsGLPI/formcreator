@@ -208,7 +208,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
-         throw new ImportFailureException('failed to add or update the item');
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the target to the linker
@@ -242,7 +243,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<table class="tab_cadre_fixe">';
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
       echo '<tr class="line1">';
-      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="15%"><strong>' . __('Name') . ' </strong></td>';
       echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
       echo '</table>';

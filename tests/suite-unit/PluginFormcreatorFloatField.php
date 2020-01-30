@@ -234,7 +234,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [

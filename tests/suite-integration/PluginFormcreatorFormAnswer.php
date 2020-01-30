@@ -112,13 +112,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $CFG_GLPI['use_notifications'] = '1';
       $CFG_GLPI['notifications_mailing'] = '1';
 
-      $form = new \PluginFormcreatorForm();
-      $form->add([
-         'name'                  => __METHOD__,
-         'validation_required'   => '0'
-      ]);
-      $this->boolean($form->isNewItem())->isFalse();
-      $form->getFromDB($form->getID());
+      $form = $this->getForm();
 
       // Answer the form
       $formAnswer = $this->newTestedInstance();
@@ -161,65 +155,32 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    }
 
    public function testOtherUserValidates() {
-      global $DB;
-
-      $form = new \PluginFormcreatorForm();
-      $form->add([
-         'entities_id'           => $_SESSION['glpiactive_entity'],
-         'name'                  => __METHOD__,
-         'description'           => 'form description',
-         'content'               => 'a content',
-         'is_active'             => 1,
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+      $form = $this->getForm([
+         'entities_id'         => $_SESSION['glpiactive_entity'],
+         'name'                => __METHOD__,
+         'description'         => 'form description',
+         'content'             => 'a content',
+         'is_active'           => 1,
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users'    => '2', // user is glpi
       ]);
-      $this->boolean($form->isNewItem())->isFalse();
-      $form->getFromDB($form->getID());
 
-      $section = new \PluginFormcreatorSection();
-      $section->add([
+      $section = $this->getSection([
          'name'                        => 'a section',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
       $this->boolean($section->isNewItem())->isFalse();
 
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'itemtype'              => 'User',
-         'users_id'              => '2', // user is glpi
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-      $this->boolean($formValidator->isNewItem())->isFalse();
-
       $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer_table = \PluginFormcreatorFormAnswer::getTable();
-
-      $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
-      if (version_compare(GLPI_VERSION, '9.5') < 0) { 
-         $maxId = $DB->fetch_assoc($result);
-      } else {
-         $maxId = $DB->fetchAssoc($result);
-      }
-      $maxId = $maxId['max_id'];
-      $maxId === null ? 0 : $maxId;
-
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'status'                      => 'waiting',
          'formcreator_validator'       => $_SESSION['glpiID'],
       ]);
-
-      $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
-      if (version_compare(GLPI_VERSION, '9.5') < 0) {
-         $fa = 'fetch_assoc';
-      } else {
-         $fa = 'fetchAssoc';
-      }
-      $newId = $DB->$fa($result);
-      $newId = $newId['max_id'];
-
-      $this->integer((int) $newId)->isGreaterThan((int) $maxId);
-      $formAnswer->getFromDB($newId);
       $this->boolean($formAnswer->isNewItem())->isFalse();
+
+      // Reload the item
+      $formAnswer->getFromDB($formAnswer->getID());
 
       $login = $this->getUniqueString();
       $user = new \User();
@@ -227,7 +188,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'name'                  => $login,
          'password'              => 'superadmin',
          'password2'             => 'superadmin',
-         '_profiles_id'          => '4',
+         '_profiles_id'          => '4', // super admin profile
          '_entities_id'          => 0,
          '_is_recursive'         => 1,
       ]);
@@ -238,12 +199,14 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       // Login as other user
       $this->boolean(self::login($login, 'superadmin', true))->isTrue();
-
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
 
       // Login as glpi
       $this->boolean(self::login('glpi', 'glpi', true))->istrue();
-
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
+
+      // Login as normal
+      $this->boolean(self::login('normal', 'normal', true))->istrue();
+      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
    }
 }

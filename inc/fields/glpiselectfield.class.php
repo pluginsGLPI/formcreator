@@ -74,6 +74,10 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
             Entity::class           => Entity::getTypeName(2),
             Profile::class          => Profile::getTypeName(2)],
       ];
+      $plugin = new Plugin();
+      if ($plugin->isActivated('appliance')) {
+         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2);
+      }
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
          'value'     => $this->question->fields['values'],

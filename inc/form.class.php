@@ -37,8 +37,11 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorForm extends CommonDBTM implements
 PluginFormcreatorExportableInterface,
-PluginFormcreatorDuplicatableInterface
+PluginFormcreatorDuplicatableInterface,
+PluginFormcreatorConditionnableInterface
 {
+   use PluginFormcreatorConditionnable;
+
    static $rightname = 'entity';
 
    public $dohistory         = true;
@@ -570,11 +573,21 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
       echo '</tr>';
 
+      echo '<tr>';
       echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
       echo '<td>';
       Dropdown::showYesNo("is_default", $this->fields["is_default"]);
       echo '</td>';
       echo '</tr>';
+
+      if (!$this->canPurgeItem()) {
+         echo '<tr>';
+         echo '<td colspan="4">'
+         . '<i class="fas fa-exclamation-triangle"></i>&nbsp;'
+         . __('To delete this form you must delete all its answers first.', 'formcreator')
+         . '</td>';
+         echo '</tr>';
+      }
 
       $this->showFormButtons($options);
    }
@@ -1043,39 +1056,10 @@ PluginFormcreatorDuplicatableInterface
    }
 
    protected function showMyLastForms() {
-      global $DB;
-
       $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
-      $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
-      $formTable = self::getTable();
-      $formFk = self::getForeignKeyField();
-      $request = [
-         'SELECT' => [
-            $formTable => ['name'],
-            $formAnswerTable => ['id', 'status', 'request_date'],
-         ],
-         'FROM' => $formTable,
-         'INNER JOIN' => [
-            $formAnswerTable => [
-               'FKEY' => [
-                  $formTable => 'id',
-                  $formAnswerTable => self::getForeignKeyField(),
-               ]
-            ]
-         ],
-         'WHERE' => [
-            "$formAnswerTable.requester_id" => $userId,
-            "$formTable.is_deleted" => 0,
-         ],
-         'ORDER' => [
-            "$formAnswerTable.status ASC",
-            "$formAnswerTable.request_date DESC",
-         ],
-         'LIMIT' => 5,
-      ];
-      $result = $DB->request($request);
+      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester();
       if ($result->count() == 0) {
          echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
          echo "<ul>";
@@ -1116,49 +1100,7 @@ PluginFormcreatorDuplicatableInterface
          foreach ($groupList as $group) {
             $groupIdList[] = $group['id'];
          }
-         $validatorTable = PluginFormcreatorForm_Validator::getTable();
-         $result = $DB->request([
-            'SELECT' => [
-               $formTable => ['name'],
-               $formAnswerTable => ['id', 'status', 'request_date'],
-            ],
-            'FROM' => $formTable,
-            'INNER JOIN' => [
-               $formAnswerTable => [
-                  'FKEY' => [
-                     $formTable => 'id',
-                     $formAnswerTable => self::getForeignKeyField(),
-                  ]
-               ],
-               $validatorTable => [
-                  'FKEY' => [
-                     $validatorTable => $formFk,
-                     $formTable => 'id'
-                  ]
-               ]
-            ],
-            'WHERE' => [
-               'OR' => [
-                  [
-                     'AND' => [
-                        "$formTable.validation_required" => 1,
-                        "$validatorTable.itemtype" => User::class,
-                        "$validatorTable.items_id" => $userId,
-                        "$formAnswerTable.users_id_validator" => $userId
-                     ]
-                  ],
-                  [
-                     'AND' => [
-                        "$formTable.validation_required" => 2,
-                        "$validatorTable.itemtype" => Group::class,
-                        "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
-                        "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
-                     ]
-                  ]
-               ]
-            ],
-            'LIMIT' => 5,
-         ]);
+         $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator();
          if ($result->count() == 0) {
             echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
          } else {
@@ -1281,17 +1223,19 @@ PluginFormcreatorDuplicatableInterface
                break;
          }
 
-         if ($result->count() > 1) {
-            $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
-            echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
-            echo '<div class="form-group required liste" id="form-validator">';
-            echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-            Dropdown::showFromArray('formcreator_validator', $validators);
-         }
-         if ($result->count() == 1) {
-            reset($validators);
-            $validatorId = key($validators);
-            echo Html::hidden('formcreator_validator', $validatorId);
+         switch (count($result)) {
+            case 1:
+               reset($validators);
+               $validatorId = key($validators);
+               echo Html::hidden('formcreator_validator', ['value' => $validatorId]);
+               break;
+            case 2:
+               $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
+               echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
+               echo '<div class="form-group required liste" id="form-validator">';
+               echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+               Dropdown::showFromArray('formcreator_validator', $validators);
+               break;
          }
       }
 
@@ -1349,7 +1293,18 @@ PluginFormcreatorDuplicatableInterface
     */
    public function post_addItem() {
       $this->updateValidators();
+      $this->updateConditions($this->input);
       return true;
+   }
+
+   /**
+    * Actions done after the UPDATE of the item in the database
+    *
+    * @return void
+    */
+    public function post_updateItem($history = 1) {
+      $this->updateValidators();
+      $this->updateConditions($this->input);
    }
 
    /**
@@ -1417,36 +1372,41 @@ PluginFormcreatorDuplicatableInterface
       if (!isset($this->input['validation_required'])) {
          return;
       }
+      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_NONE) {
+         return;
+      }
+      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER
+         && empty($this->input['_validator_users'])) {
+         return;
+      }
+      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP
+         && empty($this->input['_validator_groups'])) {
+         return;
+      }
 
       $form_validator = new PluginFormcreatorForm_Validator();
       $form_validator->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
 
-      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER
-          && !empty($this->input['_validator_users'])
-          || $this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP
-          && !empty($this->input['_validator_groups'])) {
-
-         switch ($this->input['validation_required']) {
-            case PluginFormcreatorForm_Validator::VALIDATION_USER:
-               $validators = $this->input['_validator_users'];
-               $validatorItemtype = User::class;
-               break;
-            case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
-               $validators = $this->input['_validator_groups'];
-               $validatorItemtype = Group::class;
-               break;
-         }
-         if (!is_array($validators)) {
-            $validators = [$validators];
-         }
-         foreach ($validators as $itemId) {
-            $form_validator = new PluginFormcreatorForm_Validator();
-            $form_validator->add([
-               'plugin_formcreator_forms_id' => $this->getID(),
-               'itemtype'                    => $validatorItemtype,
-               'items_id'                    => $itemId
-            ]);
-         }
+      switch ($this->input['validation_required']) {
+         case PluginFormcreatorForm_Validator::VALIDATION_USER:
+            $validators = $this->input['_validator_users'];
+            $validatorItemtype = User::class;
+            break;
+         case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
+            $validators = $this->input['_validator_groups'];
+            $validatorItemtype = Group::class;
+            break;
+      }
+      if (!is_array($validators)) {
+         $validators = [$validators];
+      }
+      foreach ($validators as $itemId) {
+         $form_validator = new PluginFormcreatorForm_Validator();
+         $form_validator->add([
+            'plugin_formcreator_forms_id' => $this->getID(),
+            'itemtype'                    => $validatorItemtype,
+            'items_id'                    => $itemId
+         ]);
       }
    }
 
@@ -1702,6 +1662,14 @@ PluginFormcreatorDuplicatableInterface
          $form['_sections'][] = $form_section->export($remove_uuid);
       }
 
+      // get submit conditions
+      $form['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $form['_conditions'][] = $condition->export($remove_uuid);
+      }
+
       // get validators
       $form['_validators'] = [];
       $all_validators = $DB->request([
@@ -1854,6 +1822,7 @@ PluginFormcreatorDuplicatableInterface
             continue;
          }
 
+         $success = true;
          foreach ($forms_toimport['forms'] as $form) {
             set_time_limit(30);
             $linker = new PluginFormcreatorLinker();
@@ -1861,6 +1830,8 @@ PluginFormcreatorDuplicatableInterface
                self::import($linker, $form);
             } catch (ImportFailureException $e) {
                // Import failed, give up
+               $success = false;
+               Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
                continue;
             }
             if (!$linker->linkPostponed()) {
@@ -1868,8 +1839,10 @@ PluginFormcreatorDuplicatableInterface
                                                            $$form['name']));
             }
          }
-         Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
+         if ($success) {
+            Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
                                                       $filename));
+         }
       }
    }
 
@@ -1957,7 +1930,8 @@ PluginFormcreatorDuplicatableInterface
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
-         throw new ImportFailureException('failed to add or update the item');
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the form to the linker
@@ -2018,6 +1992,13 @@ PluginFormcreatorDuplicatableInterface
             $formFk => $itemId,
             ['NOT' => ['id' => $importedItems]]
          ]);
+      }
+
+      // Import submit conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+         }
       }
 
       // import form's targets
@@ -2236,7 +2217,7 @@ PluginFormcreatorDuplicatableInterface
                      [
                         'OR' => [
                            "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                           "$form_table.'id'" => new QuerySubQuery([
+                           "$form_table.id" => new QuerySubQuery([
                               'SELECT' => $formFk,
                               'FROM' => $table_fp,
                               'WHERE' => [

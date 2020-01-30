@@ -79,13 +79,17 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             $value = $this->value;
          }
          echo Html::textarea([
-            'name'            => $fieldName,
-            'rand'            => $rand,
-            'value'           => $value,
-            'rows'            => 5,
-            'display'         => false,
-            'enable_richtext' => $useRichText,
+            'name'              => $fieldName,
+            'rand'              => $rand,
+            'value'             => $value,
+            'rows'              => 5,
+            'display'           => false,
+            'enable_richtext'   => $useRichText,
+            'enable_fileupload' => false,
          ]);
+         if (version_compare(GLPI_VERSION, '9.4.6') < 0) {
+            echo '</div>';
+         }
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
@@ -142,6 +146,18 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    public function prepareQuestionInputForSave($input) {
       $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
       return $input;
+   }
+
+   public function parseAnswerValues($input, $nonDestructive = false) {
+      $input = $this->question->addFiles(
+         $input,
+         [
+            'force_update'  => true,
+            'content_field' => 'formcreator_field_' . $this->question->getID(),
+         ]
+      );
+
+      return parent::parseAnswerValues($input, $nonDestructive);
    }
 
    public function getValueForTargetText($richText) {

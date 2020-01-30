@@ -30,6 +30,7 @@
  */
 
 use tests\units\PluginFormcreatorForm_Validator as TestsPluginFormcreatorForm_Validator;
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -104,7 +105,8 @@ PluginFormcreatorExportableInterface
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
-         throw new ImportFailureException();
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the item to the linker

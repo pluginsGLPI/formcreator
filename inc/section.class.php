@@ -35,11 +35,13 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild implements 
+class PluginFormcreatorSection extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
+   use PluginFormcreatorConditionnable;
+
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
 
@@ -253,12 +255,14 @@ PluginFormcreatorConditionnableInterface
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
-         throw new ImportFailureException('failed to add or update the item');
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the section to the linker
       $linker->addObject($originalId, $item);
 
+      // Import the questions
       if (isset($input['_questions'])) {
          // sort questions by order
          usort($input['_questions'], function ($a, $b) {
@@ -273,6 +277,13 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
+      // Import conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+         }
+      }
+
       return $itemId;
    }
 
@@ -283,7 +294,7 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      $section       = $this->fields;
+      $section = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -303,6 +314,14 @@ PluginFormcreatorConditionnableInterface
          if ($form_question->getFromDB($question['id'])) {
             $section['_questions'][] = $form_question->export($remove_uuid);
          }
+      }
+
+      // get section conditions
+      $section['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $section['_conditions'][] = $condition->export($remove_uuid);
       }
 
       // remove ID or UUID
@@ -347,9 +366,9 @@ PluginFormcreatorConditionnableInterface
       } else {
          $title =  __('Edit a section', 'formcreator');
       }
-      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
+      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'" data-itemtype="' . self::class . '">';
       echo '<table class="tab_cadre_fixe">';
-     
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo $title;
@@ -363,10 +382,15 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
       echo '</tr>';
 
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Show section', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
       $form = new PluginFormcreatorForm();
       $form->getFromDBBySection($this);
       $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($form, $this);
+      $condition->showConditionsForItem($this);
 
       echo '<tr>';
       echo '<td colspan="4" class="center">';
@@ -432,63 +456,11 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   /**
-    * Updates the conditions of the question
-    * @param array $input
-    * @return boolean true if success, false otherwise
-    */
-    public function updateConditions($input) {
-      if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
-         || !isset($input['show_value']) || !isset($input['show_logic'])) {
-         return  false;
-      }
+   public function post_addItem() {
+      $this->updateConditions($this->input);
+   }
 
-      if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
-         || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
-         return false;
-      }
-
-      // All arrays of condition exists
-      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         return false;
-      }
-
-      if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
-            && count($input['show_value']) == count($input['show_logic'])
-            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
-         return false;
-      }
-
-      // Delete all existing conditions for the question
-      $condition = new PluginFormcreatorCondition();
-      $condition->deleteByCriteria([
-         'itemtype' => static::class,
-         'items_id' => $input['id'],
-      ]);
-
-      // Arrays all have the same count and have at least one item
-      $order = 0;
-      while (count($input['plugin_formcreator_questions_id']) > 0) {
-         $order++;
-         $value            = array_shift($input['show_value']);
-         $questionID       = (int) array_shift($input['plugin_formcreator_questions_id']);
-         $showCondition    = html_entity_decode(array_shift($input['show_condition']));
-         $showLogic        = array_shift($input['show_logic']);
-         $condition = new PluginFormcreatorCondition();
-         $condition->add([
-            'itemtype'                        => static::class,
-            'items_id'                        => $input['id'],
-            'plugin_formcreator_questions_id' => $questionID,
-            'show_condition'                  => $showCondition,
-            'show_value'                      => $value,
-            'show_logic'                      => $showLogic,
-            'order'                           => $order,
-         ]);
-         if ($condition->isNewItem()) {
-            return false;
-         }
-      }
-
-      return true;
+   public function post_updateItem($history = 1) {
+      $this->updateConditions($this->input);
    }
 }

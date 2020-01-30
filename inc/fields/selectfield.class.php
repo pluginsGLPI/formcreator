@@ -137,6 +137,10 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function equals($value) {
+      if ($value == '') {
+         // empty string means no selection
+         $value = '0';
+      }
       return $this->value == $value;
    }
 

@@ -29,7 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorRadiosField extends PluginFormcreatorField
+class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;
@@ -45,36 +45,24 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';
       $additions .= __('Default values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => $this->question->fields['default_values'],
-         'cols'             => '50',
-         'display'          => false,
-      ]);
+      $additions .= Ticket::dropdownType('default_values',
+         [
+            'value'   => $this->value,
+            'rand'    => $rand,
+            'display' => false,
+         ]
+      );
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
-      $additions .= __('Values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
-      $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'values',
-         'id'               => 'values',
-         'value'            => $this->question->fields['values'],
-         'cols'             => '50',
-         'display'          => false,
-      ]);
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = parent::getDesignSpecializationField();
+      $common = $common = PluginFormcreatorField::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -91,106 +79,64 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
-
-         $values = $this->getAvailableValues();
-         if (!empty($values)) {
-            echo '<div class="formcreator_radios">';
-            $i = 0;
-            foreach ($values as $value) {
-               if ((trim($value) != '')) {
-                  $i++;
-                  $checked = ($this->value == $value) ? ' checked' : '';
-                  echo '<p>';
-                  echo '<input type="radio" class="form-control"
-                        name="' . $fieldName . '"
-                        id="' . $domId . '_' . $i . '"
-                        value="' . $value . '"' . $checked . ' /> ';
-                  echo '<label for="' . $domId . '_' . $i . '">';
-                  echo $value;
-                  echo '</label>';
-                  echo '</p>';
-               }
-            }
-            echo '</div>';
-         }
+         Ticket::dropdownType($fieldName, [
+            'value' => $this->value,
+            'rand'  => $rand,
+         ]);
+         echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeRadios('$fieldName', '$rand');
+            pluginFormcreatorInitializeRequestType('$fieldName', '$rand');
          });");
-
       } else {
-         echo $this->value;
+         echo Ticket::getTicketTypeName($this->value);
       }
    }
 
    public static function getName() {
-      return __('Radios', 'formcreator');
+      return __('Request type', 'formcreator');
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['values'])) {
-         if (empty($input['values'])) {
-            Session::addMessageAfterRedirect(
-                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
-            return [];
-         }
-         // trim values
-         $input['values'] = $this->trimValue($input['values']);
-      }
-      if (isset($input['default_values'])) {
-         // trim values
-         $this->value = explode('\r\n', $input['default_values']);
-         $this->value = array_map('trim', $this->value);
-         $this->value = array_filter($this->value, function($value) {
-            return ($value !== '');
-         });
-         $this->value = array_shift($this->value);
-         $input['default_values'] = $this->value;
-      }
+      $this->value = $input['default_values'] != ''
+                     ? (int) $input['default_values']
+                     : '3';
       return $input;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
-      if (isset($input[$key])) {
+      if (!isset($input[$key])) {
+         $input[$key] = '3';
+      } else {
          if (!is_string($input[$key])) {
             return false;
          }
-      } else {
-         $this->value = '';
-         return true;
       }
 
-       $this->value = Toolbox::stripslashes_deep($input[$key]);
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
    public static function canRequire() {
       return true;
    }
 
-   public function parseDefaultValue($defaultValue) {
-      $this->value = explode('\r\n', $defaultValue);
-      $this->value = array_filter($this->value, function($value) {
-         return ($value !== '');
-      });
-      $this->value = array_shift($this->value);
+   public function getAvailableValues() {
+      return Ticket::getTypes();
    }
 
    public function serializeValue() {
       if ($this->value === null || $this->value === '') {
-         return '';
+         return '2';
       }
 
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
                   ? $value
-                  : '';
+                  : '2';
    }
 
    public function getValueForDesign() {
@@ -202,7 +148,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return $this->value;
+      $available = $this->getAvailableValues();
+      return $available[$this->value];
    }
 
    public function getDocumentsForTarget() {
@@ -211,7 +158,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 
    public function isValid() {
       // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '') {
+      if ($this->isRequired() && $this->value == '0') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
@@ -224,7 +171,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->value == $value;
+      $available = $this->getAvailableValues();
+      return strcasecmp($available[$this->value], $value) === 0;
    }
 
    public function notEquals($value) {
@@ -232,7 +180,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return $this->value > $value;
+      $available = $this->getAvailableValues();
+      return strcasecmp($available[$this->value], $value) > 0;
    }
 
    public function lessThan($value) {
@@ -244,6 +193,6 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<i class="fa fa-check-circle" aria-hidden="true"></i>';
+      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
    }
 }

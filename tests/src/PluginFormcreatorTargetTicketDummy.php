@@ -84,4 +84,8 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
    public function publicSetTargetAssociatedItem($data, $formanswer) {
       return $this->setTargetAssociatedItem($data, $formanswer);
    }
+
+   public function publicSetTargetType($data, $formanswer) {
+      return $this->setTargetType($data, $formanswer);
+   }
 }

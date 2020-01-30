@@ -411,7 +411,7 @@ function buildTiles(list) {
          if (item.type == 'form') {
             forms.push(
                '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
-               + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
+               + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name
                + '</a>'
@@ -610,7 +610,6 @@ function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
 var formcreatorQuestions = new Object();
 
 function formcreatorShowFields(form) {
-   debugger;
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/showfields.php',
       type: "POST",
@@ -620,6 +619,7 @@ function formcreatorShowFields(form) {
          var itemToShow = JSON.parse(response);
          var questionToShow = itemToShow['PluginFormcreatorQuestion'];
          var sectionToShow = itemToShow['PluginFormcreatorSection'];
+         var submitButtonToShow = itemToShow['PluginFormcreatorForm'];
       } catch (e) {
          // Do nothing for now
       }
@@ -631,7 +631,7 @@ function formcreatorShowFields(form) {
             } else {
                $('div[data-section-id="' + sectionId+ '"]').hide();
             }
-         }         
+         }
       }
       var i = 0;
       for (var questionKey in questionToShow) {
@@ -650,6 +650,8 @@ function formcreatorShowFields(form) {
             }
          }
       }
+
+      $('[name="submit_formcreator"]').toggle(submitButtonToShow == true);
    });
 }
 
@@ -658,13 +660,13 @@ function plugin_formcreator_formcreatorChangeDueDate(value) {
    $('#due_date_questions').hide();
    $('#due_date_time').hide();
    switch (value) {
-      case '1' :
+      case '2' :
          $('#due_date_questions').show();
          break;
-      case '2' :
+      case '3' :
          $('#due_date_time').show();
          break;
-      case '3' :
+      case '4' :
          $('#due_date_questions').show();
          $('#due_date_time').show();
          break;
@@ -712,18 +714,22 @@ function plugin_formcreator_ChangeActorRequester(value) {
    $('#block_requester_question_user').hide();
    $('#block_requester_group').hide();
    $('#block_requester_question_group').hide();
+   $('#block_requester_group_from_object').hide();
+   $('#block_requester_tech_group_from_object').hide();
    $('#block_requester_question_actors').hide();
    $('#block_requester_supplier').hide();
    $('#block_requester_question_supplier').hide();
 
    switch (value) {
-      case '3' : $('#block_requester_user').show();               break;
-      case '4' : $('#block_requester_question_user').show();      break;
-      case '5' : $('#block_requester_group').show();              break;
-      case '6' : $('#block_requester_question_group').show();     break;
-      case '9' : $('#block_requester_question_actors').show();    break;
-      case '7' : $('#block_requester_supplier').show();           break;
-      case '8' : $('#block_requester_question_supplier').show();  break;
+      case '3' : $('#block_requester_user').show();                   break;
+      case '4' : $('#block_requester_question_user').show();          break;
+      case '5' : $('#block_requester_group').show();                  break;
+      case '6' : $('#block_requester_question_group').show();         break;
+      case '10': $('#block_requester_group_from_object').show();      break;
+      case '11': $('#block_requester_tech_group_from_object').show(); break;
+      case '9' : $('#block_requester_question_actors').show();        break;
+      case '7' : $('#block_requester_supplier').show();               break;
+      case '8' : $('#block_requester_question_supplier').show();      break;
    }
 }
 
@@ -732,18 +738,23 @@ function plugin_formcreator_ChangeActorWatcher(value) {
    $('#block_watcher_question_user').hide();
    $('#block_watcher_group').hide();
    $('#block_watcher_question_group').hide();
+   $('#block_watcher_group_from_object').hide();
+   $('#block_watcher_tech_group_from_object').hide();
    $('#block_watcher_question_actors').hide();
    $('#block_watcher_supplier').hide();
    $('#block_watcher_question_supplier').hide();
 
    switch (value) {
-      case '3' : $('#block_watcher_user').show();               break;
-      case '4' : $('#block_watcher_question_user').show();      break;
-      case '5' : $('#block_watcher_group').show();              break;
-      case '6' : $('#block_watcher_question_group').show();     break;
-      case '9' : $('#block_watcher_question_actors').show();    break;
-      case '7' : $('#block_watcher_supplier').show();           break;
-      case '8' : $('#block_watcher_question_supplier').show();  break;
+      case '3' : $('#block_watcher_user').show();                   break;
+      case '4' : $('#block_watcher_question_user').show();          break;
+      case '5' : $('#block_watcher_group').show();                  break;
+      case '6' : $('#block_watcher_question_group').show();         break;
+      case '9' : $('#block_watcher_question_actors').show();        break;
+      case '10': $('#block_watcher_group_from_object').show();      break;
+      case '11': $('#block_watcher_tech_group_from_object').show(); break;
+      case '9' : $('#block_watcher_question_actors').show();        break;
+      case '7' : $('#block_watcher_supplier').show();               break;
+      case '8' : $('#block_watcher_question_supplier').show();      break;
    }
 }
 
@@ -752,46 +763,61 @@ function plugin_formcreator_ChangeActorAssigned(value) {
    $('#block_assigned_question_user').hide();
    $('#block_assigned_group').hide();
    $('#block_assigned_question_group').hide();
+   $('#block_assigned_group_from_object').hide();
+   $('#block_assigned_tech_group_from_object').hide();
    $('#block_assigned_question_actors').hide();
    $('#block_assigned_supplier').hide();
    $('#block_assigned_question_supplier').hide();
 
    // The numbers match PluginFormcreatorTarget_Actor::ACTOR_TYPE_* constants
    switch (value) {
-      case '3' : $('#block_assigned_user').show();               break;
-      case '4' : $('#block_assigned_question_user').show();      break;
-      case '5' : $('#block_assigned_group').show();              break;
-      case '6' : $('#block_assigned_question_group').show();     break;
-      case '9' : $('#block_assigned_question_actors').show();    break;
-      case '7' : $('#block_assigned_supplier').show();           break;
-      case '8' : $('#block_assigned_question_supplier').show();  break;
+      case '3' : $('#block_assigned_user').show();                   break;
+      case '4' : $('#block_assigned_question_user').show();          break;
+      case '5' : $('#block_assigned_group').show();                  break;
+      case '6' : $('#block_assigned_question_group').show();         break;
+      case '9' : $('#block_assigned_question_actors').show();        break;
+      case '10': $('#block_assigned_group_from_object').show();      break;
+      case '11': $('#block_assigned_tech_group_from_object').show(); break;
+      case '9' : $('#block_assigned_question_actors').show();        break;
+      case '7' : $('#block_assigned_supplier').show();               break;
+      case '8' : $('#block_assigned_question_supplier').show();      break;
    }
 }
 
 // === FIELDS EDITION ===
 
-function plugin_formcreator_addEmptyCondition(target, itemtype) {
-   var itemId = $('form[name="plugin_formcreator_form"] input[name="id"]').val();
+function plugin_formcreator_toggleCondition(target) {
+   var form = $(target).closest('form');
+
+   var selector = 'tr[data-itemtype="PluginFormcreatorCondition"]';
+   if (target.value == '1') {
+      form.find(selector).hide();
+   } else {
+      if (form.find(selector).length < 1) {
+         plugin_formcreator_addEmptyCondition(target);
+      }
+      form.find(selector).show();
+   }
+}
+
+function plugin_formcreator_addEmptyCondition(target) {
+   var form     = $(target).closest('form');
+   var itemtype = form.attr('data-itemtype');
+   // value if the hidden id input field
+   var id       = form.find('[name="id"]').val();
    var parentKey;
    var parentId;
-   var data;
-
-   data = {
-         itemtype: itemtype,
-         items_id: itemId,
-      };
-   switch (itemtype) {
-      case 'PluginFormcreatorQuestion':
-         parentId = $('form[name="plugin_formcreator_form"] [name="plugin_formcreator_sections_id"]').val();
-         data.plugin_formcreator_sections_id = parentId;
-         break;
-
-      case 'PluginFormcreatorSection':
-         parentId = $('form[name="plugin_formcreator_form"] [name="plugin_formcreator_forms_id"]').val();
-         data.plugin_formcreator_forms_id = parentId;
-         break;
-   }
+   var data = form.serializeArray();
+   data.push({
+      name: 'itemtype',
+      value: itemtype
+   });
+   data.push({
+      name: 'items_id',
+      value: id
+   });
    $.ajax({
+      type: 'POST',
       url: rootDoc + '/plugins/formcreator/ajax/condition.php',
       data: data
    }).done(function (data) {
@@ -825,7 +851,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
 
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/commonTree.php',
+         url: rootDoc + '/plugins/formcreator/ajax/commontree.php',
          type: 'GET',
          data: {
             itemtype: dropdown_type,
@@ -859,13 +885,14 @@ function plugin_formcreator_changeGlpiObjectItemType() {
 }
 
 function plugin_formcreator_toggleCondition(field, itemtype) {
+   var form = $(field).closest('form');
    if (field.value == '1') {
-      $('.plugin_formcreator_logicRow').hide();
+      form.find('.plugin_formcreator_logicRow').hide();
    } else {
-      if ($('.plugin_formcreator_logicRow').length < 1) {
+      if (form.find('.plugin_formcreator_logicRow').length < 1) {
          plugin_formcreator_addEmptyCondition(field, itemtype);
       }
-      $('.plugin_formcreator_logicRow').show();
+      form.find('.plugin_formcreator_logicRow').show();
    }
 }
 
@@ -1014,6 +1041,16 @@ function pluginFormcreatorInitializeMultiselect(fieldName, rand) {
 }
 
 /**
+ * Initialize a request type field
+ */
+function pluginFormcreatorInitializeRequestType(fieldName, rand) {
+   var field = $('select[name="' + fieldName + '"]');
+   field.on("change", function(e) {
+      formcreatorShowFields($(field[0].form));
+   });
+}
+
+/**
  * Initialize a select field
  */
 function pluginFormcreatorInitializeSelect(fieldName, rand) {
@@ -1067,8 +1104,8 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
 }
 
 function plugin_formcreator_changeQuestionType(rand) {
-   var questionId = $('form[name="plugin_formcreator_form"] input[name="id"]').val();
-   var questionType = $ ('form[name="plugin_formcreator_form"] [name="fieldtype"]').val();
+   var questionId = $('form[name="plugin_formcreator_questionform"] input[name="id"]').val();
+   var questionType = $ ('form[name="plugin_formcreator_questionform"] [name="fieldtype"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/question_design.php',
@@ -1085,21 +1122,16 @@ function plugin_formcreator_changeQuestionType(rand) {
          return;
       }
 
-      $('#label_required').toggle(response.may_be_required);
-      $('#plugin_formcreator_required > *').toggle(response.may_be_required);
-
-      $('#label_show_empty').toggle(response.may_be_empty);
-      $('#plugin_formcreator_show_empty > *').toggle(response.may_be_empty);
-
+      $('.plugin_formcreator_required').toggle(response.may_be_required);
+      $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
       $('#plugin_formcreator_subtype_label').html(response.label);
       $('#plugin_formcreator_subtype_value').html(response.field);
-
       plugin_formcreator_updateQuestionSpecific(response.additions);
    });
 }
 
 function plugin_formcreator_updateQuestionSpecific(html) {
-   $('.plugin_formcreator_question_specific:gt(0)').remove();
+   $('.plugin_formcreator_question_specific').slice(1).remove();
    if (html == '') {
       $('.plugin_formcreator_question_specific').hide();
       return;
@@ -1164,6 +1196,27 @@ function plugin_formcreator_updateCompositePeerType(rand) {
 }
 
 /**
+ * change request type of a target item (design mode)
+ */
+function plugin_formcreator_changeRequestType(rand) {
+   $('#requesttype_specific_title').hide();
+   $('#requesttype_specific_value').hide();
+   $('#requesttype_question_title').hide();
+   $('#requesttype_question_value').hide();
+
+   switch($('#dropdown_type_rule' + rand).val()) {
+      case '1': // PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC
+         $('#requesttype_specific_title').show();
+         $('#requesttype_specific_value').show();
+         break;
+      case '2': // PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER
+         $('#requesttype_question_title').show();
+         $('#requesttype_question_value').show();
+         break;
+   }
+}
+
+/**
  * change urgency of a target item (design mode)
  */
 function plugin_formcreator_changeUrgency(rand) {
@@ -1174,12 +1227,12 @@ function plugin_formcreator_changeUrgency(rand) {
 
    switch($('#dropdown_urgency_rule' + rand).val()) {
       case '2' :
-         $('#urgency_question_title').show();
-         $('#urgency_question_value').show();
-         break;
-      case '3':
          $('#urgency_specific_title').show();
          $('#urgency_specific_value').show();
+         break;
+      case '3':
+         $('#urgency_question_title').show();
+         $('#urgency_question_value').show();
          break;
    }
 }

@@ -46,9 +46,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          ]);
       } else {
          $doc = new Document();
-         $answer = $this->value;
-         if (!is_array($this->value)) {
-            $answer = [$this->value];
+         $answer = $this->uploadData;
+         if (!is_array($this->uploadData)) {
+            $answer = [$this->uploadData];
          }
          foreach ($answer as $item) {
             if (is_numeric($item) && $doc->getFromDB($item)) {
@@ -105,6 +105,10 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public static function getName() {
       return __('File');
+   }
+
+   public function prepareQuestionInputForSave($input) {
+      return $input;
    }
 
    public static function canRequire() {
