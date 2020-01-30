@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    42%
-                                            <small>of 57</small>
+                    41%
+                                            <small>of 59</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -142,7 +142,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#equals">PluginFormcreatorSelectField::equals()</a></td>
-                                        <td style="text-align: center">1</td>
+                                        <td style="text-align: center">3</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -1237,36 +1237,37 @@ layout: coverage
                     <th id="L140" class="number uncovered">140</th>
 
                     <td class="uncovered" >
-                        <pre>      return $this-&gt;value == $value;</pre>
+                        <pre>      if ($value == &#039;&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number unreach">141</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L142" class="number ">142</th>
+                    <th id="L141" class="number ">141</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         // empty string means no selection
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="notEquals">
+                            <tr class="line" id="">
+                    <th id="L142" class="number uncovered">142</th>
+
+                    <td class="uncovered" >
+                        <pre>         $value = &#039;0&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L143" class="number ">143</th>
 
-                    <td class="" id="notEquals">
-                        <pre>   public function notEquals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L144" class="number uncovered">144</th>
 
                     <td class="uncovered" >
-                        <pre>      return !$this-&gt;equals($value);</pre>
+                        <pre>      return $this-&gt;value == $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1284,18 +1285,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="greaterThan">
+                            <tr class="line" id="notEquals">
                     <th id="L147" class="number ">147</th>
 
-                    <td class="" id="greaterThan">
-                        <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="notEquals">
+                        <pre>   public function notEquals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L148" class="number uncovered">148</th>
 
                     <td class="uncovered" >
-                        <pre>      return $this-&gt;value &gt; $value;</pre>
+                        <pre>      return !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1313,18 +1314,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="lessThan">
+                            <tr class="line" id="greaterThan">
                     <th id="L151" class="number ">151</th>
 
-                    <td class="" id="lessThan">
-                        <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="greaterThan">
+                        <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L152" class="number uncovered">152</th>
 
                     <td class="uncovered" >
-                        <pre>      return !$this-&gt;greaterThan($value) &amp;&amp; !$this-&gt;equals($value);</pre>
+                        <pre>      return $this-&gt;value &gt; $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1342,18 +1343,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="isAnonymousFormCompatible">
+                            <tr class="line" id="lessThan">
                     <th id="L155" class="number ">155</th>
 
-                    <td class="" id="isAnonymousFormCompatible">
-                        <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="lessThan">
+                        <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L156" class="number covered">156</th>
+                    <th id="L156" class="number uncovered">156</th>
 
-                    <td class="covered" >
-                        <pre>      return true;</pre>
+                    <td class="uncovered" >
+                        <pre>      return !$this-&gt;greaterThan($value) &amp;&amp; !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1371,22 +1372,51 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getHtmlIcon">
+                            <tr class="line" id="isAnonymousFormCompatible">
                     <th id="L159" class="number ">159</th>
+
+                    <td class="" id="isAnonymousFormCompatible">
+                        <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L160" class="number covered">160</th>
+
+                    <td class="covered" >
+                        <pre>      return true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L161" class="number unreach">161</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L162" class="number ">162</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getHtmlIcon">
+                    <th id="L163" class="number ">163</th>
 
                     <td class="" id="getHtmlIcon">
                         <pre>   public function getHtmlIcon() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L160" class="number uncovered">160</th>
+                    <th id="L164" class="number uncovered">164</th>
 
                     <td class="uncovered" >
                         <pre>      global $CFG_GLPI;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number ">161</th>
+                    <th id="L165" class="number ">165</th>
 
                     <td class="" >
                         <pre>
@@ -1394,21 +1424,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L162" class="number uncovered">162</th>
+                    <th id="L166" class="number uncovered">166</th>
 
                     <td class="uncovered" >
                         <pre>      return &#039;&lt;img src=&quot;&#039; . $CFG_GLPI[&#039;root_doc&#039;] . &#039;/plugins/formcreator/pics/ui-select-field.png&quot; title=&quot;&quot; /&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L163" class="number unreach">163</th>
+                    <th id="L167" class="number unreach">167</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L164" class="number ">164</th>
+                    <th id="L168" class="number ">168</th>
 
                     <td class="" >
                         <pre>}

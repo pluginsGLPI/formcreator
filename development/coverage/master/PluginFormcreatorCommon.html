@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    49%
-                                            <small>of 81</small>
+                    41%
+                                            <small>of 68</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -82,13 +82,6 @@ layout: coverage
                                         <td style="text-align: center">3</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
-</td>
-                                            </tr>
-            <tr>
-            <td><a href="#getLinkName">PluginFormcreatorCommon::getLinkName()</a></td>
-                                        <td style="text-align: center">13</td>
-                <td style="text-align: center">    
-    <span class="label label-success">92%</span>
 </td>
                                             </tr>
             <tr>
@@ -802,7 +795,7 @@ layout: coverage
                     <th id="L86" class="number ">86</th>
 
                     <td class="" >
-                        <pre>    * Get Link Name
+                        <pre>    * Gets the ID of Formcreator request type
 </pre>
                     </td>
                 </tr>
@@ -810,69 +803,65 @@ layout: coverage
                     <th id="L87" class="number ">87</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>    */
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="">
+                            <tr class="line" id="getFormcreatorRequestTypeId">
                     <th id="L88" class="number ">88</th>
 
-                    <td class="" >
-                        <pre>    * @param integer $value    Current value
-</pre>
+                    <td class="" id="getFormcreatorRequestTypeId">
+                        <pre>   public static function getFormcreatorRequestTypeId() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L89" class="number ">89</th>
+                    <th id="L89" class="number covered">89</th>
 
-                    <td class="" >
-                        <pre>    * @param boolean $inverted Whether to invert label
-</pre>
+                    <td class="covered" >
+                        <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L90" class="number ">90</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L91" class="number ">91</th>
+                    <th id="L91" class="number covered">91</th>
 
-                    <td class="" >
-                        <pre>    * @return string
-</pre>
+                    <td class="covered" >
+                        <pre>      $requesttypes_id = 0;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L92" class="number ">92</th>
+                    <th id="L92" class="number covered">92</th>
 
-                    <td class="" >
-                        <pre>    */
-</pre>
+                    <td class="covered" >
+                        <pre>      $request = $DB-&gt;request(</pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getLinkName">
-                    <th id="L93" class="number ">93</th>
+                            <tr class="line" id="">
+                    <th id="L93" class="number covered">93</th>
 
-                    <td class="" id="getLinkName">
-                        <pre>   public static function getLinkName($value, $inverted = false) {<span class="label label-success">92%</span><div class="btn-group"></div></pre>
+                    <td class="covered" >
+                        <pre>         RequestType::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L94" class="number covered">94</th>
 
                     <td class="covered" >
-                        <pre>      $tmp = [];</pre>
+                        <pre>         [&#039;name&#039; =&gt; [&#039;LIKE&#039;, &#039;Formcreator&#039;]]</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L95" class="number ">95</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      );
 </pre>
                     </td>
                 </tr>
@@ -880,75 +869,25 @@ layout: coverage
                     <th id="L96" class="number covered">96</th>
 
                     <td class="covered" >
-                        <pre>      if (!$inverted) {</pre>
+                        <pre>      if (count($request) === 1) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L97" class="number covered">97</th>
 
                     <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::LINK_TO]        = __(&#039;Linked to&#039;);</pre>
+                        <pre>         $row = $request-&gt;next();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L98" class="number covered">98</th>
 
                     <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::DUPLICATE_WITH] = __(&#039;Duplicates&#039;);</pre>
+                        <pre>         $requesttypes_id = $row[&#039;id&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L99" class="number covered">99</th>
-
-                    <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::SON_OF]         = __(&#039;Son of&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L100" class="number covered">100</th>
-
-                    <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::PARENT_OF]      = __(&#039;Parent of&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L101" class="number ">101</th>
-
-                    <td class="" >
-                        <pre>      } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L102" class="number covered">102</th>
-
-                    <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::LINK_TO]        = __(&#039;Linked to&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L103" class="number covered">103</th>
-
-                    <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::DUPLICATE_WITH] = __(&#039;Duplicated by&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L104" class="number covered">104</th>
-
-                    <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::SON_OF]         = __(&#039;Parent of&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L105" class="number covered">105</th>
-
-                    <td class="covered" >
-                        <pre>         $tmp[Ticket_Ticket::PARENT_OF]      = __(&#039;Son of&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L106" class="number ">106</th>
+                    <th id="L99" class="number ">99</th>
 
                     <td class="" >
                         <pre>      }
@@ -956,7 +895,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L107" class="number ">107</th>
+                    <th id="L100" class="number ">100</th>
 
                     <td class="" >
                         <pre>
@@ -964,39 +903,95 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L108" class="number covered">108</th>
+                    <th id="L101" class="number covered">101</th>
 
                     <td class="covered" >
-                        <pre>      if (isset($tmp[$value])) {</pre>
+                        <pre>      return $requesttypes_id;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L109" class="number covered">109</th>
+                    <th id="L102" class="number unreach">102</th>
 
-                    <td class="covered" >
-                        <pre>         return $tmp[$value];</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L103" class="number ">103</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L104" class="number ">104</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L105" class="number ">105</th>
+
+                    <td class="" >
+                        <pre>    * Get the maximum value of a column for a given itemtype
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L106" class="number ">106</th>
+
+                    <td class="" >
+                        <pre>    * @param CommonDBTM $item
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L107" class="number ">107</th>
+
+                    <td class="" >
+                        <pre>    * @param array $condition
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L108" class="number ">108</th>
+
+                    <td class="" >
+                        <pre>    * @param string $fieldName
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L109" class="number ">109</th>
+
+                    <td class="" >
+                        <pre>    * @return null|integer
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L110" class="number ">110</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>    */
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="">
-                    <th id="L111" class="number uncovered">111</th>
+                            <tr class="line" id="getMax">
+                    <th id="L111" class="number ">111</th>
 
-                    <td class="uncovered" >
-                        <pre>      return NOT_AVAILABLE;</pre>
+                    <td class="" id="getMax">
+                        <pre>   public static function getMax(CommonDBTM $item, array $condition, $fieldName) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L112" class="number unreach">112</th>
+                    <th id="L112" class="number uncovered">112</th>
 
-                    <td class="unreach" >
-                        <pre>   }</pre>
+                    <td class="uncovered" >
+                        <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1008,45 +1003,56 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L114" class="number ">114</th>
+                    <th id="L114" class="number uncovered">114</th>
 
-                    <td class="" >
-                        <pre>   /**
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $line = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L115" class="number ">115</th>
+                    <th id="L115" class="number uncovered">115</th>
 
-                    <td class="" >
-                        <pre>    * Gets the ID of Formcreator request type
-</pre>
+                    <td class="uncovered" >
+                        <pre>         &#039;SELECT&#039; =&gt; [$fieldName],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L116" class="number ">116</th>
+                    <th id="L116" class="number uncovered">116</th>
 
-                    <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getFormcreatorRequestTypeId">
-                    <th id="L117" class="number ">117</th>
-
-                    <td class="" id="getFormcreatorRequestTypeId">
-                        <pre>   public static function getFormcreatorRequestTypeId() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="uncovered" >
+                        <pre>         &#039;FROM&#039;   =&gt; $item::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L118" class="number covered">118</th>
+                    <th id="L117" class="number uncovered">117</th>
 
-                    <td class="covered" >
-                        <pre>      global $DB;</pre>
+                    <td class="uncovered" >
+                        <pre>         &#039;WHERE&#039;  =&gt; $condition,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L119" class="number ">119</th>
+                    <th id="L118" class="number uncovered">118</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;ORDER&#039;  =&gt; &quot;$fieldName DESC&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L119" class="number uncovered">119</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;LIMIT&#039;  =&gt; 1</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L120" class="number uncovered">120</th>
+
+                    <td class="uncovered" >
+                        <pre>      ])-&gt;next();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L121" class="number ">121</th>
 
                     <td class="" >
                         <pre>
@@ -1054,67 +1060,54 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L120" class="number covered">120</th>
+                    <th id="L122" class="number uncovered">122</th>
 
-                    <td class="covered" >
-                        <pre>      $requesttypes_id = 0;</pre>
+                    <td class="uncovered" >
+                        <pre>      if (!isset($line[$fieldName])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L121" class="number covered">121</th>
+                    <th id="L123" class="number uncovered">123</th>
 
-                    <td class="covered" >
-                        <pre>      $request = $DB-&gt;request(</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L122" class="number covered">122</th>
-
-                    <td class="covered" >
-                        <pre>         RequestType::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L123" class="number covered">123</th>
-
-                    <td class="covered" >
-                        <pre>         [&#039;name&#039; =&gt; [&#039;LIKE&#039;, &#039;Formcreator&#039;]]</pre>
+                    <td class="uncovered" >
+                        <pre>         return null;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L124" class="number ">124</th>
 
                     <td class="" >
-                        <pre>      );
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L125" class="number covered">125</th>
+                    <th id="L125" class="number uncovered">125</th>
 
-                    <td class="covered" >
-                        <pre>      if (count($request) === 1) {</pre>
+                    <td class="uncovered" >
+                        <pre>      return (int) $line[$fieldName];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L126" class="number covered">126</th>
+                    <th id="L126" class="number unreach">126</th>
 
-                    <td class="covered" >
-                        <pre>         $row = $request-&gt;next();</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L127" class="number covered">127</th>
+                    <th id="L127" class="number ">127</th>
 
-                    <td class="covered" >
-                        <pre>         $requesttypes_id = $row[&#039;id&#039;];</pre>
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L128" class="number ">128</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -1122,229 +1115,12 @@ layout: coverage
                     <th id="L129" class="number ">129</th>
 
                     <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L130" class="number covered">130</th>
-
-                    <td class="covered" >
-                        <pre>      return $requesttypes_id;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L131" class="number unreach">131</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L132" class="number ">132</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L133" class="number ">133</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L134" class="number ">134</th>
-
-                    <td class="" >
-                        <pre>    * Get the maximum value of a column for a given itemtype
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L135" class="number ">135</th>
-
-                    <td class="" >
-                        <pre>    * @param CommonDBTM $item
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L136" class="number ">136</th>
-
-                    <td class="" >
-                        <pre>    * @param array $condition
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L137" class="number ">137</th>
-
-                    <td class="" >
-                        <pre>    * @param string $fieldName
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L138" class="number ">138</th>
-
-                    <td class="" >
-                        <pre>    * @return NULL|integer
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L139" class="number ">139</th>
-
-                    <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getMax">
-                    <th id="L140" class="number ">140</th>
-
-                    <td class="" id="getMax">
-                        <pre>   public static function getMax(CommonDBTM $item, array $condition, $fieldName) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L141" class="number uncovered">141</th>
-
-                    <td class="uncovered" >
-                        <pre>      global $DB;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L142" class="number ">142</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L143" class="number uncovered">143</th>
-
-                    <td class="uncovered" >
-                        <pre>      $line = $DB-&gt;request([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L144" class="number uncovered">144</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;SELECT&#039; =&gt; [$fieldName],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L145" class="number uncovered">145</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;FROM&#039;   =&gt; $item::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L146" class="number uncovered">146</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;WHERE&#039;  =&gt; $condition,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L147" class="number uncovered">147</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;ORDER&#039;  =&gt; &quot;$fieldName DESC&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L148" class="number uncovered">148</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;LIMIT&#039;  =&gt; 1</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L149" class="number uncovered">149</th>
-
-                    <td class="uncovered" >
-                        <pre>      ])-&gt;next();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L150" class="number ">150</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L151" class="number uncovered">151</th>
-
-                    <td class="uncovered" >
-                        <pre>      if ($line === false) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L152" class="number uncovered">152</th>
-
-                    <td class="uncovered" >
-                        <pre>         return null;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L153" class="number ">153</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L154" class="number uncovered">154</th>
-
-                    <td class="uncovered" >
-                        <pre>      return (int) $line[$fieldName];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L155" class="number unreach">155</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L156" class="number ">156</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L157" class="number ">157</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L158" class="number ">158</th>
-
-                    <td class="" >
                         <pre>    * Prepare keywords for a fulltext search in boolean mode
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L159" class="number ">159</th>
+                    <th id="L130" class="number ">130</th>
 
                     <td class="" >
                         <pre>    * takes into account strings in double quotes
@@ -1352,7 +1128,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L160" class="number ">160</th>
+                    <th id="L131" class="number ">131</th>
 
                     <td class="" >
                         <pre>    *
@@ -1360,7 +1136,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number ">161</th>
+                    <th id="L132" class="number ">132</th>
 
                     <td class="" >
                         <pre>    * @param string $keywords
@@ -1368,7 +1144,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L162" class="number ">162</th>
+                    <th id="L133" class="number ">133</th>
 
                     <td class="" >
                         <pre>    * @return string
@@ -1376,7 +1152,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L163" class="number ">163</th>
+                    <th id="L134" class="number ">134</th>
 
                     <td class="" >
                         <pre>    */
@@ -1384,14 +1160,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="prepareBooleanKeywords">
-                    <th id="L164" class="number ">164</th>
+                    <th id="L135" class="number ">135</th>
 
                     <td class="" id="prepareBooleanKeywords">
                         <pre>   public static function prepareBooleanKeywords($keywords) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L165" class="number ">165</th>
+                    <th id="L136" class="number ">136</th>
 
                     <td class="" >
                         <pre>      // @see https://stackoverflow.com/questions/2202435/php-explode-the-string-but-treat-words-in-quotes-as-a-single-word
@@ -1399,35 +1175,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L166" class="number covered">166</th>
+                    <th id="L137" class="number covered">137</th>
 
                     <td class="covered" >
                         <pre>      preg_match_all(&#039;/&quot;(?:\\\\.|[^\\\\&quot;])*&quot;|\S+/&#039;, $keywords, $matches);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L167" class="number covered">167</th>
+                    <th id="L138" class="number covered">138</th>
 
                     <td class="covered" >
                         <pre>      $matches = $matches[0];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L168" class="number covered">168</th>
+                    <th id="L139" class="number covered">139</th>
 
                     <td class="covered" >
                         <pre>      foreach ($matches as &amp;$keyword) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L169" class="number covered">169</th>
+                    <th id="L140" class="number covered">140</th>
 
                     <td class="covered" >
                         <pre>         if (strpos($keyword, &#039;&quot;&#039;) !== 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L170" class="number ">170</th>
+                    <th id="L141" class="number ">141</th>
 
                     <td class="" >
                         <pre>            // keyword does not begins with a double quote (assume it does not ends with this char)
@@ -1435,14 +1211,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number covered">171</th>
+                    <th id="L142" class="number covered">142</th>
 
                     <td class="covered" >
                         <pre>            $keyword .= &#039;*&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number ">172</th>
+                    <th id="L143" class="number ">143</th>
 
                     <td class="" >
                         <pre>         }
@@ -1450,7 +1226,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L173" class="number ">173</th>
+                    <th id="L144" class="number ">144</th>
 
                     <td class="" >
                         <pre>      }
@@ -1458,7 +1234,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L174" class="number ">174</th>
+                    <th id="L145" class="number ">145</th>
 
                     <td class="" >
                         <pre>
@@ -1466,21 +1242,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number covered">175</th>
+                    <th id="L146" class="number covered">146</th>
 
                     <td class="covered" >
                         <pre>      return implode(&#039; &#039;, $matches);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number unreach">176</th>
+                    <th id="L147" class="number unreach">147</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L177" class="number ">177</th>
+                    <th id="L148" class="number ">148</th>
 
                     <td class="" >
                         <pre>
@@ -1488,7 +1264,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L178" class="number ">178</th>
+                    <th id="L149" class="number ">149</th>
 
                     <td class="" >
                         <pre>   /**
@@ -1496,7 +1272,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L179" class="number ">179</th>
+                    <th id="L150" class="number ">150</th>
 
                     <td class="" >
                         <pre>    * get the list of pictograms available for the current version of GLPI
@@ -1504,7 +1280,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L180" class="number ">180</th>
+                    <th id="L151" class="number ">151</th>
 
                     <td class="" >
                         <pre>    *
@@ -1512,7 +1288,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L181" class="number ">181</th>
+                    <th id="L152" class="number ">152</th>
 
                     <td class="" >
                         <pre>    * @return array
@@ -1520,7 +1296,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L182" class="number ">182</th>
+                    <th id="L153" class="number ">153</th>
 
                     <td class="" >
                         <pre>    */
@@ -1528,35 +1304,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getFontAwesomePictoNames">
-                    <th id="L183" class="number ">183</th>
+                    <th id="L154" class="number ">154</th>
 
                     <td class="" id="getFontAwesomePictoNames">
                         <pre>   public static function getFontAwesomePictoNames() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L184" class="number uncovered">184</th>
+                    <th id="L155" class="number uncovered">155</th>
 
                     <td class="uncovered" >
                         <pre>      $list = require_once(__DIR__ . &#039;/../&#039; . self::getPictoFilename(GLPI_VERSION));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L185" class="number uncovered">185</th>
+                    <th id="L156" class="number uncovered">156</th>
 
                     <td class="uncovered" >
                         <pre>      return $list;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L186" class="number unreach">186</th>
+                    <th id="L157" class="number unreach">157</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L187" class="number ">187</th>
+                    <th id="L158" class="number ">158</th>
 
                     <td class="" >
                         <pre>
@@ -1564,7 +1340,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L188" class="number ">188</th>
+                    <th id="L159" class="number ">159</th>
 
                     <td class="" >
                         <pre>   /**
@@ -1572,7 +1348,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L189" class="number ">189</th>
+                    <th id="L160" class="number ">160</th>
 
                     <td class="" >
                         <pre>    * get the name of the php file containing the pictogram list depending on the version of GLPI
@@ -1580,7 +1356,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L190" class="number ">190</th>
+                    <th id="L161" class="number ">161</th>
 
                     <td class="" >
                         <pre>    *
@@ -1588,7 +1364,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L191" class="number ">191</th>
+                    <th id="L162" class="number ">162</th>
 
                     <td class="" >
                         <pre>    * @param $version string GLPI version
@@ -1596,7 +1372,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L192" class="number ">192</th>
+                    <th id="L163" class="number ">163</th>
 
                     <td class="" >
                         <pre>    * @return string
@@ -1604,7 +1380,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L193" class="number ">193</th>
+                    <th id="L164" class="number ">164</th>
 
                     <td class="" >
                         <pre>    */
@@ -1612,28 +1388,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getPictoFilename">
-                    <th id="L194" class="number ">194</th>
+                    <th id="L165" class="number ">165</th>
 
                     <td class="" id="getPictoFilename">
                         <pre>   public static function getPictoFilename($version) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L195" class="number covered">195</th>
+                    <th id="L166" class="number covered">166</th>
 
                     <td class="covered" >
                         <pre>      if (version_compare($version, &#039;9.4&#039;) &lt; 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L196" class="number covered">196</th>
+                    <th id="L167" class="number covered">167</th>
 
                     <td class="covered" >
                         <pre>         return &#039;data/font-awesome_9.3.php&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L197" class="number ">197</th>
+                    <th id="L168" class="number ">168</th>
 
                     <td class="" >
                         <pre>      }
@@ -1641,21 +1417,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L198" class="number covered">198</th>
+                    <th id="L169" class="number covered">169</th>
 
                     <td class="covered" >
                         <pre>      if (version_compare($version, &#039;9.5&#039;) &lt; 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L199" class="number covered">199</th>
+                    <th id="L170" class="number covered">170</th>
 
                     <td class="covered" >
                         <pre>         return &#039;data/font-awesome_9.4.php&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L200" class="number ">200</th>
+                    <th id="L171" class="number ">171</th>
 
                     <td class="" >
                         <pre>      }
@@ -1663,21 +1439,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L201" class="number covered">201</th>
+                    <th id="L172" class="number covered">172</th>
 
                     <td class="covered" >
                         <pre>      if (version_compare($version, &#039;9.6&#039;) &lt; 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L202" class="number covered">202</th>
+                    <th id="L173" class="number covered">173</th>
 
                     <td class="covered" >
                         <pre>         return &#039;data/font-awesome_9.5.php&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L203" class="number ">203</th>
+                    <th id="L174" class="number ">174</th>
 
                     <td class="" >
                         <pre>      }
@@ -1685,7 +1461,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L204" class="number ">204</th>
+                    <th id="L175" class="number ">175</th>
 
                     <td class="" >
                         <pre>
@@ -1693,21 +1469,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L205" class="number covered">205</th>
+                    <th id="L176" class="number covered">176</th>
 
                     <td class="covered" >
                         <pre>      return &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L206" class="number unreach">206</th>
+                    <th id="L177" class="number unreach">177</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number ">207</th>
+                    <th id="L178" class="number ">178</th>
 
                     <td class="" >
                         <pre>
@@ -1715,7 +1491,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L208" class="number ">208</th>
+                    <th id="L179" class="number ">179</th>
 
                     <td class="" >
                         <pre>   /**
@@ -1723,7 +1499,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L209" class="number ">209</th>
+                    <th id="L180" class="number ">180</th>
 
                     <td class="" >
                         <pre>    * Show a dropdown with Font Awesome pictograms
@@ -1731,7 +1507,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L210" class="number ">210</th>
+                    <th id="L181" class="number ">181</th>
 
                     <td class="" >
                         <pre>    *
@@ -1739,7 +1515,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L211" class="number ">211</th>
+                    <th id="L182" class="number ">182</th>
 
                     <td class="" >
                         <pre>    * @param string $name name of the HTML input
@@ -1747,7 +1523,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L212" class="number ">212</th>
+                    <th id="L183" class="number ">183</th>
 
                     <td class="" >
                         <pre>    * @param array $options
@@ -1755,7 +1531,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L213" class="number ">213</th>
+                    <th id="L184" class="number ">184</th>
 
                     <td class="" >
                         <pre>    * @return mixed
@@ -1763,7 +1539,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L214" class="number ">214</th>
+                    <th id="L185" class="number ">185</th>
 
                     <td class="" >
                         <pre>    */
@@ -1771,35 +1547,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="showFontAwesomeDropdown">
-                    <th id="L215" class="number ">215</th>
+                    <th id="L186" class="number ">186</th>
 
                     <td class="" id="showFontAwesomeDropdown">
                         <pre>   public static function showFontAwesomeDropdown($name, $options = []) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L216" class="number uncovered">216</th>
+                    <th id="L187" class="number uncovered">187</th>
 
                     <td class="uncovered" >
                         <pre>      $items = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L217" class="number uncovered">217</th>
+                    <th id="L188" class="number uncovered">188</th>
 
                     <td class="uncovered" >
                         <pre>      foreach (static::getFontAwesomePictoNames() as $key =&gt; $value) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L218" class="number uncovered">218</th>
+                    <th id="L189" class="number uncovered">189</th>
 
                     <td class="uncovered" >
                         <pre>         $items[$key] = /* &#039;&lt;i class=&quot;&#039; . $key . &#039;&quot;&gt;&lt;/i&gt;&#039; . */ $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L219" class="number ">219</th>
+                    <th id="L190" class="number ">190</th>
 
                     <td class="" >
                         <pre>      }
@@ -1807,7 +1583,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L220" class="number ">220</th>
+                    <th id="L191" class="number ">191</th>
 
                     <td class="" >
                         <pre>
@@ -1815,49 +1591,49 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L221" class="number uncovered">221</th>
+                    <th id="L192" class="number uncovered">192</th>
 
                     <td class="uncovered" >
                         <pre>      $previewId = $name . &#039;_preview&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L222" class="number uncovered">222</th>
+                    <th id="L193" class="number uncovered">193</th>
 
                     <td class="uncovered" >
                         <pre>      $options[&#039;on_change&#039;] = &#039;plugin_formceator_showPictogram(this, &quot;&#039; . $previewId . &#039;&quot;)&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L223" class="number uncovered">223</th>
+                    <th id="L194" class="number uncovered">194</th>
 
                     <td class="uncovered" >
                         <pre>      $options[&#039;display&#039;] = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L224" class="number uncovered">224</th>
+                    <th id="L195" class="number uncovered">195</th>
 
                     <td class="uncovered" >
                         <pre>      $options[&#039;display_emptychoice&#039;] = true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L225" class="number uncovered">225</th>
+                    <th id="L196" class="number uncovered">196</th>
 
                     <td class="uncovered" >
                         <pre>      if (!isset($options[&#039;value&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L226" class="number uncovered">226</th>
+                    <th id="L197" class="number uncovered">197</th>
 
                     <td class="uncovered" >
                         <pre>         $options[&#039;value&#039;] = &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L227" class="number ">227</th>
+                    <th id="L198" class="number ">198</th>
 
                     <td class="" >
                         <pre>      }
@@ -1865,35 +1641,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L228" class="number uncovered">228</th>
+                    <th id="L199" class="number uncovered">199</th>
 
                     <td class="uncovered" >
                         <pre>      $output = Dropdown::showFromArray($name, $items, $options);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L229" class="number uncovered">229</th>
+                    <th id="L200" class="number uncovered">200</th>
 
                     <td class="uncovered" >
                         <pre>      $output .= &#039;&lt;i id=&quot;&#039; . $previewId . &#039;&quot; class=&quot;&#039;. $options[&#039;value&#039;] . &#039;&quot;&gt;&lt;/i&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L230" class="number uncovered">230</th>
+                    <th id="L201" class="number uncovered">201</th>
 
                     <td class="uncovered" >
                         <pre>      echo $output;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L231" class="number uncovered">231</th>
+                    <th id="L202" class="number uncovered">202</th>
 
                     <td class="uncovered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L232" class="number ">232</th>
+                    <th id="L203" class="number ">203</th>
 
                     <td class="" >
                         <pre>}

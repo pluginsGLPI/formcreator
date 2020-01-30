@@ -36,7 +36,7 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
-                    21%
+                    18%
                                             <small>of 294</small>
                                     </h1>
                 <strong>Lines</strong>
@@ -130,7 +130,7 @@ layout: coverage
             <td><a href="#canChildItem">CommonDBChild::canChildItem()</a></td>
                                         <td style="text-align: center">4</td>
                 <td style="text-align: center">    
-    <span class="label label-warning">50%</span>
+    <span class="label label-danger">0%</span>
 </td>
                                             </tr>
             <tr>
@@ -165,7 +165,7 @@ layout: coverage
             <td><a href="#isEntityAssign">CommonDBChild::isEntityAssign()</a></td>
                                         <td style="text-align: center">6</td>
                 <td style="text-align: center">    
-    <span class="label label-success">83%</span>
+    <span class="label label-danger">0%</span>
 </td>
                                             </tr>
             <tr>
@@ -186,7 +186,7 @@ layout: coverage
             <td><a href="#addNeededInfoToInput">CommonDBChild::addNeededInfoToInput()</a></td>
                                         <td style="text-align: center">10</td>
                 <td style="text-align: center">    
-    <span class="label label-success">100%</span>
+    <span class="label label-success">80%</span>
 </td>
                                             </tr>
             <tr>
@@ -214,21 +214,21 @@ layout: coverage
             <td><a href="#post_addItem">CommonDBChild::post_addItem()</a></td>
                                         <td style="text-align: center">12</td>
                 <td style="text-align: center">    
-    <span class="label label-success">83%</span>
+    <span class="label label-warning">50%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#post_updateItem">CommonDBChild::post_updateItem()</a></td>
                                         <td style="text-align: center">34</td>
                 <td style="text-align: center">    
-    <span class="label label-warning">44%</span>
+    <span class="label label-warning">47%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#post_deleteFromDB">CommonDBChild::post_deleteFromDB()</a></td>
                                         <td style="text-align: center">15</td>
                 <td style="text-align: center">    
-    <span class="label label-success">73%</span>
+    <span class="label label-success">80%</span>
 </td>
                                             </tr>
             <tr>
@@ -2161,7 +2161,7 @@ layout: coverage
                     <th id="L242" class="number ">242</th>
 
                     <td class="" id="canChildItem">
-                        <pre>   function canChildItem($methodItem, $methodNotItem) {<span class="label label-warning">50%</span><div class="btn-group"></div></pre>
+                        <pre>   function canChildItem($methodItem, $methodNotItem) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2181,16 +2181,16 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L245" class="number covered">245</th>
+                    <th id="L245" class="number uncovered">245</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>         return static::canConnexityItem($methodItem, $methodNotItem, static::$checkParentRights,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L246" class="number covered">246</th>
+                    <th id="L246" class="number uncovered">246</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>                                         static::$itemtype, static::$items_id);</pre>
                     </td>
                 </tr>
@@ -2957,7 +2957,7 @@ layout: coverage
                     <th id="L347" class="number ">347</th>
 
                     <td class="" id="isEntityAssign">
-                        <pre>   function isEntityAssign() {<span class="label label-success">83%</span><div class="btn-group"></div></pre>
+                        <pre>   function isEntityAssign() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2977,16 +2977,16 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L350" class="number covered">350</th>
+                    <th id="L350" class="number uncovered">350</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>      if (parent::isEntityAssign()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L351" class="number covered">351</th>
+                    <th id="L351" class="number uncovered">351</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>         return true;</pre>
                     </td>
                 </tr>
@@ -3007,9 +3007,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L354" class="number covered">354</th>
+                    <th id="L354" class="number uncovered">354</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>      $item = $this-&gt;getItem(false);</pre>
                     </td>
                 </tr>
@@ -3022,16 +3022,16 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L356" class="number covered">356</th>
+                    <th id="L356" class="number uncovered">356</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>      if ($item !== false) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L357" class="number covered">357</th>
+                    <th id="L357" class="number uncovered">357</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>         return $item-&gt;isEntityAssign();</pre>
                     </td>
                 </tr>
@@ -3445,7 +3445,7 @@ layout: coverage
                     <th id="L411" class="number ">411</th>
 
                     <td class="" id="addNeededInfoToInput">
-                        <pre>   function addNeededInfoToInput($input) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                        <pre>   function addNeededInfoToInput($input) {<span class="label label-success">80%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -3532,16 +3532,16 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L423" class="number covered">423</th>
+                    <th id="L423" class="number uncovered">423</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>               $input[&#039;entities_id&#039;]  = $itemToGetEntity-&gt;getEntityID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L424" class="number covered">424</th>
+                    <th id="L424" class="number uncovered">424</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>               $input[&#039;is_recursive&#039;] = intval($itemToGetEntity-&gt;isRecursive());</pre>
                     </td>
                 </tr>
@@ -4118,7 +4118,7 @@ layout: coverage
                     <th id="L499" class="number ">499</th>
 
                     <td class="" id="post_addItem">
-                        <pre>   function post_addItem() {<span class="label label-success">83%</span><div class="btn-group"></div></pre>
+                        <pre>   function post_addItem() {<span class="label label-warning">50%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -4204,23 +4204,23 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L511" class="number covered">511</th>
+                    <th id="L511" class="number uncovered">511</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>            &#039;0&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L512" class="number covered">512</th>
+                    <th id="L512" class="number uncovered">512</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>            &#039;&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L513" class="number covered">513</th>
+                    <th id="L513" class="number uncovered">513</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>            $this-&gt;getHistoryNameForItem($item, &#039;add&#039;),</pre>
                     </td>
                 </tr>
@@ -4233,9 +4233,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L515" class="number covered">515</th>
+                    <th id="L515" class="number uncovered">515</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>         Log::history($item-&gt;getID(), $item-&gt;getType(), $changes, $this-&gt;getType(),</pre>
                     </td>
                 </tr>
@@ -4353,7 +4353,7 @@ layout: coverage
                     <th id="L530" class="number ">530</th>
 
                     <td class="" id="post_updateItem">
-                        <pre>   function post_updateItem($history = 1) {<span class="label label-warning">44%</span><div class="btn-group"></div></pre>
+                        <pre>   function post_updateItem($history = 1) {<span class="label label-warning">47%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -4510,9 +4510,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L552" class="number uncovered">552</th>
+                    <th id="L552" class="number covered">552</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>                         static::$log_history_update);</pre>
                     </td>
                 </tr>
@@ -4774,7 +4774,7 @@ layout: coverage
                     <th id="L587" class="number ">587</th>
 
                     <td class="" id="post_deleteFromDB">
-                        <pre>   function post_deleteFromDB() {<span class="label label-success">73%</span><div class="btn-group"></div></pre>
+                        <pre>   function post_deleteFromDB() {<span class="label label-success">80%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -4941,9 +4941,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L610" class="number uncovered">610</th>
+                    <th id="L610" class="number covered">610</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>                      static::$log_history_delete);</pre>
                     </td>
                 </tr>

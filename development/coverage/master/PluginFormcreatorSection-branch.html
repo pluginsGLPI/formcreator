@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    45%
-                                            <small>of 227</small>
+                    54%
+                                            <small>of 210</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -67,7 +67,7 @@ layout: coverage
             <td><a href="#prepareInputForAdd">PluginFormcreatorSection::prepareInputForAdd()</a></td>
                                         <td style="text-align: center">15</td>
                 <td style="text-align: center">    
-    <span class="label label-success">80%</span>
+    <span class="label label-success">87%</span>
 </td>
                                             </tr>
             <tr>
@@ -107,16 +107,16 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#import">PluginFormcreatorSection::import()</a></td>
-                                        <td style="text-align: center">35</td>
+                                        <td style="text-align: center">39</td>
                 <td style="text-align: center">    
-    <span class="label label-success">80%</span>
+    <span class="label label-success">77%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#export">PluginFormcreatorSection::export()</a></td>
-                                        <td style="text-align: center">20</td>
+                                        <td style="text-align: center">25</td>
                 <td style="text-align: center">    
-    <span class="label label-success">90%</span>
+    <span class="label label-success">88%</span>
 </td>
                                             </tr>
             <tr>
@@ -128,7 +128,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#showForm">PluginFormcreatorSection::showForm()</a></td>
-                                        <td style="text-align: center">32</td>
+                                        <td style="text-align: center">37</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -148,10 +148,17 @@ layout: coverage
 </td>
                                             </tr>
             <tr>
-            <td><a href="#updateConditions">PluginFormcreatorSection::updateConditions()</a></td>
-                                        <td style="text-align: center">35</td>
+            <td><a href="#post_addItem">PluginFormcreatorSection::post_addItem()</a></td>
+                                        <td style="text-align: center">2</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#post_updateItem">PluginFormcreatorSection::post_updateItem()</a></td>
+                                        <td style="text-align: center">2</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
         </tbody>
@@ -508,14 +515,14 @@ layout: coverage
                 
                 g.render();
             </script>
-                    <div class="panel panel-default" id="updateConditions">
+                    <div class="panel panel-default" id="post_addItem">
                 <div class="panel-heading">
-                    PluginFormcreatorSection::updateConditions()
+                    PluginFormcreatorSection::post_addItem()
                         
     <span class="label label-default">N/A</span>
 
                         <div class="btn-group">
-                                <a href="./PluginFormcreatorSection.html#updateConditions" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+                                <a href="./PluginFormcreatorSection.html#post_addItem" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
         
         
             </div>
@@ -527,7 +534,34 @@ layout: coverage
             </div>
 
             <script>
-                var g = graph('PluginFormcreatorSection', 'updateConditions');
+                var g = graph('PluginFormcreatorSection', 'post_addItem');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="post_updateItem">
+                <div class="panel-heading">
+                    PluginFormcreatorSection::post_updateItem()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./PluginFormcreatorSection.html#post_updateItem" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('PluginFormcreatorSection', 'post_updateItem');
 
                 
                 g.addEnd().roundNodes();
