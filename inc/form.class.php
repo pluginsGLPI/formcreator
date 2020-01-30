@@ -1048,10 +1048,11 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showMyLastForms() {
+      $limit = 5;
       $userId = Session::getLoginUserID();
       echo '<div class="plugin_formcreator_card">';
-      echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
-      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester();
+      echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
+      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
       if ($result->count() == 0) {
          echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
          echo "<ul>";
@@ -1092,7 +1093,7 @@ PluginFormcreatorConditionnableInterface
          foreach ($groupList as $group) {
             $groupIdList[] = $group['id'];
          }
-         $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator();
+         $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
          if ($result->count() == 0) {
             echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
          } else {
