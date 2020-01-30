@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    40%
-                                            <small>of 720</small>
+                    43%
+                                            <small>of 761</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -292,6 +292,20 @@ layout: coverage
                                         <td style="text-align: center">52</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getMyLastAnswersAsRequester">PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester()</a></td>
+                                        <td style="text-align: center">13</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getMyLastAnswersAsValidator">PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator()</a></td>
+                                        <td style="text-align: center">28</td>
+                <td style="text-align: center">    
+    <span class="label label-success">82%</span>
 </td>
                                             </tr>
         </tbody>
@@ -5621,7 +5635,7 @@ layout: coverage
                     <th id="L711" class="number ">711</th>
 
                     <td class="" >
-                        <pre>      
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -5699,7 +5713,7 @@ layout: coverage
                     <th id="L722" class="number ">722</th>
 
                     <td class="" >
-                        <pre>                
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -11109,6 +11123,801 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L1449" class="number ">1449</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1450" class="number ">1450</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1451" class="number ">1451</th>
+
+                    <td class="" >
+                        <pre>    * @param integer $limit The N last answers found
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1452" class="number ">1452</th>
+
+                    <td class="" >
+                        <pre>    * @return DBMysqlIterator
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1453" class="number ">1453</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getMyLastAnswersAsRequester">
+                    <th id="L1454" class="number ">1454</th>
+
+                    <td class="" id="getMyLastAnswersAsRequester">
+                        <pre>   public static function getMyLastAnswersAsRequester($limit = 5) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1455" class="number covered">1455</th>
+
+                    <td class="covered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1456" class="number ">1456</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1457" class="number covered">1457</th>
+
+                    <td class="covered" >
+                        <pre>      $formAnswerTable = self::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1458" class="number covered">1458</th>
+
+                    <td class="covered" >
+                        <pre>      $formTable = PluginFormcreatorForm::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1459" class="number ">1459</th>
+
+                    <td class="" >
+                        <pre>      $request = [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1460" class="number ">1460</th>
+
+                    <td class="" >
+                        <pre>         &#039;SELECT&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1461" class="number covered">1461</th>
+
+                    <td class="covered" >
+                        <pre>            $formTable =&gt; [&#039;name&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1462" class="number ">1462</th>
+
+                    <td class="" >
+                        <pre>            $formAnswerTable =&gt; [&#039;id&#039;, &#039;status&#039;, &#039;request_date&#039;],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1463" class="number ">1463</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1464" class="number covered">1464</th>
+
+                    <td class="covered" >
+                        <pre>         &#039;FROM&#039; =&gt; $formTable,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1465" class="number ">1465</th>
+
+                    <td class="" >
+                        <pre>         &#039;INNER JOIN&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1466" class="number ">1466</th>
+
+                    <td class="" >
+                        <pre>            $formAnswerTable =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1467" class="number ">1467</th>
+
+                    <td class="" >
+                        <pre>               &#039;FKEY&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1468" class="number covered">1468</th>
+
+                    <td class="covered" >
+                        <pre>                  $formTable =&gt; &#039;id&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1469" class="number covered">1469</th>
+
+                    <td class="covered" >
+                        <pre>                  $formAnswerTable =&gt; PluginFormcreatorForm::getForeignKeyField(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1470" class="number ">1470</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1471" class="number ">1471</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1472" class="number ">1472</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1473" class="number ">1473</th>
+
+                    <td class="" >
+                        <pre>         &#039;WHERE&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1474" class="number covered">1474</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$formAnswerTable.requester_id&quot; =&gt; Session::getLoginUserID(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1475" class="number covered">1475</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$formTable.is_deleted&quot; =&gt; 0,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1476" class="number ">1476</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1477" class="number ">1477</th>
+
+                    <td class="" >
+                        <pre>         &#039;ORDER&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1478" class="number covered">1478</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$formAnswerTable.status ASC&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1479" class="number covered">1479</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$formAnswerTable.request_date DESC&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1480" class="number ">1480</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1481" class="number covered">1481</th>
+
+                    <td class="covered" >
+                        <pre>         &#039;LIMIT&#039; =&gt; $limit,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1482" class="number ">1482</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1483" class="number ">1483</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1484" class="number covered">1484</th>
+
+                    <td class="covered" >
+                        <pre>      return $DB-&gt;request($request);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1485" class="number unreach">1485</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1486" class="number ">1486</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1487" class="number ">1487</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1488" class="number ">1488</th>
+
+                    <td class="" >
+                        <pre>    * @param integer $limit The N last answers found
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1489" class="number ">1489</th>
+
+                    <td class="" >
+                        <pre>    * @return DBMysqlIterator
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1490" class="number ">1490</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getMyLastAnswersAsValidator">
+                    <th id="L1491" class="number ">1491</th>
+
+                    <td class="" id="getMyLastAnswersAsValidator">
+                        <pre>   public static function getMyLastAnswersAsValidator($limit = 5) {<span class="label label-success">82%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1492" class="number covered">1492</th>
+
+                    <td class="covered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1493" class="number ">1493</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1494" class="number covered">1494</th>
+
+                    <td class="covered" >
+                        <pre>      $userId = Session::getLoginUserID();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1495" class="number covered">1495</th>
+
+                    <td class="covered" >
+                        <pre>      $groupList = Group_User::getUserGroups($userId);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1496" class="number covered">1496</th>
+
+                    <td class="covered" >
+                        <pre>      $groupIdList = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1497" class="number covered">1497</th>
+
+                    <td class="covered" >
+                        <pre>      foreach ($groupList as $group) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1498" class="number uncovered">1498</th>
+
+                    <td class="uncovered" >
+                        <pre>         $groupIdList[] = $group[&#039;id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1499" class="number ">1499</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1500" class="number ">1500</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1501" class="number covered">1501</th>
+
+                    <td class="covered" >
+                        <pre>      $formAnswerTable = self::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1502" class="number covered">1502</th>
+
+                    <td class="covered" >
+                        <pre>      $formTable = PluginFormcreatorForm::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1503" class="number covered">1503</th>
+
+                    <td class="covered" >
+                        <pre>      $validatorTable = PluginFormcreatorForm_Validator::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1504" class="number covered">1504</th>
+
+                    <td class="covered" >
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1505" class="number ">1505</th>
+
+                    <td class="" >
+                        <pre>      $request = [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1506" class="number ">1506</th>
+
+                    <td class="" >
+                        <pre>         &#039;SELECT&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1507" class="number covered">1507</th>
+
+                    <td class="covered" >
+                        <pre>            $formTable =&gt; [&#039;name&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1508" class="number ">1508</th>
+
+                    <td class="" >
+                        <pre>            $formAnswerTable =&gt; [&#039;id&#039;, &#039;status&#039;, &#039;request_date&#039;],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1509" class="number ">1509</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1510" class="number covered">1510</th>
+
+                    <td class="covered" >
+                        <pre>         &#039;FROM&#039; =&gt; $formTable,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1511" class="number ">1511</th>
+
+                    <td class="" >
+                        <pre>         &#039;INNER JOIN&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1512" class="number ">1512</th>
+
+                    <td class="" >
+                        <pre>            $formAnswerTable =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1513" class="number ">1513</th>
+
+                    <td class="" >
+                        <pre>               &#039;FKEY&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1514" class="number covered">1514</th>
+
+                    <td class="covered" >
+                        <pre>                  $formTable =&gt; &#039;id&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1515" class="number covered">1515</th>
+
+                    <td class="covered" >
+                        <pre>                  $formAnswerTable =&gt; PluginFormcreatorForm::getForeignKeyField(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1516" class="number ">1516</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1517" class="number ">1517</th>
+
+                    <td class="" >
+                        <pre>            ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1518" class="number ">1518</th>
+
+                    <td class="" >
+                        <pre>            $validatorTable =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1519" class="number ">1519</th>
+
+                    <td class="" >
+                        <pre>               &#039;FKEY&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1520" class="number covered">1520</th>
+
+                    <td class="covered" >
+                        <pre>                  $validatorTable =&gt; $formFk,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1521" class="number covered">1521</th>
+
+                    <td class="covered" >
+                        <pre>                  $formTable =&gt; &#039;id&#039;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1522" class="number ">1522</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1523" class="number ">1523</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1524" class="number ">1524</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1525" class="number ">1525</th>
+
+                    <td class="" >
+                        <pre>         &#039;WHERE&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1526" class="number ">1526</th>
+
+                    <td class="" >
+                        <pre>            &#039;OR&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1527" class="number ">1527</th>
+
+                    <td class="" >
+                        <pre>               [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1528" class="number ">1528</th>
+
+                    <td class="" >
+                        <pre>                  &#039;AND&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1529" class="number covered">1529</th>
+
+                    <td class="covered" >
+                        <pre>                     &quot;$formTable.validation_required&quot; =&gt; 1,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1530" class="number uncovered">1530</th>
+
+                    <td class="uncovered" >
+                        <pre>                     &quot;$validatorTable.itemtype&quot; =&gt; User::class,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1531" class="number covered">1531</th>
+
+                    <td class="covered" >
+                        <pre>                     &quot;$validatorTable.items_id&quot; =&gt; $userId,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1532" class="number covered">1532</th>
+
+                    <td class="covered" >
+                        <pre>                     &quot;$formAnswerTable.users_id_validator&quot; =&gt; $userId</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1533" class="number ">1533</th>
+
+                    <td class="" >
+                        <pre>                  ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1534" class="number ">1534</th>
+
+                    <td class="" >
+                        <pre>               ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1535" class="number ">1535</th>
+
+                    <td class="" >
+                        <pre>               [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1536" class="number ">1536</th>
+
+                    <td class="" >
+                        <pre>                  &#039;AND&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1537" class="number covered">1537</th>
+
+                    <td class="covered" >
+                        <pre>                     &quot;$formTable.validation_required&quot; =&gt; 2,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1538" class="number uncovered">1538</th>
+
+                    <td class="uncovered" >
+                        <pre>                     &quot;$validatorTable.itemtype&quot; =&gt; Group::class,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1539" class="number uncovered">1539</th>
+
+                    <td class="uncovered" >
+                        <pre>                     &quot;$validatorTable.items_id&quot; =&gt; $groupIdList + [&#039;NULL&#039;, &#039;0&#039;, &#039;&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1540" class="number uncovered">1540</th>
+
+                    <td class="uncovered" >
+                        <pre>                     &quot;$formAnswerTable.groups_id_validator&quot; =&gt; $groupIdList + [&#039;NULL&#039;, &#039;0&#039;, &#039;&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1541" class="number ">1541</th>
+
+                    <td class="" >
+                        <pre>                  ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1542" class="number ">1542</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1543" class="number ">1543</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1544" class="number ">1544</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1545" class="number ">1545</th>
+
+                    <td class="" >
+                        <pre>         &#039;ORDER&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1546" class="number covered">1546</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$formAnswerTable.status ASC&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1547" class="number covered">1547</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$formAnswerTable.request_date DESC&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1548" class="number ">1548</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1549" class="number covered">1549</th>
+
+                    <td class="covered" >
+                        <pre>         &#039;LIMIT&#039; =&gt; $limit,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1550" class="number ">1550</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1551" class="number ">1551</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1552" class="number covered">1552</th>
+
+                    <td class="covered" >
+                        <pre>      return $DB-&gt;request($request);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1553" class="number unreach">1553</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1554" class="number ">1554</th>
 
                     <td class="" >
                         <pre>}
