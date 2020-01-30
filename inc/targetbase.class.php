@@ -232,6 +232,10 @@ PluginFormcreatorConditionnableInterface
       ];
    }
 
+   public function isEntityAssign() {
+      return false;
+   }
+
    /**
     * get the associated form
     */
