@@ -838,7 +838,7 @@ PluginFormcreatorConditionnableInterface
 
    protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
       echo '<tr>';
-      echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
+      echo '<td width="15%">' . __('Category', 'formcreator') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
          'category_rule',
