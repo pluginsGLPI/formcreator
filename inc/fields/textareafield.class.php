@@ -85,7 +85,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             'rows'              => 5,
             'display'           => false,
             'enable_richtext'   => $useRichText,
-            'enable_fileupload' => true,
+            'enable_fileupload' => false,
          ]);
          if (version_compare(GLPI_VERSION, '9.4.6') < 0) {
             echo '</div>';

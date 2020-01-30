@@ -614,7 +614,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '<div class="form-group required line1">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
          Html::textarea([
-            'name' => 'comment', 
+            'name' => 'comment',
             'value' => $this->fields['comment']
          ]);
          echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
@@ -708,7 +708,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
                             ? $_SESSION['glpiactive_entity']
                             : $form->fields['entities_id'];
-      
+
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
       $input['requester_id']                = isset($_SESSION['glpiID'])
@@ -719,7 +719,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['status']                      = $status;
       $input['request_date']                = date('Y-m-d H:i:s');
       $input['comment']                     = '';
-                
+
       return $input;
    }
 
@@ -1129,7 +1129,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       $this->createIssue();
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
-   } 
+   }
 
    public function post_updateItem($history = 1) {
       $this->sendNotification();
@@ -1445,5 +1445,110 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'status'          => $this->fields['status'],
          ]);
       }
+   }
+
+   /**
+    * @param integer $limit The N last answers found
+    * @return DBMysqlIterator
+    */
+   public static function getMyLastAnswersAsRequester($limit = 5) {
+      global $DB;
+
+      $formAnswerTable = self::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $request = [
+         'SELECT' => [
+            $formTable => ['name'],
+            $formAnswerTable => ['id', 'status', 'request_date'],
+         ],
+         'FROM' => $formTable,
+         'INNER JOIN' => [
+            $formAnswerTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ]
+         ],
+         'WHERE' => [
+            "$formAnswerTable.requester_id" => Session::getLoginUserID(),
+            "$formTable.is_deleted" => 0,
+         ],
+         'ORDER' => [
+            "$formAnswerTable.status ASC",
+            "$formAnswerTable.request_date DESC",
+         ],
+         'LIMIT' => $limit,
+      ];
+
+      return $DB->request($request);
+   }
+
+   /**
+    * @param integer $limit The N last answers found
+    * @return DBMysqlIterator
+    */
+   public static function getMyLastAnswersAsValidator($limit = 5) {
+      global $DB;
+
+      $userId = Session::getLoginUserID();
+      $groupList = Group_User::getUserGroups($userId);
+      $groupIdList = [];
+      foreach ($groupList as $group) {
+         $groupIdList[] = $group['id'];
+      }
+
+      $formAnswerTable = self::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $validatorTable = PluginFormcreatorForm_Validator::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $request = [
+         'SELECT' => [
+            $formTable => ['name'],
+            $formAnswerTable => ['id', 'status', 'request_date'],
+         ],
+         'FROM' => $formTable,
+         'INNER JOIN' => [
+            $formAnswerTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ],
+            $validatorTable => [
+               'FKEY' => [
+                  $validatorTable => $formFk,
+                  $formTable => 'id'
+               ]
+            ]
+         ],
+         'WHERE' => [
+            'OR' => [
+               [
+                  'AND' => [
+                     "$formTable.validation_required" => 1,
+                     "$validatorTable.itemtype" => User::class,
+                     "$validatorTable.items_id" => $userId,
+                     "$formAnswerTable.users_id_validator" => $userId
+                  ]
+               ],
+               [
+                  'AND' => [
+                     "$formTable.validation_required" => 2,
+                     "$validatorTable.itemtype" => Group::class,
+                     "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
+                     "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
+                  ]
+               ]
+            ]
+         ],
+         'ORDER' => [
+            "$formAnswerTable.status ASC",
+            "$formAnswerTable.request_date DESC",
+         ],
+         'LIMIT' => $limit,
+      ];
+
+      return $DB->request($request);
    }
 }

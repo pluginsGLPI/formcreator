@@ -112,13 +112,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $CFG_GLPI['use_notifications'] = '1';
       $CFG_GLPI['notifications_mailing'] = '1';
 
-      $form = new \PluginFormcreatorForm();
-      $form->add([
-         'name'                  => __METHOD__,
-         'validation_required'   => '0'
-      ]);
-      $this->boolean($form->isNewItem())->isFalse();
-      $form->getFromDB($form->getID());
+      $form = $this->getForm();
 
       // Answer the form
       $formAnswer = $this->newTestedInstance();

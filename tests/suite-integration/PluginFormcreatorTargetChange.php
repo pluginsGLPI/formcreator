@@ -41,20 +41,12 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    }
 
    public function testTargetChangeActors() {
-      $form = new \PluginFormcreatorForm();
-      $form->add([
-         'entities_id'           => $_SESSION['glpiactive_entity'],
-         'name'                  => 'a form',
-         'description'           => 'form description',
-         'content'               => 'a content',
-         'is_active'             => 1,
-         'validation_required'   => 0
-      ]);
-      $this->boolean($form->isNewItem())->isFalse();
+      // Create a form with a target change
+      $form = $this->getForm();
 
       $targetChange = new \PluginFormcreatorTargetChange();
       $targetChange->add([
-         'name'                 => 'a target',
+         'name'                        => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
       $this->boolean($targetChange->isNewItem())->isFalse();
@@ -63,6 +55,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $observerActor = new \PluginFormcreatorTargetChange_Actor();
       $targetChangeId = $targetChange->getID();
 
+      // find the actors created by default
       $requesterActor->getFromDBByCrit([
          'AND' => [
             'plugin_formcreator_targetchanges_id' => $targetChangeId,
@@ -77,9 +70,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
             ]
       ]);
-
       $this->boolean($requesterActor->isNewItem())->isFalse();
       $this->boolean($observerActor->isNewItem())->isFalse();
+
+      // check the settings of the default actors
       $this->integer((int) $requesterActor->getField('use_notification'))
          ->isEqualTo(1);
       $this->integer((int) $observerActor->getField('use_notification'))
