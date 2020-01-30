@@ -62,60 +62,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->integer((int) $CFG_GLPI['use_notifications'])->isEqualTo('1');
    }
 
-   public function providerGetLinkName() {
-      return [
-         [
-            'value'     => '1',
-            'inverted'  => false,
-            'expected'  => 'Linked to',
-         ],
-         [
-            'value'     => '2',
-            'inverted'  => false,
-            'expected'  => 'Duplicates',
-         ],
-         [
-            'value'     => '3',
-            'inverted'  => false,
-            'expected'  => 'Son of',
-         ],
-         [
-            'value'     => '4',
-            'inverted'  => false,
-            'expected'  => 'Parent of',
-         ],
-         [
-            'value'     => '1',
-            'inverted'  => true,
-            'expected'  => 'Linked to',
-         ],
-         [
-            'value'     => '2',
-            'inverted'  => true,
-            'expected'  => 'Duplicated by',
-         ],
-         [
-            'value'     => '3',
-            'inverted'  => true,
-            'expected'  => 'Parent of',
-         ],
-         [
-            'value'     => '4',
-            'inverted'  => true,
-            'expected'  => 'Son of',
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerGetLinkName
-    */
-   public function testGetLinkName($value, $inverted, $expected) {
-      $output = \PluginFormcreatorCommon::getLinkName($value, $inverted);
-      $this->string($output)->isEqualTo($expected);
-   }
-
-
    public function providerGetPictoFilename() {
       return [
          [

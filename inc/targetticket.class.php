@@ -321,18 +321,19 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // show already linked items
       foreach ($rows as $row) {
-         $icons = '&nbsp;'.Html::getSimpleForm(PluginFormcreatorItem_TargetTicket::getFormURL(), 'purge',
-               _x('button', 'Delete permanently'),
-               ['id'                => $row['id']],
-               'fa-times-circle');
-               $itemtype = $row['itemtype'];
-               $item = new $itemtype();
-               $item->getFromDB($row['items_id']);
+         $icons = '&nbsp;'.Html::getSimpleForm(
+            PluginFormcreatorItem_TargetTicket::getFormURL(),
+            'purge',
+            _x('button', 'Delete permanently'),
+            ['id' => $row['id']],
+            'fa-times-circle'
+         );
+         $itemtype = $row['itemtype'];
+         $item = new $itemtype();
+         $item->getFromDB($row['items_id']);
          switch ($itemtype) {
             case Ticket::getType():
-               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
-               //echo Ticket_Ticket::getLinkName($row['link']);
-               echo PluginFormcreatorCommon::getLinkName($row['link']);
+               echo Ticket_Ticket::getLinkName($row['link']);
                echo ' ';
                echo $itemtype::getTypeName();
                echo ' ';
@@ -342,9 +343,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                break;
 
             case PluginFormcreatorTargetTicket::getType():
-               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
-               //echo Ticket_Ticket::getLinkName($row['link']);
-               echo PluginFormcreatorCommon::getLinkName($row['link']);
+               echo Ticket_Ticket::getLinkName($row['link']);
                echo ' ';
                echo $itemtype::getTypeName();
                echo ' ';
