@@ -2093,180 +2093,89 @@ PluginFormcreatorConditionnableInterface
       global $DB, $CFG_GLPI;
 
       // Define tables
-      $cat_table        = PluginFormcreatorCategory::getTable();
-      $categoryFk       = PluginFormcreatorCategory::getForeignKeyField();
-      $form_table       = PluginFormcreatorForm::getTable();
-      $formFk           = PluginFormcreatorForm::getForeignKeyField();
-      $table_fp         = PluginFormcreatorForm_Profile::getTable();
-      $formProfileFk    = Profile::getForeignKeyField();
-      $entitiesRestrict  = (new DBUtils())->getEntitiesRestrictCriteria($form_table, '', '', true, false);
-      $language   = $_SESSION['glpilanguage'];
+      $form_table = PluginFormcreatorForm::getTable();
 
       // Show form whithout category
       $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
-      $result_forms = $DB->request([
-         'SELECT' => [
-            $form_table => ['id', 'name', 'description']
-         ],
-         'FROM' => $form_table,
-         'WHERE' => [
-            "$form_table.$formCategoryFk" => 0,
-            "$form_table.is_active" => 1,
-            "$form_table.is_deleted" => 0,
-            "$form_table.helpdesk_home" => 1,
-            "$form_table.language" => [0, '', null, $language],
-            [
-               'OR' => [
-                  'access_rights' => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                  "$form_table.id" => new QuerySubQuery([
-                     'SELECT' => $formProfileFk,
-                     'FROM' => $table_fp,
-                     'WHERE' => [
-                        'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                     ],
-                  ]),
-               ]
-            ]
-         ] + $entitiesRestrict,
-         'ORDER' => "$form_table.name ASC",
-      ]);
 
       // Show categories which have at least one form user can access
-      $result = $DB->request([
+      $result = PluginFormcreatorCategory::getAvailableCategories();
+      // For each categories, show the list of forms the user can fill
+      $categories = [0 => __('Forms without category', 'formcreator')];
+      foreach ($result as $category) {
+         $categories[$category['id']] = $category['name'];
+      }
+      $formRestriction = PluginFormcreatorForm::getFormRestrictionCriterias($form_table);
+      $formRestriction["$form_table.$formCategoryFk"] = 0;
+      $formRestriction["$form_table.helpdesk_home"] = 1;
+      $formRestriction["$form_table.$formCategoryFk"] = array_keys($categories);
+      $result_forms = $DB->request([
          'SELECT' => [
-            $cat_table => [
-               'name', 'id'
-            ]
+            $form_table => ['id', 'name', 'description', $formCategoryFk],
          ],
-         'FROM' => $cat_table,
-         'INNER JOIN' => [
-            $form_table => [
-               'FKEY' => [
-                  $cat_table => 'id',
-                  $form_table => $categoryFk
-               ]
-            ]
-         ],
-         'WHERE' => [
-            "$form_table.is_active" => 1,
-            "$form_table.is_deleted" => 0,
-            "$form_table.helpdesk_home" => 1,
-            "$form_table.language" => [$language, 0, null, ''],
-            [
-               'OR' => [
-                  "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                  "$form_table.id" => new QuerySubQuery([
-                     'SELECT' => $formFk,
-                     'FROM' => $table_fp,
-                     'WHERE' => [
-                        'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                     ]
-                  ]),
-               ],
-            ],
-         ] + $entitiesRestrict,
-         'GROUPBY' => [
-            "$cat_table.id"
+         'FROM'  => $form_table,
+         'WHERE' => $formRestriction,
+         'ORDER' => [
+            "$form_table.$formCategoryFk ASC",
+            "$form_table.name ASC",
          ]
       ]);
-      if ($result->count() > 0 || $result_forms->count() > 0) {
-         echo '<table class="tab_cadrehov homepage_forms_container" id="homepage_forms_container">';
+
+      if ($result_forms->count() < 1) {
+         echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
          echo '<tr class="noHover">';
-         echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+         echo '<th>' . __('No form available', 'formcreator') . '</th>';
          echo '</tr>';
-
-         if ($result_forms->count() > 0) {
-            echo '<tr class="noHover"><th>' . __('Forms without category', 'formcreator') . '</th></tr>';
-            $i = 0;
-            foreach ($result_forms as $form) {
-               $i++;
-               echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
-               echo '<td>';
-               echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
-                   onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
-               echo '&nbsp;';
-               echo '<a href="' . $CFG_GLPI['root_doc']
-               . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
-                  title="' . $form['description'] . '">'
-                              . $form['name']
-                              . '</a></td>';
-                              echo '</tr>';
-                              echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
-                              echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
-                              echo '</tr>';
-            }
-         }
-
-         if ($result->count() > 0) {
-            // For each categories, show the list of forms the user can fill
-            $i = 0;
-            foreach ($result as $category) {
-               $categoryId = $category['id'];
-               echo '<tr class="noHover"><th>' . $category['name'] . '</th></tr>';
-               $result_forms = $DB->request([
-                  'SELECT' => [
-                     $form_table => ['id', 'name', 'description'],
-                  ],
-                  'FROM' => $form_table,
-                  'WHERE' => [
-                     $categoryFk => [$categoryId],
-                     "$form_table.is_active" => 1,
-                     "$form_table.is_deleted" => 0,
-                     "$form_table.helpdesk_home" => 1,
-                     "$form_table.language" => [$language, 0, null, ''],
-                     [
-                        'OR' => [
-                           "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                           "$form_table.id" => new QuerySubQuery([
-                              'SELECT' => $formFk,
-                              'FROM' => $table_fp,
-                              'WHERE' => [
-                                 'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                              ]
-                           ]),
-                        ],
-                     ],
-                  ] + $entitiesRestrict,
-                  'ORDER' => [
-                     "$form_table.name ASC",
-                  ]
-               ]);
-               $i = 0;
-               foreach ($result_forms as $form) {
-                  $i++;
-                  echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
-                  echo '<td>';
-                  echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
-                      onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
-                  echo '&nbsp;';
-                  echo '<a href="' . $CFG_GLPI['root_doc']
-                  . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
-                     title="' . $form['description'] . '">'
-                                 . $form['name']
-                                 . '</a></td>';
-                                 echo '</tr>';
-                                 echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
-                                 echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
-                                 echo '</tr>';
-               }
-            }
-         }
          echo '</table>';
-         echo '<br />';
-         echo '<script type="text/javascript">
-            function showDescription(id, img){
-               if(img.alt == "+") {
-                 img.alt = "-";
-                 img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
-                 document.getElementById("desc" + id).style.display = "table-row";
-               } else {
-                 img.alt = "+";
-                 img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
-                 document.getElementById("desc" + id).style.display = "none";
-               }
-            }
-         </script>';
+         return;
       }
+
+      echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
+      echo '<tr class="noHover">';
+      echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+      echo '</tr>';
+
+      $currentCategoryId = -1;
+      $i = 0;
+      foreach ($result_forms as $row) {
+         if ($currentCategoryId != $row[$formCategoryFk]) {
+            // show header for the category
+            $currentCategoryId = $row[$formCategoryFk];
+            echo '<tr class="noHover"><th>' . $categories[$currentCategoryId] . '</th></tr>';
+         }
+
+         // Show a rox for the form
+         echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
+         echo '<td>';
+         echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
+               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+         echo '&nbsp;';
+         echo '<a href="' . $CFG_GLPI['root_doc']
+            . '/plugins/formcreator/front/formdisplay.php?id=' . $row['id'] . '"
+               title="' . $row['description'] . '">'
+            . $row['name']
+            . '</a></td>';
+         echo '</tr>';
+         echo '<tr id="desc' . $row['id'] . '" class="line' . ($i % 2) . ' form_description">';
+         echo '<td><div>' . $row['description'] . '&nbsp;</div></td>';
+         echo '</tr>';
+      }
+
+      echo '</table>';
+      echo '<br />';
+      echo '<script type="text/javascript">
+         function showDescription(id, img){
+            if(img.alt == "+") {
+               img.alt = "-";
+               img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
+               document.getElementById("desc" + id).style.display = "table-row";
+            } else {
+               img.alt = "+";
+               img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
+               document.getElementById("desc" + id).style.display = "none";
+            }
+         }
+      </script>';
    }
 
    static function getInterface() {
@@ -2540,5 +2449,35 @@ PluginFormcreatorConditionnableInterface
       if (isAPI()) {
          $this->fields += \PluginFormcreatorSection::getFullData($this->fields['id']);
       }
+   }
+
+   public static function getFormRestrictionCriterias($formTable = '') {
+      if ($formTable == '') {
+         $formTable       = PluginFormcreatorForm::getTable();
+      }
+      $formProfileFk    = Profile::getForeignKeyField();
+      $table_fp         = PluginFormcreatorForm_Profile::getTable();
+      $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCriteria($formTable, '', '', true, false);
+      $language         = $_SESSION['glpilanguage'];
+
+      $restriction = [
+         "$formTable.is_active" => 1,
+         "$formTable.is_deleted" => 0,
+         "$formTable.language" => [$language, 0, null, ''],
+         [
+            'OR' => [
+               "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+               "$formTable.id" => new QuerySubQuery([
+                  'SELECT' => $formProfileFk,
+                  'FROM' => $table_fp,
+                  'WHERE' => [
+                     'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                  ]
+               ]),
+            ],
+         ],
+      ] + $entitiesRestrict;
+
+      return $restriction;
    }
 }
