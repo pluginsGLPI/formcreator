@@ -262,7 +262,8 @@ PluginFormcreatorConditionnableInterface
       // add the section to the linker
       $linker->addObject($originalId, $item);
 
-      // Import the questions
+      // Import each question
+      $importedItems = [];
       if (isset($input['_questions'])) {
          // sort questions by order
          usort($input['_questions'], function ($a, $b) {
@@ -273,9 +274,24 @@ PluginFormcreatorConditionnableInterface
          });
 
          foreach ($input['_questions'] as $question) {
-            PluginFormcreatorQuestion::import($linker, $question, $itemId);
+            $importedItem = PluginFormcreatorQuestion::import($linker, $question, $itemId);
+            if ($importedItem === false) {
+               // Falied to import a question
+               return false;
+            }
+            $importedItems[] = $importedItem;
          }
       }
+      // Delete all other questions
+      $deleteCriteria = [];
+      if (count($importedItems) > 0) {
+         $deleteCriteria = ['NOT' => ['id' => $importedItems]];
+      }
+      $FormProfile = new PluginFormcreatorSection();
+      $FormProfile->deleteByCriteria([
+         $formFk => $itemId,
+         $deleteCriteria,
+      ]);
 
       // Import conditions
       if (isset($input['_conditions'])) {

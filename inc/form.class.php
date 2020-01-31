@@ -1986,11 +1986,15 @@ PluginFormcreatorConditionnableInterface
             }
             $importedItems[] = $importedItem;
          }
-         // Delete all other restrictions
+         // Delete all other sections
+         $deleteCriteria = [];
+         if (count($importedItems) > 0) {
+            $deleteCriteria = ['NOT' => ['id' => $importedItems]];
+         }
          $FormProfile = new PluginFormcreatorSection();
          $FormProfile->deleteByCriteria([
             $formFk => $itemId,
-            ['NOT' => ['id' => $importedItems]]
+            $deleteCriteria,
          ]);
       }
 
