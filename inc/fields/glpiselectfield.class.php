@@ -75,7 +75,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
             Profile::class          => Profile::getTypeName(2)],
       ];
       $plugin = new Plugin();
-      if ($plugin->isActivated('appliance')) {
+      if ($plugin->isActivated('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2);
       }
       array_unshift($optgroup, '---');
