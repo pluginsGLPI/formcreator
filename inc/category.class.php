@@ -187,4 +187,43 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       return $nodes;
    }
+
+   public static function  getAvailableCategories($helpdeskHome = 1) {
+      global $DB;
+
+      // Define tables
+      $cat_table       = PluginFormcreatorCategory::getTable();
+      $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();
+      $formTable       = PluginFormcreatorForm::getTable();
+      $formRestriction = PluginFormcreatorForm::getFormRestrictionCriterias($formTable);
+
+      $formRestriction["$formTable.helpdesk_home"] = $helpdeskHome;
+
+      $result = $DB->request([
+         'SELECT' => [
+            $cat_table => [
+               'name', 'id'
+            ]
+         ],
+         'FROM' => $cat_table,
+         'INNER JOIN' => [
+            $formTable => [
+               'FKEY' => [
+                  $cat_table => 'id',
+                  $formTable => $categoryFk
+               ]
+            ]
+         ],
+         'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
+         'GROUPBY' => [
+            "$cat_table.id"
+         ]
+      ]);
+
+      return $result;
+   }
+
+   public static function getAvailableCategoriesCriterias() {
+
+   }
 }
