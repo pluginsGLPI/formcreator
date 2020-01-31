@@ -35,9 +35,9 @@ layout: coverage
     <tr>
         
                     <td style="text-align: center; width: 100%">
-                <h1 class="text-success">
-                    78%
-                                            <small>of 74</small>
+                <h1 class="text-warning">
+                    65%
+                                            <small>of 89</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -96,6 +96,20 @@ layout: coverage
                                         <td style="text-align: center">59</td>
                 <td style="text-align: center">    
     <span class="label label-success">97%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getAvailableCategories">PluginFormcreatorCategory::getAvailableCategories()</a></td>
+                                        <td style="text-align: center">14</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getAvailableCategoriesCriterias">PluginFormcreatorCategory::getAvailableCategoriesCriterias()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
 </td>
                                             </tr>
         </tbody>
@@ -1539,6 +1553,300 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L190" class="number ">190</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getAvailableCategories">
+                    <th id="L191" class="number ">191</th>
+
+                    <td class="" id="getAvailableCategories">
+                        <pre>   public static function  getAvailableCategories($helpdeskHome = 1) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L192" class="number uncovered">192</th>
+
+                    <td class="uncovered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L193" class="number ">193</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L194" class="number ">194</th>
+
+                    <td class="" >
+                        <pre>      // Define tables
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L195" class="number uncovered">195</th>
+
+                    <td class="uncovered" >
+                        <pre>      $cat_table       = PluginFormcreatorCategory::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L196" class="number uncovered">196</th>
+
+                    <td class="uncovered" >
+                        <pre>      $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L197" class="number uncovered">197</th>
+
+                    <td class="uncovered" >
+                        <pre>      $formTable       = PluginFormcreatorForm::getTable();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L198" class="number uncovered">198</th>
+
+                    <td class="uncovered" >
+                        <pre>      $formRestriction = PluginFormcreatorForm::getFormRestrictionCriterias($formTable);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L199" class="number ">199</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L200" class="number uncovered">200</th>
+
+                    <td class="uncovered" >
+                        <pre>      $formRestriction[&quot;$formTable.helpdesk_home&quot;] = $helpdeskHome;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L201" class="number ">201</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L202" class="number uncovered">202</th>
+
+                    <td class="uncovered" >
+                        <pre>      $result = $DB-&gt;request([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L203" class="number ">203</th>
+
+                    <td class="" >
+                        <pre>         &#039;SELECT&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L204" class="number ">204</th>
+
+                    <td class="" >
+                        <pre>            $cat_table =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L205" class="number uncovered">205</th>
+
+                    <td class="uncovered" >
+                        <pre>               &#039;name&#039;, &#039;id&#039;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L206" class="number ">206</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L207" class="number ">207</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L208" class="number uncovered">208</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;FROM&#039; =&gt; $cat_table,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L209" class="number ">209</th>
+
+                    <td class="" >
+                        <pre>         &#039;INNER JOIN&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L210" class="number ">210</th>
+
+                    <td class="" >
+                        <pre>            $formTable =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L211" class="number ">211</th>
+
+                    <td class="" >
+                        <pre>               &#039;FKEY&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L212" class="number uncovered">212</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $cat_table =&gt; &#039;id&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L213" class="number uncovered">213</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $formTable =&gt; $categoryFk</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L214" class="number ">214</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L215" class="number ">215</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L216" class="number ">216</th>
+
+                    <td class="" >
+                        <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L217" class="number uncovered">217</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;WHERE&#039; =&gt; PluginFormcreatorForm::getFormRestrictionCriterias($formTable),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L218" class="number ">218</th>
+
+                    <td class="" >
+                        <pre>         &#039;GROUPBY&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L219" class="number uncovered">219</th>
+
+                    <td class="uncovered" >
+                        <pre>            &quot;$cat_table.id&quot;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L220" class="number ">220</th>
+
+                    <td class="" >
+                        <pre>         ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L221" class="number ">221</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L222" class="number ">222</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L223" class="number uncovered">223</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $result;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L224" class="number unreach">224</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L225" class="number ">225</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getAvailableCategoriesCriterias">
+                    <th id="L226" class="number ">226</th>
+
+                    <td class="" id="getAvailableCategoriesCriterias">
+                        <pre>   public static function getAvailableCategoriesCriterias() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L227" class="number ">227</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L228" class="number uncovered">228</th>
+
+                    <td class="uncovered" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L229" class="number ">229</th>
 
                     <td class="" >
                         <pre>}
