@@ -171,6 +171,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          );
       }
 
+      // Escape text fields
+      foreach (['target_name'] as $key) {
+         $input[$key] = $DB->escape($input[$key]);
+      }
 
       // Assume that all questions are already imported
       // convert question uuid into id
