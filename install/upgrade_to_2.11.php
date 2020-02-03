@@ -66,7 +66,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       $migration->migrationOneTable($table);
 
       $request = [
-         '*SELECT' => 'id',
+         'SELECT' => 'id',
          'FROM' => $table,
       ];
       foreach ($DB->request($request) as $row) {
