@@ -85,11 +85,12 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             'rows'              => 5,
             'display'           => false,
             'enable_richtext'   => $useRichText,
-            'enable_fileupload' => true,
+            'enable_fileupload' => false,
          ]);
-         if (version_compare(GLPI_VERSION, '9.4.6') < 0) {
-            echo '</div>';
-         }
+         // This area is filled by glpi : @see js/fileupload.js
+         // it contains _filename[] hidden inputs required to properly handle
+         // images pasted in the textarea
+         echo '<div id="fileupload_info" class="fileupload_info"></div>';
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
