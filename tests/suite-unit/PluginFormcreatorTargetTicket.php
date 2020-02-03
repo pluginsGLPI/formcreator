@@ -685,6 +685,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $uuid = plugin_formcreator_getUuid();
       $input = [
          'name' => $this->getUniqueString(),
+         'target_name' => $this->getUniqueString(),
          'content' => $this->getUniqueString(),
          'due_date_rule' => \PluginFormcreatorTargetTicket::DUE_DATE_RULE_NONE,
          'due_date_question' => '0',
