@@ -228,7 +228,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
     */
    public function  testSetTargetEntity() {
       global $CFG_GLPI;
-      
+
       // Disable notification to avoid output to console
       $CFG_GLPI['use_notifications'] = '0';
 
@@ -339,7 +339,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
-      
+
       // Disable notification to avoid output to console
       $CFG_GLPI['use_notifications'] = '0';
 
@@ -465,6 +465,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $uuid = plugin_formcreator_getUuid();
       $input = [
          'name' => $this->getUniqueString(),
+         'target_name' => $this->getUniqueString(),
          'content' => $this->getUniqueString(),
          'impactcontent' => $this->getUniqueString(),
          'controlistcontent' => $this->getUniqueString(),
