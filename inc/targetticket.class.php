@@ -943,6 +943,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $containerId;
+      $input['_skip_checks'] = true;
 
       $item = new self;
       // Find an existing target to update, only if an UUID is available
@@ -958,8 +960,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          );
       }
 
-      $input['_skip_checks'] = true;
-      $input[$formFk] = $containerId;
 
       // Assume that all questions are already imported
       // convert question uuid into id
