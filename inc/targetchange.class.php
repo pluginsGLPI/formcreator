@@ -370,9 +370,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr>';
       echo '<td colspan="5" class="center">';
-      echo Html::hidden('id', ['value' => $this->getID()]);
-      // echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
       echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
       echo '</td>';
       echo '</tr>';
