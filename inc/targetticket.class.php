@@ -41,6 +41,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    const ASSOCIATE_RULE_SPECIFIC = 2;
    const ASSOCIATE_RULE_ANSWER = 3;
 
+   const REQUESTTYPE_NONE = 0;
    const REQUESTTYPE_SPECIFIC = 1;
    const REQUESTTYPE_ANSWER = 2;
 
@@ -92,6 +93,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    public static function getEnumRequestTypeRule() {
       return [
+         self::REQUESTTYPE_NONE      => __('Default or from a template', 'formcreator'),
          self::REQUESTTYPE_SPECIFIC  => __('Specific type', 'formcreator'),
          self::REQUESTTYPE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
