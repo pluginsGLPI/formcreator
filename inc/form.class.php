@@ -2459,7 +2459,7 @@ PluginFormcreatorConditionnableInterface
       if ($formTable == '') {
          $formTable       = PluginFormcreatorForm::getTable();
       }
-      $formProfileFk    = Profile::getForeignKeyField();
+      $formFk           = self::getForeignKeyField();
       $table_fp         = PluginFormcreatorForm_Profile::getTable();
       $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCriteria($formTable, '', '', true, false);
       $language         = $_SESSION['glpilanguage'];
@@ -2472,7 +2472,7 @@ PluginFormcreatorConditionnableInterface
             'OR' => [
                "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
                "$formTable.id" => new QuerySubQuery([
-                  'SELECT' => $formProfileFk,
+                  'SELECT' => $formFk,
                   'FROM' => $table_fp,
                   'WHERE' => [
                      'profiles_id' => $_SESSION['glpiactiveprofile']['id']
