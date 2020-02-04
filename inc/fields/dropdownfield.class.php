@@ -132,13 +132,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function getRenderedHtml($canEdit = true) {
       global $DB, $CFG_GLPI;
 
+      $itemtype = $this->getSubItemtype();
       if (!$canEdit) {
-         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-         if ($decodedValues === null) {
-            $itemtype = $this->question->fields['values'];
-         } else {
-            $itemtype = $decodedValues['itemtype'];
-         }
          $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
@@ -158,12 +153,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       if (!empty($this->question->fields['values'])) {
-         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-         if ($decodedValues === null) {
-            $itemtype = $this->question->fields['values'];
-         } else {
-            $itemtype = $decodedValues['itemtype'];
-         }
 
          $dparams = ['name'     => $fieldName,
                      'value'    => $this->value,
@@ -327,11 +316,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $itemtype = $this->question->fields['values'];
-      if (isset($decodedValues['itemtype'])) {
-         $itemtype = $decodedValues['itemtype'];
-      }
+      $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
          $value = (new DBUtils())->getUserName($this->value);
       } else {
@@ -664,5 +649,18 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function isEditableField()
    {
       return true;
+   }
+
+   /**
+    * Get the itemtype of the item to show
+    *
+    * @return string
+    */
+   protected function getSubItemtype() {
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         return $this->question->fields['values'];
+      }
+         return $decodedValues['itemtype'];
    }
 }
