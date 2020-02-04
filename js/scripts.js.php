@@ -462,6 +462,13 @@ function plugin_formcreator_editQuestion(items_id, token, question, section) {
       section_id: section,
       _glpi_csrf_token: token
    }).dialog("open");
+   plugin_formcreator_scrollToModal($(modalWindow));
+}
+
+function plugin_formcreator_scrollToModal(modalWindow) {
+   $('html, body').animate({
+        scrollTop: $(modalWindow).closest('.ui-dialog').offset().top
+    }, 300);
 }
 
 function plugin_formcreator_setRequired(token, question_id, val) {
@@ -536,6 +543,7 @@ function plugin_formcreator_editSection(items_id, token ,section) {
       plugin_formcreator_forms_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
+   plugin_formcreator_scrollToModal($(modalWindow));
 }
 
 function plugin_formcreator_duplicateSection(items_id, token, section_id) {
