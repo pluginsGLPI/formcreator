@@ -74,22 +74,27 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
       ];
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         $id           = $this->question->getID();
-         $rand         = mt_rand();
-         $fieldName    = 'formcreator_field_' . $id;
-         Ticket::dropdownType($fieldName, [
-            'value' => $this->value,
-            'rand'  => $rand,
-         ]);
-         echo PHP_EOL;
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeRequestType('$fieldName', '$rand');
-         });");
-      } else {
-         echo Ticket::getTicketTypeName($this->value);
+   public function getRenderedHtml($canEdit = true) {
+      $html = "";
+      if (!$canEdit) {
+         return Ticket::getTicketTypeName($this->value);
       }
+
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+
+      $html .= Ticket::dropdownType($fieldName, [
+         'value'     => $this->value,
+         'rand'      => $rand,
+         'display'   => false,
+      ]);
+      $html .=  PHP_EOL;
+      $html .=  Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeRequestType('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    public static function getName() {

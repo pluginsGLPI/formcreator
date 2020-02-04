@@ -1337,7 +1337,7 @@ function pluginFormcreatorInitializeMultiselect(fieldName, rand) {
 function pluginFormcreatorInitializeRequestType(fieldName, rand) {
    var field = $('select[name="' + fieldName + '"]');
    field.on("change", function(e) {
-      formcreatorShowFields($(field[0].form));
+      plugin_formcreator.showFields($(field[0].form));
    });
 }
 
