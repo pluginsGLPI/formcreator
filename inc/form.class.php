@@ -1842,16 +1842,30 @@ PluginFormcreatorConditionnableInterface
       // parse json file(s)
       foreach ($params['_json_file'] as $filename) {
          if (!$json = file_get_contents(GLPI_TMP_DIR."/".$filename)) {
-            Session::addMessageAfterRedirect(__("Forms import impossible, the file is empty"));
+            Session::addMessageAfterRedirect(__("Forms import impossible, the file is empty", 'formcreator'));
             continue;
          }
          if (!$forms_toimport = json_decode($json, true)) {
-            Session::addMessageAfterRedirect(__("Forms import impossible, the file seems corrupt"));
+            Session::addMessageAfterRedirect(__("Forms import impossible, the file seems corrupt", 'formcreator'));
             continue;
          }
          if (!isset($forms_toimport['forms'])) {
-            Session::addMessageAfterRedirect(__("Forms import impossible, the file seems corrupt"));
+            Session::addMessageAfterRedirect(__("Forms import impossible, the file seems corrupt", 'formcreator'));
             continue;
+         }
+         if (isset($forms_toimport['schema_version'])) {
+            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION) {
+               Session::addMessageAfterRedirect(
+                  __("Forms import impossible, the file was generated with another version", 'formcreator'),
+                  false, ERROR
+               );
+               continue;
+            }
+         } else {
+            Session::addMessageAfterRedirect(
+               __("The file does not specifies the schema version. It was probably generated with a version older than 2.10 and import is expected to create incomplete or buggy forms.", 'formcreator'),
+               false, WARNING
+            );
          }
 
          $success = true;
