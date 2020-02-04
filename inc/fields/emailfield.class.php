@@ -131,6 +131,10 @@ class PluginFormcreatorEmailField extends PluginFormcreatorTextField
       return true;
    }
 
+   public function getEmptyParameters() {
+      return [];
+   }
+
    public function equals($value) {
       return $this->value == $value;
    }
