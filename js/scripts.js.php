@@ -655,6 +655,12 @@ var plugin_formcreator = new function() {
       });
    };
 
+   this.plugin_formcreator_scrollToModal = function (modalWindow) {
+   $('html, body').animate({
+        scrollTop: $(modalWindow).closest('.ui-dialog').offset().top
+    }, 300);
+}
+
    this.addQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       $.ajax({
@@ -843,6 +849,7 @@ var plugin_formcreator = new function() {
          question_id: questionId,
          plugin_formcreator_sections_id: sectionId
       }).dialog('open');
+      this.plugin_formcreator_scrollToModal($(modalWindow));
    };
 
    this.duplicateSection = function (item) {
@@ -873,6 +880,7 @@ var plugin_formcreator = new function() {
             plugin_formcreator_forms_id: formId
          }
       ).dialog('open');
+      this.plugin_formcreator_scrollToModal($(modalWindow));
    }
 
    this.addSection = function () {
