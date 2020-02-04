@@ -32,7 +32,9 @@
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
-      return true;
+      $itemtype = $this->getSubItemtype();
+
+      return class_exists($itemtype);
    }
 
    public function getDesignSpecializationField() {
@@ -153,7 +155,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       if (!empty($this->question->fields['values'])) {
-
          $dparams = ['name'     => $fieldName,
                      'value'    => $this->value,
                      'display'  => false,
@@ -163,6 +164,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      'rand'     => $rand];
 
          $dparams_cond_crit = [];
+         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
          switch ($itemtype) {
             case Entity::class:
                unset($dparams['entity']);
