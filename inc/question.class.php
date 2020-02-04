@@ -229,7 +229,7 @@ PluginFormcreatorConditionnableInterface
 
       $key = 'formcreator_field_' . $this->getID();
       if (isset($value[$key])) {
-         $field->deserializeValue($value[$key]);
+         $field->parseAnswerValues($value);
       } else {
          $field->deserializeValue($this->fields['default_values']);
       }

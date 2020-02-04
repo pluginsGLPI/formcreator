@@ -198,7 +198,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function isValidValue($value) {
-      if ($value === '') {
+      if ($value === '' || $value === null) {
          return true;
       }
 
