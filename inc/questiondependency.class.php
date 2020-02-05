@@ -136,6 +136,7 @@ extends PluginFormcreatorQuestionParameter
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
       $input[$questionFk] = $containerId;
 

@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild implements 
+class PluginFormcreatorSection extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
@@ -219,8 +219,10 @@ PluginFormcreatorConditionnableInterface
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk]        = $containerId;
+
       $input['_skip_checks'] = true;
 
       $item = new self();
@@ -366,7 +368,7 @@ PluginFormcreatorConditionnableInterface
       }
       echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
-     
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo $title;

@@ -94,6 +94,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $input['items_id'] = $containerId;
 
       $item = new self();
@@ -163,6 +164,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
 
       $condition = $this->fields;
 
+      // remove key and FK
       unset($condition['items_id']);
 
       // remove ID or UUID
@@ -174,13 +176,6 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          $question = new PluginFormcreatorQuestion();
          $question->getFromDB($condition['plugin_formcreator_questions_id']);
          $condition['plugin_formcreator_questions_id'] = $question->fields['uuid'];
-         $containerType = $input['itemtype'];
-         if (!class_exists($containerType) || !is_subclass_of($containerType, PluginFormcreatorConditionnableInterface::class)) {
-            return false;
-         }
-         $container = new $containerType();
-         $container->getFromDB($condition['items_id']);
-         $condition['items_id'] = $container->fields['uuid'];
       }
       unset($condition[$idToRemove]);
 
@@ -239,7 +234,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       echo '<tr">';
       echo '<td colspan="4">';
       Dropdown::showFromArray(
-         'show_rule', 
+         'show_rule',
          $this->getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
