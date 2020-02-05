@@ -94,6 +94,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $input['items_id'] = $containerId;
 
       $item = new self();
