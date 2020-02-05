@@ -6703,24 +6703,25 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L860" class="number covered">860</th>
+                    <th id="L860" class="number ">860</th>
 
-                    <td class="covered" >
-                        <pre>      $sectionFk = PluginFormcreatorSection::getForeignKeyField();</pre>
+                    <td class="" >
+                        <pre>      // restore key and FK
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L861" class="number covered">861</th>
 
                     <td class="covered" >
-                        <pre>      $input[$sectionFk] = $containerId;</pre>
+                        <pre>      $sectionFk = PluginFormcreatorSection::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L862" class="number covered">862</th>
 
                     <td class="covered" >
-                        <pre>      $input[&#039;_skip_checks&#039;] = true;</pre>
+                        <pre>      $input[$sectionFk] = $containerId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -6735,14 +6736,14 @@ layout: coverage
                     <th id="L864" class="number covered">864</th>
 
                     <td class="covered" >
-                        <pre>      $item = new self();</pre>
+                        <pre>      $input[&#039;_skip_checks&#039;] = true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L865" class="number ">865</th>
 
                     <td class="" >
-                        <pre>      // Find an existing question to update, only if an UUID is available
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -6750,14 +6751,14 @@ layout: coverage
                     <th id="L866" class="number covered">866</th>
 
                     <td class="covered" >
-                        <pre>      $itemId = false;</pre>
+                        <pre>      $item = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L867" class="number ">867</th>
 
                     <td class="" >
-                        <pre>      /** @var string $idKey key to use as ID (id or uuid) */
+                        <pre>      // Find an existing question to update, only if an UUID is available
 </pre>
                     </td>
                 </tr>
@@ -6765,72 +6766,71 @@ layout: coverage
                     <th id="L868" class="number covered">868</th>
 
                     <td class="covered" >
-                        <pre>      $idKey = &#039;id&#039;;</pre>
+                        <pre>      $itemId = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L869" class="number covered">869</th>
+                    <th id="L869" class="number ">869</th>
 
-                    <td class="covered" >
-                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
+                    <td class="" >
+                        <pre>      /** @var string $idKey key to use as ID (id or uuid) */
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L870" class="number covered">870</th>
 
                     <td class="covered" >
-                        <pre>         $idKey = &#039;uuid&#039;;</pre>
+                        <pre>      $idKey = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L871" class="number covered">871</th>
 
                     <td class="covered" >
-                        <pre>         $itemId = plugin_formcreator_getFromDBByField(</pre>
+                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L872" class="number covered">872</th>
 
                     <td class="covered" >
-                        <pre>            $item,</pre>
+                        <pre>         $idKey = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L873" class="number covered">873</th>
 
                     <td class="covered" >
-                        <pre>            &#039;uuid&#039;,</pre>
+                        <pre>         $itemId = plugin_formcreator_getFromDBByField(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L874" class="number covered">874</th>
 
                     <td class="covered" >
+                        <pre>            $item,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L875" class="number covered">875</th>
+
+                    <td class="covered" >
+                        <pre>            &#039;uuid&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L876" class="number covered">876</th>
+
+                    <td class="covered" >
                         <pre>            $input[&#039;uuid&#039;]</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L875" class="number ">875</th>
-
-                    <td class="" >
-                        <pre>         );
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L876" class="number ">876</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L877" class="number ">877</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         );
 </pre>
                     </td>
                 </tr>
@@ -6838,34 +6838,12 @@ layout: coverage
                     <th id="L878" class="number ">878</th>
 
                     <td class="" >
-                        <pre>      // escape text fields
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L879" class="number covered">879</th>
-
-                    <td class="covered" >
-                        <pre>      foreach ([&#039;name&#039;, &#039;description&#039;, &#039;default_values&#039;, &#039;values&#039;] as $key) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L880" class="number covered">880</th>
-
-                    <td class="covered" >
-                        <pre>         $input[$key] = $DB-&gt;escape($input[$key]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L881" class="number ">881</th>
-
-                    <td class="" >
                         <pre>      }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L882" class="number ">882</th>
+                    <th id="L879" class="number ">879</th>
 
                     <td class="" >
                         <pre>
@@ -6873,7 +6851,45 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L880" class="number ">880</th>
+
+                    <td class="" >
+                        <pre>      // escape text fields
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L881" class="number covered">881</th>
+
+                    <td class="covered" >
+                        <pre>      foreach ([&#039;name&#039;, &#039;description&#039;, &#039;default_values&#039;, &#039;values&#039;] as $key) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L882" class="number covered">882</th>
+
+                    <td class="covered" >
+                        <pre>         $input[$key] = $DB-&gt;escape($input[$key]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L883" class="number ">883</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L884" class="number ">884</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L885" class="number ">885</th>
 
                     <td class="" >
                         <pre>      // Add or update question
@@ -6881,42 +6897,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L884" class="number covered">884</th>
+                    <th id="L886" class="number covered">886</th>
 
                     <td class="covered" >
                         <pre>      $originalId = $input[$idKey];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L885" class="number covered">885</th>
+                    <th id="L887" class="number covered">887</th>
 
                     <td class="covered" >
                         <pre>      if ($itemId !== false) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L886" class="number uncovered">886</th>
+                    <th id="L888" class="number uncovered">888</th>
 
                     <td class="uncovered" >
                         <pre>         $input[&#039;id&#039;] = $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L887" class="number uncovered">887</th>
+                    <th id="L889" class="number uncovered">889</th>
 
                     <td class="uncovered" >
                         <pre>         $item-&gt;field = PluginFormcreatorFields::getFieldInstance(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L888" class="number uncovered">888</th>
+                    <th id="L890" class="number uncovered">890</th>
 
                     <td class="uncovered" >
                         <pre>            $input[&#039;fieldtype&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L889" class="number ">889</th>
+                    <th id="L891" class="number ">891</th>
 
                     <td class="" >
                         <pre>            $item
@@ -6924,7 +6940,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L890" class="number ">890</th>
+                    <th id="L892" class="number ">892</th>
 
                     <td class="" >
                         <pre>         );
@@ -6932,14 +6948,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L891" class="number uncovered">891</th>
+                    <th id="L893" class="number uncovered">893</th>
 
                     <td class="uncovered" >
                         <pre>         $item-&gt;update($input);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L892" class="number ">892</th>
+                    <th id="L894" class="number ">894</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -6947,21 +6963,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L893" class="number covered">893</th>
+                    <th id="L895" class="number covered">895</th>
 
                     <td class="covered" >
                         <pre>         unset($input[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L894" class="number covered">894</th>
+                    <th id="L896" class="number covered">896</th>
 
                     <td class="covered" >
                         <pre>         $itemId = $item-&gt;add($input);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L895" class="number ">895</th>
+                    <th id="L897" class="number ">897</th>
 
                     <td class="" >
                         <pre>      }
@@ -6969,28 +6985,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L896" class="number covered">896</th>
+                    <th id="L898" class="number covered">898</th>
 
                     <td class="covered" >
                         <pre>      if ($itemId === false) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L897" class="number uncovered">897</th>
+                    <th id="L899" class="number uncovered">899</th>
 
                     <td class="uncovered" >
                         <pre>         $typeName = strtolower(self::getTypeName());</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L898" class="number uncovered">898</th>
+                    <th id="L900" class="number uncovered">900</th>
 
                     <td class="uncovered" >
                         <pre>         throw new ImportFailureException(sprintf(__(&#039;failed to add or update the %1$s %2$s&#039;, &#039;formceator&#039;), $typeName, $input[&#039;name&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L899" class="number ">899</th>
+                    <th id="L901" class="number ">901</th>
 
                     <td class="" >
                         <pre>      }
@@ -6998,7 +7014,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L900" class="number ">900</th>
+                    <th id="L902" class="number ">902</th>
 
                     <td class="" >
                         <pre>
@@ -7006,7 +7022,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L901" class="number ">901</th>
+                    <th id="L903" class="number ">903</th>
 
                     <td class="" >
                         <pre>      // add the question to the linker
@@ -7014,14 +7030,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L902" class="number covered">902</th>
+                    <th id="L904" class="number covered">904</th>
 
                     <td class="covered" >
                         <pre>      $linker-&gt;addObject($originalId, $item);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L903" class="number ">903</th>
+                    <th id="L905" class="number ">905</th>
 
                     <td class="" >
                         <pre>
@@ -7029,7 +7045,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L904" class="number ">904</th>
+                    <th id="L906" class="number ">906</th>
 
                     <td class="" >
                         <pre>      // Import conditions
@@ -7037,47 +7053,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L905" class="number covered">905</th>
+                    <th id="L907" class="number covered">907</th>
 
                     <td class="covered" >
                         <pre>      if (isset($input[&#039;_conditions&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L906" class="number covered">906</th>
+                    <th id="L908" class="number covered">908</th>
 
                     <td class="covered" >
                         <pre>         foreach ($input[&#039;_conditions&#039;] as $condition) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L907" class="number uncovered">907</th>
+                    <th id="L909" class="number uncovered">909</th>
 
                     <td class="uncovered" >
                         <pre>            PluginFormcreatorCondition::import($linker, $condition, $itemId);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L908" class="number ">908</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L909" class="number ">909</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L910" class="number ">910</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         }
 </pre>
                     </td>
                 </tr>
@@ -7085,26 +7085,42 @@ layout: coverage
                     <th id="L911" class="number ">911</th>
 
                     <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L912" class="number ">912</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L913" class="number ">913</th>
+
+                    <td class="" >
                         <pre>      // Import parameters
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L912" class="number covered">912</th>
+                    <th id="L914" class="number covered">914</th>
 
                     <td class="covered" >
                         <pre>      $field = PluginFormcreatorFields::getFieldInstance(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L913" class="number covered">913</th>
+                    <th id="L915" class="number covered">915</th>
 
                     <td class="covered" >
                         <pre>         $input[&#039;fieldtype&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L914" class="number ">914</th>
+                    <th id="L916" class="number ">916</th>
 
                     <td class="" >
                         <pre>         $item
@@ -7112,7 +7128,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L915" class="number ">915</th>
+                    <th id="L917" class="number ">917</th>
 
                     <td class="" >
                         <pre>      );
@@ -7120,35 +7136,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L916" class="number covered">916</th>
+                    <th id="L918" class="number covered">918</th>
 
                     <td class="covered" >
                         <pre>      if (isset($input[&#039;_parameters&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L917" class="number covered">917</th>
+                    <th id="L919" class="number covered">919</th>
 
                     <td class="covered" >
                         <pre>         $parameters = $field-&gt;getParameters();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L918" class="number covered">918</th>
+                    <th id="L920" class="number covered">920</th>
 
                     <td class="covered" >
                         <pre>         foreach ($parameters as $fieldName =&gt; $parameter) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L919" class="number covered">919</th>
+                    <th id="L921" class="number covered">921</th>
 
                     <td class="covered" >
                         <pre>            $parameter::import($linker, $input[&#039;_parameters&#039;][$input[&#039;fieldtype&#039;]][$fieldName], $itemId);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L920" class="number ">920</th>
+                    <th id="L922" class="number ">922</th>
 
                     <td class="" >
                         <pre>         }
@@ -7156,7 +7172,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L921" class="number ">921</th>
+                    <th id="L923" class="number ">923</th>
 
                     <td class="" >
                         <pre>      }
@@ -7164,7 +7180,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L922" class="number ">922</th>
+                    <th id="L924" class="number ">924</th>
 
                     <td class="" >
                         <pre>
@@ -7172,21 +7188,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L923" class="number covered">923</th>
+                    <th id="L925" class="number covered">925</th>
 
                     <td class="covered" >
                         <pre>      return $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L924" class="number unreach">924</th>
+                    <th id="L926" class="number unreach">926</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L925" class="number ">925</th>
+                    <th id="L927" class="number ">927</th>
 
                     <td class="" >
                         <pre>
@@ -7194,47 +7210,32 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="export">
-                    <th id="L926" class="number ">926</th>
+                    <th id="L928" class="number ">928</th>
 
                     <td class="" id="export">
                         <pre>   public function export($remove_uuid = false) {<span class="label label-success">95%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L927" class="number covered">927</th>
+                    <th id="L929" class="number covered">929</th>
 
                     <td class="covered" >
                         <pre>      if ($this-&gt;isNewItem()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L928" class="number covered">928</th>
+                    <th id="L930" class="number covered">930</th>
 
                     <td class="covered" >
                         <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L929" class="number ">929</th>
+                    <th id="L931" class="number ">931</th>
 
                     <td class="" >
                         <pre>      }
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L930" class="number ">930</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L931" class="number covered">931</th>
-
-                    <td class="covered" >
-                        <pre>      $question = $this-&gt;fields;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -7246,7 +7247,22 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L933" class="number ">933</th>
+                    <th id="L933" class="number covered">933</th>
+
+                    <td class="covered" >
+                        <pre>      $question = $this-&gt;fields;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L934" class="number ">934</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L935" class="number ">935</th>
 
                     <td class="" >
                         <pre>      // remove key and fk
@@ -7254,21 +7270,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L934" class="number covered">934</th>
+                    <th id="L936" class="number covered">936</th>
 
                     <td class="covered" >
                         <pre>      $sectionFk = PluginFormcreatorSection::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L935" class="number covered">935</th>
+                    <th id="L937" class="number covered">937</th>
 
                     <td class="covered" >
                         <pre>      unset($question[$sectionFk]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L936" class="number ">936</th>
+                    <th id="L938" class="number ">938</th>
 
                     <td class="" >
                         <pre>
@@ -7276,7 +7292,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L937" class="number ">937</th>
+                    <th id="L939" class="number ">939</th>
 
                     <td class="" >
                         <pre>      // get question conditions
@@ -7284,42 +7300,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L938" class="number covered">938</th>
+                    <th id="L940" class="number covered">940</th>
 
                     <td class="covered" >
                         <pre>      $question[&#039;_conditions&#039;] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L939" class="number covered">939</th>
+                    <th id="L941" class="number covered">941</th>
 
                     <td class="covered" >
                         <pre>      $condition = new PluginFormcreatorCondition();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L940" class="number covered">940</th>
+                    <th id="L942" class="number covered">942</th>
 
                     <td class="covered" >
                         <pre>      $all_conditions = $condition-&gt;getConditionsFromItem($this);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L941" class="number covered">941</th>
+                    <th id="L943" class="number covered">943</th>
 
                     <td class="covered" >
                         <pre>      foreach ($all_conditions as $condition) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L942" class="number uncovered">942</th>
+                    <th id="L944" class="number uncovered">944</th>
 
                     <td class="uncovered" >
                         <pre>         $question[&#039;_conditions&#039;][] = $condition-&gt;export($remove_uuid);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L943" class="number ">943</th>
+                    <th id="L945" class="number ">945</th>
 
                     <td class="" >
                         <pre>      }
@@ -7327,7 +7343,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L944" class="number ">944</th>
+                    <th id="L946" class="number ">946</th>
 
                     <td class="" >
                         <pre>
@@ -7335,7 +7351,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L945" class="number ">945</th>
+                    <th id="L947" class="number ">947</th>
 
                     <td class="" >
                         <pre>      // get question parameters
@@ -7343,42 +7359,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L946" class="number covered">946</th>
+                    <th id="L948" class="number covered">948</th>
 
                     <td class="covered" >
                         <pre>      $question[&#039;_parameters&#039;] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L947" class="number covered">947</th>
+                    <th id="L949" class="number covered">949</th>
 
                     <td class="covered" >
                         <pre>      $this-&gt;field = PluginFormcreatorFields::getFieldInstance($this-&gt;fields[&#039;fieldtype&#039;], $this);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L948" class="number covered">948</th>
+                    <th id="L950" class="number covered">950</th>
 
                     <td class="covered" >
                         <pre>      $parameters = $this-&gt;field-&gt;getParameters();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L949" class="number covered">949</th>
+                    <th id="L951" class="number covered">951</th>
 
                     <td class="covered" >
                         <pre>      foreach ($parameters as $fieldname =&gt; $parameter) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L950" class="number covered">950</th>
+                    <th id="L952" class="number covered">952</th>
 
                     <td class="covered" >
                         <pre>         $question[&#039;_parameters&#039;][$this-&gt;fields[&#039;fieldtype&#039;]][$fieldname] = $parameter-&gt;export($remove_uuid);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L951" class="number ">951</th>
+                    <th id="L953" class="number ">953</th>
 
                     <td class="" >
                         <pre>      }
@@ -7386,7 +7402,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L952" class="number ">952</th>
+                    <th id="L954" class="number ">954</th>
 
                     <td class="" >
                         <pre>
@@ -7394,7 +7410,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L953" class="number ">953</th>
+                    <th id="L955" class="number ">955</th>
 
                     <td class="" >
                         <pre>      // remove ID or UUID
@@ -7402,46 +7418,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L954" class="number covered">954</th>
+                    <th id="L956" class="number covered">956</th>
 
                     <td class="covered" >
                         <pre>      $idToRemove = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L955" class="number covered">955</th>
+                    <th id="L957" class="number covered">957</th>
 
                     <td class="covered" >
                         <pre>      if ($remove_uuid) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L956" class="number covered">956</th>
+                    <th id="L958" class="number covered">958</th>
 
                     <td class="covered" >
                         <pre>         $idToRemove = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L957" class="number ">957</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L958" class="number covered">958</th>
-
-                    <td class="covered" >
-                        <pre>      unset($question[$idToRemove]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L959" class="number ">959</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -7449,18 +7450,11 @@ layout: coverage
                     <th id="L960" class="number covered">960</th>
 
                     <td class="covered" >
-                        <pre>      return $question;</pre>
+                        <pre>      unset($question[$idToRemove]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L961" class="number unreach">961</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L962" class="number ">962</th>
+                    <th id="L961" class="number ">961</th>
 
                     <td class="" >
                         <pre>
@@ -7468,18 +7462,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L963" class="number ">963</th>
+                    <th id="L962" class="number covered">962</th>
 
-                    <td class="" >
-                        <pre>   /**
-</pre>
+                    <td class="covered" >
+                        <pre>      return $question;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L963" class="number unreach">963</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L964" class="number ">964</th>
 
                     <td class="" >
-                        <pre>    * return array of question objects belonging to a form
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -7487,7 +7487,7 @@ layout: coverage
                     <th id="L965" class="number ">965</th>
 
                     <td class="" >
-                        <pre>    * @param integer $formId
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -7495,7 +7495,7 @@ layout: coverage
                     <th id="L966" class="number ">966</th>
 
                     <td class="" >
-                        <pre>    * @param array $crit array for the WHERE clause
+                        <pre>    * return array of question objects belonging to a form
 </pre>
                     </td>
                 </tr>
@@ -7503,7 +7503,7 @@ layout: coverage
                     <th id="L967" class="number ">967</th>
 
                     <td class="" >
-                        <pre>    * @return PluginFormcreatorQuestion[]
+                        <pre>    * @param integer $formId
 </pre>
                     </td>
                 </tr>
@@ -7511,26 +7511,42 @@ layout: coverage
                     <th id="L968" class="number ">968</th>
 
                     <td class="" >
+                        <pre>    * @param array $crit array for the WHERE clause
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L969" class="number ">969</th>
+
+                    <td class="" >
+                        <pre>    * @return PluginFormcreatorQuestion[]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L970" class="number ">970</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getQuestionsFromForm">
-                    <th id="L969" class="number ">969</th>
+                    <th id="L971" class="number ">971</th>
 
                     <td class="" id="getQuestionsFromForm">
                         <pre>   public function getQuestionsFromForm($formId, $crit = []) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L970" class="number uncovered">970</th>
+                    <th id="L972" class="number uncovered">972</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L971" class="number ">971</th>
+                    <th id="L973" class="number ">973</th>
 
                     <td class="" >
                         <pre>
@@ -7538,56 +7554,56 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L972" class="number uncovered">972</th>
+                    <th id="L974" class="number uncovered">974</th>
 
                     <td class="uncovered" >
                         <pre>      $table_question = PluginFormcreatorQuestion::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L973" class="number uncovered">973</th>
+                    <th id="L975" class="number uncovered">975</th>
 
                     <td class="uncovered" >
                         <pre>      $table_section  = PluginFormcreatorSection::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L974" class="number uncovered">974</th>
+                    <th id="L976" class="number uncovered">976</th>
 
                     <td class="uncovered" >
                         <pre>      $sectionFk = PluginFormcreatorSection::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L975" class="number uncovered">975</th>
+                    <th id="L977" class="number uncovered">977</th>
 
                     <td class="uncovered" >
                         <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L976" class="number uncovered">976</th>
+                    <th id="L978" class="number uncovered">978</th>
 
                     <td class="uncovered" >
                         <pre>      $result = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L977" class="number uncovered">977</th>
+                    <th id="L979" class="number uncovered">979</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;SELECT&#039; =&gt; &quot;$table_question.*&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L978" class="number uncovered">978</th>
+                    <th id="L980" class="number uncovered">980</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;FROM&#039; =&gt; $table_question,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L979" class="number ">979</th>
+                    <th id="L981" class="number ">981</th>
 
                     <td class="" >
                         <pre>         &#039;LEFT JOIN&#039; =&gt; [
@@ -7595,7 +7611,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L980" class="number ">980</th>
+                    <th id="L982" class="number ">982</th>
 
                     <td class="" >
                         <pre>            $table_section =&gt; [
@@ -7603,7 +7619,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L981" class="number ">981</th>
+                    <th id="L983" class="number ">983</th>
 
                     <td class="" >
                         <pre>               &#039;FKEY&#039; =&gt; [
@@ -7611,21 +7627,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L982" class="number uncovered">982</th>
+                    <th id="L984" class="number uncovered">984</th>
 
                     <td class="uncovered" >
                         <pre>                  $table_question =&gt; $sectionFk,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L983" class="number uncovered">983</th>
+                    <th id="L985" class="number uncovered">985</th>
 
                     <td class="uncovered" >
                         <pre>                  $table_section =&gt; &#039;id&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L984" class="number ">984</th>
+                    <th id="L986" class="number ">986</th>
 
                     <td class="" >
                         <pre>               ],
@@ -7633,7 +7649,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L985" class="number ">985</th>
+                    <th id="L987" class="number ">987</th>
 
                     <td class="" >
                         <pre>            ],
@@ -7641,7 +7657,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L986" class="number ">986</th>
+                    <th id="L988" class="number ">988</th>
 
                     <td class="" >
                         <pre>         ],
@@ -7649,7 +7665,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L987" class="number ">987</th>
+                    <th id="L989" class="number ">989</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039; =&gt; [
@@ -7657,14 +7673,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L988" class="number uncovered">988</th>
+                    <th id="L990" class="number uncovered">990</th>
 
                     <td class="uncovered" >
                         <pre>            &#039;AND&#039; =&gt; [$formFk =&gt; $formId] + $crit,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L989" class="number ">989</th>
+                    <th id="L991" class="number ">991</th>
 
                     <td class="" >
                         <pre>         ],
@@ -7672,7 +7688,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L990" class="number ">990</th>
+                    <th id="L992" class="number ">992</th>
 
                     <td class="" >
                         <pre>         &#039;ORDER&#039; =&gt; [
@@ -7680,28 +7696,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L991" class="number uncovered">991</th>
+                    <th id="L993" class="number uncovered">993</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$table_section.order&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L992" class="number uncovered">992</th>
+                    <th id="L994" class="number uncovered">994</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$table_question.row&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L993" class="number uncovered">993</th>
+                    <th id="L995" class="number uncovered">995</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$table_question.col&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L994" class="number ">994</th>
+                    <th id="L996" class="number ">996</th>
 
                     <td class="" >
                         <pre>         ]
@@ -7709,7 +7725,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L995" class="number ">995</th>
+                    <th id="L997" class="number ">997</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -7717,7 +7733,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L996" class="number ">996</th>
+                    <th id="L998" class="number ">998</th>
 
                     <td class="" >
                         <pre>
@@ -7725,42 +7741,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L997" class="number uncovered">997</th>
+                    <th id="L999" class="number uncovered">999</th>
 
                     <td class="uncovered" >
                         <pre>      $questions = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L998" class="number uncovered">998</th>
+                    <th id="L1000" class="number uncovered">1000</th>
 
                     <td class="uncovered" >
                         <pre>      foreach ($result as $row) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L999" class="number uncovered">999</th>
+                    <th id="L1001" class="number uncovered">1001</th>
 
                     <td class="uncovered" >
                         <pre>         $question = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1000" class="number uncovered">1000</th>
+                    <th id="L1002" class="number uncovered">1002</th>
 
                     <td class="uncovered" >
                         <pre>         $question-&gt;getFromDB($row[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1001" class="number uncovered">1001</th>
+                    <th id="L1003" class="number uncovered">1003</th>
 
                     <td class="uncovered" >
                         <pre>         $questions[$row[&#039;id&#039;]] = $question;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1002" class="number ">1002</th>
+                    <th id="L1004" class="number ">1004</th>
 
                     <td class="" >
                         <pre>      }
@@ -7768,7 +7784,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1003" class="number ">1003</th>
+                    <th id="L1005" class="number ">1005</th>
 
                     <td class="" >
                         <pre>
@@ -7776,40 +7792,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1004" class="number uncovered">1004</th>
+                    <th id="L1006" class="number uncovered">1006</th>
 
                     <td class="uncovered" >
                         <pre>      return $questions;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1005" class="number unreach">1005</th>
+                    <th id="L1007" class="number unreach">1007</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1006" class="number ">1006</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1007" class="number ">1007</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L1008" class="number ">1008</th>
 
                     <td class="" >
-                        <pre>    * Gets questions belonging to a section
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -7817,7 +7817,7 @@ layout: coverage
                     <th id="L1009" class="number ">1009</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -7825,7 +7825,7 @@ layout: coverage
                     <th id="L1010" class="number ">1010</th>
 
                     <td class="" >
-                        <pre>    * @param integer $sectionId
+                        <pre>    * Gets questions belonging to a section
 </pre>
                     </td>
                 </tr>
@@ -7841,7 +7841,7 @@ layout: coverage
                     <th id="L1012" class="number ">1012</th>
 
                     <td class="" >
-                        <pre>    * @return PluginFormcreatorQuestion[]
+                        <pre>    * @param integer $sectionId
 </pre>
                     </td>
                 </tr>
@@ -7849,26 +7849,42 @@ layout: coverage
                     <th id="L1013" class="number ">1013</th>
 
                     <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1014" class="number ">1014</th>
+
+                    <td class="" >
+                        <pre>    * @return PluginFormcreatorQuestion[]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1015" class="number ">1015</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getQuestionsFromSection">
-                    <th id="L1014" class="number ">1014</th>
+                    <th id="L1016" class="number ">1016</th>
 
                     <td class="" id="getQuestionsFromSection">
                         <pre>   public function getQuestionsFromSection($sectionId) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1015" class="number uncovered">1015</th>
+                    <th id="L1017" class="number uncovered">1017</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1016" class="number ">1016</th>
+                    <th id="L1018" class="number ">1018</th>
 
                     <td class="" >
                         <pre>
@@ -7876,35 +7892,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1017" class="number uncovered">1017</th>
+                    <th id="L1019" class="number uncovered">1019</th>
 
                     <td class="uncovered" >
                         <pre>      $questions = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1018" class="number uncovered">1018</th>
+                    <th id="L1020" class="number uncovered">1020</th>
 
                     <td class="uncovered" >
                         <pre>      $rows = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1019" class="number uncovered">1019</th>
+                    <th id="L1021" class="number uncovered">1021</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1020" class="number uncovered">1020</th>
+                    <th id="L1022" class="number uncovered">1022</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;FROM&#039;   =&gt; self::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1021" class="number ">1021</th>
+                    <th id="L1023" class="number ">1023</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039;  =&gt; [
@@ -7912,14 +7928,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1022" class="number uncovered">1022</th>
+                    <th id="L1024" class="number uncovered">1024</th>
 
                     <td class="uncovered" >
                         <pre>            &#039;plugin_formcreator_sections_id&#039; =&gt; $sectionId</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1023" class="number ">1023</th>
+                    <th id="L1025" class="number ">1025</th>
 
                     <td class="" >
                         <pre>         ],
@@ -7927,7 +7943,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1024" class="number ">1024</th>
+                    <th id="L1026" class="number ">1026</th>
 
                     <td class="" >
                         <pre>         &#039;ORDER&#039;  =&gt; [&#039;row ASC&#039;, &#039;col ASC&#039;]
@@ -7935,7 +7951,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1025" class="number ">1025</th>
+                    <th id="L1027" class="number ">1027</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -7943,35 +7959,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1026" class="number uncovered">1026</th>
+                    <th id="L1028" class="number uncovered">1028</th>
 
                     <td class="uncovered" >
                         <pre>      foreach ($rows as $row) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1027" class="number uncovered">1027</th>
+                    <th id="L1029" class="number uncovered">1029</th>
 
                     <td class="uncovered" >
                         <pre>            $question = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1028" class="number uncovered">1028</th>
+                    <th id="L1030" class="number uncovered">1030</th>
 
                     <td class="uncovered" >
                         <pre>            $question-&gt;getFromDB($row[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1029" class="number uncovered">1029</th>
+                    <th id="L1031" class="number uncovered">1031</th>
 
                     <td class="uncovered" >
                         <pre>            $questions[$row[&#039;id&#039;]] = $question;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1030" class="number ">1030</th>
+                    <th id="L1032" class="number ">1032</th>
 
                     <td class="" >
                         <pre>      }
@@ -7979,7 +7995,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1031" class="number ">1031</th>
+                    <th id="L1033" class="number ">1033</th>
 
                     <td class="" >
                         <pre>
@@ -7987,40 +8003,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1032" class="number uncovered">1032</th>
+                    <th id="L1034" class="number uncovered">1034</th>
 
                     <td class="uncovered" >
                         <pre>      return $questions;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1033" class="number unreach">1033</th>
+                    <th id="L1035" class="number unreach">1035</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1034" class="number ">1034</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1035" class="number ">1035</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L1036" class="number ">1036</th>
 
                     <td class="" >
-                        <pre>    * get questions of a form grouped by section name and filtered by criteria
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -8028,7 +8028,7 @@ layout: coverage
                     <th id="L1037" class="number ">1037</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -8036,7 +8036,7 @@ layout: coverage
                     <th id="L1038" class="number ">1038</th>
 
                     <td class="" >
-                        <pre>    * @param integer $formId
+                        <pre>    * get questions of a form grouped by section name and filtered by criteria
 </pre>
                     </td>
                 </tr>
@@ -8044,7 +8044,7 @@ layout: coverage
                     <th id="L1039" class="number ">1039</th>
 
                     <td class="" >
-                        <pre>    * @param array $crit additional slection criterias criterias
+                        <pre>    *
 </pre>
                     </td>
                 </tr>
@@ -8052,7 +8052,7 @@ layout: coverage
                     <th id="L1040" class="number ">1040</th>
 
                     <td class="" >
-                        <pre>    * @return array 1st level is the section name, 2nd level is id and name of the question
+                        <pre>    * @param integer $formId
 </pre>
                     </td>
                 </tr>
@@ -8060,26 +8060,42 @@ layout: coverage
                     <th id="L1041" class="number ">1041</th>
 
                     <td class="" >
+                        <pre>    * @param array $crit additional slection criterias criterias
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1042" class="number ">1042</th>
+
+                    <td class="" >
+                        <pre>    * @return array 1st level is the section name, 2nd level is id and name of the question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1043" class="number ">1043</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getQuestionsFromFormBySection">
-                    <th id="L1042" class="number ">1042</th>
+                    <th id="L1044" class="number ">1044</th>
 
                     <td class="" id="getQuestionsFromFormBySection">
                         <pre>   public function getQuestionsFromFormBySection($formId, $crit = []) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1043" class="number uncovered">1043</th>
+                    <th id="L1045" class="number uncovered">1045</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1044" class="number ">1044</th>
+                    <th id="L1046" class="number ">1046</th>
 
                     <td class="" >
                         <pre>
@@ -8087,42 +8103,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1045" class="number uncovered">1045</th>
+                    <th id="L1047" class="number uncovered">1047</th>
 
                     <td class="uncovered" >
                         <pre>      $questionTable = PluginFormcreatorQuestion::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1046" class="number uncovered">1046</th>
+                    <th id="L1048" class="number uncovered">1048</th>
 
                     <td class="uncovered" >
                         <pre>      $sectionTable  = PluginFormcreatorSection::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1047" class="number uncovered">1047</th>
+                    <th id="L1049" class="number uncovered">1049</th>
 
                     <td class="uncovered" >
                         <pre>      $sectionFk     = PluginFormcreatorSection::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1048" class="number uncovered">1048</th>
+                    <th id="L1050" class="number uncovered">1050</th>
 
                     <td class="uncovered" >
                         <pre>      $formFk        = PluginFormcreatorForm::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1049" class="number uncovered">1049</th>
+                    <th id="L1051" class="number uncovered">1051</th>
 
                     <td class="uncovered" >
                         <pre>      $result = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1050" class="number ">1050</th>
+                    <th id="L1052" class="number ">1052</th>
 
                     <td class="" >
                         <pre>         &#039;SELECT&#039; =&gt; [
@@ -8130,14 +8146,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1051" class="number uncovered">1051</th>
+                    <th id="L1053" class="number uncovered">1053</th>
 
                     <td class="uncovered" >
                         <pre>            $questionTable =&gt; [&#039;id as qid&#039;, &#039;name as qname&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1052" class="number ">1052</th>
+                    <th id="L1054" class="number ">1054</th>
 
                     <td class="" >
                         <pre>            $sectionTable =&gt; [&#039;name as sname&#039;],
@@ -8145,7 +8161,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1053" class="number ">1053</th>
+                    <th id="L1055" class="number ">1055</th>
 
                     <td class="" >
                         <pre>         ],
@@ -8153,14 +8169,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1054" class="number uncovered">1054</th>
+                    <th id="L1056" class="number uncovered">1056</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;FROM&#039; =&gt; $questionTable,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1055" class="number ">1055</th>
+                    <th id="L1057" class="number ">1057</th>
 
                     <td class="" >
                         <pre>         &#039;LEFT JOIN&#039; =&gt; [
@@ -8168,7 +8184,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1056" class="number ">1056</th>
+                    <th id="L1058" class="number ">1058</th>
 
                     <td class="" >
                         <pre>            $sectionTable =&gt; [
@@ -8176,7 +8192,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1057" class="number ">1057</th>
+                    <th id="L1059" class="number ">1059</th>
 
                     <td class="" >
                         <pre>               &#039;FKEY&#039; =&gt; [
@@ -8184,21 +8200,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1058" class="number uncovered">1058</th>
+                    <th id="L1060" class="number uncovered">1060</th>
 
                     <td class="uncovered" >
                         <pre>                  $questionTable =&gt; $sectionFk,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1059" class="number uncovered">1059</th>
+                    <th id="L1061" class="number uncovered">1061</th>
 
                     <td class="uncovered" >
                         <pre>                  $sectionTable =&gt; &#039;id&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1060" class="number ">1060</th>
+                    <th id="L1062" class="number ">1062</th>
 
                     <td class="" >
                         <pre>               ],
@@ -8206,7 +8222,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1061" class="number ">1061</th>
+                    <th id="L1063" class="number ">1063</th>
 
                     <td class="" >
                         <pre>            ],
@@ -8214,7 +8230,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1062" class="number ">1062</th>
+                    <th id="L1064" class="number ">1064</th>
 
                     <td class="" >
                         <pre>         ],
@@ -8222,7 +8238,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1063" class="number ">1063</th>
+                    <th id="L1065" class="number ">1065</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039; =&gt; [
@@ -8230,14 +8246,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1064" class="number uncovered">1064</th>
+                    <th id="L1066" class="number uncovered">1066</th>
 
                     <td class="uncovered" >
                         <pre>            &#039;AND&#039; =&gt; [$formFk =&gt; $formId] + $crit,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1065" class="number ">1065</th>
+                    <th id="L1067" class="number ">1067</th>
 
                     <td class="" >
                         <pre>         ],
@@ -8245,7 +8261,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1066" class="number ">1066</th>
+                    <th id="L1068" class="number ">1068</th>
 
                     <td class="" >
                         <pre>         &#039;ORDER&#039; =&gt; [
@@ -8253,28 +8269,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1067" class="number uncovered">1067</th>
+                    <th id="L1069" class="number uncovered">1069</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$sectionTable.order&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1068" class="number uncovered">1068</th>
+                    <th id="L1070" class="number uncovered">1070</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$questionTable.row&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1069" class="number uncovered">1069</th>
+                    <th id="L1071" class="number uncovered">1071</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;$questionTable.col&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1070" class="number ">1070</th>
+                    <th id="L1072" class="number ">1072</th>
 
                     <td class="" >
                         <pre>         ]
@@ -8282,7 +8298,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1071" class="number ">1071</th>
+                    <th id="L1073" class="number ">1073</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -8290,7 +8306,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1072" class="number ">1072</th>
+                    <th id="L1074" class="number ">1074</th>
 
                     <td class="" >
                         <pre>
@@ -8298,35 +8314,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1073" class="number uncovered">1073</th>
+                    <th id="L1075" class="number uncovered">1075</th>
 
                     <td class="uncovered" >
                         <pre>      $items = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1074" class="number uncovered">1074</th>
+                    <th id="L1076" class="number uncovered">1076</th>
 
                     <td class="uncovered" >
                         <pre>      foreach ($result as $question) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1075" class="number uncovered">1075</th>
+                    <th id="L1077" class="number uncovered">1077</th>
 
                     <td class="uncovered" >
                         <pre>         if (!isset($items[$question[&#039;sname&#039;]])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1076" class="number uncovered">1076</th>
+                    <th id="L1078" class="number uncovered">1078</th>
 
                     <td class="uncovered" >
                         <pre>            $items[$question[&#039;sname&#039;]] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1077" class="number ">1077</th>
+                    <th id="L1079" class="number ">1079</th>
 
                     <td class="" >
                         <pre>         }
@@ -8334,14 +8350,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1078" class="number uncovered">1078</th>
+                    <th id="L1080" class="number uncovered">1080</th>
 
                     <td class="uncovered" >
                         <pre>         $items[$question[&#039;sname&#039;]][$question[&#039;qid&#039;]] = $question[&#039;qname&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1079" class="number ">1079</th>
+                    <th id="L1081" class="number ">1081</th>
 
                     <td class="" >
                         <pre>      }
@@ -8349,7 +8365,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1080" class="number ">1080</th>
+                    <th id="L1082" class="number ">1082</th>
 
                     <td class="" >
                         <pre>
@@ -8357,21 +8373,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1081" class="number uncovered">1081</th>
+                    <th id="L1083" class="number uncovered">1083</th>
 
                     <td class="uncovered" >
                         <pre>      return $items;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1082" class="number unreach">1082</th>
+                    <th id="L1084" class="number unreach">1084</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1083" class="number ">1083</th>
+                    <th id="L1085" class="number ">1085</th>
 
                     <td class="" >
                         <pre>
@@ -8379,61 +8395,45 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="dropdownForForm">
-                    <th id="L1084" class="number ">1084</th>
+                    <th id="L1086" class="number ">1086</th>
 
                     <td class="" id="dropdownForForm">
                         <pre>   public static function dropdownForForm($formId, $crit, $name, $value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1085" class="number uncovered">1085</th>
+                    <th id="L1087" class="number uncovered">1087</th>
 
                     <td class="uncovered" >
                         <pre>      $question = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1086" class="number uncovered">1086</th>
+                    <th id="L1088" class="number uncovered">1088</th>
 
                     <td class="uncovered" >
                         <pre>      $items = $question-&gt;getQuestionsFromFormBySection($formId, $crit);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1087" class="number uncovered">1087</th>
+                    <th id="L1089" class="number uncovered">1089</th>
 
                     <td class="uncovered" >
                         <pre>      Dropdown::showFromArray($name, $items, []);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1088" class="number uncovered">1088</th>
+                    <th id="L1090" class="number uncovered">1090</th>
 
                     <td class="uncovered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1089" class="number ">1089</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1090" class="number ">1090</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L1091" class="number ">1091</th>
 
                     <td class="" >
-                        <pre>    * Get linked data (conditions, regexes or ranges) for a question
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -8441,7 +8441,7 @@ layout: coverage
                     <th id="L1092" class="number ">1092</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -8449,7 +8449,7 @@ layout: coverage
                     <th id="L1093" class="number ">1093</th>
 
                     <td class="" >
-                        <pre>    * @param string    $table   target table containing the needed data (
+                        <pre>    * Get linked data (conditions, regexes or ranges) for a question
 </pre>
                     </td>
                 </tr>
@@ -8457,7 +8457,7 @@ layout: coverage
                     <th id="L1094" class="number ">1094</th>
 
                     <td class="" >
-                        <pre>    *                           condition, range or regex)
+                        <pre>    *
 </pre>
                     </td>
                 </tr>
@@ -8465,7 +8465,7 @@ layout: coverage
                     <th id="L1095" class="number ">1095</th>
 
                     <td class="" >
-                        <pre>    * @param int|array $id      a single id or an array of ids
+                        <pre>    * @param string    $table   target table containing the needed data (
 </pre>
                     </td>
                 </tr>
@@ -8473,7 +8473,7 @@ layout: coverage
                     <th id="L1096" class="number ">1096</th>
 
                     <td class="" >
-                        <pre>    * @return array
+                        <pre>    *                           condition, range or regex)
 </pre>
                     </td>
                 </tr>
@@ -8481,225 +8481,12 @@ layout: coverage
                     <th id="L1097" class="number ">1097</th>
 
                     <td class="" >
-                        <pre>    */
+                        <pre>    * @param int|array $id      a single id or an array of ids
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getQuestionDataById">
+                            <tr class="line" id="">
                     <th id="L1098" class="number ">1098</th>
-
-                    <td class="" id="getQuestionDataById">
-                        <pre>   public static function getQuestionDataById($table, $id) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1099" class="number uncovered">1099</th>
-
-                    <td class="uncovered" >
-                        <pre>      global $DB;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1100" class="number ">1100</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1101" class="number ">1101</th>
-
-                    <td class="" >
-                        <pre>      $validTargets = [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1102" class="number uncovered">1102</th>
-
-                    <td class="uncovered" >
-                        <pre>         \PluginFormcreatorCondition::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1103" class="number uncovered">1103</th>
-
-                    <td class="uncovered" >
-                        <pre>         \PluginFormcreatorQuestionRegex::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1104" class="number uncovered">1104</th>
-
-                    <td class="uncovered" >
-                        <pre>         \PluginFormcreatorQuestionRange::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1105" class="number ">1105</th>
-
-                    <td class="" >
-                        <pre>      ];
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1106" class="number ">1106</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1107" class="number uncovered">1107</th>
-
-                    <td class="uncovered" >
-                        <pre>      if (array_search($table, $validTargets) === false) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1108" class="number uncovered">1108</th>
-
-                    <td class="uncovered" >
-                        <pre>         throw new \InvalidArgumentException(&quot;Invalid target (&#039;$table&#039;)&quot;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1109" class="number ">1109</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1110" class="number ">1110</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1111" class="number uncovered">1111</th>
-
-                    <td class="uncovered" >
-                        <pre>      return iterator_to_array($DB-&gt;request([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1112" class="number uncovered">1112</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;FROM&#039; =&gt; $table,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1113" class="number ">1113</th>
-
-                    <td class="" >
-                        <pre>         &#039;WHERE&#039; =&gt; [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1114" class="number uncovered">1114</th>
-
-                    <td class="uncovered" >
-                        <pre>            &quot;plugin_formcreator_questions_id&quot; =&gt; $id</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1115" class="number ">1115</th>
-
-                    <td class="" >
-                        <pre>         ]
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1116" class="number ">1116</th>
-
-                    <td class="" >
-                        <pre>      ]));
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1117" class="number unreach">1117</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1118" class="number ">1118</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1119" class="number ">1119</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1120" class="number ">1120</th>
-
-                    <td class="" >
-                        <pre>    * Get either:
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1121" class="number ">1121</th>
-
-                    <td class="" >
-                        <pre>    *  - questions, conditions, regexes and range of target parent sections
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1122" class="number ">1122</th>
-
-                    <td class="" >
-                        <pre>    *  - conditions, regexes and range of target question
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1123" class="number ">1123</th>
-
-                    <td class="" >
-                        <pre>    *
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1124" class="number ">1124</th>
-
-                    <td class="" >
-                        <pre>    * @param int $parents target parent sections
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1125" class="number ">1125</th>
-
-                    <td class="" >
-                        <pre>    * @param int $id target question
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1126" class="number ">1126</th>
 
                     <td class="" >
                         <pre>    * @return array
@@ -8707,29 +8494,29 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1127" class="number ">1127</th>
+                    <th id="L1099" class="number ">1099</th>
 
                     <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getFullData">
-                    <th id="L1128" class="number ">1128</th>
+                            <tr class="line" id="getQuestionDataById">
+                    <th id="L1100" class="number ">1100</th>
 
-                    <td class="" id="getFullData">
-                        <pre>   public static function getFullData($parents, $id = null) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="getQuestionDataById">
+                        <pre>   public static function getQuestionDataById($table, $id) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1129" class="number uncovered">1129</th>
+                    <th id="L1101" class="number uncovered">1101</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1130" class="number ">1130</th>
+                    <th id="L1102" class="number ">1102</th>
 
                     <td class="" >
                         <pre>
@@ -8737,10 +8524,224 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L1103" class="number ">1103</th>
+
+                    <td class="" >
+                        <pre>      $validTargets = [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1104" class="number uncovered">1104</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorCondition::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1105" class="number uncovered">1105</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRegex::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1106" class="number uncovered">1106</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRange::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1107" class="number ">1107</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1108" class="number ">1108</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1109" class="number uncovered">1109</th>
+
+                    <td class="uncovered" >
+                        <pre>      if (array_search($table, $validTargets) === false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1110" class="number uncovered">1110</th>
+
+                    <td class="uncovered" >
+                        <pre>         throw new \InvalidArgumentException(&quot;Invalid target (&#039;$table&#039;)&quot;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1111" class="number ">1111</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1112" class="number ">1112</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1113" class="number uncovered">1113</th>
+
+                    <td class="uncovered" >
+                        <pre>      return iterator_to_array($DB-&gt;request([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1114" class="number uncovered">1114</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;FROM&#039; =&gt; $table,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1115" class="number ">1115</th>
+
+                    <td class="" >
+                        <pre>         &#039;WHERE&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1116" class="number uncovered">1116</th>
+
+                    <td class="uncovered" >
+                        <pre>            &quot;plugin_formcreator_questions_id&quot; =&gt; $id</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1117" class="number ">1117</th>
+
+                    <td class="" >
+                        <pre>         ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1118" class="number ">1118</th>
+
+                    <td class="" >
+                        <pre>      ]));
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1119" class="number unreach">1119</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1120" class="number ">1120</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1121" class="number ">1121</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1122" class="number ">1122</th>
+
+                    <td class="" >
+                        <pre>    * Get either:
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1123" class="number ">1123</th>
+
+                    <td class="" >
+                        <pre>    *  - questions, conditions, regexes and range of target parent sections
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1124" class="number ">1124</th>
+
+                    <td class="" >
+                        <pre>    *  - conditions, regexes and range of target question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1125" class="number ">1125</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1126" class="number ">1126</th>
+
+                    <td class="" >
+                        <pre>    * @param int $parents target parent sections
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1127" class="number ">1127</th>
+
+                    <td class="" >
+                        <pre>    * @param int $id target question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1128" class="number ">1128</th>
+
+                    <td class="" >
+                        <pre>    * @return array
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1129" class="number ">1129</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getFullData">
+                    <th id="L1130" class="number ">1130</th>
+
+                    <td class="" id="getFullData">
+                        <pre>   public static function getFullData($parents, $id = null) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L1131" class="number uncovered">1131</th>
 
                     <td class="uncovered" >
-                        <pre>      $data = [];</pre>
+                        <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -8755,14 +8756,14 @@ layout: coverage
                     <th id="L1133" class="number uncovered">1133</th>
 
                     <td class="uncovered" >
-                        <pre>      if ($parents) {</pre>
+                        <pre>      $data = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1134" class="number ">1134</th>
 
                     <td class="" >
-                        <pre>         // Load questions
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -8770,18 +8771,33 @@ layout: coverage
                     <th id="L1135" class="number uncovered">1135</th>
 
                     <td class="uncovered" >
+                        <pre>      if ($parents) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1136" class="number ">1136</th>
+
+                    <td class="" >
+                        <pre>         // Load questions
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1137" class="number uncovered">1137</th>
+
+                    <td class="uncovered" >
                         <pre>         $data[&#039;_questions&#039;] = iterator_to_array($DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1136" class="number uncovered">1136</th>
+                    <th id="L1138" class="number uncovered">1138</th>
 
                     <td class="uncovered" >
                         <pre>            &#039;FROM&#039; =&gt; \PluginFormcreatorQuestion::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1137" class="number ">1137</th>
+                    <th id="L1139" class="number ">1139</th>
 
                     <td class="" >
                         <pre>            &#039;WHERE&#039; =&gt; [
@@ -8789,14 +8805,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1138" class="number uncovered">1138</th>
+                    <th id="L1140" class="number uncovered">1140</th>
 
                     <td class="uncovered" >
                         <pre>               &quot;plugin_formcreator_sections_id&quot; =&gt; $parents</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1139" class="number ">1139</th>
+                    <th id="L1141" class="number ">1141</th>
 
                     <td class="" >
                         <pre>            ]
@@ -8804,7 +8820,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1140" class="number ">1140</th>
+                    <th id="L1142" class="number ">1142</th>
 
                     <td class="" >
                         <pre>         ]));
@@ -8812,36 +8828,36 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1141" class="number ">1141</th>
+                    <th id="L1143" class="number ">1143</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1142" class="number uncovered">1142</th>
-
-                    <td class="uncovered" >
-                        <pre>         $questionIds = [];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1143" class="number uncovered">1143</th>
-
-                    <td class="uncovered" >
-                        <pre>         foreach ($data[&#039;_questions&#039;] as $question) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1144" class="number uncovered">1144</th>
 
                     <td class="uncovered" >
+                        <pre>         $questionIds = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1145" class="number uncovered">1145</th>
+
+                    <td class="uncovered" >
+                        <pre>         foreach ($data[&#039;_questions&#039;] as $question) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1146" class="number uncovered">1146</th>
+
+                    <td class="uncovered" >
                         <pre>            $questionIds[] = $question[&#039;id&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1145" class="number ">1145</th>
+                    <th id="L1147" class="number ">1147</th>
 
                     <td class="" >
                         <pre>         }
@@ -8849,7 +8865,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1146" class="number ">1146</th>
+                    <th id="L1148" class="number ">1148</th>
 
                     <td class="" >
                         <pre>
@@ -8857,21 +8873,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1147" class="number uncovered">1147</th>
+                    <th id="L1149" class="number uncovered">1149</th>
 
                     <td class="uncovered" >
                         <pre>         if (!count($questionIds)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1148" class="number uncovered">1148</th>
+                    <th id="L1150" class="number uncovered">1150</th>
 
                     <td class="uncovered" >
                         <pre>            $questionIds[] = -1;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1149" class="number ">1149</th>
+                    <th id="L1151" class="number ">1151</th>
 
                     <td class="" >
                         <pre>         }
@@ -8879,7 +8895,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1150" class="number ">1150</th>
+                    <th id="L1152" class="number ">1152</th>
 
                     <td class="" >
                         <pre>
@@ -8887,14 +8903,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1151" class="number uncovered">1151</th>
+                    <th id="L1153" class="number uncovered">1153</th>
 
                     <td class="uncovered" >
                         <pre>         $id = $questionIds;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1152" class="number ">1152</th>
+                    <th id="L1154" class="number ">1154</th>
 
                     <td class="" >
                         <pre>      }
@@ -8902,7 +8918,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1153" class="number ">1153</th>
+                    <th id="L1155" class="number ">1155</th>
 
                     <td class="" >
                         <pre>
@@ -8910,28 +8926,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1154" class="number uncovered">1154</th>
+                    <th id="L1156" class="number uncovered">1156</th>
 
                     <td class="uncovered" >
                         <pre>      if ($id == null) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1155" class="number uncovered">1155</th>
+                    <th id="L1157" class="number uncovered">1157</th>
 
                     <td class="uncovered" >
                         <pre>         throw new \InvalidArgumentException(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1156" class="number uncovered">1156</th>
+                    <th id="L1158" class="number uncovered">1158</th>
 
                     <td class="uncovered" >
                         <pre>            &quot;Parameter &#039;id&#039; can&#039;t be null if parameter &#039;parents&#039; is not specified&quot;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1157" class="number ">1157</th>
+                    <th id="L1159" class="number ">1159</th>
 
                     <td class="" >
                         <pre>         );
@@ -8939,7 +8955,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1158" class="number ">1158</th>
+                    <th id="L1160" class="number ">1160</th>
 
                     <td class="" >
                         <pre>      }
@@ -8947,7 +8963,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1159" class="number ">1159</th>
+                    <th id="L1161" class="number ">1161</th>
 
                     <td class="" >
                         <pre>
@@ -8955,7 +8971,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1160" class="number ">1160</th>
+                    <th id="L1162" class="number ">1162</th>
 
                     <td class="" >
                         <pre>      // Load conditions, regexes and ranges
@@ -8963,86 +8979,57 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1161" class="number uncovered">1161</th>
+                    <th id="L1163" class="number uncovered">1163</th>
 
                     <td class="uncovered" >
                         <pre>      $data[&#039;_conditions&#039;] = self::getQuestionDataById(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1162" class="number uncovered">1162</th>
+                    <th id="L1164" class="number uncovered">1164</th>
 
                     <td class="uncovered" >
                         <pre>         \PluginFormcreatorCondition::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1163" class="number uncovered">1163</th>
+                    <th id="L1165" class="number uncovered">1165</th>
 
                     <td class="uncovered" >
                         <pre>         $id</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1164" class="number ">1164</th>
+                    <th id="L1166" class="number ">1166</th>
 
                     <td class="" >
                         <pre>      );
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1165" class="number uncovered">1165</th>
-
-                    <td class="uncovered" >
-                        <pre>      $data[&#039;_regexes&#039;] = self::getQuestionDataById(</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1166" class="number uncovered">1166</th>
-
-                    <td class="uncovered" >
-                        <pre>         \PluginFormcreatorQuestionRegex::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1167" class="number uncovered">1167</th>
 
                     <td class="uncovered" >
-                        <pre>         $id</pre>
+                        <pre>      $data[&#039;_regexes&#039;] = self::getQuestionDataById(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1168" class="number ">1168</th>
+                    <th id="L1168" class="number uncovered">1168</th>
 
-                    <td class="" >
-                        <pre>      );
-</pre>
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRegex::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1169" class="number uncovered">1169</th>
 
                     <td class="uncovered" >
-                        <pre>      $data[&#039;_ranges&#039;] = self::getQuestionDataById(</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1170" class="number uncovered">1170</th>
-
-                    <td class="uncovered" >
-                        <pre>         \PluginFormcreatorQuestionRange::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1171" class="number uncovered">1171</th>
-
-                    <td class="uncovered" >
                         <pre>         $id</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1172" class="number ">1172</th>
+                    <th id="L1170" class="number ">1170</th>
 
                     <td class="" >
                         <pre>      );
@@ -9050,7 +9037,36 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1173" class="number ">1173</th>
+                    <th id="L1171" class="number uncovered">1171</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;_ranges&#039;] = self::getQuestionDataById(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1172" class="number uncovered">1172</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRange::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1173" class="number uncovered">1173</th>
+
+                    <td class="uncovered" >
+                        <pre>         $id</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1174" class="number ">1174</th>
+
+                    <td class="" >
+                        <pre>      );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1175" class="number ">1175</th>
 
                     <td class="" >
                         <pre>
@@ -9058,7 +9074,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1174" class="number ">1174</th>
+                    <th id="L1176" class="number ">1176</th>
 
                     <td class="" >
                         <pre>      // Load ip, may be needed for some questions
@@ -9066,14 +9082,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1175" class="number uncovered">1175</th>
+                    <th id="L1177" class="number uncovered">1177</th>
 
                     <td class="uncovered" >
                         <pre>      $data[&#039;_ip&#039;] = \Toolbox::getRemoteIpAddress();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1176" class="number ">1176</th>
+                    <th id="L1178" class="number ">1178</th>
 
                     <td class="" >
                         <pre>
@@ -9081,21 +9097,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1177" class="number uncovered">1177</th>
+                    <th id="L1179" class="number uncovered">1179</th>
 
                     <td class="uncovered" >
                         <pre>      return $data;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1178" class="number unreach">1178</th>
+                    <th id="L1180" class="number unreach">1180</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1179" class="number ">1179</th>
+                    <th id="L1181" class="number ">1181</th>
 
                     <td class="" >
                         <pre>
@@ -9103,14 +9119,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="post_getFromDB">
-                    <th id="L1180" class="number ">1180</th>
+                    <th id="L1182" class="number ">1182</th>
 
                     <td class="" id="post_getFromDB">
                         <pre>   public function post_getFromDB() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1181" class="number ">1181</th>
+                    <th id="L1183" class="number ">1183</th>
 
                     <td class="" >
                         <pre>      // Set additional data for the API
@@ -9118,21 +9134,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1182" class="number covered">1182</th>
+                    <th id="L1184" class="number covered">1184</th>
 
                     <td class="covered" >
                         <pre>      if (isAPI()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1183" class="number uncovered">1183</th>
+                    <th id="L1185" class="number uncovered">1185</th>
 
                     <td class="uncovered" >
                         <pre>         $this-&gt;fields += self::getFullData(null, $this-&gt;fields[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1184" class="number ">1184</th>
+                    <th id="L1186" class="number ">1186</th>
 
                     <td class="" >
                         <pre>      }
@@ -9140,14 +9156,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1185" class="number covered">1185</th>
+                    <th id="L1187" class="number covered">1187</th>
 
                     <td class="covered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1186" class="number ">1186</th>
+                    <th id="L1188" class="number ">1188</th>
 
                     <td class="" >
                         <pre>}
