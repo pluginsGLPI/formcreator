@@ -184,20 +184,36 @@ class PluginFormcreatorCommon {
     * @return mixed
     */
    public static function showFontAwesomeDropdown($name, $options = []) {
-      $items = [];
-      foreach (static::getFontAwesomePictoNames() as $key => $value) {
-         $items[$key] = /* '<i class="' . $key . '"></i>' . */ $value;
-      }
+      $items = static::getFontAwesomePictoNames();
 
-      $previewId = $name . '_preview';
-      $options['on_change'] = 'plugin_formceator_showPictogram(this, "' . $previewId . '")';
-      $options['display'] = false;
-      $options['display_emptychoice'] = true;
+      $options = [
+         'noselect2'           => true, // we will instanciate it later
+         'display_emptychoice' => true,
+         'rand'                => mt_rand(),
+      ];
       if (!isset($options['value'])) {
          $options['value'] = '';
       }
-      $output = Dropdown::showFromArray($name, $items, $options);
-      $output .= '<i id="' . $previewId . '" class="'. $options['value'] . '"></i>';
-      echo $output;
+      Dropdown::showFromArray($name, $items, $options);
+
+      // templates for select2 dropdown
+      $js = <<<JAVASCRIPT
+      $(function() {
+         formatFormIcon{$options['rand']} = function(icon) {
+            if (!icon.id) {
+               return icon.text;
+            }
+
+            return $('<span><i class="fa-lg '+icon.id+'"></i>&nbsp;<span>'+icon.text+'</span></span>');
+         };
+
+         $("#dropdown_{$name}{$options['rand']}").select2({
+            width: '60%',
+            templateSelection: formatFormIcon{$options['rand']},
+            templateResult: formatFormIcon{$options['rand']}
+         });
+      });
+JAVASCRIPT;
+      echo Html::scriptBlock($js);
    }
 }
