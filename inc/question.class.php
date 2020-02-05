@@ -897,8 +897,10 @@ PluginFormcreatorConditionnableInterface
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $input[$sectionFk] = $containerId;
+
       $input['_skip_checks'] = true;
 
       $item = new self();
