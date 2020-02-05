@@ -158,6 +158,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       ];
       $extraFields = [
          '_questions',
+         '_conditions',
       ];
       $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
