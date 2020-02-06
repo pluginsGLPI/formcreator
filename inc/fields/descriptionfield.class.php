@@ -139,4 +139,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    public function getHtmlIcon() {
       return '<i class="fas fa-align-left" aria-hidden="true"></i>';
    }
+
+   public function rawSearchOption() {
+      return [];
+   }
 }

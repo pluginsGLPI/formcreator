@@ -247,24 +247,35 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       if ($this->showFieldSearchOptions()) {
          $optindex = self::SOPTION_ANSWER;
-         $question = new PluginFormcreatorQuestion;
-         $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
+         $form = new PluginFormcreatorForm();
+         $form->getFromDB($_SESSION['formcreator']['form_search_answers']);
+         $fields = $form->getFields();
 
-         foreach ($questions as $question) {
-            $questionsId = $question->getID();
-            $tab[] = [
-               'id'            => $optindex,
-               'table'         => PluginFormcreatorAnswer::getTable(),
-               'field'         => 'answer',
-               'name'          => $question->fields['name'],
-               'datatype'      => 'string',
-               'massiveaction' => false,
-               'nosearch'      => false,
-               'joinparams'    => [
-                  'jointype'  => 'child',
-                  'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionsId",
-               ]
-            ];
+         foreach ($fields as $field) {
+            $question = $field->getQuestion();
+            $questionId = $question->getID();
+            if (!method_exists($field, 'rawSearchOption')) {
+               $tab[] = [
+                  'id'            => $optindex,
+                  'table'         => PluginFormcreatorAnswer::getTable(),
+                  'field'         => 'answer',
+                  'name'          => $question->fields['name'],
+                  'datatype'      => 'string',
+                  'massiveaction' => false,
+                  'nosearch'      => false,
+                  'joinparams'    => [
+                     'jointype'  => 'child',
+                     'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionId",
+                  ]
+               ];
+            } else {
+               $searchOption = $field->rawSearchOption();
+               if (count($searchOption) == 0) {
+                  continue;
+               }
+               $searchOption['id'] = $optindex;
+               $tab[] = $searchOption;
+            }
 
             $optindex++;
          }
@@ -384,7 +395,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
    }
 
-   static function showForForm(PluginFormcreatorForm $form, $params = []) {
+   static function showForForm(PluginFormcreatorForm $form) {
       // set a session var to tweak search results
       // No reliable solution to unset this var when unused.
       // @see PluginFormcreatorFormAnswer::showFieldSearchOptions()
@@ -395,7 +406,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $searchOptions   = $item->rawSearchOptions();
       $filteredOptions = [];
       foreach ($searchOptions as $value) {
-         if (is_numeric($value['id']) && $value['id'] <= 7) {
+         if (is_numeric($value['id']) && ($value['id'] <= 8 || $value['id'] >= PluginFormcreatorFormAnswer::SOPTION_ANSWER)) {
             $filteredOptions[$value['id']] = $value;
          }
       }
@@ -405,7 +416,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $forcedisplay  = array_combine($sopt_keys, $sopt_keys);
 
       // do search
-      $params = Search::manageParams(__CLASS__, $params, false);
+//       $js = <<<JAVASCRIPT
+//          function plugin_formcreator_updateSearch()  {
+//             var form = $('form[name="searchformPluginFormcreatorFormAnswer"]');
+//             var criterias = form.serialize();
+//             reloadTab(criterias);
+//          }
+// JAVASCRIPT;
+      // echo Html::scriptBlock($js);
+      $params = Search::manageParams(__CLASS__, []);
+      //$params['target'] = "javascript:plugin_formcreator_updateSearch()";
+      //Search::showGenericSearch(__CLASS__, $params);
       $data   = Search::prepareDatasForSearch(__CLASS__, $params, $forcedisplay);
       Search::constructSQL($data);
       Search::constructData($data);

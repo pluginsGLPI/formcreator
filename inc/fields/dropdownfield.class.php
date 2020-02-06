@@ -681,5 +681,36 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       return $decodedValues['itemtype'];
-      }
    }
+
+   public function rawSearchOption() {
+      $questionId = $this->question->getID();
+      $itemtype = $this->getSubItemtype();
+
+      return [
+         'table'         => $itemtype::getTable(),
+         'field'         => 'name',
+         'name'          => $this->question->fields['name'],
+         'datatype'      => 'string',
+         'massiveaction' => false,
+         'nosearch'      => false,
+         'linkfield'     => 'answer',
+         'joinparams'    => [
+            'nolink'     => true,
+            'beforejoin'    => [
+               'table'         => PluginFormcreatorAnswer::getTable(),
+               'joinparams'    => [
+                  'jointype'      => 'child',
+                  'condition'     => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionId",
+                  // Generates PHP warning in Search::computeComplexJoinID()
+                  // Array to string conversion
+                  // 'condition'     => [
+                  //    'NEWTABLE.plugin_formcreator_questions_id' => $questionId,
+                  // ]
+               ]
+            ],
+         ]
+
+      ];
+   }
+}

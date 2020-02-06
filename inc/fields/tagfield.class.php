@@ -228,4 +228,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    public function getHtmlIcon() {
       return '<i class="fas fa-tag" aria-hidden="true"></i>';
    }
-}
+
+   public function rawSearchOption() {
+      return [];
+   }}

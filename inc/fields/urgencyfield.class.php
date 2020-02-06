@@ -208,4 +208,21 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    public function getHtmlIcon() {
       return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
    }
+
+   public function rawSearchOption() {
+      $questionId = $this->question->getID();
+
+      return [
+         'table'         => PluginFormcreatorAnswer::getTable(),
+         'field'         => 'id',
+         'name'          => $this->question->fields['name'],
+         'datatype'      => 'specific',
+         'massiveaction' => false,
+         'nosearch'      => false,
+         'joinparams'    => [
+            'jointype'  => 'child',
+            'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionId",
+         ]
+      ];
+   }
 }

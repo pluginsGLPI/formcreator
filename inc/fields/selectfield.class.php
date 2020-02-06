@@ -163,4 +163,21 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    public function getHtmlIcon() {
       return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
+
+   public function rawSearchOption() {
+      $questionId = $this->question->getID();
+
+      return [
+         'table'         => PluginFormcreatorAnswer::getTable(),
+         'field'         => 'answer',
+         'name'          => $this->question->fields['name'],
+         'datatype'      => 'string',
+         'massiveaction' => false,
+         'nosearch'      => false,
+         'joinparams'    => [
+            'jointype'  => 'child',
+            'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionId",
+         ]
+      ];
+   }
 }

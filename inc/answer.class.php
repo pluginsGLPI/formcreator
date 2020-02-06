@@ -65,4 +65,33 @@ class PluginFormcreatorAnswer extends CommonDBChild
    public static function getTypeName($nb = 0) {
       return _n('Answer', 'Answers', $nb, 'formcreator');
    }
+
+   /**
+    * Define how to display a specific value in search result table
+    *
+    * @param  string $field   Name of the field as define in $this->getSearchOptions()
+    * @param  mixed  $values  The value as it is stored in DB
+    * @param  array  $options Options (optional)
+    * @return mixed           Value to be displayed
+    */
+   public static function getSpecificValueToDisplay($field, $values, array $options = []) {
+      switch ($field) {
+         case 'id':
+            // Transform the answer into a useful value for user
+            //Requires some meda data, then it is expected to get the Answer ID here
+            $answer = new PluginFormcreatorAnswer();
+            if (!$answer->getFromDB($values['id'])) {
+               return NOT_AVAILABLE;
+            }
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($answer->fields['plugin_formcreator_questions_id']);
+            $field = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
+            $field->deserializeValue($answer->fields['answer']);
+            return $field->getValueForTargetText(false);
+            break;
+      }
+
+      // Should never happen, just in case
+      return parent::getSpecificValueToDisplay($field, $values, $options);
+   }
 }

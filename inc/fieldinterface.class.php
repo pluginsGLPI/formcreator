@@ -116,7 +116,7 @@ interface PluginFormcreatorFieldInterface
    public function moveUploads();
 
    /**
-    * Gets the documents IDs
+    * Get the documents IDs
     *
     * @return integer[]
     */
@@ -124,6 +124,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * Transform input to properly save it in the database
+    *
     * @param array $input data to transform before save
     *
     * @return array|false input data to save or false if data is rejected
@@ -140,6 +141,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * Read the value of the field from answers
+    *
     * @param array $input answers of all questions of the form
     * @param boolean $nonDestructive for File field, ensure that the file uploads imported as document
     *
@@ -148,50 +150,45 @@ interface PluginFormcreatorFieldInterface
    public function parseAnswerValues($input, $nonDestructive = false);
 
    /**
-    * Prepares an answer value for output in a target object
-    * @param  string|array $input the answer to format for a target (ticket or change)
-    *
-    * @return string
-    */
-   //public function prepareQuestionInputForTarget($input);
-
-   /**
-    * Gets the parameters of the field
+    * Get the parameters of the field
     *
     * @return PluginFormcreatorQuestionParameter[]
     */
    public function getEmptyParameters();
 
    /**
-    * Gets parameters of the field with their settings
+    * Get parameters of the field with their settings
     *
     * @return PluginFormcreatorQuestionParameter[]
     */
    public function getParameters();
 
    /**
-    * Gets the name of the field type
+    * Get the name of the field type
     *
     * @return string
     */
    public function getFieldTypeName();
 
    /**
-    * Adds parameters of the field into the database
+    * Add parameters of the field into the database
+    *
     * @param PluginFormcreatorQuestion $question question of the field
     * @param array $input data of parameters
     */
    public function addParameters(PluginFormcreatorQuestion $question, array $input);
 
    /**
-    * Updates parameters of the field into the database
+    * Update parameters of the field into the database
+    *
     * @param PluginFormcreatorQuestion $question question of the field
     * @param array $input data of parameters
     */
    public function updateParameters(PluginFormcreatorQuestion $question, array $input);
 
    /**
-    * Deletes all parameters of the field applied to the question
+    * Delete all parameters of the field applied to the question
+    *
     * @param PluginFormcreatorQuestion $question
     *
     * @return boolean true if success, false otherwise
@@ -199,28 +196,28 @@ interface PluginFormcreatorFieldInterface
    public function deleteParameters(PluginFormcreatorQuestion $question);
 
    /**
-    * Tests if the given value equals the field value
+    * Test if the given value equals the field value
     *
     * @return boolean True if the value equals the field value
     */
    public function equals($value);
 
    /**
-    * Tests if the given value is not equal to field value
+    * Test if the given value is not equal to field value
     *
     * @return boolean True if the value is not equal to the field value
     */
    public function notEquals($value);
 
    /**
-    * Tests if the given value is greater than the field value
+    * Test if the given value is greater than the field value
     *
     * @return boolean True if the value is greater than the field value
     */
    public function greaterThan($value);
 
    /**
-    * Tests if the given value is less than the field value
+    * Test if the given value is less than the field value
     *
     * @return boolean True if the value is less than the field value
     */
@@ -234,7 +231,12 @@ interface PluginFormcreatorFieldInterface
    public function isAnonymousFormCompatible();
 
    /**
-    * Gets HTML code for the icon of a field
+    * Get HTML code for the icon of a field
     */
    public function getHtmlIcon();
+
+   /**
+    * Get a search option to show the answer on a form answers list
+    */
+   public function rawSearchOption();
 }

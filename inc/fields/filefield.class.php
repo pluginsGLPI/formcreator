@@ -263,4 +263,8 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    public function getHtmlIcon() {
       return '<i class="fa fa-file" aria-hidden="true"></i>';
    }
+
+   public function rawSearchOption() {
+      return [];
+   }
 }
