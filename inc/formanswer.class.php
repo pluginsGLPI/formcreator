@@ -250,19 +250,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $question = new PluginFormcreatorQuestion;
          $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
 
-         foreach ($questions as $current_question) {
-            $questions_id = $current_question->getID();
+         foreach ($questions as $question) {
+            $questionsId = $question->getID();
             $tab[] = [
                'id'            => $optindex,
                'table'         => PluginFormcreatorAnswer::getTable(),
                'field'         => 'answer',
-               'name'          => $current_question->fields['name'],
+               'name'          => $question->fields['name'],
                'datatype'      => 'string',
                'massiveaction' => false,
                'nosearch'      => false,
                'joinparams'    => [
                   'jointype'  => 'child',
-                  'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questions_id",
+                  'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionsId",
                ]
             ];
 
