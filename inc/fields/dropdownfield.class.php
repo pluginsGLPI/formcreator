@@ -139,11 +139,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $domId        = $fieldName . '_' . $rand;
          if (!empty($this->question->fields['values'])) {
             $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-            if ($decodedValues === null) {
-               $itemtype = $this->question->fields['values'];
-            } else {
-               $itemtype = $decodedValues['itemtype'];
-            }
+            $itemtype = $this->getSubItemtype();
 
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
@@ -286,12 +282,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-         if ($decodedValues === null) {
-            $itemtype = $this->question->fields['values'];
-         } else {
-            $itemtype = $decodedValues['itemtype'];
-         }
+         $itemtype = $this->getSubItemtype();
          $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
@@ -330,11 +321,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $itemtype = $this->question->fields['values'];
-      if (isset($decodedValues['itemtype'])) {
-         $itemtype = $decodedValues['itemtype'];
-      }
+      $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
          $value = (new DBUtils())->getUserName($this->value);
       } else {
@@ -652,5 +639,18 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getHtmlIcon() {
       return '<i class="fa fa-caret-down" aria-hidden="true"></i>';
+   }
+
+   /**
+    * Get the itemtype of the item to show
+    *
+    * @return string
+    */
+    protected function getSubItemtype() {
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         return $this->question->fields['values'];
+      }
+         return $decodedValues['itemtype'];
    }
 }
