@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
                     32%
-                                            <small>of 623</small>
+                                            <small>of 625</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -226,9 +226,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#import">PluginFormcreatorTargetTicket::import()</a></td>
-                                        <td style="text-align: center">48</td>
+                                        <td style="text-align: center">50</td>
                 <td style="text-align: center">    
-    <span class="label label-warning">54%</span>
+    <span class="label label-warning">56%</span>
 </td>
                                             </tr>
             <tr>
@@ -7613,7 +7613,7 @@ layout: coverage
                     <th id="L987" class="number ">987</th>
 
                     <td class="" id="import">
-                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-warning">54%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {<span class="label label-warning">56%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -7669,25 +7669,24 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L995" class="number ">995</th>
+                    <th id="L995" class="number covered">995</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>      $input[$formFk] = $containerId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L996" class="number covered">996</th>
 
                     <td class="covered" >
-                        <pre>      $item = new self;</pre>
+                        <pre>      $input[&#039;_skip_checks&#039;] = true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L997" class="number ">997</th>
 
                     <td class="" >
-                        <pre>      // Find an existing target to update, only if an UUID is available
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -7695,14 +7694,14 @@ layout: coverage
                     <th id="L998" class="number covered">998</th>
 
                     <td class="covered" >
-                        <pre>      $itemId = false;</pre>
+                        <pre>      $item = new self;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L999" class="number ">999</th>
 
                     <td class="" >
-                        <pre>      /** @var string $idKey key to use as ID (id or uuid) */
+                        <pre>      // Find an existing target to update, only if an UUID is available
 </pre>
                     </td>
                 </tr>
@@ -7710,53 +7709,68 @@ layout: coverage
                     <th id="L1000" class="number covered">1000</th>
 
                     <td class="covered" >
-                        <pre>      $idKey = &#039;id&#039;;</pre>
+                        <pre>      $itemId = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1001" class="number covered">1001</th>
+                    <th id="L1001" class="number ">1001</th>
 
-                    <td class="covered" >
-                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
+                    <td class="" >
+                        <pre>      /** @var string $idKey key to use as ID (id or uuid) */
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1002" class="number covered">1002</th>
 
                     <td class="covered" >
-                        <pre>         $idKey = &#039;uuid&#039;;</pre>
+                        <pre>      $idKey = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1003" class="number covered">1003</th>
 
                     <td class="covered" >
-                        <pre>         $itemId = plugin_formcreator_getFromDBByField(</pre>
+                        <pre>      if (isset($input[&#039;uuid&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1004" class="number covered">1004</th>
 
                     <td class="covered" >
-                        <pre>            $item,</pre>
+                        <pre>         $idKey = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1005" class="number covered">1005</th>
 
                     <td class="covered" >
-                        <pre>            &#039;uuid&#039;,</pre>
+                        <pre>         $itemId = plugin_formcreator_getFromDBByField(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1006" class="number covered">1006</th>
 
                     <td class="covered" >
+                        <pre>            $item,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1007" class="number covered">1007</th>
+
+                    <td class="covered" >
+                        <pre>            &#039;uuid&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1008" class="number covered">1008</th>
+
+                    <td class="covered" >
                         <pre>            $input[&#039;uuid&#039;]</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1007" class="number ">1007</th>
+                    <th id="L1009" class="number ">1009</th>
 
                     <td class="" >
                         <pre>         );
@@ -7764,7 +7778,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1008" class="number ">1008</th>
+                    <th id="L1010" class="number ">1010</th>
 
                     <td class="" >
                         <pre>      }
@@ -7772,37 +7786,53 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1009" class="number ">1009</th>
+                    <th id="L1011" class="number ">1011</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1010" class="number covered">1010</th>
-
-                    <td class="covered" >
-                        <pre>      $input[&#039;_skip_checks&#039;] = true;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1011" class="number covered">1011</th>
-
-                    <td class="covered" >
-                        <pre>      $input[$formFk] = $containerId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1012" class="number ">1012</th>
 
                     <td class="" >
+                        <pre>      // Escape text fields
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1013" class="number covered">1013</th>
+
+                    <td class="covered" >
+                        <pre>      foreach ([&#039;target_name&#039;] as $key) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1014" class="number covered">1014</th>
+
+                    <td class="covered" >
+                        <pre>         $input[$key] = $DB-&gt;escape($input[$key]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1015" class="number ">1015</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1016" class="number ">1016</th>
+
+                    <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1013" class="number ">1013</th>
+                    <th id="L1017" class="number ">1017</th>
 
                     <td class="" >
                         <pre>      // Assume that all questions are already imported
@@ -7810,7 +7840,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1014" class="number ">1014</th>
+                    <th id="L1018" class="number ">1018</th>
 
                     <td class="" >
                         <pre>      // convert question uuid into id
@@ -7818,42 +7848,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1015" class="number covered">1015</th>
+                    <th id="L1019" class="number covered">1019</th>
 
                     <td class="covered" >
                         <pre>      $questions = $linker-&gt;getObjectsByType(PluginFormcreatorQuestion::class);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1016" class="number covered">1016</th>
+                    <th id="L1020" class="number covered">1020</th>
 
                     <td class="covered" >
                         <pre>      if ($questions !== false) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1017" class="number uncovered">1017</th>
+                    <th id="L1021" class="number uncovered">1021</th>
 
                     <td class="uncovered" >
                         <pre>         $questionIdentifier = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1018" class="number uncovered">1018</th>
+                    <th id="L1022" class="number uncovered">1022</th>
 
                     <td class="uncovered" >
                         <pre>         if (isset($input[&#039;uuid&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1019" class="number uncovered">1019</th>
+                    <th id="L1023" class="number uncovered">1023</th>
 
                     <td class="uncovered" >
                         <pre>            $questionIdentifier = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1020" class="number ">1020</th>
+                    <th id="L1024" class="number ">1024</th>
 
                     <td class="" >
                         <pre>         }
@@ -7861,70 +7891,70 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1021" class="number uncovered">1021</th>
+                    <th id="L1025" class="number uncovered">1025</th>
 
                     <td class="uncovered" >
                         <pre>         $taggableFields = $item-&gt;getTaggableFields();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1022" class="number uncovered">1022</th>
+                    <th id="L1026" class="number uncovered">1026</th>
 
                     <td class="uncovered" >
                         <pre>         foreach ($questions as $question) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1023" class="number uncovered">1023</th>
+                    <th id="L1027" class="number uncovered">1027</th>
 
                     <td class="uncovered" >
                         <pre>            $id         = $question-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1024" class="number uncovered">1024</th>
+                    <th id="L1028" class="number uncovered">1028</th>
 
                     <td class="uncovered" >
                         <pre>            $originalId = $question-&gt;fields[$questionIdentifier];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1025" class="number uncovered">1025</th>
+                    <th id="L1029" class="number uncovered">1029</th>
 
                     <td class="uncovered" >
                         <pre>            foreach ($taggableFields as $field) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1026" class="number uncovered">1026</th>
+                    <th id="L1030" class="number uncovered">1030</th>
 
                     <td class="uncovered" >
                         <pre>               $content = $input[$field];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1027" class="number uncovered">1027</th>
+                    <th id="L1031" class="number uncovered">1031</th>
 
                     <td class="uncovered" >
                         <pre>               $content = str_replace(&quot;##question_$originalId##&quot;, &quot;##question_$id##&quot;, $content);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1028" class="number uncovered">1028</th>
+                    <th id="L1032" class="number uncovered">1032</th>
 
                     <td class="uncovered" >
                         <pre>               $content = str_replace(&quot;##answer_$originalId##&quot;, &quot;##answer_$id##&quot;, $content);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1029" class="number uncovered">1029</th>
+                    <th id="L1033" class="number uncovered">1033</th>
 
                     <td class="uncovered" >
                         <pre>               $input[$field] = $content;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1030" class="number ">1030</th>
+                    <th id="L1034" class="number ">1034</th>
 
                     <td class="" >
                         <pre>            }
@@ -7932,48 +7962,18 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1031" class="number ">1031</th>
+                    <th id="L1035" class="number ">1035</th>
 
                     <td class="" >
                         <pre>         }
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1032" class="number ">1032</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1033" class="number ">1033</th>
-
-                    <td class="" >
-                        <pre>         // escape text fields
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1034" class="number uncovered">1034</th>
-
-                    <td class="uncovered" >
-                        <pre>         foreach ($taggableFields as $key) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1035" class="number uncovered">1035</th>
-
-                    <td class="uncovered" >
-                        <pre>            $input[$key] = $DB-&gt;escape($input[$key]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1036" class="number ">1036</th>
 
                     <td class="" >
-                        <pre>         }
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -7981,12 +7981,42 @@ layout: coverage
                     <th id="L1037" class="number ">1037</th>
 
                     <td class="" >
+                        <pre>         // escape text fields
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1038" class="number uncovered">1038</th>
+
+                    <td class="uncovered" >
+                        <pre>         foreach ($taggableFields as $key) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1039" class="number uncovered">1039</th>
+
+                    <td class="uncovered" >
+                        <pre>            $input[$key] = $DB-&gt;escape($input[$key]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1040" class="number ">1040</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1041" class="number ">1041</th>
+
+                    <td class="" >
                         <pre>      }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1038" class="number ">1038</th>
+                    <th id="L1042" class="number ">1042</th>
 
                     <td class="" >
                         <pre>
@@ -7994,7 +8024,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1039" class="number ">1039</th>
+                    <th id="L1043" class="number ">1043</th>
 
                     <td class="" >
                         <pre>      // Add or update
@@ -8002,35 +8032,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1040" class="number covered">1040</th>
+                    <th id="L1044" class="number covered">1044</th>
 
                     <td class="covered" >
                         <pre>      $originalId = $input[$idKey];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1041" class="number covered">1041</th>
+                    <th id="L1045" class="number covered">1045</th>
 
                     <td class="covered" >
                         <pre>      if ($itemId !== false) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1042" class="number uncovered">1042</th>
+                    <th id="L1046" class="number uncovered">1046</th>
 
                     <td class="uncovered" >
                         <pre>         $input[&#039;id&#039;] = $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1043" class="number uncovered">1043</th>
+                    <th id="L1047" class="number uncovered">1047</th>
 
                     <td class="uncovered" >
                         <pre>         $item-&gt;update($input);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1044" class="number ">1044</th>
+                    <th id="L1048" class="number ">1048</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -8038,46 +8068,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1045" class="number covered">1045</th>
+                    <th id="L1049" class="number covered">1049</th>
 
                     <td class="covered" >
                         <pre>         unset($input[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1046" class="number covered">1046</th>
+                    <th id="L1050" class="number covered">1050</th>
 
                     <td class="covered" >
                         <pre>         $itemId = $item-&gt;add($input);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1047" class="number ">1047</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1048" class="number covered">1048</th>
-
-                    <td class="covered" >
-                        <pre>      if ($itemId === false) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1049" class="number uncovered">1049</th>
-
-                    <td class="uncovered" >
-                        <pre>         $typeName = strtolower(self::getTypeName());</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1050" class="number uncovered">1050</th>
-
-                    <td class="uncovered" >
-                        <pre>         throw new ImportFailureException(sprintf(__(&#039;failed to add or update the %1$s %2$s&#039;, &#039;formceator&#039;), $typeName, $input[&#039;name&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -8089,7 +8090,36 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1052" class="number ">1052</th>
+                    <th id="L1052" class="number covered">1052</th>
+
+                    <td class="covered" >
+                        <pre>      if ($itemId === false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1053" class="number uncovered">1053</th>
+
+                    <td class="uncovered" >
+                        <pre>         $typeName = strtolower(self::getTypeName());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1054" class="number uncovered">1054</th>
+
+                    <td class="uncovered" >
+                        <pre>         throw new ImportFailureException(sprintf(__(&#039;failed to add or update the %1$s %2$s&#039;, &#039;formceator&#039;), $typeName, $input[&#039;name&#039;]));</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1055" class="number ">1055</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1056" class="number ">1056</th>
 
                     <td class="" >
                         <pre>
@@ -8097,7 +8127,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1053" class="number ">1053</th>
+                    <th id="L1057" class="number ">1057</th>
 
                     <td class="" >
                         <pre>      // add the target to the linker
@@ -8105,14 +8135,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1054" class="number covered">1054</th>
+                    <th id="L1058" class="number covered">1058</th>
 
                     <td class="covered" >
                         <pre>      $linker-&gt;addObject($originalId, $item);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1055" class="number ">1055</th>
+                    <th id="L1059" class="number ">1059</th>
 
                     <td class="" >
                         <pre>
@@ -8120,28 +8150,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1056" class="number covered">1056</th>
+                    <th id="L1060" class="number covered">1060</th>
 
                     <td class="covered" >
                         <pre>      if (isset($input[&#039;_actors&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1057" class="number uncovered">1057</th>
+                    <th id="L1061" class="number uncovered">1061</th>
 
                     <td class="uncovered" >
                         <pre>         foreach ($input[&#039;_actors&#039;] as $actor) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1058" class="number uncovered">1058</th>
+                    <th id="L1062" class="number uncovered">1062</th>
 
                     <td class="uncovered" >
                         <pre>            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1059" class="number ">1059</th>
+                    <th id="L1063" class="number ">1063</th>
 
                     <td class="" >
                         <pre>         }
@@ -8149,52 +8179,52 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1060" class="number ">1060</th>
+                    <th id="L1064" class="number ">1064</th>
 
                     <td class="" >
                         <pre>      }
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1061" class="number ">1061</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1062" class="number covered">1062</th>
-
-                    <td class="covered" >
-                        <pre>      if (isset($input[&#039;_ticket_relations&#039;])) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1063" class="number uncovered">1063</th>
-
-                    <td class="uncovered" >
-                        <pre>         foreach ($input[&#039;_ticket_relations&#039;] as $ticketLink) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1064" class="number uncovered">1064</th>
-
-                    <td class="uncovered" >
-                        <pre>            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1065" class="number ">1065</th>
 
                     <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1066" class="number covered">1066</th>
+
+                    <td class="covered" >
+                        <pre>      if (isset($input[&#039;_ticket_relations&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1067" class="number uncovered">1067</th>
+
+                    <td class="uncovered" >
+                        <pre>         foreach ($input[&#039;_ticket_relations&#039;] as $ticketLink) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1068" class="number uncovered">1068</th>
+
+                    <td class="uncovered" >
+                        <pre>            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1069" class="number ">1069</th>
+
+                    <td class="" >
                         <pre>         }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1066" class="number ">1066</th>
+                    <th id="L1070" class="number ">1070</th>
 
                     <td class="" >
                         <pre>      }
@@ -8202,7 +8232,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1067" class="number ">1067</th>
+                    <th id="L1071" class="number ">1071</th>
 
                     <td class="" >
                         <pre>
@@ -8210,21 +8240,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1068" class="number covered">1068</th>
+                    <th id="L1072" class="number covered">1072</th>
 
                     <td class="covered" >
                         <pre>      return $itemId;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1069" class="number unreach">1069</th>
+                    <th id="L1073" class="number unreach">1073</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1070" class="number ">1070</th>
+                    <th id="L1074" class="number ">1074</th>
 
                     <td class="" >
                         <pre>
@@ -8232,14 +8262,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getTaggableFields">
-                    <th id="L1071" class="number ">1071</th>
+                    <th id="L1075" class="number ">1075</th>
 
                     <td class="" id="getTaggableFields">
                         <pre>   protected function getTaggableFields() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1072" class="number ">1072</th>
+                    <th id="L1076" class="number ">1076</th>
 
                     <td class="" >
                         <pre>      return [
@@ -8247,14 +8277,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1073" class="number covered">1073</th>
+                    <th id="L1077" class="number covered">1077</th>
 
                     <td class="covered" >
                         <pre>         &#039;name&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1074" class="number ">1074</th>
+                    <th id="L1078" class="number ">1078</th>
 
                     <td class="" >
                         <pre>         &#039;content&#039;,
@@ -8262,7 +8292,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1075" class="number ">1075</th>
+                    <th id="L1079" class="number ">1079</th>
 
                     <td class="" >
                         <pre>      ];
@@ -8270,14 +8300,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1076" class="number unreach">1076</th>
+                    <th id="L1080" class="number unreach">1080</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1077" class="number ">1077</th>
+                    <th id="L1081" class="number ">1081</th>
 
                     <td class="" >
                         <pre>
@@ -8285,7 +8315,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1078" class="number ">1078</th>
+                    <th id="L1082" class="number ">1082</th>
 
                     <td class="" >
                         <pre>   /**
@@ -8293,7 +8323,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1079" class="number ">1079</th>
+                    <th id="L1083" class="number ">1083</th>
 
                     <td class="" >
                         <pre>    * Export in an array all the data of the current instanciated targetticket
@@ -8301,7 +8331,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1080" class="number ">1080</th>
+                    <th id="L1084" class="number ">1084</th>
 
                     <td class="" >
                         <pre>    * @return array the array with all data (with sub tables)
@@ -8309,7 +8339,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1081" class="number ">1081</th>
+                    <th id="L1085" class="number ">1085</th>
 
                     <td class="" >
                         <pre>    */
@@ -8317,47 +8347,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="export">
-                    <th id="L1082" class="number ">1082</th>
+                    <th id="L1086" class="number ">1086</th>
 
                     <td class="" id="export">
                         <pre>   public function export($remove_uuid = false) {<span class="label label-success">86%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1083" class="number covered">1083</th>
+                    <th id="L1087" class="number covered">1087</th>
 
                     <td class="covered" >
                         <pre>      global $DB;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1084" class="number ">1084</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1085" class="number covered">1085</th>
-
-                    <td class="covered" >
-                        <pre>      if ($this-&gt;isNewItem()) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1086" class="number covered">1086</th>
-
-                    <td class="covered" >
-                        <pre>         return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1087" class="number ">1087</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -8372,11 +8372,26 @@ layout: coverage
                     <th id="L1089" class="number covered">1089</th>
 
                     <td class="covered" >
-                        <pre>      $target_data = $this-&gt;fields;</pre>
+                        <pre>      if ($this-&gt;isNewItem()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1090" class="number ">1090</th>
+                    <th id="L1090" class="number covered">1090</th>
+
+                    <td class="covered" >
+                        <pre>         return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1091" class="number ">1091</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1092" class="number ">1092</th>
 
                     <td class="" >
                         <pre>
@@ -8384,25 +8399,10 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1091" class="number ">1091</th>
-
-                    <td class="" >
-                        <pre>      // remove key and fk
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1092" class="number covered">1092</th>
-
-                    <td class="covered" >
-                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L1093" class="number covered">1093</th>
 
                     <td class="covered" >
-                        <pre>      unset($target_data[$formFk]);</pre>
+                        <pre>      $target_data = $this-&gt;fields;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -8417,7 +8417,7 @@ layout: coverage
                     <th id="L1095" class="number ">1095</th>
 
                     <td class="" >
-                        <pre>      // replace dropdown ids
+                        <pre>      // remove key and fk
 </pre>
                     </td>
                 </tr>
@@ -8425,54 +8425,18 @@ layout: coverage
                     <th id="L1096" class="number covered">1096</th>
 
                     <td class="covered" >
-                        <pre>      $target_data[&#039;_tickettemplate&#039;] = &#039;&#039;;</pre>
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1097" class="number covered">1097</th>
 
                     <td class="covered" >
-                        <pre>      if ($target_data[&#039;tickettemplates_id&#039;] &gt; 0) {</pre>
+                        <pre>      unset($target_data[$formFk]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1098" class="number uncovered">1098</th>
-
-                    <td class="uncovered" >
-                        <pre>         $target_data[&#039;_tickettemplate&#039;]</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1099" class="number uncovered">1099</th>
-
-                    <td class="uncovered" >
-                        <pre>            = Dropdown::getDropdownName(&#039;glpi_tickettemplates&#039;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1100" class="number uncovered">1100</th>
-
-                    <td class="uncovered" >
-                        <pre>                                        $target_data[&#039;tickettemplates_id&#039;]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1101" class="number ">1101</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1102" class="number covered">1102</th>
-
-                    <td class="covered" >
-                        <pre>      unset($target_data[&#039;tickettemplates_id&#039;]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1103" class="number ">1103</th>
+                    <th id="L1098" class="number ">1098</th>
 
                     <td class="" >
                         <pre>
@@ -8480,7 +8444,73 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1104" class="number ">1104</th>
+                    <th id="L1099" class="number ">1099</th>
+
+                    <td class="" >
+                        <pre>      // replace dropdown ids
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1100" class="number covered">1100</th>
+
+                    <td class="covered" >
+                        <pre>      $target_data[&#039;_tickettemplate&#039;] = &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1101" class="number covered">1101</th>
+
+                    <td class="covered" >
+                        <pre>      if ($target_data[&#039;tickettemplates_id&#039;] &gt; 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1102" class="number uncovered">1102</th>
+
+                    <td class="uncovered" >
+                        <pre>         $target_data[&#039;_tickettemplate&#039;]</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1103" class="number uncovered">1103</th>
+
+                    <td class="uncovered" >
+                        <pre>            = Dropdown::getDropdownName(&#039;glpi_tickettemplates&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1104" class="number uncovered">1104</th>
+
+                    <td class="uncovered" >
+                        <pre>                                        $target_data[&#039;tickettemplates_id&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1105" class="number ">1105</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1106" class="number covered">1106</th>
+
+                    <td class="covered" >
+                        <pre>      unset($target_data[&#039;tickettemplates_id&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1107" class="number ">1107</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1108" class="number ">1108</th>
 
                     <td class="" >
                         <pre>      // get target actors
@@ -8488,42 +8518,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1105" class="number covered">1105</th>
+                    <th id="L1109" class="number covered">1109</th>
 
                     <td class="covered" >
                         <pre>      $target_data[&#039;_actors&#039;] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1106" class="number covered">1106</th>
+                    <th id="L1110" class="number covered">1110</th>
 
                     <td class="covered" >
                         <pre>      $myFk = self::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1107" class="number covered">1107</th>
+                    <th id="L1111" class="number covered">1111</th>
 
                     <td class="covered" >
                         <pre>      $all_target_actors = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1108" class="number covered">1108</th>
+                    <th id="L1112" class="number covered">1112</th>
 
                     <td class="covered" >
                         <pre>         &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1109" class="number covered">1109</th>
+                    <th id="L1113" class="number covered">1113</th>
 
                     <td class="covered" >
                         <pre>         &#039;FROM&#039;    =&gt; PluginFormcreatorTargetTicket_Actor::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1110" class="number ">1110</th>
+                    <th id="L1114" class="number ">1114</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039;   =&gt; [
@@ -8531,14 +8561,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1111" class="number covered">1111</th>
+                    <th id="L1115" class="number covered">1115</th>
 
                     <td class="covered" >
                         <pre>            $myFk =&gt; $this-&gt;getID()</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1112" class="number ">1112</th>
+                    <th id="L1116" class="number ">1116</th>
 
                     <td class="" >
                         <pre>         ]
@@ -8546,7 +8576,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1113" class="number ">1113</th>
+                    <th id="L1117" class="number ">1117</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -8554,7 +8584,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1114" class="number ">1114</th>
+                    <th id="L1118" class="number ">1118</th>
 
                     <td class="" >
                         <pre>
@@ -8562,7 +8592,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1115" class="number ">1115</th>
+                    <th id="L1119" class="number ">1119</th>
 
                     <td class="" >
                         <pre>      // Export sub items
@@ -8570,35 +8600,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1116" class="number covered">1116</th>
+                    <th id="L1120" class="number covered">1120</th>
 
                     <td class="covered" >
                         <pre>      $form_target_actor = $this-&gt;getItem_Actor();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1117" class="number covered">1117</th>
+                    <th id="L1121" class="number covered">1121</th>
 
                     <td class="covered" >
                         <pre>      foreach ($all_target_actors as $target_actor) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1118" class="number covered">1118</th>
+                    <th id="L1122" class="number covered">1122</th>
 
                     <td class="covered" >
                         <pre>         if ($form_target_actor-&gt;getFromDB($target_actor[&#039;id&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1119" class="number covered">1119</th>
+                    <th id="L1123" class="number covered">1123</th>
 
                     <td class="covered" >
                         <pre>            $target_data[&#039;_actors&#039;][] = $form_target_actor-&gt;export($remove_uuid);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1120" class="number ">1120</th>
+                    <th id="L1124" class="number ">1124</th>
 
                     <td class="" >
                         <pre>         }
@@ -8606,7 +8636,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1121" class="number ">1121</th>
+                    <th id="L1125" class="number ">1125</th>
 
                     <td class="" >
                         <pre>      }
@@ -8614,7 +8644,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1122" class="number ">1122</th>
+                    <th id="L1126" class="number ">1126</th>
 
                     <td class="" >
                         <pre>
@@ -8622,7 +8652,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1123" class="number ">1123</th>
+                    <th id="L1127" class="number ">1127</th>
 
                     <td class="" >
                         <pre>      // get data from ticket relations
@@ -8630,42 +8660,42 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1124" class="number covered">1124</th>
+                    <th id="L1128" class="number covered">1128</th>
 
                     <td class="covered" >
                         <pre>      $target_data[&#039;_ticket_relations&#039;] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1125" class="number covered">1125</th>
+                    <th id="L1129" class="number covered">1129</th>
 
                     <td class="covered" >
                         <pre>      $target_ticketLink = new PluginFormcreatorItem_TargetTicket();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1126" class="number covered">1126</th>
+                    <th id="L1130" class="number covered">1130</th>
 
                     <td class="covered" >
                         <pre>      $all_ticketLinks = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1127" class="number covered">1127</th>
+                    <th id="L1131" class="number covered">1131</th>
 
                     <td class="covered" >
                         <pre>         &#039;SELECT&#039;  =&gt; [&#039;id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1128" class="number covered">1128</th>
+                    <th id="L1132" class="number covered">1132</th>
 
                     <td class="covered" >
                         <pre>         &#039;FROM&#039;    =&gt; $target_ticketLink::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1129" class="number ">1129</th>
+                    <th id="L1133" class="number ">1133</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039;   =&gt; [
@@ -8673,14 +8703,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1130" class="number covered">1130</th>
+                    <th id="L1134" class="number covered">1134</th>
 
                     <td class="covered" >
                         <pre>            &#039;plugin_formcreator_targettickets_id&#039; =&gt; $target_data[&#039;id&#039;]</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1131" class="number ">1131</th>
+                    <th id="L1135" class="number ">1135</th>
 
                     <td class="" >
                         <pre>         ],
@@ -8688,7 +8718,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1132" class="number ">1132</th>
+                    <th id="L1136" class="number ">1136</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -8696,28 +8726,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1133" class="number covered">1133</th>
+                    <th id="L1137" class="number covered">1137</th>
 
                     <td class="covered" >
                         <pre>      foreach ($all_ticketLinks as $ticketLink) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1134" class="number uncovered">1134</th>
+                    <th id="L1138" class="number uncovered">1138</th>
 
                     <td class="uncovered" >
                         <pre>         $target_ticketLink-&gt;getFromDB($ticketLink[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1135" class="number uncovered">1135</th>
+                    <th id="L1139" class="number uncovered">1139</th>
 
                     <td class="uncovered" >
                         <pre>         $target_data[&#039;_ticket_relations&#039;][] = $target_ticketLink-&gt;export($remove_uuid);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1136" class="number ">1136</th>
+                    <th id="L1140" class="number ">1140</th>
 
                     <td class="" >
                         <pre>      }
@@ -8725,7 +8755,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1137" class="number ">1137</th>
+                    <th id="L1141" class="number ">1141</th>
 
                     <td class="" >
                         <pre>
@@ -8733,7 +8763,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1138" class="number ">1138</th>
+                    <th id="L1142" class="number ">1142</th>
 
                     <td class="" >
                         <pre>      // remove ID or UUID
@@ -8741,28 +8771,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1139" class="number covered">1139</th>
+                    <th id="L1143" class="number covered">1143</th>
 
                     <td class="covered" >
                         <pre>      $idToRemove = &#039;id&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1140" class="number covered">1140</th>
+                    <th id="L1144" class="number covered">1144</th>
 
                     <td class="covered" >
                         <pre>      if ($remove_uuid) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1141" class="number covered">1141</th>
+                    <th id="L1145" class="number covered">1145</th>
 
                     <td class="covered" >
                         <pre>         $idToRemove = &#039;uuid&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1142" class="number ">1142</th>
+                    <th id="L1146" class="number ">1146</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -8770,7 +8800,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1143" class="number ">1143</th>
+                    <th id="L1147" class="number ">1147</th>
 
                     <td class="" >
                         <pre>         // Convert IDs into UUIDs
@@ -8778,14 +8808,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1144" class="number covered">1144</th>
+                    <th id="L1148" class="number covered">1148</th>
 
                     <td class="covered" >
                         <pre>         $target_data = $this-&gt;convertTags($target_data);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1145" class="number ">1145</th>
+                    <th id="L1149" class="number ">1149</th>
 
                     <td class="" >
                         <pre>      }
@@ -8793,14 +8823,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1146" class="number covered">1146</th>
+                    <th id="L1150" class="number covered">1150</th>
 
                     <td class="covered" >
                         <pre>      unset($target_data[$idToRemove]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1147" class="number ">1147</th>
+                    <th id="L1151" class="number ">1151</th>
 
                     <td class="" >
                         <pre>
@@ -8808,21 +8838,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1148" class="number covered">1148</th>
+                    <th id="L1152" class="number covered">1152</th>
 
                     <td class="covered" >
                         <pre>      return $target_data;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1149" class="number unreach">1149</th>
+                    <th id="L1153" class="number unreach">1153</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1150" class="number ">1150</th>
+                    <th id="L1154" class="number ">1154</th>
 
                     <td class="" >
                         <pre>
@@ -8830,21 +8860,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="saveAssociatedItems">
-                    <th id="L1151" class="number ">1151</th>
+                    <th id="L1155" class="number ">1155</th>
 
                     <td class="" id="saveAssociatedItems">
                         <pre>   private function saveAssociatedItems($input) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1152" class="number uncovered">1152</th>
+                    <th id="L1156" class="number uncovered">1156</th>
 
                     <td class="uncovered" >
                         <pre>      switch ($input[&#039;associate_rule&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1153" class="number ">1153</th>
+                    <th id="L1157" class="number ">1157</th>
 
                     <td class="" >
                         <pre>         case self::ASSOCIATE_RULE_ANSWER:
@@ -8852,21 +8882,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1154" class="number uncovered">1154</th>
+                    <th id="L1158" class="number uncovered">1158</th>
 
                     <td class="uncovered" >
                         <pre>            $input[&#039;associate_question&#039;] = $input[&#039;_associate_question&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1155" class="number uncovered">1155</th>
+                    <th id="L1159" class="number uncovered">1159</th>
 
                     <td class="uncovered" >
                         <pre>            break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1156" class="number ">1156</th>
+                    <th id="L1160" class="number ">1160</th>
 
                     <td class="" >
                         <pre>
@@ -8874,7 +8904,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1157" class="number ">1157</th>
+                    <th id="L1161" class="number ">1161</th>
 
                     <td class="" >
                         <pre>         case self::ASSOCIATE_RULE_SPECIFIC:
@@ -8882,21 +8912,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1158" class="number uncovered">1158</th>
+                    <th id="L1162" class="number uncovered">1162</th>
 
                     <td class="uncovered" >
                         <pre>            $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1159" class="number uncovered">1159</th>
+                    <th id="L1163" class="number uncovered">1163</th>
 
                     <td class="uncovered" >
                         <pre>            $itemTargetTicket-&gt;deleteByCriteria([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1160" class="number ">1160</th>
+                    <th id="L1164" class="number ">1164</th>
 
                     <td class="" >
                         <pre>               &#039;NOT&#039; =&gt; [&#039;itemtype&#039; =&gt; [
@@ -8904,14 +8934,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1161" class="number uncovered">1161</th>
+                    <th id="L1165" class="number uncovered">1165</th>
 
                     <td class="uncovered" >
                         <pre>                  PluginFormcreatorTargetTicket::class,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1162" class="number ">1162</th>
+                    <th id="L1166" class="number ">1166</th>
 
                     <td class="" >
                         <pre>                  Ticket::class,
@@ -8919,7 +8949,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1163" class="number ">1163</th>
+                    <th id="L1167" class="number ">1167</th>
 
                     <td class="" >
                         <pre>               ]]
@@ -8927,7 +8957,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1164" class="number ">1164</th>
+                    <th id="L1168" class="number ">1168</th>
 
                     <td class="" >
                         <pre>            ]);
@@ -8935,63 +8965,63 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1165" class="number uncovered">1165</th>
+                    <th id="L1169" class="number uncovered">1169</th>
 
                     <td class="uncovered" >
                         <pre>            $targetTicketFk = self::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1166" class="number uncovered">1166</th>
+                    <th id="L1170" class="number uncovered">1170</th>
 
                     <td class="uncovered" >
                         <pre>            foreach ($input[&#039;items_id&#039;] as $itemtype =&gt; $items) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1167" class="number uncovered">1167</th>
+                    <th id="L1171" class="number uncovered">1171</th>
 
                     <td class="uncovered" >
                         <pre>               foreach ($items as $id) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1168" class="number uncovered">1168</th>
+                    <th id="L1172" class="number uncovered">1172</th>
 
                     <td class="uncovered" >
                         <pre>                  $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1169" class="number uncovered">1169</th>
+                    <th id="L1173" class="number uncovered">1173</th>
 
                     <td class="uncovered" >
                         <pre>                  $itemTargetTicket-&gt;add([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1170" class="number uncovered">1170</th>
+                    <th id="L1174" class="number uncovered">1174</th>
 
                     <td class="uncovered" >
                         <pre>                     &#039;itemtype&#039; =&gt; $itemtype,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1171" class="number uncovered">1171</th>
+                    <th id="L1175" class="number uncovered">1175</th>
 
                     <td class="uncovered" >
                         <pre>                     &#039;items_id&#039; =&gt; $id,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1172" class="number uncovered">1172</th>
+                    <th id="L1176" class="number uncovered">1176</th>
 
                     <td class="uncovered" >
                         <pre>                     $targetTicketFk =&gt; $this-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1173" class="number ">1173</th>
+                    <th id="L1177" class="number ">1177</th>
 
                     <td class="" >
                         <pre>                  ]);
@@ -8999,7 +9029,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1174" class="number ">1174</th>
+                    <th id="L1178" class="number ">1178</th>
 
                     <td class="" >
                         <pre>               }
@@ -9007,7 +9037,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1175" class="number ">1175</th>
+                    <th id="L1179" class="number ">1179</th>
 
                     <td class="" >
                         <pre>            }
@@ -9015,14 +9045,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1176" class="number uncovered">1176</th>
+                    <th id="L1180" class="number uncovered">1180</th>
 
                     <td class="uncovered" >
                         <pre>            break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1177" class="number ">1177</th>
+                    <th id="L1181" class="number ">1181</th>
 
                     <td class="" >
                         <pre>      }
@@ -9030,63 +9060,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1178" class="number uncovered">1178</th>
+                    <th id="L1182" class="number uncovered">1182</th>
 
                     <td class="uncovered" >
                         <pre>      unset($input[&#039;items_id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1179" class="number uncovered">1179</th>
+                    <th id="L1183" class="number uncovered">1183</th>
 
                     <td class="uncovered" >
                         <pre>      return $input;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1180" class="number unreach">1180</th>
+                    <th id="L1184" class="number unreach">1184</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1181" class="number ">1181</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1182" class="number ">1182</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1183" class="number ">1183</th>
-
-                    <td class="" >
-                        <pre>    * get all target tickets for a form
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1184" class="number ">1184</th>
-
-                    <td class="" >
-                        <pre>    *
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L1185" class="number ">1185</th>
 
                     <td class="" >
-                        <pre>    * @param integer $formId
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -9094,7 +9092,7 @@ layout: coverage
                     <th id="L1186" class="number ">1186</th>
 
                     <td class="" >
-                        <pre>    * @return array
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -9102,26 +9100,58 @@ layout: coverage
                     <th id="L1187" class="number ">1187</th>
 
                     <td class="" >
+                        <pre>    * get all target tickets for a form
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1188" class="number ">1188</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1189" class="number ">1189</th>
+
+                    <td class="" >
+                        <pre>    * @param integer $formId
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1190" class="number ">1190</th>
+
+                    <td class="" >
+                        <pre>    * @return array
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1191" class="number ">1191</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="getTargetTicketsForForm">
-                    <th id="L1188" class="number ">1188</th>
+                    <th id="L1192" class="number ">1192</th>
 
                     <td class="" id="getTargetTicketsForForm">
                         <pre>   public function getTargetTicketsForForm($formId) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1189" class="number uncovered">1189</th>
+                    <th id="L1193" class="number uncovered">1193</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1190" class="number ">1190</th>
+                    <th id="L1194" class="number ">1194</th>
 
                     <td class="" >
                         <pre>
@@ -9129,35 +9159,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1191" class="number uncovered">1191</th>
+                    <th id="L1195" class="number uncovered">1195</th>
 
                     <td class="uncovered" >
                         <pre>      $targets = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1192" class="number uncovered">1192</th>
+                    <th id="L1196" class="number uncovered">1196</th>
 
                     <td class="uncovered" >
                         <pre>      $rows = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1193" class="number uncovered">1193</th>
+                    <th id="L1197" class="number uncovered">1197</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1194" class="number uncovered">1194</th>
+                    <th id="L1198" class="number uncovered">1198</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;FROM&#039;   =&gt; self::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1195" class="number ">1195</th>
+                    <th id="L1199" class="number ">1199</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039;  =&gt; [
@@ -9165,14 +9195,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1196" class="number uncovered">1196</th>
+                    <th id="L1200" class="number uncovered">1200</th>
 
                     <td class="uncovered" >
                         <pre>            &#039;plugin_formcreator_forms_id&#039; =&gt; $formId</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1197" class="number ">1197</th>
+                    <th id="L1201" class="number ">1201</th>
 
                     <td class="" >
                         <pre>         ],
@@ -9180,14 +9210,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1198" class="number uncovered">1198</th>
+                    <th id="L1202" class="number uncovered">1202</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;ORDER&#039;  =&gt; &#039;order ASC&#039;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1199" class="number ">1199</th>
+                    <th id="L1203" class="number ">1203</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -9195,35 +9225,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1200" class="number uncovered">1200</th>
+                    <th id="L1204" class="number uncovered">1204</th>
 
                     <td class="uncovered" >
                         <pre>      foreach ($rows as $row) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1201" class="number uncovered">1201</th>
+                    <th id="L1205" class="number uncovered">1205</th>
 
                     <td class="uncovered" >
                         <pre>         $target = new self();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1202" class="number uncovered">1202</th>
+                    <th id="L1206" class="number uncovered">1206</th>
 
                     <td class="uncovered" >
                         <pre>         $target-&gt;getFromDB($row[&#039;id&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1203" class="number uncovered">1203</th>
+                    <th id="L1207" class="number uncovered">1207</th>
 
                     <td class="uncovered" >
                         <pre>         $targets[$row[&#039;id&#039;]] = $target;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1204" class="number ">1204</th>
+                    <th id="L1208" class="number ">1208</th>
 
                     <td class="" >
                         <pre>      }
@@ -9231,7 +9261,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1205" class="number ">1205</th>
+                    <th id="L1209" class="number ">1209</th>
 
                     <td class="" >
                         <pre>
@@ -9239,21 +9269,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1206" class="number uncovered">1206</th>
+                    <th id="L1210" class="number uncovered">1210</th>
 
                     <td class="uncovered" >
                         <pre>      return $targets;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1207" class="number unreach">1207</th>
+                    <th id="L1211" class="number unreach">1211</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1208" class="number ">1208</th>
+                    <th id="L1212" class="number ">1212</th>
 
                     <td class="" >
                         <pre>}
