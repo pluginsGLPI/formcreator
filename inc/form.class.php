@@ -1089,21 +1089,12 @@ PluginFormcreatorConditionnableInterface
          echo "<ul>";
       } else {
          foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
-               echo '</li>';
+            $statuses = PluginFormcreatorFormAnswer::getStatuses();
+            $status = strtolower($statuses[$form['status']]);
+            echo '<li class="plugin_formcreator_answer">';
+            echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
+            echo '</li>';
          }
          echo "</ul>";
          echo '<div align="center">';
@@ -1130,17 +1121,8 @@ PluginFormcreatorConditionnableInterface
          } else {
             echo "<ul>";
             foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
+               $statuses = PluginFormcreatorFormAnswer::getStatuses();
+               $status = strtolower($statuses[$form['status']]);
                echo '<li class="plugin_formcreator_answer">';
                echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
