@@ -163,10 +163,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function rawSearchOptions() {
       $tab = parent::rawSearchOptions();
 
-      $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
-                          && $_SESSION['formcreator']['form_search_answers'];
-
-
       $tab[] = [
          'id'                 => '2',
          'table'              => $this::getTable(),
@@ -249,7 +245,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'massiveaction' => false,
       ];
 
-      if ($display_for_form) {
+      if ($this->showFieldSearchOptions()) {
          $optindex = self::SOPTION_ANSWER;
          $question = new PluginFormcreatorQuestion;
          $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
@@ -390,6 +386,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    static function showForForm(PluginFormcreatorForm $form, $params = []) {
       // set a session var to tweak search results
+      // No reliable solution to unset this var when unused.
+      // @see PluginFormcreatorFormAnswer::showFieldSearchOptions()
       $_SESSION['formcreator']['form_search_answers'] = $form->getID();
 
       // prepare params for search
@@ -412,9 +410,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       Search::constructSQL($data);
       Search::constructData($data);
       Search::displayData($data);
-
-      // remove previous session var (restore default view)
-      unset($_SESSION['formcreator']['form_search_answers']);
    }
 
    /**
@@ -1652,5 +1647,34 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public function getIsAnswersValid() {
       return $this->isAnswersValid;
+   }
+
+   /*
+    * Find if the HTTP request will display the display preferences edition form
+    * The ID of the form is in $_SESSION['formcreator']['form_search_answers']
+    * @see PluginFormcreatorFormAnswer::showForForm()
+    *
+    * @return boolean true if search options shall show fields for a specific form
+    */
+   private function showFieldSearchOptions() {
+      global $CFG_GLPI;
+
+      if (!isset($_SESSION['formcreator']['form_search_answers'])) {
+         return false;
+      }
+
+      if (strpos($_SERVER['REQUEST_URI'], $CFG_GLPI['root_doc'] . '/ajax/common.tabs.php') !== 0) {
+         return false;
+      }
+
+      if (isset($_GET['displaytype']) && $_GET['displaytype'] == PluginFormcreatorFormAnswer::class) {
+         // return true;
+      }
+
+      if (isset($_GET['_itemtype']) && $_GET['_itemtype'] == PluginFormcreatorForm::class) {
+         return true;
+      }
+
+      return false;
    }
 }
