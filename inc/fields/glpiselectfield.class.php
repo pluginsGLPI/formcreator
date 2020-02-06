@@ -31,10 +31,6 @@
 
 class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 {
-   public function isPrerequisites() {
-      return true;
-   }
-
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 

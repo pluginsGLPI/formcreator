@@ -108,8 +108,17 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
 
    public function testIsPrerequisites() {
       $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'values' => \Computer::class
+      ]));
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'values' => \UndefinedItemtype::class
+      ]));
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(false);
    }
 
    public function testGetValueForDesign() {
