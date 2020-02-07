@@ -114,6 +114,13 @@ interface PluginFormcreatorFieldInterface
    public function prepareQuestionInputForSave($input);
 
    /**
+    * Do the argument has an user input ?
+    * @param array $input answers of all questions of the form
+    * @return boolean
+    */
+   public function hasInput($input);
+
+   /**
     * Read the value of the field from answers
     * @param array $input answers of all questions of the form
     * @param boolean $nonDestructive for File field, ensure that the file uploads imported as document

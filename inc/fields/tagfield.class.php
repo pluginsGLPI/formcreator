@@ -49,7 +49,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          'may_be_required' => true,
       ];
    }
-   
+
    public function displayField($canEdit = true) {
       global $DB;
 
@@ -149,6 +149,10 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
 
    public function prepareQuestionInputForSave($input) {
       return $input;
+   }
+
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
