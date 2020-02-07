@@ -421,6 +421,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public static function canRequire() {
       return true;
    }

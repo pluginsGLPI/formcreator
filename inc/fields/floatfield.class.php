@@ -212,6 +212,8 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {

@@ -108,6 +108,8 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return $this->value;
    }
 
+   public function saveUploads($input) {}
+
    public function getValueForTargetText($richText) {
       return Toolbox::addslashes_deep(Html::convDateTime($this->value));
    }

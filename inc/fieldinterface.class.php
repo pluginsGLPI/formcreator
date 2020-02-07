@@ -122,6 +122,12 @@ interface PluginFormcreatorFieldInterface
    public function prepareQuestionInputForSave($input);
 
    /**
+    * Save uploaded files
+    * @param array $input answers of all questions of the form
+    */
+   public function saveUploads($input);
+
+   /**
     * Read the value of the field from answers
     * @param array $input answers of all questions of the form
     * @param boolean $nonDestructive for File field, ensure that the file uploads imported as document

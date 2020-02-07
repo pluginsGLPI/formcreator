@@ -54,6 +54,8 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       return Toolbox::addslashes_deep($this->value);
    }
 
+   public function saveUploads($input) {}
+
    public function getDocumentsForTarget() {
       return [];
    }

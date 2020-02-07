@@ -669,6 +669,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
+      // save uploaded files
+      foreach ($this->questionFields as $id => $question) {
+         $this->questionFields[$id]->saveUploads($input);
+      }
+
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
       $input['name'] = Toolbox::addslashes_deep($form->getName());
@@ -1097,7 +1102,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // Save questions answers
       $question = new PluginFormcreatorQuestion();
       $this->questions = $question->getQuestionsFromForm($this->input['plugin_formcreator_forms_id']);
-
       foreach ($this->questions as $questionId => $question) {
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
@@ -1114,7 +1118,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
          }
       }
+      // Send notification
       $this->sendNotification();
+
+      // Generate targets
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
@@ -1127,6 +1134,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
          }
       }
+
+      // Create the issue for this answer
       $this->createIssue();
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }

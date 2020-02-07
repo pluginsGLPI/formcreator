@@ -111,6 +111,8 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
       return __('Time', 'formcreator');
    }
 
+   public function saveUploads($input) {}
+
    public static function canRequire() {
       return true;
    }

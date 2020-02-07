@@ -49,7 +49,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          'may_be_required' => true,
       ];
    }
-   
+
    public function getRenderedHtml($canEdit = true) {
       global $DB;
 
@@ -107,7 +107,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTag('$fieldName', '$rand');
       });");
-      
+
       return $html;
    }
 
@@ -155,6 +155,8 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    public function prepareQuestionInputForSave($input) {
       return $input;
    }
+
+   public function saveUploads($input) {}
 
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();

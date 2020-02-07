@@ -31,6 +31,12 @@
 
 class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
 {
+   private $taggedUploads = [
+      '_filename' => [],
+      '_prefix_filename' => [],
+      '_tag_filename' => [],
+   ];
+
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 
@@ -84,11 +90,32 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          'rows'              => 5,
          'display'           => false,
          'enable_richtext'   => true,
-         'enable_fileupload' => true,
+         'enable_fileupload' => false,
       ]);
-      if (version_compare(GLPI_VERSION, '9.4.6') < 0) {
-         $html .= '</div>';
+      // This area is filled by glpi : @see js/fileupload.js
+      // it contains _filename[] hidden inputs required to properly handle
+      // images pasted in the textarea
+      $html .= '<div id="fileupload_info" class="fileupload_info">';
+      foreach ($this->taggedUploads['_filename'] as $id => $upload) {
+         $html .= '<p>';
+         // echo '<img src="/pics/icones/png-dist.png" title="png">';
+         // echo '<b>' . 'image_paste' . '</b>';
+         $html .= HTML::hidden(
+            '_filename[' . $id . ']',
+            ['value' => $this->taggedUploads['_filename'][$id]]
+         );
+         $html .= HTML::hidden(
+            '_prefix_filename[' . $id . ']',
+            ['value' => $this->taggedUploads['_prefix_filename'][$id]]
+         );
+         $html .= HTML::hidden(
+            '_tag_filename[' . $id . ']',
+            ['value' => $this->taggedUploads['_tag_filename'][$id]]
+         );
+         // echo '<span class="fa fa-times-circle pointer"></span>';
+         $html .= '</p>';
       }
+      $html .= '</div>';
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");
@@ -142,19 +169,27 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return $input;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->question->getID();
+   public function saveUploads($input) {
       $input = $this->question->addFiles(
          $input,
          [
             'force_update'  => true,
-            'content_field' => $key,
+            'content_field' => 'formcreator_field_' . $this->question->getID(),
+            'name'          => 'formcreator_field_' . $this->question->getID(),
          ]
       );
 
-      $this->value = str_replace('\r\n', "\r\n", $input[$key]);
-      $this->value = Toolbox::stripslashes_deep($this->value);
+      // Uploads handling ma have changed the input, update the value if the field
+      $this->parseAnswerValues($input);
+   }
 
+   public function parseAnswerValues($input, $nonDestructive = false) {
+      parent::parseAnswerValues($input, $nonDestructive);
+      if (isset($input['_tag_filename']) && isset($input['_filename']) && isset($input['_tag_filename'])) {
+         $this->taggedUploads['_filename'] = $input['_filename'];
+         $this->taggedUploads['_prefix_filename'] = $input['_prefix_filename'];
+         $this->taggedUploads['_tag_filename'] = $input['_tag_filename'];
+      }
       return true;
    }
 

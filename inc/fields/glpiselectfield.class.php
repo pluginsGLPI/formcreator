@@ -123,6 +123,8 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public function isValid() {
       // If the field is required it can't be empty (0 is a valid value for entity)
       $itemtype = $this->question->fields['values'];

@@ -96,6 +96,8 @@ class PluginFormcreatorSelectField extends PluginFormcreatorRadiosField
       return true;
    }
 
+   public function saveUploads($input) {}
+
    public function equals($value) {
       if ($value == '') {
          // empty string means no selection
