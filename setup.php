@@ -219,6 +219,12 @@ function plugin_init_formcreator() {
          if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/targetticket.form.php') !== false) {
             Html::requireJs('tinymce');
          }
+         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/form.form.php') !== false) {
+            Html::requireJs('tinymce');
+         }
+         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/formdisplay.php') !== false) {
+            Html::requireJs('tinymce');
+         }
 
          if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
                || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
