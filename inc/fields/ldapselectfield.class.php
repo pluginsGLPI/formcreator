@@ -236,6 +236,8 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public static function canRequire() {
       return true;
    }

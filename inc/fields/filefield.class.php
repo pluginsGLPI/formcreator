@@ -115,6 +115,21 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return true;
    }
 
+   public function saveUploads($input) {
+      $key = 'formcreator_field_' . $this->question->getID();
+      $index = 0;
+      $answer_value = [];
+      foreach ($input["_$key"] as $document) {
+         $document = Toolbox::stripslashes_deep($document);
+         if (is_file(GLPI_TMP_DIR . '/' . $document)) {
+            $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $answer_value[] = $this->saveDocument($document, $prefix);
+         }
+         $index++;
+      }
+      $this->uploadData = $answer_value;
+   }
+
    /**
     * Save an uploaded file into a document object, link it to the answers
     * and returns the document ID
@@ -177,22 +192,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             return false;
          }
 
-         $answer_value = [];
-         $index = 0;
-         if ($nonDestructive) {
-            $index = count($input["_$key"]);
-         } else {
-            foreach ($input["_$key"] as $document) {
-               $document = Toolbox::stripslashes_deep($document);
-               if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-                  $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
-                  $answer_value[] = $this->saveDocument($document, $prefix);
-               }
-               $index++;
-            }
+         if (isset($input["_$key"])) {
+            $this->value = __('Attached document', 'formcreator');
          }
-         $this->uploadData = $answer_value;
-         $this->value = __('Attached document', 'formcreator');
          return true;
       }
       $this->uploadData = [];

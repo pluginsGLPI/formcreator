@@ -103,6 +103,8 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return str_replace("\n", '\r\n', Toolbox::addslashes_deep($this->value));
    }
 
+   public function saveUploads($input) {}
+
    public function getDocumentsForTarget() {
       return [];
    }

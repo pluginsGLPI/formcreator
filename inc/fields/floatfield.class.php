@@ -138,7 +138,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    private function isValidValue($value) {
       if (strlen($value) == 0) {
          return true;
-      } 
+      }
 
       if (!empty($value) && !is_numeric($value)) {
          Session::addMessageAfterRedirect(sprintf(__('This is not a number: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
@@ -208,6 +208,8 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
 
       return $input;
    }
+
+   public function saveUploads($input) {}
 
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();

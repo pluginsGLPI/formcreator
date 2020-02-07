@@ -113,6 +113,8 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return true;
    }
 
+   public function saveUploads($input) {}
+
    public function equals($value) {
       return $this->value == $value;
    }

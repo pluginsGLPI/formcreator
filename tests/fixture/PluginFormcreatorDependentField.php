@@ -82,6 +82,8 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public function serializeValue() {
       if ($this->value === null || $this->value === '') {
          return '';

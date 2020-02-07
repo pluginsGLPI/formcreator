@@ -205,6 +205,8 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public function getValueForTargetText($richText) {
       $input = $this->value;
       $value = [];

@@ -243,6 +243,8 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public function getValueForTargetText($richText) {
       $value = [];
       $values = $this->getAvailableValues();

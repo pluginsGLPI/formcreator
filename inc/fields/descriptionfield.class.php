@@ -97,6 +97,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return $input;
    }
 
+   public function saveUploads($input) {}
+
    public static function canRequire() {
       return false;
    }

@@ -680,6 +680,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
+      // save uploaded files
+      foreach ($this->questionFields as $id => $question) {
+         $this->questionFields[$id]->saveUploads($input);
+      }
+
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
       $input['name'] = Toolbox::addslashes_deep($form->getName());
