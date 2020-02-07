@@ -330,7 +330,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       switch ($field) {
          case 'status' :
-            $elements = $this->getStatuses();
+            $elements = self::getStatuses();
             $output = Dropdown::showFromArray($name, $elements, ['display' => false, 'value' => $values[$field]]);
             return $output;
             break;
