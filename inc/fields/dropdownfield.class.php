@@ -32,7 +32,9 @@
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
-      return true;
+      $itemtype = $this->getSubItemtype();
+
+      return class_exists($itemtype);
    }
 
    public function getDesignSpecializationField() {
