@@ -104,6 +104,6 @@ class ConventionalChangelog extends CommonTestCase {
             [
 
             ]
-        ]
+        ];
     }
 }
