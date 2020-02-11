@@ -1084,6 +1084,9 @@ function plugin_formcreator_changeQuestionType(rand) {
          return;
       }
 
+      $('#plugin_formcreator_subtype_label').html(response.label);
+      $('#plugin_formcreator_subtype_value').html(response.field);
+
       $('.plugin_formcreator_required').toggle(response.may_be_required);
       $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
       plugin_formcreator_updateQuestionSpecific(response.additions);
