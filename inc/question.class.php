@@ -1166,10 +1166,10 @@ PluginFormcreatorConditionnableInterface
       return $items;
    }
 
-   public static function dropdownForForm($formId, $crit, $name, $value) {
+   public static function dropdownForForm($formId, $crit, $name, $options) {
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
-      Dropdown::showFromArray($name, $items, []);
+      Dropdown::showFromArray($name, $items, $options);
    }
 
    /**

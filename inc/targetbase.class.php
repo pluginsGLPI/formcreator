@@ -815,7 +815,7 @@ PluginFormcreatorTargetInterface
          ],
          '_category_question',
          [
-            $this->fields['category_question']
+            'value' => $this->fields['category_question']
          ]
       );
       echo '</div>';
