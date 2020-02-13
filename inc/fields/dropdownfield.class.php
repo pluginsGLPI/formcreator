@@ -138,7 +138,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
          if (!empty($this->question->fields['values'])) {
             $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
             $itemtype = $this->getSubItemtype();
@@ -251,6 +250,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $dparams['condition'] = $dparams_cond_crit;
 
+            $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
+
             $emptyItem = new $itemtype();
             $emptyItem->getEmpty();
             $dparams['displaywith'] = [];
@@ -260,23 +261,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             if (isset($emptyItem->fields['otherserial'])) {
                $dparams['displaywith'][] = 'otherserial';
             }
-            if (count($dparams['displaywith']) > 0) {
-               $dparams['itemtype'] = $itemtype;
-               $dparams['table'] = $itemtype::getTable();
-               $dparams['multiple'] = false;
-               $dparams['valuename'] = Dropdown::EMPTY_VALUE;
-               if ($dparams['value'] != 0) {
-                  $dparams['valuename'] = $dparams['value'];
-               }
-               echo Html::jsAjaxDropdown(
-                  $fieldName,
-                  $domId,
-                  $CFG_GLPI['root_doc']."/ajax/getDropdownFindNum.php",
-                  $dparams
-               );
-            } else {
-               $itemtype::dropdown($dparams);
-            }
+            $itemtype::dropdown($dparams);
          }
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
