@@ -375,6 +375,8 @@ PluginFormcreatorConditionnableInterface
    protected function setTargetCategory($data, $formanswer) {
       global $DB;
 
+      $category = null;
+
       switch ($this->fields['category_rule']) {
          case self::CATEGORY_RULE_ANSWER:
             $category = $DB->request([
@@ -391,7 +393,6 @@ PluginFormcreatorConditionnableInterface
             $category = $this->fields['category_question'];
             break;
          case self::CATEGORY_RULE_LAST_ANSWER:
-            $category = null;
             $form_id = $formanswer->fields['id'];
 
             // Get all answers for dropdown questions of this form, ordered
@@ -419,12 +420,10 @@ PluginFormcreatorConditionnableInterface
 
             foreach ($answers as $answer) {
                // Decode dropdown settings
-               $values = json_decode($answer['values']);
+               $itemtype = \PluginFormcreatorDropdownField::getSubItemtypeForValues($answer['values']);
 
                // Skip if not a dropdown on categories
-               if (!isset($values->itemtype)
-                  || $values->itemtype !== "ITILCategory"
-               ) {
+               if ($itemtype !== "ITILCategory") {
                   continue;
                }
 
@@ -438,9 +437,6 @@ PluginFormcreatorConditionnableInterface
                break;
             }
             break;
-
-         default:
-            $category = null;
       }
       if ($category !== null) {
          $data['itilcategories_id'] = $category;
