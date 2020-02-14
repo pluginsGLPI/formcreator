@@ -62,6 +62,81 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
+   public function providerSetTargetAssociatedItemLastAnswer() {
+      global $CFG_GLPI;
+
+      $validItemtype = $CFG_GLPI["asset_types"][0];
+      $invalidItemtype = "dzqdqzdkqzkdoz";
+
+      return [
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $validItemtype],
+               ['answer' => 9, 'values' => $validItemtype]
+            ],
+            'getItemSucess' => true,
+            'result'        => [
+               'items_id' => [$validItemtype => [7]]
+            ],
+         ],
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $invalidItemtype],
+               ['answer' => 9, 'values' => $validItemtype]
+            ],
+            'getItemSucess' => true,
+            'result'        => [
+               'items_id' => [$validItemtype => [9]]
+            ],
+         ],
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $invalidItemtype],
+               ['answer' => 9, 'values' => $invalidItemtype]
+            ],
+            'getItemSucess' => true,
+            'result'        => [],
+         ],
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $validItemtype],
+               ['answer' => 9, 'values' => $validItemtype]
+            ],
+            'getItemSucess' => false,
+            'result'        => [],
+         ],
+      ];
+   }
+
+   public function providerSetTargetAssociatedCategoryLastAnswer() {
+      $validItemtype = json_encode(["itemtype" => "ITILCategory"]);
+      $invalidItemtype = json_encode(["itemtype" => "dzqdqzdkqzkdoz"]);
+
+      return [
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $validItemtype],
+               ['answer' => 9, 'values' => $validItemtype]
+            ],
+            'result'        => ['itilcategories_id' => 7],
+         ],
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $invalidItemtype],
+               ['answer' => 9, 'values' => $validItemtype]
+            ],
+            'result'        => ['itilcategories_id' => 9],
+         ],
+         [
+            'answers' => [
+               ['answer' => 7, 'values' => $invalidItemtype],
+               ['answer' => 9, 'values' => $invalidItemtype]
+            ],
+            'result'        => [],
+         ],
+      ];
+   }
+
    /**
     * @dataProvider providerGetTypeName
     * @param integer $number
@@ -128,18 +203,20 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testGetEnumAssociateRule() {
       $output = \PluginFormcreatorTargetTicket::getEnumAssociateRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE      => 'None',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_SPECIFIC  => 'Specific asset',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE         => 'None',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_SPECIFIC     => 'Specific asset',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER       => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER  => 'Last valid answer',
       ]);
    }
 
    public function testGetEnumCategoryRule() {
       $output = \PluginFormcreatorTargetTicket::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE      => 'Category from template or none',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC  => 'Specific category',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE          => 'Category from template or none',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC      => 'Specific category',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
       ]);
    }
 
@@ -813,5 +890,117 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $output = $instance->publicSetTargetAssociatedItem([], $formAnswer);
       $this->array($output['items_id']['Computer'])->hasSize(1);
       $this->integer((int) $output['items_id']['Computer'][$computer->getID()])->isEqualTo($computer->getID());
+   }
+
+   /**
+    * @dataProvider providerSetTargetAssociatedItemLastAnswer
+    */
+   public function testSetTargetAssociatedItemLastAnswer(
+      array $answers,
+      $getItemSucess,
+      array $results
+   ) {
+      global $DB;
+
+      $lastAnswer = \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER;
+
+      // Prepare instance
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $instance->fields = ['associate_rule' => $lastAnswer];
+
+      // Prepare args
+      $data = [];
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->fields = ['id' => 1];
+
+      // Mock call to $DB
+      $DB = new \mock\DB();
+
+      // $db->request()
+      $answerTable = \PluginFormcreatorAnswer::getTable() . ' AS answer';
+      $computerTable = \Computer::getTable();
+
+      $this->calling($DB)->request = function (
+         $tableorsql,
+         $crit = "",
+         $debug = false
+      ) use ($DB, $answers, $answerTable, $computerTable, $getItemSucess) {
+
+         // Check for specific tables
+         if (isset($tableorsql['FROM'])) {
+            if ($tableorsql['FROM'] == $answerTable) {
+               // $DB is trying to load the answers for the form
+               return new \ArrayIterator($answers);
+            } else if ($tableorsql['FROM'] == $computerTable) {
+               // $item->getFromDB check
+               if ($getItemSucess) {
+                  return new \ArrayIterator([1]);
+               } else {
+                  return new \ArrayIterator();
+               }
+            }
+         }
+
+         // Keep normal execution for others requests
+         $iterator = new \DBmysqlIterator($DB);
+         $iterator->execute($tableorsql, $crit, $debug);
+         return $iterator;
+      };
+
+      // Execute the test
+      $res = $instance->publicSetTargetAssociatedItem($data, $formAnswer);
+
+      // Assert results
+      $this->array($res)->isEqualTo($results);
+   }
+
+   /**
+    * @dataProvider providerSetTargetAssociatedCategoryLastAnswer
+    */
+   public function testSetTargetCategoryLastAnswer(
+      array $answers,
+      array $results
+   ) {
+      global $DB;
+
+      $lastAnswer = \PluginFormcreatorTargetBase::CATEGORY_RULE_LAST_ANSWER;
+
+      // Prepare instance
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $instance->fields = ['category_rule' => $lastAnswer];
+
+      // Prepare args
+      $data = [];
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->fields = ['id' => 1];
+
+      // Mock call to $DB
+      $DB = new \mock\DB();
+
+      // $db->request()
+      $answerTable = \PluginFormcreatorAnswer::getTable() . ' AS answer';
+
+      $this->calling($DB)->request = function (
+         $tableorsql,
+         $crit = "",
+         $debug = false
+      ) use ($DB, $answers, $answerTable) {
+
+         // $DB is trying to load the answers for the form
+         if (isset($tableorsql['FROM']) && $tableorsql['FROM'] == $answerTable) {
+            return new \ArrayIterator($answers);
+         }
+
+         // Keep normal execution for others requests
+         $iterator = new \DBmysqlIterator($DB);
+         $iterator->execute($tableorsql, $crit, $debug);
+         return $iterator;
+      };
+
+      // Execute the test
+      $res = $instance->publicSetTargetCategory($data, $formAnswer);
+
+      // Assert results
+      $this->array($res)->isEqualTo($results);
    }
 }

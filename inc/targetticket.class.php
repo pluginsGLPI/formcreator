@@ -40,6 +40,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    const ASSOCIATE_RULE_NONE = 1;
    const ASSOCIATE_RULE_SPECIFIC = 2;
    const ASSOCIATE_RULE_ANSWER = 3;
+   const ASSOCIATE_RULE_LAST_ANSWER = 4;
 
    const REQUESTTYPE_NONE = 0;
    const REQUESTTYPE_SPECIFIC = 1;
@@ -85,9 +86,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    public static function getEnumAssociateRule() {
       return [
-         self::ASSOCIATE_RULE_NONE      => __('None', 'formcreator'),
-         self::ASSOCIATE_RULE_SPECIFIC  => __('Specific asset', 'formcreator'),
-         self::ASSOCIATE_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::ASSOCIATE_RULE_NONE        => __('None', 'formcreator'),
+         self::ASSOCIATE_RULE_SPECIFIC    => __('Specific asset', 'formcreator'),
+         self::ASSOCIATE_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         self::ASSOCIATE_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ];
    }
 
@@ -936,7 +938,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function setTargetAssociatedItem($data, $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       switch ($this->fields['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
@@ -978,6 +980,58 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             foreach ($rows as $row) {
                $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
             }
+            break;
+
+         case self::ASSOCIATE_RULE_LAST_ANSWER:
+            $form_id = $formanswer->fields['id'];
+
+            // Get all answers for glpiselect questions of this form, ordered
+            // from last to first displayed
+            $answers = $DB->request([
+               'SELECT' => ['answer.answer', 'question.values'],
+               'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
+               'JOIN' => [
+                  PluginFormcreatorQuestion::getTable() . ' AS question' => [
+                     'ON' => [
+                        'answer' => 'plugin_formcreator_questions_id',
+                        'question' => 'id',
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'question.fieldtype'                       => "glpiselect",
+               ],
+               'ORDER' => [
+                  'row DESC',
+                  'col DESC',
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Skip if the object type is not valid asset type
+               if (!in_array($answer['values'], $CFG_GLPI["asset_types"])) {
+                  continue;
+               }
+
+               // Skip if question was not answered
+               if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Skip if item doesn't exist in the DB (shouldn't happen)
+               $item = new $answer['values']();
+               if (!$item->getFromDB($answer['answer'])) {
+                  continue;
+               }
+
+               // Found a valid answer, stop here
+               $data['items_id'] = [
+                  $answer['values'] => [$answer['answer']]
+               ];
+               break;
+            }
+
             break;
       }
 
@@ -1155,6 +1209,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    private function saveAssociatedItems($input) {
       switch ($input['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
+         case self::ASSOCIATE_RULE_LAST_ANSWER:
             $input['associate_question'] = $input['_associate_question'];
             break;
 
