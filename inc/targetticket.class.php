@@ -917,7 +917,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          ],
       ]);
       foreach ($rows as $row) {
-         $options['items_id'][$row['itemtype']][$row['id']] = $row['id'];
+         $options['items_id'][$row['itemtype']][$row['id']] = $row['plugin_formcreator_targettickets_id'];
       }
       Item_Ticket::itemAddForm(new Ticket(), $options);
       echo '</div>';
