@@ -60,13 +60,13 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       $optgroup = Dropdown::getStandardDropdownItemTypes();
-      array_unshift($optgroup, '---');
       $field = '<div id="dropdown_values_field">';
       $field .= Dropdown::showFromArray('dropdown_values', $optgroup, [
-         'value'     => $itemtype,
-         'rand'      => $rand,
-         'on_change' => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
-         'display'   => false,
+         'value'               => $itemtype,
+         'rand'                => $rand,
+         'on_change'           => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
+         'display_emptychoice' => true,
+         'display'             => false,
       ]);
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
