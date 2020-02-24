@@ -253,7 +253,16 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $dparams['condition'] = $dparams_cond_crit;
 
-            $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
+            $dparams['display_emptychoice'] = false;
+            if ($itemtype != Entity::class) {
+               $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
+            } else {
+               if ($this->question->fields['show_empty'] !== '0') {
+                  $dparams['toadd'] = [
+                     -1 => Dropdown::EMPTY_VALUE,
+                  ];
+               }
+            }
 
             $emptyItem = new $itemtype();
             $emptyItem->getEmpty();
