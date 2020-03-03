@@ -217,6 +217,10 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
        return true;
    }
 
+   public function rawSearchOption() {
+      return [];
+   }
+
    public function equals($value) {
       return ($this->value) === ($value);
    }
