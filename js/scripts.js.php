@@ -626,9 +626,9 @@ function formcreatorShowFields(form) {
          var sectionId = parseInt(sectionKey);
          if (!isNaN(sectionId)) {
             if (sectionToShow[sectionId]) {
-               $('div[data-section-id="' + sectionId+ '"]').show();
+               $('div[data-section-id="' + sectionId+ '"]').css('visibility', '');
             } else {
-               $('div[data-section-id="' + sectionId+ '"]').hide();
+               $('div[data-section-id="' + sectionId+ '"]').css('visibility', 'hidden');
             }
          }
       }
@@ -638,12 +638,14 @@ function formcreatorShowFields(form) {
          questionId = parseInt(questionKey.replace('formcreator_field_', ''));
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
-               $('#form-group-field-' + questionKey).show();
+               $('#form-group-field-' + questionKey).css('visibility', '');
+               $('#form-group-field-' + questionKey).css('height', '');
                i++;
                $('#form-group-field-' + questionKey).removeClass('line' + (i+1) % 2);
                $('#form-group-field-' + questionKey).addClass('line' + i%2);
             } else {
-               $('#form-group-field-' + questionKey).hide();
+               $('#form-group-field-' + questionKey).css('visibility', 'hidden');
+               $('#form-group-field-' + questionKey).css('height', '0');
                $('#form-group-field-' + questionKey).removeClass('line0');
                $('#form-group-field-' + questionKey).removeClass('line1');
             }
