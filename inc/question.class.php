@@ -918,6 +918,9 @@ PluginFormcreatorConditionnableInterface
       if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
+            if (false === ($input['_parameters'][$input['fieldtype']][$fieldName])) {
+               continue;
+            }
             $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
          }
       }
