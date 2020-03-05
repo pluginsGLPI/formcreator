@@ -237,7 +237,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      $itemtype::getTable(),
                      $decodedValues['show_ticket_categories_root']
                   );
-               $dparams_cond_crit['id'] = $sons;
+               $dparams_cond_crit[ItilCategory::getTable().'.id'] = $sons;
                $rootItem = new $itemtype();
                if ($rootItem->getFromDB($decodedValues['show_ticket_categories_root'])) {
                   $baseLevel = $rootItem->fields['level'];
