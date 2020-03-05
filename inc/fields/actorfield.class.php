@@ -118,7 +118,11 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
                } else {
                   $user = new User();
                   $user->getFromDB($item);
-                  $value[] = $user->getRawName();
+                  if (method_exists($user, 'getFriendlyName')) {
+                     $value[] = $user->getFriendlyName();
+                  } else {
+                     $value[] = $user->getRawName();
+                  }
                }
             }
             echo implode('<br>', $value);
