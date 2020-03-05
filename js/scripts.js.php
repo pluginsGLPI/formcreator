@@ -636,8 +636,10 @@ function formcreatorShowFields(form) {
          if (!isNaN(sectionId)) {
             if (sectionToShow[sectionId]) {
                $('div[data-section-id="' + sectionId+ '"]').css('visibility', '');
+               $('div[data-section-id="' + sectionId+ '"]').css('height', '');
             } else {
                $('div[data-section-id="' + sectionId+ '"]').css('visibility', 'hidden');
+               $('div[data-section-id="' + sectionId+ '"]').css('height', '0');
             }
          }
       }
