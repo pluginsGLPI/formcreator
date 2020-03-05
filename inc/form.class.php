@@ -1896,7 +1896,7 @@ PluginFormcreatorConditionnableInterface
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('');
+         throw new ImportFailureException('UUID or ID is mandatory');
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
