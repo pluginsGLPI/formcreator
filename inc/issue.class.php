@@ -231,6 +231,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       if ($item instanceof Ticket) {
          //Tickets without form associated or single ticket for an answer
+         $satisfaction = new TicketSatisfaction();
+         if ($satisfaction->getFromDB($options['id'])) {
+            // show survey form, if any
+            $satisfaction->showForm($item);
+         }
+
          echo "<div class='timeline_box'>";
          $rand = mt_rand();
          $item->showTimelineForm($rand);
