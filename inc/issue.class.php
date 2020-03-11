@@ -231,6 +231,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       if ($item instanceof Ticket) {
          //Tickets without form associated or single ticket for an answer
+         $satisfaction = new TicketSatisfaction();
+         if ($satisfaction->getFromDB($options['id'])) {
+            // show survey form, if any
+            // @see Ticket::displayTabContentForItem()
+            $duration = Entity::getUsedConfig('inquest_duration', $item->fields['entities_id']);
+            $date2    = strtotime($satisfaction->fields['date_begin']);
+            if (($duration == 0)
+                || (strtotime("now") - $date2) <= $duration*DAY_TIMESTAMP) {
+               $satisfaction->showForm($item);
+            } else {
+               echo "<p class='center b'>".__('Satisfaction survey expired')."</p>";
+            }
+         }
+
          echo "<div class='timeline_box'>";
          $rand = mt_rand();
          $item->showTimelineForm($rand);
