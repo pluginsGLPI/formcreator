@@ -473,7 +473,7 @@ var plugin_formcreator = new function() {
          column:         this.questionsColumns,
          cellHeight:     '32px',
          verticalMargin: '5px',
-         float:          true,
+         float:          false,
          resizeable:     {
             handles: 'e, w'
          }
