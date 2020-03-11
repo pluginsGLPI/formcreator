@@ -174,7 +174,13 @@ function plugin_init_formcreator() {
          if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
             if (plugin_formcreator_replaceHelpdesk()) {
                if (!isset($_POST['update'])) {
-                  Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket');
+                  $decodedUrl = [];
+                  $forceTab = '';
+                  parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
+                  if (isset($decodedUrl['forcetab'])) {
+                     Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
+                  }
+                  Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $forceTab);
                }
             }
          }
@@ -302,7 +308,7 @@ function plugin_formcreator_decode($string) {
 
 /**
  * Tells if helpdesk replacement is enabled for the current user
- * 
+ *
  * @return boolean|integer
  */
 function plugin_formcreator_replaceHelpdesk() {
