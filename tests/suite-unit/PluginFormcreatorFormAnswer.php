@@ -36,6 +36,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       parent::beforeTestMethod($method);
       switch ($method) {
          case 'testSaveForm':
+         case 'testGetFullForm':
+         case 'testCanValidate':
             self::login('glpi', 'glpi');
       }
    }
