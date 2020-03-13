@@ -459,7 +459,7 @@ function plugin_formcreator_dynamicReport($params) {
 }
 
 function plugin_formcreator_redefine_menus($menus) {
-   if (\Session::getCurrentInterface() == "helpdesk" && isset($menus['tickets'])) {
+   if (isset($menus['tickets'])) {
       unset($menus['tickets']);
    }
 

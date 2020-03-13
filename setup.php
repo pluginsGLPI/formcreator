@@ -254,7 +254,12 @@ function plugin_init_formcreator() {
 
          Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
 
-         if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', Session::getActiveEntity())) {
+         if (Session::getCurrentInterface() == "helpdesk"
+            && PluginFormcreatorEntityconfig::getUsedConfig(
+               'replace_helpdesk',
+               $_SESSION['glpiactive_entity']
+            )
+         ) {
             $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
          }
       }

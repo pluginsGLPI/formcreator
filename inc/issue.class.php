@@ -295,7 +295,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    public function rawSearchOptions() {
       $tab = [];
-      $hide_technician = \Entity::getUsedConfig('anonymize_support_agents');
+      $hide_technician = \Entity::getUsedConfig(
+         'anonymize_support_agents',
+         $_SESSION['glpiactive_entity']
+      );
 
       $tab[] = [
          'id'                 => 'common',
