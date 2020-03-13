@@ -108,7 +108,8 @@ $(function() {
    });
 
    <?php
-   if (Session::getCurrentInterface() == 'helpdesk' && PluginFormcreatorForm::countAvailableForm() > 0) {
+   if (Session::getCurrentInterface() == 'helpdesk'
+       && PluginFormcreatorForm::countAvailableForm() > 0) {
       echo "$('#c_menu #menu1:first-child').after(link);";
    }
    ?>
