@@ -173,6 +173,7 @@ input.submit_button:focus {
    text-align: left;
    padding-left: 0;
    position: relative;
+   min-height: 32px;
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item {

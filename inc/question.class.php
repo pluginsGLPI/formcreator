@@ -425,25 +425,25 @@ PluginFormcreatorConditionnableInterface
             $oldId = $this->fields[$sectionFk];
             $newId = $input[$sectionFk];
             $row = $this->fields['row'];
-            // Reorder other questions from the old section
-            $DB->update(
-               self::getTable(),
-               new QueryExpression("`row` = `row` - 1"),
-               [
-                  'row' => ['>', $row],
-                  $sectionFk => $oldId,
-               ]
-            );
+            // Reorder other questions from the old section (handled by code client side)
+            // $DB->update(
+            //    self::getTable(),
+            //    new QueryExpression("`row` = `row` - 1"),
+            //    [
+            //       'row' => ['>', $row],
+            //       $sectionFk => $oldId,
+            //    ]
+            // );
 
             // Get the order for the new question
-            $maxRow = PluginFormcreatorCommon::getMax($this, [
-               $sectionFk => $newId
-            ], 'row');
-            if ($maxRow === null) {
-               $input['row'] = 1;
-            } else {
-               $input['row'] = $maxRow + 1;
-            }
+            // $maxRow = PluginFormcreatorCommon::getMax($this, [
+            //    $sectionFk => $newId
+            // ], 'row');
+            // if ($maxRow === null) {
+            //    $input['row'] = 1;
+            // } else {
+            //    $input['row'] = $maxRow + 1;
+            // }
          }
       }
 
@@ -461,6 +461,7 @@ PluginFormcreatorConditionnableInterface
       $width = $this->fields['width'];
       $height = 1;
 
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       if (isset($input['x'])) {
          if ($input['x'] < 0) {
             return false;
@@ -475,7 +476,6 @@ PluginFormcreatorConditionnableInterface
          if ($input['y'] < 0) {
             return false;
          }
-         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $maxRow = 1 + PluginFormcreatorCommon::getMax(
             $this, [
                $sectionFk => $this->fields[$sectionFk]
@@ -508,14 +508,25 @@ PluginFormcreatorConditionnableInterface
          $height = $input['height'];
       }
 
-      $success = $this->update([
+      if (isset($input[$sectionFk])) {
+         $section = new PluginFormcreatorSection();
+         if (!$section->getFromDB($input[$sectionFk])) {
+            return false;
+         }
+      }
+
+      $input2 = [
          'id'     => $this->getID(),
          '_skip_checks' => true,
          'col'      => $x,
          'row'      => $y,
          'width'  => $width,
          'height' => $height,
-      ]);
+      ];
+      if (isset($input[$sectionFk])) {
+         $input2[$sectionFk] = $input[$sectionFk];
+      }
+      $success = $this->update($input2);
 
       return $success;
    }

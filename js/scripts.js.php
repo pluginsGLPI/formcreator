@@ -463,6 +463,30 @@ var plugin_formcreator = new function() {
          // Remove empty rows
          plugin_formcreator.moveUpItems(group);
       });
+      group.on('dropped', function (event, previousWidget, newWidget) {
+         var changes = {};
+         var section = $(newWidget.el).closest('[data-itemtype="PluginFormcreatorSection"]');
+         var itemId = $(newWidget.el).attr('data-id');
+         changes[itemId] = {
+            plugin_formcreator_sections_id: section.attr('data-id'),
+            width: newWidget.width,
+            height: newWidget.height,
+            x: newWidget.x,
+            y: newWidget.y
+         };
+         $.ajax({
+            'url': rootDoc + '/plugins/formcreator/ajax/question_move.php',
+            type: 'POST',
+            data: {
+               move: changes,
+            }
+         }).fail(function() {
+            plugin_formcreator.cancelChangeItems(event, items);
+            plugin_formcreator.dirty = false;
+         }).done(function(response) {
+            plugin_formcreator.dirty = false;
+         });
+      });
    };
 
    this.initGridStack = function (sectionId) {
@@ -474,6 +498,7 @@ var plugin_formcreator = new function() {
          cellHeight:     '32px',
          verticalMargin: '5px',
          float:          false,
+         acceptWidgets:  true,
          resizeable:     {
             handles: 'e, w'
          }
