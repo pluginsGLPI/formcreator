@@ -2228,7 +2228,7 @@ PluginFormcreatorConditionnableInterface
       </script>';
    }
 
-   static function getInterface() {
+   public static function getInterface() {
       if (Session::getCurrentInterface() == 'helpdesk') {
          if (plugin_formcreator_replaceHelpdesk()) {
             return 'servicecatalog';
@@ -2242,7 +2242,7 @@ PluginFormcreatorConditionnableInterface
       return 'public';
    }
 
-   static function header() {
+   public static function header() {
       switch (self::getInterface()) {
          case "servicecatalog";
             return PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
@@ -2266,7 +2266,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @return string HTML to show a footer
     */
-   static function footer() {
+   public static function footer() {
       switch (self::getInterface()) {
          case "servicecatalog";
             return PluginFormcreatorWizard::footer();
