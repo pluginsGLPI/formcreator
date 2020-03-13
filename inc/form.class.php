@@ -2197,8 +2197,7 @@ PluginFormcreatorConditionnableInterface
    }
 
    static function getInterface() {
-      if (isset($_SESSION['glpiactiveprofile']['interface'])
-            && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
+      if (Session::getCurrentInterface() == 'helpdesk') {
          if (plugin_formcreator_replaceHelpdesk()) {
             return 'servicecatalog';
          }

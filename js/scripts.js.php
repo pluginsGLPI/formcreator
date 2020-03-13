@@ -107,8 +107,7 @@ $(function() {
    });
 
    <?php
-   if (isset($_SESSION['glpiactiveprofile']['interface'])
-       && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')
+   if (Session::getCurrentInterface() == 'helpdesk'
        && PluginFormcreatorForm::countAvailableForm() > 0) {
       echo "$('#c_menu #menu1:first-child').after(link);";
    }
