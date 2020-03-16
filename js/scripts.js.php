@@ -194,7 +194,7 @@ function fcInitMultiSelect() {
 }
 
 function showHomepageFormList() {
-   if ($('.homepage_forms_container').length) {
+   if ($('#plugin_formcreatorHomepageForms').length) {
       return;
    }
 
@@ -202,7 +202,7 @@ function showHomepageFormList() {
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
-      if (!$('.homepage_forms_container').length) {
+      if (!$('#plugin_formcreatorHomepageForms').length) {
          $('.central > tbody:first').first().prepend(response);
       }
    });
