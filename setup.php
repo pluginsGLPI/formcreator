@@ -312,15 +312,19 @@ function plugin_formcreator_decode($string) {
  * @return boolean|integer
  */
 function plugin_formcreator_replaceHelpdesk() {
-   if (isset($_SESSION['glpiactiveprofile']['interface'])
-         && isset($_SESSION['glpiactive_entity'])) {
-      // Interface and active entity are set in session
-      $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
-      if ($helpdeskMode != '0'
-            && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         return $helpdeskMode;
-      }
+   if (!isset($_SESSION['glpiactive_entity'])) {
+      return false;
    }
+
+   if (Session::getCurrentInterface() != 'helpdesk') {
+      return false;
+   }
+
+   $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
+   if ($helpdeskMode != 0) {
+      return $helpdeskMode;
+   }
+
    return false;
 }
 

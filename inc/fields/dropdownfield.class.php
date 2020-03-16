@@ -160,8 +160,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   break;
 
                case ITILCategory::class:
-                  if (isset ($_SESSION['glpiactiveprofile']['interface'])
-                     && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+                  if (Session::getCurrentInterface() == 'helpdesk') {
                      $dparams_cond_crit['is_helpdeskvisible'] = 1;
                   }
                   switch ($decodedValues['show_ticket_categories']) {
