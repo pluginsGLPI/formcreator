@@ -50,6 +50,8 @@ if (method_exists(Plugin::class, 'getWebDir')) {
    define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 }
 
+define('FORMCREATOR_TEMPLATE_CACHE_PATH', GLPI_PLUGIN_DOC_DIR . '/formcrator/cache');
+
 /**
  * Define the plugin's version and informations
  *
@@ -92,6 +94,11 @@ function plugin_formcreator_check_prerequisites() {
    if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')
        || PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE && version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MAX_VERSION, 'ge')) {
       echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . " and GLPI < " . PLUGIN_FORMCREATOR_GLPI_MAX_VERSION . "<br>";
+      $prerequisitesSuccess = false;
+   }
+
+   if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+      echo "Run composer install --no-dev in the plugin directory<br>";
       $prerequisitesSuccess = false;
    }
 
@@ -162,7 +169,8 @@ function plugin_init_formcreator() {
    $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+   if ($plugin->isActivated('formcreator')) {
+      require_once(__DIR__ . '/vendor/autoload.php');
       spl_autoload_register('plugin_formcreator_autoload');
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
@@ -417,7 +425,17 @@ function plugin_formcreator_autoload($classname) {
          include_once($filename);
          return true;
       }
+
+      return false;
    }
+
+   if ($classname == 'GlpiLocalesExtension') {
+      require_once(__DIR__ . '/inc/glpilocalesextension.class.php');
+      return true;
+   }
+
+   return false;
+
 }
 
 /**
@@ -438,3 +456,29 @@ function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $err
    }
    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
+
+/**
+ * @return Twig_Environment
+ */
+function plugin_formcreator_getTemplateEngine() {
+   $loader = new Twig_Loader_Filesystem(__DIR__ . '/tpl');
+   $twig =  new Twig_Environment($loader, [
+         'cache'        => FORMCREATOR_TEMPLATE_CACHE_PATH,
+         'auto_reload'  => ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE),
+   ]);
+   $twig->addExtension(new GlpiLocalesExtension());
+   return $twig;
+}
+
+/**
+ * Render HTML with Twig
+ *
+ * @param string $template filename of the template
+ * @param array $data data to fill the template
+ * @return void
+ */
+function plugin_formcreator_render($template, $data) {
+   $twig = plugin_formcreator_getTemplateEngine();
+   echo $twig->render($template, $data);
+}
+
