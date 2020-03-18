@@ -472,7 +472,10 @@ function plugin_formcreator_getTemplateEngine() {
          'auto_reload'  => ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE),
    ]);
    $twig->addExtension(new GlpiLocalesExtension());
+<<<<<<< HEAD
    $twig->addExtension(new GlpiInputExtension());
+=======
+>>>>>>> 803cf5fb... feat: introduce twig
    return $twig;
 }
 
@@ -481,6 +484,7 @@ function plugin_formcreator_getTemplateEngine() {
  *
  * @param string $template filename of the template
  * @param array $data data to fill the template
+<<<<<<< HEAD
  * @param array $options
  * @return void
  */
@@ -497,5 +501,12 @@ function plugin_formcreator_render($template, $data, $options = []) {
    }
 
    echo $output;
+=======
+ * @return void
+ */
+function plugin_formcreator_render($template, $data) {
+   $twig = plugin_formcreator_getTemplateEngine();
+   echo $twig->render($template, $data);
+>>>>>>> 803cf5fb... feat: introduce twig
 }
 
