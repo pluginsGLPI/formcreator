@@ -282,15 +282,41 @@ PluginFormcreatorConditionnableInterface
       $options['display'] = false;
 
       switch ($field) {
-         case 'is_active' :
-            return Dropdown::showFromArray($name, [
-               '0' => __('Inactive'),
-               '1' => __('Active'),
-            ], [
-               'value'               => $values[$field],
-               'display_emptychoice' => false,
-               'display'             => false
-            ]);
+         case 'is_active':
+            $options['value'] = $values[$field];
+            $options['display_emptychoice'] = false;
+            return Dropdown::showFromArray(
+               $name, [
+                  '0' => __('Inactive'),
+                  '1' => __('Active'),
+               ],
+               $options
+            );
+            break;
+
+         case 'access_rights':
+            $options['value'] = $values[$field];
+            $options['display_emptychoice'] = false;
+            return Dropdown::showFromArray(
+               $name,
+               self::getEnumAccessType(),
+               $options
+            );
+            break;
+
+         case 'language':
+            $options['value'] = $values[$field];
+            $options['display_emptychoice'] = false;
+            $options['emptylabel'] = '--- ' . __('All langages', 'formcreator') . ' ---';
+            return Dropdown::showLanguages($name, $options);
+            break;
+
+         case 'icon':
+            $options['value'] = $values[$field] == '' ? 'fa fa-question-circle' : $values[$field];
+            return PluginFormcreatorCommon::showFontAwesomeDropdown(
+               'icon',
+               $options
+            );
             break;
 
          case 'access_rights' :
@@ -393,84 +419,9 @@ PluginFormcreatorConditionnableInterface
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
-      echo '<tr class="tab_bg_1">';
-      echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
-      echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
-      echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
-      echo '<td width="30%">';
-      Dropdown::showYesNo("is_active", $this->fields["is_active"]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Category') . '</td>';
-      echo '<td>';
-      PluginFormcreatorCategory::dropdown([
-         'name'  => 'plugin_formcreator_categories_id',
-         'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
-      ]);
-      echo '</td>';
-      echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
-      echo '<td>';
-      Dropdown::showYesNo("helpdesk_home", $this->fields["helpdesk_home"]);
-      echo '</td>';
-
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Form icon', 'formcreator') . '</td>';
-      echo '<td>';
-      $icon = $this->fields['icon'] == '' ? 'fa fa-question-circle' : $this->fields['icon'];
-      PluginFormcreatorCommon::showFontAwesomeDropdown('icon', ['value' => $icon]);
-      $iconColor = $this->fields['icon_color'] == '' ? '#999999' : $this->fields['icon_color'];
-      Html::showColorField('icon_color', ['value' => $iconColor]);
-      echo '</td>';
-      echo '<td>' . __('Background color', 'formcreator') . '</td>';
-      echo '<td>';
-      $tileColor = $this->fields['background_color'] == '' ? '#E7E7E7' : $this->fields['background_color'];
-      Html::showColorField('background_color', ['value' => $tileColor]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Description') . '</td>';
-      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="35" /></td>';
-      echo '<td>' . __('Language') . '</td>';
-      echo '<td>';
-      Dropdown::showLanguages('language', [
-         'value'               => ($ID != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
-         'display_emptychoice' => true,
-         'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . _n('Header', 'Headers', 1, 'formcreator') . '</td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'content',
-         'value'   => $this->fields["content"],
-         'enable_richtext' => true,
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Need to be validate?', 'formcreator') . '</td>';
-      echo '<td class="validators_bloc">';
-
-      Dropdown::showFromArray('validation_required', [
-         self::VALIDATION_NONE  => Dropdown::EMPTY_VALUE,
-         self::VALIDATION_USER  => User::getTypeName(1),
-         self::VALIDATION_GROUP => Group::getTypeName(1),
-      ], [
-         'value'     =>  $this->fields['validation_required'],
-         'on_change' => 'plugin_formcreator_changeValidators(this.value)'
-      ]);
-      echo '</td>';
-      echo '<td colspan="2">';
+      $objectName = (new DbUtils)->autoName($this->fields['name'], 'name',
+         (isset($options['withtemplate']) && $options['withtemplate'] == 2),
+         $this->getType(), -1);
 
       // Select all users with ticket validation right and the groups
       $userTable = User::getTable();
@@ -527,15 +478,6 @@ PluginFormcreatorConditionnableInterface
       foreach($users as $user) {
          $validatorUsers[$user['id']] = $user['name'];
       }
-      echo '<div id="validators_users">';
-      Dropdown::showFromArray(
-         '_validator_users',
-         $validatorUsers, [
-            'multiple' => true,
-            'values' => $selectedValidatorUsers
-         ]
-      );
-      echo '</div>';
 
       // Validators groups
       $subQuery = [
@@ -596,38 +538,103 @@ PluginFormcreatorConditionnableInterface
       foreach($groups as $group) {
          $validatorGroups[$group['id']] = $group['name'];
       }
-      echo '<div id="validators_groups" style="width: 100%">';
-      Dropdown::showFromArray(
-         '_validator_groups',
-         $validatorGroups,
-         [
-            'multiple' => true,
-            'values'   => $selectecValidatorGroups
+
+      $data = [
+         'item' => [
+            'id' => $ID,
+            'name' => Html::autocompletionTextField(
+               $this,
+               'name',
+               ['value' => $objectName, 'display' => false]
+            ),
+            'is_active' => Dropdown::showYesNo(
+               'is_active',
+               $this->fields["is_active"],
+               -1,
+               ['display' => false]
+            ),
+            'plugin_formcreator_categories_id' => PluginFormcreatorCategory::dropdown([
+               'name'  => 'plugin_formcreator_categories_id',
+               'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
+               'display' => false,
+            ]),
+            'helpdesk_home' => Dropdown::showYesNo(
+               'helpdesk_home',
+               $this->fields['helpdesk_home'],
+               -1,
+               ['display' => false]
+            ),
+            'icon' => PluginFormcreatorCommon::showFontAwesomeDropdown(
+               'icon',
+               [
+                  'value' => $this->fields['icon'] == '' ? 'fa fa-question-circle' : $this->fields['icon'],
+                  'display' => false,
+               ]
+            ),
+            'background_color' => Html::showColorField(
+               'background_color',
+               [
+                  'value' => $this->fields['background_color'] == '' ? '#E7E7E7' : $this->fields['background_color'],
+                  'display' => false,
+               ]
+            ),
+            'description' => Html::input(
+               'descripion', [
+                  'value' => $this->fields['description'],
+                  'display' => false,
+               ]
+            ),
+            'language' => Dropdown::showLanguages(
+               'language', [
+               'value'               => ($ID != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
+               'display_emptychoice' => true,
+               'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
+               'display' => false,
+            ]),
+            'content' => Html::textarea([
+               'name'    => 'content',
+               'value'   => $this->fields['content'],
+               'enable_richtext' => true,
+               'display' => false,
+            ]),
+            'validation_required' => Dropdown::showFromArray(
+               'validation_required', [
+               self::VALIDATION_NONE  => Dropdown::EMPTY_VALUE,
+               self::VALIDATION_USER  => User::getTypeName(1),
+               self::VALIDATION_GROUP => Group::getTypeName(1),
+            ], [
+               'value'     =>  $this->fields['validation_required'],
+               'on_change' => 'plugin_formcreator_changeValidators(this.value)',
+               'display' => false,
+            ]),
+            'validators_users' => Dropdown::showFromArray(
+               '_validator_users',
+               $validatorUsers, [
+                  'multiple' => true,
+                  'values' => $selectedValidatorUsers,
+                  'display' = false,
+               ]
+            ),
+            'validators_groups' => Dropdown::showFromArray(
+               '_validator_groups',
+               $validatorGroups,
+               [
+                  'multiple' => true,
+                  'values'   => $selectecValidatorGroups,
+                  'display' = false,
+               ]
+            ),
+            'is_default' => Dropdown::showYesNo(
+               'is_default',
+               $this->fields['is_default'],
+               -1,
+               ['display' => false]
+            ),
+            'canPurgeItem' => $this->canPurgeItem(),
          ]
-      );
-      echo '</div>';
+      ];
 
-      $script = '$(document).ready(function() {plugin_formcreator_changeValidators(' . $this->fields["validation_required"] . ');});';
-      echo Html::scriptBlock($script);
-
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
-      echo '<td>';
-      Dropdown::showYesNo("is_default", $this->fields["is_default"]);
-      echo '</td>';
-      echo '</tr>';
-
-      if (!$this->canPurgeItem()) {
-         echo '<tr>';
-         echo '<td colspan="4">'
-         . '<i class="fas fa-exclamation-triangle"></i>&nbsp;'
-         . __('To delete this form you must delete all its answers first.', 'formcreator')
-         . '</td>';
-         echo '</tr>';
-      }
+      plugin_formcreator_render('form/showform.html.twig', $data);
 
       $this->showFormButtons($options);
    }

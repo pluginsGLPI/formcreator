@@ -152,7 +152,7 @@ class PluginFormcreatorCommon {
     * @return array
     */
    public static function getFontAwesomePictoNames() {
-      $list = require_once(__DIR__ . '/../' . self::getPictoFilename(GLPI_VERSION));
+      $list = require(__DIR__ . '/../' . self::getPictoFilename(GLPI_VERSION));
       return $list;
    }
 
@@ -190,11 +190,12 @@ class PluginFormcreatorCommon {
          'noselect2'           => true, // we will instanciate it later
          'display_emptychoice' => true,
          'rand'                => mt_rand(),
+         'display'             => false,
       ];
       if (!isset($options['value'])) {
          $options['value'] = '';
       }
-      Dropdown::showFromArray($name, $items, $options);
+      $html = Dropdown::showFromArray($name, $items, $options);
 
       // templates for select2 dropdown
       $js = <<<JAVASCRIPT
@@ -214,7 +215,9 @@ class PluginFormcreatorCommon {
          });
       });
 JAVASCRIPT;
-      echo Html::scriptBlock($js);
+      $html .= Html::scriptBlock($js);
+
+      return $html;
    }
 
    public static function cancelMyTicket($id) {
