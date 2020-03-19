@@ -1,0 +1,34 @@
+<div id="plugin_formcreator_wizard_categories">
+   <div>
+      <h2>{{ _n("Category", "Categories", 2, 'formcreator') }}</h2>
+   </div>
+   <div>
+      <a href="#" id="wizard_seeall">{{ __('see all', 'formcreator') }}</a>
+   </div>
+</div>
+<div id="plugin_formcreator_wizard_right">
+   {% if serviceCatalog %}
+      <div id='plugin_formcreator_display_central'>
+         {{ displayCentral }}
+      </div>
+   {% endif %}
+   <div id="plugin_formcreator_searchBar">
+      <form name="formcreator_search" onsubmit="javascript: return false;">
+         <input type="text" name="words" id="formcreator_search_input" required/>
+         <span id="formcreator_search_input_bar"></span>
+         <label for="formcreator_search_input">{{ __('Please, describe your need here', 'formcreator') }}</label>
+      </form>
+   </div>
+   <div class="plugin_formcreator_sort">
+      <span class="formcreator_radios">
+         <input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />
+         <label for="plugin_formcreator_mostPopular">{{ __('Popularity sort', 'formcreator') }}</label>
+      </span>
+      <span class="formcreator_radios">
+         <input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />
+         <label for="plugin_formcreator_alphabetic">{{ __('Alphabetic sort', 'formcreator') }}</label>
+      </span>
+   </div>
+   <div id="plugin_formcreator_wizard_forms">
+   </div>
+</div>

@@ -1,0 +1,15 @@
+<table class="tab_cadre_fixe">
+<tr><th colspan="4">{{ __('Add a target', 'formcreator') }}</th></tr>
+<tr>
+<td width="15%"><strong>{{ __('Name') }}<span style="color:red;">*</span></strong></td>
+<td width="40%">{{ item.name|raw }}</td>
+<td width="15%"><strong>{{ _n('Type', 'Types', 1) }}<span style="color:red;">*</span></strong></td>
+<td width="30%">{{ item.itemtype|raw }}</td>
+</tr>
+<tr>
+<td colspan="4" class="center">
+{{ item.plugin_formcreator_forms.id|raw}}
+{{ submit|raw }}
+</td>
+</tr>
+</table>

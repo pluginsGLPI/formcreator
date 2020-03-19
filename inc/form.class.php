@@ -769,36 +769,17 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function showWizard($service_catalog = false) {
-      echo '<div id="plugin_formcreator_wizard_categories">';
-      echo '<div><h2>'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div><a href="#" id="wizard_seeall">' . __('see all', 'formcreator') . '</a></div>';
-      echo '</div>';
-
-      echo '<div id="plugin_formcreator_wizard_right">';
-
-      // hook display central (for alert plugin)
+      $displayCentral = '';
       if ($service_catalog) {
-         echo "<div id='plugin_formcreator_display_central'>";
+         ob_start();
          Plugin::doHook('display_central');
-         echo "</div>";
+         $displayCentral = ob_get_clean();
       }
 
-      echo '<div id="plugin_formcreator_searchBar">';
-      $this->showSearchBar();
-      echo '</div>';
-      echo '<div class="plugin_formcreator_sort">';
-      echo '<span class="formcreator_radios">';
-      echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
-      echo '<label for="plugin_formcreator_mostPopular">'.__('Popularity sort', 'formcreator').'</label>';
-      echo '</span>';
-      echo '<span class="formcreator_radios">';
-      echo '<input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />';
-      echo '<label for="plugin_formcreator_alphabetic">'.__('Alphabetic sort', 'formcreator').'</label>';
-      echo '</span>';
-      echo '</div>';
-      echo '<div id="plugin_formcreator_wizard_forms">';
-      echo '</div>';
-      echo '</div>';
+      $data = [
+         'displayCentral' => $displayCentral,
+      ];
+      plugin_formcreator_render('form/showwizard.html.twig', $data);
    }
 
    /**
@@ -2186,37 +2167,30 @@ PluginFormcreatorConditionnableInterface
 
    public function showAddTargetForm() {
       echo '<form name="form_target" method="post" action="'.static::getFormURL().'">';
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="4">'.__('Add a target', 'formcreator').'</th></tr>';
-
-      echo '<tr class="line1">';
-      echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" required="required"/></td>';
-      echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="30%">';
       $targetTypes = [];
       foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
          $targetTypes[$targetType] = $targetType::getTypeName(1);
       }
-      Dropdown::showFromArray(
-         'itemtype',
-         $targetTypes,
-         [
-            'display_emptychoice' => true
-         ]
-      );
-      echo '</td>';
-      echo '</tr>';
+      $data = [
+         'item' => [
+            'name' => Html::input('name', ['display' => false]),
+            'itemtype' => Dropdown::showFromArray(
+               'itemtype',
+               $targetTypes,
+               [
+                  'display_emptychoice' => true,
+                  'display' => false,
+               ]
+            ),
+            'plugin_formcreator_forms_id' => Html::hidden(
+               'plugin_formcreator_forms_id',
+               ['value' => $this->getID(), 'display' => false]
+            ),
+         ],
+         'submit' => Html::submit(__('Add'), ['name' => 'add_target', 'display' => false]),
+      ];
 
-      echo '<tr class="line0">';
-      echo '<td colspan="4" class="center">';
-      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $this->getID()]);
-      echo Html::submit(__('Add'), ['name' => 'add_target']);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '</table>';
+      plugin_formcreator_render('form/showaddtargetform.html.twig', $data);
       Html::closeForm();
    }
 
