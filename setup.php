@@ -475,10 +475,21 @@ function plugin_formcreator_getTemplateEngine() {
  *
  * @param string $template filename of the template
  * @param array $data data to fill the template
+ * @param array $options
  * @return void
  */
-function plugin_formcreator_render($template, $data) {
+function plugin_formcreator_render($template, $data, $options = []) {
+   $defaultOptions = [
+      'display' => true,
+   ];
+   $options = array_merge($defaultOptions, $options);
+
    $twig = plugin_formcreator_getTemplateEngine();
-   echo $twig->render($template, $data);
+   $output =  $twig->render($template, $data);
+   if (!$options['display']) {
+      return $output;
+   }
+
+   echo $output;
 }
 

@@ -1715,6 +1715,13 @@ PluginFormcreatorConditionnableInterface
       $canAddType = $documentType->canCreate();
       $canUpdateType = $documentType->canUpdate();
 
+      $data = [
+         'jsonTypeExists'  => $jsonTypeExists,
+         'jsonTypeEnabled' => $jsonTypeEnabled,
+         'canAddType'      => $canAddType,
+         'canUpdateType'   => $canUpdateType,
+      ];
+
       if (! ($jsonTypeExists && $jsonTypeEnabled)) {
          if (!$jsonTypeExists) {
             $message = __('Upload of JSON files not allowed.', 'formcreator');
@@ -1739,52 +1746,21 @@ PluginFormcreatorConditionnableInterface
                $button = Html::submit(_x('button', 'Back', 'formcreator'), ['name' => 'filetype_back']);
             }
          }
-         echo '<div class="spaced" id="tabsbody">';
+         $data['message'] = $message;
+         $data['button'] = $button;
          echo "<form name='form' method='post' action='". $destination."'>";
-         echo '<table class="tab_cadre_fixe" id="mainformtable">';
-         echo '<tr class="headerRow">';
-         echo '<th>';
-         echo __('Import forms');
-         echo '</th>';
-         echo '</tr>';
-         echo '<tr>';
-         echo '<td class="center">';
-         echo $message;
-         echo '</td>';
-         echo '</tr>';
-         echo '<td class="center">';
-         echo $button;
-         echo '</td>';
-         echo '</tr>';
-         echo '<tr>';
-         echo '</table>';
-         echo '</div>';
+
+         plugin_formcreator_render('form/showimportform.html.twig', $data);
+
          Html::closeForm();
-         echo '</div>';
       } else {
+         $data['json_file'] = Html::file(['name' => 'json_file', 'display' => false]);
+         $data['import_send'] = Html::submit(_x('button', 'Send'), ['name' => 'import_send', 'display' => false]);
          echo "<form name='form' method='post' action='".
                PluginFormcreatorForm::getFormURL().
                "?import_send=1' enctype=\"multipart/form-data\">";
 
-         echo "<div class='spaced' id='tabsbody'>";
-         echo "<table class='tab_cadre_fixe' id='mainformtable'>";
-         echo "<tr class='headerRow'>";
-         echo "<th>";
-         echo __("Import forms");
-         echo "</th>";
-         echo "</tr>";
-         echo "<tr>";
-         echo "<td>";
-         echo Html::file(['name' => 'json_file']);
-         echo "</td>";
-         echo "</tr>";
-         echo "<td class='center'>";
-         echo Html::submit(_x('button', 'Send'), ['name' => 'import_send']);
-         echo "</td>";
-         echo "</tr>";
-         echo "<tr>";
-         echo "</table>";
-         echo "</div>";
+         plugin_formcreator_render('form/showimportform.html.twig', $data);
 
          Html::closeForm();
       }

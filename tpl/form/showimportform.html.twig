@@ -1,0 +1,37 @@
+<div class='spaced' id='tabsbody'>
+{% if not jsonTypeExists or  not jsonTypeEnabled %}
+<table class="tab_cadre_fixe" id="mainformtable">
+<tr class="headerRow">
+<th>{{ __('Import forms') }}
+</th>
+</tr>
+<tr>
+<td class="center">
+{{ message }}
+</td>
+</tr>
+<td class="center">
+{{ button|raw }}
+</td>
+</tr>
+<tr>
+</table>
+{% else %}
+<table class='tab_cadre_fixe' id='mainformtable'>
+<tr class='headerRow'>
+<th>{{ __("Import forms") }}
+</th>
+</tr>
+<tr>
+<td>
+{{ json_file|raw }}
+</td>
+</tr>
+<td class='center'>
+{{ import_send|raw }}
+</td>
+</tr>
+<tr>
+</table>
+{% endif %}
+</div>
