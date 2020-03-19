@@ -1,0 +1,18 @@
+<table class="tab_cadre_fixe">
+<tr>
+<th colspan="3">{{ _n('Target', 'Targets', 2, 'formcreator')}}</th>
+</tr>
+   {% for target in targets %}
+   <tr>
+      <td onclick="plugin_formcreator_editTarget('{{ target.type }}', {{ target.id }})" style="cursor: pointer">
+      {{ target.name }}
+      <span class="form_control pointer"><i class="far fa-trash-alt" title="{{ __('Delete') }}" align="absmiddle" style="cursor: pointer" onclick="plugin_formcreator_deleteTarget('{{ target.type }}, {{ target.id }}, {{ token }}')" ></i></span>
+      </td>
+   </tr>
+   {% endfor %}
+   <tr id="add_target_row">
+   <td class="center" colspan="3">
+      <a href="javascript:plugin_formcreator_addTarget({{ plugin_formcreator_forms_id }}, '{{ token }}')">{{ __('Add a target', 'formcreator') }}</a>
+   </td>
+   </tr>
+</table>
