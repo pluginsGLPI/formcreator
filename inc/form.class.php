@@ -1992,61 +1992,17 @@ PluginFormcreatorConditionnableInterface
          ]
       ]);
 
-      if ($result_forms->count() < 1) {
-         echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
-         echo '<tr class="noHover">';
-         echo '<th>' . __('No form available', 'formcreator') . '</th>';
-         echo '</tr>';
-         echo '</table>';
-         return;
-      }
+      $data = [
+         'categories' => $categories,
+         'results' => $result_forms,
+         'formDisplayUrl' => $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/formdisplay.php',
+      ];
 
-      echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
-      echo '<tr class="noHover">';
-      echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
-      echo '</tr>';
-
-      $currentCategoryId = -1;
-      $i = 0;
-      foreach ($result_forms as $row) {
-         if ($currentCategoryId != $row[$formCategoryFk]) {
-            // show header for the category
-            $currentCategoryId = $row[$formCategoryFk];
-            echo '<tr class="noHover"><th>' . $categories[$currentCategoryId] . '</th></tr>';
-         }
-
-         // Show a rox for the form
-         echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
-         echo '<td>';
-         echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
-               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
-         echo '&nbsp;';
+      plugin_formcreator_render('form/showforcentral.html.twig', $data);
          echo '<a href="' . FORMCREATOR_ROOTDOC
             . '/front/formdisplay.php?id=' . $row['id'] . '"
-               title="' . $row['description'] . '">'
-            . $row['name']
-            . '</a></td>';
-         echo '</tr>';
-         echo '<tr id="desc' . $row['id'] . '" class="line' . ($i % 2) . ' form_description">';
-         echo '<td><div>' . $row['description'] . '&nbsp;</div></td>';
-         echo '</tr>';
-      }
 
-      echo '</table>';
       echo '<br />';
-      echo '<script type="text/javascript">
-         function showDescription(id, img){
-            if(img.alt == "+") {
-               img.alt = "-";
-               img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
-               document.getElementById("desc" + id).style.display = "table-row";
-            } else {
-               img.alt = "+";
-               img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
-               document.getElementById("desc" + id).style.display = "none";
-            }
-         }
-      </script>';
    }
 
    public static function getInterface() {

@@ -1,0 +1,46 @@
+<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">
+{% if results|length < 1%}
+   <tr class="noHover">
+   <th>{{ __('No form available', 'formcreator') }}</th>
+   </tr>
+{% else %}
+   <tr class="noHover">
+   <th><a href="../plugins/formcreator/front/formlist.php">{{ _n('Form', 'Forms', 2, 'formcreator') }}</a></th>
+   </tr>
+   {% set currentCategory = -1 %}
+   {% for row in results %}
+      {% if currentCategory != row.plugin_formcreator_categories_id %}
+         {% set currentCategory = row.plugin_formcreator_categories_id %}
+         <tr class="noHover"><th>{{ categories[currentCategory] }}</th></tr>
+      {% endif %}
+      <tr>
+         <td>
+            <i class="fa fa-plus" onclick="showDescription({{ row.id }}, this)" align="absmiddle" style="cursor: pointer"></i>
+            &nbsp;
+            <a href="{{ formDisplayUrl }}?id={{ row.id }}" title="{{ row.description }}">{{ row.name }}</a>
+         </td>
+      </tr>
+      <tr id="desc{{ row.id }}" class="form_description">
+         <td>
+            <div>{{ row.description }}</div>
+         </td>
+      </tr>
+   {% endfor %}
+{% endif %}
+</table>
+<script type="text/javascript">
+   function showDescription(id, toggable){
+      toggable = $(toggable);
+      if(toggable.hasClass('fa-plus')) {
+         toggable.attr('alt', '{{ __('collapse', 'formcreator') }}')
+         toggable.removeClass('fa-plus');
+         toggable.addClass('fa-minus');
+         document.getElementById("desc" + id).style.display = "table-row";
+      } else {
+         toggable.attr('alt', '{{ __('expand', 'formcreator') }}')
+         toggable.removeClass('fa-minus');
+         toggable.addClass('fa-plus');
+         document.getElementById("desc" + id).style.display = "none";
+      }
+   }
+</script>
