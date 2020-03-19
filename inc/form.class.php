@@ -604,6 +604,7 @@ PluginFormcreatorConditionnableInterface
    public function showTargets($ID, $options = []) {
       $allTargets = $this->getTargetsFromForm();
       $token = Session::getNewCSRFToken();
+      $i = 0;
       $twigTargets = [];
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
@@ -612,8 +613,6 @@ PluginFormcreatorConditionnableInterface
                'name' => $target->fields['name'],
                'type' => $targetType,
             ];
-            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/edit.png"
-            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/delete.png"
          }
       }
       $data = [
