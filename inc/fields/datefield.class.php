@@ -132,9 +132,10 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public function isValidValue($value) {
-      if ($value == '') {
+      if (!$this->isRequired() && empty($value)) {
          return true;
       }
+
       $check = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $check !== false;
    }
