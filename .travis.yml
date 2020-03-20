@@ -32,12 +32,6 @@ php:
   - nightly
 
 matrix:
-  allow_failures:
-    - php: nightly
-    - env: GLPI_BRANCH=9.5/bugfixes
-#    - env: GLPI_BRANCH=master
-
-jobs:
   exclude:
     - php: 5.6
       env: GLPI_BRANCH=9.5/bugfixes
@@ -45,6 +39,10 @@ jobs:
       env: GLPI_BRANCH=9.5/bugfixes
     - php: 7.1
       env: GLPI_BRANCH=9.5/bugfixes
+  allow_failures:
+    - php: nightly
+#    - env: GLPI_BRANCH=9.5/bugfixes
+#    - env: GLPI_BRANCH=master
 
 before_script:
   - |
