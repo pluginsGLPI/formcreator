@@ -1043,86 +1043,74 @@ PluginFormcreatorConditionnableInterface
    protected function showMyLastForms() {
       $limit = 5;
       $userId = Session::getLoginUserID();
-      echo '<div class="plugin_formcreator_card">';
-      echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
+      $data = [
+         'users_id' => $userId,
+         'limit' => $limit,
+         'requesterForms' => [],
+         'validatorForms' => [],
+      ];
+
+      $criteria = 'criteria[0][field]=4'
+                . '&criteria[0][searchtype]=equals'
+                . '&criteria[0][value]=' . $userId;
+      $data['requesterCriteria'] = $criteria;
+
+      $criteria = 'criteria[0][field]=5'
+                . '&criteria[0][searchtype]=equals'
+                . '&criteria[0][value]=' . $userId
+                . "&criteria[1][link]=OR"
+                . "&criteria[1][field]=7"
+                . "&criteria[1][searchtype]=equals"
+                . "&criteria[1][value]=mygroups";
+      $data['requesterList'] = $criteria;
+
       $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
-      if ($result->count() == 0) {
-         echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
-         echo "<ul>";
-      } else {
-         foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
-               echo '</li>';
+      foreach ($result as $form) {
+         switch ($form['status']) {
+            case PluginFormcreatorFormAnswer::STATUS_WAITING:
+               $status = 'waiting';
+               break;
+            case PluginFormcreatorFormAnswer::STATUS_REFUSED:
+               $status = 'refused';
+               break;
+            case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
+               $status = 'accepted';
+               break;
          }
-         echo "</ul>";
-         echo '<div align="center">';
-         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
-         echo __('All my forms (requester)', 'formcreator');
-         echo '</a>';
-         echo '</div>';
+         $data['requesterForms'][] = [
+            'id'     => $form['id'],
+            'name'   => $form['name'],
+            'status' => $status,
+            'date'   => Html::convDateTime($form['request_date']),
+         ];
       }
-      echo '</div>';
 
-      if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-
-         echo '<div class="plugin_formcreator_card">';
-         echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
-         $groupList = Group_User::getUserGroups($userId);
-         $groupIdList = [];
-         foreach ($groupList as $group) {
-            $groupIdList[] = $group['id'];
-         }
+      $data['isValidator'] = Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+         || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
+      if ($data['isValidator']) {
          $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
-         if ($result->count() == 0) {
-            echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
-         } else {
-            echo "<ul>";
-            foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
-               echo '</li>';
+         foreach ($result as $form) {
+            switch ($form['status']) {
+               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+                  $status = 'waiting';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_REFUSED:
+                  $status = 'refused';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
+                  $status = 'accepted';
+                  break;
             }
-            echo "</ul>";
-            echo '<div align="center">';
-            $criteria = 'criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=' . $_SESSION['glpiID'];
-            $criteria.= "&criteria[1][link]=OR"
-                      . "&criteria[1][field]=7"
-                      . "&criteria[1][searchtype]=equals"
-                      . "&criteria[1][value]=mygroups";
-
-            echo '<a href="formanswer.php?' . $criteria . '">';
-            echo __('All my forms (validator)', 'formcreator');
-            echo '</a>';
-            echo '</div>';
+            $data['requesterForms'][] = [
+               'id'     => $form['id'],
+               'name'   => $form['name'],
+               'status' => $status,
+               'date'   => Html::convDateTime($form['request_date']),
+            ];
          }
-         echo '</div>';
       }
+
+      plugin_formcreator_render('form/showmylastforms.html.twig', $data);
    }
 
    /**

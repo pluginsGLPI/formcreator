@@ -1,0 +1,47 @@
+<div class="plugin_formcreator_card">
+   <div class="plugin_formcreator_heading">
+      {{ sprintf(__('My %1$d last forms (requester)', 'formcreator'), limit) }}
+   </div>
+   {% if requesterForms|length < 1 %}
+      <div align="center">{{ __('No form posted yet', 'formcreator') }}</div>
+   {% else %}
+      <ul>
+      {% for form in requesterForms %}
+         <li class="plugin_formcreator_answer">
+            <a class="plugin_formcreator_{{ form.status }}" href="formanswer.form.php?id={{ form.id }}">{{ form.name }}</a>
+            <span class="plugin_formcreator_date">{{ form.date }}</span>
+         </li>
+      {% endfor %}
+      </ul>
+      <div align="center">
+      <a href="formanswer.php?{{ requesterCriteria }}">
+         {{ __('All my forms (requester)', 'formcreator') }}
+      </a>
+      </div>
+   {% endif %}
+</div>
+
+{% if isValidator %}
+   <div class="plugin_formcreator_card">
+      <div class="plugin_formcreator_heading">
+         {{ sprintf(__('My %1$d last forms (validator)', 'formcreator'), limit) }}
+      </div>
+      {% if forms|length < 1 %}
+         <div align="center">{{ __('No form waiting for validation', 'formcreator') }}</div>
+      {% else %}
+         <ul>
+         {% for form in forms %}
+            <li class="plugin_formcreator_answer">
+               <a class="plugin_formcreator_{{ form.status }}" href="formanswer.form.php?id={{ form.id }}">{{ form.name }}</a>
+               <span class="plugin_formcreator_date">{{ form.date }}</span>
+            </li>
+         {% endfor %}
+         </ul>
+         <div align="center">
+         <a href="formanswer.php?{{ validatorCriteria }}">
+            {{ __('All my forms (validator)', 'formcreator') }}
+         </a>
+         </div>
+      {% endif %}
+   </div>
+{% endif %}

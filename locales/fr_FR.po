@@ -2,16 +2,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
-# Johan Cwiklinski <jcwiklinski@teclib.com>, 2020
-# alexandre delaunay <delaunay.alexandre@gmail.com>, 2020
-# gerald antoniolli <deeper26@gmail.com>, 2020
-# Tiago Graça, 2020
-# Tristan GUICHARD <t.guichard@mut25.fr>, 2020
-# 06c8e5f1ec78ded2ceb41498ec52b068, 2020
-# Thierry Bugier <tbugier@teclib.com>, 2020
-# 
+# Johan Cwiklinski <jcwiklinski@teclib.com>, 2019
+# alexandre delaunay <delaunay.alexandre@gmail.com>, 2019
+# gerald antoniolli <deeper26@gmail.com>, 2019
+# Tiago Graça, 2019
+# 06c8e5f1ec78ded2ceb41498ec52b068, 2019
+# Thierry Bugier <tbugier@teclib.com>, 2019
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -293,10 +292,9 @@ msgstr "Tri alphabétique"
 msgid "Please, describe your need here"
 msgstr "Merci de décrire votre besoin ici"
 
-#: inc/form.class.php:1078
-#, php-format
+#: inc/form.class.php:1050
 msgid "My %1$d last forms (requester)"
-msgstr "Mes %1$dderniers formulaires (demandeur)"
+msgstr "Mes %1$d derniers formulaires (Demandeur)"
 
 #: inc/form.class.php:1081
 msgid "No form posted yet"
@@ -306,10 +304,9 @@ msgstr "Aucun formulaire saisi pour le moment"
 msgid "All my forms (requester)"
 msgstr "Tous mes formulaires (Demandeur)"
 
-#: inc/form.class.php:1114
-#, php-format
+#: inc/form.class.php:1113
 msgid "My %1$d last forms (validator)"
-msgstr "Mes %1$d derniers formulaires (validateur)"
+msgstr "Mes %1$d derniers formulaires (Valideur)"
 
 #: inc/form.class.php:1122
 msgid "No form waiting for validation"

@@ -48,6 +48,7 @@ class GlpiLocalesExtension extends \Twig_Extension
             new \Twig_SimpleFunction('_sn', '_sn'),
             new \Twig_SimpleFunction('_sx', '_sx'),
             new \Twig_SimpleFunction('_x', '_x'),
+            new \Twig_SimpleFunction('sprintf', 'sprintf'),
       ];
    }
 
