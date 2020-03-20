@@ -405,25 +405,6 @@ PluginFormcreatorConditionnableInterface
       . ' action="javascript:' . $action . '"'
       . ' data-itemtype="' . self::class . '"'
       . '>';
-
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $data = [
-         'item' => [
-            'id'   => Html::hidden('id', ['value' => $ID, 'display' => false]),
-            'uuid' => Html::hidden('uuid', ['value' => $this->fields['uuid'], 'display' => false]),
-            $formFk => Html::hidden($formFk, ['value' => $this->fields[$formFk], 'display' => false]),
-            'name' => Html::input(
-               'name',
-               [
-                  'style' => 'width: calc(100% - 20px)',
-                  'value' => $this->fields['name'],
-                  'display' => false
-               ]
-            ),
-         ],
-         'title' => $title,
-      ];
-
       echo '<div>';
       echo '<table class="tab_cadre_fixe">';
 
