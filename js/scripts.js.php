@@ -843,8 +843,8 @@ function plugin_formcreator_removeNextCondition(target) {
 }
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
-   dropdown_type = $('[name="plugin_formcreator_form"] [name="dropdown_values"]').val();
-   dropdown_id   = $('[name="plugin_formcreator_form"] [name="id"]').val();
+   dropdown_type = $('[name="plugin_formcreator_questionform"] [name="dropdown_values"]').val();
+   dropdown_id   = $('[name="plugin_formcreator_questionform"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
@@ -880,8 +880,8 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
 }
 
 function plugin_formcreator_changeGlpiObjectItemType() {
-   glpi_object    = $('[name="plugin_formcreator_form"] [name="glpi_objects"]').val();
-   glpi_object_id = $('[name="plugin_formcreator_form"] [name="id"]').val();
+   glpi_object    = $('[name="plugin_formcreator_questionform"] [name="glpi_objects"]').val();
+   glpi_object_id = $('[name="plugin_formcreator_questionform"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
