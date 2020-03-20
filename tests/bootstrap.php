@@ -21,7 +21,9 @@ if (!$glpiConfigDir = getenv('GLPI_CONFIG_DIR')) {
 }
 
 define('GLPI_ROOT', realpath(__DIR__ . '/../../../'));
-define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");
+if (version_compare(GLPI_VERSION, '9.4') <= 0) {
+   define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");
+}
 if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
    echo GLPI_ROOT . "/$glpiConfigDir/config_db.php missing. Did GLPI successfully initialized ?\n";
    exit(1);
