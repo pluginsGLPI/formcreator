@@ -133,6 +133,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
+      // get conditions
+      $target_data['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $target_data['_conditions'][] = $condition->export($remove_uuid);
+      }
+
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
@@ -222,6 +230,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       if (isset($input['_actors'])) {
          foreach ($input['_actors'] as $actor) {
             PluginFormcreatorTargetChange_Actor::import($linker, $actor, $itemId);
+         }
+      }
+
+      // Import submit conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
          }
       }
 
@@ -355,7 +370,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       //  Tags
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($form, $rand);
-
 
       // -------------------------------------------------------------------------------------------
       //  Conditions to generate the target

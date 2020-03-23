@@ -1123,6 +1123,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
       }
 
+      // Import conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+         }
+      }
+
       return $itemId;
    }
 
@@ -1191,6 +1198,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       foreach ($all_ticketLinks as $ticketLink) {
          $target_ticketLink->getFromDB($ticketLink['id']);
          $target_data['_ticket_relations'][] = $target_ticketLink->export($remove_uuid);
+      }
+
+      // get conditions
+      $target_data['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $target_data['_conditions'][] = $condition->export($remove_uuid);
       }
 
       // remove ID or UUID
