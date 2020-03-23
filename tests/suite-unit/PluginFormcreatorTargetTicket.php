@@ -744,6 +744,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          '_tickettemplate',
          '_actors',
          '_ticket_relations',
+         'conditions',
       ];
 
       $this->array($output)
