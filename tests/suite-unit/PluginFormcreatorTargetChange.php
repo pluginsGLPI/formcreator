@@ -444,9 +444,11 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'tag_specifics',
          'category_rule',
          'category_question',
+         'show_rule',
       ];
       $extraFields = [
          '_actors',
+         '_conditions',
       ];
 
       $this->array($output)

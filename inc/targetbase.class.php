@@ -35,8 +35,11 @@ if (!defined('GLPI_ROOT')) {
 
 abstract class PluginFormcreatorTargetBase extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
-PluginFormcreatorTargetInterface
+PluginFormcreatorTargetInterface,
+PluginFormcreatorConditionnableInterface
 {
+   use PluginFormcreatorConditionnable;
+
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
 
@@ -1476,6 +1479,14 @@ SCRIPT;
       }
 
       return $input;
+   }
+
+   protected function showConditionsSettings($rand) {
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields[$formFk]);
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($this);
    }
 
    /**
