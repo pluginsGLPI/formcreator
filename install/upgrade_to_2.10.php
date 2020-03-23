@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_10 {
+
    protected $migration;
 
    /**
@@ -55,5 +56,11 @@ class PluginFormcreatorUpgradeTo2_10 {
       $migration->changeField($table, 'type', 'type_question', 'integer', ['after' => 'target_name', 'value' => '0']);
       $migration->migrationOneTable($table);
       $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '1']);
+
+      // conditions on targets
+      $table = 'glpi_plugin_formcreator_targetchanges';
+      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
    }
 }

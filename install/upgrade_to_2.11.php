@@ -78,12 +78,6 @@ class PluginFormcreatorUpgradeTo2_11 {
          ) or plugin_formcreator_upgrade_error($migration);
       }
 
-      // conditions on targets
-      $table = 'glpi_plugin_formcreator_targetchanges';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
-
       // Move uuid field at last position
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
