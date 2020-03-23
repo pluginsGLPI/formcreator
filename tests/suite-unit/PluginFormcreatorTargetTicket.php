@@ -661,11 +661,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'associate_question',
          'location_rule',
          'location_question',
+         'show_rule',
       ];
       $extraFields = [
          '_tickettemplate',
          '_actors',
          '_ticket_relations',
+         '_conditions',
       ];
 
       $this->array($output)

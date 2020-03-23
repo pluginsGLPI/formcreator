@@ -211,10 +211,10 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `category_question` int(11) NOT NULL DEFAULT '0',
   `associate_rule` int(11) NOT NULL DEFAULT '1',
   `associate_question` int(11) NOT NULL DEFAULT '0',
-  `show_rule` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) DEFAULT NULL,
   `location_rule` INT(11) NOT NULL DEFAULT '1',
   `location_question` int(11) NOT NULL DEFAULT '0',
+  `show_rule` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
