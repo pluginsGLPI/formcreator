@@ -133,6 +133,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
+      // get conditions
+      $target_data['_conditions'] = [];
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
+      foreach ($all_conditions as $condition) {
+         $target_data['_conditions'][] = $condition->export($remove_uuid);
+      }
+
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
@@ -225,6 +233,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
+      // Import conditions
+      if (isset($input['_conditions'])) {
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+         }
+      }
+
       return $itemId;
    }
 
@@ -241,7 +256,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
+      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '" data-itemtype="' . self::class . '">';
 
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
@@ -351,6 +366,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($form, $rand);
 
+      // -------------------------------------------------------------------------------------------
+      //  Conditions to generate the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the target', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+      $this->showConditionsSettings($rand);
+
       echo '</table>';
 
       // Buttons
@@ -361,6 +387,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
                onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
       echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
       echo '</td>';
       echo '</tr>';
@@ -475,7 +503,25 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          return false;
       }
 
+      // delete conditions
+      if (! (new PluginFormcreatorCondition())->deleteByCriteria([
+         'itemtype' => self::class,
+         'items_id' => $this->getID(),
+      ])) {
+         return false;
+      }
+
       return true;
+   }
+
+   public function post_addItem() {
+      parent::post_addItem();
+      $this->updateConditions($this->input);
+   }
+
+   public function post_updateItem($history = 1) {
+      parent::post_updateItem();
+      $this->updateConditions($this->input);
    }
 
    /**

@@ -933,6 +933,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
       foreach ($all_targets as $targetType => $targets) {
          foreach ($targets as $targetObject) {
+            // Check the condition of the target
+            $this->questionFields = $form->getFields();
+            $answers_values = $this->getAnswers($this->getID());
+            foreach ($this->questionFields as $id => $field) {
+               $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
+            }
+
+            if (!PluginFormcreatorFields::isVisible($targetObject, $this->questionFields)) {
+               // The target shall not be generated
+               continue;
+            }
+
+            // Generate the target
             $generatedTarget = $targetObject->save($this);
             if ($generatedTarget === null) {
                $success = false;
