@@ -39,6 +39,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $usenotepad = true;
    public $usenotepadrights = true;
 
+   public $targetList = [];
+
    const SOPTION_ANSWER = 900000;
 
    // Values choosen to not conflict with status of ticket constants
@@ -939,6 +941,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                $success = false;
                break;
             }
+            $this->targetList[] = $generatedTarget;
             // Map [itemtype of the target] [item ID of the target] = ID of the generated target
             $generatedTargets->addTarget($targetObject, $generatedTarget);
          }
