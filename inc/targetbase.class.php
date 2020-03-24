@@ -1382,7 +1382,7 @@ SCRIPT;
             'fieldtype' => ['glpiselect'],
             'values' => Group::class,
          ],
-         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
          [
             'value' => 0
          ]
