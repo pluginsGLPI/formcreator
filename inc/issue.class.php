@@ -547,7 +547,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                default:
                   $content = '';
             }
-            $link = FORMCREATOR_ROOTDOC . "/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype'];
+            $link = self::getFormURLWithID($id) . "&sub_itemtype=".$data['raw']['sub_itemtype'];
             $key = 'id';
             $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
                'applyto' => $itemtype.$data['raw'][$key],
