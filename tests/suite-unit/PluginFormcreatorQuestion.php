@@ -47,7 +47,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $forms_id = $form->add([
          'name'                => "test clone form",
          'is_active'           => true,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER
       ]);
 
       $sections_id = $form_section->add([

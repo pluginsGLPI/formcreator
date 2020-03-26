@@ -424,11 +424,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $form = $this->getForm();
       switch ($form->fields['validation_required']) {
-         case PluginFormcreatorForm_Validator::VALIDATION_USER:
+         case PluginFormcreatorForm::VALIDATION_USER:
             return (Session::getLoginUserID() == $this->fields['users_id_validator']);
             break;
 
-         case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
+         case PluginFormcreatorForm::VALIDATION_GROUP:
             // Check the user is member of at least one validator group for the form answers
             $condition = [
                'glpi_groups.id' => new QuerySubQuery([

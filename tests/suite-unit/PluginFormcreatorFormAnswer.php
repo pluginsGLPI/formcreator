@@ -252,7 +252,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $user = $this->getUser($this->getUniqueString(), 'p@ssw0rd', 'Technician');
       $validatorId = $user->getID();
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users' => $validatorId,
       ]);
 

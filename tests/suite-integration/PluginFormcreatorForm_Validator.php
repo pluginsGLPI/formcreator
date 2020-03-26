@@ -60,7 +60,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          'description'           => 'form description',
          'content'               => 'a content',
          'is_active'             => 1,
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         'validation_required'   => \PluginFormcreatorForm::VALIDATION_GROUP,
          '_validator_groups'     => [$group->getID()]
       ]);
       $this->boolean($form->isNewItem())->isFalse();
@@ -82,7 +82,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          'description'           => 'form description',
          'content'               => 'a content',
          'is_active'             => 1,
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required'   => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users'     => [$user->getID()]
       ]);
       $this->boolean($form->isNewItem())->isFalse();

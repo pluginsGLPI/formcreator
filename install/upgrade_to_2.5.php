@@ -256,7 +256,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $query = "INSERT INTO `glpi_plugin_formcreator_forms_validators` (`plugin_formcreator_forms_id`, `itemtype`, `items_id`)
                   SELECT
                      `$old_table`.`forms_id`,
-                  IF(`validation_required` = '".PluginFormcreatorForm_Validator::VALIDATION_USER."', 'User', 'Group'),
+                  IF(`validation_required` = '1', 'User', 'Group'),
                      `$old_table`.`users_id`
                   FROM `$old_table`
                   LEFT JOIN `$table_form` ON (`$table_form`.`id` = `$old_table`.`forms_id`)

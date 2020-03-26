@@ -161,7 +161,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'description'         => 'form description',
          'content'             => 'a content',
          'is_active'           => 1,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users'    => '2', // user is glpi
       ]);
 

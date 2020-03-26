@@ -272,7 +272,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function testPost_purgeItem() {
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          'users_id' => 2, // glpi
       ]);
       $section = $this->getSection([
@@ -326,7 +326,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($rows)->hasSize(0);
 
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users' => ['2'], // glpi account
       ]);
 
@@ -340,7 +340,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
 
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
          '_validator_groups' => ['1'], // a group ID (not created in this test)
       ]);
       $rows = $formValidator->find([
@@ -393,7 +393,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
       $form = $this->getForm([
          'name'                  => 'validation notification',
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required'   => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users'      => [$_SESSION['glpiID']],
       ]);
       $this->getSection([

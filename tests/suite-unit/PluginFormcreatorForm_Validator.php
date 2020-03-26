@@ -51,7 +51,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $user = new \User;
       $user->getFromDBbyName('glpi');
       $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users' => [
             $user->getID(),
          ],
