@@ -1428,7 +1428,7 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
    });
 }
 
-function plugin_formcreator_changeQuestionType(rand) {
+function plugin_formcreator_changeQuestionType() {
    var questionId = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
    var questionType = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 

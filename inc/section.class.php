@@ -61,6 +61,10 @@ PluginFormcreatorConditionnableInterface
       return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
+   public function isEntityAssign() {
+      return false;
+   }
+
    /**
     * Prepare input data for adding the section
     * Check fields values and get the order for the new section

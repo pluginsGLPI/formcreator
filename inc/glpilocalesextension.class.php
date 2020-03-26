@@ -29,7 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-class GlpiLocalesExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+
+class GlpiLocalesExtension extends AbstractExtension
 {
    /**
     * Sets aliases for functions
@@ -39,16 +42,16 @@ class GlpiLocalesExtension extends \Twig_Extension
     */
    public function getFunctions() {
       return [
-            new \Twig_SimpleFunction('__', '__'),
-            new \Twig_SimpleFunction('__s', '__s'),
-            new \Twig_SimpleFunction('_e', '_e'),
-            new \Twig_SimpleFunction('_ex', '_ex'),
-            new \Twig_SimpleFunction('_n', '_n'),
-            new \Twig_SimpleFunction('_nx', '_nx'),
-            new \Twig_SimpleFunction('_sn', '_sn'),
-            new \Twig_SimpleFunction('_sx', '_sx'),
-            new \Twig_SimpleFunction('_x', '_x'),
-            new \Twig_SimpleFunction('sprintf', 'sprintf'),
+            new TwigFunction('__', '__'),
+            new TwigFunction('__s', '__s'),
+            new TwigFunction('_e', '_e'),
+            new TwigFunction('_ex', '_ex'),
+            new TwigFunction('_n', '_n'),
+            new TwigFunction('_nx', '_nx'),
+            new TwigFunction('_sn', '_sn'),
+            new TwigFunction('_sx', '_sx'),
+            new TwigFunction('_x', '_x'),
+            new TwigFunction('sprintf', 'sprintf'),
       ];
    }
 

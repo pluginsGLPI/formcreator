@@ -434,6 +434,11 @@ function plugin_formcreator_autoload($classname) {
       return true;
    }
 
+   if ($classname == 'GlpiInputExtension') {
+      require_once(__DIR__ . '/inc/glpiinputextension.class.php');
+      return true;
+   }
+
    return false;
 
 }
@@ -467,6 +472,7 @@ function plugin_formcreator_getTemplateEngine() {
          'auto_reload'  => ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE),
    ]);
    $twig->addExtension(new GlpiLocalesExtension());
+   $twig->addExtension(new GlpiInputExtension());
    return $twig;
 }
 

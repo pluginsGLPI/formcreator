@@ -125,12 +125,7 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function rawSearchOptions() {
-      $tab = [];
-
-      $tab[] = [
-         'id'                 => 'common',
-         'name'               => __('Characteristics')
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'                 => '2',
@@ -138,16 +133,7 @@ PluginFormcreatorConditionnableInterface
          'field'              => 'id',
          'name'               => __('ID'),
          'searchtype'         => 'contains',
-         'massiveaction'      => false
-      ];
-
-      $tab[] = [
-         'id'                 => '1',
-         'table'              => $this->getTable(),
-         'field'              => 'name',
-         'name'               => __('Name'),
-         'datatype'           => 'itemlink',
-         'massiveaction'      => false
+         'massiveaction'      => false,
       ];
 
       $tab[] = [
@@ -155,7 +141,7 @@ PluginFormcreatorConditionnableInterface
          'table'              => $this->getTable(),
          'field'              => 'description',
          'name'               => __('Description'),
-         'massiveaction'      => false
+         'massiveaction'      => false,
       ];
 
       $tab[] = [
@@ -164,7 +150,7 @@ PluginFormcreatorConditionnableInterface
          'field'              => 'completename',
          'name'               => __('Entity'),
          'datatype'           => 'dropdown',
-         'massiveaction'      => false
+         'massiveaction'      => false,
       ];
 
       $tab[] = [
@@ -173,7 +159,7 @@ PluginFormcreatorConditionnableInterface
          'field'              => 'is_recursive',
          'name'               => __('Recursive'),
          'datatype'           => 'bool',
-         'massiveaction'      => false
+         'massiveaction'      => false,
       ];
 
       $tab[] = [
@@ -181,11 +167,11 @@ PluginFormcreatorConditionnableInterface
          'table'              => $this->getTable(),
          'field'              => 'language',
          'name'               => __('Language'),
-         'datatype'           => 'specific',
+         'datatype'           => 'language',
          'searchtype'         => [
             '0'                  => 'equals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => true,
       ];
 
       $tab[] = [
@@ -198,7 +184,7 @@ PluginFormcreatorConditionnableInterface
             '0'                  => 'equals',
             '1'                  => 'notequals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => true,
       ];
 
       $tab[] = [
@@ -211,7 +197,7 @@ PluginFormcreatorConditionnableInterface
             '0'                  => 'equals',
             '1'                  => 'notequals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => true,
       ];
 
       $tab[] = [
@@ -220,8 +206,45 @@ PluginFormcreatorConditionnableInterface
          'field'              => 'name',
          'name'               => __('Form category', 'formcreator'),
          'datatype'           => 'dropdown',
-         'massiveaction'      => true
+         'massiveaction'      => true,
       ];
+
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => $this->getTable(),
+         'field'              => 'validation_required',
+         'name'               => __('Validation type', 'formcreator'),
+         'datatype'           => 'specific',
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'massiveaction'      => true,
+      ];
+
+      $tab[] = [
+         'id'                 => '12',
+         'table'              => $this->getTable(),
+         'field'              => 'uuid',
+         'name'               => __('UUID', 'formcreator'),
+         'datatype'           => 'string',
+         'nosearch'           => true,
+         'massiveaction'      => false,
+      ];
+
+      $tab[] = [
+         'id'                 => '13',
+         'table'              => $this->getTable(),
+         'field'              => 'is_default',
+         'name'               => __('Default form', 'formcreator'),
+         'datatype'           => 'bool',
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'massiveaction'      => true,
+      ];
+
 
       $tab[] = [
          'id'                 => '30',
@@ -233,7 +256,7 @@ PluginFormcreatorConditionnableInterface
             '0'                  => 'equals',
             '1'                  => 'notequals'
          ],
-         'massiveaction'      => true
+         'massiveaction'      => true,
       ];
 
       $tab[] = [
@@ -241,7 +264,8 @@ PluginFormcreatorConditionnableInterface
          'table'              => $this->getTable(),
          'field'              => 'icon',
          'name'               => __('Icon', 'formcreator'),
-         'massiveaction'      => false
+         'nosearch'           => true,
+         'massiveaction'      => false,
       ];
 
       $tab[] = [
@@ -249,7 +273,9 @@ PluginFormcreatorConditionnableInterface
          'table'              => $this->getTable(),
          'field'              => 'icon_color',
          'name'               => __('Icon color', 'formcreator'),
-         'massiveaction'      => false
+         'datatype'           => 'color',
+         'nosearch'           => true,
+         'massiveaction'      => false,
       ];
 
       $tab[] = [
@@ -257,7 +283,20 @@ PluginFormcreatorConditionnableInterface
          'table'              => $this->getTable(),
          'field'              => 'background_color',
          'name'               => __('Background color', 'formcreator'),
-         'massiveaction'      => false
+         'datatype'           => 'color',
+         'nosearch'           => true,
+         'massiveaction'      => false,
+      ];
+
+      $tab[] = [
+         'id'                 => '34',
+         'table'              => $this->getTable(),
+         'field'              => 'content',
+         'name'               => __('Header', 'formcreator'),
+         'datatype'           => 'text',
+         'htmltext'           => true,
+         'nosearch'           => true,
+         'massiveaction'      => false,
       ];
 
       return $tab;
@@ -319,30 +358,21 @@ PluginFormcreatorConditionnableInterface
             );
             break;
 
-         case 'access_rights' :
-            return Dropdown::showFromArray($name, [
-               self::ACCESS_PUBLIC => __('Public access', 'formcreator'),
-               self::ACCESS_PRIVATE => __('Private access', 'formcreator'),
-               self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-            ], [
-               'value'               => $values[$field],
-               'display_emptychoice' => false,
-               'display'             => false
-            ]);
+         case 'validation_required':
+            $options['value'] = $values[$field];
+            return Dropdown::showFromArray(
+               'validation_required',
+               self::getEnumValidationType(),
+               $options
+            );
             break;
 
-         case 'language' :
-            return Dropdown::showLanguages($name, [
-               'value'               => $values[$field],
-               'display_emptychoice' => true,
-               'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
-               'display'             => false
-            ]);
+         case 'content':
+
             break;
       }
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
-
 
    /**
     * Define how to display a specific value in search result table
@@ -540,98 +570,34 @@ PluginFormcreatorConditionnableInterface
       }
 
       $data = [
-         'item' => [
-            'id' => $ID,
-            'name' => Html::autocompletionTextField(
-               $this,
-               'name',
-               ['value' => $objectName, 'display' => false]
-            ),
-            'is_active' => Dropdown::showYesNo(
-               'is_active',
-               $this->fields["is_active"],
-               -1,
-               ['display' => false]
-            ),
-            'plugin_formcreator_categories_id' => PluginFormcreatorCategory::dropdown([
-               'name'  => 'plugin_formcreator_categories_id',
-               'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
-               'display' => false,
-            ]),
-            'helpdesk_home' => Dropdown::showYesNo(
-               'helpdesk_home',
-               $this->fields['helpdesk_home'],
-               -1,
-               ['display' => false]
-            ),
-            'icon' => PluginFormcreatorCommon::showFontAwesomeDropdown(
-               'icon',
-               [
-                  'value' => $this->fields['icon'] == '' ? 'fa fa-question-circle' : $this->fields['icon'],
-                  'display' => false,
-               ]
-            ),
-            'background_color' => Html::showColorField(
-               'background_color',
-               [
-                  'value' => $this->fields['background_color'] == '' ? '#E7E7E7' : $this->fields['background_color'],
-                  'display' => false,
-               ]
-            ),
-            'description' => Html::input(
-               'descripion', [
-                  'value' => $this->fields['description'],
-                  'display' => false,
-               ]
-            ),
-            'language' => Dropdown::showLanguages(
-               'language', [
-               'value'               => ($ID != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
-               'display_emptychoice' => true,
-               'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
-               'display' => false,
-            ]),
-            'content' => Html::textarea([
-               'name'    => 'content',
-               'value'   => $this->fields['content'],
-               'enable_richtext' => true,
-               'display' => false,
-            ]),
-            'validation_required' => Dropdown::showFromArray(
-               'validation_required', [
-               self::VALIDATION_NONE  => Dropdown::EMPTY_VALUE,
-               self::VALIDATION_USER  => User::getTypeName(1),
-               self::VALIDATION_GROUP => Group::getTypeName(1),
-            ], [
-               'value'     =>  $this->fields['validation_required'],
-               'on_change' => 'plugin_formcreator_changeValidators(this.value)',
-               'display' => false,
-            ]),
-            'validators_users' => Dropdown::showFromArray(
-               '_validator_users',
-               $validatorUsers, [
-                  'multiple' => true,
-                  'values' => $selectedValidatorUsers,
-                  'display' = false,
-               ]
-            ),
-            'validators_groups' => Dropdown::showFromArray(
-               '_validator_groups',
-               $validatorGroups,
-               [
-                  'multiple' => true,
-                  'values'   => $selectecValidatorGroups,
-                  'display' = false,
-               ]
-            ),
-            'is_default' => Dropdown::showYesNo(
-               'is_default',
-               $this->fields['is_default'],
-               -1,
-               ['display' => false]
-            ),
-            'canPurgeItem' => $this->canPurgeItem(),
-         ]
+         'so'   => [
+            self::getType() => $this->searchOptions()
+         ],
+         'item' => $this,
+         'validators_users' => Dropdown::showFromArray(
+            '_validator_users',
+            $validatorUsers, [
+               'multiple' => true,
+               'values'   => $selectedValidatorUsers,
+               'display'  => false,
+            ]
+         ),
+         'validators_groups' => Dropdown::showFromArray(
+            '_validator_groups',
+            $validatorGroups,
+            [
+               'multiple' => true,
+               'values'   => $selectecValidatorGroups,
+               'display'  => false,
+            ]
+         ),
+         'is_default' => Dropdown::showYesNo(
+            'is_default',
+            $this->fields['is_default'],
+            -1,
+            ['display' => false]
+         ),
+         'canPurgeItem' => $this->canPurgeItem(),
       ];
 
       plugin_formcreator_render('form/showform.html.twig', $data);
@@ -1291,31 +1257,15 @@ PluginFormcreatorConditionnableInterface
    }
 
    /**
-    * Actions done after the ADD of the item in the database
-    *
-    * @return void
-    */
-   public function post_addItem() {
-      $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
       }
       return true;
    }
-
-   /**
-    * Actions done after the UPDATE of the item in the database
-    *
-    * @return void
-    */
-    public function post_updateItem($history = 1) {
-      $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
       }
    }
-
-   /**
     * Prepare input data for updating the form
     *
     * @param array $input data used to add the item
@@ -1346,10 +1296,29 @@ PluginFormcreatorConditionnableInterface
          }
 
          return $input;
-      } else {
-         $this->updateValidators();
-         return $this->prepareInputForAdd($input);
       }
+
+      return $this->prepareInputForAdd($input);
+   }
+
+   /**
+    * Actions done after the ADD of the item in the database
+    *
+    * @return void
+    */
+   public function post_addItem() {
+      $this->updateValidators();
+      $this->updateConditions($this->input);
+   }
+
+   /**
+    * Actions done after the UPDATE of the item in the database
+    *
+    * @return void
+    */
+   public function post_updateItem($history = 1) {
+      $this->updateValidators();
+      $this->updateConditions($this->input);
    }
 
    /**
@@ -2052,24 +2021,18 @@ PluginFormcreatorConditionnableInterface
    public function getFromDBByQuestion(PluginFormcreatorQuestion $question) {
       global $DB;
 
-      if ($question->isNewItem()) {
+      $section = new PluginFormcreatorSection();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      if (!isset($question->fields[$sectionFk]) || $section->isNewID($question->fields[$sectionFk])) {
          return false;
       }
-      $questionTable = PluginFormcreatorQuestion::getTable();
+
       $sectionTable = PluginFormcreatorSection::getTable();
       $iterator = $DB->request([
          'SELECT' => self::getForeignKeyField(),
-         'FROM' => PluginFormcreatorSection::getTable(),
-         'INNER JOIN' => [
-            $questionTable => [
-               'FKEY' => [
-                  $sectionTable => PluginFormcreatorSection::getIndexName(),
-                  $questionTable => PluginFormcreatorSection::getForeignKeyField()
-               ]
-            ]
-         ],
+         'FROM' => $sectionTable,
          'WHERE' => [
-            $questionTable . '.' . PluginFormcreatorQuestion::getIndexName() => $question->getID()
+            $sectionTable . '.id'  => $question->fields[$sectionFk]
          ]
       ]);
       if ($iterator->count() !== 1) {

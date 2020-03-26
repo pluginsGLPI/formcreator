@@ -59,6 +59,152 @@ PluginFormcreatorConditionnableInterface
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'massiveaction'      => false, // implicit field is id
+         'datatype'           => 'number'
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => PluginFormcreatorSection::getTable(),
+         'field'              => 'plugin_formcreator_sections_id',
+         'name'               => __('Section', 'formcreator'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'fieldtype',
+         'name'               => _n('Type', 'Types', 1),
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this->getTable(),
+         'field'              => 'required',
+         'name'               => __('Required', 'formcreator'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'show_empty',
+         'name'               => __('show_empty', 'formcreator'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this->getTable(),
+         'field'              => 'description',
+         'name'               => __('Description'),
+         'datatype'           => 'text',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this->getTable(),
+         'field'              => 'row',
+         'name'               => __('Row', 'formcreator'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => $this->getTable(),
+         'field'              => 'col',
+         'name'               => __('Column', 'formcreator'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this->getTable(),
+         'field'              => 'width',
+         'name'               => __('Width', 'formcreator'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => $this->getTable(),
+         'field'              => 'show_rule',
+         'name'               => __('Show rule', 'formcreator'),
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '12',
+         'table'              => $this->getTable(),
+         'field'              => 'uuid',
+         'name'               => __('UUID', 'formcreator'),
+         'datatype'           => 'string',
+         'nosearch'           => true,
+         'massiveaction'      => false
+      ];
+
+      return $tab;
+   }
+
+   /**
+    * Define how to display search field for a specific type
+    *
+    * @since version 0.84
+    *
+    * @param String $field           Name of the field as define in $this->rawSearchOptions()
+    * @param String $name            Name attribute for the field to be posted (default '')
+    * @param Array  $values          Array of all values to display in search engine (default '')
+    * @param Array  $options         Options (optional)
+    *
+    * @return String                 Html string to be displayed for the form field
+    */
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
+      if (!is_array($values)) {
+         $values = [$field => $values];
+      }
+      $options['display'] = false;
+
+      switch ($field) {
+         case 'fieldtype':
+            if ($name == '') {
+               $name = $field;
+            }
+            $fieldtypes = PluginFormcreatorFields::getNames();
+            $options['value'] = $values[$field];
+            //$options['on_change'] = "plugin_formcreator_changeQuestionType($rand)";
+            return Dropdown::showFromArray($name, $fieldtypes, $options);
+            break;
+
+         case 'show_rule':
+            if ($name == '') {
+               $name = $field;
+            }
+            $rules = PluginFormcreatorCondition::getEnumShowRule();
+            $options['value'] = $values[$field];
+            return Dropdown::showFromArray($name, $rules, $options);
+            break;
+      }
+   }
+
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}
@@ -678,6 +824,27 @@ PluginFormcreatorConditionnableInterface
       . '>';
       echo '<table class="tab_cadre_fixe">';
 
+      $condition = new PluginFormcreatorCondition();
+      $data = [
+         'title'   => $title,
+         'so'      => [
+            $this::getType() => $this->searchOptions(),
+            $condition::getType() => $condition->searchOptions(),
+         ],
+         'item'    => $this,
+         'conditions' => $condition->getConditionsFromItem($this),
+      ];
+
+      plugin_formcreator_render('question/showform.html.twig', $data);
+
+      $this->showFormButtons($options + [
+         'candel' => false
+      ]);
+
+      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
+      Html::closeForm();
+      return;
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo $title;
@@ -1202,6 +1369,18 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
+      public function getDropdownCondition($fieldName) {
+      switch ($fieldName) {
+         case PluginFormcreatorSection::getForeignKeyField():
+            $form = new PluginFormcreatorForm();
+            $form->getFromDBByQuestion($this);
+            return [
+               $form::getForeignKeyField() => $form->getID(),
+            ];
+            break;
+      }
+      return [];
+   }
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
    {
       $keepCriteria = [
@@ -1211,5 +1390,8 @@ PluginFormcreatorConditionnableInterface
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+      }
+
+      return [];
    }
 }

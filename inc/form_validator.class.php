@@ -61,6 +61,86 @@ PluginFormcreatorExportableInterface
       return $input;
    }
 
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => 'glpi_plugin_formcreator_forms',
+         'field'              => 'name',
+         'name'               => _n('Form', 'Forms', 1, 'formcreator'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'itemtype',
+         'name'               => __('itemtype'),
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this->getTable(),
+         'field'              => 'items_id',
+         'name'               => __('item'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false,
+      ];
+
+      $tab[] = [
+         'id'                 => '12',
+         'table'              => $this->getTable(),
+         'field'              => 'uuid',
+         'name'               => __('UUID', 'formcreator'),
+         'datatype'           => 'string',
+         'nosearch'           => true,
+         'massiveaction'      => false
+      ];
+
+      return $tab;
+   }
+
+   /**
+    * Define how to display search field for a specific type
+    *
+    * @since version 0.84
+    *
+    * @param String $field           Name of the field as define in $this->getSearchOptions()
+    * @param String $name            Name attribute for the field to be posted (default '')
+    * @param Array  $values          Array of all values to display in search engine (default '')
+    * @param Array  $options         Options (optional)
+    *
+    * @return String                 Html string to be displayed for the form field
+    */
+   public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
+      if (!is_array($values)) {
+         $values = [$field => $values];
+      }
+      $options['display'] = false;
+
+      switch ($field) {
+         case 'itemtype':
+            if ($name == '') {
+               $name = $field;
+            }
+            $options['value'] = $values[$field];
+            return Dropdown::showFromArray(
+               $name, [
+                  User::getType()  => User::getTypeName(1),
+                  Group::getType() => Group::getTypeName(1),
+               ],
+               $options
+            );
+            break;
+      }
+
+      return parent::getSpecificValueToSelect($field, $name, $values, $options);
+   }
+
    public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $forms_id;

@@ -1,45 +1,60 @@
+{% set rand = rand() %}
 <tr class="tab_bg_1">
+   {% set options = { 'rand': rand } %}
    <td width="20%"><strong>{{ __('Name') }}<span class="red">*</span></strong></td>
-   <td width="30%">{{ item.name|raw }}</td>
+   <td width="30%">{{ item|field(so, 1, options) }}</td>
+   {% set options = { 'rand': rand } %}
    <td width="20%"><strong>{{ __('Active') }}<span class="red">*</span></strong></td>
-   <td width="30%">{{ item.is_active|raw}}</td>
+   <td width="30%">{{ item|field(so, 30, options) }}</td>
 </tr>
 <tr class="tab_bg_2">
+   {% set options = {
+      'rand': rand,
+      'name': 'plugin_formcreator_categories_id'
+   } %}
    <td width="20%">{{ __('Category') }}</td>
-   <td width="30%">{{ item.plugin_formcreator_categories_id|raw }}</td>
+   <td width="30%">{{ item|field(so, 10, options) }}</td>
    <td width="20%">{{ __('Direct access on homepage', 'formcreator') }}</td>
-   <td width="30%">{{ item.helpdesk_home|raw}}</td>
+   <td width="30%">{{ item|field(so, 8, options) }}</td>
 </tr>
 <tr class="tab_bg_1">
    <td width="20%">{{ __('Form icon', 'formcreator') }}</td>
-   <td width="30%">{{ item.icon|raw }}</td>
+   <td width="30%">{{ item|field(so, 31, options) }}&nbsp;{{ item|field(so, 32, options) }}</td>
    <td width="20%">{{ __('Background color', 'formcreator') }}</td>
-   <td width="30%">{{ item.background_color|raw}}</td>
+   <td width="30%">{{ item|field(so, 33, options) }}</td>
 </tr>
 <tr class="tab_bg_1">
    <td width="20%">{{ __('Description') }}</td>
-   <td width="30%">{{ item.description|raw }}</td>
+   <td width="30%">{{ item|field(so, 4, options) }}</td>
    <td width="20%">{{ __('Language') }}</td>
-   <td width="30%">{{ item.language|raw}}</td>
+   <td width="30%">{{ item|field(so, 7, options) }}</td>
 </tr>
 <tr class="tab_bg_1">
    <td width="20%">{{ _n('Header', 'Headers', 1, 'formcreator') }}</td>
-   <td colspan="3">{{ item.content|raw }}</td>
+   <td colspan="3">{{ item|field(so, 34, options) }}</td>
 </tr>
 <tr class="tab_bg_2">
-   <td width="20%">{{ __('Need to be validate?', 'formcreator') }}</td>
-   <td class="validators_bloc">{{ item.validation_required|raw}}</td>
-   <td colspan="2"><div id="validators_users">{{ item.validators_users|raw}}</div>
+   {% set options = {
+      'rand': rand,
+      'on_change': 'plugin_formcreator_changeValidators(this.value)'
+   } %}
+   <td width="20%">{{ __('Validation type', 'formcreator') }}</td>
+   <td>{{ item|field(so, 11, options) }}</td>
+   <td colspan="2">
+      <div id="validators_users">
+         {{ validators_users|raw }}
+         </div>
       <div id="validators_groups" style="width: 100%">
-      {{ item.validators_groups|raw}}
+         {{ validators_groups|raw}}
       </div>
    </td>
 </tr>
 <tr>
+   {% set options = { 'rand': rand} %}
    <td width="20%">{{ __('Default form in service catalog', 'formcreator') }}</td>
-   <td width="30%">{{ item.is_default|raw }}</td>
+   <td width="30%">{{ item|field(so, 13, options) }}</td>
 </tr>
-{% if item.id > 0 and item.canPurgeItem == true %}
+{% if canPurgeItem(item) == true %}
 <tr>
    <td colspan="4">
    <i class="fas fa-exclamation-triangle"></i>&nbsp;

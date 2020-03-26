@@ -1,0 +1,107 @@
+{% set rand = rand() %}
+<tr>
+   <th colspan="4">{{ title }}</th>
+</tr>
+<tr>
+   {% set options = { 'rand': rand } %}
+   <td width="20%">
+      <label for="textfield_name{{ rand }}" id="label_name">
+         {{ __('Title') }}
+         <span style="color:red;">*</span>
+      </label>
+   </td>
+   <td width="30%">{{ item|field(so, 1, options) }}</td>
+   {% set options = { 'rand': rand } %}
+   <td width="20%">
+      <label for="dropdown_plugin_formcreator_sections_id{{ rand }}" id="label_section">
+         {{ _n('Section', 'Sections', 1, 'formcreator') }}
+         <span style="color:red;">*</span>
+      </label>
+   </td>
+   <td width="30%">
+      {{ item|field(so, 3, options) }}
+   </td>
+</tr>
+<tr>
+   <td>
+      <label for="dropdown_fieldtype{{ rand }}" id="label_fieldtype">
+         {{ _n('Type', 'Types', 1) }}
+         <span style="color:red;">*</span>
+      </label>
+   </td>
+   <td>
+      {% set options = {
+         'rand': rand,
+         'on_change':'plugin_formcreator_changeQuestionType()',
+      } %}
+      {{ item|field(so, 4, options) }}
+   </td>
+   {# Dynamically filled for questions with a itemtype parameter (glpi select field) #}
+   <td id="plugin_formcreator_subtype_label"></td>
+   <td id="plugin_formcreator_subtype_value"></td>
+</tr>
+<tr>
+   {% set options = { 'rand': rand } %}
+   <td>
+      <div class="plugin_formcreator_required">
+         <label for="dropdown_required{{ rand }}">
+            {{ __('Required', 'formcreator') }}
+         </label>
+      </div>
+   </td>
+   <td>
+      <div class="plugin_formcreator_required">
+         {{ item|field(so, 5, options) }}
+      </div>
+   </td>
+   {% set options = { 'rand': rand } %}
+   <td>
+      <div class="plugin_formcreator_mayBeEmpty">
+         <label for="dropdown_show_empty{{ rand }}">
+            {{ __('Show empty', 'formcreator') }}
+         </label>
+      </div>
+   </td>
+   <td>
+      <div class="plugin_formcreator_mayBeEmpty">
+         {{ item|field(so, 6, options) }}
+      </div>
+   </td>
+</tr>
+<tr class="plugin_formcreator_question_specific">
+   <td></td>
+   <td></td>
+   <td></td>
+   <td></td>
+</tr>
+<tr id="description_tr">
+   {% set options = { 'rand': rand } %}
+   <td>
+      <div class="plugin_formcreator_mayBeEmpty">
+         <label for="description{{ rand }}" id="label_description">
+            {{ __('Description') }}
+         </label>
+      </div>
+   </td>
+   <td width="80%" colspan="3">
+   {{ item|field(so, 7, options) }}
+   </td>
+</tr>
+<tr>
+   <th colspan="4">
+      {{ __('Condition to show the question', 'formcreator') }}
+   </th>
+</tr>
+<tr>
+   {% set options = {
+      'rand': rand(),
+      'on_change': 'plugin_formcreator_toggleCondition(this)',
+   } %}
+   <td colspan="4">{{ item|field(so, 11, options) }}</td>
+</tr>
+{% for condition in conditions %}
+   {% include 'condition/showconditionforitem.html.twig' %}
+{% endfor %}
+<tr>
+   <td id="plugin_formcreator_error" colspan="4" class="center"></td>
+</tr>

@@ -1,0 +1,39 @@
+<tr data-itemtype="PluginFormcreatorCondition" data-id="{{ condition.id }}">
+   <td colspan="4">
+      {% set rand = rand() %}
+      {% set options = {
+         'rand': rand,
+         'field': '_conditions[show_logic][]',
+      } %}
+      <div class="div_show_condition">
+         <div class="div_show_condition_logic">{{ condition|field(so, 3, options) }}</div>
+         {% set options = {
+            'rand': rand,
+            'field': '_conditions[plugin_formcreator_questions_id][]',
+         } %}
+         <div class="div_show_condition_field">
+         {{ condition|field(so, 4, options) }}
+         </div>
+         {% set options = {
+            'rand': rand,
+            'field': '_conditions[show_condition][]',
+         } %}
+         <div class="div_show_condition_operator">
+            {{ condition|field(so, 5, options) }}
+         </div>
+         {% set options = {
+            'rand': rand,
+            'field': '_conditions[show_value][]',
+         } %}
+         <div class="div_show_condition_value">
+            {{ condition|field(so, 6, options) }}
+         </div>
+         <div class="div_show_condition_add">
+            <i class="fas fa-plus-circle" style="cursor: pointer;" onclick="plugin_formcreator_addEmptyCondition(this)"></i>&nbsp;
+         </div>
+         <div class="div_show_condition_remove">
+            <i class="fas fa-minus-circle" style="cursor: pointer;" onclick="plugin_formcreator_removeNextCondition(this)"></i>&nbsp;
+         </div>
+      </div>
+   </td>
+</tr>

@@ -262,4 +262,23 @@ JAVASCRIPT;
       return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
    }
+
+   /**
+    * Index search options by ID
+    *
+    * @param array $searchOptions search options of a itemtype
+    * @return array
+    */
+   public static function prepareSearchOptions($searchOptions) {
+      $output = [];
+      foreach($searchOptions as $searchOption) {
+         if (!isset($searchOption['field'])) {
+            continue;
+         }
+
+         $output[$searchOption['id']] = $searchOption;
+      }
+
+      return $output;
+   }
 }
