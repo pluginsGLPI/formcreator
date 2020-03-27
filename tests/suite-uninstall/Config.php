@@ -57,10 +57,10 @@ class Config extends CommonTestCase
       });
       $plugin->uninstall($plugin->getID());
       ob_end_clean();
-      $this->boolean($plugin->isInstalled($pluginName))->isFalse($log);
 
       // Check the plugin is not installed
-      $this->boolean($plugin->isInstalled($pluginName))->isFalse();
+      $plugin->getFromDBbyDir(strtolower($pluginName));
+      $this->integer((int) $plugin->fields['state'])->isEqualTo(\Plugin::NOTINSTALLED);
 
       // Check all plugin's tables are dropped
       $tables = [];
