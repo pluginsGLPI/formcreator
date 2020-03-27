@@ -63,7 +63,7 @@ script:
   - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation"; fi
 
   - # install GLPI with an old schema of the plugin and upgrade it
-  - export GLPI_CONFIG_DIR="tests/config-$OLD_DB_NAME"
+  - export TEST_GLPI_CONFIG_DIR="tests/config-$OLD_DB_NAME"
   - init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD && init_plugin
   - # upgrade test
   - echo status of plugins
@@ -71,7 +71,7 @@ script:
   - plugin_test_upgrade
 
   - # install GLPI with a fresh install of the plugin
-  - export GLPI_CONFIG_DIR="tests/config-$DB_NAME"
+  - export TEST_GLPI_CONFIG_DIR="tests/config-$DB_NAME"
   - init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
   - # fresh install test
   - plugin_test_install
