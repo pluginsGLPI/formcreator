@@ -187,7 +187,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ];
 
       $tab[] = [
-         'id'                 => '3',
+         'id'                 => '4',
          'table'              => $this->getTable(),
          'field'              => 'show_logic',
          'name'               => __('Show logic', 'formcreator'),
@@ -196,7 +196,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ];
 
       $tab[] = [
-         'id'                 => '4',
+         'id'                 => '5',
          'table'              => PluginFormcreatorQuestion::getTable(),
          'field'              => 'plugin_formcreator_questions_id',
          'name'               => _n('Question', 'Questions', 1, 'formcreator'),
@@ -205,7 +205,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ];
 
       $tab[] = [
-         'id'                 => '5',
+         'id'                 => '6',
          'table'              => $this->getTable(),
          'field'              => 'show_condition',
          'name'               => __('Show condition', 'formcreator'),
@@ -214,7 +214,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ];
 
       $tab[] = [
-         'id'                 => '6',
+         'id'                 => '7',
          'table'              => $this->getTable(),
          'field'              => 'show_value',
          'name'               => __('Value', 'formcreator'),
