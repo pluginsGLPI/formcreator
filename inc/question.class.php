@@ -282,24 +282,23 @@ PluginFormcreatorConditionnableInterface
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       $formId = $item->getID();
-
-      echo '<div id="plugin_formcreator_form" class="plugin_formcreator_form_design" data-itemtype="' . PluginFormcreatorForm::class . '" data-id="' . $formId . '">';
-      echo '<ol>';
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
-      foreach ($sections as $section) {
-         echo $section->getDesignHtml();
-      }
+      $lastSectionOrder = PluginFormcreatorCommon::getMax(
+         new PluginFormcreatorSection(),
+         [PluginFormcreatorForm::getForeignKeyField() => $formId],
+         'order'
+      );
+      $data = [
+         'so' => [
+            self::getType() => (new self)->searchOptions(),
+         ],
+         'form' => $item,
+         'sections' => $sections,
+         'lastSectionOrder' => $lastSectionOrder,
+         'columns' => PluginFormcreatorSection::COLUMNS,
+      ];
 
-      // add a section
-      echo '<li class="plugin_formcreator_section not-sortable">';
-      echo '<a href="javascript:plugin_formcreator.showSectionForm(' . $item->getID() . ');">';
-      echo '<i class="fas fa-plus"></i>&nbsp;';
-      echo __('Add a section', 'formcreator');
-      echo '</a>';
-      echo '</li>';
-
-      echo '</ol>';
-      echo '</div>';
+      plugin_formcreator_render('question/showforform.html.twig', $data);
    }
 
    /**
