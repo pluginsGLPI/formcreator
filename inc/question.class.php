@@ -842,9 +842,6 @@ PluginFormcreatorConditionnableInterface
 
       echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       Html::closeForm();
-      return;
-
-      $condition = new PluginFormcreatorCondition();
       $data = [
          'title'   => $title,
          'so'      => [
@@ -854,14 +851,7 @@ PluginFormcreatorConditionnableInterface
          'item'    => $this,
          'conditions' => $condition->getConditionsFromItem($this),
       ];
-
       plugin_formcreator_render('question/showform.html.twig', $data);
-
-      $this->showFormButtons($options + [
-         'candel' => false
-      ]);
-
-      Html::closeForm();
    }
 
    /**
