@@ -32,6 +32,7 @@
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Toolbox;
 
 class GlpiInputExtension extends AbstractExtension
 {
@@ -44,7 +45,6 @@ class GlpiInputExtension extends AbstractExtension
     public function getFilters() {
       return [
             new TwigFilter('field', [$this, 'formatField'], ['is_safe' => ['html']]),
-
       ];
    }
 
@@ -57,7 +57,9 @@ class GlpiInputExtension extends AbstractExtension
     public function getFunctions() {
       return [
          new TwigFunction('rand', 'mt_rand'),
+         new TwigFunction('canUpdateItem', [__CLASS__, 'canUpdateItem']),
          new TwigFunction('canPurgeItem', [__CLASS__, 'canPurgeItem']),
+         new TwigFunction('canEdit', [__CLASS__, 'canEdit']),
       ];
    }
 
@@ -91,7 +93,15 @@ class GlpiInputExtension extends AbstractExtension
       return $output;
    }
 
+   public static function canUpdateItem(CommonDBTM $item) {
+      return $item->canUpdateItem();
+   }
+
    public static function canPurgeItem(CommonDBTM $item) {
       return $item->canPurgeItem();
+   }
+
+   public static function canEdit(CommonDBTM $item) {
+      return $item->canEdit($item->getID());
    }
 }

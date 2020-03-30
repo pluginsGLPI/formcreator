@@ -39,7 +39,10 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginFormcreatorEntityconfig extends CommonDBTM {
 
+   public static $rightname = 'entity';
+
    const CONFIG_PARENT = -2;
+   const CONFIG_GLPI_HELPDSK = 0;
    const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
    const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
 
@@ -47,6 +50,15 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     * @var bool $dohistory maintain history
     */
    public $dohistory                   = true;
+
+   public static function getEnumHelpdeskMode() {
+      return [
+         self::CONFIG_PARENT                     => __('Inheritance of the parent entity'),
+         self::CONFIG_GLPI_HELPDSK               => __('GLPi\'s helpdesk', 'formcreator'),
+         self::CONFIG_SIMPLIFIED_SERVICE_CATALOG => __('Service catalog simplified', 'formcreator'),
+         self::CONFIG_EXTENDED_SERVICE_CATALOG   => __('Service catalog extended', 'formcreator'),
+      ];
+   }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $tabNames = [];
@@ -58,73 +70,112 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       return $tabNames;
    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      if ($item->getType() == 'Entity') {
-         $config = new self();
-         $config->showFormForEntity($item);
-      }
+   static function isNewID($ID) {
+      return Entity::isNewID($ID);
    }
 
-   public function showFormForEntity(Entity $entity) {
-      $ID = $entity->getField('id');
-      if (!$entity->can($ID, READ)
-            || !Notification::canView()) {
+   public function canUpdateItem() {
+      $entity = new Entity();
+      $entity->getFromDB($this->getID());
+      return $entity->canUpdateItem();
+   }
+
+   public static function canDelete() {
+      return false;
+   }
+
+   public static function canPurge() {
+      return false;
+   }
+
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      if ($item->getType() != Entity::class) {
+         return false;
+      }
+      self::showForEntity($item);
+      return true;
+   }
+
+   public function prepareInputForUpdate($input) {
+      $entity = new Entity();
+      $entity->getFromDB($this->getID());
+      if ($entity->fields['level'] < 2) {
+         // This config applies to a top level entity
+         $input['replace_helpdesk'] = self::CONFIG_GLPI_HELPDSK;
+      }
+
+      return $input;
+   }
+
+   public static function showForEntity(Entity $entity, $withtemplate = '') {
+      $ID = $entity->fields['id'];
+      if (!$entity->can($ID, READ) || !Notification::canView()) {
          return false;
       }
 
-      if (!$this->getFromDB($ID)) {
-         $this->add([
-               'id'                 => $ID,
-               'replace_helpdesk'   => self::CONFIG_PARENT
+      $entityConfig = new self();
+      $entityConfig->getFromDB($ID);
+      if (!$entityConfig->getFromDB($ID)) {
+         $entityConfig->add([
+            'id'                 => $ID,
+            'replace_helpdesk'   => self::CONFIG_PARENT
          ]);
       }
 
-      $canedit = $entity->canUpdateItem();
-      echo "<div class='spaced'>";
-      if ($canedit) {
-         echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
+      $options = [
+         'formtitle' => __('Helpdesk', 'formcreator'),
+         'canedit'   => $entityConfig->canUpdateItem(),
+      ];
+      $entityConfig->initForm($entityConfig->getID(), $options);
+      $entityConfig->showFormHeader($options);
+
+      $elements = self::getEnumHelpdeskMode();
+      $data = [
+         'so'     => [
+            self::getType() => $entityConfig->searchOptions(),
+         ],
+         'entity' => $entity,
+         'item'   => $entityConfig,
+         'current_replace_helpdesk' => $elements[$entityConfig->fields['replace_helpdesk']],
+      ];
+
+      plugin_formcreator_render('entityconfig/showforentity.html.twig', $data);
+      $entityConfig->showFormButtons();
+   }
+
+   public function rawSearchOptions() {
+      $tab = [];
+
+      $tab[] = [
+         'id'              => '5',
+         'table'           => self::getTable(),
+         'name'            => self::getTypeName(1),
+         'field'           => 'replace_helpdesk',
+         'datatype'        => 'specific',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      return $tab;
+   }
+
+   public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
+      if (!is_array($values)) {
+         $values = [$field => $values];
+      }
+      $options['display'] = false;
+
+      switch ($field) {
+         case 'replace_helpdesk':
+            $elements = self::getEnumHelpdeskMode();
+            $options['value'] = $values[$field];
+            return Dropdown::showFromArray(
+               $name, $elements, $options
+            );
+         break;
       }
 
-      echo "<table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
-
-      if ($ID != 0) {
-         $elements = [
-            self::CONFIG_PARENT => __('Inheritance of the parent entity')
-         ];
-      } else {
-         $elements = [];
-      }
-      $elements[0] = __('GLPi\'s helpdesk', 'formcreator');
-      $elements[1] = __('Service catalog simplified', 'formcreator');
-      $elements[2] = __('Service catalog extended', 'formcreator');
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Helpdesk mode', 'formcreator')."</td>";
-      echo "<td>";
-      Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
-      if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('replace_helpdesk', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
-      }
-      echo '</td></tr>';
-
-      if ($canedit) {
-         echo "<tr>";
-         echo "<td class='tab_bg_2 center' colspan='4'>";
-         echo "<input type='hidden' name='id' value='".$entity->fields["id"]."'>";
-         echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
-         echo "</td></tr>";
-         echo "</table>";
-         Html::closeForm();
-
-      } else {
-         echo "</table>";
-      }
-
-      echo "</div>";
+      return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
 
    /**

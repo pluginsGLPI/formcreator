@@ -1,0 +1,13 @@
+<tr class='tab_bg_1'>
+   <td>{{ __('Helpdesk mode', 'formcreator') }}</td>
+   <td>
+   {{ item|field(so, 5) }}
+   {# -2 is PluginFormcreatorEntityconfig::CONFIG_PARENT #}
+   {% if item.fields.replace_helpdesk == -2 %}
+      <div class="green">
+      {{ current_replace_helpdesk }}
+      </div>
+   {% endif %}
+   </td>
+</tr>
+
