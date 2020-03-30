@@ -565,6 +565,9 @@ input.submit_button:focus {
 .div_show_condition_logic {
     width: 70px !important;
 }
+.plugin_formcreator_first_logic {
+   display: none;
+}
 .div_show_condition_add img, .div_show_condition_remove img {
    width: 12px;
    vertical-align: middle;

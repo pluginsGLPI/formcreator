@@ -1212,13 +1212,18 @@ function plugin_formcreator_addEmptyCondition(target) {
       data: data
    }).done(function (data) {
       $(target).parents('tr').after(data);
-      $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
+      plugin_formcreator_hideFirstShowlogic();
    });
 }
 
 function plugin_formcreator_removeNextCondition(target) {
    $(target).parents('tr').remove();
-   $('[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic').first().hide();
+   plugin_formcreator_hideFirstShowlogic();
+}
+
+function plugin_formcreator_hideFirstShowlogic() {
+   $('[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic').removeClass('plugin_formcreator_first_logic');
+   $('[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic').first().addClass('plugin_formcreator_first_logic');
 }
 
 // === FIELDS ===

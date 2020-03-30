@@ -102,6 +102,11 @@
 {% for condition in conditions %}
    {% include 'condition/showconditionforitem.html.twig' %}
 {% endfor %}
+<script type="text/javascript">
+   $(document).ready(function () {
+      plugin_formcreator_hideFirstShowlogic();
+   });
+</script>
 <tr>
    <td id="plugin_formcreator_error" colspan="4" class="center"></td>
 </tr>
