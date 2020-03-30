@@ -189,8 +189,12 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          } else {
             $user = new User();
             $user->getFromDB($item);
-            $value[] = Toolbox::addslashes_deep($user->getRawName());
-         }
+            if (method_exists($user, 'getFriendlyName')) {
+               $value[] = Toolbox::addslashes_deep($user->getFriendlyName());
+            } else {
+               $value[] = Toolbox::addslashes_deep($user->getRawName());
+            }
+       }
       }
 
       if ($richText) {
@@ -223,7 +227,11 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             $user->getFromDB($item);
             if (!$user->isNewItem()) {
                // A user known in the DB
-               $knownUsers[$user->getID()] = $user->getRawName();
+               if (method_exists($user, 'getFriendlyName')) {
+                  $knownUsers[$user->getID()] = $user->getFriendlyName();
+               } else {
+                  $knownUsers[$user->getID()] = $user->getRawName();
+               }
             }
          }
       }
