@@ -632,7 +632,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
       }
 
-      $data['_users_id_recipient'] = $requesters_id;
+      $data['users_id_recipient'] = $formanswer->fields['requester_id'];
       $data['users_id_lastupdater'] = Session::getLoginUserID();
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
@@ -665,7 +665,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       if (count($this->assignedGroups['_groups_id_assign']) > 0) {
          $data = $this->assignedGroups + $data;
       }
-      $data['users_id_recipient'] = $requesters_id;
 
       // Create the target ticket
       $data['_auto_import'] = true;
