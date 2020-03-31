@@ -262,7 +262,7 @@ class PluginFormcreatorWizard {
             </span>";
 
       echo "<span class='status status_validate'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+            <a href='".$link."?".
                      Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count['to_validate']."
@@ -272,7 +272,7 @@ class PluginFormcreatorWizard {
             </span>";
 
       echo "<span class='status status_solved'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+            <a href='".$link."?".
                      Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count[Ticket::SOLVED]."
