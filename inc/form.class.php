@@ -449,10 +449,6 @@ PluginFormcreatorConditionnableInterface
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
-      $objectName = (new DbUtils)->autoName($this->fields['name'], 'name',
-         (isset($options['withtemplate']) && $options['withtemplate'] == 2),
-         $this->getType(), -1);
-
       // Select all users with ticket validation right and the groups
       $userTable = User::getTable();
       $userFk = User::getForeignKeyField();
@@ -608,7 +604,6 @@ PluginFormcreatorConditionnableInterface
    public function showTargets($ID, $options = []) {
       $allTargets = $this->getTargetsFromForm();
       $token = Session::getNewCSRFToken();
-      $i = 0;
       $twigTargets = [];
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
