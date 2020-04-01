@@ -663,6 +663,7 @@ PluginFormcreatorConditionnableInterface
          foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
             $parameterInput['plugin_formcreator_questions_id'] = $this->getID();
             if ($parameters[$fieldName]->isNewItem()) {
+               unset($parameterInput['id']);
                $parameters[$fieldName]->add($parameterInput);
             } else {
                $parameterInput['id'] = $parameters[$fieldName]->getID();
