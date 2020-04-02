@@ -10,26 +10,32 @@
 <tr class="tab_bg_2">
    {% set options = {
       'rand': rand,
-      'name': 'plugin_formcreator_categories_id'
+      'field': 'plugin_formcreator_categories_id'
    } %}
    <td width="20%">{{ __('Category') }}</td>
    <td width="30%">{{ item|field(so, 10, options) }}</td>
+   {% set options = { 'rand': rand } %}
    <td width="20%">{{ __('Direct access on homepage', 'formcreator') }}</td>
    <td width="30%">{{ item|field(so, 8, options) }}</td>
 </tr>
 <tr class="tab_bg_1">
+   {% set options = { 'rand': rand } %}
    <td width="20%">{{ __('Form icon', 'formcreator') }}</td>
    <td width="30%">{{ item|field(so, 31, options) }}&nbsp;{{ item|field(so, 32, options) }}</td>
+   {% set options = { 'rand': rand } %}
    <td width="20%">{{ __('Background color', 'formcreator') }}</td>
    <td width="30%">{{ item|field(so, 33, options) }}</td>
 </tr>
 <tr class="tab_bg_1">
+   {% set options = { 'rand': rand } %}
    <td width="20%">{{ __('Description') }}</td>
    <td width="30%">{{ item|field(so, 4, options) }}</td>
+   {% set options = { 'rand': rand } %}
    <td width="20%">{{ __('Language') }}</td>
    <td width="30%">{{ item|field(so, 7, options) }}</td>
 </tr>
 <tr class="tab_bg_1">
+   {% set options = { 'rand': rand } %}
    <td width="20%">{{ _n('Header', 'Headers', 1, 'formcreator') }}</td>
    <td colspan="3">{{ item|field(so, 34, options) }}</td>
 </tr>

@@ -405,6 +405,10 @@ PluginFormcreatorConditionnableInterface
                ]
             ),
          ],
+         'so'    => [
+            self::getType() => $this->searchOptions(),
+         ],
+         'item'  => $this,
          'title' => $title,
       ];
 

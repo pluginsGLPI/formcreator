@@ -5,7 +5,7 @@
 <tr>
    <td width="20%">{{ __('Title') }}<span style="color:red;">*</span>
    </td>
-   <td colspan="3">{{ item.name|raw }}</td>
+   <td colspan="3">{{ item|field(so, 1, options) }}</td>
 </tr>
 <tr>
 <th colspan="4">{{ __('Condition to show the section', 'formcreator')}}</th>
@@ -13,8 +13,6 @@
 {{ conditionsHtml|raw }}
 <tr>
    <td colspan="4" class="center">
-   {{ item.id|raw }}
-   {{ item.uuid|raw }}
    {{ item.plugin_formcreator_forms_id|raw }}
    </td>
 </tr>
