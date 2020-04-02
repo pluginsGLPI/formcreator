@@ -185,7 +185,10 @@ class PluginFormcreatorFields
             $nextLogic = 'OR';
          }
 
-         // TODO: find the best behavior if the question does not exists
+         if (!isset($fields[$condition['field']])) {
+            // The field does not exists, give up and make the field visible
+            return true;
+         }
          $conditionField = $fields[$condition['field']];
 
          $value = false;
