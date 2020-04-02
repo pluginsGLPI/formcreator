@@ -87,9 +87,6 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             'enable_richtext'   => $useRichText,
             'enable_fileupload' => false,
          ]);
-         if (version_compare(GLPI_VERSION, '9.4.6') < 0) {
-            echo '</div>';
-         }
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
