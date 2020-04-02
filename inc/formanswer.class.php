@@ -299,7 +299,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       global $CFG_GLPI;
 
       if (!is_array($values)) {
+         $language = $_SESSION["glpilanguage"];
+         Session::loadLanguage('en_GB');
          $elements = self::getStatuses();
+         Session::loadLanguage($language);
          $values = [$field => $elements[$values]];
       }
       switch ($field) {
