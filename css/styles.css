@@ -308,7 +308,7 @@ input.submit_button:focus {
 }
 
 #plugin_formcreator_form .form-group {
-   padding: 0 15px;
+   padding: 5px 15px;
 }
 
 #plugin_formcreator_form .form-group > label {
