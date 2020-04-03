@@ -52,6 +52,7 @@ class PluginFormcreatorFormList extends CommonGLPI
       $menu = parent::getMenuContent();
       $menu['title'] = static::getTypeName(2);
       $menu['page'] = '/plugins/formcreator/front/formlist.php';
+      $menu['icon'] = 'fas fa-edit';
       $image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
                   title="' . __('Forms waiting for validation', 'formcreator') . '"
                   alt="' . __('Forms waiting for validation', 'formcreator') . '">';
