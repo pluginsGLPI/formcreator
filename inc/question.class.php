@@ -840,7 +840,6 @@ PluginFormcreatorConditionnableInterface
          'candel' => false
       ]);
 
-      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       Html::closeForm();
       $data = [
          'title'   => $title,
