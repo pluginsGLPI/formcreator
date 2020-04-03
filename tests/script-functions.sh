@@ -42,19 +42,19 @@ init_glpi() {
    mysql -u$2 -p$3 -h$DB_HOST --execute "DROP DATABASE IF EXISTS \`$1\`;"
    echo Cleaning up cache directory
    rm -r ../../tests/files/_cache/* || true
-   rm ../../$GLPI_CONFIG_DIR/config_db.php || true
+   rm ../../$TEST_GLPI_CONFIG_DIR/config_db.php || true
    echo Installing GLPI on database $1
-   mkdir -p ../../$GLPI_CONFIG_DIR
+   mkdir -p ../../$TEST_GLPI_CONFIG_DIR
    if [ -e ../../tools/cliinstall.php ] ; then php  ./tests/install_glpi.php --host $DB_HOST --db=$1 --user=$2 --pass=$3 ; fi
    if [ -e ../../scripts/cliinstall.php ] ; then php ./tests/install_glpi.php --host $DB_HOST --db=$1 --user=$2 --pass=$3 ; fi
-   if [ -e ../../bin/console ]; then php ../../bin/console glpi:database:install --db-host=$DB_HOST --db-user=$2 --db-password=$3 --db-name=$1 --config-dir=../../$GLPI_CONFIG_DIR --no-interaction --no-plugins --force; fi
+   if [ -e ../../bin/console ]; then php ../../bin/console glpi:database:install --db-host=$DB_HOST --db-user=$2 --db-password=$3 --db-name=$1 --config-dir=../../$TEST_GLPI_CONFIG_DIR --no-interaction --no-plugins --force; fi
 }
 
 # Plugin upgrade test
 plugin_test_upgrade() {
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_config_2.5.0.sql
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_empty_2.5.0.sql
-   php scripts/cliinstall.php --tests $GLPI_CONFIG_DIR
+   php scripts/cliinstall.php --tests $TEST_GLPI_CONFIG_DIR
 }
 
 # Plugin test

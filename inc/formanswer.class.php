@@ -39,6 +39,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $usenotepad = true;
    public $usenotepadrights = true;
 
+   public $targetList = [];
+
    const SOPTION_ANSWER = 900000;
 
    // Values choosen to not conflict with status of ticket constants
@@ -297,7 +299,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       global $CFG_GLPI;
 
       if (!is_array($values)) {
+         $language = $_SESSION["glpilanguage"];
+         Session::loadLanguage('en_GB');
          $elements = self::getStatuses();
+         Session::loadLanguage($language);
          $values = [$field => $elements[$values]];
       }
       switch ($field) {
@@ -614,7 +619,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '<div class="form-group required line1">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
          Html::textarea([
-            'name' => 'comment', 
+            'name' => 'comment',
             'value' => $this->fields['comment']
          ]);
          echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
@@ -708,7 +713,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
                             ? $_SESSION['glpiactive_entity']
                             : $form->fields['entities_id'];
-      
+
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
       $input['requester_id']                = isset($_SESSION['glpiID'])
@@ -719,7 +724,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['status']                      = $status;
       $input['request_date']                = date('Y-m-d H:i:s');
       $input['comment']                     = '';
-                
+
       return $input;
    }
 
@@ -938,6 +943,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                $success = false;
                break;
             }
+            $this->targetList[] = $generatedTarget;
             // Map [itemtype of the target] [item ID of the target] = ID of the generated target
             $generatedTargets->addTarget($targetObject, $generatedTarget);
          }
@@ -1129,7 +1135,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       $this->createIssue();
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
-   } 
+   }
 
    public function post_updateItem($history = 1) {
       $this->sendNotification();

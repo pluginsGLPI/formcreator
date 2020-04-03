@@ -1,4 +1,120 @@
 <a name="2.9.2-dev"></a>
+## [2.9.2-dev](https://github.com/pluginsglpi/formcreator/compare/v2.9.1...v2.9.2-dev) (2020-03-23)
+
+
+### Bug Fixes
+
+* **build:** invert order of versions in changelog ([ff604ee](https://github.com/pluginsglpi/formcreator/commit/ff604ee))
+* **central:** list of forms displayed twice ([00d3180](https://github.com/pluginsglpi/formcreator/commit/00d3180))
+* **condition:** incomplete export ([d4ffca2](https://github.com/pluginsglpi/formcreator/commit/d4ffca2))
+* **dropdownfield:** SQL error : ambiguous column id ([ded963f](https://github.com/pluginsglpi/formcreator/commit/ded963f))
+* **dropdownfield,glpiobjectfield:** sub type not dosplayed ([164d5b9](https://github.com/pluginsglpi/formcreator/commit/164d5b9))
+* **dropdownfield,glpiselectfield:** empty value parameter not honored ([080271a](https://github.com/pluginsglpi/formcreator/commit/080271a))
+* **dropdownfields:** handle empty value for entities dropdown ([47b47ef](https://github.com/pluginsglpi/formcreator/commit/47b47ef))
+* **filefield:** unable to create / edit a file field ([58e0101](https://github.com/pluginsglpi/formcreator/commit/58e0101))
+* **form:** hidden questions still consume 10 pixels height ([afa2ea3](https://github.com/pluginsglpi/formcreator/commit/afa2ea3))
+* **form:** list of forms on homepage ([328e591](https://github.com/pluginsglpi/formcreator/commit/328e591))
+* **form:** my last form (validator) were not sorted ([6c2b0be](https://github.com/pluginsglpi/formcreator/commit/6c2b0be))
+* **form:** single quotes around a table name ([0465095](https://github.com/pluginsglpi/formcreator/commit/0465095)), closes [#1606](https://github.com/pluginsglpi/formcreator/issues/1606)
+* **formanswer:** use of  in static method ([bb0ff99](https://github.com/pluginsglpi/formcreator/commit/bb0ff99))
+* **fotrm:** some icons may be not displayed ([8fc9587](https://github.com/pluginsglpi/formcreator/commit/8fc9587))
+* **glpiselectfield:** restrict to items associatable to tickets ([29b0a47](https://github.com/pluginsglpi/formcreator/commit/29b0a47))
+* **install:** upgrade to 2.5.0 fails on categories ([918e46f](https://github.com/pluginsglpi/formcreator/commit/918e46f))
+* **issue:** handle redirection to satisfaction survey from email ([b9aa843](https://github.com/pluginsglpi/formcreator/commit/b9aa843))
+* **issue:** handle survey expiration ([cb37daf](https://github.com/pluginsglpi/formcreator/commit/cb37daf))
+* **issue:** show satisfaction for tickets on service catalog ([7bde576](https://github.com/pluginsglpi/formcreator/commit/7bde576))
+* **issue:** warning with GLPI 9.5 ([fe5b2df](https://github.com/pluginsglpi/formcreator/commit/fe5b2df))
+* **multiselectfield:** visible JS ([bb77c0e](https://github.com/pluginsglpi/formcreator/commit/bb77c0e))
+* **question:** inoperant buttons to move questions ([3a191eb](https://github.com/pluginsglpi/formcreator/commit/3a191eb))
+* **question:** javascript code was displayed ([a7be931](https://github.com/pluginsglpi/formcreator/commit/a7be931))
+* **question:** prevent double escaping of description ([ca2450c](https://github.com/pluginsglpi/formcreator/commit/ca2450c))
+* **question:** show / hode specific properties ([490356e](https://github.com/pluginsglpi/formcreator/commit/490356e))
+* **question,section:** duplication failure ([08e934b](https://github.com/pluginsglpi/formcreator/commit/08e934b))
+* **radiosfield:** better overlap prevention ([a2f1ed1](https://github.com/pluginsglpi/formcreator/commit/a2f1ed1))
+* **radiosfield:** overlapped long labels ([f7cbdde](https://github.com/pluginsglpi/formcreator/commit/f7cbdde))
+* **robo:** prevent exception when computong log with commit without body ([e5aa246](https://github.com/pluginsglpi/formcreator/commit/e5aa246))
+* **section:** don't allocate height on hidden section ([b655842](https://github.com/pluginsglpi/formcreator/commit/b655842))
+* **targetchange:** bad url when delete an actor ([62e0de1](https://github.com/pluginsglpi/formcreator/commit/62e0de1)), closes [#1607](https://github.com/pluginsglpi/formcreator/issues/1607)
+* **targetticket:** display of selected category question ([b571115](https://github.com/pluginsglpi/formcreator/commit/b571115))
+* **targetticket:** empty dropdown for target ticket linking" ([79dd0bc](https://github.com/pluginsglpi/formcreator/commit/79dd0bc))
+* **targetticket,targetchange:** bad handling of group from question ([80f405b](https://github.com/pluginsglpi/formcreator/commit/80f405b))
+* **targetticket,targetchange:** escape text fields of targets ([559424e](https://github.com/pluginsglpi/formcreator/commit/559424e))
+* **targetticket,targetchange:** escape text fields of targets ([df0855d](https://github.com/pluginsglpi/formcreator/commit/df0855d))
+* **targetticket,targetchange:** inverted show / hide for urgenty settings ([9be5e3a](https://github.com/pluginsglpi/formcreator/commit/9be5e3a))
+* **targetticket,targetchange:** update constants for due date resolution in JS code ([4ddb6e8](https://github.com/pluginsglpi/formcreator/commit/4ddb6e8))
+* **textarea:** image paste on multiple pages ([da30f86](https://github.com/pluginsglpi/formcreator/commit/da30f86))
+* avoid caps in filenames ([918a88d](https://github.com/pluginsglpi/formcreator/commit/918a88d))
+* remove code left for debug ([351a36b](https://github.com/pluginsglpi/formcreator/commit/351a36b))
+* **textarea:** workaround GLPI bug in 9.4.5 ([8de4358](https://github.com/pluginsglpi/formcreator/commit/8de4358)), closes [#1613](https://github.com/pluginsglpi/formcreator/issues/1613)
+* **textareafield:** have file uploads work without file drop area ([4e5ed45](https://github.com/pluginsglpi/formcreator/commit/4e5ed45))
+* **textareafield:** visual glitches ([b414ee0](https://github.com/pluginsglpi/formcreator/commit/b414ee0))
+
+
+### Features
+
+* compatibiliy with glpi 9.5 ([20ca8e0](https://github.com/pluginsglpi/formcreator/commit/20ca8e0))
+
+
+
+<a name="2.9.2-dev"></a>
+## [2.9.2-dev](https://github.com/pluginsglpi/formcreator/compare/v2.9.1...v2.9.2-dev) (2020-03-23)
+
+
+### Bug Fixes
+
+* **build:** invert order of versions in changelog ([ff604ee](https://github.com/pluginsglpi/formcreator/commit/ff604ee))
+* **central:** list of forms displayed twice ([00d3180](https://github.com/pluginsglpi/formcreator/commit/00d3180))
+* **condition:** incomplete export ([d4ffca2](https://github.com/pluginsglpi/formcreator/commit/d4ffca2))
+* **dropdownfield:** SQL error : ambiguous column id ([ded963f](https://github.com/pluginsglpi/formcreator/commit/ded963f))
+* **dropdownfield,glpiobjectfield:** sub type not dosplayed ([164d5b9](https://github.com/pluginsglpi/formcreator/commit/164d5b9))
+* **dropdownfield,glpiselectfield:** empty value parameter not honored ([080271a](https://github.com/pluginsglpi/formcreator/commit/080271a))
+* **dropdownfields:** handle empty value for entities dropdown ([47b47ef](https://github.com/pluginsglpi/formcreator/commit/47b47ef))
+* **filefield:** unable to create / edit a file field ([58e0101](https://github.com/pluginsglpi/formcreator/commit/58e0101))
+* **form:** hidden questions still consume 10 pixels height ([afa2ea3](https://github.com/pluginsglpi/formcreator/commit/afa2ea3))
+* **form:** list of forms on homepage ([328e591](https://github.com/pluginsglpi/formcreator/commit/328e591))
+* **form:** my last form (validator) were not sorted ([6c2b0be](https://github.com/pluginsglpi/formcreator/commit/6c2b0be))
+* **form:** single quotes around a table name ([0465095](https://github.com/pluginsglpi/formcreator/commit/0465095)), closes [#1606](https://github.com/pluginsglpi/formcreator/issues/1606)
+* **formanswer:** use of  in static method ([bb0ff99](https://github.com/pluginsglpi/formcreator/commit/bb0ff99))
+* **fotrm:** some icons may be not displayed ([8fc9587](https://github.com/pluginsglpi/formcreator/commit/8fc9587))
+* **glpiselectfield:** restrict to items associatable to tickets ([29b0a47](https://github.com/pluginsglpi/formcreator/commit/29b0a47))
+* **install:** upgrade to 2.5.0 fails on categories ([918e46f](https://github.com/pluginsglpi/formcreator/commit/918e46f))
+* **issue:** handle redirection to satisfaction survey from email ([b9aa843](https://github.com/pluginsglpi/formcreator/commit/b9aa843))
+* **issue:** handle survey expiration ([cb37daf](https://github.com/pluginsglpi/formcreator/commit/cb37daf))
+* **issue:** show satisfaction for tickets on service catalog ([7bde576](https://github.com/pluginsglpi/formcreator/commit/7bde576))
+* **issue:** warning with GLPI 9.5 ([fe5b2df](https://github.com/pluginsglpi/formcreator/commit/fe5b2df))
+* **multiselectfield:** visible JS ([bb77c0e](https://github.com/pluginsglpi/formcreator/commit/bb77c0e))
+* **question:** inoperant buttons to move questions ([3a191eb](https://github.com/pluginsglpi/formcreator/commit/3a191eb))
+* **question:** javascript code was displayed ([a7be931](https://github.com/pluginsglpi/formcreator/commit/a7be931))
+* **question:** prevent double escaping of description ([ca2450c](https://github.com/pluginsglpi/formcreator/commit/ca2450c))
+* **question:** show / hode specific properties ([490356e](https://github.com/pluginsglpi/formcreator/commit/490356e))
+* **question,section:** duplication failure ([08e934b](https://github.com/pluginsglpi/formcreator/commit/08e934b))
+* **radiosfield:** better overlap prevention ([a2f1ed1](https://github.com/pluginsglpi/formcreator/commit/a2f1ed1))
+* **radiosfield:** overlapped long labels ([f7cbdde](https://github.com/pluginsglpi/formcreator/commit/f7cbdde))
+* **robo:** prevent exception when computong log with commit without body ([e5aa246](https://github.com/pluginsglpi/formcreator/commit/e5aa246))
+* **section:** don't allocate height on hidden section ([b655842](https://github.com/pluginsglpi/formcreator/commit/b655842))
+* **targetchange:** bad url when delete an actor ([62e0de1](https://github.com/pluginsglpi/formcreator/commit/62e0de1)), closes [#1607](https://github.com/pluginsglpi/formcreator/issues/1607)
+* **targetticket:** display of selected category question ([b571115](https://github.com/pluginsglpi/formcreator/commit/b571115))
+* **targetticket:** empty dropdown for target ticket linking" ([79dd0bc](https://github.com/pluginsglpi/formcreator/commit/79dd0bc))
+* **targetticket,targetchange:** bad handling of group from question ([80f405b](https://github.com/pluginsglpi/formcreator/commit/80f405b))
+* **targetticket,targetchange:** escape text fields of targets ([559424e](https://github.com/pluginsglpi/formcreator/commit/559424e))
+* **targetticket,targetchange:** escape text fields of targets ([df0855d](https://github.com/pluginsglpi/formcreator/commit/df0855d))
+* **targetticket,targetchange:** inverted show / hide for urgenty settings ([9be5e3a](https://github.com/pluginsglpi/formcreator/commit/9be5e3a))
+* **targetticket,targetchange:** update constants for due date resolution in JS code ([4ddb6e8](https://github.com/pluginsglpi/formcreator/commit/4ddb6e8))
+* **textarea:** image paste on multiple pages ([da30f86](https://github.com/pluginsglpi/formcreator/commit/da30f86))
+* avoid caps in filenames ([918a88d](https://github.com/pluginsglpi/formcreator/commit/918a88d))
+* remove code left for debug ([351a36b](https://github.com/pluginsglpi/formcreator/commit/351a36b))
+* **textarea:** workaround GLPI bug in 9.4.5 ([8de4358](https://github.com/pluginsglpi/formcreator/commit/8de4358)), closes [#1613](https://github.com/pluginsglpi/formcreator/issues/1613)
+* **textareafield:** have file uploads work without file drop area ([4e5ed45](https://github.com/pluginsglpi/formcreator/commit/4e5ed45))
+* **textareafield:** visual glitches ([b414ee0](https://github.com/pluginsglpi/formcreator/commit/b414ee0))
+
+
+### Features
+
+* compatibiliy with glpi 9.5 ([20ca8e0](https://github.com/pluginsglpi/formcreator/commit/20ca8e0))
+
+
+
+<a name="2.9.2-dev"></a>
 ## [2.9.2-dev](https://github.com/pluginsglpi/formcreator/compare/v2.9.1...v2.9.2-dev) (2020-03-05)
 
 
