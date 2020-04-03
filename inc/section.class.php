@@ -539,7 +539,7 @@ PluginFormcreatorConditionnableInterface
       $onclick = 'onclick="plugin_formcreator.showSectionForm(' . $formId . ', ' . $sectionId . ')"';
       $html .= '<li class="plugin_formcreator_section"'
       . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
-      . '* data-id="' . $sectionId . '"'
+      . ' data-id="' . $sectionId . '"'
       . '>';
 
       // section name

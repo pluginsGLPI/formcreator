@@ -944,7 +944,7 @@ var plugin_formcreator = new function() {
          alert(data.responseText);
       }).done(function(data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
-         section.find('[data-field="name"]').text(data);
+         section.find('> [data-field="name"]').text(data);
          modalWindow.dialog('close');
       });
    }
