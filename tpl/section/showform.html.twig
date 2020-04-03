@@ -13,6 +13,10 @@
 {{ conditionsHtml|raw }}
 <tr>
    <td colspan="4" class="center">
-   {{ item.plugin_formcreator_forms_id|raw }}
+   {% set options = {
+      'rand': rand,
+      'hidden': true
+   } %}
+   {{ item|field(so, 3, options) }}
    </td>
 </tr>

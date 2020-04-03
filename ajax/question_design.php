@@ -33,8 +33,8 @@ include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
 if (!isset($_REQUEST['questionId'])) {
-   http_response_code(400);
-   exit();
+   //http_response_code(400);
+   //exit();
 }
 if (!isset($_REQUEST['questionType'])) {
    http_response_code(400);
@@ -43,7 +43,7 @@ if (!isset($_REQUEST['questionType'])) {
 
 $question = new PluginFormcreatorQuestion();
 $question->getEmpty();
-if (!$question->isNewID((int) $_REQUEST['questionId']) && !$question->getFromDB((int) $_REQUEST['questionId'])) {
+if (isset($_REQUEST['questionId']) && !$question->isNewID((int) $_REQUEST['questionId']) && !$question->getFromDB((int) $_REQUEST['questionId'])) {
    http_response_code(400);
    exit();
 }

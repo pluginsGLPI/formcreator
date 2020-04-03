@@ -1122,15 +1122,16 @@ function plugin_formcreator_ChangeActorAssigned(value) {
 // === FIELDS EDITION ===
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
-   var dropdown_type = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
-   var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
+   var dropdown_type  = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
+   var dropdown_id    = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
+   var default_values = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_default_value"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: dropdown_type,
-         'id': dropdown_id
+         default_values: default_values
       },
    }).done(function(response) {
       var showTicketCategorySpecific = false;

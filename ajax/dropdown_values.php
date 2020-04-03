@@ -42,23 +42,19 @@ if (!isset($_REQUEST['dropdown_itemtype'])
          'display_emptychoice'   => true
       ]
    );
-} else {
-   $itemtype = $_REQUEST['dropdown_itemtype'];
-   $question = new PluginFormcreatorQuestion();
-   $question->getFromDB((int) $_REQUEST['id']);
-   $defaultValue = isset($question->fields['default_values'])
-                   ? $question->fields['default_values']
-                   : 0;
-
-   $options = [
-      'name'  => 'dropdown_default_value',
-      'rand'  => mt_rand(),
-      'value' => $defaultValue,
-   ];
-   if ($itemtype == Entity::class) {
-      $options['toadd'] = [
-         -1 => Dropdown::EMPTY_VALUE,
-      ];
-   }
-   Dropdown::show($itemtype, $options);
+   exit();
 }
+
+$itemtype = $_REQUEST['dropdown_itemtype'];
+$defaultValue = $_REQUEST['default_values'];
+$options = [
+   'name'  => 'dropdown_default_value',
+   'rand'  => mt_rand(),
+   'value' => $defaultValue,
+];
+if ($itemtype == Entity::class) {
+   $options['toadd'] = [
+      -1 => Dropdown::EMPTY_VALUE,
+   ];
+}
+Dropdown::show($itemtype, $options);

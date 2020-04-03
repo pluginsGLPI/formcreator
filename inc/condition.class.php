@@ -401,9 +401,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    public function getConditionHtml($input) {
       if ($this->isNewItem()) {
          $this->getEmpty();
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $this->fields['show_condition'] = self::SHOW_CONDITION_EQ;
          $this->fields['itemtype']       = $input['itemtype'];
          $this->fields['items_id']       = $input['items_id'];
+         $this->fields['_' . $sectionFk] = $input[$sectionFk];
       }
       $itemtype       = $this->fields['itemtype'];
       $item           = new $itemtype();
@@ -413,11 +415,34 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          throw new Exception("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
 
+      $parentItemtype = '';
+      switch ($input['itemtype']) {
+         case PluginFormcreatorQuestion::class:
+            $parentItemtype = PluginFormcreatorSection::class;
+            break;
+         case PluginFormcreatorSection::class:
+            $parentItemtype = PluginFormcreatorForm::class;
+            break;
+         case PluginFormcreatorSection::class:
+         case PluginFormcreatorTargetTicket::class:
+         case PluginFormcreatorTargetChange::class:
+            $parentItemtype = PluginFormcreatorForm::class;
+            break;
+
+      }
+      if ($parentItemtype == '') {
+         return;
+      }
+      $parentId = $input[$parentItemtype::getForeignKeyField()];
+      $parentItem = new $parentItemtype();
+      $parentItem->getFromDB($parentId);
+
       $data = [
          'so'        => [
             self::getType() => $this->searchOptions()
          ],
          'condition' => $this,
+         // 'parent' => $parentItem,
       ];
 
       return plugin_formcreator_render(
@@ -444,13 +469,17 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
                   $item = new $itemtype();
                   if ($item->isNewID($itemId)) {
                      $section = new PluginFormcreatorSection();
-                     $section->getFromDB($$this->fields[PluginFormcreatorSection::getForeignKeyField()]);
+                     $section->getFromDB($this->fields['_' . PluginFormcreatorSection::getForeignKeyField()]);
                      $form->getFromDBBySection($section);
                   } else {
                      $item->getFromDB($itemId);
                      $form->getFromDBByQuestion($item);
                      $condition = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
                   }
+                  break;
+
+               case PluginFormcreatorTargetTicket::class:
+               case PluginFormcreatorTargetChange::class:
                   break;
             }
             $sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());

@@ -65,6 +65,10 @@ PluginFormcreatorConditionnableInterface
       return false;
    }
 
+   public function mayBeRecursive() {
+      return false;
+   }
+
    /**
     * Prepare input data for adding the section
     * Check fields values and get the order for the new section
@@ -171,6 +175,21 @@ PluginFormcreatorConditionnableInterface
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $question = new PluginFormcreatorQuestion();
       $question->deleteByCriteria([$sectionFk => $this->getID()], 1);
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => PluginFormcreatorForm::getTable(),
+         'field'              => 'plugin_formcreator_forms_id',
+         'name'               => __('Form', 'formcreator'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false,
+      ];
+
+      return $tab;
    }
 
    /**
@@ -389,29 +408,14 @@ PluginFormcreatorConditionnableInterface
       echo '<div>';
       echo '<table class="tab_cadre_fixe">';
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $condition = new PluginFormcreatorCondition();
       $data = [
-         'item' => [
-            'id'   => Html::hidden('id', ['value' => $ID, 'display' => false]),
-            'uuid' => Html::hidden('uuid', ['value' => $this->fields['uuid'], 'display' => false]),
-            $formFk => Html::hidden($formFk, ['value' => $this->fields[$formFk], 'display' => false]),
-            'name' => Html::input(
-               'name',
-               [
-                  'style' => 'width: calc(100% - 20px)',
-                  'value' => $this->fields['name'],
-                  'display' => false
-               ]
-            ),
-         ],
          'so'    => [
             self::getType() => $this->searchOptions(),
          ],
          'item'  => $this,
          'title' => $title,
       ];
-
       $data['conditionsHtml'] = $condition->showConditionsForItem($this, ['display' => false]);
 
       plugin_formcreator_render('section/showform.html.twig', $data);
