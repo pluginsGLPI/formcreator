@@ -53,7 +53,7 @@ Features
    <homepage>https://pluginsglpi.github.io/formcreator/</homepage>
    <download>https://github.com/pluginsGLPI/formcreator/releases</download>
    <issues>https://github.com/pluginsGLPI/formcreator/issues</issues>
-   <readme>https://github.com/pluginsGLPI/formcreator/blob/master/README.md</readme>
+   <readme>https://glpi-plugins.readthedocs.io/en/latest/formcreator/index.html</readme>
    <authors>
       <author>Jérémy Moreau</author>
       <author>Thierry Bugier</author>
