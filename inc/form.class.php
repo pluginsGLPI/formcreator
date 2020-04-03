@@ -96,6 +96,7 @@ PluginFormcreatorConditionnableInterface
       global $CFG_GLPI;
 
       $menu  = parent::getMenuContent();
+      $menu['icon'] = 'fas fa-edit';
       $validation_image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
                                 title="' . __('Forms waiting for validation', 'formcreator') . '">';
       $import_image     = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/import.png"
