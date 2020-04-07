@@ -101,15 +101,24 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                if ((trim($value) != '')) {
                   $i++;
                   $checked = ($this->value == $value) ? ' checked' : '';
-                  echo '<p>';
+                  echo '<div class="radio">';
+                  echo '<span class="form-group-radio">';
                   echo '<input type="radio" class="form-control"
                         name="' . $fieldName . '"
                         id="' . $domId . '_' . $i . '"
                         value="' . $value . '"' . $checked . ' /> ';
-                  echo '<label for="' . $domId . '_' . $i . '">';
+                  echo '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+                  //echo $value;
+                  echo '<span class="box"></span>';
+                  echo '<span class="check"></span>';
+                  //echo $value;
+                  echo '</label>';
+                  echo '</span>';
+                  echo '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
-                  echo '</p>';
+                  echo '</div>';
+
                }
             }
             echo '</div>';
