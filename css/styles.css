@@ -337,51 +337,45 @@ form.formcreator_form {
    border: 2px solid #727272;
 }
 
-
+.formcreator_radios .form-group-radio {
+   position: relative;
+   display: inline-block;
+   width: 16px;
+   height: 16px;
+}
+.formcreator_radios .form-group-radio + label {
+   margin-left: 7px;
+}
 .formcreator_radios input[type = radio] {
    display: none;
 }
-.formcreator_radios input[type = radio] + label {
-   cursor: pointer;
-   padding-left: 22px;
-   position: relative;
+.formcreator_radios .radio {
+   padding: 2px 0;
+}
+.formcreator_radios input[type = radio] + label.label-radio span {
    display: inline-block;
-   height: 26px;
-}
-.formcreator_radios input[type = radio] + label:before,
-.formcreator_radios input[type = radio] + label:after {
    position: absolute;
-   content: "";
-   border-radius: 50%;
-   transition: all 0.3s ease;
+   width: 16px;
+   height: 16px;
 }
-.formcreator_radios input[type = radio] + label:before {
-   top: -1px;
-   left: 0;
-   width: 15px;
-   height: 15px;
-   background-color: #727272;
-   box-shadow: inset 0 0 0 13px #FFF;
+.formcreator_radios input[type = radio] + label.label-radio .box {
+   background-color: #fff;
    border: 2px solid #727272;
+   border-radius: 50%;
 }
-.formcreator_radios input[type = radio] + label:after {
-   top: 40%;
-   left: 9px;
-   width: 54px;
-   height: 54px;
-   background-color: rgba(50, 50, 50, 0.1);
-   transform: translate(-50%, -50%) scale(0);
+.formcreator_radios input[type = radio] + label.label-radio .check {
+   left: 4px;
+   top: 4px;
+   width: 0px;
+   height: 0px;
+   opacity: 0;
 }
-.formcreator_radios input[type = radio]:checked + label:before {
-   box-shadow: inset 0 0 0 2px #E0E0E0;
+.formcreator_radios input[type = radio]:checked + label.label-radio .check {
+   border: 6px solid #727272;
+   border-radius: 50%;
+   transition: opacity 0.3s ease;
+   opacity: 1;
 }
-.formcreator_radios input[type = radio]:checked + label:after {
-   transform: translate(-50%, -50%) scale(1);
-   -moz-animation: ripple 1s forwards;
-   -webkit-animation: ripple 1s forwards;
-   animation: ripple 1s forwards;
-}
-
 
 .formcreator_form .select2-container-multi .select2-choices  {
    width: 650px;
