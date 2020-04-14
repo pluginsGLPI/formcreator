@@ -42,7 +42,7 @@
 <tr class="tab_bg_2">
    {% set options = {
       'rand': rand,
-      'on_change': 'plugin_formcreator_changeValidators(this.value)'
+      'on_change': 'plugin_formcreator_changeValidators()'
    } %}
    <td width="20%">{{ __('Validation type', 'formcreator') }}</td>
    <td>{{ item|field(so, 11, options) }}</td>
