@@ -787,6 +787,7 @@ PluginFormcreatorConditionnableInterface
          'autofocus' => '',
          'value' => $this->fields['name'],
          'class' => 'required',
+         'required' => 'required',
       ]);
       echo '</td>';
 
