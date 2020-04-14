@@ -684,7 +684,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
       }
 
-      $data['_users_id_recipient'] = $requesters_id;
+      $data['users_id_recipient'] = $formanswer->fields['requester_id'];
       $data['users_id_lastupdater'] = Session::getLoginUserID();
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
@@ -978,6 +978,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
       $input['_skip_checks'] = true;
+      $input['_skip_create_actors'] = true;
 
       $item = new self;
       // Find an existing target to update, only if an UUID is available

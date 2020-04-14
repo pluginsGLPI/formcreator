@@ -223,7 +223,7 @@ form.formcreator_form {
 }
 
 .formcreator_form .form-group {
-   padding: 0 15px;
+   padding: 5px 15px;
 }
 
 .formcreator_form .form-group > label {
@@ -459,7 +459,6 @@ form.formcreator_form {
 .div_show_condition_field, .div_show_condition_operator,
 .div_show_condition_value, .div_show_condition_logic,
 .div_show_condition_add, .div_show_condition_remove {
-   //float: left;
    display: inline-block;
 }
 .div_show_condition_field .select2-container,
@@ -826,7 +825,6 @@ form.formcreator_form {
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
    padding: 10px 40px 15px 10px;
-   //height: 33px;
    display: block;
 }
 

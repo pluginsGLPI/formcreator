@@ -142,21 +142,11 @@ if (isset($_POST['add'])) {
 
       // redirect to created item
       if ($_SESSION['glpibackcreated']) {
-         $item_ticket = new Item_Ticket;
-         $tickets = $item_ticket->find([
-            'itemtype' => PluginFormcreatorFormAnswer::class,
-            'items_id' => $formAnswer->getID(),
-         ]);
-
-         if (count($tickets) === 1) {
-            $current_ticket = array_pop($tickets);
-            $tickets_id = $current_ticket['tickets_id'];
-            Html::redirect(Ticket::getFormURLWithID($tickets_id));
+         if (count($formAnswer->targetList) == 1) {
+            $target = current($formAnswer->targetList);
+            Html::redirect($target->getFormURLWithID($target->getID()));
          }
-
-         if (count($tickets) > 1) {
-            Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
-         }
+         Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
       }
 
       if (plugin_formcreator_replaceHelpdesk()) {
