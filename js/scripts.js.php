@@ -1631,7 +1631,8 @@ function plugin_formcreator_change_entity(rand) {
    }
 }
 
-function plugin_formcreator_changeValidators(value) {
+function plugin_formcreator_changeValidators() {
+   var value = $('form [name="validation_required"').val();
    if (value == 1) {
       document.getElementById("validators_users").style.display  = "block";
       document.getElementById("validators_groups").style.display = "none";

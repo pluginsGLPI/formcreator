@@ -556,6 +556,11 @@ PluginFormcreatorConditionnableInterface
          'WHERE'  => $groupsCondition,
       ]);
       $formValidator = new PluginFormcreatorForm_Validator();
+      $groups = $DB->request([
+         'SELECT' => ['id' ,'name'],
+         'FROM'   => Group::getTable(),
+         'WHERE'  => $groupsCondition,
+      ]);
       $selectecValidatorGroups = [];
       foreach($formValidator->getValidatorsForForm($this, Group::class) as $group) {
          $selectecValidatorGroups[$group->getID()] = $group->getID();
