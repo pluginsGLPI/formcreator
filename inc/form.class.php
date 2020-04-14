@@ -372,6 +372,8 @@ PluginFormcreatorConditionnableInterface
     * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options = []) {
+      global $DB;
+
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
@@ -496,14 +498,25 @@ PluginFormcreatorConditionnableInterface
          "$userTable.id" => new QuerySubquery($subQuery)
       ];
       $formValidator = new PluginFormcreatorForm_Validator();
-      $validatorUsers = $formValidator->getValidatorsForForm($this, User::class);
-      $validatorUser = array_shift($validatorUsers);
+      $selectedValidatorUsers = [];
+      foreach ($formValidator->getValidatorsForForm($this, User::class) as $user) {
+         $selectedValidatorUsers[$user->getID()] = $user->getID();
+      }
+      $users = $DB->request([
+         'SELECT' => ['id', 'name'],
+         'FROM' => User::getTable(),
+         'WHERE' => $usersCondition,
+      ]);
+      $validatorUsers = [];
+      foreach($users as $user) {
+         $validatorUsers[$user['id']] = $user['name'];
+      }
       echo '<div id="validators_users">';
-      Dropdown::show(
-         User::class, [
-            'name' => '_validator_users',
-            'value' => $validatorUser ? $validatorUser->getID() : 0,
-            'condition' => $usersCondition,
+      Dropdown::showFromArray(
+         '_validator_users',
+         $validatorUsers, [
+            'multiple' => true,
+            'values' => $selectedValidatorUsers
          ]
       );
       echo '</div>';
@@ -553,18 +566,29 @@ PluginFormcreatorConditionnableInterface
       $groupsCondition = [
          "$groupTable.id" => new QuerySubquery($subQuery),
       ];
+      $groups = $DB->request([
+         'SELECT' => ['id' ,'name'],
+         'FROM'   => Group::getTable(),
+         'WHERE'  => $groupsCondition,
+      ]);
       $formValidator = new PluginFormcreatorForm_Validator();
-      $validatorgroups = $formValidator->getValidatorsForForm($this, Group::class);
-      $validatorgroup = array_shift($validatorgroups);
+      $selectecValidatorGroups = [];
+      foreach($formValidator->getValidatorsForForm($this, Group::class) as $group) {
+         $selectecValidatorGroups[$group->getID()] = $group->getID();
+      }
+      $validatorGroups = [];
+      foreach($groups as $group) {
+         $validatorGroups[$group['id']] = $group['name'];
+      }
       echo '<div id="validators_groups" style="width: 100%">';
-      Dropdown::show(
-         Group::class, [
-            'name' => '_validator_groups',
-            'value' => $validatorgroup ? $validatorgroup->getID() : 0,
-            'condition' => $groupsCondition
+      Dropdown::showFromArray(
+         '_validator_groups',
+         $validatorGroups,
+         [
+            'multiple' => true,
+            'values'   => $selectecValidatorGroups
          ]
       );
-
       echo '</div>';
 
       $script = '$(document).ready(function() {plugin_formcreator_changeValidators(' . $this->fields["validation_required"] . ');});';
