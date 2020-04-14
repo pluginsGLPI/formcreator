@@ -3,7 +3,10 @@
    <th colspan="4">{{ title }}</th>
 </tr>
 <tr>
-   {% set options = { 'rand': rand } %}
+   {% set options = {
+      'rand': rand,
+      'required': 'required'
+   } %}
    <td width="20%">
       <label for="textfield_name{{ rand }}" id="label_name">
          {{ __('Title') }}
