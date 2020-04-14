@@ -72,7 +72,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       foreach ($DB->request($request) as $row) {
          $id = $row['id'];
          $uuid = plugin_formcreator_getUuid();
-         $DB->query("UPDATE INTO `$table`
+         $DB->query("UPDATE `$table`
             SET `uuid`='$uuid'
             WHERE `id`='$id'"
          ) or plugin_formcreator_upgrade_error($migration);
