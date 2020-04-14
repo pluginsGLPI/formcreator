@@ -2002,13 +2002,15 @@ PluginFormcreatorDuplicatableInterface
             $importedItems[] = $importedItem;
          }
          // Delete all other restrictions
+         $deleteCriteria = [];
          if (count($importedItems) > 0) {
-            $FormProfile = new PluginFormcreatorForm_Profile();
-            $FormProfile->deleteByCriteria([
-               $formFk => $itemId,
-               ['NOT' => ['id' => $importedItems]]
-            ]);
+            $deleteCriteria = ['NOT' => ['id' => $importedItems]];
          }
+         $FormProfile = new PluginFormcreatorSection();
+         $FormProfile->deleteByCriteria([
+            $formFk => $itemId,
+            $deleteCriteria,
+         ]);
       }
 
       // import form's sections
@@ -2036,11 +2038,13 @@ PluginFormcreatorDuplicatableInterface
             $importedItems[] = $importedItem;
          }
          // Delete all other restrictions
-         $FormProfile = new PluginFormcreatorSection();
-         $FormProfile->deleteByCriteria([
-            $formFk => $itemId,
-            ['NOT' => ['id' => $importedItems]]
-         ]);
+         if (count($importedItems) > 0) {
+            $FormProfile = new PluginFormcreatorSection();
+            $FormProfile->deleteByCriteria([
+               $formFk => $itemId,
+               ['NOT' => ['id' => $importedItems]]
+            ]);
+         }
       }
 
       // import form's targets
