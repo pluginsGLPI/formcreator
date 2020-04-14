@@ -171,6 +171,7 @@ PluginFormcreatorConditionnableInterface
    const CATEGORY_RULE_NONE = 1;
    const CATEGORY_RULE_SPECIFIC = 2;
    const CATEGORY_RULE_ANSWER = 3;
+   const CATEGORY_RULE_LAST_ANSWER = 4;
 
    const LOCATION_RULE_NONE = 1;
    const LOCATION_RULE_SPECIFIC = 2;
@@ -218,9 +219,10 @@ PluginFormcreatorConditionnableInterface
 
    public static function getEnumCategoryRule() {
       return [
-         self::CATEGORY_RULE_NONE      => __('Category from template or none', 'formcreator'),
-         self::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
-         self::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::CATEGORY_RULE_NONE         => __('Category from template or none', 'formcreator'),
+         self::CATEGORY_RULE_SPECIFIC     => __('Specific category', 'formcreator'),
+         self::CATEGORY_RULE_ANSWER       => __('Equals to the answer to the question', 'formcreator'),
+         self::CATEGORY_RULE_LAST_ANSWER  => __('Last valid answer', 'formcreator'),
       ];
    }
 
@@ -373,6 +375,8 @@ PluginFormcreatorConditionnableInterface
    protected function setTargetCategory($data, $formanswer) {
       global $DB;
 
+      $category = null;
+
       switch ($this->fields['category_rule']) {
          case self::CATEGORY_RULE_ANSWER:
             $category = $DB->request([
@@ -388,8 +392,51 @@ PluginFormcreatorConditionnableInterface
          case self::CATEGORY_RULE_SPECIFIC:
             $category = $this->fields['category_question'];
             break;
-         default:
-            $category = null;
+         case self::CATEGORY_RULE_LAST_ANSWER:
+            $form_id = $formanswer->fields['id'];
+
+            // Get all answers for dropdown questions of this form, ordered
+            // from last to first displayed
+            $answers = $DB->request([
+               'SELECT' => ['answer.answer', 'question.values'],
+               'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
+               'JOIN' => [
+                  PluginFormcreatorQuestion::getTable() . ' AS question' => [
+                     'ON' => [
+                        'answer' => 'plugin_formcreator_questions_id',
+                        'question' => 'id',
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'question.fieldtype'                       => "dropdown",
+               ],
+               'ORDER' => [
+                  'row DESC',
+                  'col DESC',
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Decode dropdown settings
+               $itemtype = \PluginFormcreatorDropdownField::getSubItemtypeForValues($answer['values']);
+
+               // Skip if not a dropdown on categories
+               if ($itemtype !== "ITILCategory") {
+                  continue;
+               }
+
+               // Skip if question was not answered
+               if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Found a valid answer, stop here
+               $category = $answer['answer'];
+               break;
+            }
+            break;
       }
       if ($category !== null) {
          $data['itilcategories_id'] = $category;
