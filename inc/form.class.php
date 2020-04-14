@@ -380,7 +380,7 @@ PluginFormcreatorConditionnableInterface
 
       echo '<tr class="tab_bg_1">';
       echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
-      echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      echo '<td width="30%"><input type="text" name="name" required="required" value="' . $this->fields["name"] . '" size="35"/></td>';
       echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
       echo '<td width="30%">';
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
