@@ -171,8 +171,8 @@ function plugin_init_formcreator() {
                }
             }
          }
-         if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
-            if (plugin_formcreator_replaceHelpdesk()) {
+         if (plugin_formcreator_replaceHelpdesk()) {
+            if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
                if (!isset($_POST['update'])) {
                   $decodedUrl = [];
                   $forceTab = '';
@@ -181,6 +181,18 @@ function plugin_init_formcreator() {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
                   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $forceTab);
+               }
+            }
+
+            $pages = [
+               'front/reservationitem.php' => 'plugins/formcreator/front/reservationitem.php',
+               'front/helpdesk.faq.php' => 'plugins/formcreator/front/wizard.php',
+               'front/ticket.php' => 'plugins/formcreator/front/issue.php',
+            ];
+            foreach ($pages as $srcPage => $dstPage) {
+               if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
+                  Html::redirect($CFG_GLPI["root_doc"] . '/' . $dstPage);
+                  break;
                }
             }
          }
