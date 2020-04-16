@@ -641,11 +641,23 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
     *
     * @return string
     */
-    protected function getSubItemtype() {
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues === null) {
-         return $this->question->fields['values'];
-      }
-         return $decodedValues['itemtype'];
+   protected function getSubItemtype() {
+      return self::getSubItemtypeForValues($this->question->fields['values']);
    }
-}
+
+   /**
+    * Get the itemtype of the item to show for the given values
+    *
+    * @param string $values json or raw string
+    *
+    * @return string
+    */
+   public static function getSubItemtypeForValues($values) {
+      $decodedValues = json_decode($values, JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         return $values;
+      }
+
+      return $decodedValues['itemtype'];
+      }
+   }
