@@ -33,7 +33,11 @@
    {% set options = { 'rand': rand } %}
    <td width="20%">{{ __('Description') }}</td>
    <td width="30%">{{ item|field(so, 4, options) }}</td>
-   {% set options = { 'rand': rand } %}
+   {% set options = {
+      'rand': rand,
+      'display_emptychoice': true,
+      'emptylabel': __('All langages', 'formcreator')
+   } %}
    <td width="20%">{{ __('Language') }}</td>
    <td width="30%">{{ item|field(so, 7, options) }}</td>
 </tr>
