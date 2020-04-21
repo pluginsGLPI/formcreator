@@ -43,7 +43,7 @@ class PluginFormcreatorWizard {
    const MENU_HELP         = 6;
 
    public static function header($title) {
-      global $CFG_GLPI, $HEADER_LOADED, $DB;
+      global $CFG_GLPI, $HEADER_LOADED;
 
       // Print a nice HTML-head for help page
       if ($HEADER_LOADED) {
