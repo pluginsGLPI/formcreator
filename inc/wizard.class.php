@@ -105,18 +105,11 @@ class PluginFormcreatorWizard {
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
-         $found_available_res = $DB->request([
-            'COUNT' => 'cpt',
-            'FROM'  => ReservationItem::getTable(),
-            'WHERE' => getEntitiesRestrictCriteria(ReservationItem::getTable(), 'entities_id'),
-         ])->next();
-         if ($found_available_res['cpt'] > 0) {
-            echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-            echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
-            echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
-            echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
-            echo '</a></li>';
-         }
+         echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
+         echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
+         echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
+         echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
+         echo '</a></li>';
       }
 
       if (RSSFeed::canView()) {
