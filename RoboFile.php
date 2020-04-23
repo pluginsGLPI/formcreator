@@ -147,7 +147,12 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
+      $this->taskGitStack()
+         ->stopOnFail()
+         ->add('data/font-awesome.php')
          ->commit('build(form): update font awesome data')
+         ->run();
+
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release != 'release') {
