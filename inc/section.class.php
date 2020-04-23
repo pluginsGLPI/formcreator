@@ -396,7 +396,7 @@ PluginFormcreatorConditionnableInterface
       echo '<tr>';
       echo '<td width="20%">'.__('Title').' <span style="color:red;">*</span></td>';
       echo '<td colspan="3">';
-      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'value' => $this->fields['name']]);
+      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'required' => 'required', 'value' => $this->fields['name']]);
       echo '</td>';
       echo '</tr>';
 
