@@ -481,8 +481,6 @@ function plugin_formcreator_getTemplateEngine() {
  *
  * @param string $template filename of the template
  * @param array $data data to fill the template
-<<<<<<< HEAD
-<<<<<<< HEAD
  * @param array $options
  * @return void
  */
@@ -499,29 +497,5 @@ function plugin_formcreator_render($template, $data, $options = []) {
    }
 
    echo $output;
-=======
-=======
- * @param array $options
->>>>>>> 4ad77685... refactor: use twig on import forms
- * @return void
- */
-function plugin_formcreator_render($template, $data, $options = []) {
-   $defaultOptions = [
-      'display' => true,
-   ];
-   $options = array_merge($defaultOptions, $options);
-
-   $twig = plugin_formcreator_getTemplateEngine();
-<<<<<<< HEAD
-   echo $twig->render($template, $data);
->>>>>>> 803cf5fb... feat: introduce twig
-=======
-   $output =  $twig->render($template, $data);
-   if (!$options['display']) {
-      return $output;
-   }
-
-   echo $output;
->>>>>>> 4ad77685... refactor: use twig on import forms
 }
 

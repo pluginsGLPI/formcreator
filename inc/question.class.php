@@ -841,16 +841,6 @@ PluginFormcreatorConditionnableInterface
       ]);
 
       Html::closeForm();
-      $data = [
-         'title'   => $title,
-         'so'      => [
-            $this::getType() => $this->searchOptions(),
-            $condition::getType() => $condition->searchOptions(),
-         ],
-         'item'    => $this,
-         'conditions' => $condition->getConditionsFromItem($this),
-      ];
-      plugin_formcreator_render('question/showform.html.twig', $data);
    }
 
    /**
