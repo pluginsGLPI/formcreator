@@ -50,6 +50,8 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
    const SHOW_CONDITION_GT = 4;
    const SHOW_CONDITION_LE = 5;
    const SHOW_CONDITION_GE = 6;
+   const SHOW_CONDITION_QUESTION_VISIBLE = 7;
+   const SHOW_CONDITION_QUESTION_INVISIBLE = 8;
 
    public function prepareInputForAdd($input) {
       // generate a unique id
@@ -76,6 +78,8 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          self::SHOW_CONDITION_GT => '>',
          self::SHOW_CONDITION_LE => '≤',
          self::SHOW_CONDITION_GE => '≥',
+         self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
+         self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
       ];
    }
 
