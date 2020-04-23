@@ -57,6 +57,8 @@ class PluginFormcreatorCondition extends CommonTestCase {
             '4' => '>',
             '5' => '≤',
             '6' => '≥',
+            '7' => 'is visible',
+            '8' => 'is not visible',
          ]);
    }
 
