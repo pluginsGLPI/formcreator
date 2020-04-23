@@ -2,8 +2,11 @@
    <th colspan="4">{{ title }}</th>
 </tr>
 <tr>
-   <td width="20%">{{ __('Title') }}<span style="color:red;">*</span>
-   </td>
+   {% set options = {
+      'rand': rand,
+      'required': 'required'
+   } %}
+   <td width="20%">{{ __('Title') }}<span style="color:red;">*</span></td>
    <td colspan="3">{{ item|field(so, 1, options) }}</td>
 </tr>
 <tr>
