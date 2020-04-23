@@ -147,10 +147,12 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
+         ->commit('build(form): update font awesome data')
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
-
-      //$this->updateChangelog();
+      if ($release != 'release') {
+         $this->updateChangelog();
+      }
 
       $diff = $this->gitDiff(['package.json']);
       $diff = implode("\n", $diff);
