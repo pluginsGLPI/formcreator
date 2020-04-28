@@ -815,7 +815,6 @@ PluginFormcreatorConditionnableInterface
          $action = 'plugin_formcreator.editQuestion()';
       }
 
-      $rand = mt_rand();
       echo '<form name="form"'
       . ' method="post"'
       . ' action="javascript:' . $action . '"'
