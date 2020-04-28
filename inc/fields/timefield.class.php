@@ -35,6 +35,52 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $value = Html::entities_deep($this->question->fields['default_values']);
+      if (version_compare(GLPI_VERSION, '9.5') >= 0 && method_exists(Html::class, 'showTimeField')) {
+         $additions .= Html::showTimeField('default_values', [
+            'type'    => 'text',
+            'id'      => 'default_values',
+            'value'   => $value,
+            'display' => false,
+         ]);
+      } else {
+         $additions .= static::showTimeField('default_values', [
+            'type'    => 'text',
+            'id'      => 'default_values',
+            'value'   => $value,
+            'display' => false,
+         ]);
+      }
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $id        = $this->question->getID();
@@ -154,7 +200,7 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
    }
 
    /**
-    * Display TimeField form 
+    * Display TimeField form
     * @see Html::dateTime()
     *
     * @param string $name
@@ -194,7 +240,7 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
          $p['timestep'] = $CFG_GLPI['time_step'];
       }
 
-      // Those vars are set but not used ... 
+      // Those vars are set but not used ...
       // check Hml::showDateTimeField()
 
       // $minHour   = 0;
