@@ -49,12 +49,21 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '<td>';
       $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::showTimeField('default_values', [
-         'type'    => 'text',
-         'id'      => 'default_values',
-         'value'   => $value,
-         'display' => false,
-      ]);
+      if (version_compare(GLPI_VERSION, '9.5') >= 0 && method_exists(Html::class, 'showTimeField')) {
+         $additions .= Html::showTimeField('default_values', [
+            'type'    => 'text',
+            'id'      => 'default_values',
+            'value'   => $value,
+            'display' => false,
+         ]);
+      } else {
+         $additions .= static::showTimeField('default_values', [
+            'type'    => 'text',
+            'id'      => 'default_values',
+            'value'   => $value,
+            'display' => false,
+         ]);
+      }
       $additions .= '</td>';
       $additions .= '<td></td>';
       $additions .= '<td></td>';
