@@ -321,7 +321,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         var html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
