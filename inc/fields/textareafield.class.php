@@ -162,6 +162,18 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
+      if (PLUGIN_FORMCREATOR_TEXTAREA_FIX && version_compare(GLPI_VERSION, '9.5.0-dev') < 0) {
+         $input = $this->question->addFiles(
+            $input,
+            [
+               'force_update'  => true,
+               'content_field' => 'formcreator_field_' . $this->question->getID(),
+            ]
+         );
+
+         return parent::parseAnswerValues($input, $nonDestructive);
+      }
+
       parent::parseAnswerValues($input, $nonDestructive);
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {

@@ -1116,17 +1116,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public function post_addItem() {
       // Save questions answers
-      $question = new PluginFormcreatorQuestion();
-      $this->questions = $question->getQuestionsFromForm($this->input['plugin_formcreator_forms_id']);
-
-      foreach ($this->questions as $questionId => $question) {
+      foreach ($this->questionFields as $questionId => $field) {
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
             'plugin_formcreator_formanswers_id'  => $this->getID(),
-            'plugin_formcreator_questions_id'    => $question->getID(),
-            'answer'                             => $this->questionFields[$questionId]->serializeValue(),
+            'plugin_formcreator_questions_id'    => $questionId,
+            'answer'                             => $field->serializeValue(),
          ], [], 0);
-         foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
+         foreach ($field->getDocumentsForTarget() as $documentId) {
             $docItem = new Document_Item();
             $docItem->add([
                'documents_id' => $documentId,
