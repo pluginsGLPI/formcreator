@@ -95,6 +95,10 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             'enable_fileupload' => false,
             'uploads'           => $this->uploads
          ]);
+         if (PLUGIN_FORMCREATOR_TEXTAREA_FIX && version_compare(GLPI_VERSION, '9.5.0-dev') < 0) {
+            // for GLPI 9.4 without patch https://github.com/glpi-project/glpi/pull/6936
+            echo '<div class="fileupload_info"></div>';
+         }
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
