@@ -113,6 +113,10 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorFloatField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {

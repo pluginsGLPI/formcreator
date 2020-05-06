@@ -62,6 +62,10 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorCheckboxesField
       return $html;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public static function getName() {
       return __('Multiselect', 'formcreator');
    }

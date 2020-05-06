@@ -258,6 +258,10 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function getValueForTargetText($richText) {
       $value = [];
       $values = $this->getAvailableValues();

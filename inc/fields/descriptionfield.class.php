@@ -99,6 +99,10 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return $input;
    }
 
+   public function hasInput($input) {
+      return false;
+   }
+
    public static function canRequire() {
       return false;
    }
