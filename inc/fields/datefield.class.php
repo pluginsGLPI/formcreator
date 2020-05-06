@@ -70,6 +70,10 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       return Toolbox::addslashes_deep(Html::convDate($this->value));
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function getDocumentsForTarget() {
       return [];
    }

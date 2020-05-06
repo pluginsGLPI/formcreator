@@ -103,6 +103,10 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return str_replace("\n", '\r\n', Toolbox::addslashes_deep($this->value));
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function getDocumentsForTarget() {
       return [];
    }

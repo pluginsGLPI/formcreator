@@ -42,6 +42,8 @@ define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.4');
 // Maximum GLPI version, exclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.5');
 
+define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
+
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
 /**

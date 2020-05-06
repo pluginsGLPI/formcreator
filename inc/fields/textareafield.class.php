@@ -31,6 +31,13 @@
 
 class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
 {
+   /** @var $uploads array uploaded files on form submit */
+   private $uploads = [
+      '_filename' => [],
+      '_prefix_filename' => [],
+      '_tag_filename' => [],
+   ];
+
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 
@@ -86,11 +93,12 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             'display'           => false,
             'enable_richtext'   => $useRichText,
             'enable_fileupload' => false,
+            'uploads'           => $this->uploads
          ]);
-         // This area is filled by glpi : @see js/fileupload.js
-         // it contains _filename[] hidden inputs required to properly handle
-         // images pasted in the textarea
-         echo '<div id="fileupload_info" class="fileupload_info"></div>';
+         if (PLUGIN_FORMCREATOR_TEXTAREA_FIX && version_compare(GLPI_VERSION, '9.5.0-dev') < 0) {
+            // for GLPI 9.4 without patch https://github.com/glpi-project/glpi/pull/6936
+            echo '<div class="fileupload_info"></div>';
+         }
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
@@ -149,16 +157,30 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return $input;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      $input = $this->question->addFiles(
-         $input,
-         [
-            'force_update'  => true,
-            'content_field' => 'formcreator_field_' . $this->question->getID(),
-         ]
-      );
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
 
-      return parent::parseAnswerValues($input, $nonDestructive);
+   public function parseAnswerValues($input, $nonDestructive = false) {
+      if (PLUGIN_FORMCREATOR_TEXTAREA_FIX && version_compare(GLPI_VERSION, '9.5.0-dev') < 0) {
+         $input = $this->question->addFiles(
+            $input,
+            [
+               'force_update'  => true,
+               'content_field' => 'formcreator_field_' . $this->question->getID(),
+            ]
+         );
+
+         return parent::parseAnswerValues($input, $nonDestructive);
+      }
+
+      parent::parseAnswerValues($input, $nonDestructive);
+      $key = 'formcreator_field_' . $this->question->getID();
+      if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
+         $this->uploads['_' . $key] = $input['_' . $key];
+         $this->uploads['_prefix_' . $key] = $input['_prefix_' . $key];
+         $this->uploads['_tag_' . $key] = $input['_tag_' . $key];
+      }
    }
 
    public function getValueForTargetText($richText) {

@@ -31,7 +31,15 @@
 
 class PluginFormcreatorFileField extends PluginFormcreatorField
 {
+   /**@var $uploadData array uploads saved as documents   */
    private $uploadData = [];
+
+   /** @var $uploads array uploaded files on form submit */
+   private $uploads = [
+      '_filename' => [],
+      '_prefix_filename' => [],
+      '_tag_filename' => [],
+   ];
 
    public function isPrerequisites() {
       return true;
@@ -43,6 +51,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             'name'    => 'formcreator_field_' . $this->question->getID(),
             'display' => false,
             'multiple' => 'multiple',
+            'uploads' => $this->uploads,
          ]);
       } else {
          $doc = new Document();
@@ -115,6 +124,25 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return true;
    }
 
+   public function saveUploads($input) {
+      $key = 'formcreator_field_' . $this->question->getID();
+      $index = 0;
+      $answer_value = [];
+      foreach ($input["_$key"] as $document) {
+         $document = Toolbox::stripslashes_deep($document);
+         if (is_file(GLPI_TMP_DIR . '/' . $document)) {
+            $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $answer_value[] = $this->saveDocument($document, $prefix);
+         }
+         $index++;
+      }
+      $this->uploadData = $answer_value;
+   }
+
+   public function hasInput($input) {
+      return isset($input['_formcreator_field_' . $this->question->getID()]);
+   }
+
    /**
     * Save an uploaded file into a document object, link it to the answers
     * and returns the document ID
@@ -172,27 +200,39 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
+      if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
+         $this->uploads['_' . $key] = $input['_' . $key];
+         $this->uploads['_prefix_' . $key] = $input['_prefix_' . $key];
+         $this->uploads['_tag_' . $key] = $input['_tag_' . $key];
+      }
       if (isset($input["_$key"])) {
          if (!is_array($input["_$key"])) {
             return false;
          }
 
-         $answer_value = [];
-         $index = 0;
-         if ($nonDestructive) {
-            $index = count($input["_$key"]);
-         } else {
-            foreach ($input["_$key"] as $document) {
-               $document = Toolbox::stripslashes_deep($document);
-               if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-                  $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
-                  $answer_value[] = $this->saveDocument($document, $prefix);
+         if (PLUGIN_FORMCREATOR_TEXTAREA_FIX && version_compare(GLPI_VERSION, '9.5.0-dev') < 0) {
+            $answer_value = [];
+            $index = 0;
+            if ($nonDestructive) {
+               $index = count($input["_$key"]);
+            } else {
+               foreach ($input["_$key"] as $document) {
+                  $document = Toolbox::stripslashes_deep($document);
+                  if (is_file(GLPI_TMP_DIR . '/' . $document)) {
+                     $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
+                     $answer_value[] = $this->saveDocument($document, $prefix);
+                  }
+                  $index++;
                }
-               $index++;
             }
+            $this->uploadData = $answer_value;
+            $this->value = __('Attached document', 'formcreator');
+
+            return true;
          }
-         $this->uploadData = $answer_value;
-         $this->value = __('Attached document', 'formcreator');
+         if ($this->hasInput($input)) {
+            $this->value = __('Attached document', 'formcreator');
+         }
          return true;
       }
       $this->uploadData = [];

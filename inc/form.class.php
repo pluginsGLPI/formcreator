@@ -1286,7 +1286,7 @@ PluginFormcreatorDuplicatableInterface
             if (!$field->isPrerequisites()) {
                continue;
             }
-            if (isset($data['formcreator_field_' . $question->getID()])) {
+            if ($field->hasInput($data)) {
                $field->parseAnswerValues($data);
             } else {
                $field->deserializeValue($question->fields['default_values']);
