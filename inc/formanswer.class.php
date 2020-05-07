@@ -924,17 +924,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
 
+      // get all fields to compute visibility of targets
+      $this->questionFields = $form->getFields();
+      $answers_values = $this->getAnswers($this->getID());
+      foreach ($this->questionFields as $id => $field) {
+         $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
+      }
+
       // Generate targets
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
       foreach ($all_targets as $targetType => $targets) {
          foreach ($targets as $targetObject) {
             // Check the condition of the target
-            $this->questionFields = $form->getFields();
-            $answers_values = $this->getAnswers($this->getID());
-            foreach ($this->questionFields as $id => $field) {
-               $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
-            }
-
             if (!PluginFormcreatorFields::isVisible($targetObject, $this->questionFields)) {
                // The target shall not be generated
                continue;
