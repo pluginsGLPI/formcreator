@@ -147,6 +147,10 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
       return $this->value;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function getValueForTargetText($richText) {
       $available = $this->getAvailableValues();
       return $available[$this->value];
