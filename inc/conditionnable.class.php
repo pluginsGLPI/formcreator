@@ -37,6 +37,7 @@ trait PluginFormcreatorConditionnable
       }
       $showRule = $input['show_rule'];
       if ($showRule == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         $this->deleteConditions();
          return false;
       }
 
@@ -63,11 +64,7 @@ trait PluginFormcreatorConditionnable
       $itemId = $this->getID();
 
       // Delete all existing conditions for the question
-      $condition = new PluginFormcreatorCondition();
-      $condition->deleteByCriteria([
-         'itemtype' => $this->getType(),
-         'items_id' => $this->getID(),
-      ]);
+      $this->deleteConditions();
 
       // Arrays all have the same count and have at least one item
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
@@ -94,5 +91,13 @@ trait PluginFormcreatorConditionnable
       }
 
       return true;
+   }
+
+   private function deleteConditions() {
+      $condition = new PluginFormcreatorCondition();
+      $condition->deleteByCriteria([
+         'itemtype' => $this->getType(),
+         'items_id' => $this->getID(),
+      ]);
    }
 }
