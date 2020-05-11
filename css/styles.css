@@ -1459,6 +1459,9 @@ span.fc_list_icon {
    color: #a0a0a0;
 }
 
+.plugin_formcreator_cancel_my_ticket {
+   background: #fec95c;
+}
 
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {

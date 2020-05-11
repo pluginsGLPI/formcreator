@@ -200,4 +200,14 @@ class PluginFormcreatorCommon {
       $output .= '<i id="' . $previewId . '" class="'. $options['value'] . '"></i>';
       echo $output;
    }
+
+   public static function cancelMyTicket($id) {
+      $ticket = new Ticket();
+      $ticket->getFromDB($id);
+      if (!$ticket->canRequesterUpdateItem()) {
+         return false;
+      }
+
+      return $ticket->delete($ticket->fields);
+   }
 }
