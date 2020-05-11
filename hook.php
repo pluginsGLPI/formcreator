@@ -106,7 +106,7 @@ function plugin_formcreator_getCondition($itemtype) {
    $table = $itemtype::getTable();
    if ($itemtype == PluginFormcreatorFormAnswer::class) {
       if (Session::haveRight('config', UPDATE)) {
-         return "";
+         return '';
       }
       if (plugin_formcreator_canValidate()) {
          $groupUser = new Group_User();
