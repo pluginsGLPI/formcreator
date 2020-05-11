@@ -207,6 +207,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
    switch ($table.".".$field) {
       case "glpi_plugin_formcreator_issues.status" :
          $tocheck = [];
+         /** @var CommonITILObject $item  */
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case 'all':
@@ -218,6 +219,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   break;
 
                case 'process' :
+                  // getProcessStatusArray should be an abstract method of CommonITILObject
                   $tocheck = $item->getProcessStatusArray();
                   break;
 
