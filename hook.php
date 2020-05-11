@@ -483,3 +483,24 @@ function plugin_formcreator_dynamicReport($params) {
 
    return false;
 }
+
+/**
+ * Hook for timeline_actions; display a new action for a CommonITILObject
+ * @see CommonITILObject
+ *
+ * @return void
+ */
+function plugin_formcreator_timelineActions($options) {
+   $item = $options['item'];
+   if (!$item->canDeleteItem()) {
+      return;
+   }
+
+   if (!(isset($_SESSION['glpiactiveprofile']) &&
+       $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
+      return;
+   }
+   echo "<li class='plugin_formcreator_cancel_my_ticket' onclick='".
+      "javascript:plugin_formcreator_cancelMyTicket(".$item->fields['id'].");'>"
+      ."<i class='fa'></i>".__('Cancel my ticket', 'formcreator')."</li>";
+}
