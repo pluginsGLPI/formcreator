@@ -96,6 +96,12 @@ function plugin_formcreator_canValidate() {
       || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
 }
 
+/**
+ * Undocumented function
+ *
+ * @param string $itemtype
+ * @return string
+ */
 function plugin_formcreator_getCondition($itemtype) {
    $table = $itemtype::getTable();
    if ($itemtype == PluginFormcreatorFormAnswer::class) {
