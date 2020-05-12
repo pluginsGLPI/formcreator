@@ -343,7 +343,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td colspan="3">';
       echo Html::textarea([
          'name'   => 'checklistcontent',
-         'vamue'  => $this->fields['checklistcontent'],
+         'value'  => $this->fields['checklistcontent'],
          'display' => false,
       ]);
       echo '</td>';
