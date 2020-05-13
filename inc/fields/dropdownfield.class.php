@@ -96,7 +96,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'request'  => __('Request categories', 'formcreator'),
          'incident' => __('Incident categories', 'formcreator'),
          'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
-         'change'   => __('Change'),
+         'change'   => __('Change categories', 'formcreator'),
          'all'      => __('All'),
       ];
       $additions .= dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
