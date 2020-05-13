@@ -158,24 +158,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function rawSearchOptions() {
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
                           && $_SESSION['formcreator']['form_search_answers'];
 
-      $tab[] = [
-         'id'                 => 'common',
-         'name'               => __('Characteristics')
-      ];
-
-      $tab[] = [
-         'id'                 => '1',
-         'table'              => $this->getTable(),
-         'field'              => 'name',
-         'name'               => __('Name'),
-         'datatype'           => 'itemlink',
-         'massiveaction'      => false
-      ];
 
       $tab[] = [
          'id'                 => '2',
