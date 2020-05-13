@@ -2114,7 +2114,7 @@ PluginFormcreatorConditionnableInterface
       }
       $data = [
          'item' => [
-            'name' => Html::input('name', ['display' => false]),
+            'name' => Html::input('name', ['display' => false, 'required' => 'required']),
             'itemtype' => Dropdown::showFromArray(
                'itemtype',
                $targetTypes,
