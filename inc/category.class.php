@@ -148,6 +148,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $categories = [];
       foreach($result as $category) {
          $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
+         // Keep the short name only
+         // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
+         $split = explode(' > ', $category['name']);
+         $category['name'] = array_pop($split);
          $categories[$category['id']] = $category;
       }
 
