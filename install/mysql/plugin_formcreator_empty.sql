@@ -242,14 +242,16 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `date_mod` datetime NOT NULL,
   `entities_id` int(11) NOT NULL DEFAULT '0',
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-   `requester_id` int(11) NOT NULL DEFAULT '0',
-  `validator_id` int(11) NOT NULL DEFAULT '0',
+  `requester_id` int(11) NOT NULL DEFAULT '0',
+  `users_id_validator` int(11) NOT NULL DEFAULT '0',
+  `groups_id_validator` int(11) NOT NULL DEFAULT '0',
   `comment` longtext,
   PRIMARY KEY (`id`),
   INDEX `original_id_sub_itemtype` (`original_id`, `sub_itemtype`),
   INDEX `entities_id` (`entities_id`),
   INDEX `requester_id` (`requester_id`),
-  INDEX `validator_id` (`validator_id`)
+  INDEX `users_id_validator` (`users_id_validator`),
+  INDEX `groups_id_validator` (`groups_id_validator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
