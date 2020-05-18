@@ -62,5 +62,14 @@ class PluginFormcreatorUpgradeTo2_10 {
       $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
+
+      // support for validator group in issues
+      $table = 'glpi_plugin_formcreator_issues';
+      $migration->changeField($table, 'validator_id', 'users_id_validator', 'integer');
+      $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
+      $migration->migrationOneTable($table);
+      $migration->dropKey($table, 'validator_id');
+      $migration->addKey($table, 'users_id_validator');
+      $migration->addKey($table, 'groups_id_validator');
    }
 }
