@@ -1261,3 +1261,14 @@ function plugin_formcreator_updateCompositePeerType(rand) {
       $('#plugin_formcreator_link_target').show();
    }
 }
+
+function plugin_formcreator_cancelMyTicket(id) {
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/cancelticket.php',
+      data: {id: id},
+      type: "POST",
+      dataType: "json"
+   }).done(function(response) {
+      reloadTab;
+   });
+}

@@ -96,11 +96,17 @@ function plugin_formcreator_canValidate() {
       || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
 }
 
+/**
+ * Undocumented function
+ *
+ * @param string $itemtype
+ * @return string
+ */
 function plugin_formcreator_getCondition($itemtype) {
    $table = $itemtype::getTable();
    if ($itemtype == PluginFormcreatorFormAnswer::class) {
       if (Session::haveRight('config', UPDATE)) {
-         return "";
+         return '';
       }
       if (plugin_formcreator_canValidate()) {
          $groupUser = new Group_User();
@@ -201,6 +207,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
    switch ($table.".".$field) {
       case "glpi_plugin_formcreator_issues.status" :
          $tocheck = [];
+         /** @var CommonITILObject $item  */
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case 'all':
@@ -212,6 +219,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   break;
 
                case 'process' :
+                  // getProcessStatusArray should be an abstract method of CommonITILObject
                   $tocheck = $item->getProcessStatusArray();
                   break;
 
@@ -474,4 +482,25 @@ function plugin_formcreator_dynamicReport($params) {
    }
 
    return false;
+}
+
+/**
+ * Hook for timeline_actions; display a new action for a CommonITILObject
+ * @see CommonITILObject
+ *
+ * @return void
+ */
+function plugin_formcreator_timelineActions($options) {
+   $item = $options['item'];
+   if (!$item->canDeleteItem()) {
+      return;
+   }
+
+   if (!(isset($_SESSION['glpiactiveprofile']) &&
+       $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
+      return;
+   }
+   echo "<li class='plugin_formcreator_cancel_my_ticket' onclick='".
+      "javascript:plugin_formcreator_cancelMyTicket(".$item->fields['id'].");'>"
+      ."<i class='fa'></i>".__('Cancel my ticket', 'formcreator')."</li>";
 }
