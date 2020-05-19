@@ -210,4 +210,25 @@ class PluginFormcreatorCommon {
 
       return $ticket->delete($ticket->fields);
    }
+
+   public static function getTicketStatusForIssue(Ticket $item) {
+      $ticketValidation = new TicketValidation();
+      $ticketValidation->getFromDBByCrit([
+         'tickets_id' => $item->getID(),
+      ]);
+      $status = $item->fields['status'];
+      if (!$ticketValidation->isNewItem()) {
+         $status = 103;
+         switch ($ticketValidation->fields['status']) {
+            case TicketValidation::WAITING:
+               $status = 101;
+               break;
+            case TicketValidation::REFUSED:
+               $status = 102;
+               break;
+         }
+      }
+
+      return $status;
+   }
 }
