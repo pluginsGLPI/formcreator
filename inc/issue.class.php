@@ -103,13 +103,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  `tic`.`status`                AS `status`,
+                  if(`tv`.`status` IS NULL,`tic`.`status`, if(`tv`.`status` = 2, 101, if(`tv`.`status` = 3, 103, 102))) AS `status`,
                   `tic`.`date`                  AS `date_creation`,
                   `tic`.`date_mod`              AS `date_mod`,
                   `tic`.`entities_id`           AS `entities_id`,
                   0                             AS `is_recursive`,
                   `tu`.`users_id`               AS `requester_id`,
-                  0                             AS `users_id_validator`,
+                  `tv`.`users_id_validate`      AS `users_id_validator`,
                   0                             AS `groups_id_validator`,
                   `tic`.`content`               AS `comment`
                FROM `glpi_tickets` AS `tic`
@@ -123,6 +123,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ORDER BY `id` ASC
                   LIMIT 1
                ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
+               LEFT JOIN `glpi_ticketvalidations` as `tv`
+                  ON (`tic`.`id` = `tv`.`tickets_id`)
                WHERE `tic`.`is_deleted` = 0
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`items_id`) <= 1";
