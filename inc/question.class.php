@@ -592,18 +592,30 @@ PluginFormcreatorConditionnableInterface
     * @return boolean true if success, false otherwise
     */
    public function updateConditions($input) {
+      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         $condition = new PluginFormcreatorCondition();
+         $condition->deleteByCriteria([
+            'itemtype' => $this->getType(),
+            'items_id' => $this->getID(),
+         ]);
+         return false;
+      }
+
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
+         $condition = new PluginFormcreatorCondition();
+         $condition->deleteByCriteria([
+            'itemtype' => $this->getType(),
+            'items_id' => $this->getID(),
+         ]);
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         $input['_skip_checks'] = true;
+         $this->update(['id' => $this->fields['id']] + $input);
          return  false;
       }
 
       if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
          || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
-         return false;
-      }
-
-      // All arrays of condition exists
-      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          return false;
       }
 
@@ -616,7 +628,7 @@ PluginFormcreatorConditionnableInterface
       // Delete all existing conditions for the question
       $condition = new PluginFormcreatorCondition();
       $condition->deleteByCriteria([
-         'itemtype' => static::class,
+         'itemtype' => $this->getType(),
          'items_id' => $input['id'],
       ]);
 
