@@ -51,6 +51,10 @@ trait PluginFormcreatorConditionnable
 
       if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
          || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
+         $this->deleteConditions();
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         $input['_skip_checks'] = true;
+         $this->update(['id' => $this->fields['id']] + $input);
          return false;
       }
 
