@@ -42,7 +42,8 @@
 
 .form-group {
    margin:  20px 10px;
-   break-inside: avoid-page;
+   page-break-inside: avoid;
+   page-break-after:auto;
 }
 
 .form_field {
@@ -132,4 +133,17 @@ label[for] {
    border-radius: 3px;
    height:16px;
    width:16px;
+}
+
+#c_menu, #header_top {
+   display: none;
+}
+
+#page.plugin_formcreator_page {
+   margin: 0;
+   width: auto;
+}
+
+#page.plugin_formcreator_page {
+   height: auto;
 }
