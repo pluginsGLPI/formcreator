@@ -417,43 +417,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
-   global $DB;
-
-   if ($item instanceof Ticket) {
-      $id = $item->getID();
-
-      // Restore deletes form_answers
-      $iterator = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype'   => 'PluginFormcreatorFormAnswer',
-            'tickets_id' => $id,
-         ]
-      ]);
-      foreach ($iterator as $row) {
-         $form_answer = new PluginFormcreatorFormAnswer();
-         $form_answer->update([
-            'id'           => $row['id'],
-            'is_deleted'   => 0,
-         ]);
-      }
-
-      $issue = new PluginFormcreatorIssue();
-      $issue->add([
-         'original_id'     => $item->getID(),
-         'sub_itemtype'    => 'Ticket',
-         'name'            => addslashes($item->fields['name']),
-         'status'          => $item->fields['status'],
-         'date_creation'   => $item->fields['date'],
-         'date_mod'        => $item->fields['date_mod'],
-         'entities_id'     => $item->fields['entities_id'],
-         'is_recursive'    => '0',
-         'requester_id'    => $item->fields['users_id_recipient'],
-         'validator_id'    => '0',
-         'comment'         => '',
-      ]);
-   }
+   plugin_formcreator_hook_add_ticket($item);
 }
 
 function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
