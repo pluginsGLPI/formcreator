@@ -211,13 +211,20 @@ class PluginFormcreatorCommon {
       return $ticket->delete($ticket->fields);
    }
 
+   /**
+    * Get the status to set for an issue matching a ticket
+    * @param Ticket $item
+    * @return integer
+    */
    public static function getTicketStatusForIssue(Ticket $item) {
       $ticketValidation = new TicketValidation();
       $ticketValidation->getFromDBByCrit([
          'tickets_id' => $item->getID(),
       ]);
       $status = $item->fields['status'];
+      $user = 0;
       if (!$ticketValidation->isNewItem()) {
+         $user = $ticketValidation->fields['users_id_validate'];
          $status = 103;
          switch ($ticketValidation->fields['status']) {
             case TicketValidation::WAITING:
@@ -229,6 +236,6 @@ class PluginFormcreatorCommon {
          }
       }
 
-      return $status;
+      return ['status' => $status, 'user' => $user];
    }
 }

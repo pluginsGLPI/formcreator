@@ -333,19 +333,21 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       ];
    }
 
+   $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
+
    $issue = new PluginFormcreatorIssue();
    $issue->add([
-      'original_id'     => $item->getID(),
-      'sub_itemtype'    => 'Ticket',
-      'name'            => addslashes($item->fields['name']),
-      'status'          => PluginFOrmcreatorCommon::getTicketStatusForIssue($item),
-      'date_creation'   => $item->fields['date'],
-      'date_mod'        => $item->fields['date_mod'],
-      'entities_id'     => $item->fields['entities_id'],
-      'is_recursive'    => '0',
-      'requester_id'    => $requester['users_id'],
-      'validator_id'    => '0',
-      'comment'         => addslashes($item->fields['content']),
+      'original_id'        => $item->getID(),
+      'sub_itemtype'       => 'Ticket',
+      'name'               => addslashes($item->fields['name']),
+      'status'             => $validationStatus['status'],
+      'date_creation'      => $item->fields['date'],
+      'date_mod'           => $item->fields['date_mod'],
+      'entities_id'        => $item->fields['entities_id'],
+      'is_recursive'       => '0',
+      'requester_id'       => $requester['users_id'],
+      'users_id_validator' => $validationStatus['user'],
+      'comment'            => addslashes($item->fields['content']),
    ]);
 }
 
@@ -356,6 +358,8 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 
    $id = $item->getID();
 
+   $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
+
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
@@ -364,19 +368,19 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       ]
    ]);
    $issue->update([
-      'id'              => $issue->getID(),
-      'original_id'     => $id,
-      'display_id'      => "t_$id",
-      'sub_itemtype'    => 'Ticket',
-      'name'            => addslashes($item->fields['name']),
-      'status'          => PluginFOrmcreatorCommon::getTicketStatusForIssue($item),
-      'date_creation'   => $item->fields['date'],
-      'date_mod'        => $item->fields['date_mod'],
-      'entities_id'     => $item->fields['entities_id'],
-      'is_recursive'    => '0',
-      'requester_id'    => $item->fields['users_id_recipient'],
-      'validator_id'    => '0',
-      'comment'         => addslashes($item->fields['content']),
+      'id'                 => $issue->getID(),
+      'original_id'        => $id,
+      'display_id'         => "t_$id",
+      'sub_itemtype'       => 'Ticket',
+      'name'               => addslashes($item->fields['name']),
+      'status'             => $validationStatus['status'],
+      'date_creation'      => $item->fields['date'],
+      'date_mod'           => $item->fields['date_mod'],
+      'entities_id'        => $item->fields['entities_id'],
+      'is_recursive'       => '0',
+      'requester_id'       => $item->fields['users_id_recipient'],
+      'users_id_validator' => $validationStatus['user'],
+      'comment'            => addslashes($item->fields['content']),
    ]);
 }
 
