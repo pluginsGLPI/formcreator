@@ -453,26 +453,30 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          Html::displayNotFoundError();
       }
       $options = ['canedit' => false];
+      $canEdit = $this->fields['status'] == self::STATUS_REFUSED
+                 && $_SESSION['glpiID'] == $this->fields['requester_id'];
 
       // Print css media
-      echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
+      echo Html::css('plugins/formcreator/css/print_form.css', ['media' => 'print']);
 
-      $style = "<style>";
-      // force colums width
-      $width_percent = 100 / PluginFormcreatorSection::COLUMNS;
-      for ($i = 0; $i < PluginFormcreatorSection::COLUMNS; $i++) {
-         $width = ($i+1) * $width_percent;
-         $style.= '
-         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
-         #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
-         {
-            min-width: ' . $width_percent . '%;
-            width: ' . $width . '%;
-         }
-         ';
+      $form = $this->getForm();
+      // Get fields populated with answers
+      $questions = (new PluginFormcreatorQuestion)->getQuestionsFromForm($form->getID());
+      $answers = $this->getAnswers($this->getID());
+      $answersHtml = [];
+      foreach ($questions as $question) {
+         $answersHtml[$question->getID()] = $question->getRenderedHtml($canEdit, $answers);
       }
-      $style.= "</style>";
-      echo $style;
+      $data = [
+         'so'   => [
+            self::getType() => $this->searchOptions()
+         ],
+         'item'        => $this,
+         'columnCount' => PluginFormcreatorSection::COLUMNS,
+         'sections'    => (new PluginFormcreatorSection)->getSectionsFromForm($form->getID()),
+         'questions'   => $questions,
+         'answers'     => $answers,
+      ];
 
       $formName = 'plugin_formcreator_form';
       self::getFormURL();
@@ -482,16 +486,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       . ' id="plugin_formcreator_form"'
       . '>';
 
-      $form = $this->getForm();
-
-      $canEdit = $this->fields['status'] == self::STATUS_REFUSED
-                 && $_SESSION['glpiID'] == $this->fields['requester_id'];
-
-      // form title
-      echo "<h1 class='form-title'>";
-      echo $this->fields['name'] . "&nbsp;";
-      echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
-      echo '</h1>';
+      plugin_formcreator_render('formanswer/showform.html.twig', $data);
+      return;
 
       // Form Header
       if (!empty($this->fields['content'])) {
@@ -520,13 +516,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Section content
          echo '<div>';
 
-         // Get fields populated with answers
-         $answers = $this->getAnswers(
-            $this->getID(),
-            [
-               PluginFormcreatorSection::getForeignKeyField() => $section->getID(),
-            ]
-         );
 
          // Display all fields of the section
          $lastQuestion = null;

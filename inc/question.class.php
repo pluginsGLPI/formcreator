@@ -1219,8 +1219,5 @@ PluginFormcreatorConditionnableInterface
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
-      }
-
-      return [];
    }
 }

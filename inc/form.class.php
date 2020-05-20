@@ -1927,10 +1927,6 @@ PluginFormcreatorConditionnableInterface
       ];
 
       plugin_formcreator_render('form/showforcentral.html.twig', $data);
-         echo '<a href="' . FORMCREATOR_ROOTDOC
-            . '/front/formdisplay.php?id=' . $row['id'] . '"
-
-      echo '<br />';
    }
 
    public static function getInterface() {
