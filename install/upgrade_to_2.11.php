@@ -82,16 +82,16 @@ class PluginFormcreatorUpgradeTo2_11 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
 
-      $this->migrateCheckboxes();
-      $this->migrateRadios();
+      $this->migrateCheckboxesAndMultiselect();
+      $this->migrateRadiosAndSelect();
    }
 
    /**
-    * Migrate checkboxes data to JSON
+    * Migrate checkboxes and multiselect data to JSON
     *
     * @return void
     */
-   public function migrateCheckboxes() {
+   public function migrateCheckboxesAndMultiselect() {
       global $DB;
 
       // Migrate default value
@@ -99,7 +99,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       $request = [
          'SELECT' => ['id', 'default_values', 'values'],
          'FROM' => $questionTable,
-         'WHERE' => ['fieldtype' => ['checkboxes']],
+         'WHERE' => ['fieldtype' => ['checkboxes', 'multiselect']],
       ];
       foreach($DB->request($request) as $row) {
          $newValues = $row['values'];
@@ -130,7 +130,7 @@ class PluginFormcreatorUpgradeTo2_11 {
                ]
             ]
          ],
-         'WHERE' => ['fieldtype' => 'checkboxes'],
+         'WHERE' => ['fieldtype' => 'checkboxes', 'multiselect'],
       ];
       foreach ($DB->request($request) as $row) {
          $newAnswer = $row['answer'];
@@ -144,11 +144,11 @@ class PluginFormcreatorUpgradeTo2_11 {
    }
 
    /**
-    * Migrate radios data to JSON
+    * Migrate radios and select data to JSON
     *
     * @return void
     */
-    public function migrateRadios() {
+    public function migrateRadiosAndSelect() {
       global $DB;
 
       // Migrate default value
@@ -156,7 +156,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       $request = [
          'SELECT' => ['id', 'default_values', 'values'],
          'FROM' => $questionTable,
-         'WHERE' => ['fieldtype' => ['radios']],
+         'WHERE' => ['fieldtype' => ['radios', 'select']],
       ];
       foreach($DB->request($request) as $row) {
          $newValues = $row['values'];

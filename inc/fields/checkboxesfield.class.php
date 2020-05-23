@@ -140,7 +140,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          return '';
       }
 
-      return Toolbox::addslashes_deep(json_encode($this->value, JSON_OBJECT_AS_ARRAY));
+      return Toolbox::addslashes_deep(json_encode($this->value, JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE));
    }
 
    public function deserializeValue($value) {
