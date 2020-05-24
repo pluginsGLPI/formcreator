@@ -65,9 +65,9 @@ PluginFormcreatorExportableInterface
       return $input;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $input[$formFk] = $forms_id;
+      $input[$formFk] = $containerId;
 
       $item = new self();
        /** @var string $idKey key to use as ID (id or uuid) */
@@ -158,7 +158,7 @@ PluginFormcreatorExportableInterface
    }
 
    /**
-    * Get validators of type $itemtype associated to a form 
+    * Get validators of type $itemtype associated to a form
     *
     * @param PluginFormcreatorForm $form
     * @param string $itemtype
