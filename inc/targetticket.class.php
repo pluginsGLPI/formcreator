@@ -1022,7 +1022,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return $data;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -1080,38 +1080,40 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       // Add or update
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+      if (!$dryRun) {
+         $originalId = $input[$idKey];
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
 
-      // add the target to the linker
-      $linker->addObject($originalId, $item);
+         // add the target to the linker
+         $linker->addObject($originalId, $item);
+      }
 
       if (isset($input['_actors'])) {
          foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId);
+            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId, $dryRun);
          }
       }
 
       if (isset($input['_ticket_relations'])) {
          foreach ($input['_ticket_relations'] as $ticketLink) {
-            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId);
+            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId, $dryRun);
          }
       }
 
       // Import conditions
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
          }
       }
 

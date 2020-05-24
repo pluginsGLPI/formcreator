@@ -50,7 +50,8 @@ interface PluginFormcreatorExportableInterface
     * @param  PluginFormcreatorLinker $linker
     * @param  integer $containerId  id of the parent itemtype, 0 if not
     * @param  array   $input the target data (match the target table)
+    * @param  boolean $dryRun simulate import (used to detect issues before actual import)
     * @return integer|false the id of the imported item or false on error
     */
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0);
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false);
 }

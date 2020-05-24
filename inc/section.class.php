@@ -214,7 +214,7 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -248,21 +248,23 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Add or update section
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+      if (!$dryRun) {
+         $originalId = $input[$idKey];
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
 
-      // add the section to the linker
-      $linker->addObject($originalId, $item);
+         // add the section to the linker
+         $linker->addObject($originalId, $item);
+      }
 
       // Import each question
       $importedItems = [];
@@ -276,7 +278,7 @@ PluginFormcreatorConditionnableInterface
          });
 
          foreach ($input['_questions'] as $question) {
-            $importedItem = PluginFormcreatorQuestion::import($linker, $question, $itemId);
+            $importedItem = PluginFormcreatorQuestion::import($linker, $question, $itemId, $dryRun);
             if ($importedItem === false) {
                // Falied to import a question
                return false;
@@ -285,7 +287,7 @@ PluginFormcreatorConditionnableInterface
          }
       }
       // Delete all other questions
-      if (count($importedItems) > 0) {
+      if (!$dryRun && count($importedItems) > 0) {
          $FormProfile = new PluginFormcreatorSection();
          $FormProfile->deleteByCriteria([
             $formFk => $itemId,
@@ -296,7 +298,7 @@ PluginFormcreatorConditionnableInterface
       // Import conditions
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
          }
       }
 

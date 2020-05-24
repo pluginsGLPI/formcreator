@@ -65,7 +65,7 @@ PluginFormcreatorExportableInterface
       return $input;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
 
@@ -96,24 +96,23 @@ PluginFormcreatorExportableInterface
       $input['items_id'] = $linkedItem->getID();
 
       // Add or update the form validator
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+      if (!$dryRun) {
+         $originalId = $input[$idKey];
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
 
-      // add the item to the linker
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
+         // add the item to the linker
+         $linker->addObject($originalId, $item);
       }
-      $linker->addObject($originalId, $item);
 
       return $itemId;
    }

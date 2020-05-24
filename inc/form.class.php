@@ -1859,6 +1859,33 @@ PluginFormcreatorConditionnableInterface
             );
          }
 
+         // Dry run
+         $success = true;
+         foreach ($forms_toimport['forms'] as $form) {
+            set_time_limit(30);
+            $linker = new PluginFormcreatorLinker();
+            try {
+               self::import($linker, $form, 0, true);
+            } catch (ImportFailureException $e) {
+               // Import failed, give up
+               $success = false;
+               $failureMessage = $e->getMessage();
+               Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
+               continue;
+            }
+            if (!$linker->linkPostponed()) {
+               $success = false;
+               $failureMessage = sprintf(__("Infinite dependency loop while importing %s", 'formcreator'), $form['name']);
+            }
+         }
+
+         if (!$success) {
+            // abort the import process
+            Session::addMessageAfterRedirect($failureMessage, false, ERROR);
+            return;
+         }
+
+         // Actual import
          $success = true;
          foreach ($forms_toimport['forms'] as $form) {
             set_time_limit(30);
@@ -1883,7 +1910,7 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -1946,9 +1973,11 @@ PluginFormcreatorConditionnableInterface
       $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
       $formCategoryId = 0;
       if ($input['_plugin_formcreator_category'] != '') {
-         $formCategoryId = $formCategory->import([
-            'completename' => Toolbox::addslashes_deep($input['_plugin_formcreator_category']),
-         ]);
+         if (!$dryRun) {
+            $formCategoryId = $formCategory->import([
+               'completename' => Toolbox::addslashes_deep($input['_plugin_formcreator_category']),
+            ]);
+         }
       }
       $input[$formCategoryFk] = $formCategoryId;
 
@@ -1958,21 +1987,23 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Add or update the form
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+      if (!$dryRun) {
+         $originalId = $input[$idKey];
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
 
-      // add the form to the linker
-      $linker->addObject($originalId, $item);
+         // add the form to the linker
+         $linker->addObject($originalId, $item);
+      }
 
       // import form_profiles
       if (isset($input['_profiles'])) {
@@ -1981,7 +2012,8 @@ PluginFormcreatorConditionnableInterface
             $importedItem = PluginFormcreatorForm_Profile::import(
                $linker,
                $formProfile,
-               $itemId
+               $itemId,
+               $dryRun
             );
             if ($importedItem === false) {
                // Falied to import a form_profile
@@ -1990,7 +2022,7 @@ PluginFormcreatorConditionnableInterface
             $importedItems[] = $importedItem;
          }
          // Delete all other restrictions
-         if (count($importedItems) > 0) {
+         if (!$dryRun && count($importedItems) > 0) {
             $FormProfile = new PluginFormcreatorForm_Profile();
             $FormProfile->deleteByCriteria([
                $formFk => $itemId,
@@ -2015,7 +2047,8 @@ PluginFormcreatorConditionnableInterface
             $importedItem = PluginFormcreatorSection::import(
                $linker,
                $section,
-               $itemId
+               $itemId,
+               $dryRun
             );
             if ($importedItem === false) {
                // Falied to import a section
@@ -2025,7 +2058,7 @@ PluginFormcreatorConditionnableInterface
          }
          // Delete all other sections
          $deleteCriteria = [];
-         if (count($importedItems) > 0) {
+         if (!$dryRun && count($importedItems) > 0) {
             $deleteCriteria = ['NOT' => ['id' => $importedItems]];
          }
          $FormProfile = new PluginFormcreatorSection();
@@ -2038,7 +2071,7 @@ PluginFormcreatorConditionnableInterface
       // Import submit conditions
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
          }
       }
 
@@ -2052,7 +2085,8 @@ PluginFormcreatorConditionnableInterface
                   $importedItem = $targetType::import(
                      $linker,
                      $targetData,
-                     $itemId
+                     $itemId,
+                     $dryRun
                   );
                   if ($importedItem === false) {
                      // Falied to import a section
@@ -2062,7 +2096,7 @@ PluginFormcreatorConditionnableInterface
                }
             }
             // delete other targets of the itemtype $targetType
-            if (count($importedItems)) {
+            if (!$dryRun && count($importedItems)) {
                $target = new $targetType();
                $target->deleteByCriteria([
                   $formFk => $itemId,
@@ -2079,7 +2113,8 @@ PluginFormcreatorConditionnableInterface
             $importedItem = PluginFormcreatorForm_Validator::import(
                $linker,
                $validator,
-               $itemId
+               $itemId,
+               $dryRun
             );
             if ($importedItem === false) {
                // Failed to import a section
@@ -2087,7 +2122,7 @@ PluginFormcreatorConditionnableInterface
             }
             $importedItems[] = $importedItem;
          }
-         if (count($importedItems)) {
+         if (!$dryRun && count($importedItems)) {
             $form_validator = new PluginFormcreatorForm_Validator;
             $form_validator->deleteByCriteria([
                $formFk => $itemId,

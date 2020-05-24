@@ -162,7 +162,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
     * @param  array   $form_profile the validator data (match the validator table)
     * @return integer|false the form_Profile ID or false on error
     */
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
          throw new ImportFailureException('UUID or ID is mandatory');
       }
@@ -194,21 +194,23 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       $input[Profile::getForeignKeyField()] = $profile->getID();
 
       // Add or update the form_profile
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+      if (!$dryRun) {
+         $originalId = $input[$idKey];
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
 
-      // add the form_profile to the linker
-      $linker->addObject($originalId, $item);
+         // add the form_profile to the linker
+         $linker->addObject($originalId, $item);
+      }
 
       return $itemId;
    }

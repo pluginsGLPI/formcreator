@@ -892,7 +892,7 @@ PluginFormcreatorConditionnableInterface
       return $newQuestionId;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -925,30 +925,32 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Add or update question
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->field = PluginFormcreatorFields::getFieldInstance(
-            $input['fieldtype'],
-            $item
-         );
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+      if (!$dryRun) {
+         $originalId = $input[$idKey];
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->field = PluginFormcreatorFields::getFieldInstance(
+               $input['fieldtype'],
+               $item
+            );
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
 
-      // add the question to the linker
-      $linker->addObject($originalId, $item);
+         // add the question to the linker
+         $linker->addObject($originalId, $item);
+      }
 
       // Import conditions
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
+            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
          }
       }
 
@@ -960,7 +962,7 @@ PluginFormcreatorConditionnableInterface
       if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
+            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId, $dryRun);
          }
       }
 

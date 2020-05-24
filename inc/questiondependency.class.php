@@ -129,7 +129,7 @@ extends PluginFormcreatorQuestionParameter
       $this->fields['plugin_formcreator_questions_id_2'] = '0';
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
