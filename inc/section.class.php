@@ -285,15 +285,13 @@ PluginFormcreatorConditionnableInterface
          }
       }
       // Delete all other questions
-      $deleteCriteria = [];
       if (count($importedItems) > 0) {
-         $deleteCriteria = ['NOT' => ['id' => $importedItems]];
+         $FormProfile = new PluginFormcreatorSection();
+         $FormProfile->deleteByCriteria([
+            $formFk => $itemId,
+            ['NOT' => ['id' => $importedItems]],
+         ]);
       }
-      $FormProfile = new PluginFormcreatorSection();
-      $FormProfile->deleteByCriteria([
-         $formFk => $itemId,
-         $deleteCriteria,
-      ]);
 
       // Import conditions
       if (isset($input['_conditions'])) {
