@@ -122,6 +122,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                $html .= '</label>';
                $html .= '</span>';
                $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+               $html .= $value;
                $html .= '</label>';
                $html .= '</div>';
             }
