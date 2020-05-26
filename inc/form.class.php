@@ -2033,7 +2033,7 @@ PluginFormcreatorConditionnableInterface
 
       // import form's sections
       if (isset($input['_sections'])) {
-         // sort questions by order
+         // sort sections by order
          usort($input['_sections'], function ($a, $b) {
             if ($a['order'] == $b['order']) {
                return 0;
@@ -2061,8 +2061,8 @@ PluginFormcreatorConditionnableInterface
          if (!$dryRun && count($importedItems) > 0) {
             $deleteCriteria = ['NOT' => ['id' => $importedItems]];
          }
-         $FormProfile = new PluginFormcreatorSection();
-         $FormProfile->deleteByCriteria([
+         $section = new PluginFormcreatorSection();
+         $section->deleteByCriteria([
             $formFk => $itemId,
             $deleteCriteria,
          ]);
