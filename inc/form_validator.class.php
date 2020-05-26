@@ -29,7 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use tests\units\PluginFormcreatorForm_Validator as TestsPluginFormcreatorForm_Validator;
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 
 if (!defined('GLPI_ROOT')) {
@@ -96,8 +95,8 @@ PluginFormcreatorExportableInterface
       $input['items_id'] = $linkedItem->getID();
 
       // Add or update the form validator
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -109,10 +108,10 @@ PluginFormcreatorExportableInterface
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the item to the linker
-         $linker->addObject($originalId, $item);
       }
+
+      // add the item to the linker
+      $linker->addObject($originalId, $item);
 
       return $itemId;
    }
@@ -201,5 +200,16 @@ PluginFormcreatorExportableInterface
       }
 
       return $result;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         $container::getForeignKeyField() => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

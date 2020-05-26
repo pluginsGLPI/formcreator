@@ -212,8 +212,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       }
 
       // Add or update
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -225,21 +225,41 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the target to the linker
-         $linker->addObject($originalId, $item);
       }
 
+      // add the target to the linker
+      $linker->addObject($originalId, $item);
+
       if (isset($input['_actors'])) {
+         $importedItems = [];
          foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetChange_Actor::import($linker, $actor, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorTargetChange_Actor::import($linker, $actor, $itemId, $dryRun);
+
+            // If $importedItem === false the item import is postponed
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
+         }
+         if (!$dryRun) {
+            $actor = new PluginFormcreatorTargetChange_Actor();
+            $actor->deleteObsoleteItems($item, $importedItems);
          }
       }
 
       // Import conditions
       if (isset($input['_conditions'])) {
+         $importedItems = [];
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+
+            // If $importedItem === false the item import is postponed
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
+         }
+         if (!$dryRun) {
+            $condition = new PluginFormcreatorCondition();
+            $condition->deleteObsoleteItems($item, $importedItems);
          }
       }
 

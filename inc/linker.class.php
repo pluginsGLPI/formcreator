@@ -54,7 +54,8 @@ class PluginFormcreatorLinker
    }
 
    /**
-    * Get a previously imported object
+    * Get a previously imported object. Useful to rebuild a link
+    * with an item which must be part of the import
     *
     * @param integer $originalId
     * @param string $itemtype
@@ -72,6 +73,28 @@ class PluginFormcreatorLinker
          return false;
       }
       return $this->imported[$itemtype];
+   }
+
+   /**
+    * Find an object in the DB
+    * Contrary to getObject(), this method also searches in objects which
+    * are not and will not be imported
+    *
+    * @param string $itemtype itemtype of object to find
+    * @param integer $id ID of object to fiind
+    * @param string $idField fieldname where the ID is searched for
+    * @return void
+    */
+   public function findObject($itemtype, $id, $idField) {
+      if (!strpos($itemtype, 'PluginFormcreator') === 0) {
+         // The itemtype is not part of Formcreator
+         // Cannot use uuid column
+         $idField = 'id';
+     }
+     $item = new $itemtype();
+     plugin_formcreator_getFromDBByField($item, $id, $idField);
+
+     return $item;
    }
 
    /**
@@ -113,7 +136,7 @@ class PluginFormcreatorLinker
          if ($postponedAgainCount > 0 && $postponedCount == $postponedAgainCount) {
             return false;
          }
-      } while ($postponedCount > 0);
+      } while ($postponedAgainCount > 0);
 
       return true;
    }

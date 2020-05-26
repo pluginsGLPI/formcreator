@@ -44,7 +44,6 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorQuestionDependency
 extends PluginFormcreatorQuestionParameter
 {
-
    /** @var string $fieldtype type of field useable for the dependency */
    protected $fieldType;
 
@@ -159,7 +158,7 @@ extends PluginFormcreatorQuestionParameter
          $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
-            $input['plugin_formcreator_questions_id_2']
+            $input['uuid']
          );
       }
 
@@ -169,31 +168,31 @@ extends PluginFormcreatorQuestionParameter
       }
 
       // set ID for linked objects
-      $linked = $linker->getObject($input['plugin_formcreator_questions_id_2'], PluginFormcreatorQuestion::class);
-      if ($linked === false) {
-         $linked = new PluginFormcreatorQuestion();
-         $linked->getFromDBByCrit([
-            $idKey => $input['plugin_formcreator_questions_id']
-         ]);
-         if ($linked->isNewItem()) {
+      if (!$dryRun) {
+         $linkedItemtype = PluginFormcreatorQuestion::class;
+         $linkedItemId = $input['plugin_formcreator_questions_id_2'];
+         $linkedItem = $linker->getObject($$linkedItemId, $linkedItemtype);
+         if ($linkedItem->isNewItem()) {
             $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
             return false;
          }
+         $input['plugin_formcreator_questions_id_2'] = $linkedItem->getID();
       }
-      $input['plugin_formcreator_questions_id_2'] = $linked->getID();
 
-      // Add or update condition
+      // Add or update
       $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+      if (!$dryRun) {
+         if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+         } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+         }
+         if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         }
       }
 
       // add the parameter to the linker

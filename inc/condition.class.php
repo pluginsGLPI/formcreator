@@ -136,8 +136,8 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       $input['plugin_formcreator_questions_id'] = $linked->getID();
 
       // Add or update condition
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -149,10 +149,10 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the question to the linker
-         $linker->addObject($originalId, $item);
       }
+
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
 
       return $itemId;
    }
@@ -388,5 +388,17 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       $html.= '</tr>';
 
       return $html;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         'itemtype' => $container->getType(),
+         'items_id' => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

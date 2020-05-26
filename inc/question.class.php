@@ -925,8 +925,8 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Add or update question
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->field = PluginFormcreatorFields::getFieldInstance(
@@ -942,29 +942,48 @@ PluginFormcreatorConditionnableInterface
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the question to the linker
-         $linker->addObject($originalId, $item);
       }
+
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
 
       // Import conditions
       if (isset($input['_conditions'])) {
+         $importedItems = [];
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+
+            // If $importedItem === false the item import is postponed
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
+         }
+         if (!$dryRun) {
+            $condition = new PluginFormcreatorCondition();
+            $condition->deleteObsoleteItems($item, $importedItems);
          }
       }
 
       // Import parameters
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $item
-      );
-      if (isset($input['_parameters'])) {
-         $parameters = $field->getParameters();
-         foreach ($parameters as $fieldName => $parameter) {
-            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId, $dryRun);
-         }
-      }
+      // if (isset($input['_parameters'])) {
+      //    $field = PluginFormcreatorFields::getFieldInstance(
+      //       $input['fieldtype'],
+      //       $item
+      //    );
+      //    $parameters = $field->getParameters();
+      //    $importedItems = [];
+      //    foreach ($parameters as $fieldName => $parameter) {
+      //       $importedItem = $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId, $dryRun);
+
+      //       // If $importedItem === false the item import is postponed
+      //       if ($importedItem !== false) {
+      //          $importedItems[] = $importedItem;
+      //       }
+      //    }
+      //    if (!$dryRun) {
+      //       $parameter->deleteObsoleteItems($item, $importedItems);
+      //    }
+      // }
 
       return $itemId;
    }
@@ -1226,5 +1245,16 @@ PluginFormcreatorConditionnableInterface
       if (isAPI()) {
          $this->fields += self::getFullData(null, $this->fields['id']);
       }
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         $container::getForeignKeyField() => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

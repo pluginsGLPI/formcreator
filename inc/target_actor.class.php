@@ -153,8 +153,8 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             break;
       }
 
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -166,10 +166,10 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the question to the linker
-         $linker->addObject($originalId, $item);
       }
+
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
 
       return $itemId;
    }
@@ -231,5 +231,16 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
       unset($target_actor[$idToRemove]);
 
       return $target_actor;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         $container::getForeignKeyField() => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

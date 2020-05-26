@@ -248,8 +248,8 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Add or update section
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -261,13 +261,12 @@ PluginFormcreatorConditionnableInterface
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the section to the linker
-         $linker->addObject($originalId, $item);
       }
 
+      // add the section to the linker
+      $linker->addObject($originalId, $item);
+
       // Import each question
-      $importedItems = [];
       if (isset($input['_questions'])) {
          // sort questions by order
          usort($input['_questions'], function ($a, $b) {
@@ -277,28 +276,33 @@ PluginFormcreatorConditionnableInterface
             return ($a['order'] < $b['order']) ? -1 : 1;
          });
 
+         $importedItems = [];
          foreach ($input['_questions'] as $question) {
             $importedItem = PluginFormcreatorQuestion::import($linker, $question, $itemId, $dryRun);
-            if ($importedItem === false) {
-               // Falied to import a question
-               return false;
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
             }
-            $importedItems[] = $importedItem;
          }
-      }
-      // Delete all other questions
-      if (!$dryRun && count($importedItems) > 0) {
-         $FormProfile = new PluginFormcreatorSection();
-         $FormProfile->deleteByCriteria([
-            $formFk => $itemId,
-            ['NOT' => ['id' => $importedItems]],
-         ]);
+         if (!$dryRun) {
+            $section = new PluginFormcreatorQuestion();
+            $section->deleteObsoleteItems($item, $importedItems);
+         }
       }
 
       // Import conditions
       if (isset($input['_conditions'])) {
+         $importedItem = [];
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+
+            // If $importedItem === false the item import is postponed
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
+         }
+         if (!$dryRun) {
+            $condition = new PluginFormcreatorCondition();
+            $condition->deleteObsoleteItems($item, $importedItems);
          }
       }
 
@@ -480,5 +484,16 @@ PluginFormcreatorConditionnableInterface
 
    public function post_updateItem($history = 1) {
       $this->updateConditions($this->input);
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         $container::getForeignKeyField() => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

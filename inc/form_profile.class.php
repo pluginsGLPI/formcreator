@@ -194,8 +194,8 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       $input[Profile::getForeignKeyField()] = $profile->getID();
 
       // Add or update the form_profile
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -207,10 +207,10 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the form_profile to the linker
-         $linker->addObject($originalId, $item);
       }
+
+      // add the form_profile to the linker
+      $linker->addObject($originalId, $item);
 
       return $itemId;
    }
@@ -246,5 +246,16 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       unset($form_profile[$idToRemove]);
 
       return $form_profile;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         $container::getForeignKeyField() => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

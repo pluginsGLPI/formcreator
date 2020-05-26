@@ -1055,21 +1055,23 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // Assume that all questions are already imported
       // convert question uuid into id
-      $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
-      if ($questions !== false) {
-         $questionIdentifier = 'id';
-         if (isset($input['uuid'])) {
-            $questionIdentifier = 'uuid';
-         }
-         $taggableFields = $item->getTaggableFields();
-         foreach ($questions as $question) {
-            $id         = $question->getID();
-            $originalId = $question->fields[$questionIdentifier];
-            foreach ($taggableFields as $field) {
-               $content = $input[$field];
-               $content = str_replace("##question_$originalId##", "##question_$id##", $content);
-               $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
-               $input[$field] = $content;
+      if (!$dryRun) {
+         $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
+         if ($questions !== false) {
+            $questionIdentifier = 'id';
+            if (isset($input['uuid'])) {
+               $questionIdentifier = 'uuid';
+            }
+            $taggableFields = $item->getTaggableFields();
+            foreach ($questions as $question) {
+               $id         = $question->getID();
+               $originalId = $question->fields[$questionIdentifier];
+               foreach ($taggableFields as $field) {
+                  $content = $input[$field];
+                  $content = str_replace("##question_$originalId##", "##question_$id##", $content);
+                  $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+                  $input[$field] = $content;
+               }
             }
          }
 
@@ -1080,8 +1082,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       // Add or update
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
@@ -1093,27 +1095,56 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             $typeName = strtolower(self::getTypeName());
             throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
          }
-
-         // add the target to the linker
-         $linker->addObject($originalId, $item);
       }
 
+      // add the target to the linker
+      $linker->addObject($originalId, $item);
+
       if (isset($input['_actors'])) {
+         $importedItems = [];
          foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId, $dryRun);
+
+            // If $importedItem === false the item import is postponed
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
          }
+         if (!$dryRun) {
+            $actor = new PluginFormcreatorTargetTicket_Actor();
+            $actor->deleteObsoleteItems($item, $importedItems);
+         }
+
       }
 
       if (isset($input['_ticket_relations'])) {
+         $importedItems = [];
          foreach ($input['_ticket_relations'] as $ticketLink) {
-            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId, $dryRun);
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
+         }
+         if (!$dryRun) {
+            $targetTicket = new PluginFormcreatorItem_TargetTicket();
+            $targetTicket->deleteObsoleteItems($item, $importedItems);
          }
       }
 
       // Import conditions
       if (isset($input['_conditions'])) {
+         $importedItems = [];
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+            $importedItem = PluginFormcreatorCondition::import($linker, $condition, $itemId, $dryRun);
+
+            // If $importedItem === false the item import is postponed
+            if ($importedItem !== false) {
+               $importedItems[] = $importedItem;
+            }
+         }
+         if (!$dryRun) {
+            $condition = new PluginFormcreatorCondition();
+            $condition->deleteObsoleteItems($item, $importedItems);
          }
       }
 

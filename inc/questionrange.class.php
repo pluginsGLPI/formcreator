@@ -161,8 +161,8 @@ extends PluginFormcreatorQuestionParameter
       }
 
       // Add or update condition
+      $originalId = $input[$idKey];
       if (!$dryRun) {
-         $originalId = $input[$idKey];
          if ($itemId !== false) {
             $input['id'] = $itemId;
             $item->update($input);
