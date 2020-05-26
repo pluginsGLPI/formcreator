@@ -1482,6 +1482,16 @@ PluginFormcreatorConditionnableInterface
       $linker = new PluginFormcreatorLinker();
 
       $export = $this->export(true);
+
+      // Duplicate wih dry run mode
+      try {
+         $new_form_id =  static::import($linker, $export, 0, true);
+      } catch (ImportFailureException $e) {
+         Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
+         return false;
+      }
+
+      // Real duplicate
       $new_form_id =  static::import($linker, $export);
 
       if ($new_form_id === false) {
@@ -1870,7 +1880,6 @@ PluginFormcreatorConditionnableInterface
                // Import failed, give up
                $success = false;
                $failureMessage = $e->getMessage();
-               Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
                continue;
             }
             if (!$linker->linkPostponed()) {
