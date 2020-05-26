@@ -28,6 +28,11 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 abstract class PluginFormcreatorQuestionParameter
 extends CommonDBChild
 implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExportableInterface
