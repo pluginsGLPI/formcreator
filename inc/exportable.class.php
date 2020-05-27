@@ -46,7 +46,6 @@ trait PluginFormcreatorExportable
     public function exportChildrenObjects($subItems, $export, $remove_uuid = false) {
         global $DB;
 
-        $fk = static::getForeignKeyField();
         foreach ($subItems as $key => $itemtypes) {
             if (!is_array($itemtypes)) {
                 $itemtypes = [$itemtypes];
