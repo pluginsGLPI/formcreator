@@ -29,19 +29,23 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
+implements PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
 
    static public $itemtype_1           = 'itemtype';
    static public $items_id_1           = 'items_id';
    static public $itemtype_2           = PluginFormcreatorTargetTicket::class;
    static public $items_id_2           = 'plugin_formcreator_targettickets_id';
 
-   static public $logs_for_item_1        = false;
+   static public $logs_for_item_1      = false;
 
    /**
     * Export in an array all the data of the current instanciated form
@@ -69,42 +73,81 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
       }
       unset($item_targetTicket[$idToRemove]);
 
+      $linkedItemtype = $item_targetTicket['itemtype'];
+      $linkedItem = new $linkedItemtype();
+      $linkedItemId = $item_targetTicket['items_id'];
+      $identifierColumn = 'id';
+      if (strpos($item_targetTicket['itemtype'], 'PluginFormcreator') === 0) {
+         $identifierColumn = 'uuid';
+      }
+      $linkedItem->getFromDBByCrit([
+         $identifierColumn => $linkedItemId
+      ]);
+      if ($linkedItem->isNewItem()) {
+         // TODO: error linked item not found
+      }
+      $item_targetTicket['items_id'] = $linkedItem->fields[$identifierColumn];
+
       return $item_targetTicket;
    }
 
-   public static function import($targetTicket_id, $item_targetTicket = [], $storeOnly = true) {
-      static $relationsToImport = [];
-
-      if ($storeOnly) {
-         $item_targetTicket['plugin_formcreator_targettickets_id'] = $targetTicket_id;
-
-         $item = new static();
-         if ($item_targetTicket_id = plugin_formcreator_getFromDBByField($item, 'uuid', $item_targetTicket['uuid'])) {
-            // add id key
-            $item_targetTicket['id'] = $item_targetTicket_id;
-
-            // prepare update item_target ticket
-            $relationsToImport[] = $item_targetTicket;
-         } else {
-            // prepare create item_target ticket
-            $relationsToImport[] = $item_targetTicket;
-         }
-      } else {
-         // Assumes all target tickets needed for the stored conditions exist
-         foreach ($relationsToImport as $item_targetTicket) {
-            $item = new static();
-            $linkedItem = new $item_targetTicket['itemtype']();
-            if ($item_targetTicket['itemtype'] == PluginFormcreatorTargetTicket::getType()) {
-               $item_targetTicket['items_id'] = plugin_formcreator_getFromDBByField($linkedItem, 'uuid', $item_targetTicket['items_id']);
-            }
-            if (isset($item_targetTicket['id'])) {
-               $item->update($item_targetTicket);
-            } else {
-               $item->add($item_targetTicket);
-            }
-         }
-         $relationsToImport = [];
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
       }
+
+      $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
+      $input[$targetTicketFk] = $containerId;
+      $input['_skip_checks'] = true;
+
+      $item = new self;
+      // Find an existing target to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id';
+      if (isset($input['uuid'])) {
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
+
+      // set ID for linked objects
+      if (!$dryRun) {
+         $linkedItemtype = $input['itemtype'];
+         $linkedItemId = $input['items_id'];
+         $linkedItem = $linker->findObject($linkedItemtype, $linkedItemId, $idKey);
+         if ($linkedItem->isNewItem()) {
+            if (strpos($linkedItemtype, 'PluginFormcreator') === 0) {
+               // the linnked object belongs to the plugin, maybe the item will be imported later
+               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+               return false;
+            }
+            // linked item is not an object of Formcreator, it will not be imported
+            throw new ImportFailureException('Failed to find a linked object to a target ticket');
+         }
+      }
+
+      // Add or update
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
+      } else {
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+      }
+
+      // add the target to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 
    public function prepareInputForAdd($input) {

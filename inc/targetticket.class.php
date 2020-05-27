@@ -1112,24 +1112,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // add the target to the linker
       $linker->addObject($originalId, $item);
 
-      if (isset($input['_actors'])) {
-         foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId);
-         }
-      }
-
-      if (isset($input['_ticket_relations'])) {
-         foreach ($input['_ticket_relations'] as $ticketLink) {
-            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId);
-         }
-      }
-
-      // Import conditions
-      if (isset($input['_conditions'])) {
-         foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
-         }
-      }
+      $subItems = [
+         '_actors'            => $item->getItem_Actor()->getType(),
+         '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
+         '_conditions'        => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -1146,68 +1134,31 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $target_data = $this->fields;
+      $export = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      unset($target_data[$formFk]);
+      unset($export[$formFk]);
 
       // replace dropdown ids
-      $target_data['_tickettemplate'] = '';
-      if ($target_data['tickettemplates_id'] > 0) {
-         $target_data['_tickettemplate']
+      $export['_tickettemplate'] = '';
+      if ($export['tickettemplates_id'] > 0) {
+         $export['_tickettemplate']
             = Dropdown::getDropdownName('glpi_tickettemplates',
-                                        $target_data['tickettemplates_id']);
+                                        $export['tickettemplates_id']);
       }
-      unset($target_data['tickettemplates_id']);
+      unset($export['tickettemplates_id']);
 
-      // get target actors
-      $target_data['_actors'] = [];
-      $myFk = self::getForeignKeyField();
-      $all_target_actors = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'    => PluginFormcreatorTargetTicket_Actor::getTable(),
-         'WHERE'   => [
-            $myFk => $this->getID()
-         ]
-      ]);
-
-      // Export sub items
-      $form_target_actor = $this->getItem_Actor();
-      foreach ($all_target_actors as $target_actor) {
-         if ($form_target_actor->getFromDB($target_actor['id'])) {
-            $target_data['_actors'][] = $form_target_actor->export($remove_uuid);
-         }
-      }
-
-      // get data from ticket relations
-      $target_data['_ticket_relations'] = [];
-      $target_ticketLink = new PluginFormcreatorItem_TargetTicket();
-      $all_ticketLinks = $DB->request([
-         'SELECT'  => ['id'],
-         'FROM'    => $target_ticketLink::getTable(),
-         'WHERE'   => [
-            'plugin_formcreator_targettickets_id' => $target_data['id']
-         ],
-      ]);
-      foreach ($all_ticketLinks as $ticketLink) {
-         $target_ticketLink->getFromDB($ticketLink['id']);
-         $target_data['_ticket_relations'][] = $target_ticketLink->export($remove_uuid);
-      }
-
-      // get conditions
-      $target_data['_conditions'] = [];
-      $condition = new PluginFormcreatorCondition();
-      $all_conditions = $condition->getConditionsFromItem($this);
-      foreach ($all_conditions as $condition) {
-         $target_data['_conditions'][] = $condition->export($remove_uuid);
-      }
+      $subItems = [
+         '_actors'            => $this->getItem_Actor()->getType(),
+         '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
+         '_conditions'        => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -1215,11 +1166,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          $idToRemove = 'uuid';
       } else {
          // Convert IDs into UUIDs
-         $target_data = $this->convertTags($target_data);
+         $export = $this->convertTags($export);
       }
-      unset($target_data[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $target_data;
+      return $export;
    }
 
    private function saveAssociatedItems($input) {

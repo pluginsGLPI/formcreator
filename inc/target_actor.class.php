@@ -37,6 +37,8 @@ if (!defined('GLPI_ROOT')) {
 
 abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
+
    const ACTOR_TYPE_CREATOR = 1;
    const ACTOR_TYPE_VALIDATOR = 2;
    const ACTOR_TYPE_PERSON = 3;
