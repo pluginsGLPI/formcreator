@@ -42,6 +42,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorForm_Validator extends CommonDBRelation implements
 PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
 
    // From CommonDBRelation
    static public $itemtype_1          = PluginFormcreatorForm::class;
@@ -158,7 +159,7 @@ PluginFormcreatorExportableInterface
    }
 
    /**
-    * Get validators of type $itemtype associated to a form 
+    * Get validators of type $itemtype associated to a form
     *
     * @param PluginFormcreatorForm $form
     * @param string $itemtype

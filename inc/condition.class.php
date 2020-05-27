@@ -35,8 +35,13 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreatorExportableInterface
+class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
+
+   static public $itemtype = 'itemtype';
+   static public $items_id = 'items_id';
+
    const SHOW_RULE_ALWAYS = 1;
    const SHOW_RULE_HIDDEN = 2;
    const SHOW_RULE_SHOWN = 3;

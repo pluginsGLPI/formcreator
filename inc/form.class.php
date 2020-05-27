@@ -41,6 +41,7 @@ PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnable;
+   use PluginFormcreatorExportable;
 
    static $rightname = 'entity';
 
@@ -1627,117 +1628,47 @@ PluginFormcreatorConditionnableInterface
    }
 
    function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $formFk        = PluginFormcreatorForm::getForeignKeyField();
-      $form           = $this->fields;
-      $form_section   = new PluginFormcreatorSection;
-      $form_validator = new PluginFormcreatorForm_Validator;
-      $form_profile   = new PluginFormcreatorForm_Profile;
+      $export = $this->fields;
 
       // replace entity id
-      $form['_entity']
+      $export['_entity']
          = Dropdown::getDropdownName(Entity::getTable(),
-                                       $form['entities_id']);
+                                       $export['entities_id']);
 
       // replace form category id
-      $form['_plugin_formcreator_category'] = '';
-      if ($form['plugin_formcreator_categories_id'] > 0) {
-         $form['_plugin_formcreator_category']
+      $export['_plugin_formcreator_category'] = '';
+      if ($export['plugin_formcreator_categories_id'] > 0) {
+         $export['_plugin_formcreator_category']
             = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
-                                        $form['plugin_formcreator_categories_id']);
+                                        $export['plugin_formcreator_categories_id']);
       }
 
       // remove non needed keys
-      unset($form['plugin_formcreator_categories_id'],
-            $form['entities_id'],
-            $form['usage_count']);
+      unset($export['plugin_formcreator_categories_id'],
+            $export['entities_id'],
+            $export['usage_count']);
 
-      // restrictions
-      $form['_profiles'] = [];
-      $all_profiles = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_profile::getTable(),
-         'WHERE'  => [
-            $formFk => $this->getID()
-         ]
-      ]);
-      foreach ($all_profiles as $profile) {
-         $form_profile->getFromDB($profile['id']);
-         $form['_profiles'][] = $form_profile->export($remove_uuid);
-      }
-
-      // get sections
-      $form['_sections'] = [];
-      $all_sections = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_section::getTable(),
-         'WHERE'  => [
-            $formFk => $this->getID()
-         ]
-      ]);
-      foreach ($all_sections as $section) {
-         $form_section->getFromDB($section['id']);
-         $form['_sections'][] = $form_section->export($remove_uuid);
-      }
-
-      // get submit conditions
-      $form['_conditions'] = [];
-      $condition = new PluginFormcreatorCondition();
-      $all_conditions = $condition->getConditionsFromItem($this);
-      foreach ($all_conditions as $condition) {
-         $form['_conditions'][] = $condition->export($remove_uuid);
-      }
-
-      // get validators
-      $form['_validators'] = [];
-      $all_validators = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_validator::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
-         ]
-      ]);
-      foreach ($all_validators as $validator) {
-         $form_validator->getFromDB($validator['id']);
-         $form['_validators'][] = $form_validator->export($remove_uuid);
-      }
-
-      // get targets
-      $form['_targets'] = [];
-      $all_targets = $this->getTargetsFromForm();
-      foreach ($all_targets as $targetType => $targets) {
-         foreach ($targets as $target) {
-            $form['_targets'][$target->getType()][] = $target->export($remove_uuid);
-         }
-      }
-
-      // get validators
-      $form['_validators'] = [];
-      $all_validators = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_validator::getTable(),
-         'WHERE'  => [
-            $formFk => $this->getID()
-         ]
-      ]);
-      foreach ($all_validators as $validator) {
-         $form_validator->getFromDB($validator['id']);
-         $form['_validators'][] = $form_validator->export($remove_uuid);
-      }
+      $subItems = [
+         '_profiles'   => PluginFormcreatorForm_Profile::class,
+         '_sections'   => PluginFormcreatorSection::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+         '_targets'    => (new self())->getTargetTypes(),
+         '_validators' => PluginFormcreatorForm_Validator::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
       }
-      unset($form[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $form;
+      return $export;
    }
 
    /**
@@ -1890,7 +1821,6 @@ PluginFormcreatorConditionnableInterface
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $item = new self();
       // Find an existing form to update, only if an UUID is available
       $itemId = false;
@@ -1974,127 +1904,14 @@ PluginFormcreatorConditionnableInterface
       // add the form to the linker
       $linker->addObject($originalId, $item);
 
-      // import form_profiles
-      if (isset($input['_profiles'])) {
-         $importedItems = [];
-         foreach ($input['_profiles'] as $formProfile) {
-            $importedItem = PluginFormcreatorForm_Profile::import(
-               $linker,
-               $formProfile,
-               $itemId
-            );
-            if ($importedItem === false) {
-               // Falied to import a form_profile
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-         // Delete all other restrictions
-         if (count($importedItems) > 0) {
-            $FormProfile = new PluginFormcreatorForm_Profile();
-            $FormProfile->deleteByCriteria([
-               $formFk => $itemId,
-               ['NOT' => ['id' => $importedItems]]
-            ]);
-         }
-      }
-
-      // import form's sections
-      if (isset($input['_sections'])) {
-         // sort questions by order
-         usort($input['_sections'], function ($a, $b) {
-            if ($a['order'] == $b['order']) {
-               return 0;
-            }
-            return ($a['order'] < $b['order']) ? -1 : 1;
-         });
-
-         // Import each section
-         $importedItems = [];
-         foreach ($input['_sections'] as $section) {
-            $importedItem = PluginFormcreatorSection::import(
-               $linker,
-               $section,
-               $itemId
-            );
-            if ($importedItem === false) {
-               // Falied to import a section
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-         // Delete all other sections
-         $deleteCriteria = [];
-         if (count($importedItems) > 0) {
-            $deleteCriteria = ['NOT' => ['id' => $importedItems]];
-         }
-         $FormProfile = new PluginFormcreatorSection();
-         $FormProfile->deleteByCriteria([
-            $formFk => $itemId,
-            $deleteCriteria,
-         ]);
-      }
-
-      // Import submit conditions
-      if (isset($input['_conditions'])) {
-         foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
-         }
-      }
-
-      // import form's targets
-      if (isset($input['_targets'])) {
-         foreach ((new self())->getTargetTypes() as $targetType) {
-            // import targets
-            $importedItems = [];
-            if (isset($input['_targets'][$targetType])) {
-               foreach ($input['_targets'][$targetType] as $targetData) {
-                  $importedItem = $targetType::import(
-                     $linker,
-                     $targetData,
-                     $itemId
-                  );
-                  if ($importedItem === false) {
-                     // Falied to import a section
-                     return false;
-                  }
-                  $importedItems[] = $importedItem;
-               }
-            }
-            // delete other targets of the itemtype $targetType
-            if (count($importedItems)) {
-               $target = new $targetType();
-               $target->deleteByCriteria([
-                  $formFk => $itemId,
-                  ['NOT' => ['id' => $importedItems]]
-               ]);
-            }
-         }
-      }
-
-      // Import validators
-      if (isset($input['_validators'])) {
-         $importedItems = [];
-         foreach ($input['_validators'] as $validator) {
-            $importedItem = PluginFormcreatorForm_Validator::import(
-               $linker,
-               $validator,
-               $itemId
-            );
-            if ($importedItem === false) {
-               // Failed to import a section
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-         if (count($importedItems)) {
-            $form_validator = new PluginFormcreatorForm_Validator;
-            $form_validator->deleteByCriteria([
-               $formFk => $itemId,
-               ['NOT' => ['id' => $importedItems]]
-            ]);
-         }
-      }
+      $subItems = [
+         '_profiles'   => PluginFormcreatorForm_Profile::class,
+         '_sections'   => PluginFormcreatorSection::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+         '_targets'    => (new self())->getTargetTypes(),
+         '_validators' => PluginFormcreatorForm_Validator::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -2520,4 +2337,6 @@ PluginFormcreatorConditionnableInterface
 
       return $restriction;
    }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {}
 }

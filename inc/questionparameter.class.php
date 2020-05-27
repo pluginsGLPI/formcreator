@@ -37,6 +37,7 @@ abstract class PluginFormcreatorQuestionParameter
 extends CommonDBChild
 implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
 
    // From CommonDBRelation
    static public $itemtype       = PluginFormcreatorQuestion::class;

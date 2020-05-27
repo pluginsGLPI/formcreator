@@ -36,6 +36,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
+
    static public $itemtype_1 = PluginFormcreatorForm::class;
    static public $items_id_1 = 'plugin_formcreator_forms_id';
    static public $itemtype_2 = Profile::class;
