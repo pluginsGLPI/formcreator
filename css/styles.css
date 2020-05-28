@@ -257,6 +257,7 @@ form.formcreator_form {
 .formcreator_form .description_field {
    border-left: 4px solid #999;
    margin: 10px 15px;
+   word-wrap: break-word;
 }
 
 .formcreator_form .form-group .form_field > input,
