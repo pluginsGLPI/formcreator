@@ -340,6 +340,7 @@ input.submit_button:focus {
 #plugin_formcreator_form .description_field {
    border-left: 4px solid #999;
    margin: 10px 15px;
+   word-wrap: break-word;
 }
 
 #plugin_formcreator_form .form-group .form_field > input,
