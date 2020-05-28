@@ -75,11 +75,34 @@ class PluginFormcreatorLinker
    }
 
    /**
+    * Find an object in the DB
+    * Contrary to getObject(), this method also searches in objects which
+    * are not and will not be imported
+    *
+    * @param string $itemtype itemtype of object to find
+    * @param integer $id ID of object to fiind
+    * @param string $idField fieldname where the ID is searched for
+    * @return void
+    */
+   public function findObject($itemtype, $idField, $id) {
+      if (!strpos($itemtype, 'PluginFormcreator') !== 0) {
+         // The itemtype is not part of Formcreator
+         // Cannot use uuid column
+         $idField = 'id';
+     }
+     $item = new $itemtype();
+     plugin_formcreator_getFromDBByField($item, $idField, $id);
+
+     return $item;
+   }
+
+   /**
     * Store input data of an object to add it later
     *
     * @param string|integer $originalId
     * @param string $itemtype
     * @param array $input
+    * @param integer $relationId
     * @return void
     */
    public function postpone($originalId, $itemtype, array $input, $relationId) {
