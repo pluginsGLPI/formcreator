@@ -1816,9 +1816,10 @@ PluginFormcreatorConditionnableInterface
             }
          } else {
             Session::addMessageAfterRedirect(
-               __("The file does not specifies the schema version. It was probably generated with a version older than 2.10 and import is expected to create incomplete or buggy forms.", 'formcreator'),
-               false, WARNING
+               __("The file does not specifies the schema version. It was probably generated with a version older than 2.10. Giving up.", 'formcreator'),
+               false, ERROR
             );
+            continue;
          }
 
          $success = true;
