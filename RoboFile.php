@@ -733,6 +733,8 @@ class Git
             //$user = $split[0];
             $split = explode(':', $split[1]);
             $url = 'https://' . $split[0] . '/' . $split[1];
+         } else {
+            $url = $line[1];
          }
          $remotes[$line[0]] = $url;
       }
@@ -880,7 +882,7 @@ class ConventionalChangelog
       });
 
       $log = [];
-      if ($b === '"Unreleaased') {
+      if ($b === '"Unreleased') {
          array_unshift($tags, $b);
       }
       $startRef = array_shift($tags);
