@@ -98,15 +98,16 @@ class PluginFormcreatorLinker
       do {
          $postponedCount = 0;
          $postponedAgainCount = 0;
-         foreach ($this->postponed as $itemtype => $postponedItemtypeList) {
+         foreach ($this->postponed as $itemtype => &$postponedItemtypeList) {
             $postponedCount += count($postponedItemtypeList);
-            $newList = $postponedItemtypeList;
+            $newList = [];
             foreach ($postponedItemtypeList as $originalId => $postponedItem) {
                if ($itemtype::import($this, $postponedItem['input'], $postponedItem['relationId']) === false) {
                   $newList[$originalId] = $postponedItem;
                   $postponedAgainCount++;
                }
             }
+            $postponedItemtypeList = $newList;
          }
 
          // If no item was successfully imported,  then the import is in a deadlock and fails
