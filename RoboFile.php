@@ -733,6 +733,8 @@ class Git
             //$user = $split[0];
             $split = explode(':', $split[1]);
             $url = 'https://' . $split[0] . '/' . $split[1];
+         } else {
+            $url = $line[1];
          }
          $remotes[$line[0]] = $url;
       }
@@ -833,7 +835,13 @@ class ConventionalChangelog
       return 0;
    }
 
-
+   /**
+    * Display changelog between tags
+    *
+    * @param string $a
+    * @param string $b
+    * @return void
+    */
    public static function buildLog($a, $b = 'HEAD') {
       if (!Git::tagExists($b)) {
          // $b is not a tag, try to find a matching one
