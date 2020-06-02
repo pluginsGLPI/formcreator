@@ -223,6 +223,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
     */
    public function showConditionsForItem($form, PluginFormcreatorConditionnableInterface $item) {
       $rand = mt_rand();
+      $containerItemtype = $item->getType();
       echo '<tr>';
       echo '<th colspan="4">';
       echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
@@ -238,7 +239,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          $this->getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
-            'on_change'    => 'plugin_formcreator_toggleCondition(this, "' . get_class($item) . '");',
+            'on_change'    => 'plugin_formcreator_toggleCondition(this, "' . $containerItemtype . '");',
             'rand'         => $rand,
          ]
       );
@@ -250,10 +251,10 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       reset($conditions);
       $condition = array_shift($conditions);
       if ($condition !== null) {
-         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0, true);
+         echo $condition->getConditionHtml($form, $containerItemtype, 0, true);
       }
       foreach ($conditions as $condition) {
-         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0);
+         echo $condition->getConditionHtml($form, $containerItemtype, 0);
       }
    }
 
