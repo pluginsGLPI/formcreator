@@ -361,6 +361,14 @@ class PluginFormcreatorInstall {
    protected function deleteNotifications() {
       global $DB;
 
+      $itemtypes = [
+         PluginFormcreatorFormAnswer::class,
+     ];
+
+     if (count($itemtypes) == 0) {
+         return;
+     }
+
       // Delete translations
       $translation = new NotificationTemplateTranslation();
       $translation->deleteByCriteria([
@@ -373,13 +381,13 @@ class PluginFormcreatorInstall {
             ]
          ],
          'WHERE' => [
-            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorFormAnswer::class
+            NotificationTemplate::getTable() . '.itemtype' => $itemtypes
          ]
       ]);
 
       // Delete notification templates
       $template = new NotificationTemplate();
-      $template->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
+      $template->deleteByCriteria(['itemtype' => $itemtypes]);
 
       // Delete notification targets
       $target = new NotificationTarget();
@@ -393,7 +401,7 @@ class PluginFormcreatorInstall {
             ]
          ],
          'WHERE' => [
-            Notification::getTable() . '.itemtype' => PluginFormcreatorFormAnswer::class
+            Notification::getTable() . '.itemtype' => $itemtypes
          ],
       ]);
 
@@ -404,7 +412,7 @@ class PluginFormcreatorInstall {
          'SELECT' => ['id'],
          'FROM'   => $notification::getTable(),
          'WHERE'  => [
-            'itemtype' => 'PluginFormcreatorFormAnswer'
+            'itemtype' => $itemtypes
          ]
       ]);
       foreach ($rows as $row) {
@@ -412,7 +420,7 @@ class PluginFormcreatorInstall {
          $notification->delete($row);
       }
 
-      $notification->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
+      $notification->deleteByCriteria(['itemtype' => $itemtypes]);
    }
 
    protected function deleteTicketRelation() {
