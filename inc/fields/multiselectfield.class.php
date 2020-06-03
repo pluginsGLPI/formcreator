@@ -71,8 +71,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorCheckboxesField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-multiselect-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-multiselect-field.png" title="" />';
    }
 }

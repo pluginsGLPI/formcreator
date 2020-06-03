@@ -44,7 +44,11 @@ define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.5');
 
 define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
 
-define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
+if (method_exists(Plugin::class, 'getWebDir')) {
+   define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
+} else {
+   define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
+}
 
 /**
  * Define the plugin's version and informations
@@ -170,7 +174,7 @@ function plugin_init_formcreator() {
                      && isset($_SESSION['glpiactive_entity'])) {
                   // Interface and active entity are set in session
                   if (plugin_formcreator_replaceHelpdesk()) {
-                     Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+                     Html::redirect(FORMCREATOR_ROOTDOC."/front/wizard.php");
                   }
                }
             }
@@ -184,18 +188,18 @@ function plugin_init_formcreator() {
                   if (isset($decodedUrl['forcetab'])) {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
-                  Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $forceTab);
+                  Html::redirect(FORMCREATOR_ROOTDOC . '/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $forceTab);
                }
             }
 
             $pages = [
-               'front/reservationitem.php' => 'plugins/formcreator/front/reservationitem.php',
-               'front/helpdesk.faq.php' => 'plugins/formcreator/front/wizard.php',
-               'front/ticket.php' => 'plugins/formcreator/front/issue.php',
+               'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
+               'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
+               'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
             ];
             foreach ($pages as $srcPage => $dstPage) {
                if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
-                  Html::redirect($CFG_GLPI["root_doc"] . '/' . $dstPage);
+                  Html::redirect($dstPage);
                   break;
                }
             }
@@ -219,10 +223,10 @@ function plugin_init_formcreator() {
             if (Session::haveRight('entity', UPDATE)) {
                $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
                $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
-               $links['config'] = '/plugins/formcreator/front/form.php';
-               $links['add']    = '/plugins/formcreator/front/form.form.php';
+               $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
+               $links['add']    = FORMCREATOR_ROOTDOC . '/front/form.form.php';
             }
-            $img = '<img  src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+            $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                         title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
             $links[$img] = '/plugins/formcreator/front/formanswer.php';

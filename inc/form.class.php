@@ -94,13 +94,11 @@ PluginFormcreatorConditionnableInterface
    }
 
    static function getMenuContent() {
-      global $CFG_GLPI;
-
       $menu  = parent::getMenuContent();
       $menu['icon'] = 'fas fa-edit';
-      $validation_image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+      $validation_image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                                 title="' . __('Forms waiting for validation', 'formcreator') . '">';
-      $import_image     = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/import.png"
+      $import_image     = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/import.png"
                                 title="' . __('Import forms', 'formcreator') . '">';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
@@ -619,8 +617,6 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function showTargets($ID, $options = []) {
-      global $CFG_GLPI;
-
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
@@ -643,13 +639,13 @@ PluginFormcreatorConditionnableInterface
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/edit.png"
+            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/edit.png"
                      alt="*" title="'.__('Edit').'" ';
             echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/delete.png"
+            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/delete.png"
                      alt="*" title="'.__('Delete', 'formcreator').'"
                      onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
@@ -2047,8 +2043,8 @@ PluginFormcreatorConditionnableInterface
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
          echo '&nbsp;';
-         echo '<a href="' . $CFG_GLPI['root_doc']
-            . '/plugins/formcreator/front/formdisplay.php?id=' . $row['id'] . '"
+         echo '<a href="' . FORMCREATOR_ROOTDOC
+            . '/front/formdisplay.php?id=' . $row['id'] . '"
                title="' . $row['description'] . '">'
             . $row['name']
             . '</a></td>';
