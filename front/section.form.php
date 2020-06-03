@@ -53,7 +53,7 @@ if ($plugin->isActivated('formcreator')) {
 
    } else {
       // Return to form list
-      Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
+      Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
    }
 
    // Or display a "Not found" error

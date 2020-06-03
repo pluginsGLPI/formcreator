@@ -283,8 +283,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return Mixed           Value to be displayed
     */
    public static function getSpecificValueToDisplay($field, $values, array $options = []) {
-      global $CFG_GLPI;
-
       if (!is_array($values)) {
          $language = $_SESSION["glpilanguage"];
          Session::loadLanguage('en_GB');
@@ -294,7 +292,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       switch ($field) {
          case 'status' :
-            $output = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/' . strtolower($values[$field]) . '.png"
+            $output = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/' . strtolower($values[$field]) . '.png"
                          alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
             return $output;
             break;

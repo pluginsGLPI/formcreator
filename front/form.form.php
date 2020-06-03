@@ -44,7 +44,7 @@ if (isset($_POST['add'])) {
    // Add a new Form
    Session::checkRight('entity', UPDATE);
    $newID = $form->add($_POST);
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
+   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.form.php?id=' . $newID);
 
 } else if (isset($_POST['update'])) {
    // Edit an existing form
@@ -78,7 +78,7 @@ if (isset($_POST['add'])) {
 } else if (isset($_POST['delete_target'])) {
    Session::checkRight('entity', UPDATE);
    $form->deleteTarget($_POST);
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
 } else if (isset($_POST['filetype_create'])) {
    $documentType = new DocumentType();
