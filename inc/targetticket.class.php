@@ -488,12 +488,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    public function post_addItem() {
       parent::post_addItem();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    public function post_updateItem($history = 1) {
       parent::post_updateItem();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    /**
