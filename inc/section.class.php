@@ -430,4 +430,15 @@ PluginFormcreatorConditionnableInterface
    public function post_updateItem($history = 1) {
       $this->updateConditions($this->input);
    }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
+   }
 }

@@ -128,24 +128,4 @@ trait PluginFormcreatorExportable
             }
         }
     }
-
-    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-    {
-        if ($this instanceof CommonDBRelation) {
-            $keepCriteria = [
-                'itemtype' => $container->getType(),
-                'items_id' => $container->getID(),
-            ];
-        } else if ($this instanceof CommonDBChild) {
-            $keepCriteria = [
-                $container::getForeignKeyField() => $container->getID(),
-            ];
-        } else {
-            return true;
-        }
-        if (count($exclude) > 0) {
-            $keepCriteria[] = ['NOT' => ['id' => $exclude]];
-        }
-        return $this->deleteByCriteria($keepCriteria);
-    }
 }
