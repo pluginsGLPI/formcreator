@@ -1175,7 +1175,7 @@ PluginFormcreatorConditionnableInterface
          #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
          #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
          {
-            min-width: $width_percent%;
+            min-width: ' . $width_percent . '%;
             width: ' . $width . '%;
          }
          ';

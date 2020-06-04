@@ -225,7 +225,7 @@ input.submit_button:focus {
    padding-left: 0;
 }
 
-#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"],
+#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]),
 #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap {
       vertical-align: top;
    display: inline-block;
