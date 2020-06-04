@@ -111,6 +111,7 @@ trait PluginFormcreatorExportable
             }
         }
     }
+<<<<<<< HEAD
 
     public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
     {
@@ -129,4 +130,6 @@ trait PluginFormcreatorExportable
         }
         return $this->deleteByCriteria($keepCriteria);
     }
+=======
+>>>>>>> b13c01a6... fix(import): cannot factorize deleteObsoleteItems
 }

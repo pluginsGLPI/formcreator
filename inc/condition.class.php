@@ -401,4 +401,16 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
 
       return $html;
    }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         'itemtype' => $container->getType(),
+         'items_id' => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
+   }
 }
