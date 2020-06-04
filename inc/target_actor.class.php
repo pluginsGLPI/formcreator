@@ -231,4 +231,15 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
       return $target_actor;
    }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
+   }
 }
