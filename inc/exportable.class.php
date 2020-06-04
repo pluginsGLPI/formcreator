@@ -111,25 +111,4 @@ trait PluginFormcreatorExportable
             }
         }
     }
-<<<<<<< HEAD
-
-    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-    {
-        if ($this instanceof CommonDBChild) {
-            $keepCriteria = [
-                'itemtype' => $container->getType(),
-                'items_id' => $container->getID(),
-            ];
-        } else {
-            $keepCriteria = [
-                $container::getForeignKeyField() => $container->getID(),
-            ];
-        }
-        if (count($exclude) > 0) {
-            $keepCriteria[] = ['NOT' => ['id' => $exclude]];
-        }
-        return $this->deleteByCriteria($keepCriteria);
-    }
-=======
->>>>>>> b13c01a6... fix(import): cannot factorize deleteObsoleteItems
 }
