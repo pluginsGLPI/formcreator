@@ -130,7 +130,7 @@ class PluginFormcreatorUpgradeTo2_11 {
                ]
             ]
          ],
-         'WHERE' => ['fieldtype' => 'checkboxes', 'multiselect'],
+         'WHERE' => ['fieldtype' => ['checkboxes', 'multiselect']],
       ];
       foreach ($DB->request($request) as $row) {
          $newAnswer = $row['answer'];
