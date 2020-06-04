@@ -129,14 +129,21 @@ PluginFormcreatorConditionnableInterface
       global $DB;
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $DB->update(
-         self::getTable(),
-         new QueryExpression("`order` = `order` - 1"),
-         [
+      $rows = $DB->request([
+         'SELECT' => 'id',
+         'FROM' => self::getTable(),
+         'WHERE' => [
             'order' => ['>', $this->fields['order']],
             $formFk => $this->fields[$formFk]
-         ]
-      );
+         ],
+      ]);
+      $section = new self();
+      foreach($rows as $row) {
+         $section->update([
+            'id' => $row['id'],
+            'order' => $section->fields['order'] - 1,
+         ]);
+      }
 
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $question = new PluginFormcreatorQuestion();
