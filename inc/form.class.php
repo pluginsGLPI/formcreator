@@ -1349,7 +1349,10 @@ PluginFormcreatorConditionnableInterface
     */
    public function post_addItem() {
       $this->updateValidators();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
+      return true;
    }
 
    /**
@@ -1359,7 +1362,9 @@ PluginFormcreatorConditionnableInterface
     */
     public function post_updateItem($history = 1) {
       $this->updateValidators();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    /**
@@ -1852,6 +1857,8 @@ PluginFormcreatorConditionnableInterface
       if (!isset($input['uuid']) && !isset($input['id'])) {
          throw new ImportFailureException('UUID or ID is mandatory');
       }
+
+      $input['_skip_checks'] = true;
 
       $item = new self();
       // Find an existing form to update, only if an UUID is available
