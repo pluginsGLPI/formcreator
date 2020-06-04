@@ -1153,8 +1153,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
       $DB->delete(
-         self::getTable(), [
-            $formAnswerFk,
+         PluginFormcreatorAnswer::getTable(), [
+            $formAnswerFk => $this->getID(),
          ]
       );
 
