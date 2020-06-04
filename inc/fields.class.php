@@ -133,28 +133,31 @@ class PluginFormcreatorFields
        * Get inherit visibility from parent item.
        * @return boolean
        */
-      $getParentVisibility = function() use ($item, $itemtype, &$evalItem, $itemId, $fields) {
+      $getParentVisibility = function() use ($item, &$evalItem, $fields) {
          // Check if item has a condtionnable visibility parent
          if ($item instanceof CommonDBChild) {
             if (is_subclass_of($item::$itemtype, PluginFormcreatorConditionnableInterface::class)) {
                if ($parent = $item->getItem(true, false)) {
+                  $parentItemtype = $parent->getType();
+                  $parentId = $parent->getID();
                   if ($parent->getType() == PluginFormcreatorForm::class) {
                      // the condition for form is only for its submit button. A form is always visible
-                     return true;
+                     $evalItem[$parentItemtype][$parentId] = true;
+                     return $evalItem[$parentItemtype][$parentId];
                   }
                   // Use visibility of the parent item
-                  $evalItem[$itemtype][$itemId] = self::isVisible($parent, $fields);
-                  return $evalItem[$itemtype][$itemId];
+                  $evalItem[$parentItemtype][$parentId] = self::isVisible($parent, $fields);
+                  return $evalItem[$parentItemtype][$parentId];
                }
             }
          }
-         $evalItem[$itemtype][$itemId] = true;
-         return $evalItem[$itemtype][$itemId];
+         return true;
       };
 
       // If the field is always shown
       if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         return $getParentVisibility();
+         $evalItem[$itemtype][$itemId] = $getParentVisibility();
+         return $evalItem[$itemtype][$itemId];
       }
 
       // Get conditions to show or hide the item
@@ -168,9 +171,19 @@ class PluginFormcreatorFields
             'value'    => $condition->fields['show_value']
          ];
       }
-      if ($getParentVisibility() === false || count($conditions) < 1) {
+      if ($getParentVisibility() === false) {
          // No condition defined or parent hidden
+         $evalItem[$itemtype][$itemId] = false;
          return $evalItem[$itemtype][$itemId];
+      }
+      if (count($conditions) < 1) {
+         if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
+            $evalItem[$itemtype][$itemId] = false;
+            return $evalItem[$itemtype][$itemId];
+         } else if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
+            $evalItem[$itemtype][$itemId] = true;
+            return $evalItem[$itemtype][$itemId];
+         }
       }
       $evalItem[$itemtype][$itemId] = null;
 
