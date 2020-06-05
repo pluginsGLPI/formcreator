@@ -182,7 +182,6 @@ implements PluginFormcreatorExportableInterface
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
    {
       $keepCriteria = [
-         self::$itemtype_2 => $container->getType(),
          self::$items_id_2 => $container->getID(),
       ];
       if (count($exclude) > 0) {

@@ -84,7 +84,7 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
    {
       $keepCriteria = [
-         self::$items_id => $container->getID(),
+         static::$items_id => $container->getID(),
       ];
       if (count($exclude) > 0) {
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
