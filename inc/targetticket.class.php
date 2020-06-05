@@ -1209,7 +1209,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          'WHERE'  => [
             'plugin_formcreator_forms_id' => $formId
          ],
-         'ORDER'  => 'order ASC'
       ]);
       foreach ($rows as $row) {
          $target = new self();
