@@ -39,7 +39,7 @@ if (!$plugin->isActivated('formcreator')) {
 }
 
 if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/formlist.php");
+   Html::redirect(FORMCREATOR_ROOTDOC."/front/formlist.php");
 }
 
 PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
