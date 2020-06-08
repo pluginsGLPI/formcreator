@@ -1061,18 +1061,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
       if ($questions !== false) {
-         $questionIdentifier = 'id';
-         if (isset($input['uuid'])) {
-            $questionIdentifier = 'uuid';
-         }
          $taggableFields = $item->getTaggableFields();
-         foreach ($questions as $question) {
-            $id         = $question->getID();
-            $originalId = $question->fields[$questionIdentifier];
+         foreach ($questions as $originalId => $question) {
+            $newId = $question->getID();
             foreach ($taggableFields as $field) {
                $content = $input[$field];
-               $content = str_replace("##question_$originalId##", "##question_$id##", $content);
-               $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+               $content = str_replace("##question_$originalId##", "##question_$newId##", $content);
+               $content = str_replace("##answer_$originalId##", "##answer_$newId##", $content);
                $input[$field] = $content;
             }
          }
@@ -1112,7 +1107,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    protected function getTaggableFields() {
       return [
-         'name',
+         'target_name',
          'content',
       ];
    }
