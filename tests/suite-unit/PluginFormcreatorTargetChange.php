@@ -206,7 +206,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $instance = new PluginFormcreatorTargetChangeDummy();
       $output = $instance->publicGetTaggableFields();
       $this->array($output)->isEqualTo([
-         'name',
+         'target_name',
          'content',
          'impactcontent',
          'controlistcontent',
