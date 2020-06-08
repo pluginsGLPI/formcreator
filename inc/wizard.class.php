@@ -93,20 +93,20 @@ class PluginFormcreatorWizard {
       $activeMenuItem = self::findActiveMenuItem();
       echo '<ul class="plugin_formcreator_services">';
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">';
+      echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/wizard.php' . '">';
       echo '<span class="fa fa-paper-plane fc_list_icon" title="'.__('Seek assistance', 'formcreator').'"></span>';
       echo '<span class="label">'.__('Seek assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php?reset=reset' . '">';
+      echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/issue.php?reset=reset' . '">';
       echo '<span class="fa fa-list fc_list_icon" title="'.__('My requests for assistance', 'formcreator').'"></span>';
       echo '<span class="label">'.__('My requests for assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
          echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-         echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
+         echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/reservationitem.php' . '">';
          echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
          echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
          echo '</a></li>';
@@ -114,7 +114,7 @@ class PluginFormcreatorWizard {
 
       if (RSSFeed::canView()) {
          echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-         echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">';
+         echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/wizardfeeds.php' . '">';
          echo '<span class="fa fa-rss fc_list_icon" title="'.__('Consult feeds', 'formcreator').'"></span>';
          echo '<span class="label">'.__('Consult feeds', 'formcreator').'</span>';
          echo '</a></li>';

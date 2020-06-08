@@ -77,7 +77,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
              method='post' action=' ";
@@ -101,10 +101,10 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo '</td>';
       echo '<td>'.__('Link to the form', 'formcreator').': ';
       if ($item->fields['is_active']) {
-         $form_url = $CFG_GLPI['url_base'].'/plugins/formcreator/front/formdisplay.php?id='.$item->getID();
+         $form_url = FORMCREATOR_ROOTDOC.'/front/formdisplay.php?id='.$item->getID();
          echo '<a href="'.$form_url.'">'.$form_url.'</a>&nbsp;';
          echo '<a href="mailto:?subject='.$item->getName().'&body='.$form_url.'" target="_blank">';
-         echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/email.png" />';
+         echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/email.png" />';
          echo '</a>';
       } else {
          echo __('Please active the form to view the link', 'formcreator');
