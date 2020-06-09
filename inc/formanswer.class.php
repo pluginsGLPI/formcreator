@@ -284,17 +284,20 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public static function getSpecificValueToDisplay($field, $values, array $options = []) {
       if (!is_array($values)) {
-         $language = $_SESSION["glpilanguage"];
-         Session::loadLanguage('en_GB');
-         $elements = self::getStatuses();
-         Session::loadLanguage($language);
-         $values = [$field => $elements[$values]];
+         $values = [$field => $values];
       }
       switch ($field) {
          case 'status' :
-            $output = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/' . strtolower($values[$field]) . '.png"
-                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
-            return $output;
+            if (!isAPI()) {
+               $language = $_SESSION["glpilanguage"];
+               Session::loadLanguage('en_GB');
+               $elements = self::getStatuses();
+               Session::loadLanguage($language);
+               $values = [$field => $elements[$values[$field]]];
+               $output = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/' . strtolower($values[$field]) . '.png"
+                           alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
+               return $output;
+            }
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
