@@ -203,6 +203,25 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
+      // Update links to other questions
+      $questionLinks = [
+         'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+         'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+         'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+         'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+      ];
+      foreach ($questionLinks as $field => $fieldSetting) {
+         if (!is_array($fieldSetting['values'])) {
+            $fieldSetting['values'] = [$fieldSetting['values']];
+         }
+         if (!in_array($input[$field], $fieldSetting['values'])) {
+            continue;
+         }
+         /**@var PluginFormcreatorQuestion $question */
+         $question = $linker->getObject($input[$fieldSetting['field']], PluginFormcreatorQuestion::class);
+         $input[$fieldSetting['field']] = $question->getID();
+      }
+
       // Add or update
       $originalId = $input[$idKey];
       if ($itemId !== false) {

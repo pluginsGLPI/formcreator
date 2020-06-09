@@ -599,6 +599,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'category_question' => '0',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE,
          'associate_question' => '0',
+         'type_rule' => 1,
+         'type_question' => 0,
          'uuid' => $uuid,
       ];
 
