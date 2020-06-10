@@ -28,10 +28,16 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 abstract class PluginFormcreatorQuestionParameter
 extends CommonDBChild
 implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
 
    // From CommonDBRelation
    static public $itemtype       = PluginFormcreatorQuestion::class;
@@ -73,5 +79,16 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       }
 
       return $input;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         static::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

@@ -212,6 +212,10 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
@@ -274,9 +278,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-float-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-float-field.png" title="" />';
    }
 
    public function isVisibleField()

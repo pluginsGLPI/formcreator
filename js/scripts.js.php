@@ -108,7 +108,8 @@ $(function() {
    });
 
    <?php
-   if (Session::getCurrentInterface() == 'helpdesk' && PluginFormcreatorForm::countAvailableForm() > 0) {
+   if (Session::getCurrentInterface() == 'helpdesk'
+       && PluginFormcreatorForm::countAvailableForm() > 0) {
       echo "$('#c_menu #menu1:first-child').after(link);";
    }
    ?>
@@ -194,7 +195,7 @@ function fcInitMultiSelect() {
 }
 
 function showHomepageFormList() {
-   if ($('.homepage_forms_container').length) {
+   if ($('#plugin_formcreatorHomepageForms').length) {
       return;
    }
 
@@ -202,7 +203,7 @@ function showHomepageFormList() {
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
-      if (!$('.homepage_forms_container').length) {
+      if (!$('#plugin_formcreatorHomepageForms').length) {
          $('.central > tbody:first').first().prepend(response);
       }
    });
@@ -320,7 +321,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         var html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -791,11 +792,9 @@ var plugin_formcreator = new function() {
             var sectionId = parseInt(sectionKey);
             if (!isNaN(sectionId)) {
                if (sectionToShow[sectionId]) {
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').css('visibility', '');
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').css('height', '');
+                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').removeAttr('hidden', '');
                } else {
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').css('visibility', 'hidden');
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').css('height', '0');
+                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"][data-id="' + sectionId+ '"]').attr('hidden', '');
                }
             }
          }
@@ -805,11 +804,9 @@ var plugin_formcreator = new function() {
             questionId = parseInt(questionKey.replace('formcreator_field_', ''));
             if (!isNaN(questionId)) {
                if (questionToShow[questionKey]) {
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').css('visibility', '');
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').css('height', '');
+                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').removeAttr('hidden', '');
                } else {
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').css('visibility', 'hidden');
-                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').css('height', '0');
+                  $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').attr('hidden', '');
                }
             }
          }
@@ -943,7 +940,7 @@ var plugin_formcreator = new function() {
          alert(data.responseText);
       }).done(function(data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
-         section.find('[data-field="name"]').text(data);
+         section.find('> [data-field="name"]').text(data);
          modalWindow.dialog('close');
       });
    }
@@ -1649,4 +1646,15 @@ function plugin_formcreator_updateCompositePeerType(rand) {
       $('#plugin_formcreator_link_ticket').hide();
       $('#plugin_formcreator_link_target').show();
    }
+}
+
+function plugin_formcreator_cancelMyTicket(id) {
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/cancelticket.php',
+      data: {id: id},
+      type: "POST",
+      dataType: "json"
+   }).done(function(response) {
+      reloadTab;
+   });
 }

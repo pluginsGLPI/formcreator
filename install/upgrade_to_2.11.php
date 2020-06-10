@@ -72,20 +72,100 @@ class PluginFormcreatorUpgradeTo2_11 {
       foreach ($DB->request($request) as $row) {
          $id = $row['id'];
          $uuid = plugin_formcreator_getUuid();
-         $DB->query("UPDATE INTO `$table`
+         $DB->query("UPDATE `$table`
             SET `uuid`='$uuid'
             WHERE `id`='$id'"
          ) or plugin_formcreator_upgrade_error($migration);
       }
 
-      // conditions on targets
-      $table = 'glpi_plugin_formcreator_targetchanges';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
-
       // Move uuid field at last position
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
+
+      $this->migrateCheckboxesAndMultiselect();
+      $this->migrateRadiosAndSelect();
+   }
+
+   /**
+    * Migrate checkboxes and multiselect data to JSON
+    *
+    * @return void
+    */
+   public function migrateCheckboxesAndMultiselect() {
+      global $DB;
+
+      // Migrate default value
+      $questionTable = 'glpi_plugin_formcreator_questions';
+      $request = [
+         'SELECT' => ['id', 'default_values', 'values'],
+         'FROM' => $questionTable,
+         'WHERE' => ['fieldtype' => ['checkboxes', 'multiselect']],
+      ];
+      foreach($DB->request($request) as $row) {
+         $newValues = $row['values'];
+         if (json_decode($row['values']) === null) {
+            // Seems already migrated, skipping
+            $newValues = json_encode(explode("\r\n", $row['values']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
+            $newValues = Toolbox::addslashes_deep($newValues);
+         }
+         $newDefault = $row['default_values'];
+         if (json_decode($row['default_values']) === null) {
+            // Seems already migrated, skipping
+            $newDefault = json_encode(explode("\r\n", $row['default_values']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
+            $newDefault = Toolbox::addslashes_deep($newDefault);
+         }
+         $DB->update($questionTable, ['values' => $newValues, 'default_values' => $newDefault], ['id' => $row['id']]);
+      }
+
+      // Migrate answers
+      $answerTable = 'glpi_plugin_formcreator_answers';
+      $request = [
+         'SELECT' => ["$answerTable.id", 'answer'],
+         'FROM' => $answerTable,
+         'INNER JOIN' => [
+            $questionTable => [
+               'FKEY' => [
+                  $questionTable => 'id',
+                  $answerTable => 'plugin_formcreator_questions_id',
+               ]
+            ]
+         ],
+         'WHERE' => ['fieldtype' => ['checkboxes', 'multiselect']],
+      ];
+      foreach ($DB->request($request) as $row) {
+         $newAnswer = $row['answer'];
+         if (json_decode($row['answer']) === null) {
+            // Seems already migrated, skipping
+            $newAnswer = json_encode(explode("\r\n", $row['answer']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
+            $newAnswer = Toolbox::addslashes_deep($newAnswer);
+         }
+         $DB->update($answerTable, ['answer' => $newAnswer], ['id' => $row['id']]);
+      }
+   }
+
+   /**
+    * Migrate radios and select data to JSON
+    *
+    * @return void
+    */
+    public function migrateRadiosAndSelect() {
+      global $DB;
+
+      // Migrate default value
+      $questionTable = 'glpi_plugin_formcreator_questions';
+      $request = [
+         'SELECT' => ['id', 'default_values', 'values'],
+         'FROM' => $questionTable,
+         'WHERE' => ['fieldtype' => ['radios', 'select']],
+      ];
+      foreach($DB->request($request) as $row) {
+         $newValues = $row['values'];
+         if (json_decode($row['values']) === null) {
+            // Seems already migrated, skipping
+            $newValues = json_encode(explode("\r\n", $row['values']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
+            $newValues = Toolbox::addslashes_deep($newValues);
+         }
+         $DB->update($questionTable, ['values' => $newValues], ['id' => $row['id']]);
+      }
    }
 }

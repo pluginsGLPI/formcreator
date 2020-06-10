@@ -41,6 +41,7 @@ PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnable;
+   use PluginFormcreatorExportable;
 
    static $rightname = 'entity';
 
@@ -93,12 +94,11 @@ PluginFormcreatorConditionnableInterface
    }
 
    static function getMenuContent() {
-      global $CFG_GLPI;
-
       $menu  = parent::getMenuContent();
-      $validation_image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+      $menu['icon'] = 'fas fa-edit';
+      $validation_image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                                 title="' . __('Forms waiting for validation', 'formcreator') . '">';
-      $import_image     = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/import.png"
+      $import_image     = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/import.png"
                                 title="' . __('Import forms', 'formcreator') . '">';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
@@ -372,6 +372,8 @@ PluginFormcreatorConditionnableInterface
     * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options = []) {
+      global $DB;
+
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
@@ -496,15 +498,25 @@ PluginFormcreatorConditionnableInterface
          "$userTable.id" => new QuerySubquery($subQuery)
       ];
       $formValidator = new PluginFormcreatorForm_Validator();
-      $validatorUsers = $formValidator->getValidatorsForForm($this, User::class);
-      $validatorUser = array_shift($validatorUsers);
+      $selectedValidatorUsers = [];
+      foreach ($formValidator->getValidatorsForForm($this, User::class) as $user) {
+         $selectedValidatorUsers[$user->getID()] = $user->getID();
+      }
+      $users = $DB->request([
+         'SELECT' => ['id', 'name'],
+         'FROM' => User::getTable(),
+         'WHERE' => $usersCondition,
+      ]);
+      $validatorUsers = [];
+      foreach($users as $user) {
+         $validatorUsers[$user['id']] = $user['name'];
+      }
       echo '<div id="validators_users">';
-      Dropdown::show(
-         User::class, [
-            'name' => '_validator_users',
-            'value' => $validatorUser ? $validatorUser->getID() : 0,
-            'condition' => $usersCondition,
-            'multiple'  => true,
+      Dropdown::showFromArray(
+         '_validator_users',
+         $validatorUsers, [
+            'multiple' => true,
+            'values' => $selectedValidatorUsers
          ]
       );
       echo '</div>';
@@ -554,18 +566,29 @@ PluginFormcreatorConditionnableInterface
       $groupsCondition = [
          "$groupTable.id" => new QuerySubquery($subQuery),
       ];
+      $groups = $DB->request([
+         'SELECT' => ['id' ,'name'],
+         'FROM'   => Group::getTable(),
+         'WHERE'  => $groupsCondition,
+      ]);
       $formValidator = new PluginFormcreatorForm_Validator();
-      $validatorgroups = $formValidator->getValidatorsForForm($this, Group::class);
-      $validatorgroup = array_shift($validatorgroups);
+      $selectecValidatorGroups = [];
+      foreach($formValidator->getValidatorsForForm($this, Group::class) as $group) {
+         $selectecValidatorGroups[$group->getID()] = $group->getID();
+      }
+      $validatorGroups = [];
+      foreach($groups as $group) {
+         $validatorGroups[$group['id']] = $group['name'];
+      }
       echo '<div id="validators_groups" style="width: 100%">';
-      Dropdown::show(
-         Group::class, [
-            'name' => '_validator_groups',
-            'value' => $validatorgroup ? $validatorgroup->getID() : 0,
-            'condition' => $groupsCondition
+      Dropdown::showFromArray(
+         '_validator_groups',
+         $validatorGroups,
+         [
+            'multiple' => true,
+            'values'   => $selectecValidatorGroups
          ]
       );
-
       echo '</div>';
 
       $script = '$(document).ready(function() {plugin_formcreator_changeValidators(' . $this->fields["validation_required"] . ');});';
@@ -594,8 +617,6 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function showTargets($ID, $options = []) {
-      global $CFG_GLPI;
-
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
@@ -618,13 +639,13 @@ PluginFormcreatorConditionnableInterface
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/edit.png"
+            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/edit.png"
                      alt="*" title="'.__('Edit').'" ';
             echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/delete.png"
+            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/delete.png"
                      alt="*" title="'.__('Delete', 'formcreator').'"
                      onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
@@ -1150,7 +1171,7 @@ PluginFormcreatorConditionnableInterface
          #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
          #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
          {
-            min-width: $width_percent%;
+            min-width: ' . $width_percent . '%;
             width: ' . $width . '%;
          }
          ';
@@ -1252,19 +1273,17 @@ PluginFormcreatorConditionnableInterface
                break;
          }
 
-         switch (count($result)) {
-            case 1:
-               reset($validators);
-               $validatorId = key($validators);
-               echo Html::hidden('formcreator_validator', ['value' => $validatorId]);
-               break;
-            case 2:
-               $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
-               echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
-               echo '<div class="form-group required liste" id="form-validator">';
-               echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-               Dropdown::showFromArray('formcreator_validator', $validators);
-               break;
+         $resultCount = count($result);
+         if ($resultCount == 1) {
+            reset($validators);
+            $validatorId = key($validators);
+            echo Html::hidden('formcreator_validator', ['value' => $validatorId]);
+         } else if ($resultCount > 1) {
+            $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
+            echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
+            echo '<div class="form-group required liste" id="form-validator">';
+            echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+            Dropdown::showFromArray('formcreator_validator', $validators);
          }
       }
 
@@ -1326,7 +1345,10 @@ PluginFormcreatorConditionnableInterface
     */
    public function post_addItem() {
       $this->updateValidators();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
+      return true;
    }
 
    /**
@@ -1336,7 +1358,9 @@ PluginFormcreatorConditionnableInterface
     */
     public function post_updateItem($history = 1) {
       $this->updateValidators();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    /**
@@ -1636,117 +1660,47 @@ PluginFormcreatorConditionnableInterface
    }
 
    function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $formFk        = PluginFormcreatorForm::getForeignKeyField();
-      $form           = $this->fields;
-      $form_section   = new PluginFormcreatorSection;
-      $form_validator = new PluginFormcreatorForm_Validator;
-      $form_profile   = new PluginFormcreatorForm_Profile;
+      $export = $this->fields;
 
       // replace entity id
-      $form['_entity']
+      $export['_entity']
          = Dropdown::getDropdownName(Entity::getTable(),
-                                       $form['entities_id']);
+                                       $export['entities_id']);
 
       // replace form category id
-      $form['_plugin_formcreator_category'] = '';
-      if ($form['plugin_formcreator_categories_id'] > 0) {
-         $form['_plugin_formcreator_category']
+      $export['_plugin_formcreator_category'] = '';
+      if ($export['plugin_formcreator_categories_id'] > 0) {
+         $export['_plugin_formcreator_category']
             = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
-                                        $form['plugin_formcreator_categories_id']);
+                                        $export['plugin_formcreator_categories_id']);
       }
 
       // remove non needed keys
-      unset($form['plugin_formcreator_categories_id'],
-            $form['entities_id'],
-            $form['usage_count']);
+      unset($export['plugin_formcreator_categories_id'],
+            $export['entities_id'],
+            $export['usage_count']);
 
-      // restrictions
-      $form['_profiles'] = [];
-      $all_profiles = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_profile::getTable(),
-         'WHERE'  => [
-            $formFk => $this->getID()
-         ]
-      ]);
-      foreach ($all_profiles as $profile) {
-         $form_profile->getFromDB($profile['id']);
-         $form['_profiles'][] = $form_profile->export($remove_uuid);
-      }
-
-      // get sections
-      $form['_sections'] = [];
-      $all_sections = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_section::getTable(),
-         'WHERE'  => [
-            $formFk => $this->getID()
-         ]
-      ]);
-      foreach ($all_sections as $section) {
-         $form_section->getFromDB($section['id']);
-         $form['_sections'][] = $form_section->export($remove_uuid);
-      }
-
-      // get submit conditions
-      $form['_conditions'] = [];
-      $condition = new PluginFormcreatorCondition();
-      $all_conditions = $condition->getConditionsFromItem($this);
-      foreach ($all_conditions as $condition) {
-         $form['_conditions'][] = $condition->export($remove_uuid);
-      }
-
-      // get validators
-      $form['_validators'] = [];
-      $all_validators = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_validator::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
-         ]
-      ]);
-      foreach ($all_validators as $validator) {
-         $form_validator->getFromDB($validator['id']);
-         $form['_validators'][] = $form_validator->export($remove_uuid);
-      }
-
-      // get targets
-      $form['_targets'] = [];
-      $all_targets = $this->getTargetsFromForm();
-      foreach ($all_targets as $targetType => $targets) {
-         foreach ($targets as $target) {
-            $form['_targets'][$target->getType()][] = $target->export($remove_uuid);
-         }
-      }
-
-      // get validators
-      $form['_validators'] = [];
-      $all_validators = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_validator::getTable(),
-         'WHERE'  => [
-            $formFk => $this->getID()
-         ]
-      ]);
-      foreach ($all_validators as $validator) {
-         $form_validator->getFromDB($validator['id']);
-         $form['_validators'][] = $form_validator->export($remove_uuid);
-      }
+      $subItems = [
+         '_profiles'   => PluginFormcreatorForm_Profile::class,
+         '_sections'   => PluginFormcreatorSection::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+         '_targets'    => (new self())->getTargetTypes(),
+         '_validators' => PluginFormcreatorForm_Validator::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
       }
-      unset($form[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $form;
+      return $export;
    }
 
    /**
@@ -1863,9 +1817,10 @@ PluginFormcreatorConditionnableInterface
             }
          } else {
             Session::addMessageAfterRedirect(
-               __("The file does not specifies the schema version. It was probably generated with a version older than 2.10 and import is expected to create incomplete or buggy forms.", 'formcreator'),
-               false, WARNING
+               __("The file does not specifies the schema version. It was probably generated with a version older than 2.10. Giving up.", 'formcreator'),
+               false, ERROR
             );
+            continue;
          }
 
          $success = true;
@@ -1899,7 +1854,8 @@ PluginFormcreatorConditionnableInterface
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input['_skip_checks'] = true;
+
       $item = new self();
       // Find an existing form to update, only if an UUID is available
       $itemId = false;
@@ -1983,127 +1939,14 @@ PluginFormcreatorConditionnableInterface
       // add the form to the linker
       $linker->addObject($originalId, $item);
 
-      // import form_profiles
-      if (isset($input['_profiles'])) {
-         $importedItems = [];
-         foreach ($input['_profiles'] as $formProfile) {
-            $importedItem = PluginFormcreatorForm_Profile::import(
-               $linker,
-               $formProfile,
-               $itemId
-            );
-            if ($importedItem === false) {
-               // Falied to import a form_profile
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-         // Delete all other restrictions
-         if (count($importedItems) > 0) {
-            $FormProfile = new PluginFormcreatorForm_Profile();
-            $FormProfile->deleteByCriteria([
-               $formFk => $itemId,
-               ['NOT' => ['id' => $importedItems]]
-            ]);
-         }
-      }
-
-      // import form's sections
-      if (isset($input['_sections'])) {
-         // sort questions by order
-         usort($input['_sections'], function ($a, $b) {
-            if ($a['order'] == $b['order']) {
-               return 0;
-            }
-            return ($a['order'] < $b['order']) ? -1 : 1;
-         });
-
-         // Import each section
-         $importedItems = [];
-         foreach ($input['_sections'] as $section) {
-            $importedItem = PluginFormcreatorSection::import(
-               $linker,
-               $section,
-               $itemId
-            );
-            if ($importedItem === false) {
-               // Falied to import a section
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-         // Delete all other sections
-         $deleteCriteria = [];
-         if (count($importedItems) > 0) {
-            $deleteCriteria = ['NOT' => ['id' => $importedItems]];
-         }
-         $FormProfile = new PluginFormcreatorSection();
-         $FormProfile->deleteByCriteria([
-            $formFk => $itemId,
-            $deleteCriteria,
-         ]);
-      }
-
-      // Import submit conditions
-      if (isset($input['_conditions'])) {
-         foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
-         }
-      }
-
-      // import form's targets
-      if (isset($input['_targets'])) {
-         foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
-            // import targets
-            $importedItems = [];
-            if (isset($input['_targets'][$targetType])) {
-               foreach ($input['_targets'][$targetType] as $targetData) {
-                  $importedItem = $targetType::import(
-                     $linker,
-                     $targetData,
-                     $itemId
-                  );
-                  if ($importedItem === false) {
-                     // Falied to import a section
-                     return false;
-                  }
-                  $importedItems[] = $importedItem;
-               }
-            }
-            // delete other targets of the itemtype $targetType
-            if (count($importedItems)) {
-               $target = new $targetType();
-               $target->deleteByCriteria([
-                  $formFk => $itemId,
-                  ['NOT' => ['id' => $importedItems]]
-               ]);
-            }
-         }
-      }
-
-      // Import validators
-      if (isset($input['_validators'])) {
-         $importedItems = [];
-         foreach ($input['_validators'] as $validator) {
-            $importedItem = PluginFormcreatorForm_Validator::import(
-               $linker,
-               $validator,
-               $itemId
-            );
-            if ($importedItem === false) {
-               // Failed to import a section
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-         if (count($importedItems)) {
-            $form_validator = new PluginFormcreatorForm_Validator;
-            $form_validator->deleteByCriteria([
-               $formFk => $itemId,
-               ['NOT' => ['id' => $importedItems]]
-            ]);
-         }
-      }
+      $subItems = [
+         '_profiles'   => PluginFormcreatorForm_Profile::class,
+         '_sections'   => PluginFormcreatorSection::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+         '_targets'    => (new self())->getTargetTypes(),
+         '_validators' => PluginFormcreatorForm_Validator::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -2200,8 +2043,8 @@ PluginFormcreatorConditionnableInterface
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
          echo '&nbsp;';
-         echo '<a href="' . $CFG_GLPI['root_doc']
-            . '/plugins/formcreator/front/formdisplay.php?id=' . $row['id'] . '"
+         echo '<a href="' . FORMCREATOR_ROOTDOC
+            . '/front/formdisplay.php?id=' . $row['id'] . '"
                title="' . $row['description'] . '">'
             . $row['name']
             . '</a></td>';
@@ -2228,7 +2071,7 @@ PluginFormcreatorConditionnableInterface
       </script>';
    }
 
-   static function getInterface() {
+   public static function getInterface() {
       if (Session::getCurrentInterface() == 'helpdesk') {
          if (plugin_formcreator_replaceHelpdesk()) {
             return 'servicecatalog';
@@ -2242,7 +2085,7 @@ PluginFormcreatorConditionnableInterface
       return 'public';
    }
 
-   static function header() {
+   public static function header() {
       switch (self::getInterface()) {
          case "servicecatalog";
             return PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
@@ -2266,7 +2109,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @return string HTML to show a footer
     */
-   static function footer() {
+   public static function footer() {
       switch (self::getInterface()) {
          case "servicecatalog";
             return PluginFormcreatorWizard::footer();
@@ -2415,7 +2258,7 @@ PluginFormcreatorConditionnableInterface
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
+      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" required="required"/></td>';
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $targetTypes = [];
@@ -2554,4 +2397,6 @@ PluginFormcreatorConditionnableInterface
 
       return $restriction;
    }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {}
 }

@@ -62,13 +62,13 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       $optgroup = Dropdown::getStandardDropdownItemTypes();
-      array_unshift($optgroup, '---');
       $field = '<div id="dropdown_values_field">';
       $field .= Dropdown::showFromArray('dropdown_values', $optgroup, [
-         'value'     => $itemtype,
-         'rand'      => $rand,
-         'on_change' => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
-         'display'   => false,
+         'value'               => $itemtype,
+         'rand'                => $rand,
+         'on_change'           => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
+         'display_emptychoice' => true,
+         'display'             => false,
       ]);
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
@@ -96,7 +96,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'request'  => __('Request categories', 'formcreator'),
          'incident' => __('Incident categories', 'formcreator'),
          'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
-         'change'   => __('Change'),
+         'change'   => __('Change categories', 'formcreator'),
          'all'      => __('All'),
       ];
       $additions .= dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
@@ -153,7 +153,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
       if (!empty($this->question->fields['values'])) {
          $dparams = ['name'     => $fieldName,
                      'value'    => $this->value,
@@ -265,6 +264,17 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
          $dparams['condition'] = $dparams_cond_crit;
 
+         $dparams['display_emptychoice'] = false;
+         if ($itemtype != Entity::class) {
+            $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
+         } else {
+            if ($this->question->fields['show_empty'] !== '0') {
+               $dparams['toadd'] = [
+                  -1 => Dropdown::EMPTY_VALUE,
+               ];
+            }
+         }
+
          $emptyItem = new $itemtype();
          $emptyItem->getEmpty();
          $dparams['displaywith'] = [];
@@ -274,23 +284,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          if (isset($emptyItem->fields['otherserial'])) {
             $dparams['displaywith'][] = 'otherserial';
          }
-         if (count($dparams['displaywith']) > 0) {
-            $dparams['itemtype'] = $itemtype;
-            $dparams['table'] = $itemtype::getTable();
-            $dparams['multiple'] = false;
-            $dparams['valuename'] = Dropdown::EMPTY_VALUE;
-            if ($dparams['value'] != 0) {
-               $dparams['valuename'] = $dparams['value'];
-            }
-            $html .= Html::jsAjaxDropdown(
-               $fieldName,
-               $domId,
-               $CFG_GLPI['root_doc']."/ajax/getDropdownFindNum.php",
-               $dparams
-            );
-         } else {
-            $html .= $itemtype::dropdown($dparams);
-         }
+         $itemtype::dropdown($dparams);
       }
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
@@ -419,6 +413,10 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       unset($input['dropdown_default_value']);
 
       return $input;
+   }
+
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
    public static function canRequire() {

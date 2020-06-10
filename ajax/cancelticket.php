@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2020 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -29,22 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
 include ('../../../inc/includes.php');
-
-// Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!isset($_POST['id'])) {
+    http_response_code(400);
+    exit;
 }
-
-if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
-}
-
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-$form = new PluginFormcreatorForm();
-$form->showServiceCatalog();
-
-PluginFormcreatorWizard::footer();
+$ticketId = (int) $_POST['id'];
+PluginFormcreatorCommon::cancelMyTicket($ticketId);

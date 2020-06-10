@@ -274,7 +274,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $instance = new PluginFormcreatorTargetTicketDummy();
       $output = $instance->publicGetTaggableFields();
       $this->array($output)->isEqualTo([
-         'name',
+         'target_name',
          'content',
       ]);
    }
@@ -748,6 +748,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          '_tickettemplate',
          '_actors',
          '_ticket_relations',
+         'conditions',
       ];
 
       $this->array($output)

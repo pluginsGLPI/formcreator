@@ -36,6 +36,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
+
    static public $itemtype_1 = PluginFormcreatorForm::class;
    static public $items_id_1 = 'plugin_formcreator_forms_id';
    static public $itemtype_2 = Profile::class;
@@ -102,7 +104,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          $form_url = $CFG_GLPI['url_base'].'/plugins/formcreator/front/formdisplay.php?id='.$item->getID();
          echo '<a href="'.$form_url.'">'.$form_url.'</a>&nbsp;';
          echo '<a href="mailto:?subject='.$item->getName().'&body='.$form_url.'" target="_blank">';
-         echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/email.png" />';
+         echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/email.png" />';
          echo '</a>';
       } else {
          echo __('Please active the form to view the link', 'formcreator');
@@ -244,5 +246,16 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       unset($form_profile[$idToRemove]);
 
       return $form_profile;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id_1 => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

@@ -21,30 +21,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2020 Teclib'
+ *
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-
-global $CFG_GLPI;
-include ('../../../inc/includes.php');
-
-// Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+class PluginFormcreatorUpgradeTo2_8_1 {
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      $table = 'glpi_plugin_formcreator_issues';
+      $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
+   }
 }
-
-if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
-}
-
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-$form = new PluginFormcreatorForm();
-$form->showServiceCatalog();
-
-PluginFormcreatorWizard::footer();

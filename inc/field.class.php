@@ -224,6 +224,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
          if ($parameter->isNewItem()) {
             // In case of the parameter vanished in DB, just recreate it
+            unset($parameterInput['id']);
             $parameter->add($parameterInput);
          } else {
             $parameterInput['id'] = $parameter->getID();

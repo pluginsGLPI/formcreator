@@ -29,7 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use tests\units\PluginFormcreatorForm_Validator as TestsPluginFormcreatorForm_Validator;
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 
 if (!defined('GLPI_ROOT')) {
@@ -42,6 +41,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorForm_Validator extends CommonDBRelation implements
 PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
 
    // From CommonDBRelation
    static public $itemtype_1          = PluginFormcreatorForm::class;
@@ -158,7 +158,7 @@ PluginFormcreatorExportableInterface
    }
 
    /**
-    * Get validators of type $itemtype associated to a form 
+    * Get validators of type $itemtype associated to a form
     *
     * @param PluginFormcreatorForm $form
     * @param string $itemtype
@@ -202,5 +202,16 @@ PluginFormcreatorExportableInterface
       }
 
       return $result;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id_1 => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

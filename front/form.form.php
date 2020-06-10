@@ -44,7 +44,7 @@ if (isset($_POST['add'])) {
    // Add a new Form
    Session::checkRight('entity', UPDATE);
    $newID = $form->add($_POST);
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
+   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.form.php?id=' . $newID);
 
 } else if (isset($_POST['update'])) {
    // Edit an existing form
@@ -78,7 +78,7 @@ if (isset($_POST['add'])) {
 } else if (isset($_POST['delete_target'])) {
    Session::checkRight('entity', UPDATE);
    $form->deleteTarget($_POST);
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
 } else if (isset($_POST['filetype_create'])) {
    $documentType = new DocumentType();
@@ -142,21 +142,11 @@ if (isset($_POST['add'])) {
 
       // redirect to created item
       if ($_SESSION['glpibackcreated']) {
-         $item_ticket = new Item_Ticket;
-         $tickets = $item_ticket->find([
-            'itemtype' => PluginFormcreatorFormAnswer::class,
-            'items_id' => $formAnswer->getID(),
-         ]);
-
-         if (count($tickets) === 1) {
-            $current_ticket = array_pop($tickets);
-            $tickets_id = $current_ticket['tickets_id'];
-            Html::redirect(Ticket::getFormURLWithID($tickets_id));
+         if (count($formAnswer->targetList) == 1) {
+            $target = current($formAnswer->targetList);
+            Html::redirect($target->getFormURLWithID($target->getID()));
          }
-
-         if (count($tickets) > 1) {
-            Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
-         }
+         Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
       }
 
       if (plugin_formcreator_replaceHelpdesk()) {

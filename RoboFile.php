@@ -149,14 +149,15 @@ class RoboFile extends RoboFilePlugin
 
       $this->taskGitStack()
          ->stopOnFail()
-         ->add('data/font-awesome.php')
-         ->commit('docs(changelog): update changelog')
+         ->add('data/font-awesome_.php')
+         ->commit('build(form): update font awesome data')
          ->run();
 
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
-
-      $this->updateChangelog();
+      if ($release == 'release') {
+         $this->updateChangelog();
+      }
 
       $diff = $this->gitDiff(['package.json']);
       $diff = implode("\n", $diff);

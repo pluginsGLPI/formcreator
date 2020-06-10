@@ -57,7 +57,7 @@ if (isset($_POST['save_formanswer'])) {
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {
-      Html::redirect($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
+      Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
    }
 
    $issue->getFromDBByCrit([

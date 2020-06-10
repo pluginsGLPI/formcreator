@@ -113,6 +113,10 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorFloatField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
@@ -133,8 +137,6 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorFloatField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-integer-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-integer-field.png" title="" />';
    }
 }

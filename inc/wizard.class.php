@@ -43,7 +43,7 @@ class PluginFormcreatorWizard {
    const MENU_HELP         = 6;
 
    public static function header($title) {
-      global $CFG_GLPI, $HEADER_LOADED, $DB;
+      global $CFG_GLPI, $HEADER_LOADED;
 
       // Print a nice HTML-head for help page
       if ($HEADER_LOADED) {
@@ -105,18 +105,11 @@ class PluginFormcreatorWizard {
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
-         $found_available_res = $DB->request([
-            'COUNT' => 'cpt',
-            'FROM'  => ReservationItem::getTable(),
-            'WHERE' => getEntitiesRestrictCriteria(ReservationItem::getTable(), 'entities_id'),
-         ])->next();
-         if ($found_available_res['cpt'] > 0) {
-            echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-            echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
-            echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
-            echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
-            echo '</a></li>';
-         }
+         echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
+         echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
+         echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
+         echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
+         echo '</a></li>';
       }
 
       if (RSSFeed::canView()) {
@@ -127,42 +120,26 @@ class PluginFormcreatorWizard {
          echo '</a></li>';
       }
 
-      $query = "SELECT `glpi_savedsearches`.*,
-                       `glpi_savedsearches_users`.`id` AS IS_DEFAULT
-                FROM `glpi_savedsearches`
-                LEFT JOIN `glpi_savedsearches_users`
-                  ON (`glpi_savedsearches`.`itemtype` = `glpi_savedsearches_users`.`itemtype`
-                      AND `glpi_savedsearches`.`id` = `glpi_savedsearches_users`.`savedsearches_id`
-                      AND `glpi_savedsearches_users`.`users_id` = '".Session::getLoginUserID()."')
-                WHERE `glpi_savedsearches`.`is_private`='1'
-                  AND `glpi_savedsearches`.`users_id`='".Session::getLoginUserID()."'
-                  OR `glpi_savedsearches`.`is_private`='0' ".
-                     getEntitiesRestrictRequest("AND", "glpi_savedsearches", "", "", true);
-
-      if ($result = $DB->query($query)) {
-         if ($DB->numrows($result)) {
-            Ajax::createSlidePanel(
-                  'showSavedSearches',
-                  [
-                     'title'     => __('Saved searches'),
-                     'url'       => $CFG_GLPI['root_doc'] . '/ajax/savedsearch.php?action=show',
-                     'icon'      => '/pics/menu_config.png',
-                     'icon_url'  => SavedSearch::getSearchURL(),
-                     'icon_txt'  => __('Manage saved searches')
-                  ]
-                  );
-            echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-            Ajax::createIframeModalWindow('loadbookmark',
-                  $CFG_GLPI["root_doc"]."/front/savedsearch.php?action=load",
-                  ['title'         => __('Saved searches'),
-                   'reloadonclose' => true]);
-            echo '<a href="#" id="showSavedSearchesLink">';
-            echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
-            echo '<span class="label">'.__('Saved searches').'</span>';
-            echo '</a>';
-            echo '</li>';
-         }
-      }
+      Ajax::createSlidePanel(
+         'showSavedSearches',
+         [
+            'title'     => __('Saved searches'),
+            'url'       => $CFG_GLPI['root_doc'] . '/ajax/savedsearch.php?action=show',
+            'icon'      => '/pics/menu_config.png',
+            'icon_url'  => SavedSearch::getSearchURL(),
+            'icon_txt'  => __('Manage saved searches')
+         ]
+      );
+      echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
+      Ajax::createIframeModalWindow('loadbookmark',
+            $CFG_GLPI["root_doc"]."/front/savedsearch.php?action=load",
+            ['title'         => __('Saved searches'),
+            'reloadonclose' => true]);
+      echo '<a href="#" id="showSavedSearchesLink">';
+      echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
+      echo '<span class="label">'.__('Saved searches').'</span>';
+      echo '</a>';
+      echo '</li>';
 
       if (isset($CFG_GLPI["helpdesk_doc_url"]) && !empty($CFG_GLPI["helpdesk_doc_url"])) {
          echo '<li class="' . ($activeMenuItem == self::MENU_HELP ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_helpIcon">';
@@ -240,8 +217,9 @@ class PluginFormcreatorWizard {
       echo "<span id='formcreator_servicecatalogue_ticket_summary'>";
       $status_count = PluginFormcreatorIssue::getTicketSummary();
 
+      $link = PluginFormcreatorIssue::getSearchURL();
       echo "<span class='status status_incoming'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+            <a href='".$link."?".
                      Toolbox::append_params(PluginFormcreatorIssue::getProcessingCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count[Ticket::INCOMING]."
@@ -251,7 +229,7 @@ class PluginFormcreatorWizard {
             </span>";
 
       echo "<span class='status status_waiting'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+            <a href='".$link."?".
                      Toolbox::append_params(PluginFormcreatorIssue::getWaitingCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count[Ticket::WAITING]."
@@ -261,7 +239,7 @@ class PluginFormcreatorWizard {
             </span>";
 
       echo "<span class='status status_validate'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+            <a href='".$link."?".
                      Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count['to_validate']."
@@ -271,7 +249,7 @@ class PluginFormcreatorWizard {
             </span>";
 
       echo "<span class='status status_solved'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+            <a href='".$link."?".
                      Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count[Ticket::SOLVED]."

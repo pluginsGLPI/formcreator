@@ -87,7 +87,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    protected function getTaggableFields() {
       return [
-         'name',
+         'target_name',
          'content',
          'impactcontent',
          'controlistcontent',
@@ -102,36 +102,21 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $target_data = $this->fields;
+      $export = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      unset($target_data[$formFk]);
+      unset($export[$formFk]);
 
-      // get target actors
-      $target_data['_actors'] = [];
-      $myFk = self::getForeignKeyField();
-      $all_target_actors = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'    => PluginFormcreatorTargetChange_Actor::getTable(),
-         'WHERE'   => [
-            $myFk => $this->getID()
-         ]
-      ]);
-
-      // Export sub items
-      $form_target_actor = $this->getItem_Actor();
-      foreach ($all_target_actors as $target_actor) {
-         if ($form_target_actor->getFromDB($target_actor['id'])) {
-            $target_data['_actors'][] = $form_target_actor->export($remove_uuid);
-         }
-      }
+      $subItems = [
+         '_actors'     => $this->getItem_Actor()->getType(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -139,11 +124,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $idToRemove = 'uuid';
       } else {
          // Convert IDs into UUIDs
-         $target_data = $this->convertTags($target_data);
+         $export = $this->convertTags($export);
       }
-      unset($target_data[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $target_data;
+      return $export;
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
@@ -156,6 +141,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
       $input['_skip_checks'] = true;
+      $input['_skip_create_actors'] = true;
 
       $item = new self();
       // Find an existing target to update, only if an UUID is available
@@ -180,18 +166,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
       if ($questions !== false) {
-         $questionIdentifier = 'id';
-         if (isset($input['uuid'])) {
-            $questionIdentifier = 'uuid';
-         }
          $taggableFields = $item->getTaggableFields();
-         foreach ($questions as $question) {
-            $id         = $question['id'];
-            $originalId = $question[$questionIdentifier];
+         foreach ($questions as $originalId => $question) {
+            $newId = $question->getID();
             foreach ($taggableFields as $field) {
                $content = $input[$field];
-               $content = str_replace("##question_$originalId##", "##question_$id##", $content);
-               $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+               $content = str_replace("##question_$originalId##", "##question_$newId##", $content);
+               $content = str_replace("##answer_$originalId##", "##answer_$newId##", $content);
                $input[$field] = $content;
             }
          }
@@ -219,11 +200,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // add the target to the linker
       $linker->addObject($originalId, $item);
 
-      if (isset($input['_actors'])) {
-         foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetChange_Actor::import($linker, $actor, $itemId);
-         }
-      }
+      $subItems = [
+         '_actors'     => $item->getItem_Actor()->getType(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -327,7 +308,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td colspan="3">';
       echo Html::textarea([
          'name'   => 'checklistcontent',
-         'vamue'  => $this->fields['checklistcontent'],
+         'value'  => $this->fields['checklistcontent'],
          'display' => false,
       ]);
       echo '</td>';
@@ -355,7 +336,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       //  Tags
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($form, $rand);
-
 
       // -------------------------------------------------------------------------------------------
       //  Conditions to generate the target
@@ -510,12 +490,16 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    public function post_addItem() {
       parent::post_addItem();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    public function post_updateItem($history = 1) {
       parent::post_updateItem();
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    /**
@@ -662,7 +646,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          'WHERE'  => [
             'plugin_formcreator_forms_id' => $formId
          ],
-         'ORDER'  => 'order ASC'
       ]);
       foreach ($rows as $row) {
          $target = new self();

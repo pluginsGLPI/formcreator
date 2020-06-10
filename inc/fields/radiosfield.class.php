@@ -108,17 +108,23 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             if ((trim($value) != '')) {
                $i++;
                $checked = ($this->value == $value) ? ['checked' => ''] : [];
-               $html .= '<p>';
+               $html .= '<div class="radio">';
+               $html .= '<span class="form-group-radio">';
                $html .= Html::input($fieldName, [
                   'type'    => 'radio',
                   'class'   => 'form-control',
                   'id'      => $domId . '_' . $i,
                   'value'   => $value
                ] + $checked);
-               $html .= '<label for="' . $domId . '_' . $i . '">';
+               $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+               $html .= '<span class="box"></span>';
+               $html .= '<span class="check"></span>';
+               $html .= '</label>';
+               $html .= '</span>';
+               $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
                $html .= $value;
                $html .= '</label>';
-               $html .= '</p>';
+               $html .= '</div>';
             }
          }
          $html .= '</div>';
@@ -148,6 +154,10 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       $input['default_values'] = trim($input['default_values']);
 
       return $input;
+   }
+
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {

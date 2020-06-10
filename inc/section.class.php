@@ -41,6 +41,7 @@ PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnable;
+   use PluginFormcreatorExportable;
 
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
@@ -147,14 +148,21 @@ PluginFormcreatorConditionnableInterface
       global $DB;
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $DB->update(
-         self::getTable(),
-         new QueryExpression("`order` = `order` - 1"),
-         [
+      $rows = $DB->request([
+         'SELECT' => 'id',
+         'FROM' => self::getTable(),
+         'WHERE' => [
             'order' => ['>', $this->fields['order']],
             $formFk => $this->fields[$formFk]
-         ]
-      );
+         ],
+      ]);
+      $section = new self();
+      foreach($rows as $row) {
+         $section->update([
+            'id' => $row['id'],
+            'order' => $section->fields['order'] - 1,
+         ]);
+      }
 
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $question = new PluginFormcreatorQuestion();
@@ -299,92 +307,40 @@ PluginFormcreatorConditionnableInterface
       // add the section to the linker
       $linker->addObject($originalId, $item);
 
-      // Import each question
-      $importedItems = [];
-      if (isset($input['_questions'])) {
-         // sort questions by order
-         usort($input['_questions'], function ($a, $b) {
-            if ($a['row'] == $b['row']) {
-               return 0;
-            }
-            return ($a['row'] < $b['row']) ? -1 : 1;
-         });
-
-         foreach ($input['_questions'] as $question) {
-            $importedItem = PluginFormcreatorQuestion::import($linker, $question, $itemId);
-            if ($importedItem === false) {
-               // Falied to import a question
-               return false;
-            }
-            $importedItems[] = $importedItem;
-         }
-      }
-      // Delete all other questions
-      $deleteCriteria = [];
-      if (count($importedItems) > 0) {
-         $deleteCriteria = ['NOT' => ['id' => $importedItems]];
-      }
-      $FormProfile = new PluginFormcreatorSection();
-      $FormProfile->deleteByCriteria([
-         $formFk => $itemId,
-         $deleteCriteria,
-      ]);
-
-      // Import conditions
-      if (isset($input['_conditions'])) {
-         foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
-         }
-      }
+      $subItems = [
+         '_questions'   => PluginFormcreatorQuestion::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
 
    public function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $section = $this->fields;
+      $export = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      unset($section[$formFk]);
+      unset($export[$formFk]);
 
-      // get questions
-      $form_question = new PluginFormcreatorQuestion;
-      $section['_questions'] = [];
-      $all_questions = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_question::getTable(),
-         'WHERE'  => [
-            self::getForeignKeyField() => $this->getID()
-         ]
-      ]);
-      foreach ($all_questions as $question) {
-         if ($form_question->getFromDB($question['id'])) {
-            $section['_questions'][] = $form_question->export($remove_uuid);
-         }
-      }
-
-      // get section conditions
-      $section['_conditions'] = [];
-      $condition = new PluginFormcreatorCondition();
-      $all_conditions = $condition->getConditionsFromItem($this);
-      foreach ($all_conditions as $condition) {
-         $section['_conditions'][] = $condition->export($remove_uuid);
-      }
+      $subItems = [
+         '_questions'   => PluginFormcreatorQuestion::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
       }
-      unset($section[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $section;
+      return $export;
    }
 
    /**
@@ -438,7 +394,7 @@ PluginFormcreatorConditionnableInterface
       echo '<tr>';
       echo '<td width="20%">'.__('Title').' <span style="color:red;">*</span></td>';
       echo '<td colspan="3">';
-      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'value' => $this->fields['name']]);
+      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'required' => 'required', 'value' => $this->fields['name']]);
       echo '</td>';
       echo '</tr>';
 
@@ -539,7 +495,7 @@ PluginFormcreatorConditionnableInterface
       $onclick = 'onclick="plugin_formcreator.showSectionForm(' . $formId . ', ' . $sectionId . ')"';
       $html .= '<li class="plugin_formcreator_section"'
       . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
-      . '* data-id="' . $sectionId . '"'
+      . ' data-id="' . $sectionId . '"'
       . '>';
 
       // section name
@@ -624,5 +580,16 @@ PluginFormcreatorConditionnableInterface
       );
 
       return ($count < 1);
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

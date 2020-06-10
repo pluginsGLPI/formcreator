@@ -121,6 +121,10 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return true;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function equals($value) {
       return $this->value == $value;
    }

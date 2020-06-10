@@ -42,5 +42,5 @@ if (!$plugin->isActivated('formcreator')) {
 
 
 // Return to form list
-Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
+Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
 

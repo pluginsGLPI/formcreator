@@ -41,6 +41,7 @@ PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnable;
+   use PluginFormcreatorExportable;
 
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
@@ -228,7 +229,7 @@ PluginFormcreatorConditionnableInterface
       }
 
       $key = 'formcreator_field_' . $this->getID();
-      if (isset($value[$key])) {
+      if ($field->hasInput($value)) {
          $field->deserializeValue($value[$key]);
       } else {
          $field->deserializeValue($this->fields['default_values']);
@@ -584,13 +585,17 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function post_addItem() {
-      $this->updateConditions($this->input);
-      $this->updateParameters($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+         $this->updateParameters($this->input);
+      }
    }
 
    public function post_updateItem($history = 1) {
-      $this->updateConditions($this->input);
-      $this->updateParameters($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+         $this->updateParameters($this->input);
+      }
    }
 
    /**
@@ -1195,5 +1200,16 @@ PluginFormcreatorConditionnableInterface
       if (isAPI()) {
          $this->fields += self::getFullData(null, $this->fields['id']);
       }
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }
