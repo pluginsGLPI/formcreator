@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
+ *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -28,37 +29,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-
-include ('../../../inc/includes.php');
-
-Session::checkRight('entity', UPDATE);
-
-if (!isset($_REQUEST['dropdown_itemtype'])
-    || $_REQUEST['dropdown_itemtype'] == '0'
-    || !class_exists($_REQUEST['dropdown_itemtype'])) {
-   Dropdown::showFromArray(
-      'dropdown_default_value',
-      [], [
-         'display_emptychoice'   => true
-      ]
-   );
-} else {
-   $itemtype = $_REQUEST['dropdown_itemtype'];
-   $question = new PluginFormcreatorQuestion();
-   $question->getFromDB((int) $_REQUEST['id']);
-   $defaultValue = isset($question->fields['default_values'])
-                   ? $question->fields['default_values']
-                   : 0;
-
-   $options = [
-      'name'  => 'dropdown_default_value',
-      'rand'  => mt_rand(),
-      'value' => $defaultValue,
-   ];
-   if ($itemtype == Entity::class) {
-      $options['toadd'] = [
-         -1 => Dropdown::EMPTY_VALUE,
-      ];
+class PluginFormcreatorUpgradeTo2_8_1 {
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      $table = 'glpi_plugin_formcreator_issues';
+      $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
    }
-   Dropdown::show($itemtype, $options);
 }

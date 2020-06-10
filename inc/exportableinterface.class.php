@@ -53,4 +53,15 @@ interface PluginFormcreatorExportableInterface
     * @return integer|false the id of the imported item or false on error
     */
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0);
+
+   /**
+    * Delete all items belonging to a container and not in the list of items to keep
+    *
+    * Used when importing objects. Items not matching imported objects are deleted
+    * @param CommonDBTM $container instance of the object containing items of
+    * @param array $exclude list of ID to keep
+    *
+    * @return boolean
+    */
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude);
 }

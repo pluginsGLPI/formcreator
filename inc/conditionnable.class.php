@@ -29,6 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 trait PluginFormcreatorConditionnable
 {
    public function updateConditions($input) {
@@ -37,6 +41,7 @@ trait PluginFormcreatorConditionnable
       }
       $showRule = $input['show_rule'];
       if ($showRule == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         $this->deleteConditions();
          return false;
       }
 
@@ -45,6 +50,12 @@ trait PluginFormcreatorConditionnable
       // All arrays of condition exists
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
+         $this->deleteConditions();
+         $this->update([
+            'id'           => $this->fields['id'],
+            '_skip_checks' => true,
+            'show_rule'    => PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         ]);
          return  false;
       }
 
@@ -63,11 +74,7 @@ trait PluginFormcreatorConditionnable
       $itemId = $this->getID();
 
       // Delete all existing conditions for the question
-      $condition = new PluginFormcreatorCondition();
-      $condition->deleteByCriteria([
-         'itemtype' => $this->getType(),
-         'items_id' => $this->getID(),
-      ]);
+      $this->deleteConditions();
 
       // Arrays all have the same count and have at least one item
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
@@ -94,5 +101,13 @@ trait PluginFormcreatorConditionnable
       }
 
       return true;
+   }
+
+   private function deleteConditions() {
+      $condition = new PluginFormcreatorCondition();
+      $condition->deleteByCriteria([
+         'itemtype' => $this->getType(),
+         'items_id' => $this->getID(),
+      ]);
    }
 }

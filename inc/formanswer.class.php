@@ -39,6 +39,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $usenotepad = true;
    public $usenotepadrights = true;
 
+   public $targetList = [];
+
    const SOPTION_ANSWER = 900000;
 
    // Values choosen to not conflict with status of ticket constants
@@ -156,24 +158,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function rawSearchOptions() {
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
                           && $_SESSION['formcreator']['form_search_answers'];
 
-      $tab[] = [
-         'id'                 => 'common',
-         'name'               => __('Characteristics')
-      ];
-
-      $tab[] = [
-         'id'                 => '1',
-         'table'              => $this->getTable(),
-         'field'              => 'name',
-         'name'               => __('Name'),
-         'datatype'           => 'itemlink',
-         'massiveaction'      => false
-      ];
 
       $tab[] = [
          'id'                 => '2',
@@ -294,17 +283,21 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return Mixed           Value to be displayed
     */
    public static function getSpecificValueToDisplay($field, $values, array $options = []) {
-      global $CFG_GLPI;
-
       if (!is_array($values)) {
-         $elements = self::getStatuses();
-         $values = [$field => $elements[$values]];
+         $values = [$field => $values];
       }
       switch ($field) {
          case 'status' :
-            $output = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/' . strtolower($values[$field]) . '.png"
-                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
-            return $output;
+            if (!isAPI()) {
+               $language = $_SESSION["glpilanguage"];
+               Session::loadLanguage('en_GB');
+               $elements = self::getStatuses();
+               Session::loadLanguage($language);
+               $values = [$field => $elements[$values[$field]]];
+               $output = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/' . strtolower($values[$field]) . '.png"
+                           alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
+               return $output;
+            }
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
@@ -330,7 +323,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       switch ($field) {
          case 'status' :
-            $elements = $this->getStatuses();
+            $elements = self::getStatuses();
             $output = Dropdown::showFromArray($name, $elements, ['display' => false, 'value' => $values[$field]]);
             return $output;
             break;
@@ -711,6 +704,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $input['is_recursive']                = $form->fields['is_recursive'];
       $input['plugin_formcreator_forms_id'] = $form->getID();
+      // requester_id is actually the author
+      // TODO : rename this column
       $input['requester_id']                = isset($_SESSION['glpiID'])
                                             ? $_SESSION['glpiID']
                                             : 0;
@@ -850,7 +845,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public function updateAnswers($input) {
       $form = new PluginFormcreatorForm();
-      $form->getFromDB((int) $input['formcreator_form']);
+      $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
       $input['status'] = self::STATUS_WAITING;
 
       $fields = $form->getFields();
@@ -929,15 +924,30 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
 
+      // get all fields to compute visibility of targets
+      $this->questionFields = $form->getFields();
+      $answers_values = $this->getAnswers($this->getID());
+      foreach ($this->questionFields as $id => $field) {
+         $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
+      }
+
       // Generate targets
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
       foreach ($all_targets as $targetType => $targets) {
          foreach ($targets as $targetObject) {
+            // Check the condition of the target
+            if (!PluginFormcreatorFields::isVisible($targetObject, $this->questionFields)) {
+               // The target shall not be generated
+               continue;
+            }
+
+            // Generate the target
             $generatedTarget = $targetObject->save($this);
             if ($generatedTarget === null) {
                $success = false;
                break;
             }
+            $this->targetList[] = $generatedTarget;
             // Map [itemtype of the target] [item ID of the target] = ID of the generated target
             $generatedTargets->addTarget($targetObject, $generatedTarget);
          }
@@ -1095,17 +1105,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public function post_addItem() {
       // Save questions answers
-      $question = new PluginFormcreatorQuestion();
-      $this->questions = $question->getQuestionsFromForm($this->input['plugin_formcreator_forms_id']);
-
-      foreach ($this->questions as $questionId => $question) {
+      foreach ($this->questionFields as $questionId => $field) {
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
             'plugin_formcreator_formanswers_id'  => $this->getID(),
-            'plugin_formcreator_questions_id'    => $question->getID(),
-            'answer'                             => $this->questionFields[$questionId]->serializeValue(),
+            'plugin_formcreator_questions_id'    => $questionId,
+            'answer'                             => $field->serializeValue(),
          ], [], 0);
-         foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
+         foreach ($field->getDocumentsForTarget() as $documentId) {
             $docItem = new Document_Item();
             $docItem->add([
                'documents_id' => $documentId,
@@ -1325,17 +1332,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             // There are several tickets for this form answer
             // The issue must be created from this form answer
             $issue->add([
-               'original_id'     => $this->getID(),
-               'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-               'name'            => addslashes($this->fields['name']),
-               'status'          => $this->fields['status'],
-               'date_creation'   => $this->fields['request_date'],
-               'date_mod'        => $this->fields['request_date'],
-               'entities_id'     => $this->fields['entities_id'],
-               'is_recursive'    => $this->fields['is_recursive'],
-               'requester_id'    => $this->fields['requester_id'],
-               'validator_id'    => $this->fields['users_id_validator'],
-               'comment'         => '',
+               'original_id'        => $this->getID(),
+               'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
+               'name'               => addslashes($this->fields['name']),
+               'status'             => $this->fields['status'],
+               'date_creation'      => $this->fields['request_date'],
+               'date_mod'           => $this->fields['request_date'],
+               'entities_id'        => $this->fields['entities_id'],
+               'is_recursive'       => $this->fields['is_recursive'],
+               'requester_id'       => $this->fields['requester_id'],
+               'users_id_validator' => $this->fields['users_id_validator'],
+               'groups_id_validator'=> $this->fields['groups_id_validator'],
+               'comment'            => '',
             ]);
          } else {
             // There is one ticket for this form answer
@@ -1347,18 +1355,30 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
                throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
             }
+            $ticketId = $ticket->getID();
+            $ticketUser = new Ticket_User();
+            $ticketUserRow = $ticketUser->find([
+               'tickets_id' => $ticketId,
+               'type' => CommonITILActor::REQUESTER,
+               ], [
+                  'id ASC'
+               ],
+               1
+            );
+            $ticketUserRow = array_pop($ticketUserRow);
             $issue->add([
-               'original_id'     => $ticket->getID(),
-               'sub_itemtype'    => Ticket::class,
-               'name'            => addslashes($ticket->getField('name')),
-               'status'          => $ticket->getField('status'),
-               'date_creation'   => $ticket->getField('date'),
-               'date_mod'        => $ticket->getField('date_mod'),
-               'entities_id'     => $ticket->getField('entities_id'),
-               'is_recursive'    => '0',
-               'requester_id'    => $ticket->getField('users_id_recipient'),
-               'validator_id'    => '',
-               'comment'         => addslashes($ticket->getField('content')),
+               'original_id'        => $ticketId,
+               'sub_itemtype'       => Ticket::class,
+               'name'               => addslashes($ticket->getField('name')),
+               'status'             => $ticket->getField('status'),
+               'date_creation'      => $ticket->getField('date'),
+               'date_mod'           => $ticket->getField('date_mod'),
+               'entities_id'        => $ticket->getField('entities_id'),
+               'is_recursive'       => '0',
+               'requester_id'       => $ticketUserRow['users_id'],
+               'users_id_validator' => '',
+               'groups_id_validator'=> '',
+               'comment'            => addslashes($ticket->getField('content')),
             ]);
          }
       }
@@ -1387,18 +1407,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                ]
             ]);
             $issue->update([
-               'id'              => $issue->getID(),
-               'original_id'     => $this->getID(),
-               'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-               'name'            => addslashes($this->fields['name']),
-               'status'          => $this->fields['status'],
-               'date_creation'   => $this->fields['request_date'],
-               'date_mod'        => $this->fields['request_date'],
-               'entities_id'     => $this->fields['entities_id'],
-               'is_recursive'    => $this->fields['is_recursive'],
-               'requester_id'    => $this->fields['requester_id'],
-               'validator_id'    => $this->fields['users_id_validator'],
-               'comment'         => '',
+               'id'                 => $issue->getID(),
+               'original_id'        => $this->getID(),
+               'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
+               'name'               => addslashes($this->fields['name']),
+               'status'             => $this->fields['status'],
+               'date_creation'      => $this->fields['request_date'],
+               'date_mod'           => $this->fields['request_date'],
+               'entities_id'        => $this->fields['entities_id'],
+               'is_recursive'       => $this->fields['is_recursive'],
+               'requester_id'       => $this->fields['requester_id'],
+               'users_id_validator' => $this->fields['users_id_validator'],
+               'groups_id_validator'=> $this->fields['groups_id_validator'],
+               'comment'            => '',
             ]);
          } else {
             // There is one ticket for this form answer
@@ -1410,6 +1431,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
                throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
             }
+            $ticketId = $ticket->getID();
+            $ticketUser = new Ticket_User();
+            $ticketUserRow = $ticketUser->find([
+                  'tickets_id' => $ticketId,
+                  'type' => CommonITILActor::REQUESTER,
+               ], [
+                  'id ASC'
+               ],
+               1
+            );
+            $ticketUserRow = array_pop($ticketUserRow);
             $issue->getFromDBByCrit([
                'AND' => [
                  'sub_itemtype' => PluginFormcreatorFormAnswer::class,
@@ -1417,18 +1449,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                ]
              ]);
              $issue->update([
-                'id'              => $issue->getID(),
-                'original_id'     => $ticket->getID(),
-                'sub_itemtype'    => Ticket::class,
-                'name'            => addslashes($ticket->getField('name')),
-                'status'          => $ticket->getField('status'),
-                'date_creation'   => $ticket->getField('date'),
-                'date_mod'        => $ticket->getField('date_mod'),
-                'entities_id'     => $ticket->getField('entities_id'),
-                'is_recursive'    => '0',
-                'requester_id'    => $ticket->getField('users_id_recipient'),
-                'validator_id'    => '',
-                'comment'         => addslashes($ticket->getField('content')),
+                'id'                 => $issue->getID(),
+                'original_id'        => $ticketId,
+                'sub_itemtype'       => Ticket::class,
+                'name'               => addslashes($ticket->getField('name')),
+                'status'             => $ticket->getField('status'),
+                'date_creation'      => $ticket->getField('date'),
+                'date_mod'           => $ticket->getField('date_mod'),
+                'entities_id'        => $ticket->getField('entities_id'),
+                'is_recursive'       => '0',
+                'requester_id'       => $ticketUserRow['users_id'],
+                'users_id_validator' => '',
+                'groups_id_validator'=> '',
+                'comment'            => addslashes($ticket->getField('content')),
              ]);
          }
       } else {

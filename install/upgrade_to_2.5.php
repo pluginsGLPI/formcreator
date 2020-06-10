@@ -153,7 +153,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $migration->addKey('glpi_plugin_formcreator_categories', 'knowbaseitemcategories_id');
          $migration->addKey('glpi_plugin_formcreator_categories', 'plugin_formcreator_categories_id');
          $migration->migrationOneTable('glpi_plugin_formcreator_categories');
-         $query  = "UPDATE `glpi_plugin_formcreator_categories` SET `completename` = `name` WHERE `completename` = ''";
+         $query  = "UPDATE `glpi_plugin_formcreator_categories` SET `completename` = `name` WHERE `completename` IS NULL";
          $DB->query($query);
       }
    }

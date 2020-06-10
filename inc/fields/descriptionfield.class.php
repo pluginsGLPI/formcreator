@@ -97,6 +97,10 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return $input;
    }
 
+   public function hasInput($input) {
+      return false;
+   }
+
    public static function canRequire() {
       return false;
    }
@@ -126,8 +130,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-description-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-description-field.png" title="" />';
    }
 }

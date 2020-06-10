@@ -192,6 +192,10 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public static function canRequire() {
       return true;
    }
@@ -256,8 +260,6 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-text-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-text-field.png" title="" />';
    }
 }

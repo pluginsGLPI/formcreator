@@ -274,8 +274,10 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
+      global $DB;
+
       $question = $this->getQuestion([
-         'values' => "foo\r\nbar\r\ntest d'apostrophe",
+         'values' => $DB->escape("foo\r\nbar\r\ntest d'apostrophe"),
       ]);
       $instance = new \PluginFormcreatorCheckboxesField($question);
       $instance->deserializeValue($value);

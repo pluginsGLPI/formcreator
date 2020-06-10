@@ -60,6 +60,10 @@ if (isset($_POST['save_formanswer'])) {
       Html::redirect($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
    }
 
+   $issue->getFromDBByCrit([
+      'original_id' => (int) $_REQUEST['id'],
+      'sub_itemtype' => $_REQUEST['sub_itemtype'],
+   ]);
    $issue->display($_REQUEST);
 
    if (plugin_formcreator_replaceHelpdesk()) {

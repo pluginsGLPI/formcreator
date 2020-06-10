@@ -102,36 +102,21 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $target_data = $this->fields;
+      $export = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      unset($target_data[$formFk]);
+      unset($export[$formFk]);
 
-      // get target actors
-      $target_data['_actors'] = [];
-      $myFk = self::getForeignKeyField();
-      $all_target_actors = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'    => PluginFormcreatorTargetChange_Actor::getTable(),
-         'WHERE'   => [
-            $myFk => $this->getID()
-         ]
-      ]);
-
-      // Export sub items
-      $form_target_actor = $this->getItem_Actor();
-      foreach ($all_target_actors as $target_actor) {
-         if ($form_target_actor->getFromDB($target_actor['id'])) {
-            $target_data['_actors'][] = $form_target_actor->export($remove_uuid);
-         }
-      }
+      $subItems = [
+         '_actors'     => $this->getItem_Actor()->getType(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -139,11 +124,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $idToRemove = 'uuid';
       } else {
          // Convert IDs into UUIDs
-         $target_data = $this->convertTags($target_data);
+         $export = $this->convertTags($export);
       }
-      unset($target_data[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $target_data;
+      return $export;
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
@@ -154,6 +139,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $containerId;
+      $input['_skip_checks'] = true;
+      $input['_skip_create_actors'] = true;
 
       $item = new self();
       // Find an existing target to update, only if an UUID is available
@@ -169,8 +157,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          );
       }
 
-      $input['_skip_checks'] = true;
-      $input[$formFk] = $containerId;
+      // Escape text fields
+      foreach (['target_name'] as $key) {
+         $input[$key] = $DB->escape($input[$key]);
+      }
 
       // Assume that all questions are already imported
       // convert question uuid into id
@@ -215,11 +205,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // add the target to the linker
       $linker->addObject($originalId, $item);
 
-      if (isset($input['_actors'])) {
-         foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetChange_Actor::import($linker, $actor, $itemId);
-         }
-      }
+      $subItems = [
+         '_actors'     => $item->getItem_Actor()->getType(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -237,7 +227,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
+      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '" data-itemtype="' . self::class . '">';
 
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
@@ -318,7 +308,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td colspan="3">';
       echo Html::textarea([
          'name'   => 'checklistcontent',
-         'vamue'  => $this->fields['checklistcontent'],
+         'value'  => $this->fields['checklistcontent'],
          'display' => false,
       ]);
       echo '</td>';
@@ -347,6 +337,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($form, $rand);
 
+      // -------------------------------------------------------------------------------------------
+      //  Conditions to generate the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the target', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+      $this->showConditionsSettings($rand);
+
       echo '</table>';
 
       // Buttons
@@ -357,6 +358,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
                onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
       echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
       echo '</td>';
       echo '</tr>';
@@ -471,7 +474,29 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          return false;
       }
 
+      // delete conditions
+      if (! (new PluginFormcreatorCondition())->deleteByCriteria([
+         'itemtype' => self::class,
+         'items_id' => $this->getID(),
+      ])) {
+         return false;
+      }
+
       return true;
+   }
+
+   public function post_addItem() {
+      parent::post_addItem();
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
+   }
+
+   public function post_updateItem($history = 1) {
+      parent::post_updateItem();
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    /**
@@ -618,7 +643,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          'WHERE'  => [
             'plugin_formcreator_forms_id' => $formId
          ],
-         'ORDER'  => 'order ASC'
       ]);
       foreach ($rows as $row) {
          $target = new self();

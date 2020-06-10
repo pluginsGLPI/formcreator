@@ -148,6 +148,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $categories = [];
       foreach($result as $category) {
          $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
+         // Keep the short name only
+         // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
+         $split = explode(' > ', $category['name']);
+         $category['name'] = array_pop($split);
          $categories[$category['id']] = $category;
       }
 
@@ -186,5 +190,44 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       }
 
       return $nodes;
+   }
+
+   public static function  getAvailableCategories($helpdeskHome = 1) {
+      global $DB;
+
+      // Define tables
+      $cat_table       = PluginFormcreatorCategory::getTable();
+      $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();
+      $formTable       = PluginFormcreatorForm::getTable();
+      $formRestriction = PluginFormcreatorForm::getFormRestrictionCriterias($formTable);
+
+      $formRestriction["$formTable.helpdesk_home"] = $helpdeskHome;
+
+      $result = $DB->request([
+         'SELECT' => [
+            $cat_table => [
+               'name', 'id'
+            ]
+         ],
+         'FROM' => $cat_table,
+         'INNER JOIN' => [
+            $formTable => [
+               'FKEY' => [
+                  $cat_table => 'id',
+                  $formTable => $categoryFk
+               ]
+            ]
+         ],
+         'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
+         'GROUPBY' => [
+            "$cat_table.id"
+         ]
+      ]);
+
+      return $result;
+   }
+
+   public static function getAvailableCategoriesCriterias() {
+
    }
 }

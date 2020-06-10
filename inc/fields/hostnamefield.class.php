@@ -50,6 +50,10 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       return Toolbox::addslashes_deep($this->value);
    }
 
+   public function hasInput($input) {
+      return false;
+   }
+
    public function getDocumentsForTarget() {
       return [];
    }

@@ -107,8 +107,7 @@ $(function() {
    });
 
    <?php
-   if (isset($_SESSION['glpiactiveprofile']['interface'])
-       && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')
+   if (Session::getCurrentInterface() == 'helpdesk'
        && PluginFormcreatorForm::countAvailableForm() > 0) {
       echo "$('#c_menu #menu1:first-child').after(link);";
    }
@@ -195,7 +194,7 @@ function fcInitMultiSelect() {
 }
 
 function showHomepageFormList() {
-   if ($('.homepage_forms_container').length) {
+   if ($('#plugin_formcreatorHomepageForms').length) {
       return;
    }
 
@@ -203,7 +202,7 @@ function showHomepageFormList() {
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
-      if (!$('.homepage_forms_container').length) {
+      if (!$('#plugin_formcreatorHomepageForms').length) {
          $('.central > tbody:first').first().prepend(response);
       }
    });
@@ -462,6 +461,13 @@ function plugin_formcreator_editQuestion(items_id, token, question, section) {
       section_id: section,
       _glpi_csrf_token: token
    }).dialog("open");
+   plugin_formcreator_scrollToModal($(modalWindow));
+}
+
+function plugin_formcreator_scrollToModal(modalWindow) {
+   $('html, body').animate({
+        scrollTop: $(modalWindow).closest('.ui-dialog').offset().top
+    }, 300);
 }
 
 function plugin_formcreator_setRequired(token, question_id, val) {
@@ -536,6 +542,7 @@ function plugin_formcreator_editSection(items_id, token ,section) {
       plugin_formcreator_forms_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
+   plugin_formcreator_scrollToModal($(modalWindow));
 }
 
 function plugin_formcreator_duplicateSection(items_id, token, section_id) {
@@ -627,9 +634,9 @@ function formcreatorShowFields(form) {
          var sectionId = parseInt(sectionKey);
          if (!isNaN(sectionId)) {
             if (sectionToShow[sectionId]) {
-               $('div[data-section-id="' + sectionId+ '"]').show();
+               $('div[data-section-id="' + sectionId+ '"]').removeAttr('hidden', '');
             } else {
-               $('div[data-section-id="' + sectionId+ '"]').hide();
+               $('div[data-section-id="' + sectionId+ '"]').attr('hidden', '');
             }
          }
       }
@@ -639,12 +646,12 @@ function formcreatorShowFields(form) {
          questionId = parseInt(questionKey.replace('formcreator_field_', ''));
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
-               $('#form-group-field-' + questionKey).show();
+               $('#form-group-field-' + questionKey).removeAttr('hidden');
                i++;
                $('#form-group-field-' + questionKey).removeClass('line' + (i+1) % 2);
                $('#form-group-field-' + questionKey).addClass('line' + i%2);
             } else {
-               $('#form-group-field-' + questionKey).hide();
+               $('#form-group-field-' + questionKey).attr('hidden', '');
                $('#form-group-field-' + questionKey).removeClass('line0');
                $('#form-group-field-' + questionKey).removeClass('line1');
             }
@@ -832,8 +839,8 @@ function plugin_formcreator_removeNextCondition(target) {
 }
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
-   dropdown_type = $('[name="plugin_formcreator_form"] [name="dropdown_values"]').val();
-   dropdown_id   = $('[name="plugin_formcreator_form"] [name="id"]').val();
+   dropdown_type = $('[name="plugin_formcreator_questionform"] [name="dropdown_values"]').val();
+   dropdown_id   = $('[name="plugin_formcreator_questionform"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
@@ -869,8 +876,8 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
 }
 
 function plugin_formcreator_changeGlpiObjectItemType() {
-   glpi_object    = $('[name="plugin_formcreator_form"] [name="glpi_objects"]').val();
-   glpi_object_id = $('[name="plugin_formcreator_form"] [name="id"]').val();
+   glpi_object    = $('[name="plugin_formcreator_questionform"] [name="glpi_objects"]').val();
+   glpi_object_id = $('[name="plugin_formcreator_questionform"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
@@ -1122,6 +1129,9 @@ function plugin_formcreator_changeQuestionType(rand) {
          return;
       }
 
+      $('#plugin_formcreator_subtype_label').html(response.label);
+      $('#plugin_formcreator_subtype_value').html(response.field);
+
       $('.plugin_formcreator_required').toggle(response.may_be_required);
       $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
       $('#plugin_formcreator_subtype_label').html(response.label);
@@ -1318,4 +1328,15 @@ function plugin_formcreator_updateCompositePeerType(rand) {
       $('#plugin_formcreator_link_ticket').hide();
       $('#plugin_formcreator_link_target').show();
    }
+}
+
+function plugin_formcreator_cancelMyTicket(id) {
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/cancelticket.php',
+      data: {id: id},
+      type: "POST",
+      dataType: "json"
+   }).done(function(response) {
+      reloadTab;
+   });
 }

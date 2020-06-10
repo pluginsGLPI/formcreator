@@ -205,12 +205,6 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
-
    public function testGetValueForTargetText() {
       $computer = new \Computer();
       $computer->add([

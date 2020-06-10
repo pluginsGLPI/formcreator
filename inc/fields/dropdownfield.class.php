@@ -32,7 +32,9 @@
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
-      return true;
+      $itemtype = $this->getSubItemtype();
+
+      return class_exists($itemtype);
    }
 
    public function getDesignSpecializationField() {
@@ -60,13 +62,13 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       $optgroup = Dropdown::getStandardDropdownItemTypes();
-      array_unshift($optgroup, '---');
       $field = '<div id="dropdown_values_field">';
       $field .= Dropdown::showFromArray('dropdown_values', $optgroup, [
-         'value'     => $itemtype,
-         'rand'      => $rand,
-         'on_change' => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
-         'display'   => false,
+         'value'               => $itemtype,
+         'rand'                => $rand,
+         'on_change'           => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
+         'display_emptychoice' => true,
+         'display'             => false,
       ]);
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
@@ -94,7 +96,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'request'  => __('Request categories', 'formcreator'),
          'incident' => __('Incident categories', 'formcreator'),
          'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
-         'change'   => __('Change'),
+         'change'   => __('Change categories', 'formcreator'),
          'all'      => __('All'),
       ];
       $additions .= dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
@@ -136,14 +138,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
          if (!empty($this->question->fields['values'])) {
             $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-            if ($decodedValues === null) {
-               $itemtype = $this->question->fields['values'];
-            } else {
-               $itemtype = $decodedValues['itemtype'];
-            }
+            $itemtype = $this->getSubItemtype();
 
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
@@ -162,8 +159,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   break;
 
                case ITILCategory::class:
-                  if (isset ($_SESSION['glpiactiveprofile']['interface'])
-                     && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+                  if (Session::getCurrentInterface() == 'helpdesk') {
                      $dparams_cond_crit['is_helpdeskvisible'] = 1;
                   }
                   switch ($decodedValues['show_ticket_categories']) {
@@ -222,6 +218,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                         ];
                         $groups = implode("', '", $groups);
                      }
+                     // Check if helpdesk availability is fine tunable on a per item basis
+                     if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
+                        $dparams_cond_crit[] = [
+                           'is_helpdesk_visible' => '1',
+                        ];
+                     }
                   }
             }
 
@@ -233,7 +235,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      $itemtype::getTable(),
                      $decodedValues['show_ticket_categories_root']
                   );
-               $dparams_cond_crit['id'] = $sons;
+               $dparams_cond_crit[ItilCategory::getTable().'.id'] = $sons;
                $rootItem = new $itemtype();
                if ($rootItem->getFromDB($decodedValues['show_ticket_categories_root'])) {
                   $baseLevel = $rootItem->fields['level'];
@@ -248,6 +250,17 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $dparams['condition'] = $dparams_cond_crit;
 
+            $dparams['display_emptychoice'] = false;
+            if ($itemtype != Entity::class) {
+               $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
+            } else {
+               if ($this->question->fields['show_empty'] !== '0') {
+                  $dparams['toadd'] = [
+                     -1 => Dropdown::EMPTY_VALUE,
+                  ];
+               }
+            }
+
             $emptyItem = new $itemtype();
             $emptyItem->getEmpty();
             $dparams['displaywith'] = [];
@@ -257,35 +270,14 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             if (isset($emptyItem->fields['otherserial'])) {
                $dparams['displaywith'][] = 'otherserial';
             }
-            if (count($dparams['displaywith']) > 0) {
-               $dparams['itemtype'] = $itemtype;
-               $dparams['table'] = $itemtype::getTable();
-               $dparams['multiple'] = false;
-               $dparams['valuename'] = Dropdown::EMPTY_VALUE;
-               if ($dparams['value'] != 0) {
-                  $dparams['valuename'] = $dparams['value'];
-               }
-               echo Html::jsAjaxDropdown(
-                  $fieldName,
-                  $domId,
-                  $CFG_GLPI['root_doc']."/ajax/getDropdownFindNum.php",
-                  $dparams
-               );
-            } else {
-               $itemtype::dropdown($dparams);
-            }
+            $itemtype::dropdown($dparams);
          }
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-         if ($decodedValues === null) {
-            $itemtype = $this->question->fields['values'];
-         } else {
-            $itemtype = $decodedValues['itemtype'];
-         }
+         $itemtype = $this->getSubItemtype();
          $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
@@ -324,11 +316,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $itemtype = $this->question->fields['values'];
-      if (isset($decodedValues['itemtype'])) {
-         $itemtype = $decodedValues['itemtype'];
-      }
+      $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
          $value = (new DBUtils())->getUserName($this->value);
       } else {
@@ -418,6 +406,10 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       return $input;
+   }
+
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
    public static function canRequire() {
@@ -647,4 +639,29 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function getHtmlIcon() {
       return '<i class="fa fa-caret-down" aria-hidden="true"></i>';
    }
-}
+
+   /**
+    * Get the itemtype of the item to show
+    *
+    * @return string
+    */
+   protected function getSubItemtype() {
+      return self::getSubItemtypeForValues($this->question->fields['values']);
+   }
+
+   /**
+    * Get the itemtype of the item to show for the given values
+    *
+    * @param string $values json or raw string
+    *
+    * @return string
+    */
+   public static function getSubItemtypeForValues($values) {
+      $decodedValues = json_decode($values, JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         return $values;
+      }
+
+      return $decodedValues['itemtype'];
+      }
+   }

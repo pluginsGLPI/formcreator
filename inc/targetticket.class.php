@@ -40,7 +40,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    const ASSOCIATE_RULE_NONE = 1;
    const ASSOCIATE_RULE_SPECIFIC = 2;
    const ASSOCIATE_RULE_ANSWER = 3;
+   const ASSOCIATE_RULE_LAST_ANSWER = 4;
 
+   const REQUESTTYPE_NONE = 0;
    const REQUESTTYPE_SPECIFIC = 1;
    const REQUESTTYPE_ANSWER = 2;
 
@@ -84,14 +86,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    public static function getEnumAssociateRule() {
       return [
-         self::ASSOCIATE_RULE_NONE      => __('None', 'formcreator'),
-         self::ASSOCIATE_RULE_SPECIFIC  => __('Specific asset', 'formcreator'),
-         self::ASSOCIATE_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::ASSOCIATE_RULE_NONE        => __('None', 'formcreator'),
+         self::ASSOCIATE_RULE_SPECIFIC    => __('Specific asset', 'formcreator'),
+         self::ASSOCIATE_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         self::ASSOCIATE_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ];
    }
 
    public static function getEnumRequestTypeRule() {
       return [
+         self::REQUESTTYPE_NONE      => __('Default or from a template', 'formcreator'),
          self::REQUESTTYPE_SPECIFIC  => __('Specific type', 'formcreator'),
          self::REQUESTTYPE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
@@ -108,7 +112,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
+      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '" data-itemtype="' . self::class . '">';
 
       // General information: target_name
       echo '<table class="tab_cadre_fixe">';
@@ -198,6 +202,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          echo '</tr>';
       }
 
+      // -------------------------------------------------------------------------------------------
+      //  Conditions to generate the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Condition to show the target', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+      $this->showConditionsSettings($rand);
+
       echo '</table>';
 
       // Buttons
@@ -208,6 +223,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
                onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
       echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
       echo '</td>';
       echo '</tr>';
@@ -450,6 +467,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          return false;
       }
 
+      // delete conditions
+      if (! (new PluginFormcreatorCondition())->deleteByCriteria([
+         'itemtype' => self::class,
+         'items_id' => $this->getID(),
+      ])) {
+         return false;
+      }
+
       // delete targets linked to this instance
       $myFk = static::getForeignKeyField();
       $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
@@ -459,6 +484,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       return true;
+   }
+
+   public function post_addItem() {
+      parent::post_addItem();
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
+   }
+
+   public function post_updateItem($history = 1) {
+      parent::post_updateItem();
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
    }
 
    /**
@@ -651,7 +690,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
       }
 
-      $data['_users_id_recipient'] = $requesters_id;
+      $data['users_id_recipient'] = $formanswer->fields['requester_id'];
       $data['users_id_lastupdater'] = Session::getLoginUserID();
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
@@ -887,7 +926,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function setTargetAssociatedItem($data, $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       switch ($this->fields['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
@@ -930,6 +969,58 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
             }
             break;
+
+         case self::ASSOCIATE_RULE_LAST_ANSWER:
+            $form_id = $formanswer->fields['id'];
+
+            // Get all answers for glpiselect questions of this form, ordered
+            // from last to first displayed
+            $answers = $DB->request([
+               'SELECT' => ['answer.answer', 'question.values'],
+               'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
+               'JOIN' => [
+                  PluginFormcreatorQuestion::getTable() . ' AS question' => [
+                     'ON' => [
+                        'answer' => 'plugin_formcreator_questions_id',
+                        'question' => 'id',
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'question.fieldtype'                       => "glpiselect",
+               ],
+               'ORDER' => [
+                  'row DESC',
+                  'col DESC',
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Skip if the object type is not valid asset type
+               if (!in_array($answer['values'], $CFG_GLPI["asset_types"])) {
+                  continue;
+               }
+
+               // Skip if question was not answered
+               if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Skip if item doesn't exist in the DB (shouldn't happen)
+               $item = new $answer['values']();
+               if (!$item->getFromDB($answer['answer'])) {
+                  continue;
+               }
+
+               // Found a valid answer, stop here
+               $data['items_id'] = [
+                  $answer['values'] => [$answer['answer']]
+               ];
+               break;
+            }
+
+            break;
       }
 
       return $data;
@@ -943,6 +1034,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $containerId;
+      $input['_skip_checks'] = true;
+      $input['_skip_create_actors'] = true;
 
       $item = new self;
       // Find an existing target to update, only if an UUID is available
@@ -958,8 +1052,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          );
       }
 
-      $input['_skip_checks'] = true;
-      $input[$formFk] = $containerId;
+      // Escape text fields
+      foreach (['target_name'] as $key) {
+         $input[$key] = $DB->escape($input[$key]);
+      }
 
       // Assume that all questions are already imported
       // convert question uuid into id
@@ -1004,17 +1100,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // add the target to the linker
       $linker->addObject($originalId, $item);
 
-      if (isset($input['_actors'])) {
-         foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId);
-         }
-      }
-
-      if (isset($input['_ticket_relations'])) {
-         foreach ($input['_ticket_relations'] as $ticketLink) {
-            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId);
-         }
-      }
+      $subItems = [
+         '_actors'            => $item->getItem_Actor()->getType(),
+         '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
+         '_conditions'        => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -1031,60 +1122,31 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      $target_data = $this->fields;
+      $export = $this->fields;
 
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      unset($target_data[$formFk]);
+      unset($export[$formFk]);
 
       // replace dropdown ids
-      $target_data['_tickettemplate'] = '';
-      if ($target_data['tickettemplates_id'] > 0) {
-         $target_data['_tickettemplate']
+      $export['_tickettemplate'] = '';
+      if ($export['tickettemplates_id'] > 0) {
+         $export['_tickettemplate']
             = Dropdown::getDropdownName('glpi_tickettemplates',
-                                        $target_data['tickettemplates_id']);
+                                        $export['tickettemplates_id']);
       }
-      unset($target_data['tickettemplates_id']);
+      unset($export['tickettemplates_id']);
 
-      // get target actors
-      $target_data['_actors'] = [];
-      $myFk = self::getForeignKeyField();
-      $all_target_actors = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'    => PluginFormcreatorTargetTicket_Actor::getTable(),
-         'WHERE'   => [
-            $myFk => $this->getID()
-         ]
-      ]);
-
-      // Export sub items
-      $form_target_actor = $this->getItem_Actor();
-      foreach ($all_target_actors as $target_actor) {
-         if ($form_target_actor->getFromDB($target_actor['id'])) {
-            $target_data['_actors'][] = $form_target_actor->export($remove_uuid);
-         }
-      }
-
-      // get data from ticket relations
-      $target_data['_ticket_relations'] = [];
-      $target_ticketLink = new PluginFormcreatorItem_TargetTicket();
-      $all_ticketLinks = $DB->request([
-         'SELECT'  => ['id'],
-         'FROM'    => $target_ticketLink::getTable(),
-         'WHERE'   => [
-            'plugin_formcreator_targettickets_id' => $target_data['id']
-         ],
-      ]);
-      foreach ($all_ticketLinks as $ticketLink) {
-         $target_ticketLink->getFromDB($ticketLink['id']);
-         $target_data['_ticket_relations'][] = $target_ticketLink->export($remove_uuid);
-      }
+      $subItems = [
+         '_actors'            => $this->getItem_Actor()->getType(),
+         '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
+         '_conditions'        => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -1092,16 +1154,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          $idToRemove = 'uuid';
       } else {
          // Convert IDs into UUIDs
-         $target_data = $this->convertTags($target_data);
+         $export = $this->convertTags($export);
       }
-      unset($target_data[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $target_data;
+      return $export;
    }
 
    private function saveAssociatedItems($input) {
       switch ($input['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
+         case self::ASSOCIATE_RULE_LAST_ANSWER:
             $input['associate_question'] = $input['_associate_question'];
             break;
 
@@ -1146,7 +1209,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          'WHERE'  => [
             'plugin_formcreator_forms_id' => $formId
          ],
-         'ORDER'  => 'order ASC'
       ]);
       foreach ($rows as $row) {
          $target = new self();

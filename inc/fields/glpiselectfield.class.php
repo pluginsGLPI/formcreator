@@ -31,10 +31,6 @@
 
 class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 {
-   public function isPrerequisites() {
-      return true;
-   }
-
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 
@@ -75,7 +71,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
             Profile::class          => Profile::getTypeName(2)],
       ];
       $plugin = new Plugin();
-      if ($plugin->isActivated('appliance')) {
+      if ($plugin->isActivated('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2);
       }
       array_unshift($optgroup, '---');
@@ -182,8 +178,6 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-glpiselect-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-glpiselect-field.png" title="" />';
    }
 }

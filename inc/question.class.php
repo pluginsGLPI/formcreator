@@ -41,6 +41,7 @@ PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnable;
+   use PluginFormcreatorExportable;
 
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
@@ -143,20 +144,20 @@ PluginFormcreatorConditionnableInterface
          echo '<th align="center">';
 
          echo "<span class='form_control pointer'>";
-         echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
+         echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/delete.png"
                   title="' . __('Delete', 'formcreator') . '"
                   onclick="plugin_formcreator_deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
-         echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
+         echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/clone.png"
                   title="' . _sx('button', "Duplicate") . '"
                   onclick="plugin_formcreator_duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
          if ($section->fields['order'] != $section_number) {
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
+            echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/down.png"
                      title="' . __('Bring down') . '"
                      onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'down\');" >';
          }
@@ -164,7 +165,7 @@ PluginFormcreatorConditionnableInterface
 
          echo "<span class='form_control pointer'>";
          if ($section->fields['order'] != 1) {
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
+            echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/up.png"
                      title="' . __('Bring up') . '"
                      onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
          }
@@ -200,13 +201,13 @@ PluginFormcreatorConditionnableInterface
             $question->fields['name'] = htmlspecialchars_decode($question->fields['name'], ENT_QUOTES);
 
             echo "<span class='form_control pointer'>";
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
+            echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/delete.png"
                      title="' . __('Delete', 'formcreator') . '"
                      onclick="plugin_formcreator_deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
             echo "</span>";
 
             echo "<span class='form_control pointer'>";
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
+            echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/clone.png"
                      title="' . _sx('button', "Duplicate") . '"
                      onclick="plugin_formcreator_duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
             echo "</span>";
@@ -214,7 +215,7 @@ PluginFormcreatorConditionnableInterface
             if ($classname::canRequire()) {
                $required_pic = ($question->fields['required'] ? "required": "not-required");
                echo "<span class='form_control pointer'>";
-               echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/formcreator/pics/$required_pic.png'
+               echo "<img src='" . FORMCREATOR_ROOTDOC . "/pics/$required_pic.png'
                         title='" . __('Required', 'formcreator') . "'
                         onclick='plugin_formcreator_setRequired(\"".$token."\", ".$question->getID().", ".($question->fields['required']?0:1).")' > ";
                echo "</span>";
@@ -226,7 +227,7 @@ PluginFormcreatorConditionnableInterface
 
             echo "<span class='form_control pointer'>";
             if ($question->fields['order'] != 1) {
-               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
+               echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/up.png"
                         title="' . __('Bring up') . '"
                         onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'up\');" align="absmiddle"> ';
             }
@@ -234,7 +235,7 @@ PluginFormcreatorConditionnableInterface
 
             echo "<span class='form_control pointer'>";
             if ($question->fields['order'] != $question_number) {
-               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
+               echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/down.png"
                         title="' . __('Bring down') . '"
                         onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'down\');"> ';
             }
@@ -242,7 +243,7 @@ PluginFormcreatorConditionnableInterface
 
             echo "<span class='form_control pointer'>";
             if ($question->fields['order'] != 1) {
-               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/chevron-up.png"
+               echo '<img src="' . FORMCREATOR_ROOTDOC . '/pics/chevron-up.png"
                         title="' . __('Bring top') . '"
                         onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'top\');" align="absmiddle"> ';
             }
@@ -624,6 +625,7 @@ PluginFormcreatorConditionnableInterface
          foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
             $parameterInput['plugin_formcreator_questions_id'] = $this->getID();
             if ($parameters[$fieldName]->isNewItem()) {
+               unset($parameterInput['id']);
                $parameters[$fieldName]->add($parameterInput);
             } else {
                $parameterInput['id'] = $parameters[$fieldName]->getID();
@@ -642,12 +644,16 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function post_addItem() {
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
       $this->updateParameters($this->input);
    }
 
    public function post_updateItem($history = 1) {
-      $this->updateConditions($this->input);
+      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+         $this->updateConditions($this->input);
+      }
       $this->updateParameters($this->input);
    }
 
@@ -735,6 +741,7 @@ PluginFormcreatorConditionnableInterface
          'autofocus' => '',
          'value' => $this->fields['name'],
          'class' => 'required',
+         'required' => 'required',
       ]);
       echo '</td>';
 
@@ -897,8 +904,10 @@ PluginFormcreatorConditionnableInterface
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $input[$sectionFk] = $containerId;
+
       $input['_skip_checks'] = true;
 
       $item = new self();
@@ -916,7 +925,7 @@ PluginFormcreatorConditionnableInterface
       }
 
       // escape text fields
-      foreach (['name', 'description', 'values', 'default_values', 'description'] as $key) {
+      foreach (['name', 'description', 'values', 'default_values'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
       }
 
@@ -1220,5 +1229,16 @@ PluginFormcreatorConditionnableInterface
       if (isAPI()) {
          $this->fields += self::getFullData(null, $this->fields['id']);
       }
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         self::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

@@ -49,7 +49,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          'may_be_required' => true,
       ];
    }
-   
+
    public function displayField($canEdit = true) {
       global $DB;
 
@@ -151,6 +151,10 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
@@ -220,8 +224,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-tag-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-tag-field.png" title="" />';
    }
 }

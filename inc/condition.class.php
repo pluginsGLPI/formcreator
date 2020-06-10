@@ -35,8 +35,13 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreatorExportableInterface
+class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
+   use PluginFormcreatorExportable;
+
+   static public $itemtype = 'itemtype';
+   static public $items_id = 'items_id';
+
    const SHOW_RULE_ALWAYS = 1;
    const SHOW_RULE_HIDDEN = 2;
    const SHOW_RULE_SHOWN = 3;
@@ -50,6 +55,8 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
    const SHOW_CONDITION_GT = 4;
    const SHOW_CONDITION_LE = 5;
    const SHOW_CONDITION_GE = 6;
+   const SHOW_CONDITION_QUESTION_VISIBLE = 7;
+   const SHOW_CONDITION_QUESTION_INVISIBLE = 8;
 
    public function prepareInputForAdd($input) {
       // generate a unique id
@@ -76,6 +83,8 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          self::SHOW_CONDITION_GT => '>',
          self::SHOW_CONDITION_LE => '≤',
          self::SHOW_CONDITION_GE => '≥',
+         self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
+         self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
       ];
    }
 
@@ -94,6 +103,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
+      // restore key and FK
       $input['items_id'] = $containerId;
 
       $item = new self();
@@ -381,5 +391,17 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       $html.= '</tr>';
 
       return $html;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   {
+      $keepCriteria = [
+         'itemtype' => $container->getType(),
+         'items_id' => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
    }
 }

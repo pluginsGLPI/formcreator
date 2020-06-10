@@ -82,6 +82,10 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       return $input;
    }
 
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
    public function serializeValue() {
       if ($this->value === null || $this->value === '') {
          return '';

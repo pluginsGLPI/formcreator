@@ -95,5 +95,5 @@ if (isset($_POST["add"])) {
 
 } else {
    // Return to form list
-   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.php');
+   Html::redirect(FORMCREATOR_ROOTDOC .  '/front/form.php');
 }

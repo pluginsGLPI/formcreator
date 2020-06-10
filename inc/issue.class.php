@@ -72,19 +72,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
       $query = "SELECT DISTINCT
-                  NULL                           AS `id`,
-                  `f`.`name`                     AS `name`,
-                  CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
-                  `fanswer`.`id`                 AS `original_id`,
-                  'PluginFormcreatorFormAnswer'  AS `sub_itemtype`,
-                  `fanswer`.`status`             AS `status`,
-                  `fanswer`.`request_date`       AS `date_creation`,
-                  `fanswer`.`request_date`       AS `date_mod`,
-                  `fanswer`.`entities_id`        AS `entities_id`,
-                  `fanswer`.`is_recursive`       AS `is_recursive`,
-                  `fanswer`.`requester_id`       AS `requester_id`,
-                  `fanswer`.`users_id_validator` AS `validator_id`,
-                  `fanswer`.`comment`            AS `comment`
+                  NULL                            AS `id`,
+                  `f`.`name`                      AS `name`,
+                  CONCAT('f_',`fanswer`.`id`)     AS `display_id`,
+                  `fanswer`.`id`                  AS `original_id`,
+                  'PluginFormcreatorFormAnswer'   AS `sub_itemtype`,
+                  `fanswer`.`status`              AS `status`,
+                  `fanswer`.`request_date`        AS `date_creation`,
+                  `fanswer`.`request_date`        AS `date_mod`,
+                  `fanswer`.`entities_id`         AS `entities_id`,
+                  `fanswer`.`is_recursive`        AS `is_recursive`,
+                  `fanswer`.`requester_id`        AS `requester_id`,
+                  `fanswer`.`users_id_validator`  AS `users_id_validator`,
+                  `fanswer`.`groups_id_validator` AS `groups_id_validator`,
+                  `fanswer`.`comment`             AS `comment`
                FROM `glpi_plugin_formcreator_formanswers` AS `fanswer`
                LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
                   ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
@@ -102,18 +103,28 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  `tic`.`status`                AS `status`,
+                  if(`tv`.`status` IS NULL,`tic`.`status`, if(`tv`.`status` = 2, 101, if(`tv`.`status` = 3, 103, 102))) AS `status`,
                   `tic`.`date`                  AS `date_creation`,
                   `tic`.`date_mod`              AS `date_mod`,
                   `tic`.`entities_id`           AS `entities_id`,
                   0                             AS `is_recursive`,
-                  `tic`.`users_id_recipient`    AS `requester_id`,
-                  0                             AS `validator_id`,
+                  `tu`.`users_id`               AS `requester_id`,
+                  `tv`.`users_id_validate`      AS `users_id_validator`,
+                  0                             AS `groups_id_validator`,
                   `tic`.`content`               AS `comment`
                FROM `glpi_tickets` AS `tic`
                LEFT JOIN `glpi_items_tickets` AS `itic`
                   ON `itic`.`tickets_id` = `tic`.`id`
                   AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
+               LEFT JOIN (
+                  SELECT `users_id`, `tickets_id`
+                  FROM `glpi_tickets_users` AS `tu`
+                  WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
+                  ORDER BY `id` ASC
+                  LIMIT 1
+               ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
+               LEFT JOIN `glpi_ticketvalidations` as `tv`
+                  ON (`tic`.`id` = `tv`.`tickets_id`)
                WHERE `tic`.`is_deleted` = 0
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`items_id`) <= 1";
@@ -231,6 +242,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       if ($item instanceof Ticket) {
          //Tickets without form associated or single ticket for an answer
+         $satisfaction = new TicketSatisfaction();
+         if ($satisfaction->getFromDB($options['id'])) {
+            // show survey form, if any
+            // @see Ticket::displayTabContentForItem()
+            $duration = Entity::getUsedConfig('inquest_duration', $item->fields['entities_id']);
+            $date2    = strtotime($satisfaction->fields['date_begin']);
+            if (($duration == 0)
+                || (strtotime("now") - $date2) <= $duration*DAY_TIMESTAMP) {
+               $satisfaction->showForm($item);
+            } else {
+               echo "<p class='center b'>".__('Satisfaction survey expired')."</p>";
+            }
+         }
+
          echo "<div class='timeline_box'>";
          $rand = mt_rand();
          $item->showTimelineForm($rand);
@@ -375,7 +400,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '9',
          'table'              => 'glpi_users',
          'field'              => 'name',
-         'linkfield'          => 'validator_id',
+         'linkfield'          => 'users_id_validator',
          'name'               => __('Form approver', 'formcreator'),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
@@ -460,6 +485,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ]
       ];
 
+      $tab[] = [
+         'id'                 => '16',
+         'table'              => 'glpi_groups',
+         'field'              => 'completename',
+         'name'               => __('Form approver group', 'formcreator'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'linkfield'          => 'groups_id_validator',
+      ];
+
       return $tab;
    }
 
@@ -533,7 +568,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                default:
                   $content = '';
             }
-            $link = FORMCREATOR_ROOTDOC . "/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype'];
+            $link = self::getFormURLWithID($id) . "&sub_itemtype=".$data['raw']['sub_itemtype'];
             $key = 'id';
             $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
                'applyto' => $itemtype.$data['raw'][$key],
@@ -614,53 +649,75 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getValidateCriteria() {
-      $currentUser = Session::getLoginUserID();
-      return ['criteria' => [['field' => 4,
+      return ['criteria' => [['link'       => 'AND',
+                              'field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'waiting',
-                              'link'       => 'AND'],
-                             ['field' => 9,
-                              'searchtype' => 'equals',
-                              'value'      => $currentUser,
-                              'link'       => 'AND'],
-                             ['field' => 4,
-                              'searchtype' => 'equals',
-                              'value'      => 'waiting',
-                              'link'       => 'OR'],
-                             ['field' => 11,
-                              'searchtype' => 'equals',
-                              'value'      => $currentUser,
-                              'link'       => 'AND']],
+                              'value'      => PluginFormcreatorFormAnswer::STATUS_WAITING,
+                              ],
+                             ['link' => 'AND'] + self::getMeAsValidatorCriteria()
+                            ],
               'reset'    => 'reset'];
    }
 
    static function getSolvedCriteria() {
       $currentUser = Session::getLoginUserID();
-      return ['criteria' => [['field' => 4,
-                              'searchtype' => 'equals',
-                              'value'      => 'old',
-                              'link'       => 'AND'],
-                             ['field'      => 8,
+      return ['criteria' => [['link'       => 'AND',
+                              'field'      => 8,
                               'searchtype'  => 'equals',
                               'value'       => $currentUser,
-                              'link'       => 'AND'],
-                             ['field' => 4,
+                              ],
+                              ['link'       => 'AND',
+                              'criteria' => [[
+                               'link'       => 'AND',
+                               'field' => 4,
+                               'searchtype' => 'equals',
+                               'value'      => 'old', // see Ticket::getAllStatusArray()
+                              ],
+                              ['field' => 4,
+                               'searchtype' => 'equals',
+                               'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
+                               'link'       => 'OR']
+                             ]],
+                             ['link'       => 'OR',
+                             'criteria' => [[
+                              'link'       => 'AND',
+                              'field'      => 9,
                               'searchtype' => 'equals',
-                              'value'      => 'refused',
-                              'link'       => 'OR'],
-                             ['field'      => 8,
-                              'searchtype'  => 'equals',
-                              'value'       => $currentUser,
-                              'link'       => 'AND'],
-                             ['field' => 4,
+                              'value'      => $currentUser,
+                             ],
+                             ['link'       => 'OR',
+                              'field'      => 16,
                               'searchtype' => 'equals',
-                              'value'      => 'refused',
-                              'link'       => 'OR'],
-                             ['field'      => 9,
-                              'searchtype'  => 'equals',
-                              'value'       => $currentUser,
-                              'link'       => 'AND']],
+                              'value'      => 'mygroups',
+                             ],
+                            ]],
+                            ['link'       => 'AND',
+                               'field' => 4,
+                               'searchtype' => 'equals',
+                               'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
+                            ]],
               'reset'    => 'reset'];
+   }
+
+   public static function getMeAsValidatorCriteria() {
+      $currentUser = Session::getLoginUserID();
+      return ['criteria'   => [[
+         'link'       => 'AND',
+         'field'      => 9,
+         'searchtype' => 'equals',
+         'value'      => $currentUser,
+        ],
+        ['link'       => 'OR',
+         'field'      => 16,
+         'searchtype' => 'equals',
+         'value'      => 'mygroups',
+        ],
+        ['link'       => 'OR',
+         'field'      => 11,
+         'searchtype' => 'equals',
+         'value'      => $currentUser,
+        ]]
+      ];
    }
 
    static function getTicketSummary() {

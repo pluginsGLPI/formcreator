@@ -152,12 +152,6 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       $this->boolean($output)->isTrue();
    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
-
    public function testCanRequire() {
       $instance = new \PluginFormcreatorSelectField($this->getQuestion());
       $output = $instance->canRequire();
