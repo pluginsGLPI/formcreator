@@ -1878,6 +1878,14 @@ PluginFormcreatorDuplicatableInterface
     * @param  array  $params GET/POST data that need to contain the filename(s) in _json_file key
     */
    public function importJson($params = []) {
+      if (!isset($params['_json_file'])) {
+         Session::addMessageAfterRedirect(
+            __("No file uploaded", 'formcreator'),
+            false, ERROR
+         );
+         return;
+      }
+
       // parse json file(s)
       foreach ($params['_json_file'] as $filename) {
          if (!$json = file_get_contents(GLPI_TMP_DIR."/".$filename)) {
