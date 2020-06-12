@@ -47,6 +47,10 @@ extends PluginFormcreatorQuestionParameter
 
    protected $domId = 'plugin_formcreator_questionRegex';
 
+   public static function getTypeName($nb = 0) {
+      return _n('Question regular expression', 'Question regular expressions', $nb, 'formcreator');
+   }
+
    public function getParameterFormSize() {
       return 1;
    }
@@ -120,7 +124,7 @@ extends PluginFormcreatorQuestionParameter
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();

@@ -47,6 +47,10 @@ implements PluginFormcreatorExportableInterface
 
    static public $logs_for_item_1      = false;
 
+   public static function getTypeName($nb = 0) {
+      return _n('Composite ticket relation', 'Composite ticket relations', $nb, 'formcreator');
+   }
+
    /**
     * Export in an array all the data of the current instanciated form
     *
@@ -93,7 +97,7 @@ implements PluginFormcreatorExportableInterface
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();

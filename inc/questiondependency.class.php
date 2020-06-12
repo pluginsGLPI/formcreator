@@ -62,6 +62,10 @@ extends PluginFormcreatorQuestionParameter
       $this->fieldtype = isset($options['fieldType']) ? $options['fieldType'] : [];
    }
 
+   public static function getTypeName($nb = 0) {
+      return _n('Question dependency', 'Question dependencies', $nb, 'formcreator');
+   }
+
    public function getParameterFormSize() {
       return 0;
    }
@@ -133,7 +137,7 @@ extends PluginFormcreatorQuestionParameter
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();

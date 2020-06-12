@@ -80,6 +80,11 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
          // TODO : support ACTOR_ROLE_SUPPLIER
       ];
    }
+
+   public static function getTypeName($nb = 0) {
+      return _n('Target actor', 'Target actors', $nb, 'formcreator');
+   }
+
    public function prepareInputForAdd($input) {
 
       // generate a unique id
@@ -92,7 +97,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $input[static::$items_id] = $containerId;
