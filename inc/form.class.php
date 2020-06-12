@@ -1907,7 +1907,7 @@ PluginFormcreatorDuplicatableInterface
             }
             if (!$linker->linkPostponed()) {
                Session::addMessageAfterRedirect(sprintf(__("Failed to import %s", "formcreator"),
-                                                           $$form['name']));
+                                                           $form['name']));
             }
          }
          if ($success) {
