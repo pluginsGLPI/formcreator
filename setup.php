@@ -229,13 +229,13 @@ function plugin_init_formcreator() {
             $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                         title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
-            $links[$img] = '/plugins/formcreator/front/formanswer.php';
+            $links[$img] = FORMCREATOR_ROOTDOC . '/front/formanswer.php';
 
             // Set options for pages (title, links, buttons...)
-            $links['search'] = '/plugins/formcreator/front/formlist.php';
+            $links['search'] = FORMCREATOR_ROOTDOC . '/front/formlist.php';
             $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
                'config'       => ['title'  => __('Setup'),
-                                  'page'   => '/plugins/formcreator/front/form.php',
+                                  'page'   => FORMCREATOR_ROOTDOC . '/front/form.php',
                                   'links'  => $links],
                'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
                                   'links'  => $links],
