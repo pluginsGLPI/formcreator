@@ -643,7 +643,7 @@ class PluginFormcreatorForm extends CommonTestCase {
             \PluginFormcreatorForm::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory'); // passes
+      ->hasMessage('UUID or ID is mandatory for Form'); // passes
 
       $input['id'] = $formId;
       $formId2 = \PluginFormcreatorForm::import($linker, $input);

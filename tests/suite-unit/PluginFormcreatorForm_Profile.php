@@ -149,7 +149,7 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
             \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-         ->hasMessage('UUID or ID is mandatory'); // passes
+         ->hasMessage('UUID or ID is mandatory for Access type'); // passes
 
       $input['id'] = $formProfileId;
       $formProfileId2 = \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());

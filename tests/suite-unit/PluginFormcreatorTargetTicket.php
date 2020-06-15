@@ -797,7 +797,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-         ->hasMessage('UUID or ID is mandatory'); // passes
+         ->hasMessage('UUID or ID is mandatory for Target ticket'); // passes
 
       $input['id'] = $targetTicketId;
       $targetTicketId2 = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
