@@ -241,7 +241,8 @@ function plugin_init_formcreator() {
          $pages = [
             "plugins/formcreator/front/targetticket.form.php",
             "plugins/formcreator/front/formdisplay.php",
-            "plugins/formcreator/front/form.form.php"
+            "plugins/formcreator/front/form.form.php",
+            "plugins/formcreator/front/formanswer.form.php",
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
