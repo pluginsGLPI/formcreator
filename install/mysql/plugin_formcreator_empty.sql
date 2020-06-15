@@ -173,6 +173,12 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `category_question` int(11) NOT NULL DEFAULT '0',
   `show_rule` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) DEFAULT NULL,
+  `sla_rule` int(11) NOT NULL DEFAULT '1',
+  `sla_question_tto` int(11) NOT NULL DEFAULT '0',
+  `sla_question_ttr` int(11) NOT NULL DEFAULT '0',
+  `ola_rule` int(11) NOT NULL DEFAULT '1',
+  `ola_question_tto` int(11) NOT NULL DEFAULT '0',
+  `ola_question_ttr` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

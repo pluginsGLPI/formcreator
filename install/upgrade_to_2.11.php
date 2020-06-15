@@ -84,6 +84,78 @@ class PluginFormcreatorUpgradeTo2_11 {
 
       $this->migrateCheckboxesAndMultiselect();
       $this->migrateRadiosAndSelect();
+
+      // Add SLA in target ticket
+      $migration->addField(
+         PluginFormcreatorTargetTicket::getTable(),
+         "sla_rule",
+         "int",
+         ['value' => 1]
+      );
+      $migration->addField(
+         PluginFormcreatorTargetTicket::getTable(),
+         "sla_question_tto",
+         "int"
+      );
+      $migration->addField(
+         PluginFormcreatorTargetTicket::getTable(),
+         "sla_question_ttr",
+         "int"
+      );
+
+      // Add OLA in target ticket
+      $migration->addField(
+         PluginFormcreatorTargetTicket::getTable(),
+         "ola_rule",
+         "int",
+         ['value' => 1]
+      );
+      $migration->addField(
+         PluginFormcreatorTargetTicket::getTable(),
+         "ola_question_tto",
+         "int"
+      );
+      $migration->addField(
+         PluginFormcreatorTargetTicket::getTable(),
+         "ola_question_ttr",
+         "int"
+      );
+
+      // Add SLA in target change
+      $migration->addField(
+         PluginFormcreatorTargetChange::getTable(),
+         "sla_rule",
+         "int",
+         ['value' => 1]
+      );
+      $migration->addField(
+         PluginFormcreatorTargetChange::getTable(),
+         "sla_question_tto",
+         "int"
+      );
+      $migration->addField(
+         PluginFormcreatorTargetChange::getTable(),
+         "sla_question_ttr",
+         "int"
+      );
+
+      // Add OLA in target change
+      $migration->addField(
+         PluginFormcreatorTargetChange::getTable(),
+         "ola_rule",
+         "int",
+         ['value' => 1]
+      );
+      $migration->addField(
+         PluginFormcreatorTargetChange::getTable(),
+         "ola_question_tto",
+         "int"
+      );
+      $migration->addField(
+         PluginFormcreatorTargetChange::getTable(),
+         "ola_question_ttr",
+         "int"
+      );
    }
 
    /**

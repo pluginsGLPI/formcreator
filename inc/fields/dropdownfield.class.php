@@ -62,6 +62,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       $optgroup = Dropdown::getStandardDropdownItemTypes();
+
+      $optgroup[__('Service levels')] = [
+         SLA::getType() => __("SLA", "formcreator"),
+         OLA::getType() => __("OLA", "formcreator"),
+      ];
+
       $field = '<div id="dropdown_values_field">';
       $field .= Dropdown::showFromArray('dropdown_values', $optgroup, [
          'value'               => $itemtype,
@@ -119,6 +125,32 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $additions .= '</tr>';
       $additions .= Html::scriptBlock("plugin_formcreator_changeDropdownItemtype($rand);");
 
+      // Service level specific
+      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_service_level">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_show_service_level_types'.$rand.'" id="label_show_service_level_types">';
+      $additions .= __('Type', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $serviceLevelTypes = [
+         SLM::TTO  => __('Time to own', 'formcreator'),
+         SLM::TTR  => __('Time to resolve', 'formcreator'),
+      ];
+      $additions .= dropdown::showFromArray('show_service_level_types', $serviceLevelTypes, [
+         'rand'  => $rand,
+         'value' => isset($decodedValues['show_service_level_types'])
+                    ? $decodedValues['show_service_level_types']
+                    : SLM::TTO,
+         'display' => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</tr>';
+
       $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
@@ -158,6 +190,14 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       );
 
       switch ($itemtype) {
+         case SLA::class:
+         case OLA::class:
+            // Apply service level type if defined
+            if (isset($decodedValues['show_service_level_types'])) {
+               $dparams_cond_crit['type'] = $decodedValues['show_service_level_types'];
+            }
+            break;
+
          case Entity::class:
             unset($dparams['entity']);
 
@@ -405,6 +445,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       foreach ($stdtypes as $categoryOfTypes) {
          $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
       }
+      $allowedDropdownValues[] = SLA::getType();
+      $allowedDropdownValues[] = OLA::getType();
+
       if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
          Session::addMessageAfterRedirect(
                sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
@@ -431,6 +474,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $input['values']['show_ticket_categories_root'] = isset($input['show_ticket_categories_root'])
                                                             ? $input['show_ticket_categories_root']
                                                             : '';
+      } else if ($input['dropdown_values'] == SLA::getType()
+         || $input['dropdown_values'] == OLA::getType()
+      ) {
+         $input['values']['show_service_level_types'] = $input['show_service_level_types'];
+         unset($input['show_service_level_types']);
       }
 
       $input['values'] = json_encode($input['values']);
