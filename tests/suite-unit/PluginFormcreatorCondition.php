@@ -116,7 +116,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
             \PluginFormcreatorCondition::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory');
+      ->hasMessage('UUID or ID is mandatory for Condition');
 
       // Check a new item is created when id is not an uuid (duplication use case)
       $linker = new \PluginFormcreatorLinker();

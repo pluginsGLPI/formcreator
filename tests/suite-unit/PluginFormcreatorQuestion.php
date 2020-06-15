@@ -294,7 +294,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
             \PluginFormcreatorQuestion::import($linker, $input, $section->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory'); // passes
+      ->hasMessage('UUID or ID is mandatory for Question'); // passes
 
       $input['id'] = $questionId;
       $questionId2 = \PluginFormcreatorQuestion::import($linker, $input, $section->getID());

@@ -140,7 +140,7 @@ class PluginFormcreatorQuestionRegex extends CommonTestCase {
             \PluginFormcreatorQuestionRegex::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory');
+      ->hasMessage('UUID or ID is mandatory for Question regular expression');
 
       $input['id'] = $parameterId;
       $parameterId2 = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());

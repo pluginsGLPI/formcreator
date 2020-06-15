@@ -502,7 +502,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
             \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-         ->hasMessage('UUID or ID is mandatory'); // passes
+         ->hasMessage('UUID or ID is mandatory for Target change'); // passes
 
       $input['id'] = $targetChangeId;
       $targetChangeId2 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
