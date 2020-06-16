@@ -136,7 +136,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             $user = new User;
             $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user']);
             if ($users_id === false) {
-               throw new ImportFailureException('failed to find a user');
+               throw new ImportFailureException(sprintf(__('failed to find a user: ID %1$d'), $users_id));
             }
             $input['actor_value'] = $users_id;
             break;
@@ -145,7 +145,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             $group = new Group;
             $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group']);
             if ($groups_id === false) {
-               throw new ImportFailureException('failed to find a group');
+               throw new ImportFailureException(sprintf(__('failed to find a group: ID %1$d'), $groups_id));
             }
             $input['actor_value'] = $groups_id;
             break;
@@ -154,7 +154,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             $supplier = new Supplier;
             $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
             if ($suppliers_id === false) {
-               throw new ImportFailureException('failed to find a supplier');
+               throw new ImportFailureException(sprintf(__('failed to find a supplier: ID %1$d'), $suppliers_id));
             }
             $input['actor_value'] = $suppliers_id;
             break;
