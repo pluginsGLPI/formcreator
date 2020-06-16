@@ -1538,7 +1538,15 @@ PluginFormcreatorDuplicatableInterface
       $linker = new PluginFormcreatorLinker();
 
       $export = $this->export(true);
-      $new_form_id =  static::import($linker, $export);
+      try {
+         $new_form_id =  static::import($linker, $export);
+      } catch (ImportFailureException $e) {
+         foreach ($linker->getObjectsByType(PluginFormcreatorForm::class) as $form) {
+            $form->delete(['id' => $form->getID()]);
+         }
+         Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
+         return false;
+      }
 
       if ($new_form_id === false) {
          return false;
