@@ -1039,6 +1039,19 @@ function pluginFormcreatorInitializeTag(fieldName, rand) {
  */
 function pluginFormcreatorInitializeTextarea(fieldName, rand) {
    var field = $('input[name="' + fieldName + '"]');
+   observer = new MutationObserver(function(mutationsList, observer) {
+      for(let mutation of mutationsList) {
+         if (mutation.type === 'childList') {
+            for (let node of mutation.addedNodes) {
+               if (node.nodeName == 'IFRAME') {
+                  $(node).css('height', '100px');
+               }
+            }
+         }
+     }
+   });
+   observer.observe($('[name="' + fieldName + '"]').parent()[0], { attributes: true, childList: true, subtree: true });
+
    field.on("change", function(e) {
       formcreatorShowFields($(field[0].form));
    });
