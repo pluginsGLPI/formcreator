@@ -1541,10 +1541,13 @@ PluginFormcreatorDuplicatableInterface
       try {
          $new_form_id =  static::import($linker, $export);
       } catch (ImportFailureException $e) {
-         foreach ($linker->getObjectsByType(PluginFormcreatorForm::class) as $form) {
-            $form->delete(['id' => $form->getID()]);
-         }
-         Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
+         $forms = $linker->getObjectsByType(PluginFormcreatorForm::class);
+         $form = reset($forms);
+         $form->update([
+            'id' => $form->getID(),
+            'name' => $form->fields['name'] . ' [' . __('Errored duplicate', 'formcreator') . ']',
+         ]);
+         Session::addMessageAfterRedirect($e->getMessage(), false, WARNING);
          return false;
       }
 
