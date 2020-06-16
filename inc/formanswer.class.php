@@ -418,7 +418,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Can the current user validate the form ?
     */
    public function canValidate() {
-      if (!plugin_formcreator_canValidate()) {
+      if (!PluginFormcreatorCommon::canValidate()) {
          return false;
       }
 

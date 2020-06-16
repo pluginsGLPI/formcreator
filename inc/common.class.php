@@ -254,4 +254,9 @@ JAVASCRIPT;
 
       return ['status' => $status, 'user' => $user];
    }
+
+   public static function canValidate() {
+      return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+         || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
+   }
 }

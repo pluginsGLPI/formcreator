@@ -90,12 +90,6 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
    return $join;
 }
 
-
-function plugin_formcreator_canValidate() {
-   return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
-}
-
 /**
  * Undocumented function
  *
@@ -108,7 +102,7 @@ function plugin_formcreator_getCondition($itemtype) {
       if (Session::haveRight('config', UPDATE)) {
          return '';
       }
-      if (plugin_formcreator_canValidate()) {
+      if (PluginFormcreatorCommon::canValidate()) {
          $groupUser = new Group_User();
          $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
          $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
