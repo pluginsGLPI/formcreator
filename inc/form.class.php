@@ -1480,7 +1480,18 @@ PluginFormcreatorConditionnableInterface
       $linker = new PluginFormcreatorLinker();
 
       $export = $this->export(true);
-      $new_form_id =  static::import($linker, $export);
+      try {
+         $new_form_id =  static::import($linker, $export);
+      } catch (ImportFailureException $e) {
+         $forms = $linker->getObjectsByType(PluginFormcreatorForm::class);
+         $form = reset($forms);
+         $form->update([
+            'id' => $form->getID(),
+            'name' => $form->fields['name'] . ' [' . __('Errored duplicate', 'formcreator') . ']',
+         ]);
+         Session::addMessageAfterRedirect($e->getMessage(), false, WARNING);
+         return false;
+      }
 
       if ($new_form_id === false) {
          return false;
