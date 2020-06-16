@@ -74,6 +74,14 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
             Entity::class           => Entity::getTypeName(2),
             Profile::class          => Profile::getTypeName(2)],
       ];
+      if (class_exists(PassiveDCEquipment::class)) {
+         // Does not exists in GLPI 9.4
+         $optgroup['Assets'][PassiveDCEquipment::class] = PassiveDCEquipment::getTypeName(2);
+      }
+      $plugin = new Plugin();
+      if ($plugin->isActivated('appliances')) {
+         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2);
+      }
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
          'value'     => $this->question->fields['values'],
