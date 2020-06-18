@@ -284,7 +284,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          if (isset($emptyItem->fields['otherserial'])) {
             $dparams['displaywith'][] = 'otherserial';
          }
-         $itemtype::dropdown($dparams);
+         $html .= $itemtype::dropdown($dparams + ['display' => false]);
       }
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
