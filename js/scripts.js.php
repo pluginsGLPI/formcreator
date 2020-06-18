@@ -639,6 +639,8 @@ function formcreatorShowFields(form) {
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
                $('#form-group-field-' + questionKey).removeAttr('hidden');
+               // Workaround an issue with TinyMCE and unwanted inline CSS
+               // $('#form-group-field-' + questionKey + ' iframe').css(('height', ''));
                i++;
                $('#form-group-field-' + questionKey).removeClass('line' + (i+1) % 2);
                $('#form-group-field-' + questionKey).addClass('line' + i%2);
