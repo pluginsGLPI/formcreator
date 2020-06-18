@@ -120,7 +120,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             ]
          ]
          + ($helpdeskHome ? ['helpdesk_home' => '1']: [])
-         + $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false),
+         + [$dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false)],
       ]);
       $count2 = new QuerySubQuery([
          'COUNT' => 'count',
