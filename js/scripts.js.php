@@ -1653,8 +1653,10 @@ function plugin_formcreator_cancelMyTicket(id) {
       url: rootDoc + '/plugins/formcreator/ajax/cancelticket.php',
       data: {id: id},
       type: "POST",
-      dataType: "json"
+      dataType: "text"
    }).done(function(response) {
-      reloadTab;
+      window.location.replace(rootDoc + '/plugins/formcreator/front/issue.php?reset=reset');
+   }).error(function(response) {
+      alert("<?php echo __('Failed to cancel the ticket', 'formcreator'); ?>");
    });
 }
