@@ -387,33 +387,35 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    global $DB;
 
-   if ($item instanceof Ticket) {
-      $id = $item->getID();
-
-      // mark formanswers as deleted
-      $iterator = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype'   => 'PluginFormcreatorFormAnswer',
-            'tickets_id' => $id,
-         ]
-      ]);
-      foreach ($iterator as $row) {
-         $form_answer = new PluginFormcreatorFormAnswer();
-         $form_answer->update([
-            'id'           => $row['id'],
-            'is_deleted'   => 1,
-         ]);
-      }
-
-      // delete issue
-      $issue = new PluginFormcreatorIssue();
-      $issue->deleteByCriteria([
-         'display_id'   => "t_$id",
-         'sub_itemtype' => 'Ticket'
-      ], 1);
+   if (!($item instanceof Ticket)) {
+      return;
    }
+
+   $id = $item->getID();
+
+   // mark formanswers as deleted
+   $iterator = $DB->request([
+      'SELECT' => ['id'],
+      'FROM'   => Item_Ticket::getTable(),
+      'WHERE'  => [
+         'itemtype'   => 'PluginFormcreatorFormAnswer',
+         'tickets_id' => $id,
+      ]
+   ]);
+   foreach ($iterator as $row) {
+      $form_answer = new PluginFormcreatorFormAnswer();
+      $form_answer->update([
+         'id'           => $row['id'],
+         'is_deleted'   => 1,
+      ]);
+   }
+
+   // delete issue
+   $issue = new PluginFormcreatorIssue();
+   $issue->deleteByCriteria([
+      'display_id'   => "t_$id",
+      'sub_itemtype' => 'Ticket'
+   ], 1);
 }
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
