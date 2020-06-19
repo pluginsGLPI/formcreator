@@ -372,7 +372,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
-   if ($item instanceof Ticket) {
+   if (!($item instanceof Ticket)) {
       return;
    }
    $id = $item->getID();
