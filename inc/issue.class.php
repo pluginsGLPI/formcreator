@@ -694,25 +694,29 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $searchIncoming = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getProcessingCriteria());
-      if ($searchIncoming['data']['totalcount'] > 0) {
+      $status[Ticket::INCOMING] = NOT_AVAILABLE;
+      if (isset($searchIncoming['data']['totalcount'])) {
          $status[Ticket::INCOMING] = $searchIncoming['data']['totalcount'];
       }
 
       $searchWaiting = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getWaitingCriteria());
-      if ($searchWaiting['data']['totalcount'] > 0) {
+      $status[Ticket::WAITING] = NOT_AVAILABLE;
+      if (isset($searchWaiting['data']['totalcount'])) {
          $status[Ticket::WAITING] = $searchWaiting['data']['totalcount'];
       }
 
       $searchValidate = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getValidateCriteria());
-      if ($searchValidate['data']['totalcount'] > 0) {
+      $status['to_validate'] = NOT_AVAILABLE;
+      if (isset($searchValidate['data']['totalcount'])) {
          $status['to_validate'] = $searchValidate['data']['totalcount'];
       }
 
       $searchSolved = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getSolvedCriteria());
-      if ($searchSolved['data']['totalcount'] > 0) {
+      $status[Ticket::SOLVED] = NOT_AVAILABLE;
+      if (isset($searchSolved['data']['totalcount'])) {
          $status[Ticket::SOLVED] = $searchSolved['data']['totalcount'];
       }
 
