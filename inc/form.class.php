@@ -55,6 +55,22 @@ PluginFormcreatorConditionnableInterface
    const VALIDATION_USER     = 1;
    const VALIDATION_GROUP    = 2;
 
+   public static function  getEnumValidationType() {
+      return [
+         self::VALIDATION_NONE => Dropdown::EMPTY_VALUE,
+         self::VALIDATION_USER  => User::getTypeName(1),
+         self::VALIDATION_GROUP  => Group::getTypeName(1),
+      ];
+   }
+
+   public static function getEnumAccessType() {
+      return [
+         self::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
+         self::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
+         self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+      ];
+   }
+
    public static function canCreate() {
       return Session::haveRight('entity', UPDATE);
    }
