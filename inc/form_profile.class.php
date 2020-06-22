@@ -69,11 +69,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    }
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      switch (get_class($item)) {
-         case PluginFormcreatorForm::class:
-            static::showForForm($item, $withtemplate);
-            break;
+      if ($item->getType() != PluginFormcreatorForm::class) {
+         return false;
       }
+      self::showForForm($item, $withtemplate);
+      return true;
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
@@ -84,8 +84,15 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
 
-      echo '<tr><th colspan="2">'._n('Access type', 'Access types', 1, 'formcreator').'</th>';
-      echo '</tr>';
+      echo '<tr><th colspan="2">'.self::getTypeName(1).'</th></tr>';
+      $data = [
+         'so'     => [
+            $this->getType() => $this->searchOptions(),
+         ],
+      ];
+      plugin_formcreator_render('entityconfig/showforform.html.twig', $data);
+      return;
+
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
@@ -150,6 +157,41 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
 
       echo "</table>";
       Html::closeForm();
+   }
+
+   public function rawSearchOptions() {
+      $tab = [];
+
+      $tab[] = [
+         'id'              => '5',
+         'table'           => self::getTable(),
+         'name'            => self::getTypeName(1),
+         'field'           => 'access_rights',
+         'datatype'        => 'specific',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      return $tab;
+   }
+
+   public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
+      if (!is_array($values)) {
+         $values = [$field => $values];
+      }
+      $options['display'] = false;
+
+      switch ($field) {
+         case 'replace_helpdesk':
+            $elements = PluginFormcreatorForm::getEnum();
+            $options['value'] = $values[$field];
+            return Dropdown::showFromArray(
+               $name, $elements, $options
+            );
+         break;
+      }
+
+      return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
 
    /**
