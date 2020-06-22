@@ -231,30 +231,43 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * Display HTML for conditions applied on an item
     *
     * @param CommonDBTM $item item where conditions applies to
-    * @return void
+    * @param array      $options
+    * @return void|string
     */
-   public function showConditionsForItem(CommonDBTM $item) {
+   public function showConditionsForItem(CommonDBTM $item, $options = []) {
+      $defaultOptions = [
+         'display' => true,
+      ];
+      $options = array_merge($defaultOptions, $options);
+
       $rand = mt_rand();
 
-      echo '<tr>';
-      echo '<td colspan="4">';
-      Dropdown::showFromArray(
+      $html = '<tr>';
+      $html .= '<td colspan="4">';
+      $html .=Dropdown::showFromArray(
          'show_rule',
          $this->getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
             'on_change'    => 'plugin_formcreator_toggleCondition(this, "' . $item->getType() . '");',
             'rand'         => $rand,
+            'display'      => false,
          ]
       );
-      echo '</td>';
-      echo '</tr>';
+      $html .= '</td>';
+      $html .= '</tr>';
 
       // Get existing conditions for the item
       $conditions = $this->getConditionsFromItem($item);
       foreach ($conditions as $condition) {
-         echo $condition->getConditionHtml($item->fields);
+         $html .= $condition->getConditionHtml($item->fields);
       }
+
+      if (!$options['display']) {
+         return $html;
+      }
+
+      echo $html;
    }
 
    /**

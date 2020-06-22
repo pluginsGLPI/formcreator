@@ -385,39 +385,28 @@ PluginFormcreatorConditionnableInterface
       echo '<div>';
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo $title;
-      echo '</th>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td width="20%">'.__('Title').' <span style="color:red;">*</span></td>';
-      echo '<td colspan="3">';
-      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'required' => 'required', 'value' => $this->fields['name']]);
-      echo '</td>';
-      echo '</tr>';
-
-      // List of conditions
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Condition to show the section', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
-      $form = new PluginFormcreatorForm();
-      $form->getFromDBBySection($this);
-      $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($this);
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo Html::hidden('id', ['value' => $ID]);
-      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
-      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
-      echo '</td>';
-      echo '</tr>';
+      $condition = new PluginFormcreatorCondition();
+      $data = [
+         'item' => [
+            'id'   => Html::hidden('id', ['value' => $ID, 'display' => false]),
+            'uuid' => Html::hidden('uuid', ['value' => $this->fields['uuid'], 'display' => false]),
+            $formFk => Html::hidden($formFk, ['value' => $this->fields[$formFk], 'display' => false]),
+            'name' => Html::input(
+               'name',
+               [
+                  'style' => 'width: calc(100% - 20px)',
+                  'value' => $this->fields['name'],
+                  'display' => false
+               ]
+            ),
+         ],
+         'title' => $title,
+      ];
+
+      $data['conditionsHtml'] = $condition->showConditionsForItem($this, ['display' => false]);
+
+      plugin_formcreator_render('section/showform.html.twig', $data);
 
       // table and div are closed here
       $this->showFormButtons($options + [
