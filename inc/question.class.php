@@ -751,9 +751,14 @@ PluginFormcreatorConditionnableInterface
                'SELECT' => self::getForeignKeyField(),
                'FROM' => $condition_table,
                'WHERE' => [
-                  'itemtype' => $this->getType(),
-                  'items_id' => $questionId
+                  'OR' => [
+                     [
+                        'itemtype' => $this->getType(),
+                        'items_id' => $questionId
+                     ],
+                     'plugin_formcreator_questions_id' => $questionId
                   ]
+               ]
             ])
          ]
       );
