@@ -32,7 +32,6 @@
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Toolbox;
 
 class GlpiInputExtension extends AbstractExtension
 {
