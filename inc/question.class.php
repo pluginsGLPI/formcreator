@@ -750,7 +750,10 @@ PluginFormcreatorConditionnableInterface
             'id' => new QuerySubquery([
                'SELECT' => self::getForeignKeyField(),
                'FROM' => $condition_table,
-               'WHERE' => ['show_field' => $questionId]
+               'WHERE' => [
+                  'itemtype' => $this->getType(),
+                  'items_id' => $questionId
+                  ]
             ])
          ]
       );
