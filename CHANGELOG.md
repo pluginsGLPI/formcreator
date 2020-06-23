@@ -1,3 +1,34 @@
+<a name="2.10.0"></a>
+# [2.10.0](https://github.com/pluginsglpi/formcreator/compare/v2.10.0-rc.1...v2.10.0) (2020-06-23)
+
+
+### Bug Fixes
+
+* **category:** entity restriction not applied ([333fefe](https://github.com/pluginsglpi/formcreator/commit/333fefe))
+* **dropdownfield:** empty dropdown ([324bd74](https://github.com/pluginsglpi/formcreator/commit/324bd74))
+* **form:** bad expression to acess form name ([d7dda48](https://github.com/pluginsglpi/formcreator/commit/d7dda48))
+* **form:** duplication exception ([#1818](https://github.com/pluginsglpi/formcreator/issues/1818)) ([c66e518](https://github.com/pluginsglpi/formcreator/commit/c66e518))
+* **form:** export versin number as string ([475e190](https://github.com/pluginsglpi/formcreator/commit/475e190))
+* **form:** php warning in import ([db49e89](https://github.com/pluginsglpi/formcreator/commit/db49e89))
+* **formanswer:** view of textarea with rich text ([c175396](https://github.com/pluginsglpi/formcreator/commit/c175396))
+* **import:** more explicit error message ([8bb3c3d](https://github.com/pluginsglpi/formcreator/commit/8bb3c3d))
+* **issue:** cancel ticket with simplified service catalog ([b46b64f](https://github.com/pluginsglpi/formcreator/commit/b46b64f))
+* **item_targetticket:** bad relation expression for SQL ([4565197](https://github.com/pluginsglpi/formcreator/commit/4565197))
+* **question:** delete all conditions of a question being deleted ([8ba3031](https://github.com/pluginsglpi/formcreator/commit/8ba3031))
+* **target_actor:** bad key for users, groups or suppliers ([6e05962](https://github.com/pluginsglpi/formcreator/commit/6e05962))
+* **target_actor:** make string localazable ([bc4befe](https://github.com/pluginsglpi/formcreator/commit/bc4befe))
+* **target_actor:** tell the ID of missing actor ([81a6c01](https://github.com/pluginsglpi/formcreator/commit/81a6c01))
+* **targettichet,targetchange:** question tags not updated on duplication ([22f765d](https://github.com/pluginsglpi/formcreator/commit/22f765d))
+* bad redirection ([3ba9748](https://github.com/pluginsglpi/formcreator/commit/3ba9748))
+* other bad redirections ([6869b64](https://github.com/pluginsglpi/formcreator/commit/6869b64))
+
+
+### Features
+
+* **glpiselectfield:** support for new passive DC equipment ([41e59c1](https://github.com/pluginsglpi/formcreator/commit/41e59c1))
+
+
+
 ## [2.10.0](https://github.com/pluginsglpi/formcreator/compare/v2.10.0-rc.1..v2.10.0) (2020-06-23)
 
 
