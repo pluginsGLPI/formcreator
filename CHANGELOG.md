@@ -1,3 +1,33 @@
+## [2.10.0](https://github.com/pluginsglpi/formcreator/compare/v2.10.0-rc.1..v2.10.0) (2020-06-23)
+
+
+### Bug Fixes
+
+*  bad redirection ([3ba9748f](https://github.com/pluginsglpi/formcreator/commit/3ba9748f))
+*  other bad redirections ([6869b646](https://github.com/pluginsglpi/formcreator/commit/6869b646))
+* **category:** entity restriction not applied ([333fefe0](https://github.com/pluginsglpi/formcreator/commit/333fefe0))
+* **dropdownfield:** empty dropdown ([324bd74f](https://github.com/pluginsglpi/formcreator/commit/324bd74f))
+* **form:** bad expression to acess form name ([d7dda48b](https://github.com/pluginsglpi/formcreator/commit/d7dda48b))
+* **form:** duplication exception (#1818) ([c66e5187](https://github.com/pluginsglpi/formcreator/commit/c66e5187))
+* **form:** export versin number as string ([475e1902](https://github.com/pluginsglpi/formcreator/commit/475e1902))
+* **form:** php warning in import ([db49e89a](https://github.com/pluginsglpi/formcreator/commit/db49e89a))
+* **formanswer:** view of textarea with rich text ([c1753960](https://github.com/pluginsglpi/formcreator/commit/c1753960))
+* **import:** more explicit error message ([8bb3c3d7](https://github.com/pluginsglpi/formcreator/commit/8bb3c3d7))
+* **issue:** cancel ticket with simplified service catalog ([b46b64f5](https://github.com/pluginsglpi/formcreator/commit/b46b64f5))
+* **item_targetticket:** bad relation expression for SQL ([45651977](https://github.com/pluginsglpi/formcreator/commit/45651977))
+* **question:** delete all conditions of a question being deleted ([8ba30316](https://github.com/pluginsglpi/formcreator/commit/8ba30316))
+* **target_actor:** bad key for users, groups or suppliers ([6e059627](https://github.com/pluginsglpi/formcreator/commit/6e059627))
+* **target_actor:** make string localazable ([bc4befed](https://github.com/pluginsglpi/formcreator/commit/bc4befed))
+* **target_actor:** tell the ID of missing actor ([81a6c01d](https://github.com/pluginsglpi/formcreator/commit/81a6c01d))
+* **targettichet,targetchange:** question tags not updated on duplication ([22f765d8](https://github.com/pluginsglpi/formcreator/commit/22f765d8))
+
+
+### Features
+
+* **glpiselectfield:** support for new passive DC equipment ([41e59c10](https://github.com/pluginsglpi/formcreator/commit/41e59c10))
+
+
+
 <a name="2.10.0-rc.1"></a>
 # [2.10.0-rc.1](https://github.com/pluginsglpi/formcreator/compare/v2.10.0-beta.1...v2.10.rc.1) (2020-06-10)
 
