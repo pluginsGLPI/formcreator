@@ -58,6 +58,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    const SHOW_CONDITION_QUESTION_VISIBLE = 7;
    const SHOW_CONDITION_QUESTION_INVISIBLE = 8;
 
+   public static function getTypeName($nb = 0) {
+      return _n('Condition', 'Conditions', $nb, 'formcreator');
+   }
+
+
    public function prepareInputForAdd($input) {
       // generate a unique id
       if (!isset($input['uuid'])
@@ -100,7 +105,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       // restore key and FK

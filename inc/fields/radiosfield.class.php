@@ -95,7 +95,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 
          $values = $this->getAvailableValues();
          if (!empty($values)) {
-            echo '<div class="formcreator_radios">';
+            echo '<div class="radios">';
             $i = 0;
             foreach ($values as $value) {
                if ((trim($value) != '')) {
@@ -108,13 +108,11 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                         id="' . $domId . '_' . $i . '"
                         value="' . $value . '"' . $checked . ' /> ';
                   echo '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
-                  //echo $value;
                   echo '<span class="box"></span>';
                   echo '<span class="check"></span>';
-                  //echo $value;
                   echo '</label>';
                   echo '</span>';
-                  echo '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+                  echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
                   echo '</div>';

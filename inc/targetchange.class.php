@@ -87,7 +87,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    protected function getTaggableFields() {
       return [
-         'name',
+         'target_name',
          'content',
          'impactcontent',
          'controlistcontent',
@@ -135,7 +135,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -166,18 +166,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
       if ($questions !== false) {
-         $questionIdentifier = 'id';
-         if (isset($input['uuid'])) {
-            $questionIdentifier = 'uuid';
-         }
          $taggableFields = $item->getTaggableFields();
-         foreach ($questions as $question) {
-            $id         = $question['id'];
-            $originalId = $question[$questionIdentifier];
+         foreach ($questions as $originalId => $question) {
+            $newId = $question->getID();
             foreach ($taggableFields as $field) {
                $content = $input[$field];
-               $content = str_replace("##question_$originalId##", "##question_$id##", $content);
-               $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+               $content = str_replace("##question_$originalId##", "##question_$newId##", $content);
+               $content = str_replace("##answer_$originalId##", "##answer_$newId##", $content);
                $input[$field] = $content;
             }
          }

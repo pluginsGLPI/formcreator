@@ -110,7 +110,7 @@ class PluginFormcreatorQuestionDependency extends CommonTestCase {
             \PluginFormcreatorQuestionDependency::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory');
+      ->hasMessage('UUID or ID is mandatory for Question dependency');
 
       $linker = new \PluginFormcreatorLinker();
       $linker->addObject($question2->getID(), $question2);

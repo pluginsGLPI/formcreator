@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.10.0-rc.1');
+define('PLUGIN_FORMCREATOR_VERSION', '2.10.0');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.10');
 // is or is not an official release of the plugin
@@ -193,13 +193,13 @@ function plugin_init_formcreator() {
             }
 
             $pages = [
-               'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/reservationitem.php',
-               'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/wizard.php',
-               'front/ticket.php' => FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/issue.php',
+               'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
+               'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
+               'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
             ];
             foreach ($pages as $srcPage => $dstPage) {
                if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
-                  Html::redirect(FORMCREATOR_ROOTDOC . $dstPage);
+                  Html::redirect($dstPage);
                   break;
                }
             }
@@ -223,19 +223,19 @@ function plugin_init_formcreator() {
             if (Session::haveRight('entity', UPDATE)) {
                $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
                $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
-               $links['config'] = FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/form.php';
-               $links['add']    =FORMCREATOR_ROOTDOC .  '/plugins/formcreator/front/form.form.php';
+               $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
+               $links['add']    = FORMCREATOR_ROOTDOC .  '/front/form.form.php';
             }
             $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                         title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
-            $links[$img] = FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/formanswer.php';
+            $links[$img] = FORMCREATOR_ROOTDOC . '/front/formanswer.php';
 
             // Set options for pages (title, links, buttons...)
-            $links['search'] = FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/formlist.php';
+            $links['search'] = FORMCREATOR_ROOTDOC . '/front/formlist.php';
             $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
                'config'       => ['title'  => __('Setup'),
-                                  'page'   => FORMCREATOR_ROOTDOC . '/plugins/formcreator/front/form.php',
+                                  'page'   => FORMCREATOR_ROOTDOC . '/front/form.php',
                                   'links'  => $links],
                'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
                                   'links'  => $links],
@@ -245,7 +245,8 @@ function plugin_init_formcreator() {
          $pages = [
             "plugins/formcreator/front/targetticket.form.php",
             "plugins/formcreator/front/formdisplay.php",
-            "plugins/formcreator/front/form.form.php"
+            "plugins/formcreator/front/form.form.php",
+            "plugins/formcreator/front/formanswer.form.php",
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {

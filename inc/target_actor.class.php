@@ -80,6 +80,11 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
          // TODO : support ACTOR_ROLE_SUPPLIER
       ];
    }
+
+   public static function getTypeName($nb = 0) {
+      return _n('Target actor', 'Target actors', $nb, 'formcreator');
+   }
+
    public function prepareInputForAdd($input) {
 
       // generate a unique id
@@ -92,7 +97,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $input[static::$items_id] = $containerId;
@@ -129,27 +134,27 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
          case self::ACTOR_TYPE_PERSON:
             $user = new User;
-            $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user']);
+            $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
             if ($users_id === false) {
-               throw new ImportFailureException('failed to find a user');
+               throw new ImportFailureException(sprintf(__('failed to find a user: ID %1$d', 'formcreator'), $users_id));
             }
             $input['actor_value'] = $users_id;
             break;
 
          case self::ACTOR_TYPE_GROUP:
             $group = new Group;
-            $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group']);
+            $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
             if ($groups_id === false) {
-               throw new ImportFailureException('failed to find a group');
+               throw new ImportFailureException(sprintf(__('failed to find a group: ID %1$d', 'formcreator'), $groups_id));
             }
             $input['actor_value'] = $groups_id;
             break;
 
          case self::ACTOR_TYPE_SUPPLIER:
             $supplier = new Supplier;
-            $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
+            $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
             if ($suppliers_id === false) {
-               throw new ImportFailureException('failed to find a supplier');
+               throw new ImportFailureException(sprintf(__('failed to find a supplier: ID %1$d', 'formcreator'), $suppliers_id));
             }
             $input['actor_value'] = $suppliers_id;
             break;

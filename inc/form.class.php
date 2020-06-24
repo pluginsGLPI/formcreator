@@ -986,7 +986,6 @@ PluginFormcreatorConditionnableInterface
          ];
       }
       $result_faqs = $DB->request($query_faqs);
-      Toolbox::logSqlDebug($result_faqs->getSQL());
       if ($result_faqs->count() > 0) {
          foreach ($result_faqs as $faq) {
             $formList[] = [
@@ -1481,7 +1480,18 @@ PluginFormcreatorConditionnableInterface
       $linker = new PluginFormcreatorLinker();
 
       $export = $this->export(true);
-      $new_form_id =  static::import($linker, $export);
+      try {
+         $new_form_id =  static::import($linker, $export);
+      } catch (ImportFailureException $e) {
+         $forms = $linker->getObjectsByType(PluginFormcreatorForm::class);
+         $form = reset($forms);
+         $form->update([
+            'id' => $form->getID(),
+            'name' => $form->fields['name'] . ' [' . __('Errored duplicate', 'formcreator') . ']',
+         ]);
+         Session::addMessageAfterRedirect($e->getMessage(), false, WARNING);
+         return false;
+      }
 
       if ($new_form_id === false) {
          return false;
@@ -1759,6 +1769,14 @@ PluginFormcreatorConditionnableInterface
     * @param  array  $params GET/POST data that need to contain the filename(s) in _json_file key
     */
    public function importJson($params = []) {
+      if (!isset($params['_json_file'])) {
+         Session::addMessageAfterRedirect(
+            __("No file uploaded", 'formcreator'),
+            false, ERROR
+         );
+         return;
+      }
+
       // parse json file(s)
       foreach ($params['_json_file'] as $filename) {
          if (!$json = file_get_contents(GLPI_TMP_DIR."/".$filename)) {
@@ -1802,7 +1820,7 @@ PluginFormcreatorConditionnableInterface
             }
             if (!$linker->linkPostponed()) {
                Session::addMessageAfterRedirect(sprintf(__("Failed to import %s", "formcreator"),
-                                                           $$form['name']));
+                                                           $form['name']));
             }
          }
          if ($success) {
@@ -1816,7 +1834,7 @@ PluginFormcreatorConditionnableInterface
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $input['_skip_checks'] = true;

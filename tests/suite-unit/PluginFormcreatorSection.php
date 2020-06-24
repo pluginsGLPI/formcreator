@@ -192,7 +192,7 @@ class PluginFormcreatorSection extends CommonTestCase {
             \PluginFormcreatorSection::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory'); // passes
+      ->hasMessage('UUID or ID is mandatory for Section'); // passes
 
       $input['id'] = $sectionId;
       $sectionId2 = \PluginFormcreatorSection::import($linker, $input, $form->getID());

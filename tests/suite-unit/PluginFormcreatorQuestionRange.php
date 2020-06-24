@@ -145,7 +145,7 @@ class PluginFormcreatorQuestionRange extends CommonTestCase {
             \PluginFormcreatorQuestionRange::import($linker, $input);
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory');
+      ->hasMessage('UUID or ID is mandatory for Question range');
 
       $input['id'] = $parameterId;
       $parameterId2 = \PluginFormcreatorQuestionRange::import($linker, $input, $question->getID());

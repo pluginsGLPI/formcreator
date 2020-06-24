@@ -47,6 +47,10 @@ implements PluginFormcreatorExportableInterface
 
    static public $logs_for_item_1      = false;
 
+   public static function getTypeName($nb = 0) {
+      return _n('Composite ticket relation', 'Composite ticket relations', $nb, 'formcreator');
+   }
+
    public function export($remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
@@ -88,7 +92,7 @@ implements PluginFormcreatorExportableInterface
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException('UUID or ID is mandatory');
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
@@ -175,7 +179,6 @@ implements PluginFormcreatorExportableInterface
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
    {
       $keepCriteria = [
-         self::$itemtype_2 => $container->getType(),
          self::$items_id_2 => $container->getID(),
       ];
       if (count($exclude) > 0) {
