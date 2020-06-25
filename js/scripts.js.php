@@ -175,9 +175,6 @@ $(function() {
             );
          }
       });
-
-      // Initialize sort controls
-      $('.plugin_formcreator_sort [value=mostPopularSort]')[0].checked = true;
    }
 
    // === Add better multi-select on form configuration validators ===
