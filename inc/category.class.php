@@ -99,9 +99,14 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $query_faqs = $subQuery->getSQL();
       }
 
+      $dbUtils = new DbUtils();
+      $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);
+      if (count($entityRestrict)) {
+         $entityRestrict = [$entityRestrict];
+      }
+
       // Selects categories containing forms or sub-categories
       $categoryFk = self::getForeignKeyField();
-      $dbUtils = new DbUtils();
       $count1 = new QuerySubQuery([
          'COUNT' => 'count',
          'FROM' => $form_table,
@@ -120,7 +125,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             ]
          ]
          + ($helpdeskHome ? ['helpdesk_home' => '1']: [])
-         + [$dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false)],
+         + $entityRestrict,
       ]);
       $count2 = new QuerySubQuery([
          'COUNT' => 'count',
