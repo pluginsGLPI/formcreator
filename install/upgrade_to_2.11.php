@@ -132,6 +132,18 @@ class PluginFormcreatorUpgradeTo2_11 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `ola_question_ttr`");
       $migration->migrationOneTable($table);
+
+      // sort setting in entityes
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+      if (!$DB->fieldExists($table, 'sort_order')) {
+         // Write default settigns only if the columns must be created
+         $migration->addPostQuery("UPDATE `$table`
+            INNER JOIN `glpi_entities` ON (`$table`.`id` = `glpi_entities`.`id`)
+            SET `sort_order` = '-2'
+            WHERE `level` > '1'"
+         );
+      }
+      $migration->addField($table, 'sort_order', 'integer', ['after' => 'replace_helpdesk']);
    }
 
    /**

@@ -92,4 +92,14 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       $output = $instance::getUsedConfig('replace_helpdesk', $entityId2);
        $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG);
    }
+
+   public function testgetEnumHelpdeskMode() {
+      $output = \PluginFormcreatorEntityconfig::getEnumHelpdeskMode();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT                     => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_GLPI_HELPDSK               => __('GLPi\'s helpdesk', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG => __('Service catalog simplified', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG   => __('Service catalog extended', 'formcreator'),
+      ]);
+   }
 }
