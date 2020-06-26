@@ -421,40 +421,46 @@ input.submit_button:focus {
    border: 2px solid #727272;
 }
 
-.formcreator_radios .form-group-radio {
+.formcreator_form div.radio {
+   padding: 3.7px 0;
+}
+.formcreator_form div.radio label {
+   cursor: pointer;
+}
+.radios .form-group-radio {
    position: relative;
    display: inline-block;
    width: 16px;
    height: 16px;
 }
-.formcreator_radios .form-group-radio + label {
+.radios .form-group-radio + label {
    margin-left: 7px;
 }
-.formcreator_radios input[type = radio] {
+input[type = radio] {
    display: none;
 }
-.formcreator_radios .radio {
+.label-radio .radio {
    padding: 2px 0;
 }
-.formcreator_radios input[type = radio] + label.label-radio span {
+input[type = radio] + label.label-radio span {
    display: inline-block;
    position: absolute;
    width: 16px;
    height: 16px;
 }
-.formcreator_radios input[type = radio] + label.label-radio .box {
+input[type = radio] + label.label-radio .box {
    background-color: #fff;
    border: 2px solid #727272;
    border-radius: 50%;
 }
-.formcreator_radios input[type = radio] + label.label-radio .check {
+input[type = radio] + label.label-radio .check {
    left: 4px;
    top: 4px;
    width: 0px;
    height: 0px;
    opacity: 0;
 }
-.formcreator_radios input[type = radio]:checked + label.label-radio .check {
+input[type = radio]:checked + label.label-radio .check {
    border: 6px solid #727272;
    border-radius: 50%;
    transition: opacity 0.3s ease;
