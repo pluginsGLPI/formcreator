@@ -303,10 +303,10 @@ PluginFormcreatorConditionnableInterface
                   ]
                ],
                'WHERE' => [
-                  "$profileUserTable.users_id" => $requesters_id
+                  "$profileUserTable.users_id" => $requesters_id,
+                  'is_dynamic' => '1',
                ],
                'ORDER' => [
-                  "$profileUserTable.is_dynamic DSC",
                   $order_entities
                ]
             ]);
