@@ -313,6 +313,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $entity = new \Entity();
       $profileUser = new \Profile_User();
+      // A login resyncs a user. Must login nefore adding the dynamic profile
+      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $profileUser->add([
          \User::getForeignKeyField()    => $user->getID(),
          \Profile::getForeignKeyField() => 4, // Super admin
@@ -323,12 +325,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       // Disable notification to avoid output to console
       $CFG_GLPI['use_notifications'] = '0';
 
-      $this->login($user->fields['name'], 'passwd');
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
       ]);
-      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
@@ -349,7 +349,6 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
-      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
