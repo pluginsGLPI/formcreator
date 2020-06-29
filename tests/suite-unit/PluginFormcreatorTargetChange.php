@@ -314,14 +314,16 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $entity = new \Entity();
       $profileUser = new \Profile_User();
       $profileUser->add([
-         \User::getForeignKeyField() => $user->getID(),
+         \User::getForeignKeyField()    => $user->getID(),
          \Profile::getForeignKeyField() => 4, // Super admin
-         \Entity::getForeignKeyField() => 0,
+         \Entity::getForeignKeyField()  => $entityId,
+         'is_dynamic'                   => '1',
       ]);
 
       // Disable notification to avoid output to console
       $CFG_GLPI['use_notifications'] = '0';
 
+      $this->login($user->fields['name'], 'passwd');
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -350,7 +352,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
-      $this->integer((int) $output['entities_id'])->isEqualTo(0);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test specific entity
       $this->boolean($this->login('glpi', 'glpi'))->isTrue();
