@@ -309,6 +309,10 @@ PluginFormcreatorTargetInterface
             foreach ($res_entities as $entity) {
                $data_entities[] = $entity;
             }
+            if (count($data_entities) < 1) {
+               // No entity found
+               break;
+            }
             $first_entity = array_shift($data_entities);
             $entityId = $first_entity[$entityFk];
             break;
