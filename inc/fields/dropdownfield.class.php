@@ -578,6 +578,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $itemtype = $json->itemtype;
       }
 
+      // In some case, there is no itemtype (PluginFormcreatorTagField)
+      if (empty($itemtype)) {
+         return $content;
+      }
+
       $item = new $itemtype;
       $item->getFromDB($answer);
 
