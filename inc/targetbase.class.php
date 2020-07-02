@@ -947,6 +947,11 @@ SCRIPT;
          // Specific tags
          echo '<div id="tag_specific_value" style="display: none">';
 
+         $dbUtils = new DbUtils();
+         $entityRestrict = $dbUtils->getEntitiesRestrictCriteria(PluginTagTag::getTable(), "", "", true, false);
+         if (count($entityRestrict)) {
+            $entityRestrict = [$entityRestrict];
+         }
          $result = $DB->request([
             'SELECT' => ['id', 'name'],
             'FROM'   => PluginTagTag::getTable(),
@@ -954,10 +959,11 @@ SCRIPT;
                'AND' => [
                   'OR' => [
                      ['type_menu' => ['LIKE', '%"' . $this->getTargetItemtypeName() . '"%']],
-                     ['type_menu' => ['LIKE', '%"0"%']]
+                     ['type_menu' => ['LIKE', '%"0"%']],
+                     ['type_menu' => ''],
+                     ['type_menu' => 'NULL'],
                   ],
-                  getEntitiesRestrictCriteria(PluginTagTag::getTable()),
-               ]
+               ] + $entityRestrict,
             ]
          ]);
          $values = [];
