@@ -1807,62 +1807,64 @@ SCRIPT;
 
       // Add tag if presents
       $plugin = new Plugin();
-      if ($plugin->isActivated('tag')) {
-         $tagObj = new PluginTagTagItem();
-         $tags   = [];
+      if (!$plugin->isActivated('tag')) {
+         return;
+      }
 
-         // Add question tags
-         if (($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS
-               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
-               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC)
-               && (!empty($this->fields['tag_questions']))) {
-            $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
-            $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
-            $result = $DB->request([
-               'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
-               'FROM' => PluginFormcreatorAnswer::getTable(),
-               'WHERE' => [
-                  $formAnswerFk => [(int) $formanswer->fields['id']],
-                  $questionFk => $this->fields['tag_questions']
-               ],
-            ]);
-            foreach ($result as $line) {
-               $question = new PluginFormcreatorQuestion();
-               $question->getFromDB($line['plugin_formcreator_questions_id']);
-               $field = PluginFormcreatorFields::getFieldInstance(
-                  $question->fields['fieldtype'],
-                  $question
-               );
-               $field->deserializeValue($line['answer']);
-               $tab = $field->getRawValue();
-               if (is_integer($tab)) {
-                  $tab = [$tab];
-               }
-               if (is_array($tab)) {
-                  $tags = array_merge($tags, $tab);
-               }
+      $tagObj = new PluginTagTagItem();
+      $tags   = [];
+
+      // Add question tags
+      if (($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS
+            || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+            || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC)
+            && (!empty($this->fields['tag_questions']))) {
+         $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+         $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+         $result = $DB->request([
+            'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
+            'FROM' => PluginFormcreatorAnswer::getTable(),
+            'WHERE' => [
+               $formAnswerFk => [(int) $formanswer->fields['id']],
+               $questionFk => $this->fields['tag_questions']
+            ],
+         ]);
+         foreach ($result as $line) {
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($line['plugin_formcreator_questions_id']);
+            $field = PluginFormcreatorFields::getFieldInstance(
+               $question->fields['fieldtype'],
+               $question
+            );
+            $field->deserializeValue($line['answer']);
+            $tab = $field->getRawValue();
+            if (is_integer($tab)) {
+               $tab = [$tab];
+            }
+            if (is_array($tab)) {
+               $tags = array_merge($tags, $tab);
             }
          }
+      }
 
-         // Add specific tags
-         if ($this->fields['tag_type'] == self::TAG_TYPE_SPECIFICS
-                     || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
-                     || ($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC && empty($tags))
-                     && (!empty($this->fields['tag_specifics']))) {
+      // Add specific tags
+      if ($this->fields['tag_type'] == self::TAG_TYPE_SPECIFICS
+                  || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+                  || ($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC && empty($tags))
+                  && (!empty($this->fields['tag_specifics']))) {
 
-            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
-         }
+         $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+      }
 
-         $tags = array_unique($tags);
+      $tags = array_unique($tags);
 
-         // Save tags in DB
-         foreach ($tags as $tag) {
-            $tagObj->add([
-               'plugin_tag_tags_id' => $tag,
-               'items_id'           => $targetId,
-               'itemtype'           => $this->getTargetItemtypeName(),
-            ]);
-         }
+      // Save tags in DB
+      foreach ($tags as $tag) {
+         $tagObj->add([
+            'plugin_tag_tags_id' => $tag,
+            'items_id'           => $targetId,
+            'itemtype'           => $this->getTargetItemtypeName(),
+         ]);
       }
    }
 
