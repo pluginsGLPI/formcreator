@@ -646,6 +646,10 @@ function formcreatorShowFields(form) {
          questionId = parseInt(questionKey.replace('formcreator_field_', ''));
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
+               // Workaround issue with tinymce input which may be 0px height
+               $('#form-group-field-' + questionKey + ' iframe')
+                  .attr('data-mce-style', 'width: 100%; height: 148px; display: block;')
+                  .attr('style', 'width: 100%; height: 148px; display: block;');
                $('#form-group-field-' + questionKey).removeAttr('hidden');
                i++;
                $('#form-group-field-' + questionKey).removeClass('line' + (i+1) % 2);
