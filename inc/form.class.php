@@ -827,13 +827,17 @@ PluginFormcreatorConditionnableInterface
 
       $order         = "$table_form.name ASC";
 
-      $dbUtils = new DBUtils();
+      $dbUtils = new DbUtils();
+      $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($table_form, "", "", true, false);
+      if (count($entityRestrict)) {
+         $entityRestrict = [$entityRestrict];
+      }
       $where_form = [
          'AND' => [
             "$table_form.is_active" => '1',
             "$table_form.is_deleted" => '0',
             "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
-         ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false)
+         ] + $entityRestrict
       ];
       if ($helpdeskHome) {
          $where_form['AND']["$table_form.helpdesk_home"] = '1';
