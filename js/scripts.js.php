@@ -803,6 +803,10 @@ var plugin_formcreator = new function() {
             var questionId = questionKey;
             questionId = parseInt(questionKey.replace('formcreator_field_', ''));
             if (!isNaN(questionId)) {
+               // Workaround issue with tinymce input which may be 0px height
+               $('#form-group-field-' + questionKey + ' iframe')
+                  .attr('data-mce-style', 'width: 100%; height: 148px; display: block;')
+                  .attr('style', 'width: 100%; height: 148px; display: block;');
                if (questionToShow[questionKey]) {
                   $('#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-id="' + questionKey + '"]').removeAttr('hidden', '');
                } else {
