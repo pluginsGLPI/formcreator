@@ -140,9 +140,13 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
          $condition = Search::addDefaultWhere(Ticket::class);
-         $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
-         $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
-         $condition = "($condition OR `glpi_plugin_formcreator_issues`.`validator_id` = '" . Session::getLoginUserID() . "')";
+         if ($condition == '') {
+            $condition = "(`glpi_plugin_formcreator_issues`.`validator_id` = '" . Session::getLoginUserID() . "')";
+         } else {
+            $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
+            $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+            $condition = "($condition OR `glpi_plugin_formcreator_issues`.`validator_id` = '" . Session::getLoginUserID() . "')";
+         }
          break;
 
       case PluginFormcreatorFormAnswer::class:
