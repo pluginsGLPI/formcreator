@@ -34,8 +34,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorSelectField extends CommonTestCase {
 
-   public function provider() {
-
+   public function providerGetAvailableValue() {
       $dataset = [
          [
             'fields'          => [
@@ -44,7 +43,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '0',
                   'show_empty'      => '0',
                   'default_values'  => '',
-                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -58,7 +57,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '0',
                   'show_empty'      => '1',
                   'default_values'  => '',
-                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -72,7 +71,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '0',
                   'show_empty'      => '0',
                   'default_values'  => '3',
-                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -86,7 +85,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '1',
                   'show_empty'      => '0',
                   'default_values'  => '',
-                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -100,7 +99,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
                   'required'        => '1',
                   'show_empty'      => '1',
                   'default_values'  => '',
-                  'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
@@ -113,14 +112,14 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    }
 
    /**
-    * @dataProvider provider
+    * @dataProvider providerGetAvailableValue
     */
    public function testFieldAvailableValue($fields, $expectedValue, $expectedValidity) {
       $question = $this->getQuestion($fields);
       $instance = new \PluginFormcreatorSelectField($question);
 
       $availableValues = $instance->getAvailableValues();
-      $expectedAvaliableValues = explode("\r\n", $fields['values']);
+      $expectedAvaliableValues = explode('\r\n', $fields['values']);
 
       $this->integer(count($availableValues))->isEqualTo(count($expectedAvaliableValues));
 
@@ -129,8 +128,83 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       }
    }
 
+   public function providerIsValid() {
+      return [
+         [
+            'fields'          => [
+                  'fieldtype'       => 'select',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'show_empty'      => '0',
+                  'default_values'  => '',
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+                  'order'           => '1',
+                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            ],
+            'expectedValue'   => '1',
+            'expectedIsValid' => true
+         ],
+         [
+            'fields'          => [
+                  'fieldtype'       => 'select',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'show_empty'      => '1',
+                  'default_values'  => '',
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+                  'order'           => '1',
+                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            ],
+            'expectedValue'   => '',
+            'expectedIsValid' => true
+         ],
+         [
+            'fields'          => [
+                  'fieldtype'       => 'select',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'show_empty'      => '0',
+                  'default_values'  => '3',
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+                  'order'           => '1',
+                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            ],
+            'expectedValue'   => '3',
+            'expectedIsValid' => true
+         ],
+         [
+            'fields'          => [
+                  'fieldtype'       => 'select',
+                  'name'            => 'question',
+                  'required'        => '1',
+                  'show_empty'      => '0',
+                  'default_values'  => '1',
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+                  'order'           => '1',
+                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            ],
+            'expectedValue'   => '1',
+            'expectedIsValid' => true
+         ],
+         [
+            'fields'          => [
+                  'fieldtype'       => 'select',
+                  'name'            => 'question',
+                  'required'        => '1',
+                  'show_empty'      => '1',
+                  'default_values'  => '',
+                  'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+                  'order'           => '1',
+                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            ],
+            'expectedValue'   => '',
+            'expectedIsValid' => false
+         ],
+      ];
+   }
+
    /**
-    * @dataProvider provider
+    * @dataProvider providerIsValid
     */
    public function testIsValid($fields, $expectedValue, $expected) {
       $question = $this->getQuestion($fields);

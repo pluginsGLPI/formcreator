@@ -102,7 +102,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       }
 
       // If the field is required it can't be empty
-      if (($this->isRequired() && count($this->uploadData) > 0)) {
+      if (($this->isRequired() && count($this->uploadData) < 1)) {
          Session::addMessageAfterRedirect(
             sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
             false,

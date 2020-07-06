@@ -37,8 +37,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
          'fieldtype'       => 'radios',
          'name'            => 'question',
          'required'        => '0',
-         'default_values'  => json_encode(['1', '2', '3', '5', '6']),
-         'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+         'default_values'  => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
+         'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
          'order'           => '1',
          'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'range_min'       => 3,
@@ -263,6 +263,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
       $question = $this->getQuestion($fields);
       $instance = new \PluginFormcreatorRadiosField($question);
       $instance->deserializeValue($value);
+
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expected);
    }

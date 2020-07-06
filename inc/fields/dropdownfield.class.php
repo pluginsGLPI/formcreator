@@ -357,6 +357,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    }
 
    public function isValidValue($value) {
+      if ($value == '') {
+         return true;
+      }
       $itemtype = json_decode($this->question->fields['values'], true);
       if ($itemtype === null) {
          $itemtype = $this->question->fields['values'];

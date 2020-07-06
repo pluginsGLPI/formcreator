@@ -146,7 +146,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    public function isRequired() {
-      return $this->question->fields['required'];
+      return ($this->question->fields['required'] != '0');
    }
 
    /**
