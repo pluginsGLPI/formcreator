@@ -1238,7 +1238,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       foreach (array_keys($this->questionFields) as $id) {
          // Test integrity of the value
          $key = "formcreator_field_$id";
-         $this->questionFields[$id]->parseAnswerValues($input);
+         $fieldValidities[$id] = $this->questionFields[$id]->parseAnswerValues($input);
       }
       // any invalid field will invalidate the answers
       $valid = !in_array(false, $fieldValidities, true);
@@ -1252,7 +1252,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             }
             if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
                $valid = false;
-               break;
             }
          }
       }

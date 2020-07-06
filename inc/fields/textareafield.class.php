@@ -175,6 +175,8 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          $this->uploads['_prefix_' . $key] = $input['_prefix_' . $key];
          $this->uploads['_tag_' . $key] = $input['_tag_' . $key];
       }
+
+      return true;
    }
 
    public function getValueForTargetText($richText) {
