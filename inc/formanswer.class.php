@@ -1239,7 +1239,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Test integrity of the value
          $key = "formcreator_field_$id";
          $this->questionFields[$id]->parseAnswerValues($input);
-         $fieldValidities[$id] = $this->questionFields[$id]->isValidValue($input[$key]);
       }
       // any invalid field will invalidate the answers
       $valid = !in_array(false, $fieldValidities, true);

@@ -353,17 +353,25 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       // All is OK
-      return true;
+      return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {
-      return true;
+      $itemtype = json_decode($this->question->fields['values'], true);
+      if ($itemtype === null) {
+         $itemtype = $this->question->fields['values'];
+      } else {
+         $itemtype = $itemtype['itemtype'];
+      }
+      $dropdown = new $itemtype();
+
+      return $dropdown->getFromDB($value);
    }
 
    public function prepareQuestionInputForSave($input) {
       if (!isset($input['dropdown_values']) || empty($input['dropdown_values'])) {
          Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            sprintf(__('The field value is required: %s', 'formcreator'), $input['name']),
             false,
             ERROR);
          return [];
@@ -375,7 +383,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
       if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
          Session::addMessageAfterRedirect(
-               __('Invalid dropdown type:', 'formcreator') . ' ' . $input['name'],
+               sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
                false,
                ERROR);
          return [];

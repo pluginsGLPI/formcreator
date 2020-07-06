@@ -101,17 +101,20 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          return true;
       }
 
-      if (!$this->isValidValue($this->value)) {
-         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
+      // If the field is required it can't be empty
+      if (($this->isRequired() && count($this->uploadData) > 0)) {
+         Session::addMessageAfterRedirect(
+            sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR);
          return false;
       }
 
-      return true;
+      return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {
-      // If the field is required it can't be empty
-      return (!$this->isRequired() || count($this->uploadData) > 0);
+      return true;
    }
 
    public static function getName() {

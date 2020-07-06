@@ -131,11 +131,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          return false;
       }
 
-      if (!$this->isValidValue($this->value)) {
-         return false;
-      }
-
-      return true;
+      return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {
@@ -144,7 +140,10 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       }
 
       if (!empty($value) && !is_numeric($value)) {
-         Session::addMessageAfterRedirect(sprintf(__('This is not a number: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('This is not a number: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR);
          return false;
       }
 

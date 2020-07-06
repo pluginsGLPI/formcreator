@@ -93,7 +93,10 @@ class PluginFormcreatorEmailField extends PluginFormcreatorTextField
       }
 
       if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-         Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('This is not a valid e-mail: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR);
          return false;
       }
 

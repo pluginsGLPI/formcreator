@@ -124,14 +124,14 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) == '')) {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
             false,
             ERROR);
          return false;
       }
 
       // All is OK
-      return true;
+      return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {

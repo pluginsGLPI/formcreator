@@ -231,13 +231,13 @@ input.submit_button:focus {
    display: inline-block;
 }
 
-/* form#plugin_formcreator_form {
+form#plugin_formcreator_form {
    max-width: 950px;
    margin: 10px auto 50px !important;
    display: block;
    position: relative;
    line-height: 1.4em;
-} */
+}
 
 #bloc > #plugin_formcreator_form {
    width: 850px;
@@ -421,19 +421,19 @@ input.submit_button:focus {
    border: 2px solid #727272;
 }
 
-.formcreator_form div.radio {
+.plugin_formcreator_form div.radio {
    padding: 3.7px 0;
 }
-.formcreator_form div.radio label {
+.plugin_formcreator_form div.radio label {
    cursor: pointer;
 }
-.radios .form-group-radio {
+.formcreator_radios .form-group-radio {
    position: relative;
    display: inline-block;
    width: 16px;
    height: 16px;
 }
-.radios .form-group-radio + label {
+.formcreator_radios .form-group-radio + label {
    margin-left: 7px;
 }
 input[type = radio] {

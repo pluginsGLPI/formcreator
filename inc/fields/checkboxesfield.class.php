@@ -186,15 +186,13 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       // If the field is required it can't be empty
       if ($this->isRequired() && count($value) <= 0) {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
             false,
             ERROR);
          return false;
       }
 
-      return true;
-
-      //return $this->isValidValue($value);
+      return $this->isValidValue($value);
    }
 
    public function isValidValue($value) {

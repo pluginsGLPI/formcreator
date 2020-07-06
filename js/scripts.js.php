@@ -664,7 +664,7 @@ var plugin_formcreator = new function() {
       if (typeof(id) === 'undefined') {
          return;
       }
-      var required = $(target).hasClass('fa-dot-circle');
+      var required = $(target).hasClass('fa-check-circle');
       jQuery.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/question_toggle_required.php',
          type: "POST",
@@ -676,8 +676,8 @@ var plugin_formcreator = new function() {
          alert(data.responseText);
       }).done(function() {
          $(target)
-            .removeClass('fa-circle fa-dot-circle')
-            .addClass(required ? 'fa-circle' : 'fa-dot-circle');
+            .removeClass('fa-circle fa-check-circle')
+            .addClass(required ? 'fa-circle' : 'fa-check-circle');
       });
    };
 

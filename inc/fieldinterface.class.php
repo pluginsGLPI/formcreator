@@ -64,7 +64,7 @@ interface PluginFormcreatorFieldInterface
    /**
     * Check if a value is valid for the field type
     *
-    * @param string $value
+    * @param string|array $value
     * @return boolean true if valid, false otherwise
     */
    public function isValidValue($value);

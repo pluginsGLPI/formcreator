@@ -176,7 +176,7 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
       }
 
       // All is OK
-      return true;
+      return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {

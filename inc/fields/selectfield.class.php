@@ -82,20 +82,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorRadiosField
       return __('Select', 'formcreator');
    }
 
-   public function isValid() {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '0') {
-         Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR);
-         return false;
-      }
-
-      // All is OK
-      return true;
-   }
-
    public function equals($value) {
       if ($value == '') {
          // empty string means no selection

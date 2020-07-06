@@ -243,16 +243,23 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
       // If the field is required it can't be empty
       if ($this->isRequired() && count($this->value) === 0) {
-         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR);
          return false;
       }
 
       // If an item has been removed by sanitization, then the data is not valid
       if (count($sanitized) != count($this->value)) {
-         Session::addMessageAfterRedirect(__('Invalid value:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('Invalid value: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR);
          return false;
       }
-      return true;
+
+      return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {
