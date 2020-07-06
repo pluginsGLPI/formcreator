@@ -228,7 +228,6 @@ PluginFormcreatorConditionnableInterface
          return '';
       }
 
-      $key = 'formcreator_field_' . $this->getID();
       if ($field->hasInput($value)) {
          // Parse an HTML input
          $field->parseAnswerValues($value);
