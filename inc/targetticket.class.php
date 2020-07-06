@@ -931,7 +931,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // Update links to other questions
       $questionLinks = [
-         'type_rule'      => ['values' => self::REQUESTTYPE_ANSWER, 'field' => 'type_question'],
          'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
          'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
          'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
