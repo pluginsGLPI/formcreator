@@ -603,7 +603,7 @@ PluginFormcreatorConditionnableInterface
          }
 
          switch ($actor['actor_type']) {
-            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
                $userIds = [$formanswer->fields['requester_id']];
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
@@ -702,7 +702,7 @@ PluginFormcreatorConditionnableInterface
          $notify = $actor['use_notification'];
 
          switch ($actor['actor_type']) {
-            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
@@ -1597,7 +1597,7 @@ SCRIPT;
       $target_actor->add([
          $myFk                 => $this->getID(),
          'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
-         'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
+         'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          'use_notification'    => '1',
       ]);
       $target_actor = $this->getItem_Actor();
@@ -2018,7 +2018,7 @@ SCRIPT;
       foreach ($actors[$actorRole] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
-            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
                echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
