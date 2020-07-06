@@ -796,11 +796,11 @@ PluginFormcreatorConditionnableInterface
       $this->showSearchBar();
       echo '</div>';
       echo '<div class="plugin_formcreator_sort">';
-      echo '<span class="formcreator_radios">';
+      echo '<span class="radios">';
       echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
       echo '<label for="plugin_formcreator_mostPopular">'.__('Popularity sort', 'formcreator').'</label>';
       echo '</span>';
-      echo '<span class="formcreator_radios">';
+      echo '<span class="radios">';
       echo '<input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />';
       echo '<label for="plugin_formcreator_alphabetic">'.__('Alphabetic sort', 'formcreator').'</label>';
       echo '</span>';

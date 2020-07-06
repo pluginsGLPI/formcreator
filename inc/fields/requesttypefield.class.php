@@ -29,12 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
+class PluginFormcreatorRequestTypeField extends PluginFormcreatorSelectField
 {
-   public function isPrerequisites() {
-      return true;
-   }
-
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 
@@ -62,8 +58,7 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = $common = PluginFormcreatorField::getDesignSpecializationField();
-      $additions .= $common['additions'];
+      $additions .= $$this->getParametersHtmlForDesign();
 
       return [
          'label' => $label,

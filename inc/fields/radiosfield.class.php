@@ -102,7 +102,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 
       $values = $this->getAvailableValues();
       if (!empty($values)) {
-         $html .= '<div class="formcreator_radios">';
+         $html .= '<div class="radios">';
          $i = 0;
          foreach ($values as $value) {
             if ((trim($value) != '')) {
