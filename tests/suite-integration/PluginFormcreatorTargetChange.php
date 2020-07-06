@@ -60,7 +60,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'AND' => [
             'plugin_formcreator_targetchanges_id' => $targetChangeId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
-            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
+            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([

@@ -39,7 +39,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 {
    use PluginFormcreatorExportable;
 
-   const ACTOR_TYPE_CREATOR = 1;
+   const ACTOR_TYPE_AUTHOR = 1;
    const ACTOR_TYPE_VALIDATOR = 2;
    const ACTOR_TYPE_PERSON = 3;
    const ACTOR_TYPE_QUESTION_PERSON = 4;
@@ -58,7 +58,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
    static function getEnumActorType() {
       return [
-         self::ACTOR_TYPE_CREATOR                => __('Form requester', 'formcreator'),
+         self::ACTOR_TYPE_AUTHOR                => __('Form author', 'formcreator'),
          self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
          self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
