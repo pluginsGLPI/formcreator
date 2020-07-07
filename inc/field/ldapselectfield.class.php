@@ -29,7 +29,16 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use AuthLDAP;
+use Dropdown;
+use Exception;
+use Html;
+use Session;
+use RuleRightParameter;
+class LdapselectField extends SelectField
 {
    public function getDesignSpecializationField() {
       $rand = mt_rand();

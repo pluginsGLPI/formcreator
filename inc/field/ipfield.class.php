@@ -29,7 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorIpField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Toolbox;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
+class IpField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;
@@ -136,11 +143,11 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible() {

@@ -29,12 +29,21 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use User;
+use Toolbox;
+use Session;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
 /**
  * Actors field is a field which accepts several users. Those users may be
  * users from the itemtype User or email addresses. Email addresses allows to
  * add actors who don't have an account in GLPI.
  */
-class PluginFormcreatorActorField extends PluginFormcreatorField
+class ActorField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;
@@ -368,11 +377,11 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible() {

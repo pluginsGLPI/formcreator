@@ -29,7 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorDescriptionField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Session;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
+class DescriptionField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;
@@ -110,19 +116,19 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function notEquals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {

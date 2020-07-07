@@ -29,7 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorDatetimeField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Session;
+use Toolbox;
+use DateTime;
+class DatetimeField extends PluginFormcreatorField
 {
    /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
    protected $fields = null;

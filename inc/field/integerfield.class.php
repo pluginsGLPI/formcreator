@@ -29,7 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorIntegerField extends PluginFormcreatorFloatField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Session;
+use Toolbox;
+
+class IntegerField extends FloatField
 {
    public function serializeValue() {
       if ($this->value === null || $this->value === '') {

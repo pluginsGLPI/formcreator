@@ -29,7 +29,16 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorFloatField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Html;
+use PluginFormcreatorField;
+use PluginFormcreatorQuestionRange;
+use PluginFormcreatorQuestionRegex;
+use Session;
+use Toolbox;
+
+class TextField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;
@@ -44,15 +53,18 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';
-      $additions .= __('Default value');
+      $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
-      $additions .= '<td id="dropdown_default_value_field">';
+      $additions .= '<td>';
       $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::input('default_values', [
-         'id' => 'default_values',
-         'value' => $value,
-      ]);
+      $additions .= Html::input(
+         'default_values', [
+            'type'  => 'text',
+            'id'    => 'default_values',
+            'value' => $value,
+         ]
+      );
       $additions .= '</td>';
       $additions .= '<td></td>';
       $additions .= '<td></td>';
@@ -81,11 +93,13 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $defaultValue = Html::cleanInputText($this->value);
+
       $html .= Html::input($fieldName, [
+         'type'  => 'text',
          'id'    => $domId,
-         'value' => $defaultValue
+         'value' => $defaultValue,
       ]);
-      $html .=Html::scriptBlock("$(function() {
+      $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeField('$fieldName', '$rand');
       });");
 
@@ -97,7 +111,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          return '';
       }
 
-      return strval((float) $this->value);
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function deserializeValue($value) {
@@ -125,9 +139,10 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function isValid() {
+      // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
             ERROR);
          return false;
@@ -141,49 +156,35 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          return true;
       }
 
-      if (!empty($value) && !is_numeric($value)) {
-         Session::addMessageAfterRedirect(
-            sprintf(__('This is not a number: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR);
-         return false;
-      }
-
       $parameters = $this->getParameters();
 
       // Check the field matches the format regex
-      if (!$parameters['regex']->isNewItem()) {
-         $regex = $parameters['regex']->fields['regex'];
-         if ($regex !== null && strlen($regex) > 0) {
-            if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
-               return false;
-            }
+      $regex = $parameters['regex']->fields['regex'];
+      if ($regex !== null && strlen($regex) > 0) {
+         if (!preg_match($regex, $value)) {
+            Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
+            return false;
          }
       }
 
       // Check the field is in the range
-      if (!$parameters['range']->isNewItem()) {
-         $rangeMin = $parameters['range']->fields['range_min'];
-         $rangeMax = $parameters['range']->fields['range_max'];
-         if ($rangeMin > 0 && $value < $rangeMin) {
-            $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->question->fields['name']);
-            Session::addMessageAfterRedirect($message, false, ERROR);
-            return false;
-         }
+      $rangeMin = $parameters['range']->fields['range_min'];
+      $rangeMax = $parameters['range']->fields['range_max'];
+      if ($rangeMin > 0 && strlen($value) < $rangeMin) {
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters): %s', 'formcreator'), $rangeMin, $this->question->fields['name']), false, ERROR);
+         return false;
+      }
 
-         if ($rangeMax > 0 && $value > $rangeMax) {
-            $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->question->fields['name']);
-            Session::addMessageAfterRedirect($message, false, ERROR);
-            return false;
-         }
+      if ($rangeMax > 0 && strlen($value) > $rangeMax) {
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters): %s', 'formcreator'), $rangeMax, $this->question->fields['name']), false, ERROR);
+         return false;
       }
 
       return true;
    }
 
    public static function getName() {
-      return __('Float', 'formcreator');
+      return __('Text', 'formcreator');
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -198,17 +199,8 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          }
       }
       if (!$success) {
-         return false;
+         return [];
       }
-
-      if (isset($input['default_values'])) {
-         if ($input['default_values'] != '') {
-            $this->value = (float) str_replace(',', '.', $input['default_values']);
-         } else {
-            $this->value = '';
-         }
-      }
-      $input['values'] = '';
 
       return $input;
    }
@@ -217,18 +209,20 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!is_string($input[$key])) {
-         $this->value = '';
-      }
-      // $input[$key] = (float) str_replace(',', '.', $input[$key]);
-
-      $this->value = $input[$key];
+   public static function canRequire() {
       return true;
    }
 
-   public static function canRequire() {
+   public function parseAnswerValues($input, $nonDestructive = false) {
+      $key = 'formcreator_field_' . $this->question->getID();
+      if (!isset($input[$key])) {
+         return false;
+      }
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 
@@ -257,9 +251,8 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       ];
    }
 
-
    public function equals($value) {
-      return ((float) $this->value) === ((float) $value);
+      return Toolbox::stripslashes_deep($this->value) == $value;
    }
 
    public function notEquals($value) {
@@ -267,7 +260,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return ((float) $this->value) > ((float) $value);
+      return Toolbox::stripslashes_deep($this->value) > $value;
    }
 
    public function lessThan($value) {
@@ -279,7 +272,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-float-field.png" title="" />';
+      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-text-field.png" title="" />';
    }
 
    public function isVisibleField()

@@ -29,7 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorUrgencyField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Session;
+use Ticket;
+class UrgencyField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;

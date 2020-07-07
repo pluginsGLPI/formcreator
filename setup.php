@@ -418,13 +418,6 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
  */
 function plugin_formcreator_autoload($classname) {
    if (strpos($classname, 'PluginFormcreator') === 0) {
-      // Search first for field clases
-      $filename = __DIR__ . '/inc/fields/' . strtolower(str_replace('PluginFormcreator', '', $classname)) . '.class.php';
-      if (is_readable($filename) && is_file($filename)) {
-         include_once($filename);
-         return true;
-      }
-
       // useful only for installer GLPi autoloader already handles inc/ folder
       $filename = __DIR__ . '/inc/' . strtolower(str_replace('PluginFormcreator', '', $classname)). '.class.php';
       if (is_readable($filename) && is_file($filename)) {

@@ -29,7 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Toolbox;
+use Session;
+use PluginFormcreatorQuestionRange;
+
+class CheckboxesField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;

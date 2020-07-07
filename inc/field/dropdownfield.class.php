@@ -29,7 +29,28 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorDropdownField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Toolbox;
+use Session;
+use DBUtils;
+use Dropdown;
+use CommonITILObject;
+use CommonTreeDropdown;
+use ITILCategory;
+use User;
+use Group;
+use Group_User;
+use Ticket;
+use Search;
+use SLA;
+use SLM;
+use OLA;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
+class DropdownField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       $itemtype = $this->getSubItemtype();
@@ -559,7 +580,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          return ($value === '');
       }
       if (!$dropdown->getFromDB($this->value)) {
-         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+         throw new ComparisonException('Item not found for comparison');
       }
       if ($dropdown instanceof CommonTreeDropdown) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());
@@ -578,7 +599,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $itemtype = $this->question->fields['values'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
-         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+         throw new ComparisonException('Item not found for comparison');
       }
       if ($dropdown instanceof CommonTreeDropdown) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());

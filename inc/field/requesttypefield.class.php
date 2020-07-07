@@ -29,7 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorRequestTypeField extends PluginFormcreatorSelectField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Html;
+use Session;
+use Ticket;
+
+class RequestTypeField extends SelectField
 {
    public function getDesignSpecializationField() {
       $rand = mt_rand();
