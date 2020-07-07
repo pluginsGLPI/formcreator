@@ -29,7 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorTextField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Session;
+use Toolbox;
+
+class RadiosField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;
@@ -45,20 +52,37 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';
       $additions .= __('Default values');
+      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $value = Html::entities_deep($this->question->fields['default_values']);
       $additions .= Html::input(
          'default_values', [
-            'type'  => 'text',
-            'id'    => 'default_values',
-            'value' => $value,
-         ]
-      );
+         'id'               => 'default_values',
+         'value'            => Html::entities_deep($this->getValueForDesign()),
+         'cols'             => '50',
+         'display'          => false,
+      ]);
       $additions .= '</td>';
-      $additions .= '<td></td>';
-      $additions .= '<td></td>';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Values');
+      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $value = json_decode($this->question->fields['values']);
+      if ($value === null) {
+         $value = [];
+      }
+      $additions .= Html::textarea([
+         'name'             => 'values',
+         'id'               => 'values',
+         'value'            => implode("\r\n", $value),
+         'cols'             => '50',
+         'display'          => false,
+      ]);
+      $additions .= '</td>';
       $additions .= '</tr>';
 
       $common = parent::getDesignSpecializationField();
@@ -77,24 +101,93 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       if (!$canEdit) {
          return $this->value;
       }
-
       $html         = '';
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->value);
 
-      $html .= Html::input($fieldName, [
-         'type'  => 'text',
-         'id'    => $domId,
-         'value' => $defaultValue,
-      ]);
+      $values = $this->getAvailableValues();
+      if (!empty($values)) {
+         $html .= '<div class="radios">';
+         $i = 0;
+         foreach ($values as $value) {
+            if ((trim($value) != '')) {
+               $i++;
+               $checked = ($this->value == $value) ? ['checked' => ''] : [];
+               $html .= '<div class="radio">';
+               $html .= '<span class="form-group-radio">';
+               $html .= Html::input($fieldName, [
+                  'type'    => 'radio',
+                  'class'   => 'form-control',
+                  'id'      => $domId . '_' . $i,
+                  'value'   => $value
+               ] + $checked);
+               $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+               $html .= '<span class="box"></span>';
+               $html .= '<span class="check"></span>';
+               $html .= '</label>';
+               $html .= '</span>';
+               $html .= '<label for="' . $domId . '_' . $i . '">';
+               $html .= $value;
+               $html .= '</label>';
+               $html .= '</div>';
+            }
+         }
+         $html .= '</div>';
+      }
       $html .= Html::scriptBlock("$(function() {
-         pluginFormcreatorInitializeField('$fieldName', '$rand');
+         pluginFormcreatorInitializeRadios('$fieldName', '$rand');
       });");
 
       return $html;
+   }
+
+   public static function getName() {
+      return __('Radios', 'formcreator');
+   }
+
+   public function prepareQuestionInputForSave($input) {
+      if (!isset($input['values']) || empty($input['values'])) {
+         Session::addMessageAfterRedirect(
+            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            false,
+            ERROR);
+         return [];
+      }
+
+      // trim values
+      $input['values'] = $this->trimValue($input['values']);
+      $input['default_values'] = trim($input['default_values']);
+
+      return $input;
+   }
+
+   public function hasInput($input) {
+      return isset($input['formcreator_field_' . $this->question->getID()]);
+   }
+
+   public function parseAnswerValues($input, $nonDestructive = false) {
+      $key = 'formcreator_field_' . $this->question->getID();
+      if (isset($input[$key])) {
+         if (!is_string($input[$key])) {
+            return false;
+         }
+      } else {
+         $this->value = '';
+         return true;
+      }
+
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
+      return true;
+   }
+
+   public function parseDefaultValue($defaultValue) {
+      $this->value = explode('\r\n', $defaultValue);
+      $this->value = array_filter($this->value, function($value) {
+         return ($value !== '');
+      });
+      $this->value = array_shift($this->value);
    }
 
    public function serializeValue() {
@@ -120,7 +213,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function moveUploads() {}
@@ -133,117 +226,31 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
             false,
             ERROR);
          return false;
       }
 
+      // All is OK
       return $this->isValidValue($this->value);
    }
 
    public function isValidValue($value) {
-      if (strlen($value) == 0) {
+      if ($value == '') {
          return true;
       }
-
-      $parameters = $this->getParameters();
-
-      // Check the field matches the format regex
-      $regex = $parameters['regex']->fields['regex'];
-      if ($regex !== null && strlen($regex) > 0) {
-         if (!preg_match($regex, $value)) {
-            Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
-            return false;
-         }
-      }
-
-      // Check the field is in the range
-      $rangeMin = $parameters['range']->fields['range_min'];
-      $rangeMax = $parameters['range']->fields['range_max'];
-      if ($rangeMin > 0 && strlen($value) < $rangeMin) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters): %s', 'formcreator'), $rangeMin, $this->question->fields['name']), false, ERROR);
-         return false;
-      }
-
-      if ($rangeMax > 0 && strlen($value) > $rangeMax) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters): %s', 'formcreator'), $rangeMax, $this->question->fields['name']), false, ERROR);
-         return false;
-      }
-
-      return true;
-   }
-
-   public static function getName() {
-      return __('Text', 'formcreator');
-   }
-
-   public function prepareQuestionInputForSave($input) {
-      $success = true;
-      $fieldType = $this->getFieldTypeName();
-      // Add leading and trailing regex marker automaticaly
-      if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
-         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
-         $success = $this->checkRegex($regex);
-         if (!$success) {
-            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
-         }
-      }
-      if (!$success) {
-         return [];
-      }
-
-      return $input;
-   }
-
-   public function hasInput($input) {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
+      $value = Toolbox::stripslashes_deep($value);
+      $value = trim($value);
+      return in_array($value, $this->getAvailableValues());
    }
 
    public static function canRequire() {
       return true;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!isset($input[$key])) {
-         return false;
-      }
-      if (!is_string($input[$key])) {
-         return false;
-      }
-
-      $this->value = Toolbox::stripslashes_deep($input[$key]);
-      return true;
-   }
-
-   public function getEmptyParameters() {
-      $regexDoc = '<small>';
-      $regexDoc.= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
-      $regexDoc.= '('.__('Regular expression', 'formcreator').')';
-      $regexDoc.= '</small>';
-      return [
-         'regex' => new PluginFormcreatorQuestionRegex(
-            $this,
-            [
-               'fieldName' => 'regex',
-               'label'     => __('Additional validation', 'formcreator') . $regexDoc,
-               'fieldType' => ['text'],
-            ]
-         ),
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
-      ];
-   }
-
    public function equals($value) {
-      return Toolbox::stripslashes_deep($this->value) == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
@@ -251,7 +258,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return Toolbox::stripslashes_deep($this->value) > $value;
+      return $this->value > $value;
    }
 
    public function lessThan($value) {
@@ -263,7 +270,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-text-field.png" title="" />';
+      return '<i class="fa fa-check-circle" aria-hidden="true"></i>';
    }
 
    public function isVisibleField()

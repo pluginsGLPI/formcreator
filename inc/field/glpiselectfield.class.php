@@ -29,7 +29,41 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Html;
+use Session;
+use Dropdown;
+use User;
+use Group;
+use Ticket;
+use Computer;
+use Monitor;
+use Software;
+use NetworkEquipment;
+use Peripheral;
+use Printer;
+use CartridgeItem;
+use ConsumableItem;
+use Phone;
+use Line;
+use Problem;
+use TicketRecurrent;
+use Budget;
+use Supplier;
+use Contact;
+use Contract;
+use Document;
+use Project;
+use Entity;
+use Profile;
+use PassiveDCEquipment;
+use PluginAppliancesAppliance;
+use Plugin;
+
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
+class GlpiselectField extends DropdownField
 {
    public function getDesignSpecializationField() {
       $rand = mt_rand();
@@ -139,7 +173,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
          return ($value === '');
       }
       if (!$item->getFromDB($this->value)) {
-         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+         throw new ComparisonException('Item not found for comparison');
       }
       return $item->getField($item->getNameField()) == $value;
    }
@@ -153,7 +187,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
-         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+         throw new ComparisonException('Item not found for comparison');
       }
       return $item->getField($item->getNameField()) > $value;
    }

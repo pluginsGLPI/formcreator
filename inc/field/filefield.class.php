@@ -29,7 +29,19 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorFileField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Document;
+use Html;
+use Toolbox;
+use Session;
+use PluginFormcreatorForm;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use PluginFormcreatorSection;
+use PluginFormcreatorQuestion;
+
+class FileField extends PluginFormcreatorField
 {
    /**@var $uploadData array uploads saved as documents   */
    private $uploadData = [];
@@ -247,19 +259,19 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function notEquals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible() {

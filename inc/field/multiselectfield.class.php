@@ -29,7 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorMultiSelectField extends PluginFormcreatorCheckboxesField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Dropdown;
+use Html;
+
+class MultiSelectField extends CheckboxesField
 {
    public function getRenderedHtml($canEdit = true) {
       $html         = '';

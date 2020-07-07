@@ -29,7 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorTimeField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+use DateTime;
+use Html;
+use PluginFormcreatorField;
+use Session;
+use Toolbox;
+
+class TimeField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;

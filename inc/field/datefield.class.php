@@ -29,7 +29,16 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorDateField extends PluginFormcreatorField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use DateTime;
+use Toolbox;
+use Session;
+
+
+class DateField extends PluginFormcreatorField
 {
    const DATE_FORMAT = 'Y-m-d';
 

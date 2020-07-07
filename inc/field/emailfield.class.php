@@ -29,7 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorEmailField extends PluginFormcreatorTextField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Html;
+use Session;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
+class EmailField extends TextField
 {
    public function getDesignSpecializationField() {
       $rand = mt_rand();
@@ -153,11 +159,11 @@ class PluginFormcreatorEmailField extends PluginFormcreatorTextField
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible() {

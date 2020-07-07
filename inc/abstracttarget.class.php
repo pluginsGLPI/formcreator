@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Field\DropdownField;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -449,7 +451,7 @@ PluginFormcreatorConditionnableInterface
 
             foreach ($answers as $answer) {
                // Decode dropdown settings
-               $itemtype = \PluginFormcreatorDropdownField::getSubItemtypeForValues($answer['values']);
+               $itemtype = DropdownField::getSubItemtypeForValues($answer['values']);
 
                // Skip if not a dropdown on categories
                if ($itemtype !== "ITILCategory") {

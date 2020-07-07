@@ -36,7 +36,6 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorFields
 {
 
-   private $types = null;
    /**
     * Retrive all field types and file path
     *
@@ -45,9 +44,9 @@ class PluginFormcreatorFields
    public static function getTypes() {
       $tab_field_types     = [];
 
-      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+      foreach (glob(dirname(__FILE__).'/field/*field.class.php') as $class_file) {
          $matches = null;
-         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         preg_match("#field/(.+)field\.class.php$#", $class_file, $matches);
 
          if (PluginFormcreatorFields::fieldTypeExists($matches[1])) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
@@ -64,9 +63,9 @@ class PluginFormcreatorFields
     */
    public static function getClasses() {
       $classes = [];
-      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+      foreach (glob(dirname(__FILE__).'/field/*field.class.php') as $class_file) {
          $matches = null;
-         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         preg_match("#field/(.+)field\.class.php$#", $class_file, $matches);
          $classname = self::getFieldClassname($matches[1]);
          if (self::fieldTypeExists($matches[1])) {
             $classes[strtolower($matches[1])] = $classname;
@@ -407,7 +406,7 @@ class PluginFormcreatorFields
     * @return string
     */
    public static function getFieldClassname($type) {
-      return 'PluginFormcreator' . ucfirst($type) . 'Field';
+      return 'GlpiPlugin\\Formcreator\\Field\\' . ucfirst($type) . 'Field';
    }
 
    /**

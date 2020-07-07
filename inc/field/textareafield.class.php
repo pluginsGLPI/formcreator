@@ -29,7 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
+namespace GlpiPlugin\Formcreator\Field;
+
+use PluginFormcreatorField;
+use Html;
+use Session;
+use Toolbox;
+class TextareaField extends TextField
 {
    /** @var $uploads array uploaded files on form submit */
    private $uploads = [

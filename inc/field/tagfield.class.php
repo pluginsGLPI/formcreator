@@ -29,7 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Dropdown;
+use PluginTagTag;
+use Session;
+use Toolbox;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
+class TagField extends DropdownField
 {
    public function isPrerequisites() {
       return class_exists(PluginTagTag::class);
@@ -215,15 +223,15 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function notEquals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible() {

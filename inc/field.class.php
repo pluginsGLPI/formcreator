@@ -173,9 +173,11 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    public function getFieldTypeName() {
-      $classname = get_called_class();
+      $classname = explode('\\', get_called_class());
+      $classname = array_pop($classname);
       $matches = null;
-      preg_match("#^PluginFormcreator(.+)Field$#", $classname, $matches);
+
+      preg_match("#^(.+)Field$#", $classname, $matches);
       return strtolower($matches[1]);
    }
 

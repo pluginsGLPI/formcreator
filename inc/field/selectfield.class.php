@@ -29,7 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorSelectField extends PluginFormcreatorRadiosField
+namespace GlpiPlugin\Formcreator\Field;
+
+use Dropdown;
+use Html;
+
+class SelectField extends RadiosField
 {
    public function isPrerequisites() {
       return true;

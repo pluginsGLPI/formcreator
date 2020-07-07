@@ -170,7 +170,7 @@ PluginFormcreatorConditionnableInterface
 
       $questionId = $this->getID();
       $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
-      $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
+      $fieldType = PluginFormcreatorFields::getFieldClassname($this->fields['fieldtype']);
       $field = new $fieldType($this);
 
       $html .= '<div class="grid-stack-item"'
