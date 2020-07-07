@@ -476,14 +476,15 @@ class DropdownField extends PluginFormcreatorField
                ERROR);
          return [];
       }
+      $itemtype = $input['dropdown_values'];
       $input['values'] = [
-         'itemtype' => $input['dropdown_values'],
+         'itemtype' => $itemtype,
       ];
 
       // Params for CommonTreeDropdown fields
-      if (is_a($input['dropdown_values'], CommonTreeDropdown::class, true)) {
+      if (is_a($itemtype, CommonTreeDropdown::class, true)) {
          // Specific param for ITILCategory
-         if ($input['dropdown_values'] == ITILCategory::class) {
+         if ($itemtype == ITILCategory::class) {
             $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
          }
 
@@ -504,14 +505,12 @@ class DropdownField extends PluginFormcreatorField
 
       $input['values'] = json_encode($input['values']);
 
-      if ($input['dropdown_values'] == ITILCategory::class) {
-         unset($input['show_ticket_categories']);
-      }
-      unset($input['show_ticket_categories_depth']);
-      unset($input['show_ticket_categories_root']);
-
       $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
       unset($input['dropdown_default_value']);
+      unset($input['show_ticket_categories']);
+      unset($input['show_ticket_categories_depth']);
+      unset($input['show_ticket_categories_root']);
+      unset($input['dropdown_values']);
 
       return $input;
    }

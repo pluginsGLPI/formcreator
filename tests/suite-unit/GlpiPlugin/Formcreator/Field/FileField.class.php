@@ -29,14 +29,19 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorFileField extends CommonTestCase {
+class FileField extends CommonTestCase {
    public function testIsPrerequisites() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testGetName() {
+      $output = $this->getTestedClassName()::getName();
+      $this->string($output)->isEqualTo('File');
    }
 
    public function testDeserializeValue() {
@@ -59,7 +64,7 @@ class PluginFormcreatorFileField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorFileField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

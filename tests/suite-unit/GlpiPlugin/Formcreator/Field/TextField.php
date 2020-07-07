@@ -28,10 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorTextField extends CommonTestCase {
+class TextField extends CommonTestCase {
 
    public function provider() {
       $dataset = [
@@ -204,7 +204,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
 
       $question = $this->getQuestion($fields);
 
-      $instance = new \PluginFormcreatorTextField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($fields['default_values']);
       $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
 
@@ -233,12 +233,12 @@ class PluginFormcreatorTextField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorTextField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Text');
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorTextField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -261,7 +261,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
     */
    public function testSerializeValue($value, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorTextField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
@@ -284,14 +284,14 @@ class PluginFormcreatorTextField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorTextField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

@@ -29,10 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
- namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorIntegerField extends CommonTestCase {
+class IntegerField extends CommonTestCase {
+
+   public function testGetName() {
+      $output = $this->getTestedClassName()::getName();
+      $this->string($output)->isEqualTo('Integer');
+   }
 
    public function providerIsValid() {
       $dataset = [
@@ -235,7 +240,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
 
       $question = $this->getQuestion($fields);
 
-      $instance = new \PluginFormcreatorIntegerField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($fields['default_values']);
 
       $isValid = $instance->isValid();
@@ -243,7 +248,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorIntegerField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -255,7 +260,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorIntegerField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

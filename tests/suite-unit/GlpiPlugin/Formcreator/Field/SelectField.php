@@ -29,10 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorSelectField extends CommonTestCase {
+class SelectField extends CommonTestCase {
 
    public function providerGetAvailableValue() {
       $dataset = [
@@ -116,7 +116,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     */
    public function testFieldAvailableValue($fields, $expectedValue, $expectedValidity) {
       $question = $this->getQuestion($fields);
-      $instance = new \PluginFormcreatorSelectField($question);
+      $instance = $this->newTestedInstance($question);
 
       $availableValues = $instance->getAvailableValues();
       $expectedAvaliableValues = explode('\r\n', $fields['values']);
@@ -208,7 +208,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     */
    public function testIsValid($fields, $expectedValue, $expected) {
       $question = $this->getQuestion($fields);
-      $instance = new \PluginFormcreatorSelectField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($fields['default_values']);
 
       $isValid = $instance->isValid();
@@ -216,12 +216,12 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorSelectField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Select');
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorSelectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -233,7 +233,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorSelectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
@@ -276,7 +276,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     */
    public function testSerializeValue($value, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorSelectField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
@@ -308,7 +308,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     */
    public function testDeserializeValue($value, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorSelectField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
@@ -365,7 +365,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
     * @dataProvider providerGetValueForDesign
     */
    public function testGetValueForDesign($value, $expected) {
-      $instance = new \PluginFormcreatorSelectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);

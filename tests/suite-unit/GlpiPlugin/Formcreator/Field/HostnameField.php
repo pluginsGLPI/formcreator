@@ -29,24 +29,30 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorHostnameField extends CommonTestCase {
+class HostnameField extends CommonTestCase {
    public function testIsPrerequisites() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
+   public function testGetName() {
+      $output = $this->getTestedClassName()::getName();
+      $this->string($output)->isEqualTo('Hostname');
+   }
+
+
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
    }
 
    public function testGetDesignSpecializationField() {
-      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getDesignSpecializationField();
       $this->array($output)->isIdenticalTo([
          'label' => '',
@@ -74,7 +80,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function serializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -99,7 +105,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
@@ -107,7 +113,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
 
    public function testGetValueForDesign() {
       $value = 'foo';
-      $instance = new \PluginFormcreatorHostnameField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo('');
@@ -169,7 +175,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
     */
    public function testEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHostnameField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
@@ -199,7 +205,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
     */
    public function testNotEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHostnameField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
@@ -234,7 +240,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
     */
    public function testGreaterThan($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHostnameField($question, $answer);
+      $instance = $this->newTestedInstance($question, $answer);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->greaterThan($value))->isEqualTo($expected);
    }
@@ -269,7 +275,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
     */
    public function testLessThan($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHostnameField($question, $answer);
+      $instance = $this->newTestedInstance($question, $answer);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->lessThan($value))->isEqualTo($expected);
    }

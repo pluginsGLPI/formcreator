@@ -28,12 +28,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorCheckboxesField extends CommonTestCase {
+class CheckboxesField extends CommonTestCase {
    public function testGetName() {
-      $output = \PluginFormcreatorCheckboxesField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Checkboxes');
    }
 
@@ -165,7 +165,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
     */
    public function testSerializeValue($value, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorCheckboxesField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
@@ -204,7 +204,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
          'fieldtype' => 'checkboxes',
          'values' => implode('\r\n', ["foo", "bar","test d'apostrophe"]),
       ]);
-      $instance = new \PluginFormcreatorCheckboxesField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo(implode(', ', $expected));
@@ -265,7 +265,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorCheckboxesField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -447,7 +447,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
 
    public function testCanRequire() {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorCheckboxesField($question);
+      $instance = $this->newTestedInstance($question);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

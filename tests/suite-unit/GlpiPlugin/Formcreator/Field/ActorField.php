@@ -28,12 +28,13 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
-class PluginFormcreatorActorField extends CommonTestCase {
+class ActorField extends CommonTestCase {
    public function testGetDesignSpecializationField() {
-      $instance = new \PluginFormcreatorActorField($this->getQuestion(['fieldtype' => 'actor']));
+      $instance = $this->newTestedInstance($this->getQuestion(['fieldtype' => 'actor']));
       $output = $instance->getDesignSpecializationField();
       $this->string($output['label'])->isEqualTo('');
       $this->string($output['field'])->isEqualTo('');
@@ -42,7 +43,8 @@ class PluginFormcreatorActorField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorActorField::getName();
+      $itemtype = $this->getTestedClassName();
+      $output = $itemtype::getName();
       $this->string($output)->isEqualTo('Actor');
    }
 
@@ -59,7 +61,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'default_values'  => json_encode([]),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
             'expectedIsValid' => true
@@ -117,7 +119,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     */
    public function testIsValid($fields, $expectedValue, $expectedValidity) {
       $question = $this->getQuestion($fields);
-      $instance = new \PluginFormcreatorActorField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($fields['default_values']);
 
       $isValid = $instance->isValid();
@@ -160,7 +162,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
       $question = $this->getQuestion([
          'fieldtype' => 'actor'
       ]);
-      $instance = new \PluginFormcreatorActorField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
@@ -204,7 +206,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorActorField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo(implode(', ', $expected));
@@ -244,7 +246,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerGetValueForDesign
     */
    public function testGetValueForDesign($value, $expected) {
-      $instance = new \PluginFormcreatorActorField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
@@ -297,7 +299,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     */
    public function testEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorActorField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
@@ -349,7 +351,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
     */
    public function testNotEquals($value, $answer, $expected) {
       $question = $this->getQuestion(['fieldtype' => 'actor']);
-      $instance = new \PluginFormcreatorActorField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
@@ -357,19 +359,19 @@ class PluginFormcreatorActorField extends CommonTestCase {
    public function testGreaterThan() {
       $this->exception(
          function() {
-            $instance = new \PluginFormcreatorActorField($this->getQuestion());
+            $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+      )->isInstanceOf(ComparisonException::class);
    }
 
    public function testLessThan() {
       $this->exception(
          function() {
-            $instance = new \PluginFormcreatorActorField($this->getQuestion());
+            $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+      )->isInstanceOf(ComparisonException::class);
    }
 
    public function testIsAnonymousFormCompatible() {
@@ -390,7 +392,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorActorField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

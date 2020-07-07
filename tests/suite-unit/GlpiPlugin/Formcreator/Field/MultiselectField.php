@@ -28,10 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorMultiSelectField extends CommonTestCase {
+class MultiSelectField extends CommonTestCase {
 
    public function provider() {
       $dataset = [
@@ -155,7 +155,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
     */
    public function testGetAvailableValues($fields, $expectedValue, $expectedValidity) {
       $question = $this->getQuestion($fields);
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($question);
+      $fieldInstance = $this->newTestedInstance($question);
 
       $availableValues = $fieldInstance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
@@ -167,8 +167,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
-      $output = $instance->getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Multiselect');
    }
 
