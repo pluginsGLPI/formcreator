@@ -28,24 +28,23 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorHiddenField extends CommonTestCase {
+class HiddenField extends CommonTestCase {
    public function testGetName() {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
-      $output = $instance->getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Hidden field');
    }
 
    public function testIsValid() {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isValid('');
       $this->boolean($output)->isTrue();
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -57,7 +56,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
    }
@@ -79,7 +78,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function serializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -104,7 +103,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
@@ -112,7 +111,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
 
    public function testGetValueForDesign() {
       $value = 'foo';
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo('foo');
@@ -174,7 +173,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
     */
    public function testEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHiddenField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
@@ -204,7 +203,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
     */
    public function testNotEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHiddenField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
@@ -239,7 +238,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
     */
    public function testGreaterThan($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHiddenField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->greaterThan($value))->isEqualTo($expected);
    }
@@ -274,7 +273,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
     */
    public function testLessThan($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorHiddenField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->lessThan($value))->isEqualTo($expected);
    }
@@ -285,7 +284,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
    }
 
    public function testGetDesignSpecializationField() {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getDesignSpecializationField();
       $this->string($output['label'])->isEqualTo('');
       $this->string($output['field'])->isEqualTo('');

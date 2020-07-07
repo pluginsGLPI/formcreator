@@ -28,10 +28,11 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+namespace GlpiPlugin\Formcreator\Field;
+use PluginFormcreatorField;
+use PluginFormcreatorQuestionDependency;
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-
-class PluginFormcreatorDependentField extends PluginFormcreatorField
+class DependentField extends PluginFormcreatorField
 {
    public function isPrerequisites() {
       return true;

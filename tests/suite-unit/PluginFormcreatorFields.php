@@ -293,7 +293,7 @@ class PluginFormcreatorFields extends CommonTestCase {
 
    public function testGetFieldClassname() {
       $output = \PluginFormcreatorFields::getFieldClassname('dummy');
-      $this->string($output)->isEqualTo('PluginFormcreatorDummyField');
+      $this->string($output)->isEqualTo('GlpiPlugin\Formcreator\Field\DummyField');
    }
 
    public function testFieldTypeExists() {

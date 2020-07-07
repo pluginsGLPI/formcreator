@@ -28,10 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorDropdownField extends CommonTestCase {
+class DropdownField extends CommonTestCase {
    public function beforeTestMethod($method) {
       switch ($method) {
          case 'testPrepareQuestionInputForSave':
@@ -42,8 +42,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
-      $output = $instance->getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Dropdown');
    }
 
@@ -64,7 +63,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'show_ticket_categories_depth' => '5',
                   'show_ticket_categories_root' => '0',
                ]),
-               'dropdown_values' => \Location::class,
                'default_values'  => '',
             ]
          ],
@@ -74,6 +72,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                'dropdown_values' => \ITILCategory::class,
                'show_ticket_categories' => '2',
                'show_ticket_categories_depth' => '3',
+               'default_values'  => '',
             ],
             'expected' => [
                'name' => $name,
@@ -83,7 +82,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'show_ticket_categories_depth' => '3',
                   'show_ticket_categories_root'  => '',
                ]),
-               'dropdown_values' => \ITILCategory::class,
                'default_values'  => '',
             ]
          ],
@@ -94,7 +92,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerPrepareQuestionInputForSave
     */
    public function testPrepareQuestionInputForSave($input, $expected) {
-      $instance = new \PluginFormcreatorDropdownField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->prepareQuestionInputForSave($input);
       $this->array($output)->hasSize(count($expected));
       foreach ($expected as $key => $value) {
@@ -103,7 +101,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDropdownField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isFalse();
    }
@@ -124,7 +122,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
 
    public function testGetValueForDesign() {
       $value = $expected = 'foo';
-      $instance = new \PluginFormcreatorDropdownField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
@@ -216,7 +214,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerIsValid
     */
    public function testIsValid($question, $input, $expected) {
-      $instance = new \PluginFormcreatorDropdownField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($question->fields['default_values']);
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expected);
@@ -275,7 +273,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
          ]),
       ]);
 
-      $instance = new \PluginFormcreatorDropdownField($question);
+      $instance = $this->newTestedInstance($question);
       $output = $instance->getDesignSpecializationField();
       $this->boolean($output['may_be_empty'])->isEqualTo(true);
       $this->boolean($output['may_be_required'])->isEqualTo(true);
@@ -316,7 +314,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerEquals
     */
    public function testEquals($fields, $value, $answer, $expected) {
-      $instance = new \PluginFormcreatorDropdownField($fields);
+      $instance = $this->newTestedInstance($fields);
       $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
@@ -355,14 +353,14 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerNotEquals
     */
    public function testNotEquals($fields, $value, $answer, $expected) {
-      $instance = new \PluginFormcreatorDropdownField($fields);
+      $instance = $this->newTestedInstance($fields);
       $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
 
    public function testCanRequire() {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorDropdownField($question);
+      $instance = $this->newTestedInstance($question);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

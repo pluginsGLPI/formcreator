@@ -29,25 +29,25 @@
  * ---------------------------------------------------------------------
  */
 
- namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
-class PluginFormcreatorIpField extends CommonTestCase {
+class IpField extends CommonTestCase {
 
    public function testGetName() {
-      $instance = new \PluginFormcreatorIpField($this->getQuestion());
-      $output = $instance->getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('IP address');
    }
 
    public function testIsValid() {
-      $instance = new \PluginFormcreatorIpField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isValid('');
       $this->boolean($output)->isTrue();
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorIpField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -59,7 +59,7 @@ class PluginFormcreatorIpField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorIpField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
    }
@@ -70,7 +70,7 @@ class PluginFormcreatorIpField extends CommonTestCase {
    }
 
    public function testGetDesignSpecializationField() {
-      $instance = new \PluginFormcreatorHiddenField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getDesignSpecializationField();
       $this->string($output['label'])->isEqualTo('');
       $this->string($output['field'])->isEqualTo('');
@@ -103,7 +103,7 @@ class PluginFormcreatorIpField extends CommonTestCase {
     */
    public function testEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorIpField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
@@ -133,7 +133,7 @@ class PluginFormcreatorIpField extends CommonTestCase {
     */
    public function testNotEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorIpField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
@@ -141,18 +141,18 @@ class PluginFormcreatorIpField extends CommonTestCase {
    public function testGreaterThan() {
       $this->exception(
          function() {
-            $instance = new \PluginFormcreatorIpField($this->getQuestion());
+            $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+      )->isInstanceOf(ComparisonException::class);
    }
 
    public function testLessThan() {
       $this->exception(
          function() {
-            $instance = new \PluginFormcreatorIpField($this->getQuestion());
+            $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+      )->isInstanceOf(ComparisonException::class);
    }
 }

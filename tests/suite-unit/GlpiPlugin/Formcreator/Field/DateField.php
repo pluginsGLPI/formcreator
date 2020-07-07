@@ -28,16 +28,16 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorDatetimeField extends CommonTestCase {
+class DateField extends CommonTestCase {
 
    public function providerGetValue() {
       $dataset = [
          [
             'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
+               'fieldtype'       => 'date',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
@@ -51,21 +51,21 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
          ],
          [
             'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
+               'fieldtype'       => 'date',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '2018-08-16 08:12:34',
+               'default_values'  => '2018-08-16',
                'values'          => "",
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
-            'expectedValue'   => '2018-08-16 08:12:34',
+            'expectedValue'   => '2018-08-16',
             'expectedIsValid' => true
          ],
          [
             'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
+               'fieldtype'       => 'date',
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => '',
@@ -79,16 +79,16 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
          ],
          [
             'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
+               'fieldtype'       => 'date',
                'name'            => 'question',
                'required'        => '1',
-               'default_values'  => '2018-08-16 08:12:34',
+               'default_values'  => '2018-08-16',
                'values'          => "",
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
-            'expectedValue'   => '2018-08-16 08:12:34',
+            'expectedValue'   => '2018-08-16',
             'expectedIsValid' => true
          ],
       ];
@@ -112,134 +112,12 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorDatetimeField::getName();
-      $this->string($output)->isEqualTo('Date & time');
-   }
-
-   public function providerParseAnswerValues() {
-      return [
-         [
-            'question' => $this->getQuestion(),
-            'value' => '',
-            'expected' => true,
-            'expectedValue' => ' ',
-         ],
-         [
-            'question' => $this->getQuestion(),
-            'value' => '2018-12-25 23:00:00',
-            'expected' => true,
-            'expectedValue' => '2018-12-25 23:00',
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerParseAnswerValues
-    */
-   public function testParseAnswerValues($question, $value, $expected, $expectedValue) {
-      $instance = $this->newTestedInstance($question);
-      $output = $instance->parseAnswerValues([
-         'formcreator_field_' . $question->getID() => $value
-      ]);
-      $this->boolean($output)->isEqualTo($expected);
-
-      $outputValue = $instance->getValueForTargetText(false);
-      if ($expected === false) {
-         $this->variable($outputValue)->isNull();
-      } else {
-         $this->string($outputValue)
-            ->isEqualTo($expectedValue);
-      }
-   }
-
-   public function providerSerializeValue() {
-      return [
-         [
-            'id' => '1',
-            'input' => [],
-         ],
-      ];
-   }
-
-   public function testSerializeValue() {
-      $value = $expected = '2019-01-01 12:00:00';
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
-      $this->string($output)->isEqualTo($expected);
-   }
-
-   public function testGetValueForDesign() {
-      $value = $expected = '2019-01-01 12:00:00';
-      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
-      $instance->deserializeValue($value);
-      $output = $instance->getValueForDesign();
-      $this->string($output)->isEqualTo($expected);
-   }
-
-   public function providerEquals() {
-      return [
-         [
-            'value'     => '2019-01-01 00:00:00',
-            'answer'    => '',
-            'expected'  => false,
-         ],
-         [
-            'value'     => '2019-01-01 02:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => false,
-         ],
-         [
-            'value'     => '2019-01-01 03:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => true,
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerEquals
-    */
-   public function testEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorDatetimeField($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->equals($value))->isEqualTo($expected);
-   }
-
-   public function providerNotEquals() {
-      return [
-         [
-            'value'     => '2019-01-01 00:00:00',
-            'answer'    => '',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '2019-01-01 02:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '2019-01-01 03:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => false,
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerNotEquals
-    */
-   public function testNotEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorDatetimeField($question, $answer);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+      $output = $this->getTestedClassName()::getName();
+      $this->string($output)->isEqualTo('Date');
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -250,13 +128,98 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $this->boolean($output)->isEqualTo(true);
    }
 
+   public function testSerializeValue() {
+      $value = $expected = '2019-01-01';
+      $question = $this->getQuestion([
+         'fieldtype' => 'Date',
+      ]);
+      $instance = $this->newTestedInstance($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetValueForDesign() {
+      $value = $expected = '2019-01-01';
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'     => '0000-00-00',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2018-01-01',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2019-01-01',
+            'expected'  => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = $this->newTestedInstance($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return [
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2018-01-01',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2019-01-01',
+            'expected'  => false,
+         ],
+
+      ];
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $question = $this->getQuestion();
+      $instance = $this->newTestedInstance($question, $answer);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

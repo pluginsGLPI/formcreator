@@ -28,12 +28,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorTextareaField extends CommonTestCase {
+class TextareaField extends CommonTestCase {
    public function testGetName() {
-      $output = \PluginFormcreatorTextareaField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Textarea');
    }
 

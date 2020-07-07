@@ -28,10 +28,11 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorRadiosField extends CommonTestCase {
+class RadiosField extends CommonTestCase {
    public function testPrepareQuestionInputForSave() {
       $question = $this->getQuestion([
          'fieldtype'       => 'radios',
@@ -74,13 +75,13 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorRadiosField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Radios');
    }
 
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorRadiosField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -92,7 +93,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorRadiosField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
@@ -102,7 +103,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
          'fieldtype' => 'radios',
          'values' => json_encode(['foo', 'bar', 'test d\'apostrophe'])
       ]);
-      $instance = new \PluginFormcreatorRadiosField($question);
+      $instance = $this->newTestedInstance($question);
       return [
          [
             'instance'  => $instance,
@@ -141,7 +142,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
          'fieldtype' => 'radios',
          'values' => json_encode(['foo', 'bar', 'test d\'apostrophe'])
       ]);
-      $instance = new \PluginFormcreatorRadiosField($question);
+      $instance = $this->newTestedInstance($question);
       return [
          [
             'instance'  => $instance,
@@ -227,7 +228,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerGetValueForDesign
     */
    public function testGetValueForDesign($value, $expected) {
-      $instance = new \PluginFormcreatorRadiosField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
@@ -261,7 +262,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     */
    public function testIsValid($fields, $value, $expected) {
       $question = $this->getQuestion($fields);
-      $instance = new \PluginFormcreatorRadiosField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
 
       $output = $instance->isValid();

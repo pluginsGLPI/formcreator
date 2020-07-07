@@ -30,10 +30,10 @@
  */
 
 
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorGlpiselectField extends CommonTestCase {
+class GlpiselectField extends CommonTestCase {
 
    public function beforeTestMethod($method)
    {
@@ -45,7 +45,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorGlpiselectField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('GLPI object');
    }
 
@@ -209,7 +209,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorGlpiselectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isFalse();
    }
@@ -256,7 +256,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorGlpiselectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

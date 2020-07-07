@@ -29,10 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorFloatField extends CommonTestCase {
+class FloatField extends CommonTestCase {
+
+   public function testGetName() {
+      $output = $this->getTestedClassName()::getName();
+      $this->string($output)->isEqualTo('Float');
+   }
 
    public function provider() {
       $dataset = [
@@ -267,7 +272,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $question->add($fields);
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
-      $instance = new \PluginFormcreatorFloatField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($fields['default_values']);
       $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
 
@@ -296,7 +301,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorFloatField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -308,7 +313,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorFloatField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

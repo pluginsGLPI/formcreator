@@ -29,18 +29,18 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorDescriptionField extends CommonTestCase {
+class DescriptionField extends CommonTestCase {
 
    public function testIsValid() {
-      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->boolean($instance->isValid(''))->isTrue();
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorDescriptionField::getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('Description');
    }
 
@@ -72,7 +72,7 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
     * @dataProvider providerPrepareQuestionInputForSave
     */
    public function testPrepareQuestionInputForSave($input, $expected, $message) {
-      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->prepareQuestionInputForSave($input);
       if (count($expected) === 0 || $expected === false) {
          $this->string($_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR][0])
@@ -88,7 +88,7 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -105,7 +105,7 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
    }

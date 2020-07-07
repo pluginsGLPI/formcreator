@@ -161,7 +161,7 @@ class DateField extends PluginFormcreatorField
 
    public function equals($value) {
       if ($this->value === '') {
-         $answer = '0000-00-00 00:00';
+         $answer = '0000-00-00';
       } else {
          $answer = $this->value;
       }
@@ -176,7 +176,7 @@ class DateField extends PluginFormcreatorField
 
    public function greaterThan($value) {
       if (empty($this->value)) {
-         $answer = '0000-00-00 00:00';
+         $answer = '0000-00-00';
       } else {
          $answer = $this->value;
       }

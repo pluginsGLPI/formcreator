@@ -29,19 +29,18 @@
  * ---------------------------------------------------------------------
  */
 
- namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorLdapselectField extends CommonTestCase {
+class LdapSelectField extends CommonTestCase {
 
    public function testGetName() {
-      $instance = new \PluginFormcreatorLdapselectField($this->getQuestion());
-      $output = $instance->getName();
+      $output = $this->getTestedClassName()::getName();
       $this->string($output)->isEqualTo('LDAP Select');
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorLdapselectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isFalse();
    }
@@ -53,7 +52,7 @@ class PluginFormcreatorLdapselectField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorLdapselectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
@@ -89,7 +88,7 @@ class PluginFormcreatorLdapselectField extends CommonTestCase {
     */
    public function testSerializeValue($value, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorLdapselectField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
@@ -116,7 +115,7 @@ class PluginFormcreatorLdapselectField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorLdapselectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
@@ -135,7 +134,7 @@ class PluginFormcreatorLdapselectField extends CommonTestCase {
     * @dataProvider providergetValueForDesign
     */
    public function testGetValueForDesign($value, $expected) {
-      $instance = new \PluginFormcreatorLdapselectField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);

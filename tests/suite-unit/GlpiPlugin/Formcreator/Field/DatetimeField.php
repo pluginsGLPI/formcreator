@@ -28,10 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace tests\units;
+namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorTimeField extends CommonTestCase {
+class DatetimeField extends CommonTestCase {
 
    public function providerGetValue() {
       $dataset = [
@@ -43,7 +43,7 @@ class PluginFormcreatorTimeField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
@@ -54,13 +54,13 @@ class PluginFormcreatorTimeField extends CommonTestCase {
                'fieldtype'       => 'datetime',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '08:12',
+               'default_values'  => '2018-08-16 08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
-            'expectedValue'   => '08:12',
+            'expectedValue'   => '2018-08-16 08:12:34',
             'expectedIsValid' => true
          ],
          [
@@ -71,7 +71,7 @@ class PluginFormcreatorTimeField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
@@ -82,13 +82,13 @@ class PluginFormcreatorTimeField extends CommonTestCase {
                'fieldtype'       => 'datetime',
                'name'            => 'question',
                'required'        => '1',
-               'default_values'  => '08:12:34',
+               'default_values'  => '2018-08-16 08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
-            'expectedValue'   => '08:12:34',
+            'expectedValue'   => '2018-08-16 08:12:34',
             'expectedIsValid' => true
          ],
       ];
@@ -112,8 +112,8 @@ class PluginFormcreatorTimeField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = \PluginFormcreatorTimeField::getName();
-      $this->string($output)->isEqualTo('Time');
+      $output = $this->getTestedClassName()::getName();
+      $this->string($output)->isEqualTo('Date & time');
    }
 
    public function providerParseAnswerValues() {
@@ -126,9 +126,9 @@ class PluginFormcreatorTimeField extends CommonTestCase {
          ],
          [
             'question' => $this->getQuestion(),
-            'value' => '23:00:00',
+            'value' => '2018-12-25 23:00:00',
             'expected' => true,
-            'expectedValue' => '23:00',
+            'expectedValue' => '2018-12-25 23:00',
          ],
       ];
    }
@@ -172,7 +172,7 @@ class PluginFormcreatorTimeField extends CommonTestCase {
 
    public function testGetValueForDesign() {
       $value = $expected = '2019-01-01 12:00:00';
-      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
@@ -180,6 +180,11 @@ class PluginFormcreatorTimeField extends CommonTestCase {
 
    public function providerEquals() {
       return [
+         [
+            'value'     => '0000-00-00 00:00:00',
+            'answer'    => '',
+            'expected'  => true,
+         ],
          [
             'value'     => '2019-01-01 00:00:00',
             'answer'    => '',
@@ -203,7 +208,7 @@ class PluginFormcreatorTimeField extends CommonTestCase {
     */
    public function testEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorDatetimeField($question);
+      $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
@@ -233,13 +238,13 @@ class PluginFormcreatorTimeField extends CommonTestCase {
     */
    public function testNotEquals($value, $answer, $expected) {
       $question = $this->getQuestion();
-      $instance = new \PluginFormcreatorDatetimeField($question, $answer);
+      $instance = $this->newTestedInstance($question, $answer);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -256,7 +261,7 @@ class PluginFormcreatorTimeField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorDatetimeField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

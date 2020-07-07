@@ -38,6 +38,8 @@ use Toolbox;
 
 class TimeField extends PluginFormcreatorField
 {
+   const DATE_FORMAT = 'H:i';
+
    public function isPrerequisites() {
       return true;
    }
@@ -180,8 +182,8 @@ class TimeField extends PluginFormcreatorField
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("HH:mm", $answer);
-      $compareDatetime = DateTime::createFromFormat("HH:mm", $value);
+      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $answerDatetime == $compareDatetime;
    }
 
@@ -195,8 +197,8 @@ class TimeField extends PluginFormcreatorField
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("HH:mm", $answer);
-      $compareDatetime = DateTime::createFromFormat("HH:mm", $value);
+      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
       return $answerDatetime > $compareDatetime;
    }
 
