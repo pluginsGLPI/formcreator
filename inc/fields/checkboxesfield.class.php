@@ -210,6 +210,11 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          }
       }
 
+      // Not required and no answer -> valid
+      if (!$this->isRequired() && count($value) == 0) {
+         return true;
+      }
+
       $parameters = $this->getParameters();
 
       // Check the field matches the format regex

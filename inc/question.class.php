@@ -1176,6 +1176,33 @@ PluginFormcreatorConditionnableInterface
          );
       }
 
+      if (isset($data['_questions'])) {
+         foreach ($data['_questions'] as $key => $question) {
+            if ($question['fieldtype'] == "dropdown") {
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($key);
+
+               /** @var PluginFormcreatorDropdownField */
+               $field = PluginFormcreatorFields::getFieldInstance(
+                  "dropdown",
+                  $question
+               );
+
+               $decodedValues = json_decode($question->fields['values'], JSON_OBJECT_AS_ARRAY);
+               if ($decodedValues === null) {
+                  $itemtype = $question->fields['values'];
+               } else {
+                  $itemtype = $decodedValues['itemtype'];
+               }
+
+               $searchParams = $field->buildParams();
+               $searchParams['itemtype'] = $itemtype;
+               $searchParams['show_empty'] = false;
+               $data['_questions'][$key]['_values'] = Dropdown::getDropdownValue($searchParams, false)['results'];
+            }
+         }
+      }
+
       // Load conditions, regexes and ranges
       $data['_conditions'] = self::getQuestionDataById(
          \PluginFormcreatorCondition::getTable(),
