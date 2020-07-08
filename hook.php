@@ -461,6 +461,15 @@ function plugin_formcreator_dynamicReport($params) {
    return false;
 }
 
+
+function plugin_formcreator_redefine_menus($menus) {
+   if (isset($menus['tickets'])) {
+      unset($menus['tickets']);
+   }
+
+   return $menus;
+}
+
 /**
  * Hook for timeline_actions; display a new action for a CommonITILObject
  * @see CommonITILObject

@@ -40,6 +40,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       switch ($method) {
          case 'testSetTargetEntity':
          case 'testSetTargetCategory':
+         case 'testSetTargetType':
+         case 'testPrepareTemplate':
+         case 'testDeleteLinkedTickets':
+         case 'testSetTargetAssociatedItem':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }

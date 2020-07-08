@@ -306,6 +306,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    public function rawSearchOptions() {
       $tab = [];
+      $hide_technician = \Entity::getUsedConfig(
+         'anonymize_support_agents',
+         $_SESSION['glpiactive_entity']
+      );
 
       $tab[] = [
          'id'                 => 'common',
@@ -454,6 +458,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'forcegroupby'       => false,
          'massiveaction'      => false,
+         'nodisplay'          => $hide_technician,
+         'nosearch'           => $hide_technician,
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Ticket_User::getTable(),
@@ -474,6 +480,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'forcegroupby'       => false,
          'massiveaction'      => false,
+         'nodisplay'          => $hide_technician,
+         'nosearch'           => $hide_technician,
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Group_Ticket::getTable(),
