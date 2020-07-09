@@ -1174,7 +1174,7 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Print css media
-      echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
+      echo Html::css(FORMCREATOR_ROOTDOC . "/css/print_form.css", ['media' => 'print']);
 
       // Display form
       $formName = 'plugin_formcreator_form';
@@ -2008,7 +2008,7 @@ PluginFormcreatorConditionnableInterface
 
       echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
       echo '<tr class="noHover">';
-      echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+      echo '<th><a href="' . Plugin::getWebDir('formcreator', true, true) . '/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
       echo '</tr>';
 
       $currentCategoryId = -1;
