@@ -595,6 +595,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    ) {
       global $TRANSLATE;
 
+      // This feature is not available for PluginFormcreatorTagField
+      if (static::class == PluginFormcreatorTagField::class) {
+         return $content;
+      }
+
       // Get ID from question
       // $questionID = $question->fields['id'];
       $questionID = $this->getQuestion()->getID();
@@ -615,8 +620,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $itemtype = $json->itemtype;
       }
 
-      // In some case, there is no itemtype (PluginFormcreatorTagField)
-      if (empty($itemtype)) {
+      // Safe check
+      if (empty($itemtype) || !class_exists($itemtype)) {
          return $content;
       }
 
