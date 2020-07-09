@@ -38,7 +38,7 @@ if (!$plugin->isActivated('formcreator')) {
 }
 
 $form = new PluginFormcreatorForm;
-$export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION, 'forms' => []];
+$export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION . '.0', 'forms' => []];
 foreach ($_GET['plugin_formcreator_forms_id'] as $id) {
    $form->getFromDB($id);
    $export_array['forms'][] = $form->export();

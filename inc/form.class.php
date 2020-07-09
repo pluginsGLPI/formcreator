@@ -1792,7 +1792,7 @@ PluginFormcreatorConditionnableInterface
             continue;
          }
          if (isset($forms_toimport['schema_version'])) {
-            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION) {
+            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION . '.0') {
                Session::addMessageAfterRedirect(
                   __("Forms import impossible, the file was generated with another version", 'formcreator'),
                   false, ERROR
