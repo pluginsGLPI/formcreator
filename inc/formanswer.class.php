@@ -460,7 +460,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $options = ['canedit' => false];
 
       // Print css media
-      echo Html::css(FORMCREATOR_ROOTDOC."/css/print_form_answer.css", ['media' => 'print']);
+      echo Html::css(FORMCREATOR_ROOTDOC . "/css/print_form_answer.css", ['media' => 'print']);
 
       // start form
       echo "<div class='form_answer'>";
