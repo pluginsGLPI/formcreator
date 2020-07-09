@@ -186,9 +186,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if ($item Instanceof PluginFormcreatorFormAnswer) {
          $item = $this->getTicketsForDisplay($options);
       }
+      unset($options['_item']);
 
-      $item->showTabsContent();
-
+      $item->showTabsContent($options);
    }
 
    /**
@@ -235,6 +235,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if ($item Instanceof PluginFormcreatorFormAnswer) {
          $item = $this->getTicketsForDisplay($options);
       }
+      unset($options['_item']);
 
       // force recall of ticket in layout
       $old_layout = $_SESSION['glpilayout'];
@@ -265,7 +266,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          // No ticket associated to this issue or multiple tickets
          // Show the form answers
          echo '<div class"center">';
-         $item->showTabsContent();
+         $item->showTabsContent($options);
          echo '</div>';
       }
 

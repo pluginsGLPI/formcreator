@@ -183,12 +183,15 @@ function plugin_init_formcreator() {
             if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
                if (!isset($_POST['update'])) {
                   $decodedUrl = [];
-                  $forceTab = '';
+                  $openItilFollowup = '';
+                  if (isset($_GET['_openfollowup'])) {
+                     $openItilFollowup = '&_openfollowup=1';
+                  }
                   parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
                   if (isset($decodedUrl['forcetab'])) {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
-                  Html::redirect(FORMCREATOR_ROOTDOC . '/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $forceTab);
+                  Html::redirect(FORMCREATOR_ROOTDOC . '/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $openItilFollowup);
                }
             }
 
