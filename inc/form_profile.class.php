@@ -77,7 +77,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
              method='post' action=' ";
