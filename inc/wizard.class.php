@@ -71,7 +71,9 @@ class PluginFormcreatorWizard {
       }
       echo '<div class="plugin_formcreator_container '.$toggle_menu.'">';
 
-      Html::displayImpersonateBanner();
+      if (method_exists(Html::class, 'displayImpersonateBanner')) {
+         Html::displayImpersonateBanner();
+      }
 
       // menu toggle (responsive mode)
       echo "<input type='checkbox' id='formcreator-toggle-nav-responsive'>";
