@@ -247,6 +247,7 @@ function plugin_init_formcreator() {
             FORMCREATOR_ROOTDOC . '/front/formdisplay.php',
             FORMCREATOR_ROOTDOC . '/front/form.form.php',
             FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
+            FORMCREATOR_ROOTDOC . '/front/issue.form.php',
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
