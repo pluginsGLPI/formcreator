@@ -579,7 +579,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       // In some case, there is no itemtype (PluginFormcreatorTagField)
-      if (empty($itemtype)) {
+      if (empty($itemtype) || !class_exists($itemtype)) {
          return $content;
       }
 
