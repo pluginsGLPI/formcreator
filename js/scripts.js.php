@@ -42,6 +42,7 @@ var tiles = [];
 var serviceCatalogEnabled = false;
 var slinkyCategories;
 var timers = [];
+var formcreatorRootDoc = '<?php echo Plugin::getWebDir('formcreator')?>';
 
 // === COMMON ===
 
@@ -68,7 +69,7 @@ function getTimer(object) {
 // === MENU ===
 var link = '';
 link += '<li id="menu7">';
-link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
+link += '<a href="' + formcreatorRootDoc + '/front/formlist.php" class="itemP">';
 link += "<?php echo Toolbox::addslashes_deep(_n('Form', 'Forms', 2, 'formcreator')); ?>";
 link += '</a>';
 link += '</li>';
@@ -91,7 +92,7 @@ $(function() {
    $('#formcreator-toggle-nav-desktop').change(function() {
       $('.plugin_formcreator_container').toggleClass('toggle_menu');
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+         url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
          data: {wizard: 'toggle_menu'},
          type: "POST",
          dataType: "json"
@@ -200,7 +201,7 @@ function showHomepageFormList() {
    }
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
+      url: formcreatorRootDoc + '/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
       if (!$('#plugin_formcreatorHomepageForms').length) {
@@ -211,7 +212,7 @@ function showHomepageFormList() {
 
 function updateCategoriesView() {
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+      url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'categories'},
       type: "GET",
       dataType: "json"
@@ -255,7 +256,7 @@ function getFormAndFaqItems(categoryId) {
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+      url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
       type: "GET",
       dataType: "json"
@@ -370,10 +371,10 @@ function buildTiles(list) {
       var faqs = [];
       $.each(list, function (key, item) {
          // Build a HTML tile
-         var url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + item.id;
+         var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
          if (item.type != 'form') {
             if (serviceCatalogEnabled) {
-               url = rootDoc + '/plugins/formcreator/front/knowbaseitem.form.php?id=' + item.id;
+               url = formcreatorRootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
             } else {
                url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
             }
@@ -476,7 +477,7 @@ var plugin_formcreator = new function() {
             y: newWidget.y
          };
          $.ajax({
-            'url': rootDoc + '/plugins/formcreator/ajax/question_move.php',
+            'url': formcreatorRootDoc + '/ajax/question_move.php',
             type: 'POST',
             data: {
                move: changes,
@@ -505,7 +506,7 @@ var plugin_formcreator = new function() {
          }
       });
       $.get({
-         url: rootDoc + '/plugins/formcreator/ajax/question_get.php',
+         url: formcreatorRootDoc + '//ajax/question_get.php',
          dataType: 'json',
          data: {
             id: sectionId,
@@ -578,7 +579,7 @@ var plugin_formcreator = new function() {
          return;
       }
       $.ajax({
-         'url': rootDoc + '/plugins/formcreator/ajax/question_move.php',
+         'url': formcreatorRootDoc + '/ajax/question_move.php',
          type: 'POST',
          data: {
             move: changes,
@@ -622,7 +623,7 @@ var plugin_formcreator = new function() {
       }
       if (confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
          jQuery.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/question_delete.php',
+         url: formcreatorRootDoc + '/ajax/question_delete.php',
          type: "POST",
          data: {
                id: id,
@@ -666,7 +667,7 @@ var plugin_formcreator = new function() {
       }
       var required = $(target).hasClass('fa-check-circle');
       jQuery.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/question_toggle_required.php',
+         url: formcreatorRootDoc + '/ajax/question_toggle_required.php',
          type: "POST",
          data: {
             id: id,
@@ -690,7 +691,7 @@ var plugin_formcreator = new function() {
    this.addQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/question_add.php',
+         url: formcreatorRootDoc + '/ajax/question_add.php',
          type: "POST",
          data: form.serializeArray(),
          dataType: 'json'
@@ -726,7 +727,7 @@ var plugin_formcreator = new function() {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = form.find('[name="id"]').val();
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/question_update.php',
+         url: formcreatorRootDoc + '/ajax/question_update.php',
          type: "POST",
          data: form.serializeArray(),
          dataType: 'html'
@@ -748,7 +749,7 @@ var plugin_formcreator = new function() {
       }
 
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/question_duplicate.php',
+         url: formcreatorRootDoc + '/ajax/question_duplicate.php',
          type: "POST",
          dataType: 'json',
          data: {
@@ -776,7 +777,7 @@ var plugin_formcreator = new function() {
 
    this.showFields = function (form) {
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/showfields.php',
+         url: formcreatorRootDoc + '/ajax/showfields.php',
          type: "POST",
          data: form.serializeArray()
       }).done(function(response){
@@ -826,7 +827,7 @@ var plugin_formcreator = new function() {
          var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
          var sectionId = section.attr('data-id');
          $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/section_delete.php',
+         url: formcreatorRootDoc + '/ajax/section_delete.php',
          type: "POST",
          data: {
                id: sectionId
@@ -844,7 +845,7 @@ var plugin_formcreator = new function() {
       var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
       var sectionId = section.attr('data-id');
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/section_move.php',
+         url: formcreatorRootDoc + '/ajax/section_move.php',
          type: "POST",
          data: {
             id: sectionId,
@@ -875,7 +876,7 @@ var plugin_formcreator = new function() {
    };
 
    this.showQuestionForm = function (sectionId, questionId = 0) {
-      modalWindow.load(rootDoc + '/plugins/formcreator/ajax/question.php', {
+      modalWindow.load(formcreatorRootDoc + '/ajax/question.php', {
          question_id: questionId,
          plugin_formcreator_sections_id: sectionId
       }).dialog('open');
@@ -886,7 +887,7 @@ var plugin_formcreator = new function() {
       var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
       var sectionId = section.attr('data-id');
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/section_duplicate.php',
+         url: formcreatorRootDoc + '/ajax/section_duplicate.php',
       type: "POST",
       data: {
          id: sectionId
@@ -905,7 +906,7 @@ var plugin_formcreator = new function() {
 
    this.showSectionForm = function (formId, sectionId = 0) {
       modalWindow.load(
-         rootDoc + '/plugins/formcreator/ajax/section.php', {
+         formcreatorRootDoc + '/ajax/section.php', {
             section_id: sectionId,
             plugin_formcreator_forms_id: formId
          }
@@ -916,7 +917,7 @@ var plugin_formcreator = new function() {
    this.addSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/section_add.php',
+         url: formcreatorRootDoc + '/ajax/section_add.php',
          type: "POST",
          data: form.serializeArray(),
          dataType: 'html'
@@ -936,7 +937,7 @@ var plugin_formcreator = new function() {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
       var sectionId = form.find('[name="id"]').val();
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/section_update.php',
+         url: formcreatorRootDoc + '/ajax/section_update.php',
          type: "POST",
          data: form.serializeArray(),
          dataType: 'html'
@@ -964,13 +965,13 @@ var plugin_formcreator = new function() {
 // === TARGETS ===
 
 function plugin_formcreator_addTarget(items_id, token) {
-   modalWindow.load(rootDoc + '/plugins/formcreator/ajax/target.php', {
+   modalWindow.load(formcreatorRootDoc + '/ajax/target.php', {
       plugin_formcreator_forms_id: items_id
    }).dialog("open");
 }
 
 function plugin_formcreator_editTarget(itemtype, items_id) {
-   modalWindow.load(rootDoc + '/plugins/formcreator/ajax/target_edit.php', {
+   modalWindow.load(formcreatorRootDoc + '/ajax/target_edit.php', {
       itemtype: itemtype,
       id: items_id
    }).dialog("open");
@@ -979,7 +980,7 @@ function plugin_formcreator_editTarget(itemtype, items_id) {
 function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
    if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
       jQuery.ajax({
-        url: rootDoc + '/plugins/formcreator/front/form.form.php',
+        url: formcreatorRootDoc + '/front/form.form.php',
         type: "POST",
         data: {
             delete_target: 1,
@@ -1130,7 +1131,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
    var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
+      url: formcreatorRootDoc + '/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: dropdown_type,
@@ -1145,7 +1146,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
 
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/commontree.php',
+         url: formcreatorRootDoc + '/ajax/commontree.php',
          type: 'GET',
          data: {
             itemtype: dropdown_type,
@@ -1167,7 +1168,7 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    var glpi_object_id = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
+      url: formcreatorRootDoc + '/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: glpi_object,
@@ -1212,7 +1213,7 @@ function plugin_formcreator_addEmptyCondition(target) {
    });
    $.ajax({
       type: 'POST',
-      url: rootDoc + '/plugins/formcreator/ajax/condition.php',
+      url: formcreatorRootDoc + '/ajax/condition.php',
       data: data
    }).done(function (data) {
       $(target).parents('tr').after(data);
@@ -1437,7 +1438,7 @@ function plugin_formcreator_changeQuestionType(rand) {
    var questionType = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/question_design.php',
+      url: formcreatorRootDoc + '/ajax/question_design.php',
       type: 'GET',
       data: {
          questionId: questionId,
@@ -1475,7 +1476,7 @@ function plugin_formcreator_changeLDAP(ldap) {
    var ldap_directory = ldap.value;
 
    jQuery.ajax({
-   url: rootDoc + '/plugins/formcreator/ajax/ldap_filter.php',
+   url: formcreatorRootDoc + '/ajax/ldap_filter.php',
    type: 'POST',
    data: {
          value: ldap_directory,
@@ -1654,12 +1655,12 @@ function plugin_formcreator_updateCompositePeerType(rand) {
 
 function plugin_formcreator_cancelMyTicket(id) {
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/cancelticket.php',
+      url: formcreatorRootDoc + '/ajax/cancelticket.php',
       data: {id: id},
       type: "POST",
       dataType: "text"
    }).done(function(response) {
-      window.location.replace(rootDoc + '/plugins/formcreator/front/issue.php?reset=reset');
+      window.location.replace(formcreatorRootDoc + '/front/issue.php?reset=reset');
    }).error(function(response) {
       alert("<?php echo __('Failed to cancel the ticket', 'formcreator'); ?>");
    });

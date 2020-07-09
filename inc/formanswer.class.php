@@ -455,7 +455,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $options = ['canedit' => false];
 
       // Print css media
-      echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
+      echo Html::css(FORMCREATOR_ROOTDOC . "/css/print_form.css", ['media' => 'print']);
 
       $style = "<style>";
       // force colums width
