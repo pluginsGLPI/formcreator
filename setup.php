@@ -243,10 +243,10 @@ function plugin_init_formcreator() {
          }
 
          $pages = [
-            "plugins/formcreator/front/targetticket.form.php",
-            "plugins/formcreator/front/formdisplay.php",
-            "plugins/formcreator/front/form.form.php",
-            "plugins/formcreator/front/formanswer.form.php",
+            FORMCREATOR_ROOTDOC . '/front/targetticket.form.php',
+            FORMCREATOR_ROOTDOC . '/front/formdisplay.php',
+            FORMCREATOR_ROOTDOC . '/front/form.form.php',
+            FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
@@ -276,7 +276,7 @@ function plugin_init_formcreator() {
       }
 
       // Load JS and CSS files if we are on a page which need them
-      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+      if (strpos($_SERVER['REQUEST_URI'], '/formcreator') !== false
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
             $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
