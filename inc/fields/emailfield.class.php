@@ -87,6 +87,8 @@ class PluginFormcreatorEmailField extends PluginFormcreatorTextField
       return $html;
    }
 
+   public function moveUploads() {}
+
    public function isValidValue($value) {
       if ($value === '') {
          return true;

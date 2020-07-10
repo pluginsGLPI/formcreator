@@ -156,6 +156,8 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorSelectField
       return $available[$this->value];
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

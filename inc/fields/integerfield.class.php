@@ -39,6 +39,8 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorFloatField
       return strval((int) $this->value);
    }
 
+   public function moveUploads() {}
+
    public function isValidValue($value) {
       if (strlen($value) == 0) {
          return true;

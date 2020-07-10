@@ -287,6 +287,8 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return $value;
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

@@ -209,6 +209,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       return $this->value;
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

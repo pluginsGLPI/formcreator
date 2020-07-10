@@ -91,6 +91,8 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return Toolbox::addslashes_deep($this->value);
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }
