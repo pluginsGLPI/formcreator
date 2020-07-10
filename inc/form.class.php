@@ -2040,7 +2040,7 @@ PluginFormcreatorConditionnableInterface
 
       echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
       echo '<tr class="noHover">';
-      echo '<th><a href="' . Plugin::getWebDir('formcreator', true, true) . '/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+      echo '<th><a href="' . FORMCREATOR_ROOTDOC . '/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
       echo '</tr>';
 
       $currentCategoryId = -1;
