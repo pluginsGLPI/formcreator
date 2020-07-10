@@ -1056,6 +1056,26 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       } else {
          // Convert IDs into UUIDs
          $target_data = $this->convertTags($target_data);
+         $questionLinks = [
+            'type_rule'      => ['values' => self::REQUESTTYPE_ANSWER, 'field' => 'type_question'],
+            'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+            'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+            'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+            'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+            'associate_rule' => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
+            'location_rule'  => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+         ];
+         foreach ($questionLinks as $field => $fieldSetting) {
+            if (!is_array($fieldSetting['values'])) {
+               $fieldSetting['values'] = [$fieldSetting['values']];
+            }
+            if (!in_array($target_data[$field], $fieldSetting['values'])) {
+               continue;
+            }
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($target_data[$fieldSetting['field']]);
+            $target_data[$fieldSetting['field']] = $question->fields['uuid'];
+         }
       }
       unset($target_data[$idToRemove]);
 
