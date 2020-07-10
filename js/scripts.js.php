@@ -42,7 +42,7 @@ var tiles = [];
 var serviceCatalogEnabled = false;
 var slinkyCategories;
 var timers = [];
-var formcreatorRootDoc = '<?php echo Plugin::getWebDir('formcreator')?>';
+var formcreatorRootDoc = rootDoc + '/<?php echo method_exists(Plugin::class, 'getWebDir') ? Plugin::getWebDir('formcreator', false) : 'plugins/formcreator' ?>';
 
 // === COMMON ===
 
