@@ -100,6 +100,11 @@ interface PluginFormcreatorFieldInterface
    public function getValueForTargetText($richText);
 
    /**
+    * Move uploaded files and make Document items
+    */
+   public function moveUploads();
+
+   /**
     * Gets the documents IDs
     *
     * @return void

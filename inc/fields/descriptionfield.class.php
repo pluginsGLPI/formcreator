@@ -70,6 +70,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return '';
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }
