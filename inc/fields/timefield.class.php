@@ -128,6 +128,8 @@ class PluginFormcreatorTimeField extends PluginFormcreatorField
       return Toolbox::addslashes_deep($date->format('H:i'));
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

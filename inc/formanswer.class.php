@@ -49,7 +49,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    const STATUS_REFUSED = 102;
    const STATUS_ACCEPTED = 103;
 
+   /** @var $questionFields PluginFormcreatorField[] fields of the form answers */
    private $questionFields = [];
+
    private $questions      = [];
 
    public static function getStatuses() {
@@ -1105,7 +1107,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public function post_addItem() {
       // Save questions answers
+      /** @var PluginFormcreatorField $field */
       foreach ($this->questionFields as $questionId => $field) {
+         $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
             'plugin_formcreator_formanswers_id'  => $this->getID(),

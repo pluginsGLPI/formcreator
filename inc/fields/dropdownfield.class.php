@@ -325,6 +325,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return $value;
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

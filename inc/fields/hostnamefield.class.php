@@ -54,6 +54,8 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       return false;
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

@@ -107,6 +107,8 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }
