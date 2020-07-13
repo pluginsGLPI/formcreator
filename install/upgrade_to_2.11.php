@@ -78,84 +78,60 @@ class PluginFormcreatorUpgradeTo2_11 {
          ) or plugin_formcreator_upgrade_error($migration);
       }
 
-      // Move uuid field at last position
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
-
       $this->migrateCheckboxesAndMultiselect();
       $this->migrateRadiosAndSelect();
 
-      // Add SLA in target ticket
-      $migration->addField(
-         PluginFormcreatorTargetTicket::getTable(),
-         "sla_rule",
-         "int",
-         ['value' => 1]
-      );
-      $migration->addField(
-         PluginFormcreatorTargetTicket::getTable(),
-         "sla_question_tto",
-         "int"
-      );
-      $migration->addField(
-         PluginFormcreatorTargetTicket::getTable(),
-         "sla_question_ttr",
-         "int"
-      );
+      $tables = [
+         'glpi_plugin_formcreator_targettickets',
+         'glpi_plugin_formcreator_targetchanges'
+      ];
+      foreach ($tables as $table) {
+         // Add SLA
+         $migration->addField(
+            $table,
+            "sla_rule",
+            "integer",
+            ['value' => 1, 'after' => 'show_rule']
+         );
+         $migration->addField(
+            $table,
+            "sla_question_tto",
+            "integer",
+            ['value' => 0, 'after' => 'sla_rule']
+         );
+         $migration->addField(
+            $table,
+            "sla_question_ttr",
+            "integer",
+            ['value' => 0, 'after' => 'sla_question_tto']
+         );
 
-      // Add OLA in target ticket
-      $migration->addField(
-         PluginFormcreatorTargetTicket::getTable(),
-         "ola_rule",
-         "int",
-         ['value' => 1]
-      );
-      $migration->addField(
-         PluginFormcreatorTargetTicket::getTable(),
-         "ola_question_tto",
-         "int"
-      );
-      $migration->addField(
-         PluginFormcreatorTargetTicket::getTable(),
-         "ola_question_ttr",
-         "int"
-      );
+         // Add OLA
+         $migration->addField(
+            $table,
+            "ola_rule",
+            "integer",
+            ['value' => 1, 'after' => 'sla_question_ttr']
+         );
+         $migration->addField(
+            $table,
+            "ola_question_tto",
+            "integer",
+            ['value' => 0, 'after' => 'ola_rule']
+         );
+         $migration->addField(
+            $table,
+            "ola_question_ttr",
+            "integer",
+            ['value' => 0, 'after' => 'ola_question_tto']
+         );
+         $migration->migrationOneTable($table);
+      }
 
-      // Add SLA in target change
-      $migration->addField(
-         PluginFormcreatorTargetChange::getTable(),
-         "sla_rule",
-         "int",
-         ['value' => 1]
-      );
-      $migration->addField(
-         PluginFormcreatorTargetChange::getTable(),
-         "sla_question_tto",
-         "int"
-      );
-      $migration->addField(
-         PluginFormcreatorTargetChange::getTable(),
-         "sla_question_ttr",
-         "int"
-      );
-
-      // Add OLA in target change
-      $migration->addField(
-         PluginFormcreatorTargetChange::getTable(),
-         "ola_rule",
-         "int",
-         ['value' => 1]
-      );
-      $migration->addField(
-         PluginFormcreatorTargetChange::getTable(),
-         "ola_question_tto",
-         "int"
-      );
-      $migration->addField(
-         PluginFormcreatorTargetChange::getTable(),
-         "ola_question_ttr",
-         "int"
-      );
+      // Move uuid field at last position
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `ola_question_ttr`");
+      $migration->migrationOneTable($table);
    }
 
    /**

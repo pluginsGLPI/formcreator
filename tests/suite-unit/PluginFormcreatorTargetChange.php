@@ -77,6 +77,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
             'input' => [
                'name' => '',
                'content' => '',
+               'sla_rule' => (string) \PluginFormcreatorTargetChange::SLA_RULE_NONE,
+               'ola_rule' => (string) \PluginFormcreatorTargetChange::OLA_RULE_NONE,
             ],
             'expected' => [
             ],
@@ -86,6 +88,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
             'input' => [
                'name' => 'something',
                'content' => '',
+               'sla_rule' => (string) \PluginFormcreatorTargetChange::SLA_RULE_NONE,
+               'ola_rule' => (string) \PluginFormcreatorTargetChange::OLA_RULE_NONE,
             ],
             'expected' => [
             ],
@@ -101,6 +105,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
                '_urgency_specific' => '3',
                'category_rule' => \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE,
                'category_question' => '0',
+               'sla_rule' => (string) \PluginFormcreatorTargetChange::SLA_RULE_NONE,
+               'ola_rule' => (string) \PluginFormcreatorTargetChange::OLA_RULE_NONE,
             ],
             'expected' => [
                'name' => 'something',
@@ -446,6 +452,12 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'category_rule',
          'category_question',
          'show_rule',
+         'sla_rule',
+         'sla_question_tto',
+         'sla_question_ttr',
+         'ola_rule',
+         'ola_question_tto',
+         'ola_question_ttr',
       ];
       $extraFields = [
          '_actors',

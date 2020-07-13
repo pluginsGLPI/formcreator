@@ -221,6 +221,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $targetTicketData['destination_entity'] = 'NULL';
          $targetTicketData['category_rule'] = '';
          $targetTicketData['location_rule'] = '';
+         $targetTicketData['sla_rule'] = (string) \PluginFormcreatorTargetTicket::SLA_RULE_NONE;
+         $targetTicketData['ola_rule'] = (string) \PluginFormcreatorTargetTicket::OLA_RULE_NONE;
          $targetTicketData['type_rule'] = \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC;
          $targetTicketData['_type_specific'] = \Ticket::INCIDENT_TYPE;
          $this->boolean($targetTicket->update($targetTicketData))->isTrue();
