@@ -38,7 +38,7 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -60,7 +60,7 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -85,14 +85,14 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
@@ -100,5 +100,113 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'      => '',
+            'comparison' => '',
+            'expected'   => true,
+         ],
+         [
+            'value'      => 'foo',
+            'comparison' => 'bar',
+            'expected'   => false,
+         ],
+         [
+            'value'      => '',
+            'comparison' => 'bar',
+            'expected'   => false,
+         ],
+         [
+            'value'      => 'foo',
+            'comparison' => '',
+            'expected'   => false,
+         ],
+         [
+            'value'      => 'foo',
+            'comparison' => 'foo',
+            'expected'   => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    *
+    */
+   public function testEquals($value, $comparison, $expected) {
+      $question = $this->getQuestion();
+      $key = 'formcreator_field_' . $question->getID();
+      $instance = $this->newTestedInstance($question);
+      $input = [
+         $key => $value,
+      ];
+      $instance->parseAnswerValues($input, true);
+      $output =$instance->equals($comparison);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   /**
+    * @dataProvider providerEquals
+    *
+    */
+   public function testNotEquals($value, $comparison, $expected) {
+      $question = $this->getQuestion();
+      $key = 'formcreator_field_' . $question->getID();
+      $instance = $this->newTestedInstance($question);
+      $input = [
+         $key => $value,
+      ];
+      $instance->parseAnswerValues($input, true);
+      $output =$instance->notEquals($comparison);
+      $this->boolean($output)->isEqualTo(!$expected);
+   }
+
+   public function providerGreaterThan() {
+      return [
+         [
+            'value'      => '',
+            'comparison' => '',
+            'expected'   => false,
+         ],
+         [
+            'value'      => 'foo',
+            'comparison' => 'foo',
+            'expected'   => false,
+         ],
+         [
+            'value'      => 'foo',
+            'comparison' => 'foo',
+            'expected'   => false,
+         ],
+         [
+            'value'      => 'foo',
+            'comparison' => 'bar',
+            'expected'   => true,
+         ],
+         [
+            'value'      => 'bar',
+            'comparison' => 'foo',
+            'expected'   => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGreaterThan
+    *
+    */
+   public function testGreaterThan($value, $comparison, $expected) {
+      $question = $this->getQuestion();
+      $key = 'formcreator_field_' . $question->getID();
+      $instance = $this->newTestedInstance($question);
+      $input = [
+         $key => $value,
+      ];
+      $instance->parseAnswerValues($input, true);
+      $output = $instance->greaterThan($comparison);
+      $this->boolean($output)->isEqualTo($expected);
    }
 }
