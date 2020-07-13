@@ -656,7 +656,7 @@ PluginFormcreatorConditionnableInterface
       echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_row">';
       echo '<td colspan="3">';
       echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
-                <i class="fa fa-plus" />
+                <i class="fa fa-plus"></i>
                 '.__('Add a target', 'formcreator').'
             </a>';
       echo '</td>';
