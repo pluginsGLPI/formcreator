@@ -1015,4 +1015,26 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Assert results
       $this->array($res)->isEqualTo($results);
    }
+
+   public function testIsEntityAssign() {
+      $instance = $this->newTestedInstance();
+      $this->boolean($instance->isEntityAssign())->isFalse();
+   }
+
+   public function testdeleteObsoleteItems() {
+      $form = $this->getForm();
+      $targetTicket1 = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetTicket2 = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $instance = $this->newTestedInstance();
+      $instance->deleteObsoleteItems($form, [$targetTicket2->getID()]);
+
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetTicket1->getID()))->isFalse();
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetTicket2->getID()))->isTrue();
+   }
 }
