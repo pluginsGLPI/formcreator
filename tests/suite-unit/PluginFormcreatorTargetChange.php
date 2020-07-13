@@ -509,4 +509,26 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChangeId2 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
       $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId2);
    }
+
+   public function testIsEntityAssign() {
+      $instance = $this->newTestedInstance();
+      $this->boolean($instance->isEntityAssign())->isFalse();
+   }
+
+   public function testdeleteObsoleteItems() {
+      $form = $this->getForm();
+      $targetChange1 = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetChange2 = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $instance = $this->newTestedInstance();
+      $instance->deleteObsoleteItems($form, [$targetChange2->getID()]);
+
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetChange1->getID()))->isFalse();
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetChange2->getID()))->isTrue();
+   }
 }
