@@ -178,6 +178,14 @@ PluginFormcreatorConditionnableInterface
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
 
+   const OLA_RULE_NONE = 1;
+   const OLA_RULE_SPECIFIC = 2;
+   const OLA_RULE_FROM_ANWSER = 3;
+
+   const SLA_RULE_NONE = 1;
+   const SLA_RULE_SPECIFIC = 2;
+   const SLA_RULE_FROM_ANWSER = 3;
+
    public static function getEnumDestinationEntity() {
       return [
          self::DESTINATION_ENTITY_CURRENT   => __('Current active entity', 'formcreator'),
@@ -207,6 +215,22 @@ PluginFormcreatorConditionnableInterface
          self::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
          self::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
          self::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumSlaRule() {
+      return [
+         self::SLA_RULE_NONE => __('SLA from template or none', 'formcreator'),
+         self::SLA_RULE_SPECIFIC => __('Specific SLA', 'formcreator'),
+         self::SLA_RULE_FROM_ANWSER => __('Equals to the answer to the question', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumOlaRule() {
+      return [
+         self::OLA_RULE_NONE => __('OLA from template or none', 'formcreator'),
+         self::OLA_RULE_SPECIFIC => __('Specific OLA', 'formcreator'),
+         self::OLA_RULE_FROM_ANWSER => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
@@ -445,6 +469,86 @@ PluginFormcreatorConditionnableInterface
       }
       if ($category !== null) {
          $data['itilcategories_id'] = $category;
+      }
+
+      return $data;
+   }
+
+   protected function setSLA($data, $formanswer) {
+      global $DB;
+
+      switch ($this->fields['sla_rule']) {
+         case self::SLA_RULE_SPECIFIC:
+            if (isset($this->fields['sla_question_tto'])) {
+               $data['slas_id_tto'] = $this->fields['sla_question_tto'];
+            }
+
+            if (isset($this->fields['sla_question_ttr'])) {
+               $data['slas_id_ttr'] = $this->fields['sla_question_ttr'];
+            }
+            break;
+
+         case self::SLA_RULE_FROM_ANWSER:
+            $tto = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->getID(),
+                  'plugin_formcreator_questions_id'   => $this->fields['sla_question_tto']
+               ]
+            ])->next();
+            $data['slas_id_tto'] = $tto['answer'];
+
+            $ttr = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->getID(),
+                  'plugin_formcreator_questions_id'   => $this->fields['sla_question_ttr']
+               ]
+            ])->next();
+            $data['slas_id_ttr'] = $ttr['answer'];
+            break;
+      }
+
+      return $data;
+   }
+
+   protected function setOLA($data, $formanswer) {
+      global $DB;
+
+      switch ($this->fields['ola_rule']) {
+         case self::OLA_RULE_SPECIFIC:
+            if (isset($this->fields['ola_question_tto'])) {
+               $data['olas_id_tto'] = $this->fields['ola_question_tto'];
+            }
+
+            if (isset($this->fields['ola_question_ttr'])) {
+               $data['olas_id_ttr'] = $this->fields['ola_question_ttr'];
+            }
+            break;
+
+         case self::OLA_RULE_FROM_ANWSER:
+            $tto = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->getID(),
+                  'plugin_formcreator_questions_id'   => $this->fields['ola_question_tto']
+               ]
+            ])->next();
+            $data['olas_id_tto'] = $tto['answer'];
+
+            $ttr = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->getID(),
+                  'plugin_formcreator_questions_id'   => $this->fields['ola_question_ttr']
+               ]
+            ])->next();
+            $data['olas_id_ttr'] = $ttr['answer'];
+            break;
       }
 
       return $data;
@@ -886,6 +990,156 @@ PluginFormcreatorConditionnableInterface
       ]);
       echo '</div>';
       echo '</td>';
+   }
+
+   protected function showSLASettings() {
+      $label = __("SLA");
+
+      echo '<tr>';
+      echo "<td width='15%'>$label</td>";
+      echo '<td width="25%">';
+
+      // Due date type selection
+      Dropdown::showFromArray("sla_rule", self::getEnumSlaRule(),
+         [
+            'value'     => $this->fields["sla_rule"],
+            'on_change' => "plugin_formcreator_formcreatorChangeSla(this.value)",
+            'display_emptychoice' => true
+         ]
+      );
+      echo '</td>';
+
+      $display_specific = $this->fields["sla_rule"] == self::SLA_RULE_SPECIFIC;
+      $display_questions = $this->fields["sla_rule"] == self::SLA_RULE_FROM_ANWSER;
+      $style_specific = !$display_specific ? "style='display: none'" : "";
+      $style_questions = !$display_questions ? "style='display: none'" : "";
+
+      echo '<td width="15%">';
+
+      echo "<span id='sla_specific_title' $style_specific>" . __('SLA (TTO/TTR)', 'formcreator') . '</span>';
+      echo "<span id='sla_question_title' $style_questions>" . __('Question (TTO/TTR)', 'formcreator') . '</span>';
+
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo "<div id='sla_specific_value' $style_specific>";
+      SLA::dropdown([
+         'name'      => '_sla_specific_tto',
+         'value'     => $this->fields["sla_question_tto"],
+         'condition' => ['type' => SLM::TTO],
+      ]);
+      echo "&nbsp;&nbsp;";
+      SLA::dropdown([
+         'name'      => '_sla_specific_ttr',
+         'value'     => $this->fields["sla_question_ttr"],
+         'condition' => ['type' => SLM::TTR],
+      ]);
+      echo '</div>';
+
+      echo "<div id='sla_questions' $style_questions>";
+
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => 'glpiselect',
+            'values' => SLA::getType() . "_TTO",
+         ],
+         "_sla_questions_tto",
+         [
+            'value' => $this->fields["sla_question_tto"]
+         ]
+      );
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => 'glpiselect',
+            'values' => SLA::getType() . "_TTR",
+         ],
+         "_sla_questions_ttr",
+         [
+            'value' => $this->fields["sla_question_ttr"]
+         ]
+      );
+
+      echo '</div>';
+
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   protected function showOLASettings() {
+      $label = __("OLA");
+
+      echo '<tr>';
+      echo "<td width='15%'>$label</td>";
+      echo '<td width="25%">';
+
+      // Due date type selection
+      Dropdown::showFromArray("ola_rule", self::getEnumOlaRule(),
+         [
+            'value'     => $this->fields["ola_rule"],
+            'on_change' => "plugin_formcreator_formcreatorChangeOla(this.value)",
+            'display_emptychoice' => true
+         ]
+      );
+      echo '</td>';
+
+      $display_specific = $this->fields["ola_rule"] == self::OLA_RULE_SPECIFIC;
+      $display_questions = $this->fields["ola_rule"] == self::OLA_RULE_FROM_ANWSER;
+      $style_specific = !$display_specific ? "style='display: none'" : "";
+      $style_questions = !$display_questions ? "style='display: none'" : "";
+
+      echo '<td width="15%">';
+
+      echo "<span id='ola_specific_title' $style_specific>" . __('OLA (TTO/TTR)', 'formcreator') . '</span>';
+      echo "<span id='ola_question_title' $style_questions>" . __('Question (TTO/TTR)', 'formcreator') . '</span>';
+
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo "<div id='ola_specific_value' $style_specific>";
+      OLA::dropdown([
+         'name'      => '_ola_specific_tto',
+         'value'     => $this->fields["ola_question_tto"],
+         'condition' => ['type' => SLM::TTO],
+      ]);
+      echo "&nbsp;&nbsp;";
+      OLA::dropdown([
+         'name'      => '_ola_specific_ttr',
+         'value'     => $this->fields["ola_question_ttr"],
+         'condition' => ['type' => SLM::TTR],
+      ]);
+      echo '</div>';
+
+      echo "<div id='ola_questions' $style_questions>";
+
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => 'glpiselect',
+            'values' => OLA::getType() . "_TTO",
+         ],
+         "_ola_questions_tto",
+         [
+            'value' => $this->fields["ola_question_tto"]
+         ]
+      );
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => 'glpiselect',
+            'values' => OLA::getType() . "_TTR",
+         ],
+         "_ola_questions_ttr",
+         [
+            'value' => $this->fields["ola_question_ttr"]
+         ]
+      );
+
+      echo '</div>';
+
+      echo '</td>';
+      echo '</tr>';
    }
 
    protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {

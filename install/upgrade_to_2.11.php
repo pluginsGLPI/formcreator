@@ -78,12 +78,60 @@ class PluginFormcreatorUpgradeTo2_11 {
          ) or plugin_formcreator_upgrade_error($migration);
       }
 
-      // Move uuid field at last position
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `show_rule`");
-
       $this->migrateCheckboxesAndMultiselect();
       $this->migrateRadiosAndSelect();
+
+      $tables = [
+         'glpi_plugin_formcreator_targettickets',
+         'glpi_plugin_formcreator_targetchanges'
+      ];
+      foreach ($tables as $table) {
+         // Add SLA
+         $migration->addField(
+            $table,
+            "sla_rule",
+            "integer",
+            ['value' => 1, 'after' => 'show_rule']
+         );
+         $migration->addField(
+            $table,
+            "sla_question_tto",
+            "integer",
+            ['value' => 0, 'after' => 'sla_rule']
+         );
+         $migration->addField(
+            $table,
+            "sla_question_ttr",
+            "integer",
+            ['value' => 0, 'after' => 'sla_question_tto']
+         );
+
+         // Add OLA
+         $migration->addField(
+            $table,
+            "ola_rule",
+            "integer",
+            ['value' => 1, 'after' => 'sla_question_ttr']
+         );
+         $migration->addField(
+            $table,
+            "ola_question_tto",
+            "integer",
+            ['value' => 0, 'after' => 'ola_rule']
+         );
+         $migration->addField(
+            $table,
+            "ola_question_ttr",
+            "integer",
+            ['value' => 0, 'after' => 'ola_question_tto']
+         );
+         $migration->migrationOneTable($table);
+      }
+
+      // Move uuid field at last position
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `ola_question_ttr`");
+      $migration->migrationOneTable($table);
    }
 
    /**

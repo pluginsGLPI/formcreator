@@ -1013,6 +1013,54 @@ function plugin_formcreator_formcreatorChangeDueDate(value) {
    }
 }
 
+function plugin_formcreator_formcreatorChangeSla(value) {
+   switch (value) {
+      default:
+      case '1' :
+         $('#sla_specific_title').hide();
+         $('#sla_specific_value').hide();
+         $('#sla_question_title').hide();
+         $('#sla_questions').hide();
+         break;
+      case '2' :
+         $('#sla_question_title').hide();
+         $('#sla_questions').hide();
+         $('#sla_specific_title').show();
+         $('#sla_specific_value').show();
+         break;
+      case '3' :
+         $('#sla_specific_title').hide();
+         $('#sla_specific_value').hide();
+         $('#sla_question_title').show();
+         $('#sla_questions').show();
+         break;
+   }
+}
+
+function plugin_formcreator_formcreatorChangeOla(value) {
+   switch (value) {
+      default:
+      case '1' :
+         $('#ola_specific_title').hide();
+         $('#ola_specific_value').hide();
+         $('#ola_question_title').hide();
+         $('#ola_questions').hide();
+         break;
+      case '2' :
+         $('#ola_question_title').hide();
+         $('#ola_questions').hide();
+         $('#ola_specific_title').show();
+         $('#ola_specific_value').show();
+         break;
+      case '3' :
+         $('#ola_specific_title').hide();
+         $('#ola_specific_value').hide();
+         $('#ola_question_title').show();
+         $('#ola_questions').show();
+         break;
+   }
+}
+
 function plugin_formcreator_displayRequesterForm() {
    $('#form_add_requester').show();
    $('#btn_add_requester').hide();
@@ -1139,11 +1187,15 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       },
    }).done(function(response) {
       var showTicketCategorySpecific = false;
+      var showServiceLevelSpecific = false;
       if (dropdown_type == 'ITILCategory') {
          showTicketCategorySpecific = true;
+      } else if (dropdown_type == 'SLA' || dropdown_type == 'OLA') {
+         showServiceLevelSpecific = true;
       }
       $('#dropdown_default_value_field').html(response);
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
+      $('.plugin_formcreator_dropdown_service_level').toggle();
 
       $.ajax({
          url: formcreatorRootDoc + '/ajax/commontree.php',

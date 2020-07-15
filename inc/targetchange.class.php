@@ -358,6 +358,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td colspan="2"></td>';
       echo '</tr>';
 
+      $this->showSLASettings();
+      $this->showOLASettings();
+
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
@@ -483,6 +486,28 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                default:
                   $input['category_question'] = '0';
             }
+         }
+
+         switch ($input['sla_rule']) {
+            case PluginFormcreatorTargetBase::SLA_RULE_SPECIFIC:
+               $input['sla_question_tto'] = $input['_sla_specific_tto'];
+               $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
+               break;
+            case PluginFormcreatorTargetBase::SLA_RULE_FROM_ANWSER:
+               $input['sla_question_tto'] = $input['_sla_questions_tto'];
+               $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
+               break;
+         }
+
+         switch ($input['ola_rule']) {
+            case PluginFormcreatorTargetBase::OLA_RULE_SPECIFIC:
+               $input['ola_question_tto'] = $input['_ola_specific_tto'];
+               $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
+               break;
+            case PluginFormcreatorTargetBase::OLA_RULE_FROM_ANWSER:
+               $input['ola_question_tto'] = $input['_ola_questions_tto'];
+               $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
+               break;
          }
 
          $plugin = new Plugin();
@@ -640,6 +665,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
+      $data = $this->setSLA($data, $formanswer);
+      $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
       $data = $this->setTargetCategory($data, $formanswer);
 

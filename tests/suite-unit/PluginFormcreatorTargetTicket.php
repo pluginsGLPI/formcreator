@@ -748,6 +748,12 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'location_rule',
          'location_question',
          'show_rule',
+         'sla_rule',
+         'sla_question_tto',
+         'sla_question_ttr',
+         'ola_rule',
+         'ola_question_tto',
+         'ola_question_ttr',
       ];
       $extraFields = [
          '_tickettemplate',
