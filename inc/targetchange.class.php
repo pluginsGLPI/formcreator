@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
+class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 {
    public static function getTypeName($nb = 1) {
       return _n('Target change', 'Target changes', $nb, 'formcreator');
@@ -43,9 +43,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    static function getEnumUrgencyRule() {
       return [
-         PluginFormcreatorTargetBase::URGENCY_RULE_NONE      => __('Medium', 'formcreator'),
-         PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
-         PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE      => __('Medium', 'formcreator'),
+         PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
+         PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
@@ -489,22 +489,22 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          switch ($input['sla_rule']) {
-            case PluginFormcreatorTargetBase::SLA_RULE_SPECIFIC:
+            case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
                $input['sla_question_tto'] = $input['_sla_specific_tto'];
                $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
                break;
-            case PluginFormcreatorTargetBase::SLA_RULE_FROM_ANWSER:
+            case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
                $input['sla_question_tto'] = $input['_sla_questions_tto'];
                $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
                break;
          }
 
          switch ($input['ola_rule']) {
-            case PluginFormcreatorTargetBase::OLA_RULE_SPECIFIC:
+            case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
                $input['ola_question_tto'] = $input['_ola_specific_tto'];
                $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
                break;
-            case PluginFormcreatorTargetBase::OLA_RULE_FROM_ANWSER:
+            case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
                $input['ola_question_tto'] = $input['_ola_questions_tto'];
                $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
                break;

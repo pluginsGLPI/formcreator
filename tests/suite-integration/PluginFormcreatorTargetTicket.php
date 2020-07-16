@@ -150,7 +150,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
             'itemtype'              => \PluginFormcreatorTargetTicket::class,
-            'urgency_rule'          => \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER,
+            'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER,
             'urgency_question'      => 'custom urgency',
             'expected'              => '5'
          ],
@@ -159,7 +159,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
             'itemtype'              => \PluginFormcreatorTargetTicket::class,
-            'urgency_rule'          => \PluginFormcreatorTargetBase::URGENCY_RULE_NONE,
+            'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE,
             'urgency_question'      => '',
             'expected'              => '3'
          ]

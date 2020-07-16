@@ -981,7 +981,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    ) {
       global $DB;
 
-      $lastAnswer = \PluginFormcreatorTargetBase::CATEGORY_RULE_LAST_ANSWER;
+      $lastAnswer = \PluginFormcreatorAbstractTarget::CATEGORY_RULE_LAST_ANSWER;
 
       // Prepare instance
       $instance = new PluginFormcreatorTargetTicketDummy();
