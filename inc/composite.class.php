@@ -49,10 +49,10 @@ class PluginFormcreatorComposite
    /**
     * Add a target and generated target
     *
-    * @param PluginFormcreatorTargetBase $target
+    * @param PluginFormcreatorAbstractTarget $target
     * @param CommonDBTM $generatedTarget
     */
-   public function addTarget(PluginFormcreatorTargetBase $target, CommonDBTM $generatedTarget) {
+   public function addTarget(PluginFormcreatorAbstractTarget $target, CommonDBTM $generatedTarget) {
       $itemtype = get_class($target);
       $this->targets[$itemtype][$target->getID()] = $generatedTarget;
    }

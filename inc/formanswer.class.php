@@ -1015,7 +1015,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $fields[$questionId]->deserializeValue($answers_values['formcreator_field_' . $questionId]);
       }
 
-      // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
+      // TODO: code very close to PluginFormcreatorAbstractTarget::parseTags() (factorizable ?)
       // compute all questions
       $questionTable = PluginFormcreatorQuestion::getTable();
       $sectionTable = PluginFormcreatorSection::getTable();

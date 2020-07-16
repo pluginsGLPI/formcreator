@@ -33,7 +33,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTargetBase extends CommonDBChild implements
+abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorTargetInterface,
 PluginFormcreatorConditionnableInterface
@@ -559,7 +559,7 @@ PluginFormcreatorConditionnableInterface
 
       $urgency = null;
       switch ($this->fields['urgency_rule']) {
-         case PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER:
+         case PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER:
             $urgency = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -570,7 +570,7 @@ PluginFormcreatorConditionnableInterface
             ])->next();
             $urgency = $urgency['answer'];
             break;
-         case PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC:
+         case PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC:
             $urgency = $this->fields['urgency_question'];
             break;
       }
@@ -951,7 +951,7 @@ PluginFormcreatorConditionnableInterface
          $questions_list[$question->getID()] = $question->fields['name'];
       }
       // List questions
-      if ($this->fields['due_date_rule'] != PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
+      if ($this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_ANSWER
             && $this->fields['due_date_rule'] != 'calcul') {
          echo '<div id="due_date_questions" style="display:none">';
       } else {
@@ -981,10 +981,10 @@ PluginFormcreatorConditionnableInterface
          'max'   => 30
       ]);
       Dropdown::showFromArray('due_date_period', [
-         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_MINUTE => _n('Minute', 'Minutes', 2),
-         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_HOUR   => _n('Hour', 'Hours', 2),
-         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_DAY    => _n('Day', 'Days', 2),
-         PluginFormcreatorTargetBase::DUE_DATE_PERIOD_MONTH  => _n('Month', 'Months', 2),
+         PluginFormcreatorAbstractTarget::DUE_DATE_PERIOD_MINUTE => _n('Minute', 'Minutes', 2),
+         PluginFormcreatorAbstractTarget::DUE_DATE_PERIOD_HOUR   => _n('Hour', 'Hours', 2),
+         PluginFormcreatorAbstractTarget::DUE_DATE_PERIOD_DAY    => _n('Day', 'Days', 2),
+         PluginFormcreatorAbstractTarget::DUE_DATE_PERIOD_MONTH  => _n('Month', 'Months', 2),
       ], [
          'value' => $this->fields['due_date_period']
       ]);
@@ -1504,13 +1504,13 @@ SCRIPT;
       $str    = "+" . $this->fields['due_date_value'] . " $period";
 
       switch ($this->fields['due_date_rule']) {
-         case PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER:
+         case PluginFormcreatorAbstractTarget::DUE_DATE_RULE_ANSWER:
             $due_date = $date['answer'];
             break;
-         case PluginFormcreatorTargetBase::DUE_DATE_RULE_TICKET:
+         case PluginFormcreatorAbstractTarget::DUE_DATE_RULE_TICKET:
             $due_date = date('Y-m-d H:i:s', strtotime($str));
             break;
-         case PluginFormcreatorTargetBase::DUE_DATE_RULE_CALC:
+         case PluginFormcreatorAbstractTarget::DUE_DATE_RULE_CALC:
             $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
             break;
          default:
