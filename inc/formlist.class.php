@@ -49,7 +49,11 @@ class PluginFormcreatorFormList extends CommonGLPI
    static function getMenuContent() {
       $menu = parent::getMenuContent();
       $menu['title'] = static::getTypeName(2);
-      $menu['page'] = FORMCREATOR_ROOTDOC . '/front/formlist.php';
+      if (method_exists(Plugin::class, 'getWebDir')) {
+         $menu['page'] = '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php';
+      } else {
+         $menu['page'] =  '/plugins/formcreator/front/formlist.php';
+      }
       $menu['icon'] = 'fas fa-edit';
       $image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                   title="' . __('Forms waiting for validation', 'formcreator') . '"
