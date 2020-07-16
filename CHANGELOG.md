@@ -1,3 +1,43 @@
+<a name="2.10.1"></a>
+## [2.10.1](https://github.com/pluginsglpi/formcreator/compare/v2.10.0..2.10.1) (2020-07-16)
+
+
+### Bug Fixes
+
+*  bad path for marketplace ([9e49a028](https://github.com/pluginsglpi/formcreator/commit/9e49a028))
+*  keep backward compatibility with GLPI 9.4 ([dedde0b5](https://github.com/pluginsglpi/formcreator/commit/dedde0b5))
+*  keep compatibility <ith GLPI 9.4 ([b4335c54](https://github.com/pluginsglpi/formcreator/commit/b4335c54))
+*  marketplace compatibility (again) ([1070cb6f](https://github.com/pluginsglpi/formcreator/commit/1070cb6f))
+*  path for marketplace compatibility ([1da588e1](https://github.com/pluginsglpi/formcreator/commit/1da588e1))
+*  unloaded JS library ([a71d468e](https://github.com/pluginsglpi/formcreator/commit/a71d468e))
+* **category:** fix SQL error ([3470b61e](https://github.com/pluginsglpi/formcreator/commit/3470b61e))
+* **dropdownfield:** compatibility with Tags plugin ([c40177a8](https://github.com/pluginsglpi/formcreator/commit/c40177a8))
+* **filefield:** documentt upload with GLPI 9.5 ([9658946c](https://github.com/pluginsglpi/formcreator/commit/9658946c))
+* **form:** broken link to forms ([1195d5bd](https://github.com/pluginsglpi/formcreator/commit/1195d5bd))
+* **form:** entity restrict problem ([58a79101](https://github.com/pluginsglpi/formcreator/commit/58a79101))
+* **form:** incorrect font on add target link ([4880b95f](https://github.com/pluginsglpi/formcreator/commit/4880b95f))
+* **form:** version comparison for export / import ([d9dff6cb](https://github.com/pluginsglpi/formcreator/commit/d9dff6cb))
+* **issue:** load tinymce ([820bd7ac](https://github.com/pluginsglpi/formcreator/commit/820bd7ac))
+* **issue:** possible SQL error ([0688d13c](https://github.com/pluginsglpi/formcreator/commit/0688d13c))
+* **issue:** self service is able to reopen a closed issue / ticket ([f483ddbb](https://github.com/pluginsglpi/formcreator/commit/f483ddbb))
+* **issue:** ticket status when approval request is used ([d9b46773](https://github.com/pluginsglpi/formcreator/commit/d9b46773))
+* **targetticket,targetcategory:** category question not properly set on display ([5fb8fd4b](https://github.com/pluginsglpi/formcreator/commit/5fb8fd4b))
+* **targetticket,targetchange:** avoid possible PHP warning ([eb312921](https://github.com/pluginsglpi/formcreator/commit/eb312921))
+* **targetticket,targetchange:** covnert question ID into UUID for export of target settings ([a17e4590](https://github.com/pluginsglpi/formcreator/commit/a17e4590))
+* **targetticket,targetchange:** dynamic entity computation may fail ([85b1e76b](https://github.com/pluginsglpi/formcreator/commit/85b1e76b))
+* **targetticket,targetchange:** missing update of question ID in targets ([5ecb8283](https://github.com/pluginsglpi/formcreator/commit/5ecb8283))
+* **targetticket,targetchange:** specific tags not applicable ([b2330387](https://github.com/pluginsglpi/formcreator/commit/b2330387))
+* **targetticket,targetchange:** unsaved question ID for tags from question, restore multiple choice ([ae3188ab](https://github.com/pluginsglpi/formcreator/commit/ae3188ab))
+* **textareafield:** tinymce may be 0px height ([3f1c262b](https://github.com/pluginsglpi/formcreator/commit/3f1c262b))
+* **wizard:** impersonation exists in GLPI 9.5 only ([eb6f43e0](https://github.com/pluginsglpi/formcreator/commit/eb6f43e0))
+
+
+### Features
+
+* **wizard:** handle GLPI's impersonate feature ([9cd0c8be](https://github.com/pluginsglpi/formcreator/commit/9cd0c8be))
+
+
+
 <a name="2.10.0"></a>
 # [2.10.0](https://github.com/pluginsglpi/formcreator/compare/v2.10.0-rc.1...v2.10.0) (2020-06-23)
 
