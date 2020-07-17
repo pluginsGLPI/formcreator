@@ -1532,6 +1532,12 @@ PluginFormcreatorConditionnableInterface
       return $result;
    }
 
+   public function getForbiddenStandardMassiveAction() {
+      return [
+         'clone',
+      ];
+   }
+
    /**
     * @since version 0.85
     *
