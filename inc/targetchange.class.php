@@ -125,6 +125,23 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       } else {
          // Convert IDs into UUIDs
          $export = $this->convertTags($export);
+         $questionLinks = [
+            'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+            'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+            'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+            'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+         ];
+         foreach ($questionLinks as $field => $fieldSetting) {
+            if (!is_array($fieldSetting['values'])) {
+               $fieldSetting['values'] = [$fieldSetting['values']];
+            }
+            if (!in_array($export[$field], $fieldSetting['values'])) {
+               continue;
+            }
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($export[$fieldSetting['field']]);
+            $export[$fieldSetting['field']] = $question->fields['uuid'];
+         }
       }
       unset($export[$idToRemove]);
 
@@ -181,6 +198,25 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          foreach ($taggableFields as $key) {
             $input[$key] = $DB->escape($input[$key]);
          }
+      }
+
+      // Update links to other questions
+      $questionLinks = [
+         'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+         'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+         'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+         'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+      ];
+      foreach ($questionLinks as $field => $fieldSetting) {
+         if (!is_array($fieldSetting['values'])) {
+            $fieldSetting['values'] = [$fieldSetting['values']];
+         }
+         if (!in_array($input[$field], $fieldSetting['values'])) {
+            continue;
+         }
+         /**@var PluginFormcreatorQuestion $question */
+         $question = $linker->getObject($input[$fieldSetting['field']], PluginFormcreatorQuestion::class);
+         $input[$fieldSetting['field']] = $question->getID();
       }
 
       // Add or update

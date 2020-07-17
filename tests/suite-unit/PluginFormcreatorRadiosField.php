@@ -123,7 +123,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $question = $this->getQuestion(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $question = $this->getQuestion(\Toolbox::addslashes_deep(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']));
       $instance = new \PluginFormcreatorRadiosField($question);
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
@@ -157,7 +157,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $question = $this->getQuestion(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $question = $this->getQuestion(\Toolbox::addslashes_deep(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']));
       $instance = new \PluginFormcreatorRadiosField($question);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);

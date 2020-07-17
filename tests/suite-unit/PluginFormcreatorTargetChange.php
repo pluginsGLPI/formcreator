@@ -313,10 +313,13 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $entity = new \Entity();
       $profileUser = new \Profile_User();
+      // A login resyncs a user. Must login nefore adding the dynamic profile
+      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $profileUser->add([
-         \User::getForeignKeyField() => $user->getID(),
+         \User::getForeignKeyField()    => $user->getID(),
          \Profile::getForeignKeyField() => 4, // Super admin
-         \Entity::getForeignKeyField() => 0,
+         \Entity::getForeignKeyField()  => $entityId,
+         'is_dynamic'                   => '1',
       ]);
 
       // Disable notification to avoid output to console
@@ -326,7 +329,6 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
       ]);
-      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
@@ -347,10 +349,9 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
-      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
-      $this->integer((int) $output['entities_id'])->isEqualTo(0);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test specific entity
       $this->boolean($this->login('glpi', 'glpi'))->isTrue();
@@ -507,5 +508,27 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $input['id'] = $targetChangeId;
       $targetChangeId2 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
       $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId2);
+   }
+
+   public function testIsEntityAssign() {
+      $instance = $this->newTestedInstance();
+      $this->boolean($instance->isEntityAssign())->isFalse();
+   }
+
+   public function testdeleteObsoleteItems() {
+      $form = $this->getForm();
+      $targetChange1 = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetChange2 = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $instance = $this->newTestedInstance();
+      $instance->deleteObsoleteItems($form, [$targetChange2->getID()]);
+
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetChange1->getID()))->isFalse();
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetChange2->getID()))->isTrue();
    }
 }

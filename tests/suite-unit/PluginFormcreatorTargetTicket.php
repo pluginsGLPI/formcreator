@@ -432,16 +432,22 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $entity = new \Entity();
       $profileUser = new \Profile_User();
+      // A login resyncs a user. Must login nefore adding the dynamic profile
+      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $profileUser->add([
-         \User::getForeignKeyField() => $user->getID(),
+         \User::getForeignKeyField()    => $user->getID(),
          \Profile::getForeignKeyField() => 4, // Super admin
-         \Entity::getForeignKeyField() => 0,
+         \Entity::getForeignKeyField()  => $entityId,
+         'is_dynamic'                   => '1',
       ]);
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
       ]);
-      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
@@ -462,10 +468,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
-      $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
-      $this->integer((int) $output['entities_id'])->isEqualTo(0);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test specific entity
       $this->boolean($this->login('glpi', 'glpi'))->isTrue();
@@ -783,6 +788,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'category_question' => '0',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE,
          'associate_question' => '0',
+         'type_rule' => 1,
+         'type_question' => 0,
          'uuid' => $uuid,
       ];
 
@@ -1004,5 +1011,27 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       // Assert results
       $this->array($res)->isEqualTo($results);
+   }
+
+   public function testIsEntityAssign() {
+      $instance = $this->newTestedInstance();
+      $this->boolean($instance->isEntityAssign())->isFalse();
+   }
+
+   public function testdeleteObsoleteItems() {
+      $form = $this->getForm();
+      $targetTicket1 = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetTicket2 = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $instance = $this->newTestedInstance();
+      $instance->deleteObsoleteItems($form, [$targetTicket2->getID()]);
+
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetTicket1->getID()))->isFalse();
+      $checkDeleted = $this->newTestedInstance();
+      $this->boolean($checkDeleted->getFromDB($targetTicket2->getID()))->isTrue();
    }
 }

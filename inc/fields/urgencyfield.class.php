@@ -163,6 +163,8 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return $available[$this->value];
    }
 
+   public function moveUploads() {}
+
    public function getDocumentsForTarget() {
       return [];
    }

@@ -90,6 +90,25 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return $this->value;
    }
 
+   public function moveUploads()
+   {
+      $key = 'formcreator_field_' . $this->question->getID();
+      if (!is_array($this->uploads) || !isset($this->uploads["_$key"])) {
+         return;
+      }
+      $answer_value = [];
+      $index = 0;
+      foreach ($this->uploads["_$key"] as $document) {
+         $document = Toolbox::stripslashes_deep($document);
+         if (is_file(GLPI_TMP_DIR . '/' . $document)) {
+            $prefix = $this->uploads['_prefix_formcreator_field_' . $this->question->getID()][$index];
+            $answer_value[] = $this->saveDocument($document, $prefix);
+         }
+         $index++;
+      }
+      $this->uploadData = $answer_value;
+   }
+
    public function getDocumentsForTarget() {
       return $this->uploadData;
    }
@@ -210,26 +229,6 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             return false;
          }
 
-         if (PLUGIN_FORMCREATOR_TEXTAREA_FIX && version_compare(GLPI_VERSION, '9.5.0-dev') < 0) {
-            $answer_value = [];
-            $index = 0;
-            if ($nonDestructive) {
-               $index = count($input["_$key"]);
-            } else {
-               foreach ($input["_$key"] as $document) {
-                  $document = Toolbox::stripslashes_deep($document);
-                  if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-                     $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
-                     $answer_value[] = $this->saveDocument($document, $prefix);
-                  }
-                  $index++;
-               }
-            }
-            $this->uploadData = $answer_value;
-            $this->value = __('Attached document', 'formcreator');
-
-            return true;
-         }
          if ($this->hasInput($input)) {
             $this->value = __('Attached document', 'formcreator');
          }

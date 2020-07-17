@@ -70,6 +70,8 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
                   ['type_menu' => ['LIKE', '%\"Ticket\"%']],
                   ['type_menu' => ['LIKE', '%\"Change\"%']],
                   ['type_menu' => ['LIKE', '0']],
+                  ['type_menu' => ''],
+                  ['type_menu' => 'NULL'],
                ]
             ] + getEntitiesRestrictCriteria(PluginTagTag::getTable(), '', '', true),
             'ORDER'  => 'name'

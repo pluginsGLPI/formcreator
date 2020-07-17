@@ -160,6 +160,8 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       return [];
    }
 
+   public function moveUploads() {}
+
    public function isValid() {
       if ($this->isRequired() && $this->value === '') {
          Session::addMessageAfterRedirect(

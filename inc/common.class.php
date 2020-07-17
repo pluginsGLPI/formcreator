@@ -225,15 +225,6 @@ class PluginFormcreatorCommon {
       $user = 0;
       if (!$ticketValidation->isNewItem()) {
          $user = $ticketValidation->fields['users_id_validate'];
-         $status = 103;
-         switch ($ticketValidation->fields['status']) {
-            case TicketValidation::WAITING:
-               $status = 101;
-               break;
-            case TicketValidation::REFUSED:
-               $status = 102;
-               break;
-         }
       }
 
       return ['status' => $status, 'user' => $user];

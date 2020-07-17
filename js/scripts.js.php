@@ -41,6 +41,7 @@ var tiles = [];
 var serviceCatalogEnabled = false;
 var slinkyCategories;
 var timers = [];
+var formcreatorRootDoc = rootDoc + '/<?php echo method_exists(Plugin::class, 'getWebDir') ? Plugin::getWebDir('formcreator', false) : 'plugins/formcreator' ?>';
 
 // === COMMON ===
 
@@ -67,7 +68,7 @@ function getTimer(object) {
 // === MENU ===
 var link = '';
 link += '<li id="menu7">';
-link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
+link += '<a href="' + formcreatorRootDoc + '/front/formlist.php" class="itemP">';
 link += "<?php echo Toolbox::addslashes_deep(_n('Form', 'Forms', 2, 'formcreator')); ?>";
 link += '</a>';
 link += '</li>';
@@ -90,7 +91,7 @@ $(function() {
    $('#formcreator-toggle-nav-desktop').change(function() {
       $('.plugin_formcreator_container').toggleClass('toggle_menu');
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+         url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
          data: {wizard: 'toggle_menu'},
          type: "POST",
          dataType: "json"
@@ -199,7 +200,7 @@ function showHomepageFormList() {
    }
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
+      url: formcreatorRootDoc + '/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
       if (!$('#plugin_formcreatorHomepageForms').length) {
@@ -210,7 +211,7 @@ function showHomepageFormList() {
 
 function updateCategoriesView() {
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+      url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'categories'},
       type: "GET",
       dataType: "json"
@@ -254,7 +255,7 @@ function getFormAndFaqItems(categoryId) {
    keywords = $('#plugin_formcreator_searchBar input:first').val();
    deferred = jQuery.Deferred();
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+      url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
       type: "GET",
       dataType: "json"
@@ -370,10 +371,10 @@ function buildTiles(list) {
       $.each(list, function (key, item) {
          // Build a HTML tile
          if (item.type == 'form') {
-            url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + item.id;
+            url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
          } else {
             if (serviceCatalogEnabled) {
-               url = rootDoc + '/plugins/formcreator/front/knowbaseitem.form.php?id=' + item.id;
+               url = formcreatorRootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
             } else {
                url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
             }
@@ -444,8 +445,8 @@ function buildTiles(list) {
 // === SEARCH BAR ===
 
 // === QUESTIONS ===
-var urlQuestion      = rootDoc + "/plugins/formcreator/ajax/question.php";
-var urlFrontQuestion = rootDoc + "/plugins/formcreator/front/question.form.php";
+var urlQuestion      = formcreatorRootDoc + "/ajax/question.php";
+var urlFrontQuestion = formcreatorRootDoc + "/front/question.form.php";
 
 function plugin_formcreator_addQuestion(items_id, token, section) {
    modalWindow.load(urlQuestion, {
@@ -526,8 +527,8 @@ function plugin_formcreator_duplicateQuestion(items_id, token, question_id) {
 
 
 // === SECTIONS ===
-var urlSection      = rootDoc + "/plugins/formcreator/ajax/section.php";
-var urlFrontSection = rootDoc + "/plugins/formcreator/front/section.form.php";
+var urlSection      = formcreatorRootDoc + "/ajax/section.php";
+var urlFrontSection = formcreatorRootDoc + "/front/section.form.php";
 
 function plugin_formcreator_addSection(items_id, token) {
    modalWindow.load(urlSection, {
@@ -589,7 +590,7 @@ function plugin_formcreator_moveSection(token, section_id, action) {
 
 // === TARGETS ===
 function plugin_formcreator_addTarget(items_id, token) {
-   modalWindow.load(rootDoc + '/plugins/formcreator/ajax/target.php', {
+   modalWindow.load(formcreatorRootDoc + '/ajax/target.php', {
       form_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
@@ -598,7 +599,7 @@ function plugin_formcreator_addTarget(items_id, token) {
 function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
    if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
       jQuery.ajax({
-        url: rootDoc + '/plugins/formcreator/front/form.form.php',
+        url: formcreatorRootDoc + '/front/form.form.php',
         type: "POST",
         data: {
             delete_target: 1,
@@ -618,7 +619,7 @@ var formcreatorQuestions = new Object();
 
 function formcreatorShowFields(form) {
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/showfields.php',
+      url: formcreatorRootDoc + '/ajax/showfields.php',
       type: "POST",
       data: form.serializeArray()
    }).done(function(response){
@@ -646,6 +647,10 @@ function formcreatorShowFields(form) {
          questionId = parseInt(questionKey.replace('formcreator_field_', ''));
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
+               // Workaround issue with tinymce input which may be 0px height
+               $('#form-group-field-' + questionKey + ' iframe')
+                  .attr('data-mce-style', 'width: 100%; height: 148px; display: block;')
+                  .attr('style', 'width: 100%; height: 148px; display: block;');
                $('#form-group-field-' + questionKey).removeAttr('hidden');
                i++;
                $('#form-group-field-' + questionKey).removeClass('line' + (i+1) % 2);
@@ -825,7 +830,7 @@ function plugin_formcreator_addEmptyCondition(target) {
    });
    $.ajax({
       type: 'POST',
-      url: rootDoc + '/plugins/formcreator/ajax/condition.php',
+      url: formcreatorRootDoc + '/ajax/condition.php',
       data: data
    }).done(function (data) {
       $(target).parents('tr').after(data);
@@ -843,7 +848,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
    dropdown_id   = $('[name="plugin_formcreator_questionform"] [name="id"]').val();
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
+      url: formcreatorRootDoc + '/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: dropdown_type,
@@ -858,7 +863,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
 
       $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/commontree.php',
+         url: formcreatorRootDoc + '/ajax/commontree.php',
          type: 'GET',
          data: {
             itemtype: dropdown_type,
@@ -880,7 +885,7 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    glpi_object_id = $('[name="plugin_formcreator_questionform"] [name="id"]').val();
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
+      url: formcreatorRootDoc + '/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: glpi_object,
@@ -1115,7 +1120,7 @@ function plugin_formcreator_changeQuestionType(rand) {
    var questionType = $ ('form[name="plugin_formcreator_questionform"] [name="fieldtype"]').val();
 
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/question_design.php',
+      url: formcreatorRootDoc + '/ajax/question_design.php',
       type: 'GET',
       data: {
          questionId: questionId,
@@ -1153,7 +1158,7 @@ function plugin_formcreator_changeLDAP(ldap) {
    var ldap_directory = ldap.value;
 
    jQuery.ajax({
-   url: rootDoc + '/plugins/formcreator/ajax/ldap_filter.php',
+   url: formcreatorRootDoc + '/ajax/ldap_filter.php',
    type: 'POST',
    data: {
          value: ldap_directory,
@@ -1332,12 +1337,12 @@ function plugin_formcreator_updateCompositePeerType(rand) {
 
 function plugin_formcreator_cancelMyTicket(id) {
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/cancelticket.php',
+      url: formcreatorRootDoc + '/ajax/cancelticket.php',
       data: {id: id},
       type: "POST",
       dataType: "text"
    }).done(function(response) {
-      window.location.replace(rootDoc + '/plugins/formcreator/front/issue.php?reset=reset');
+      window.location.replace(formcreatorRootDoc + '/front/issue.php?reset=reset');
    }).error(function(response) {
       alert("<?php echo __('Failed to cancel the ticket', 'formcreator'); ?>");
    });

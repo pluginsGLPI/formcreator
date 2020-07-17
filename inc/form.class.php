@@ -656,7 +656,7 @@ PluginFormcreatorConditionnableInterface
       echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_row">';
       echo '<td colspan="3">';
       echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
-                <i class="fa fa-plus" />
+                <i class="fa fa-plus"></i>
                 '.__('Add a target', 'formcreator').'
             </a>';
       echo '</td>';
@@ -836,13 +836,17 @@ PluginFormcreatorConditionnableInterface
 
       $order         = "$table_form.name ASC";
 
-      $dbUtils = new DBUtils();
+      $dbUtils = new DbUtils();
+      $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($table_form, "", "", true, false);
+      if (count($entityRestrict)) {
+         $entityRestrict = [$entityRestrict];
+      }
       $where_form = [
          'AND' => [
             "$table_form.is_active" => '1',
             "$table_form.is_deleted" => '0',
             "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
-         ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false)
+         ] + $entityRestrict
       ];
       if ($helpdeskHome) {
          $where_form['AND']["$table_form.helpdesk_home"] = '1';
@@ -1174,7 +1178,7 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Print css media
-      echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
+      echo Html::css(FORMCREATOR_ROOTDOC . "/css/print_form.css", ['media' => 'print']);
 
       // Display form
       $formName = 'plugin_formcreator_form';
@@ -1792,7 +1796,7 @@ PluginFormcreatorConditionnableInterface
             continue;
          }
          if (isset($forms_toimport['schema_version'])) {
-            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION) {
+            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION . '.0') {
                Session::addMessageAfterRedirect(
                   __("Forms import impossible, the file was generated with another version", 'formcreator'),
                   false, ERROR
@@ -2008,7 +2012,7 @@ PluginFormcreatorConditionnableInterface
 
       echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
       echo '<tr class="noHover">';
-      echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+      echo '<th><a href="' . FORMCREATOR_ROOTDOC . '/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
       echo '</tr>';
 
       $currentCategoryId = -1;

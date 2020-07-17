@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.10.0');
+define('PLUGIN_FORMCREATOR_VERSION', '2.10.1');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.10');
 // is or is not an official release of the plugin
@@ -183,12 +183,15 @@ function plugin_init_formcreator() {
             if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
                if (!isset($_POST['update'])) {
                   $decodedUrl = [];
-                  $forceTab = '';
+                  $openItilFollowup = '';
+                  if (isset($_GET['_openfollowup'])) {
+                     $openItilFollowup = '&_openfollowup=1';
+                  }
                   parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
                   if (isset($decodedUrl['forcetab'])) {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
-                  Html::redirect(FORMCREATOR_ROOTDOC . '/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $forceTab);
+                  Html::redirect(FORMCREATOR_ROOTDOC . '/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $openItilFollowup);
                }
             }
 
@@ -243,10 +246,11 @@ function plugin_init_formcreator() {
          }
 
          $pages = [
-            "plugins/formcreator/front/targetticket.form.php",
-            "plugins/formcreator/front/formdisplay.php",
-            "plugins/formcreator/front/form.form.php",
-            "plugins/formcreator/front/formanswer.form.php",
+            FORMCREATOR_ROOTDOC . '/front/targetticket.form.php',
+            FORMCREATOR_ROOTDOC . '/front/formdisplay.php',
+            FORMCREATOR_ROOTDOC . '/front/form.form.php',
+            FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
+            FORMCREATOR_ROOTDOC . '/front/issue.form.php',
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
@@ -260,6 +264,7 @@ function plugin_init_formcreator() {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
          Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
@@ -276,7 +281,7 @@ function plugin_init_formcreator() {
       }
 
       // Load JS and CSS files if we are on a page which need them
-      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+      if (strpos($_SERVER['REQUEST_URI'], '/formcreator') !== false
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
             $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
