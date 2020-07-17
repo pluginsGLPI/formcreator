@@ -854,24 +854,15 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Find forms accessible by the current user
+      $keywords = trim($keywords);
       if (!empty($keywords)) {
-         // Determine the optimal search mode
-         $searchMode = "BOOLEAN MODE";
-         $formCount = $dbUtils->countElementsInTable($table_form);
-         if ($formCount > 20) {
-            $searchMode = "NATURAL LANGUAGE MODE";
-         } else {
-            $keywords = PluginFormcreatorCommon::prepareBooleanKeywords($keywords);
-         }
-         $keywords = $DB->escape($keywords);
-         $highWeightedMatch = " MATCH($table_form.`name`, $table_form.`description`)
-               AGAINST('$keywords' IN $searchMode)";
-         $lowWeightedMatch = " MATCH($table_question.`name`, $table_question.`description`)
-               AGAINST('$keywords' IN $searchMode)";
+         $keywordsWithWilcards = $DB->escape(PluginFormcreatorCommon::prepareBooleanKeywords($keywords));
          $where_form['AND'][] = [
             'OR' => [
-               new QueryExpression("$highWeightedMatch"),
-               new QueryExpression("$lowWeightedMatch"),
+               new QueryExpression("MATCH($table_form.`name`, $table_form.`description`)
+                  AGAINST('$keywordsWithWilcards' IN BOOLEAN MODE)"),
+               new QueryExpression("MATCH($table_question.`name`, $table_question.`description`)
+                  AGAINST('$keywordsWithWilcards' IN BOOLEAN MODE)"),
             ]
          ];
       }
