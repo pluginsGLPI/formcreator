@@ -503,7 +503,7 @@ var plugin_formcreator = new function() {
          }
       });
       $.get({
-         url: formcreatorRootDoc + '//ajax/question_get.php',
+         url: formcreatorRootDoc + '/ajax/question_get.php',
          dataType: 'json',
          data: {
             id: sectionId,
