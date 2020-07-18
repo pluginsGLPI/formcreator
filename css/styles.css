@@ -909,6 +909,11 @@ input[type=radio]:checked+label.label-radio .check {
    animation-iteration-count: 1;
    animation-timing-function: ease-in;
    animation-duration: 0.3s;
+   transition: box-shadow 0.25s;
+   border-radius: 2px;
+   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+
 }
 
 .plugin_formcreator_formTile:hover {
@@ -920,13 +925,21 @@ input[type=radio]:checked+label.label-radio .check {
 }
 
 a.plugin_formcreator_formTile_title {
-   font-size: 1.1em;
+   font-size: 1.5em;
    padding: 10px 40px 15px 10px;
    display: block;
+   background: transparent no-repeat top 10px right 10px;
+   font-weight: 400;
+   color: #292929;
+   max-width: 23ch;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
    cursor: pointer;
+   transition: color 0.3s ease;
 }
 
 .plugin_formcreator_formTile i.fa,
@@ -934,12 +947,28 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_formTile i.fas {
    font-size: 2.5em;
    margin-right: 10px;
-   float: left;
-   margin: 10px;
+   margin-top: 5px;
+   float: right;
 }
 
 .plugin_formcreator_formTile_description {
-   padding: 0 15px 5px 15px;
+   padding: 12px 12px 24px 12px;
+   border-radius: 0 0 2px 2px;
+   background-color: inherit;
+   border-top: 1px solid rgba(160, 160, 160, 0.2);
+   position: relative;
+   background: #fff;
+   line-height: 1.6;
+   min-height: 33px;
+   height: 33px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: inherit;
+   line-height: 1.5;
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+   font-weight: normal;
+   color: rgba(0, 0, 0, 0.87);
 }
 
 .plugin_formcreator_formTile div:first-child {
@@ -974,7 +1003,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_wizard_forms>div {
-   text-align: center;
+   text-align: left;
 }
 
 #plugin_formcreator_searchBar {
