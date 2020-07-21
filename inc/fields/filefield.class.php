@@ -128,7 +128,8 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    private function isValidValue($value) {
       // If the field is required it can't be empty
-      return (count($this->uploadData) > 0);
+      $key = 'formcreator_field_' . $this->question->getID();
+      return (count($this->uploads["_$key"]) > 0);
    }
 
    public static function getName() {
