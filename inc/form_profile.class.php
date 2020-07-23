@@ -79,7 +79,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       global $DB, $CFG_GLPI;
 
-      echo "<form name='notificationtargets_form' id='notificationtargets_form'
+      echo "<form name='form_profiles_form' id='form_profiles_form'
              method='post' action=' ";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
