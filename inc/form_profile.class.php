@@ -89,11 +89,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
-         [
-            PluginFormcreatorForm::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
-            PluginFormcreatorForm::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
-            PluginFormcreatorForm::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-         ],
+         PluginFormcreatorForm::getEnumAccessType(),
          [
             'value' => (isset($item->fields["access_rights"])) ? $item->fields["access_rights"] : 1,
          ]
