@@ -136,7 +136,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
             ],
          ]);
          foreach ($result as $row) {
-            $checked = $row['is_enabled'] !== '0' ? ' checked' : '';
+            $checked = $row['is_enabled'] != '0' ? ' checked' : '';
             echo '<tr><td colspan="2">';
             echo '<input type="checkbox" name="profiles_id[]" value="'.$row['id'].'" '.$checked.'> ';
             echo '<label>' . $row['name']. '</label>';
