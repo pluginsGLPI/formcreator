@@ -33,7 +33,8 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class TextareaField extends CommonTestCase {
    public function testGetName() {
-      $output = $this->getTestedClassName()::getName();
+      $itemtype = $this->getTestedClassName();
+      $output = $itemtype::getName();
       $this->string($output)->isEqualTo('Textarea');
    }
 
