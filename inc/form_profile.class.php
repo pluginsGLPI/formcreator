@@ -144,10 +144,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          }
       }
 
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       echo '<tr>';
          echo '<td class="center" colspan="2">';
             echo Html::hidden('profiles_id[]', ['value' => '0']);
-            echo Html::hidden('form_id', ['value' => $item->fields['id']]);
+            echo Html::hidden($formFk, ['value' => $item->fields['id']]);
             echo '<input type="submit" name="update" value="'.__('Save').'" class="submit" />';
          echo "</td>";
       echo "</tr>";
