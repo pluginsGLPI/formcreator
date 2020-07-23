@@ -42,7 +42,8 @@ class DropdownField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $output = $this->getTestedClassName()::getName();
+      $itemtype = $this->getTestedClassName();
+      $output = $itemtype::getName();
       $this->string($output)->isEqualTo('Dropdown');
    }
 
