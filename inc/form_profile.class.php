@@ -79,7 +79,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       global $DB, $CFG_GLPI;
 
-      echo "<form name='notificationtargets_form' id='notificationtargets_form'
+      echo "<form name='form_profiles_form' id='form_profiles_form'
              method='post' action=' ";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
@@ -89,11 +89,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
-         [
-            PluginFormcreatorForm::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
-            PluginFormcreatorForm::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
-            PluginFormcreatorForm::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-         ],
+         PluginFormcreatorForm::getEnumAccessType(),
          [
             'value' => (isset($item->fields["access_rights"])) ? $item->fields["access_rights"] : 1,
          ]
@@ -120,34 +116,39 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          $formFk = PluginFormcreatorForm::getForeignKeyField();
          $result = $DB->request([
             'SELECT' => [
-               'p'     => ['id', 'name'],
-               'f'     => ['profiles_id'],
-               new QueryExpression('IF(f.`profiles_id` IS NOT NULL, 1, 0) AS `is_enabled`')
+               $profileTable     => ['id', 'name'],
+               $formProfileTable => ['profiles_id'],
+               new QueryExpression("IF(`$formProfileTable`.`profiles_id` IS NOT NULL, 1, 0) AS `is_enabled`")
             ],
-            'FROM' => "$profileTable as p",
+            'FROM' => $profileTable,
             'LEFT JOIN' => [
-               "$formProfileTable as f" => [
+               $formProfileTable => [
                   'FKEY' => [
-                     "p"     => 'id',
-                     "f" => 'profiles_id',
-                     ['AND' => ["f.$formFk" => $item->getID()]]
+                     $profileTable     => 'id',
+                     $formProfileTable => 'profiles_id',
+                     [
+                        'AND' => [
+                           "$formProfileTable.$formFk" => $item->getID()
+                        ]
+                     ]
                   ]
                ]
             ],
          ]);
          foreach ($result as $row) {
-            $checked = $row['is_enabled'] !== '0' ? ' checked' : '';
-            echo '<tr><td colspan="2"><label>';
+            $checked = $row['is_enabled'] != '0' ? ' checked' : '';
+            echo '<tr><td colspan="2">';
             echo '<input type="checkbox" name="profiles_id[]" value="'.$row['id'].'" '.$checked.'> ';
-            echo $row['name'];
-            echo '</label></td></tr>';
+            echo '<label>' . $row['name']. '</label>';
+            echo '</td></tr>';
          }
       }
 
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       echo '<tr>';
          echo '<td class="center" colspan="2">';
-            echo '<input type="hidden" name="profiles_id[]" value="0" />';
-            echo '<input type="hidden" name="form_id" value="'.$item->fields['id'].'" />';
+            echo Html::hidden('profiles_id[]', ['value' => '0']);
+            echo Html::hidden($formFk, ['value' => $item->fields['id']]);
             echo '<input type="submit" name="update" value="'.__('Save').'" class="submit" />';
          echo "</td>";
       echo "</tr>";
