@@ -97,30 +97,33 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
  * @return string
  */
 function plugin_formcreator_getCondition($itemtype) {
-   $table = $itemtype::getTable();
-   if ($itemtype == PluginFormcreatorFormAnswer::class) {
-      if (Session::haveRight('config', UPDATE)) {
-         return '';
-      }
-      if (PluginFormcreatorCommon::canValidate()) {
-         $groupUser = new Group_User();
-         $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
-         $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
-         if (count($groups) < 1) {
-            $condition .= ")";
-         } else {
-            $groupIDs = [];
-            foreach ($groups as $group) {
-               $groupIDs[] = $group['id'];
-            }
-            $groupIDs = implode(',', $groupIDs);
-            $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs) )";
-         }
-         return $condition;
-      }
+   if ($itemtype != PluginFormcreatorFormAnswer::class) {
+      return '';
    }
-
-   return " `$table`.`requester_id` = " . $_SESSION['glpiID'];
+   if (Session::haveRight('config', UPDATE)) {
+      // No condition for an administrator
+      return '';
+   }
+   // Restrict to the current user
+   // - when the user is a requester
+   $table = $itemtype::getTable();
+   $condition = "(`$table`.`requester_id` = " . $_SESSION['glpiID'];
+   if (PluginFormcreatorCommon::canValidate()) {
+      // - when the user is a validator or a member of a validator group
+      $condition = " OR `$table`.`users_id_validator` =". $_SESSION['glpiID'];
+      $groupUser = new Group_User();
+      $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+      if (count($groups) > 0) {
+         $groupIDs = [];
+         foreach ($groups as $group) {
+            $groupIDs[] = $group['id'];
+         }
+         $groupIDs = implode(',', $groupIDs);
+         $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs)";
+      }
+      $condition .= ")";
+   }
+   return $condition;
 }
 
 /**
