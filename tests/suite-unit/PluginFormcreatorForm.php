@@ -76,6 +76,15 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->string($output)->isEqualTo($expected);
    }
 
+   public function testGetEnumAccessType() {
+      $output = \PluginFormcreatorForm::getEnumAccessType();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorForm::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
+         \PluginFormcreatorForm::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
+         \PluginFormcreatorForm::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+      ]);
+   }
+
    public function testCanCreate() {
       $this->login('glpi', 'glpi');
       $output = \PluginFormcreatorForm::canCreate();
