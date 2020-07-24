@@ -52,8 +52,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /** @var $questionFields PluginFormcreatorField[] fields of the form answers */
    private $questionFields = [];
 
-   private $questions      = [];
-
    public static function getStatuses() {
       return [
          self::STATUS_WAITING  => __('Waiting', 'formcreator'),
