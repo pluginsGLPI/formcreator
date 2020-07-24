@@ -380,12 +380,9 @@ function buildTiles(list) {
             }
          }
 
-         description = '';
-         if (item.description) {
-            description = '<div class="plugin_formcreator_formTile_description">'
-                          +item.description
-                          +'</div>';
-         }
+         description = '<div class="plugin_formcreator_formTile_description">'
+                        +item.description
+                        +'</div>';
 
          var default_class = '';
          if (JSON.parse(item.is_default)) {

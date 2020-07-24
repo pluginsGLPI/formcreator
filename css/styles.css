@@ -825,8 +825,11 @@ input[type = radio]:checked + label.label-radio .check {
 
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
-   padding: 10px 40px 15px 10px;
+   padding: 17px 40px 10px 10px;
    display: block;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
@@ -835,13 +838,17 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_formTile  i.fa, .plugin_formcreator_formTile  i.fab, .plugin_formcreator_formTile  i.fas {
    font-size: 2.5em;
-   margin-right: 10px;
    float: left;
    margin: 10px;
 }
 
 .plugin_formcreator_formTile_description {
-   padding: 0 15px 5px 15px;
+   padding: 0 10px 5px 10px;
+   min-height: 30px;
+   height: 30px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
 .plugin_formcreator_formTile div:first-child {
