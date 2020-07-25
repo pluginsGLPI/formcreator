@@ -1168,10 +1168,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // TODO: find a way to validate the answers
             // It the form is not being validated, nothing gives the power to anyone to validate the answers
-            $this->update([
+            $formAnswer = new self();
+            $formAnswer->update([
                'id'     => $this->getID(),
                'status' => self::STATUS_WAITING,
             ]);
+            return;
          }
       }
       $this->createIssue();
@@ -1186,10 +1188,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // TODO: find a way to validate the answers
             // It the form is not being validated, nothing gives the power to anyone to validate the answers
-            $this->update([
+            $formAnswer = new self();
+            $formAnswer->update([
                'id'     => $this->getID(),
                'status' => self::STATUS_WAITING,
             ]);
+            return;
          }
       }
       $this->updateIssue();
