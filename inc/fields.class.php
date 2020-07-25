@@ -112,7 +112,8 @@ class PluginFormcreatorFields
    }
 
    /**
-    * Reset the cache of visibility of hide-able items
+    * Reset cache of evaluated visibility
+    * used for unit tests
     *
     * @return void
     */

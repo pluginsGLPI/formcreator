@@ -377,10 +377,10 @@ PluginFormcreatorConditionnableInterface
       return $data;
    }
 
-   protected function setTargetCategory($data, $formanswer) {
+   protected function setTargetCategory($data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
-      $category = null;
+      $category = 0;
 
       switch ($this->fields['category_rule']) {
          case self::CATEGORY_RULE_ANSWER:
@@ -398,54 +398,53 @@ PluginFormcreatorConditionnableInterface
             $category = $this->fields['category_question'];
             break;
          case self::CATEGORY_RULE_LAST_ANSWER:
-            $form_id = $formanswer->fields['id'];
+            $questionFields = $formanswer->getForm()->getFields();
+            $answers_values = $formanswer->getAnswers($formanswer->getID());
+            foreach ($questionFields as $id => $question) {
+               $questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
+            }
 
-            // Get all answers for dropdown questions of this form, ordered
-            // from last to first displayed
-            $answers = $DB->request([
-               'SELECT' => ['answer.answer', 'question.values'],
-               'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
-               'JOIN' => [
-                  PluginFormcreatorQuestion::getTable() . ' AS question' => [
-                     'ON' => [
-                        'answer' => 'plugin_formcreator_questions_id',
-                        'question' => 'id',
-                     ]
-                  ]
-               ],
-               'WHERE' => [
-                  'answer.plugin_formcreator_formanswers_id' => $form_id,
-                  'question.fieldtype'                       => "dropdown",
-               ],
-               'ORDER' => [
-                  'row DESC',
-                  'col DESC',
-               ]
-            ]);
+            // filter questions; keep DropdownFields only
+            $filteredFields = array_filter($questionFields, function($item) {
+               return get_class($item) === PluginFormcreatorDropdownField::class;
+            });
 
-            foreach ($answers as $answer) {
+            // Sort question in reverse order
+            uasort($filteredFields, function($a, $b) {
+               $orderA = $a->getQuestion()->fields['order'];
+               $orderB = $b->getQuestion()->fields['order'];
+               if ($orderA == $orderB) {
+                  return 0;
+               }
+               return ($orderA > $orderB) ? -1 : 1;
+            });
+
+            foreach ($filteredFields as $questionField) {
                // Decode dropdown settings
-               $itemtype = \PluginFormcreatorDropdownField::getSubItemtypeForValues($answer['values']);
+               $itemtype = \PluginFormcreatorDropdownField::getSubItemtypeForValues($questionField->getQuestion()->fields['values']);
 
                // Skip if not a dropdown on categories
-               if ($itemtype !== "ITILCategory") {
+               if ($itemtype !== ITILCategory::class) {
+                  continue;
+               }
+
+               // Skip if question is invisible
+               if (!PluginFormcreatorFields::isVisible($questionField->getQuestion(), $questionFields)) {
                   continue;
                }
 
                // Skip if question was not answered
-               if (empty($answer['answer'])) {
+               if (empty($questionField->getValueForDesign())) {
                   continue;
                }
 
                // Found a valid answer, stop here
-               $category = $answer['answer'];
+               $category = $questionField->getValueForDesign();
                break;
             }
             break;
       }
-      if ($category !== null) {
-         $data['itilcategories_id'] = $category;
-      }
+      $data['itilcategories_id'] = $category;
 
       return $data;
    }
