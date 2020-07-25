@@ -59,7 +59,9 @@ if (isset($_POST['update'])) {
    $formanswer->redirectToList();
 
 } else if (isset($_POST['save_formanswer'])) {
-   $formanswer->updateAnswers($_POST);
+   if (!$formanswer->updateAnswers($_POST)) {
+      Html::back();
+   }
    if (plugin_formcreator_replaceHelpdesk()) {
       $issue = new PluginFormcreatorIssue();
       $issue->redirectToList();

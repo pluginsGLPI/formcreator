@@ -848,10 +848,36 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
       $input['status'] = self::STATUS_WAITING;
 
+      $valid = true;
+      $fieldValidities = [];
+
       $fields = $form->getFields();
       foreach ($fields as $id => $question) {
-         $fields[$id]->parseAnswerValues($input);
+         $fieldValidities[$id] = $fields[$id]->parseAnswerValues($input);
       }
+      // any invalid field will invalidate the answers
+      $valid = !in_array(false, $fieldValidities, true);
+
+      // Mandatory field must be filled
+      // and fields must contain a value matching the constraints of the field (range for example)
+      if ($valid) {
+         foreach ($fields as $id => $field) {
+            if (!$fields[$id]->isPrerequisites()) {
+               continue;
+            }
+            if (PluginFormcreatorFields::isVisible($field->getQuestion(), $fields) && !$fields[$id]->isValid()) {
+               $valid = false;
+               break;
+            }
+         }
+      }
+
+      if (!$valid) {
+         // Save answers in session to display it again with the same values
+         $_SESSION['formcreator']['data'] = Toolbox::stripslashes_deep($input);
+         return false;
+      }
+
       return $this->saveAnswers($form, $input, $fields);
    }
 
