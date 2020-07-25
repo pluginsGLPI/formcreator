@@ -608,7 +608,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if (($this->fields['status'] == self::STATUS_REFUSED) && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
          echo '<div class="form-group">';
          echo '<div class="center">';
-         echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
+         echo Html::submit(__('Save'), ['name' => 'save_formanswer']);
          echo '</div>';
          echo '</div>';
 
@@ -628,7 +628,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo Html::submit(
             __('Refuse', 'formcreator'), [
                'name'      => 'refuse_formanswer',
-               'onclick'   => 'return checkComment(this)',
+               'onclick'   => 'return plugin_formcreator_checkComment(this)',
          ]);
          echo '</div>';
          echo '<div class="center">';
@@ -642,14 +642,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $options['candel'] = false;
       }
 
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . $form->getID() . '">';
-      echo '<input type="hidden" name="id" value="' . $this->getID() . '">';
-      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $form->getID()]);
+      echo Html::hidden('id', ['value' => $this->getID()]);
+      echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
 
       echo '</div>';
-      //      echo '</form>';
       echo '<script type="text/javascript">
-               function checkComment(field) {
+               function plugin_formcreator_checkComment(field) {
                   if ($("textarea[name=comment]").val() == "") {
                      alert("' . __('Refused comment is required!', 'formcreator') . '");
                      return false;

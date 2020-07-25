@@ -47,13 +47,11 @@ if (isset($_POST['update'])) {
    Html::back();
 
 } else if (isset($_POST['refuse_formanswer'])) {
-
    $formanswer->getFromDB(intval($_POST['id']));
    $formanswer->refuseAnswers($_POST);
    $formanswer->redirectToList();
 
 } else if (isset($_POST['accept_formanswer'])) {
-
    $formanswer->getFromDB(intval($_POST['id']));
    $formanswer->acceptAnswers($_POST);
    $formanswer->redirectToList();
