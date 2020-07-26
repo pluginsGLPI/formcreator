@@ -796,10 +796,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // get all fields to compute visibility of targets
       $this->questionFields = $form->getFields();
-      $answers_values = $this->getAnswers($this->getID());
-      foreach ($this->questionFields as $id => $field) {
-         $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
-      }
+      $this->deserializeAnswers();
 
       // Generate targets
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
@@ -889,12 +886,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       // retrieve answers
-      $answers_values = $this->getAnswers($this->getID());
       $form = $this->getForm();
       $fields = $form->getFields();
-      foreach ($fields as $questionId => $question) {
-         $fields[$questionId]->deserializeValue($answers_values['formcreator_field_' . $questionId]);
-      }
+      $this->deserializeAnswers();
 
       // TODO: code very close to PluginFormcreatorAbstractTarget::parseTags() (factorizable ?)
       // compute all questions
@@ -939,7 +933,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          if ($last_section != $question_line[$sectionFk]) {
             $currentSection = new PluginFormcreatorSection();
             $currentSection->getFromDB($question_line[$sectionFk]);
-            if (!PluginFormcreatorFields::isVisible($currentSection, $fields)) {
+            if (!PluginFormcreatorFields::isVisible($currentSection, $this->questionFields)) {
                // The section is not visible, skip it as well all its questions
                continue;
             }
@@ -957,7 +951,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
 
-         if (!PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $fields)) {
+         if (!PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $this->questionFields)) {
             continue;
          }
 
@@ -1093,34 +1087,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return string                                     Parsed string with tags replaced by form values
     */
    public function parseTags($content, PluginFormcreatorTargetInterface $target, $richText = false) {
-      // retrieve answers
-      $answers_values = $this->getAnswers($this->getID());
-
-      // Retrieve questions
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $questions = (new PluginFormcreatorQuestion())
-         ->getQuestionsFromForm($this->fields[$formFk]);
-
       // Prepare all fields of the form
       $form = $this->getForm();
-      $fields = $form->getFields();
-      foreach ($questions as $questionId => $question) {
-         $answer = $answers_values['formcreator_field_' . $questionId];
-         $fields[$questionId]->deserializeValue($answer);
-      }
+      $this->getQuestionFields($form->getID());
+      $this->deserializeAnswers();
 
-      foreach ($questions as $questionId => $question) {
-         if (!PluginFormcreatorFields::isVisible($question, $fields)) {
-            $name = '';
-            $value = '';
-         } else {
+      foreach ($this->questionFields as $questionId => $field) {
+         $question = $field->getQuestion();
+         $name = '';
+         $value = '';
+         if (PluginFormcreatorFields::isVisible($question, $this->questionFields)) {
             $name  = $question->fields['name'];
-            $value = $fields[$questionId]->getValueForTargetText($richText);
+            $value = $this->questionFields[$questionId]->getValueForTargetText($richText);
          }
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
          $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
-         foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
+         foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
             $target->addAttachedDocument($documentId);
          }
          if ($question->fields['fieldtype'] === 'file') {
@@ -1131,8 +1114,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             }
          }
 
-         if ($fields[$questionId] instanceof PluginFormcreatorDropdownField) {
-            $content = $fields[$questionId]->parseObjectProperties($answer, $content);
+         if ($this->questionFields[$questionId] instanceof PluginFormcreatorDropdownField) {
+            $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
          }
       }
 
@@ -1517,5 +1500,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public function getIsAnswersValid() {
       return $this->isAnswersValid;
+   }
+
+   /**
+    * Deserialize answers from the DB
+    *
+    * @return boolean True on success
+    */
+   public function deserializeAnswers() {
+      if ($this->isNewItem()) {
+         return false;
+      }
+
+      $answers_values = $this->getAnswers($this->getID());
+      foreach (array_keys($this->questionFields) as $id) {
+         $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
+      }
+
+      return true;
    }
 }

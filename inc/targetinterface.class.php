@@ -36,4 +36,6 @@ if (!defined('GLPI_ROOT')) {
 interface PluginFormcreatorTargetInterface
 {
    public function save(PluginFormcreatorFormAnswer $formanswer);
+
+   public function addAttachedDocument($documentId);
 }

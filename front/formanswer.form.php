@@ -41,8 +41,8 @@ if (!$plugin->isActivated("formcreator")) {
 
 $formanswer = new PluginFormcreatorFormAnswer();
 
-// Edit an existing target ticket
 if (isset($_POST['update'])) {
+   // Edit an existing target ticket
    $formanswer->update($_POST);
    Html::back();
 
@@ -65,8 +65,8 @@ if (isset($_POST['update'])) {
       $formanswer->redirectToList();
    }
 
-   // Show target ticket form
 } else {
+   // Show target ticket form
    $formanswer->getFromDB((int) $_GET['id']);
    if (!$formanswer->checkEntity()) {
       Html::displayRightError();
