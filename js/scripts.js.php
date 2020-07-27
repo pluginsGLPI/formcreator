@@ -81,7 +81,7 @@ $(function() {
       autoOpen: false,
       height: "auto",
       modal: true,
-      position: ['center', 50],
+      position: {my: 'center'},
       open: function( event, ui ) {
          //remove existing tinymce when reopen modal (without this, tinymce don't load on 2nd opening of dialog)
          modalWindow.find('.mce-container').remove();
