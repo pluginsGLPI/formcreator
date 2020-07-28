@@ -35,6 +35,15 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorFields
 {
+   /**
+    * Keep track of questions results and computation status
+    * null = is being avaluated
+    * true or false = result of a previous evaluation
+    * not set = not evaluated yet AND not being evaluated
+    * @var CommonDBTM[] $visibility
+    * @see self::isVisible
+    */
+   private static $visibility = [];
 
    /**
     * Retrive all field types and file path
@@ -103,6 +112,15 @@ class PluginFormcreatorFields
    }
 
    /**
+    * Reset the cache of visibility of hide-able items
+    *
+    * @return void
+    */
+   public static function resetVisibilityCache() {
+      self::$visibility = [];
+   }
+
+   /**
     * Check if an item should be shown or not
     *
     * @param   integer     $item       Item tested for visibility
@@ -110,20 +128,12 @@ class PluginFormcreatorFields
     * @return  boolean                 If true the question should be visible
     */
    public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
-      /**
-       * Keep track of questions results and computation status
-       * null = is being avaluated
-       * true or false = result of a previous evaluation
-       * not set = not evaluated yet AND not being evaluated
-       */
-      static $evalItem = [];
-
       $itemtype = get_class($item);
       $itemId = $item->getID();
-      if (!isset($evalItem[$itemtype][$itemId])) {
-         $evalItem[$itemtype][$itemId] = null;
-      } else if ($evalItem[$itemtype][$itemId] !== null) {
-         return $evalItem[$itemtype][$itemId];
+      if (!isset(self::$visibility[$itemtype][$itemId])) {
+         self::$visibility[$itemtype][$itemId] = null;
+      } else if (self::$visibility[$itemtype][$itemId] !== null) {
+         return self::$visibility[$itemtype][$itemId];
       } else {
          throw new Exception("Infinite loop in show conditions evaluation");
       }
@@ -132,7 +142,7 @@ class PluginFormcreatorFields
        * Get inherit visibility from parent item.
        * @return boolean
        */
-      $getParentVisibility = function() use ($item, &$evalItem, $fields) {
+      $getParentVisibility = function() use ($item, $fields) {
          // Check if item has a condtionnable visibility parent
          if ($item instanceof CommonDBChild) {
             if (is_subclass_of($item::$itemtype, PluginFormcreatorConditionnableInterface::class)) {
@@ -141,12 +151,12 @@ class PluginFormcreatorFields
                   $parentId = $parent->getID();
                   if ($parent->getType() == PluginFormcreatorForm::class) {
                      // the condition for form is only for its submit button. A form is always visible
-                     $evalItem[$parentItemtype][$parentId] = true;
-                     return $evalItem[$parentItemtype][$parentId];
+                     self::$visibility[$parentItemtype][$parentId] = true;
+                     return self::$visibility[$parentItemtype][$parentId];
                   }
                   // Use visibility of the parent item
-                  $evalItem[$parentItemtype][$parentId] = self::isVisible($parent, $fields);
-                  return $evalItem[$parentItemtype][$parentId];
+                  self::$visibility[$parentItemtype][$parentId] = self::isVisible($parent, $fields);
+                  return self::$visibility[$parentItemtype][$parentId];
                }
             }
          }
@@ -155,8 +165,8 @@ class PluginFormcreatorFields
 
       // If the field is always shown
       if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $evalItem[$itemtype][$itemId] = $getParentVisibility();
-         return $evalItem[$itemtype][$itemId];
+         self::$visibility[$itemtype][$itemId] = $getParentVisibility();
+         return self::$visibility[$itemtype][$itemId];
       }
 
       // Get conditions to show or hide the item
@@ -172,19 +182,19 @@ class PluginFormcreatorFields
       }
       if ($getParentVisibility() === false) {
          // No condition defined or parent hidden
-         $evalItem[$itemtype][$itemId] = false;
-         return $evalItem[$itemtype][$itemId];
+         self::$visibility[$itemtype][$itemId] = false;
+         return self::$visibility[$itemtype][$itemId];
       }
       if (count($conditions) < 1) {
          if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
-            $evalItem[$itemtype][$itemId] = false;
-            return $evalItem[$itemtype][$itemId];
+            self::$visibility[$itemtype][$itemId] = false;
+            return self::$visibility[$itemtype][$itemId];
          } else if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
-            $evalItem[$itemtype][$itemId] = true;
-            return $evalItem[$itemtype][$itemId];
+            self::$visibility[$itemtype][$itemId] = true;
+            return self::$visibility[$itemtype][$itemId];
          }
       }
-      $evalItem[$itemtype][$itemId] = null;
+      self::$visibility[$itemtype][$itemId] = null;
 
       // Force the first logic operator to OR
       $conditions[0]['logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;
@@ -212,8 +222,8 @@ class PluginFormcreatorFields
             switch ($condition['operator']) {
                case PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE:
                   if (!$conditionField->isPrerequisites()) {
-                     $evalItem[$itemtype][$itemId] = false;
-                     return $evalItem[$itemtype][$itemId];
+                     self::$visibility[$itemtype][$itemId] = false;
+                     return self::$visibility[$itemtype][$itemId];
                   }
                   try {
                      $value = self::isVisible($conditionField->getQuestion(), $fields);
@@ -223,8 +233,8 @@ class PluginFormcreatorFields
                   break;
                case PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_INVISIBLE:
                   if (!$conditionField->isPrerequisites()) {
-                     $evalItem[$itemtype][$itemId] = false;
-                     return $evalItem[$itemtype][$itemId];
+                     self::$visibility[$itemtype][$itemId] = false;
+                     return self::$visibility[$itemtype][$itemId];
                   }
                   try {
                      $value = !self::isVisible($conditionField->getQuestion(), $fields);
@@ -238,8 +248,8 @@ class PluginFormcreatorFields
                switch ($condition['operator']) {
                   case PluginFormcreatorCondition::SHOW_CONDITION_NE :
                      if (!$conditionField->isPrerequisites()) {
-                        $evalItem[$itemtype][$itemId] = true;
-                        return $evalItem[$itemtype][$itemId];
+                        self::$visibility[$itemtype][$itemId] = true;
+                        return self::$visibility[$itemtype][$itemId];
                      }
                      try {
                         $value = $conditionField->notEquals($condition['value']);
@@ -250,8 +260,8 @@ class PluginFormcreatorFields
 
                   case PluginFormcreatorCondition::SHOW_CONDITION_EQ :
                      if (!$conditionField->isPrerequisites()) {
-                        $evalItem[$itemtype][$itemId] = false;
-                        return $evalItem[$itemtype][$itemId];
+                        self::$visibility[$itemtype][$itemId] = false;
+                        return self::$visibility[$itemtype][$itemId];
                      }
                      try {
                         $value = $conditionField->equals($condition['value']);
@@ -262,8 +272,8 @@ class PluginFormcreatorFields
 
                   case PluginFormcreatorCondition::SHOW_CONDITION_GT:
                      if (!$conditionField->isPrerequisites()) {
-                        $evalItem[$itemtype][$itemId] = false;
-                        return $evalItem[$itemtype][$itemId];
+                        self::$visibility[$itemtype][$itemId] = false;
+                        return self::$visibility[$itemtype][$itemId];
                      }
                      try {
                         $value = $conditionField->greaterThan($condition['value']);
@@ -274,8 +284,8 @@ class PluginFormcreatorFields
 
                   case PluginFormcreatorCondition::SHOW_CONDITION_LT:
                      if (!$conditionField->isPrerequisites()) {
-                        $evalItem[$itemtype][$itemId] = false;
-                        return $evalItem[$itemtype][$itemId];
+                        self::$visibility[$itemtype][$itemId] = false;
+                        return self::$visibility[$itemtype][$itemId];
                      }
                      try {
                         $value = $conditionField->lessThan($condition['value']);
@@ -286,8 +296,8 @@ class PluginFormcreatorFields
 
                   case PluginFormcreatorCondition::SHOW_CONDITION_GE:
                      if (!$conditionField->isPrerequisites()) {
-                        $evalItem[$itemtype][$itemId] = false;
-                        return $evalItem[$itemtype][$itemId];
+                        self::$visibility[$itemtype][$itemId] = false;
+                        return self::$visibility[$itemtype][$itemId];
                      }
                      try {
                         $value = ($conditionField->greaterThan($condition['value'])
@@ -299,8 +309,8 @@ class PluginFormcreatorFields
 
                   case PluginFormcreatorCondition::SHOW_CONDITION_LE:
                      if (!$conditionField->isPrerequisites()) {
-                        $evalItem[$itemtype][$itemId] = false;
-                        return $evalItem[$itemtype][$itemId];
+                        self::$visibility[$itemtype][$itemId] = false;
+                        return self::$visibility[$itemtype][$itemId];
                      }
                      try {
                         $value = ($conditionField->lessThan($condition['value'])
@@ -353,13 +363,13 @@ class PluginFormcreatorFields
 
       if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
          // If the field is hidden by default, show it if condition is true
-         $evalItem[$itemtype][$itemId] = $return;
+         self::$visibility[$itemtype][$itemId] = $return;
       } else {
          // else show it if condition is false
-         $evalItem[$itemtype][$itemId] = !$return;
+         self::$visibility[$itemtype][$itemId] = !$return;
       }
 
-      return $evalItem[$itemtype][$itemId];
+      return self::$visibility[$itemtype][$itemId];
    }
 
    /**
