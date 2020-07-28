@@ -1143,12 +1143,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    public function post_addItem() {
       // Save questions answers
+      $formAnswerId = $this->getID();
       /** @var PluginFormcreatorField $field */
       foreach ($this->questionFields as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
-            'plugin_formcreator_formanswers_id'  => $this->getID(),
+            'plugin_formcreator_formanswers_id'  => $formAnswerId,
             'plugin_formcreator_questions_id'    => $questionId,
             'answer'                             => $field->serializeValue(),
          ], [], 0);
@@ -1157,7 +1158,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $docItem->add([
                'documents_id' => $documentId,
                'itemtype'     => __CLASS__,
-               'items_id'     => $this->getID(),
+               'items_id'     => $formAnswerId,
             ]);
          }
       }
@@ -1170,7 +1171,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             // It the form is not being validated, nothing gives the power to anyone to validate the answers
             $formAnswer = new self();
             $formAnswer->update([
-               'id'     => $this->getID(),
+               'id'     => $formAnswerId,
                'status' => self::STATUS_WAITING,
             ]);
             return;
@@ -1190,7 +1191,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             // It the form is not being validated, nothing gives the power to anyone to validate the answers
             $formAnswer = new self();
             $formAnswer->update([
-               'id'     => $this->getID(),
+               'id'     => $formAnswerId,
                'status' => self::STATUS_WAITING,
             ]);
             return;
