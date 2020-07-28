@@ -137,7 +137,6 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ];
    }
 
-
    /**
     * @dataProvider providerGetFullForm
     */
@@ -145,6 +144,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $instance = $this->newTestedInstance();
       $output = $instance->add($answers);
       $this->boolean($instance->isNewItem())->isFalse();
+      \PluginFormcreatorFields::resetVisibilityCache();
       $output = $instance->getFullForm(true);
       $expected($output);
    }
