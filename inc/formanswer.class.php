@@ -1066,7 +1066,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $questions = $DB->request([
          'SELECT' => [
             $sectionTable => ['name as section_name'],
-            $questionTable => ['id', 'fieldtype'],
+            $questionTable => ['id', 'fieldtype', $sectionFk],
          ],
          'FROM' => [
             $questionTable,
@@ -1081,7 +1081,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ],
          'WHERE' => [
             'AND' => [
-               "$sectionTable.$formFk" => $this->fields['plugin_formcreator_forms_id'],
+               "$sectionTable.$formFk" => $this->fields[$formFk],
             ],
          ],
          'GROUPBY' => [
@@ -1093,17 +1093,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             "$questionTable.order *ASC",
          ],
       ]);
-      $last_section = "";
+      $last_section = -1;
       while ($question_line = $questions->next()) {
          // Get and display current section if needed
-         if ($last_section != $question_line['section_name']) {
+         if ($last_section != $question_line[$sectionFk]) {
+            $currentSection = new PluginFormcreatorSection();
+            $currentSection->getFromDB($question_line[$sectionFk]);
+            if (!PluginFormcreatorFields::isVisible($currentSection, $fields)) {
+               // The section is not visible, skip it as well all its questions
+               continue;
+            }
             if ($richText) {
                $output .= '<h2>' . $question_line['section_name'] . '</h2>';
             } else {
                $output .= $eol . $question_line['section_name'] . $eol;
                $output .= '---------------------------------' . $eol;
             }
-            $last_section = $question_line['section_name'];
+            $last_section = $question_line[$sectionFk];
          }
 
          // Don't save tags in "full form"
