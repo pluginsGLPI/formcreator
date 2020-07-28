@@ -38,32 +38,115 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testSaveForm':
          case 'testGetFullForm':
          case 'testCanValidate':
-            self::login('glpi', 'glpi');
+            $this->login('glpi', 'glpi');
       }
    }
 
-   public function testGetFullForm() {
+   public function providerGetFullForm() {
       $form = $this->getForm();
-      $section = $this->getSection([
+      $section1 = $this->getSection([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-         'name' => \Toolbox::addslashes_deep("section '1'"),
+         'name' => \Toolbox::addslashes_deep("section 1"),
       ]);
-      $question = $this->getQuestion([
-         \PluginFormcreatorSection::getForeignKeyField() => $section->getID(),
-         'name' => \Toolbox::addslashes_deep("question '1'"),
+      $question1 = $this->getQuestion([
+         \PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
+         'name' => \Toolbox::addslashes_deep("radios for section"),
+         'fieldtype'  => 'radios',
+         'values'     => "yes\r\nno",
+      ]);
+      $question2 = $this->getQuestion([
+         \PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
+         'name' => \Toolbox::addslashes_deep("radios for question"),
+         'fieldtype'  => 'radios',
+         'values'     => "yes\r\nno",
+      ]);
+      $section2 = $this->getSection([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'name' => \Toolbox::addslashes_deep("section 2"),
+         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions' => [
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition' => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'     => ['yes'],
+            'show_logic'     => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+         ]
+      ]);
+      $question3 = $this->getQuestion([
+         \PluginFormcreatorSection::getForeignKeyField() => $section2->getID(),
+         'name' => \Toolbox::addslashes_deep("text"),
+         'fieldtype'  => 'text',
+         'values'     => 'hello',
+         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions' => [
+            'plugin_formcreator_questions_id' => [$question2->getID()],
+            'show_condition' => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'     => ['yes'],
+            'show_logic'     => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+         ]
       ]);
 
+      return [
+         // fullForm matches all question and section names
+         [
+            'answer' => [
+               \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+               'formcreator_field_' . $question1->getID() => 'yes',
+               'formcreator_field_' . $question2->getID() => 'yes',
+               'formcreator_field_' . $question3->getID() => 'foo',
+            ],
+            'expected' => function($output) use($section1, $section2, $question1, $question2, $question3) {
+               $this->string($output)->contains($section1->fields['name']);
+               $this->string($output)->contains('##question_' . $question1->getID() . '##');
+               $this->string($output)->contains('##question_' . $question2->getID() . '##');
+               $this->string($output)->contains($section2->fields['name']);
+               $this->string($output)->contains('##question_' . $question3->getID() . '##');
+            }
+         ],
+         // fullForm matches only visible section names
+         [
+            'answer' => [
+               \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+               'formcreator_field_' . $question1->getID() => 'no',
+               'formcreator_field_' . $question2->getID() => 'yes',
+               'formcreator_field_' . $question3->getID() => 'foo',
+            ],
+            'expected' => function($output) use($section1, $section2, $question1, $question2, $question3) {
+               $this->string($output)->contains($section1->fields['name']);
+               $this->string($output)->contains('##question_' . $question1->getID() . '##');
+               $this->string($output)->contains('##question_' . $question2->getID() . '##');
+               $this->string($output)->notContains($section2->fields['name']);
+               $this->string($output)->notContains('##question_' . $question3->getID() . '##');
+            }
+         ],
+         // fullForm matches only visible question names
+         [
+            'answer' => [
+               \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+               'formcreator_field_' . $question1->getID() => 'yes',
+               'formcreator_field_' . $question2->getID() => 'no',
+               'formcreator_field_' . $question3->getID() => 'foo',
+            ],
+            'expected' => function($output) use($section1, $section2, $question1, $question2, $question3) {
+               $this->string($output)->contains($section1->fields['name']);
+               $this->string($output)->contains('##question_' . $question1->getID() . '##');
+               $this->string($output)->contains('##question_' . $question2->getID() . '##');
+               $this->string($output)->contains($section2->fields['name']);
+               $this->string($output)->notContains('##question_' . $question3->getID() . '##');
+            }
+         ],
+      ];
+   }
+
+
+   /**
+    * @dataProvider providerGetFullForm
+    */
+   public function testGetFullForm($answers, $expected) {
       $instance = $this->newTestedInstance();
-      $instance->add([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-         'formcreator_field_' . $question->getID() => ''
-      ]);
-
-      $questionId = $question->getID();
-
+      $output = $instance->add($answers);
+      $this->boolean($instance->isNewItem())->isFalse();
       $output = $instance->getFullForm(true);
-      $this->string($output)->contains("section '1'");
-      $this->string($output)->contains("##question_$questionId##");
+      $expected($output);
    }
 
    public function testSaveForm() {
