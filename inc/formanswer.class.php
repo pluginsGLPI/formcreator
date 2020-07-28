@@ -689,7 +689,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Does the form need to be validated?
       $status = self::STATUS_ACCEPTED;
-      $usersIdValidator = 0;
       $groupIdValidator = 0;
       $usersIdValidator = 0;
       switch ($form->fields['validation_required']) {
