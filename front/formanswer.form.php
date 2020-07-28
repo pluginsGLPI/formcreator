@@ -47,17 +47,15 @@ if (isset($_POST['update'])) {
    Html::back();
 
 } else if (isset($_POST['refuse_formanswer'])) {
-   $formanswer->getFromDB(intval($_POST['id']));
-   $formanswer->refuseAnswers($_POST);
+   $formanswer->update($_POST);
    $formanswer->redirectToList();
 
 } else if (isset($_POST['accept_formanswer'])) {
-   $formanswer->getFromDB(intval($_POST['id']));
-   $formanswer->acceptAnswers($_POST);
+   $formanswer->update($_POST);
    $formanswer->redirectToList();
 
 } else if (isset($_POST['save_formanswer'])) {
-   if (!$formanswer->updateAnswers($_POST)) {
+   if (!$formanswer->update($_POST)) {
       Html::back();
    }
    if (plugin_formcreator_replaceHelpdesk()) {
