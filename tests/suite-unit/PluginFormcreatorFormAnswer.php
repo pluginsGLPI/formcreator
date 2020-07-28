@@ -52,13 +52,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          \PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
          'name' => \Toolbox::addslashes_deep("radios for section"),
          'fieldtype'  => 'radios',
-         'values'     => "yes\r\nno",
+         'values'     => 'yes\r\nno',
       ]);
       $question2 = $this->getQuestion([
          \PluginFormcreatorSection::getForeignKeyField() => $section1->getID(),
          'name' => \Toolbox::addslashes_deep("radios for question"),
          'fieldtype'  => 'radios',
-         'values'     => "yes\r\nno",
+         'values'     => 'yes\r\nno',
       ]);
       $section2 = $this->getSection([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
