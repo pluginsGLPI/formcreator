@@ -144,6 +144,10 @@ class PluginFormcreatorUpgradeTo2_11 {
          );
       }
       $migration->addField($table, 'sort_order', 'integer', ['after' => 'replace_helpdesk']);
+
+      // Remove unused column
+      $table = 'glpi_plugin_formcreator_forms';
+      $migration->dropField($table, 'requesttype');
    }
 
    /**
