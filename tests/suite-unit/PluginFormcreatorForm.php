@@ -454,7 +454,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          'icon_color',
          'background_color',
          'access_rights',
-         'requesttype',
          'description',
          'content',
          'is_active',
