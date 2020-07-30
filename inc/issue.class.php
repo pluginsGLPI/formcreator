@@ -590,16 +590,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
             return $data['raw']['id'];
 
          case "glpi_plugin_formcreator_issues.status":
-            switch ($data['raw']['sub_itemtype']) {
-               case Ticket::class:
-                  $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
-                  return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
-
-               case PluginFormcreatorFormAnswer::class:
-                  $elements = PluginFormcreatorFormAnswer::getStatuses();
-                  return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
-                     ." ".__($elements[$data['raw']["ITEM_$num"]], 'formcreator');
+            if ($data['raw']["ITEM_$num"] > 100) {
+               // The status matches tle values of a FormAnswer
+               $elements = PluginFormcreatorFormAnswer::getStatuses();
+               return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
+                  ." ".__($elements[$data['raw']["ITEM_$num"]], 'formcreator');
             }
+            $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
+            return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
             break;
       }
 
