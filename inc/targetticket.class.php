@@ -71,10 +71,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return Ticket::class;
    }
 
-   public function getItem_Actor() {
-      return new PluginFormcreatorTargetTicket_Actor();
-   }
-
    protected function getCategoryFilter() {
       return [
          'OR' => [
@@ -1161,7 +1157,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $linker->addObject($originalId, $item);
 
       $subItems = [
-         '_actors'            => $item->getItem_Actor()->getType(),
+         '_actors'            => PluginFormcreatorTarget_Actor::class,
          '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
          '_conditions'        => PluginFormcreatorCondition::class,
       ];
@@ -1202,7 +1198,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       unset($export['tickettemplates_id']);
 
       $subItems = [
-         '_actors'            => $this->getItem_Actor()->getType(),
+         '_actors'            => PluginFormcreatorTarget_Actor::class,
          '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
          '_conditions'        => PluginFormcreatorCondition::class,
       ];

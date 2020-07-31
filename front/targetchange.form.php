@@ -51,20 +51,23 @@ if (isset($_POST["update"])) {
                   ? $_POST['actor_value_' . $_POST['actor_type']]
                   : '';
    $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
-   $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
+   $targetChange_actor = new PluginFormcreatorTarget_Actor();
    $targetChange_actor->add([
-      'plugin_formcreator_targetchanges_id'  => $id,
-      'actor_role'                           => $_POST['actor_role'],
-      'actor_type'                           => $_POST['actor_type'],
-      'actor_value'                          => $actor_value,
-      'use_notification'                     => $use_notification
+      'itemtype'         => $targetchange->getType(),
+      'items_id'         => $id,
+      'actor_role'       => $_POST['actor_role'],
+      'actor_type'       => $_POST['actor_type'],
+      'actor_value'      => $actor_value,
+      'use_notification' => $use_notification
    ]);
    Html::back();
 
 } else if (isset($_GET['delete_actor'])) {
-   $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
+   $targetChange_actor = new PluginFormcreatorTarget_Actor();
    $targetChange_actor->delete([
-      'id'  => (int) $_GET['delete_actor']
+      'itemtype'  => $targetchange->getType(),
+      'items_id'  => $id,
+      'id'        => (int) $_GET['delete_actor']
    ]);
    Html::back();
 

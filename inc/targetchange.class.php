@@ -77,10 +77,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return Change::class;
    }
 
-   public function getItem_Actor() {
-      return new PluginFormcreatorTargetChange_Actor();
-   }
-
    protected function getCategoryFilter() {
       return ['is_change' => 1];
    }
@@ -113,7 +109,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       unset($export[$formFk]);
 
       $subItems = [
-         '_actors'     => $this->getItem_Actor()->getType(),
+         '_actors'     => PluginFormcreatorTarget_Actor::class,
          '_conditions' => PluginFormcreatorCondition::class,
       ];
       $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
@@ -237,7 +233,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $linker->addObject($originalId, $item);
 
       $subItems = [
-         '_actors'     => $item->getItem_Actor()->getType(),
+         '_actors'     => PluginFormcreatorTarget_Actor::class,
          '_conditions' => PluginFormcreatorCondition::class,
       ];
       $item->importChildrenObjects($item, $linker, $subItems, $input);

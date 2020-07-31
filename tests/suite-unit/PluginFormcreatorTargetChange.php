@@ -193,13 +193,6 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $this->boolean($output->isNewItem())->isTrue();
    }
 
-   public function testGetItem_Actor() {
-      $instance = new PluginFormcreatorTargetChangeDummy();
-      $output = $instance->publicGetItem_Actor();
-      $this->object($output)->isInstanceOf(\PluginFormcreatorTargetChange_Actor::class);
-      $this->boolean($output->isNewItem())->isTrue();
-   }
-
    public function testGetCategoryFilter() {
       $instance = new PluginFormcreatorTargetChangeDummy();
       $output = $instance->publicGetCategoryFilter();

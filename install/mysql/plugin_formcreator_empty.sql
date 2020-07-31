@@ -183,18 +183,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_targetchanges_id` int(11) NOT NULL,
-  `actor_role` int(11) NOT NULL DEFAULT '1',
-  `actor_type` int(11) NOT NULL DEFAULT '1',
-  `actor_value` int(11) DEFAULT NULL,
-  `use_notification` tinyint(1) NOT NULL DEFAULT '1',
-  `uuid` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_targetchanges_id` (`plugin_formcreator_targetchanges_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -234,16 +222,17 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   INDEX `tickettemplates_id` (`tickettemplates_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_targettickets_id` int(11) NOT NULL,
+  `itemtype` varchar(255) DEFAULT NULL,
+  `items_id` int(11) NOT NULL,
   `actor_role` int(11) NOT NULL DEFAULT '1',
   `actor_type` int(11) NOT NULL DEFAULT '1',
   `actor_value` int(11) DEFAULT NULL,
   `use_notification` tinyint(1) NOT NULL DEFAULT '1',
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
+  INDEX `item` (`itemtype`, `items_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
