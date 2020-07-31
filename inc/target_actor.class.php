@@ -61,7 +61,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
 
    static function getEnumActorType() {
       return [
-         self::ACTOR_TYPE_AUTHOR                => __('Form author', 'formcreator'),
+         self::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
          self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
          self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),

@@ -2011,7 +2011,7 @@ SCRIPT;
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
-               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
+               echo $img_user . ' <b>' . __('Form author', 'formcreator') . '</b>';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
