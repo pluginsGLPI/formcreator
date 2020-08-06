@@ -1336,12 +1336,6 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      if (!isset($input['requesttype'])) {
-         $requestType = new RequestType();
-         $requestType->getFromDBByCrit(['name' => ['LIKE', 'Formcreator']]);
-         $input['requesttype'] = $requestType->getID();
-      }
-
       return $input;
    }
 

@@ -145,10 +145,14 @@ class PluginFormcreatorUpgradeTo2_11 {
       }
       $migration->addField($table, 'sort_order', 'integer', ['after' => 'replace_helpdesk']);
 
+      // Remove unused column
+      $table = 'glpi_plugin_formcreator_forms';
+      $migration->dropField($table, 'requesttype');
+
       // Merge targettickets_actors and targetchanges_actors
       $this->migrateTargetTicket_Actor();
       $this->migrateTargetChange_Actor();
-   }
+}
 
    /**
     * Migrate checkboxes and multiselect data to JSON
