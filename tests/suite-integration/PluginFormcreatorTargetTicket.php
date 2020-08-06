@@ -55,20 +55,22 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->boolean($targetTicket->isNewItem())->isFalse();
 
       // find the actors created by default
-      $requesterActor = new \PluginFormcreatorTargetTicket_Actor();
-      $observerActor = new \PluginFormcreatorTargetTicket_Actor();
+      $requesterActor = new \PluginFormcreatorTarget_Actor();
+      $observerActor = new \PluginFormcreatorTarget_Actor();
       $targetTicketId = $targetTicket->getID();
 
       $requesterActor->getFromDBByCrit([
          'AND' => [
-            'plugin_formcreator_targettickets_id' => $targetTicketId,
+            'itemtype'   => $targetTicket->getType(),
+            'items_id'   => $targetTicketId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([
          'AND' => [
-            'plugin_formcreator_targettickets_id' => $targetTicketId,
+            'itemtype'   => $targetTicket->getType(),
+            'items_id'   => $targetTicketId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
          ]

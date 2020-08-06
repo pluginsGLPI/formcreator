@@ -35,9 +35,12 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
+class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
    use PluginFormcreatorExportable;
+
+   static public $itemtype = 'itemtype';
+   static public $items_id = 'items_id';
 
    const ACTOR_TYPE_AUTHOR = 1;
    const ACTOR_TYPE_VALIDATOR = 2;
@@ -58,7 +61,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
    static function getEnumActorType() {
       return [
-         self::ACTOR_TYPE_AUTHOR                => __('Form author', 'formcreator'),
+         self::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
          self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
          self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
@@ -240,6 +243,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
    {
       $keepCriteria = [
+         static::$itemtype => $container->getType(),
          static::$items_id => $container->getID(),
       ];
       if (count($exclude) > 0) {

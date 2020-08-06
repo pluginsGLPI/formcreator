@@ -394,6 +394,10 @@ class PluginFormcreatorForm extends CommonTestCase {
       $user = new \User();
       $user->getFromDBbyName('glpi');
       $_SESSION['glpiID'] = $user->getID();
+      $useremail = new \UserEmail();
+      $useremail->deleteByCriteria([
+         'users_id' => $user->getID(),
+      ]);
       $user->update([
          'id' => $_SESSION['glpiID'],
          '_useremails' => [

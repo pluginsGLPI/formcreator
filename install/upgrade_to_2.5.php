@@ -1059,7 +1059,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid
-      $DB->update(PluginFormcreatorTargetChange_Actor::getTable(), [
+      $DB->update('glpi_plugin_formcreator_targetchanges_actors', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -1100,7 +1100,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid
-      $DB->update(PluginFormcreatorTargetTicket_Actor::getTable(), [
+      $DB->update('glpi_plugin_formcreator_targettickets_actors', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null

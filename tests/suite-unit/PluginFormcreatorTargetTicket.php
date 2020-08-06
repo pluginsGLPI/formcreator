@@ -252,13 +252,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->boolean($output->isNewItem())->isTrue();
    }
 
-   public function testGetItem_Actor() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetItem_Actor();
-      $this->object($output)->isInstanceOf(\PluginFormcreatorTargetTicket_Actor::class);
-      $this->boolean($output->isNewItem())->isTrue();
-   }
-
    public function testGetCategoryFilter() {
       $instance = new PluginFormcreatorTargetTicketDummy();
       $output = $instance->publicGetCategoryFilter();

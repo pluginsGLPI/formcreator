@@ -51,21 +51,23 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $this->boolean($targetChange->isNewItem())->isFalse();
 
-      $requesterActor = new \PluginFormcreatorTargetChange_Actor();
-      $observerActor = new \PluginFormcreatorTargetChange_Actor();
+      $requesterActor = new \PluginFormcreatorTarget_Actor();
+      $observerActor = new \PluginFormcreatorTarget_Actor();
       $targetChangeId = $targetChange->getID();
 
       // find the actors created by default
       $requesterActor->getFromDBByCrit([
          'AND' => [
-            'plugin_formcreator_targetchanges_id' => $targetChangeId,
+            'itemtype'   => $targetChange->getType(),
+            'items_id'   => $targetChangeId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([
          'AND' => [
-            'plugin_formcreator_targetchanges_id' => $targetChangeId,
+            'itemtype'   => $targetChange->getType(),
+            'items_id'   => $targetChangeId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
             ]

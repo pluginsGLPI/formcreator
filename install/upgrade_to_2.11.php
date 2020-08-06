@@ -148,7 +148,11 @@ class PluginFormcreatorUpgradeTo2_11 {
       // Remove unused column
       $table = 'glpi_plugin_formcreator_forms';
       $migration->dropField($table, 'requesttype');
-   }
+
+      // Merge targettickets_actors and targetchanges_actors
+      $this->migrateTargetTicket_Actor();
+      $this->migrateTargetChange_Actor();
+}
 
    /**
     * Migrate checkboxes and multiselect data to JSON
@@ -212,7 +216,7 @@ class PluginFormcreatorUpgradeTo2_11 {
     *
     * @return void
     */
-    public function migrateRadiosAndSelect() {
+   public function migrateRadiosAndSelect() {
       global $DB;
 
       // Migrate default value
@@ -231,5 +235,53 @@ class PluginFormcreatorUpgradeTo2_11 {
             $DB->update($questionTable, ['values' => $newValues], ['id' => $row['id']]);
          }
       }
+   }
+
+   public function migrateTargetTicket_Actor() {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_targettickets_actors';
+      if (!$DB->tableExists($table)) {
+         return;
+      }
+
+      $result = $DB->request([
+         'FROM' => $table
+      ]);
+      $table = 'glpi_plugin_formcreator_targets_actors';
+      foreach($result as $row) {
+         $row['itemtype'] = PluginFormcreatorTargetTicket::class;
+         $row['items_id'] = $row['plugin_formcreator_targettickets_id'];
+         unset($row['plugin_formcreator_targettickets_id']);
+         unset($row['id']);
+         $DB->insert($table, $row);
+      }
+
+      $table = 'glpi_plugin_formcreator_targettickets_actors';
+      $this->migration->backupTables([$table]);
+   }
+
+   public function migrateTargetChange_Actor() {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_targetchanges_actors';
+      if (!$DB->tableExists($table)) {
+         return;
+      }
+
+      $result = $DB->request([
+         'FROM' => $table
+      ]);
+      $table = 'glpi_plugin_formcreator_targets_actors';
+      foreach($result as $row) {
+         $row['itemtype'] = PluginFormcreatorTargetChange::class;
+         $row['items_id'] = $row['plugin_formcreator_targettickets_id'];
+         unset($row['plugin_formcreator_targettickets_id']);
+         unset($row['id']);
+         $DB->insert($table, $row);
+      }
+
+      $table = 'glpi_plugin_formcreator_targetchanges_actors';
+      $this->migration->backupTables([$table]);
    }
 }

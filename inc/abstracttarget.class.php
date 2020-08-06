@@ -103,7 +103,7 @@ PluginFormcreatorConditionnableInterface
    abstract protected function getItem_Supplier();
 
    /**
-    * Gets an instance object for the relation between the target itemtype
+    * Get an instance object for the relation between the target itemtype
     * and an object of any itemtype
     *
     * @return CommonDBTM
@@ -111,18 +111,11 @@ PluginFormcreatorConditionnableInterface
    abstract protected function getItem_Item();
 
    /**
-    * Gets the class name of the target itemtype
+    * Get the class name of the target itemtype
     *
     * @return string
     */
    abstract protected function getTargetItemtypeName();
-
-   /**
-    * get an instance of the itemtype storing the actors if the target
-    *
-    * @return PluginFormcreatorTarget_Actor
-    */
-   abstract public function getItem_Actor();
 
    /**
     * Get the query criterias to query the ITIL categories
@@ -589,13 +582,11 @@ PluginFormcreatorConditionnableInterface
    protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
-      $target_actor = $this->getItem_Actor();
-      $foreignKey   = $this->getForeignKeyField();
-
       $rows = $DB->request([
-         'FROM'   => $target_actor::getTable(),
+         'FROM'   => PluginFormcreatorTarget_Actor::getTable(),
          'WHERE'  => [
-            $foreignKey => $this->getID(),
+            'itemtype' => $this->getType(),
+            'items_id' => $this->getID(),
          ]
       ]);
       foreach ($rows as $actor) {
@@ -1340,8 +1331,6 @@ SCRIPT;
       global $DB;
 
       // Get available questions for actors lists
-      $itemActor = $this->getItem_Actor();
-      $itemActorTable = $itemActor::getTable();
       $actors = [
          PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER => [],
          PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER => [],
@@ -1349,10 +1338,11 @@ SCRIPT;
       ];
       $result = $DB->request([
          'SELECT' => ['id', 'actor_role', 'actor_type', 'actor_value', 'use_notification'],
-         'FROM' => $itemActorTable,
+         'FROM' => PluginFormcreatorTarget_Actor::getTable(),
          'WHERE' => [
-            self::getForeignKeyField() => [$this->getID()]
-         ]
+            'itemtype' => $this->getType(),
+            'items_id' => $this->getID(),
+         ],
       ]);
       foreach ($result as $actor) {
          $actors[$actor['actor_role']][$actor['id']] = [
@@ -1594,17 +1584,18 @@ SCRIPT;
          return;
       }
 
-      $target_actor = $this->getItem_Actor();
-      $myFk = self::getForeignKeyField();
+      $target_actor = new PluginFormcreatorTarget_Actor();
       $target_actor->add([
-         $myFk                 => $this->getID(),
+         'itemtype'            => $this->getType(),
+         'items_id'            => $this->getID(),
          'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
          'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          'use_notification'    => '1',
       ]);
-      $target_actor = $this->getItem_Actor();
+      $target_actor = new PluginFormcreatorTarget_Actor();
       $target_actor->add([
-         $myFk                 => $this->getID(),
+         'itemtype'            => $this->getType(),
+         'items_id'            => $this->getID(),
          'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
          'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
          'use_notification'    => '1',
@@ -1620,10 +1611,9 @@ SCRIPT;
    }
 
    public function pre_purgeItem() {
-      $myFk = static::getForeignKeyField();
       // delete actors related to this instance
-      $targetItemActor = $this->getItem_Actor();
-      if (!$targetItemActor->deleteByCriteria([$myFk => $this->getID()])) {
+      $targetItemActor = new PluginFormcreatorTarget_Actor();
+      if (!$targetItemActor->deleteByCriteria(['itemtype' => $this->getType(), 'items_id' => $this->getID()])) {
          $this->input = false;
          return false;
       }
@@ -1853,7 +1843,7 @@ SCRIPT;
     * @return void
     */
    protected function showActorSettingsForType($actorType, array $actors) {
-      $itemActor = $this->getItem_Actor();
+      $itemActor = new PluginFormcreatorTarget_Actor();
       $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
 
       switch ($actorType) { // Values from CommonITILObject::getSearchOptionsActors()
@@ -2021,7 +2011,7 @@ SCRIPT;
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
-               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
+               echo $img_user . ' <b>' . __('Form author', 'formcreator') . '</b>';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
