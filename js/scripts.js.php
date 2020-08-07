@@ -1266,13 +1266,11 @@ function plugin_formcreator_addEmptyCondition(target) {
       data: data
    }).done(function (data) {
       $(target).parents('tr').after(data);
-      $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
    });
 }
 
 function plugin_formcreator_removeNextCondition(target) {
    $(target).parents('tr').remove();
-   $('[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic').first().hide();
 }
 
 // === FIELDS ===
