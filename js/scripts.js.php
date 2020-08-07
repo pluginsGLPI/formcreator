@@ -815,7 +815,7 @@ function plugin_formcreator_toggleCondition(target) {
 function plugin_formcreator_addEmptyCondition(target) {
    var form     = $(target).closest('form');
    var itemtype = form.attr('data-itemtype');
-   // value if the hidden id input field
+   // value of the hidden id input field
    var id       = form.find('[name="id"]').val();
    var parentKey;
    var parentId;
@@ -834,13 +834,11 @@ function plugin_formcreator_addEmptyCondition(target) {
       data: data
    }).done(function (data) {
       $(target).parents('tr').after(data);
-      $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
    });
 }
 
 function plugin_formcreator_removeNextCondition(target) {
    $(target).parents('tr').remove();
-   $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
 }
 
 function plugin_formcreator_changeDropdownItemtype(rand) {

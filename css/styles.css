@@ -457,6 +457,9 @@ input[type = radio]:checked + label.label-radio .check {
    font-style: italic;
    margin: 0 4px;
 }
+
+/* CONDITIONS */
+
 .div_show_condition_field, .div_show_condition_operator,
 .div_show_condition_value, .div_show_condition_logic,
 .div_show_condition_add, .div_show_condition_remove {
@@ -491,12 +494,12 @@ input[type = radio]:checked + label.label-radio .check {
    width: 12px;
    vertical-align: middle;
 }
-/* jQuery UI Combobox*/
-.pq-select-multiple {
-   display: inline-block;
-   width: 85% !important;
+tr[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic {
+   visibility: hidden;
 }
-
+tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcreatorCondition"] .div_show_condition_logic {
+   visibility: visible;
+}
 .select2-container + select {
    display: none !important;
 }
