@@ -213,7 +213,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
          'WHERE'  => [
-            'itemtype' => get_class($item),
+            'itemtype' => $item->getType(),
             'items_id' => $item->getID()
          ],
          'ORDER'  => 'order ASC'
@@ -243,7 +243,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          $this->getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
-            'on_change'    => 'plugin_formcreator_toggleCondition(this, "' . $item->getType() . '");',
+            'on_change'    => 'plugin_formcreator_toggleCondition(this);',
             'rand'         => $rand,
          ]
       );
