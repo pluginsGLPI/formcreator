@@ -199,7 +199,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * get conditions applied to an item
     *
     * @param PluginFormcreatorConditionnableInterface $item
-    * @return array array of PluginFotrmcreatorCondition
+    * @return PluginFotrmcreatorCondition[]
     */
    public function getConditionsFromItem(PluginFormcreatorConditionnableInterface $item) {
       global $DB;
@@ -249,6 +249,10 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       );
       echo '</td>';
       echo '</tr>';
+
+      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         return;
+      }
 
       // Get existing conditions for the item
       $conditions = $this->getConditionsFromItem($item);
