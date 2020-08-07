@@ -894,17 +894,6 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    });
 }
 
-function plugin_formcreator_toggleCondition(field, itemtype) {
-   var form = $(field).closest('form');
-   if (field.value == '1') {
-      form.find('.plugin_formcreator_logicRow').hide();
-   } else {
-      if (form.find('.plugin_formcreator_logicRow').length < 1) {
-         plugin_formcreator_addEmptyCondition(field, itemtype);
-      }
-      form.find('.plugin_formcreator_logicRow').show();
-   }
-}
 
 // === FIELDS ===
 
