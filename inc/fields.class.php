@@ -194,7 +194,6 @@ class PluginFormcreatorFields
             return self::$visibility[$itemtype][$itemId];
          }
       }
-      self::$visibility[$itemtype][$itemId] = null;
 
       // Force the first logic operator to OR
       $conditions[0]['logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;

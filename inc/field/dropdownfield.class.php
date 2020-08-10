@@ -653,7 +653,6 @@ class DropdownField extends PluginFormcreatorField
     * If not specified, search_option_group would be the default "common"
     * group.
     *
-    * @param PluginFormCreatorQuestion $question
     * @param PluginFormCreatorAnswer   $answer
     * @param string                    $content
     *
