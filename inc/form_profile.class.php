@@ -97,7 +97,9 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo '</td>';
       echo '<td>'.__('Link to the form', 'formcreator').': ';
       if ($item->fields['is_active']) {
-         $form_url = $CFG_GLPI['url_base'] . FORMCREATOR_ROOTDOC . '/front/formdisplay.php?id='.$item->getID();
+         $baseUrl = parse_url($CFG_GLPI['url_base']);
+         $baseUrl = $baseUrl['scheme'] . '://' . $baseUrl['host'] . ':' . $baseUrl['port'];
+         $form_url = $baseUrl . FORMCREATOR_ROOTDOC . '/front/formdisplay.php?id='.$item->getID();
          echo '<a href="'.$form_url.'">'.$form_url.'</a>&nbsp;';
          echo '<a href="mailto:?subject='.$item->getName().'&body='.$form_url.'" target="_blank">';
          echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/email.png" />';
