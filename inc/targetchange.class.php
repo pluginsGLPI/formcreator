@@ -171,7 +171,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       }
 
       // Escape text fields
-      foreach (['name', 'target_name'] as $key) {
+      foreach (['target_name'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
       }
 
