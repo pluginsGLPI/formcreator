@@ -1401,9 +1401,9 @@ SCRIPT;
       echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
       echo '<tr>';
       echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
-      echo '<th width="20%">' . __('Title') . '</th>';
-      echo '<th width="20%">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
-      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
+      echo '<th width="20%" align="center">' . __('Title') . '</th>';
+      echo '<th width="20%" align="center">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
+      echo '<th width="20%" align="center">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
       echo '</tr>';
 
       echo '<tr class="line0">';
