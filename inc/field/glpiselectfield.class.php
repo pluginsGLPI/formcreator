@@ -145,6 +145,15 @@ class GlpiselectField extends DropdownField
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 
+   public function isValidValue($value) {
+      $itemtype = $this->getSubItemtype();
+      if  ($itemtype == Entity::getType() && $value == '-1') {
+         return true;
+      }
+
+      return parent::isValidValue($value);
+   }
+
    public function prepareQuestionInputForSave($input) {
       if (!isset($input['glpi_objects']) || empty($input['glpi_objects'])) {
          Session::addMessageAfterRedirect(
