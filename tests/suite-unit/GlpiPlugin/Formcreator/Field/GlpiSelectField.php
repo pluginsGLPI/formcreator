@@ -117,7 +117,7 @@ class GlpiselectField extends CommonTestCase {
                'fieldtype'       => 'glpiselect',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '',
+               'default_values'  => '0',
                'glpi_objects'    => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
@@ -156,7 +156,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => true
+            'expectedIsValid' => false
          ],
          [
             'fields'          => [
@@ -183,6 +183,36 @@ class GlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
+               '_parameters'     => [],
+            ],
+            'expectedValue'   => '&nbsp;',
+            'expectedIsValid' => false
+         ],
+         [
+            'fields'          => [
+               'fieldtype'       => 'glpiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => '0',
+               'glpi_objects'     => \Entity::class,
+               'order'           => '1',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_empty'      => true,
+               '_parameters'     => [],
+            ],
+            'expectedValue'   => (new \Entity())->getFromDB(0),
+            'expectedIsValid' => true
+         ],
+         [
+            'fields'          => [
+               'fieldtype'       => 'glpiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => '-1',
+               'glpi_objects'     => \Entity::class,
+               'order'           => '1',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',

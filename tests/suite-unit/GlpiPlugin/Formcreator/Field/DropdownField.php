@@ -149,6 +149,7 @@ class DropdownField extends CommonTestCase {
                   'itemtype' => \Location::class,
                ]),
                'required' => '0',
+               'default_values' => '0',
             ]),
             'input' => [
                'dropdown_values' => \Location::class,

@@ -439,7 +439,7 @@ class DropdownField extends PluginFormcreatorField
    }
 
    public function isValidValue($value) {
-      if ($value == '') {
+      if ($value == '0') {
          return true;
       }
       $itemtype = json_decode($this->question->fields['values'], true);
@@ -450,7 +450,16 @@ class DropdownField extends PluginFormcreatorField
       }
       $dropdown = new $itemtype();
 
-      return $dropdown->getFromDB($value);
+      $isValid = $dropdown->getFromDB($value);
+
+      if (!$isValid) {
+         Session::addMessageAfterRedirect(
+            __('Invalid value for ', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+      }
+
+      return $isValid;
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -664,8 +673,8 @@ class DropdownField extends PluginFormcreatorField
    ) {
       global $TRANSLATE;
 
-      // This feature is not available for PluginFormcreatorTagField
-      if (static::class == PluginFormcreatorTagField::class) {
+      // This feature is not available for TagField
+      if (static::class == TagField::class) {
          return $content;
       }
 
@@ -681,8 +690,8 @@ class DropdownField extends PluginFormcreatorField
       // $itemtype = $question->getField('values');
       $itemtype = $this->question->fields['values'];
 
-      // Itemtype is stored in plaintext for PluginFormcreatorGlpiselectField and in
-      // json for PluginFormcreatorDropdownField
+      // Itemtype is stored in plaintext for GlpiselectField and in
+      // json for DropdownField
       $json = json_decode($itemtype);
 
       if ($json) {
