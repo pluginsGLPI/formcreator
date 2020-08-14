@@ -219,7 +219,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * get conditions applied to an item
     *
     * @param CommonDBTM $item
-    * @return PluginFotrmcreatorCondition[]
+    * @return PluginFormcreatorCondition[]
     */
    public function getConditionsFromItem(CommonDBTM $item) : array {
       global $DB;
