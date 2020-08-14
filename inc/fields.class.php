@@ -30,6 +30,12 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Xylemical\Expressions\Math\BcMath;
+use Xylemical\Expressions\Context;
+use Xylemical\Expressions\ExpressionFactory;
+use Xylemical\Expressions\Evaluator;
+use Xylemical\Expressions\Lexer;
+use Xylemical\Expressions\Parser;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -126,7 +132,7 @@ class PluginFormcreatorFields
     * Check if an item should be shown or not
     *
     * @param   integer     $item       Item tested for visibility
-    * @param   array       $fields     Array of fields instances (question id => instance)
+    * @param   PluginFormcreatorFieldInterface $fields     Array of fields instances (question id => instance)
     * @return  boolean                 If true the question should be visible
     */
    public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
@@ -190,28 +196,14 @@ class PluginFormcreatorFields
          }
       }
 
-      // Force the first logic operator to OR
-      $conditions[0]->fields['show_logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;
-
-      $return                       = false;
-      $lowPrecedenceReturnPart      = false;
-      $lowPrecedenceLogic           = 'OR';
-      foreach ($conditions as $order => $condition) {
-         $currentLogic = $condition->fields['show_logic'];
-         if (isset($conditions[$order + 1])) {
-            $nextLogic = $conditions[$order + 1]->fields['show_logic'];
-         } else {
-            // To ensure the low precedence return part is used at the end of the whole evaluation
-            $nextLogic = PluginFormcreatorCondition::SHOW_LOGIC_OR;
-         }
-
+      $expression = [];
+      foreach ($condition->getConditionsFromItem($item) as $condition) {
+         $value = false;
          if (!isset($fields[$condition->fields['plugin_formcreator_questions_id']])) {
             // The field does not exists, give up and make the field visible
             return true;
          }
          $conditionField = $fields[$condition->fields['plugin_formcreator_questions_id']];
-
-         $value = false;
          if (in_array($condition->fields['show_condition'], [PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE, PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_INVISIBLE])) {
             switch ($condition->fields['show_condition']) {
                case PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE:
@@ -316,53 +308,30 @@ class PluginFormcreatorFields
                }
             }
          }
-         // Combine all condition with respect of operator precedence
-         // AND has precedence over OR and XOR
-         if ($currentLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND) {
-            // next condition has a higher precedence operator
-            // Save the current computed return and operator to use later
-            $lowPrecedenceReturnPart = $return;
-            $lowPrecedenceLogic = $currentLogic;
-            $return = $value;
-         } else {
-            switch ($currentLogic) {
-               case PluginFormcreatorCondition::SHOW_LOGIC_AND :
-                  $return = ($return and $value);
-                  break;
-
-               case PluginFormcreatorCondition::SHOW_LOGIC_OR  :
-                  $return = ($return or $value);
-                  break;
-
-               default :
-                  $return = $value;
-            }
-         }
-
-         if ($currentLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND) {
-            if ($lowPrecedenceLogic == PluginFormcreatorCondition::SHOW_LOGIC_OR) {
-               $return = ($return or $lowPrecedenceReturnPart);
-            } else {
-               $return = ($return xor $lowPrecedenceReturnPart);
-            }
-         }
+         $expression[] = PluginFormcreatorCondition::getEnumShowLogic()[$condition->fields['show_logic']];
+         $expression[] = $value ? '1' : '0';
       }
+      // Drop the first logic operator as it is irrelevant
+      array_shift($expression);
+      $expression = implode(' ', $expression);
 
-      // Ensure the low precedence part is used if last condition has logic == AND
-      if ($lowPrecedenceLogic == PluginFormcreatorCondition::SHOW_LOGIC_OR) {
-         $return = ($return or $lowPrecedenceReturnPart);
-      } else {
-         $return = ($return xor $lowPrecedenceReturnPart);
-      }
+      $math = new BcMath();
+      $factory = new ExpressionFactory($math);
+      $lexer = new Lexer($factory);
+      $parser = new Parser($lexer);
+      $evaluator = new Evaluator();
+      $context = new Context();
+
+      $tokens = $parser->parse($expression);
+      $result = $evaluator->evaluate($tokens, $context) ? true : false;
 
       if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
          // If the field is hidden by default, show it if condition is true
-         self::$visibility[$itemtype][$itemId] = $return;
+         self::$visibility[$itemtype][$itemId] = $result;
       } else {
          // else show it if condition is false
-         self::$visibility[$itemtype][$itemId] = !$return;
+         self::$visibility[$itemtype][$itemId] = !$result;
       }
-
       return self::$visibility[$itemtype][$itemId];
    }
 

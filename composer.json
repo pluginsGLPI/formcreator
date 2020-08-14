@@ -6,16 +6,17 @@
     "prefer-stable": true,
     "config": {
       "platform": {
-          "php": "5.6.0"
+          "php": "7.2.0"
       },
       "optimize-autoloader": true,
       "apcu-autoloader": true
   },
   "require": {
-      "php": ">= 5.6.0",
+      "php": ">= 7.2.0",
       "ext-xml": "*",
       "docopt/docopt": "^1.0",
-      "gregwar/captcha": "^1.1"
+      "gregwar/captcha": "^1.1",
+      "xylemical/php-expressions": "^1.0"
     },
     "require-dev": {
       "ext-bz2": "*",
@@ -24,7 +25,7 @@
       "atoum/stubs": "^2.5",
       "atoum/reports-extension": "^3.0",
       "glpi-project/tools": "^0.1.0",
-      "glpi-project/coding-standard": "0.7.1",
+      "glpi-project/coding-standard": "^0.8",
       "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
       "phpcsstandards/phpcsutils": "^1.0@alpha"

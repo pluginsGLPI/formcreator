@@ -165,9 +165,9 @@ function plugin_init_formcreator() {
    $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
-      require_once(__DIR__ . '/vendor/autoload.php');
+   if ($plugin->isActivated('formcreator')) {
       spl_autoload_register('plugin_formcreator_autoload');
+      require_once(__DIR__ . '/vendor/autoload.php');
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
          // Redirect to helpdesk replacement
