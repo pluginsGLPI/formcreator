@@ -80,7 +80,7 @@ class PluginFormcreatorLinker
          $this->imported[$object->getType()] = [];
       }
       if (isset($this->imported[$object->getType()][$originalId])) {
-         throw new ImportFailureException(sprintf('Attempt to create an already created item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
+         throw new ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
       }
       $this->imported[$object->getType()][$originalId] = $object;
       $this->progress++;
@@ -156,15 +156,16 @@ class PluginFormcreatorLinker
       do {
          $postponedCount = 0;
          $postponedAgainCount = 0;
-         foreach ($this->postponed as $itemtype => $postponedItemtypeList) {
+         foreach ($this->postponed as $itemtype => &$postponedItemtypeList) {
             $postponedCount += count($postponedItemtypeList);
-            $newList = $postponedItemtypeList;
+            $newList = [];
             foreach ($postponedItemtypeList as $originalId => $postponedItem) {
                if ($itemtype::import($this, $postponedItem['input'], $postponedItem['relationId']) === false) {
                   $newList[$originalId] = $postponedItem;
                   $postponedAgainCount++;
                }
             }
+            $postponedItemtypeList = $newList;
          }
 
          // If no item was successfully imported,  then the import is in a deadlock and fails
