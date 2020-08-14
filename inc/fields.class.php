@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -226,7 +228,7 @@ class PluginFormcreatorFields
                   }
                   try {
                      $value = self::isVisible($conditionField->getQuestion(), $fields);
-                  } catch (PluginFormcreatorComparisonException $e) {
+                  } catch (ComparisonException $e) {
                      $value = false;
                   }
                   break;
@@ -237,7 +239,7 @@ class PluginFormcreatorFields
                   }
                   try {
                      $value = !self::isVisible($conditionField->getQuestion(), $fields);
-                  } catch (PluginFormcreatorComparisonException $e) {
+                  } catch (ComparisonException $e) {
                      $value = false;
                   }
                   break;
@@ -252,7 +254,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->notEquals($condition['value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -264,7 +266,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->equals($condition['value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -276,7 +278,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->greaterThan($condition['value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -288,7 +290,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->lessThan($condition['value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -301,7 +303,7 @@ class PluginFormcreatorFields
                      try {
                         $value = ($conditionField->greaterThan($condition['value'])
                                  || $conditionField->equals($condition['value']));
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -314,7 +316,7 @@ class PluginFormcreatorFields
                      try {
                         $value = ($conditionField->lessThan($condition['value'])
                                  || $conditionField->equals($condition['value']));
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
