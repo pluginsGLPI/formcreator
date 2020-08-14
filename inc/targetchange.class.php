@@ -241,6 +241,16 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return $itemId;
    }
 
+   public static function countItemsToImport($input) {
+      $subItems = [
+         '_actors'            => PluginFormcreatorTarget_Actor::class,
+         '_conditions'        => PluginFormcreatorCondition::class,
+      ];
+
+      return 1 + self::countChildren($subItems, $input);
+   }
+
+
    public function showForm($ID, $options = []) {
       if ($ID == 0) {
          // Not used for now

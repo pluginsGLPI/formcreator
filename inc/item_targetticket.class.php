@@ -154,6 +154,10 @@ implements PluginFormcreatorExportableInterface
       return $itemId;
    }
 
+   public static function countItemsToImport($input) {
+      return 1;
+   }
+
    public function prepareInputForAdd($input) {
       // generate a unique id
       if (!isset($input['uuid'])

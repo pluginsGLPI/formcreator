@@ -64,4 +64,11 @@ interface PluginFormcreatorExportableInterface
     * @return boolean
     */
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude);
+
+   /** get the count of inner objects to import
+    * @param array $input data to import
+    *
+    * return integer
+    */
+   public static function countItemsToImport($input);
 }

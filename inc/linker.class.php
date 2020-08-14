@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -38,6 +40,33 @@ class PluginFormcreatorLinker
    private $imported = [];
 
    private $postponed = [];
+
+   private $progress = 0;
+
+   private $totalCount = 0;
+
+   public function countItems($input, $itemtype) {
+      // Get the total count of objects to import, for the progressbar
+      $this->totalCount += $itemtype::countItemsToImport($input);
+   }
+
+   public function getProgress() {
+      return $this->progress;
+   }
+
+   public  function getTotalCount() {
+      return $this->totalCount;
+   }
+
+   public function initProgressBar() {
+      if (!isCommandLine() && !isAPI()) {
+         echo "<div class='center'>";
+         echo "<table class='tab_cadrehov'><tr><th>".__('Importing', 'formcreator')."</th></tr>";
+         echo "<tr class='tab_bg_2'><td>";
+         Html::createProgressBar(__('Import in progress'));
+         echo "</td></tr></table></div>\n";
+      }
+   }
 
    /**
     * Store an object added in the DB
@@ -50,7 +79,14 @@ class PluginFormcreatorLinker
       if (!isset($this->imported[$object->getType()])) {
          $this->imported[$object->getType()] = [];
       }
+      if (isset($this->imported[$object->getType()][$originalId])) {
+         throw new ImportFailureException(sprintf('Attempt to create an already created item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
+      }
       $this->imported[$object->getType()][$originalId] = $object;
+      $this->progress++;
+      if (!isCommandLine() && !isAPI()) {
+         Html::changeProgressBarPosition($this->getProgress(), $this->getTotalCount(), $this->getProgress() . ' / ' . $this->getTotalCount());
+      }
    }
 
    /**
@@ -138,5 +174,10 @@ class PluginFormcreatorLinker
       } while ($postponedCount > 0);
 
       return true;
+   }
+
+   public function reset() {
+      $this->imported = [];
+      $this->postponed = [];
    }
 }

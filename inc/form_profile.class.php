@@ -251,6 +251,10 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       return $form_profile;
    }
 
+   public static function countItemsToImport($input) {
+      return 1;
+   }
+
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
    {
       $keepCriteria = [

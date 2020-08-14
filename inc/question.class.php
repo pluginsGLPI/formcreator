@@ -942,6 +942,15 @@ PluginFormcreatorConditionnableInterface
       return $itemId;
    }
 
+   public static function countItemsToImport($input) {
+      // TODO: need improvement to handle parameters
+      $subItems = [
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+
+      return 1 + self::countChildren($input, $subItems);
+   }
+
    public function export($remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;

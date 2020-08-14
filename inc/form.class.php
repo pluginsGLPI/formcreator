@@ -1841,10 +1841,17 @@ PluginFormcreatorConditionnableInterface
             continue;
          }
 
+         // Get the total count of objects to import, for the progressbar
+         $linker = new PluginFormcreatorLinker();
+         foreach($forms_toimport['forms'] as $form) {
+            $linker->countItems($form, self::class);
+         }
+         $linker->initProgressBar();
+
          $success = true;
          foreach ($forms_toimport['forms'] as $form) {
+            $linker->reset();
             set_time_limit(30);
-            $linker = new PluginFormcreatorLinker();
             try {
                self::import($linker, $form);
             } catch (ImportFailureException $e) {
@@ -1977,6 +1984,18 @@ PluginFormcreatorConditionnableInterface
       $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
+   }
+
+   public static function countItemsToImport($input) {
+      // Code similar to ImportChildrenObjects
+      $subItems = [
+         '_profiles'   => PluginFormcreatorForm_Profile::class,
+         '_sections'   => PluginFormcreatorSection::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+         '_targets'    => (new self())->getTargetTypes(),
+         '_validators' => PluginFormcreatorForm_Validator::class,
+      ];
+      return 1 + self::countChildren($input, $subItems);
    }
 
    public function createDocumentType() {

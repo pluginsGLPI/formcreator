@@ -75,6 +75,7 @@ trait PluginFormcreatorExportable
      *
      * @param array PluginFormcreatorExportableInterface $item
      * @param PluginFormcreatorLinker $linker
+     * @param $subItems
      * @param array $input
      * @return void
      */
@@ -110,5 +111,43 @@ trait PluginFormcreatorExportable
                $subItem->deleteObsoleteItems($item, $importedItems);
             }
         }
+    }
+
+    /**
+     * Count sub items
+     *
+     * @param array $input
+     * @param $subItems
+     * @return integer
+     */
+    public static function countChildren($input, $subItems = []) {
+        if (count($subItems) < 1) {
+            return 1;
+        }
+
+        $count = 0;
+        foreach($subItems as $key => $itemtypes) {
+           if (isset($input[$key])) {
+              // force array of itemetypes
+              if (!is_array($itemtypes)) {
+                if (!isset($input[$key])) {
+                    $input[$key] = [];
+                }
+                $input[$key] = [$itemtypes => $input[$key]];
+                $itemtypes = [$itemtypes];
+              }
+
+              foreach ($itemtypes as $itemtype) {
+                if (!isset($input[$key][$itemtype])) {
+                    continue;
+                }
+                foreach ($input[$key][$itemtype] as $subInput) {
+                    $count += $itemtype::countItemsToImport($subInput);
+                }
+              }
+           }
+        }
+
+        return $count;
     }
 }

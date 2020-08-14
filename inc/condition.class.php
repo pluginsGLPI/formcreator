@@ -165,6 +165,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $itemId;
    }
 
+
+   public static function countItemsToImport($input) {
+      return 1;
+   }
+
    /**
     * Export in an array all the data of the current instanciated condition
     * @param boolean $remove_uuid remove the uuid key
