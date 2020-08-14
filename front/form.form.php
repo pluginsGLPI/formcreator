@@ -113,6 +113,14 @@ if (isset($_POST['add'])) {
    Html::footer();
 
 } else if (isset($_POST['import_send'])) {
+   Html::header(
+      PluginFormcreatorForm::getTypeName(2),
+      $_SERVER['PHP_SELF'],
+      'admin',
+      'PluginFormcreatorForm',
+      'option'
+   );
+
    // Import form
    Session::checkRight('entity', UPDATE);
    $form->importJson($_REQUEST);

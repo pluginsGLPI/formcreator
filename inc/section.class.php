@@ -316,6 +316,14 @@ PluginFormcreatorConditionnableInterface
       return $itemId;
    }
 
+   public static function countItemsToImport($input) {
+      $subItems = [
+         '_questions'   => PluginFormcreatorQuestion::class,
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      return 1 + self::countChildren($input, $subItems);
+   }
+
    public function export($remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;

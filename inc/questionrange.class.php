@@ -183,4 +183,9 @@ extends PluginFormcreatorQuestionParameter
 
       return $itemId;
    }
+
+   public static function countItemsToImport($input)
+   {
+      return 1;
+   }
 }

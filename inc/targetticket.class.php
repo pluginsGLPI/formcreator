@@ -1166,6 +1166,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $itemId;
    }
 
+   public static function countItemsToImport($input) {
+      $subItems = [
+         '_actors'            => PluginFormcreatorTarget_Actor::class,
+         '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
+         '_conditions'        => PluginFormcreatorCondition::class,
+      ];
+
+      return 1 + self::countChildren($subItems, $input);
+   }
+
    protected function getTaggableFields() {
       return [
          'target_name',

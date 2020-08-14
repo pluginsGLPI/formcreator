@@ -181,6 +181,11 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
       return $itemId;
    }
 
+   public static function countItemsToImport($input)
+   {
+      return 1;
+   }
+
    /**
     * Export in an array all the data of the current instanciated actor
     * @param boolean $remove_uuid remove the uuid key

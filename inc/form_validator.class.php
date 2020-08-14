@@ -118,6 +118,10 @@ PluginFormcreatorExportableInterface
       return $itemId;
    }
 
+   public static function countItemsToImport($input) {
+      return 1;
+   }
+
    /**
     * Export in an array all the data of the current instanciated validator
     * @param boolean $remove_uuid remove the uuid key
