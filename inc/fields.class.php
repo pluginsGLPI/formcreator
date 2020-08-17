@@ -178,7 +178,6 @@ class PluginFormcreatorFields
       }
 
       // Get conditions to show or hide the item
-      $conditions = [];
       $condition = new PluginFormcreatorCondition();
       $conditions = $condition->getConditionsFromItem($item);
       if ($getParentVisibility() === false) {
@@ -197,7 +196,7 @@ class PluginFormcreatorFields
       }
 
       $expression = [];
-      foreach ($condition->getConditionsFromItem($item) as $condition) {
+      foreach ($conditions as $condition) {
          $value = false;
          if (!isset($fields[$condition->fields['plugin_formcreator_questions_id']])) {
             // The field does not exists, give up and make the field visible
