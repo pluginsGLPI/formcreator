@@ -117,8 +117,8 @@ trait PluginFormcreatorExportable
      * Count sub items
      *
      * @param array $input
-     * @param $subItems
-     * @return integer
+     * @param array $subItems
+     * @return int
      */
     public static function countChildren($input, $subItems = []) {
         if (count($subItems) < 1) {
