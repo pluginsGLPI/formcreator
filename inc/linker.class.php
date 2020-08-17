@@ -167,6 +167,7 @@ class PluginFormcreatorLinker
             }
             $postponedItemtypeList = $newList;
          }
+         unset($postponedItemtypeList);
 
          // If no item was successfully imported,  then the import is in a deadlock and fails
          if ($postponedAgainCount > 0 && $postponedCount == $postponedAgainCount) {
