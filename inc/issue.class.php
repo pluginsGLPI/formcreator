@@ -71,64 +71,119 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
       // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
-      $query = "SELECT DISTINCT
-                  NULL                            AS `id`,
-                  `f`.`name`                      AS `name`,
-                  CONCAT('f_',`fanswer`.`id`)     AS `display_id`,
-                  `fanswer`.`id`                  AS `original_id`,
-                  'PluginFormcreatorFormAnswer'   AS `sub_itemtype`,
-                  `fanswer`.`status`              AS `status`,
-                  `fanswer`.`request_date`        AS `date_creation`,
-                  `fanswer`.`request_date`        AS `date_mod`,
-                  `fanswer`.`entities_id`         AS `entities_id`,
-                  `fanswer`.`is_recursive`        AS `is_recursive`,
-                  `fanswer`.`requester_id`        AS `requester_id`,
-                  `fanswer`.`users_id_validator`  AS `users_id_validator`,
-                  `fanswer`.`groups_id_validator` AS `groups_id_validator`,
-                  `fanswer`.`comment`             AS `comment`
-               FROM `glpi_plugin_formcreator_formanswers` AS `fanswer`
-               LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
-                  ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
-               LEFT JOIN `glpi_items_tickets` AS `itic`
-                  ON `itic`.`items_id` = `fanswer`.`id`
-                  AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
-               GROUP BY `original_id`
-               HAVING COUNT(`itic`.`tickets_id`) != 1
+      $formTable = PluginFormcreatorForm::getTable();
+      $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
+      $itemTicketTable = Item_Ticket::getTable();
+      $ticketFk = Ticket::getForeignKeyField();
+      $query1 = new QuerySubQuery([
+         'SELECT' => [
+            new QueryExpression('NULL as `id`'),
+            $formTable => ['name as name'],
+            new QueryExpression("CONCAT('f_', `$formAnswerTable`.`id`) as `display_id`"),
+            "$formAnswerTable.id as original_id",
+            new QueryExpression("'" . PluginFormcreatorFormAnswer::getType() . "' as `sub_itemtype`"),
+            $formAnswerTable => [
+               'status              as status',
+               'request_date        as date_creation',
+               'request_date        as date_mod',
+               'entities_id         as entities_d',
+               'is_recursive        as is_recursive',
+               'requester_id        as requester_id',
+               'users_id_validator  as users_id_validator',
+               'groups_id_validator as groups_id_validator',
+               'comment             as comment'
+            ],
+         ],
+         'DISTINCT' => true,
+         'FROM' => $formAnswerTable,
+         'LEFT JOIN' => [
+            $formTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
+               ],
+            ],
+            $itemTicketTable => [
+               'FKEY' => [
+                  $itemTicketTable => 'items_id',
+                  $formAnswerTable => 'id',
+                  ['AND' => [
+                     "`$itemTicketTable`.`itemtype`" => PluginFormcreatorFormAnswer::getType()
+                  ]]
+               ]
+            ]
+         ],
+         'GROUPBY' => ['original_id'],
+         'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`$ticketFk`) != 1"),
+      ]);
 
-               UNION
+      $ticketTable = Ticket::getTable();
+      $ticketValidationTable = TicketValidation::getTable();
+      $ticketUserTable = Ticket_User::getTable();
+      $query2 = new QuerySubquery([
+         'SELECT' => [
+            new QueryExpression('NULL as `id`'),
+            "$ticketTable.name as name",
+            new QueryExpression("CONCAT('t_', `$ticketTable`.`id`) as `display_id`"),
+            "$ticketTable.id as original_id",
+            new QueryExpression("'" . Ticket::getType() . "' as `sub_itemtype`"),
+            new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,`$ticketTable`.`status`, IF(`$ticketValidationTable`.`status` = 2, 101, IF(`$ticketValidationTable`.`status` = 3, `$ticketTable`.`status`, 102))) AS `status`"),
+            $ticketTable => [
+               'date                                     as date_creation',
+               'date_mod                                 as date_mod',
+               'entities_id                              as entities_id'
+            ],
+            new QueryExpression('0                       as is_recursive'),
+            "$ticketUserTable.users_id                   as requester_id",
+            new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
+            new QueryExpression('0                       as groups_id_validator'),
+            "$ticketTable.content                        as comment",
+         ],
+         'DISTINCT' => true,
+         'FROM' => $ticketTable,
+         'LEFT JOIN' => [
+            $itemTicketTable => [
+               'FKEY' => [
+                  $itemTicketTable => $ticketFk,
+                  $ticketTable => 'id',
+                  ['AND' => [
+                     "`$itemTicketTable`.`itemtype`" => PluginFormcreatorFormAnswer::getType(),
+                  ]],
+               ],
+            ],
+            [
+               'TABLE' => new QuerySubquery([
+                  'SELECT' => ['users_id', $ticketFk],
+                  'DISTINCT' => true,
+                  'FROM'  => $ticketUserTable,
+                  'WHERE' => [
+                     'type' => CommonITILActor::REQUESTER,
+                  ],
+                  'ORDER' => ['id ASC'],
+               ], 'glpi_tickets_users'),
+               'FKEY' => [
+                  $ticketTable => 'id',
+                  $ticketUserTable => $ticketFk,
+               ],
+            ],
+            $ticketValidationTable => [
+               'FKEY' => [
+                  $ticketTable => 'id',
+                  $ticketValidationTable => $ticketFk,
+               ],
+            ],
+         ],
+         'WHERE' => [
+            "$ticketTable.is_deleted" => 0,
+         ],
+         'GROUPBY' => ['original_id'],
+         'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) <= 1")
+      ]);
 
-               SELECT DISTINCT
-                  NULL                          AS `id`,
-                  `tic`.`name`                  AS `name`,
-                  CONCAT('t_',`tic`.`id`)       AS `display_id`,
-                  `tic`.`id`                    AS `original_id`,
-                  'Ticket'                      AS `sub_itemtype`,
-                  if(`tv`.`status` IS NULL,`tic`.`status`, if(`tv`.`status` = 2, 101, if(`tv`.`status` = 3, `tic`.`status`, 102))) AS `status`,
-                  `tic`.`date`                  AS `date_creation`,
-                  `tic`.`date_mod`              AS `date_mod`,
-                  `tic`.`entities_id`           AS `entities_id`,
-                  0                             AS `is_recursive`,
-                  `tu`.`users_id`               AS `requester_id`,
-                  `tv`.`users_id_validate`      AS `users_id_validator`,
-                  0                             AS `groups_id_validator`,
-                  `tic`.`content`               AS `comment`
-               FROM `glpi_tickets` AS `tic`
-               LEFT JOIN `glpi_items_tickets` AS `itic`
-                  ON `itic`.`tickets_id` = `tic`.`id`
-                  AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
-               LEFT JOIN (
-                  SELECT DISTINCT `users_id`, `tickets_id`
-                  FROM `glpi_tickets_users` AS `tu`
-                  WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
-                  ORDER BY `id` ASC
-               ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
-               LEFT JOIN `glpi_ticketvalidations` as `tv`
-                  ON (`tic`.`id` = `tv`.`tickets_id`)
-               WHERE `tic`.`is_deleted` = 0
-               GROUP BY `original_id`
-               HAVING COUNT(`itic`.`items_id`) <= 1";
+      $union = new QueryUnion([$query1, $query2], true);
+      $rawQuery = $union->getQuery();
 
-      $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
+      $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($rawQuery)";
       $result = $DB->query($countQuery);
       if ($result !== false) {
          if (version_compare(GLPI_VERSION, '9.5') < 0) {
@@ -140,7 +195,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $table = static::getTable();
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
-               $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
+               $DB->query("INSERT INTO `$table` SELECT * FROM ($rawQuery)");
                $volume = 1;
             }
          }
