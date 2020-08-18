@@ -111,6 +111,10 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'input' => 'foo bar ',
             'expected' => 'foo* bar*',
          ],
+         [
+            'input' => 'foo***** bar* ',
+            'expected' => 'foo* bar*',
+         ],
       ];
    }
 
