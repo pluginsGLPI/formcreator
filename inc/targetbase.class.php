@@ -1463,7 +1463,7 @@ SCRIPT;
             'FROM' => PluginFormcreatorAnswer::getTable(),
             'WHERE' => [
                $formAnswerFk => [(int) $formanswer->fields['id']],
-               $questionFk => $this->fields['tag_questions']
+               $questionFk => explode(',', $this->fields['tag_questions'])
             ],
          ]);
          foreach ($result as $line) {
