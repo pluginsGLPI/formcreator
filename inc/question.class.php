@@ -646,15 +646,15 @@ PluginFormcreatorConditionnableInterface
    public function post_addItem() {
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
+         $this->updateParameters($this->input);
       }
-      $this->updateParameters($this->input);
    }
 
    public function post_updateItem($history = 1) {
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
+         $this->updateParameters($this->input);
       }
-      $this->updateParameters($this->input);
    }
 
    /**
