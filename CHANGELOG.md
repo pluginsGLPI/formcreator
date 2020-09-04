@@ -1,3 +1,36 @@
+<a name="2.10.2"></a>
+## [2.10.2](https://github.com/pluginsglpi/formcreator/compare/v2.10.1..2.10.2) (2020-09-04)
+
+
+### Bug Fixes
+
+*  modal positionning ([a0e0873f](https://github.com/pluginsglpi/formcreator/commit/a0e0873f))
+* **condition:** duplicated JS function ([acbe985b](https://github.com/pluginsglpi/formcreator/commit/acbe985b))
+* **confition:** hide garbage conditions ([8810cd68](https://github.com/pluginsglpi/formcreator/commit/8810cd68))
+* **filefield:** broken mandatory check ([f70a8472](https://github.com/pluginsglpi/formcreator/commit/f70a8472))
+* **form:** bad session var type when using anonymous form ([9d43e80f](https://github.com/pluginsglpi/formcreator/commit/9d43e80f))
+* **form:** doubling starcauses SQL error ([41101ca1](https://github.com/pluginsglpi/formcreator/commit/41101ca1))
+* **form:** error in displayed form URL ([d21c5b3a](https://github.com/pluginsglpi/formcreator/commit/d21c5b3a))
+* **form:** forbid clone massive action in GLPI 9.5 ([2947d6f6](https://github.com/pluginsglpi/formcreator/commit/2947d6f6))
+* **form:** prevent SQL errors, remove natural language search ([2eabddf5](https://github.com/pluginsglpi/formcreator/commit/2eabddf5))
+* **form_profile:** HTML form name mismatch ([f201f37a](https://github.com/pluginsglpi/formcreator/commit/f201f37a))
+* **form_profile:** not rendered selection of profiles ([1c0d27d5](https://github.com/pluginsglpi/formcreator/commit/1c0d27d5))
+* **formanswer:** do not render section title if invisible ([6bb6be33](https://github.com/pluginsglpi/formcreator/commit/6bb6be33))
+* **formanswer:** missing validation checks when user updates a refused form ([788ac89c](https://github.com/pluginsglpi/formcreator/commit/788ac89c))
+* **issue:** adjust ticket status n automatic action ([397a9127](https://github.com/pluginsglpi/formcreator/commit/397a9127))
+* **issue:** repopulate table on upgrade ([90727ae2](https://github.com/pluginsglpi/formcreator/commit/90727ae2))
+* **issue:** status conversion for ticket ([9aae13d0](https://github.com/pluginsglpi/formcreator/commit/9aae13d0))
+* **issue:** syncissues drops most requesters ([1fa10c82](https://github.com/pluginsglpi/formcreator/commit/1fa10c82))
+* **issue:** validated ticket status ([24dacd2a](https://github.com/pluginsglpi/formcreator/commit/24dacd2a))
+* **question:** parameters duplicated twice ([e6889cc0](https://github.com/pluginsglpi/formcreator/commit/e6889cc0))
+* **section:** order of sections not respected on import ([e9bf84b7](https://github.com/pluginsglpi/formcreator/commit/e9bf84b7))
+* **target:** load all tag questions ([bbcfc8a5](https://github.com/pluginsglpi/formcreator/commit/bbcfc8a5))
+* **targetchange:** do not geenrate HTML for simple text fields ([2d7a5f68](https://github.com/pluginsglpi/formcreator/commit/2d7a5f68))
+* **targetchange:** prevent SQL escaping bug ([c88cb991](https://github.com/pluginsglpi/formcreator/commit/c88cb991))
+* **targetticket:** last valid category ignored visibility state ([f6e09f09](https://github.com/pluginsglpi/formcreator/commit/f6e09f09))
+* **targetticket,targetchange:** too many escaping on target_name ([fcfbed98](https://github.com/pluginsglpi/formcreator/commit/fcfbed98))
+
+
 <a name="2.10.1"></a>
 ## [2.10.1](https://github.com/pluginsglpi/formcreator/compare/v2.10.0..2.10.1) (2020-07-16)
 
