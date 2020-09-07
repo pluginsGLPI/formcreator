@@ -215,6 +215,6 @@ class TextareaField extends TextField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-textarea-field.png" title="" />';
+      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
    }
 }
