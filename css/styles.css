@@ -1473,6 +1473,19 @@ span.fc_list_icon {
    background: #fec95c;
 }
 
+/* Count of conditions in design view */
+.plugin_formcreator_conditions_count {
+   border-radius: 50%;
+   background-color: #FFF;
+   min-width: 18px;
+   margin-right: 5px;
+   display: inline-block;
+   text-align: center;
+   vertical-align: top;
+   padding: 3px 2px 5px;
+   box-sizing: border-box;
+}
+
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
    form#plugin_formcreator_form {

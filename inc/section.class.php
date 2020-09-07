@@ -508,6 +508,12 @@ PluginFormcreatorConditionnableInterface
 
       // section name
       $html .= '<a href="#" ' . $onclick . ' data-field="name">';
+      // Show count of conditions
+      $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
+         'itemtype' => PluginFormcreatorSection::getType(),
+         'items_id' => $this->getID(),
+      ]);
+      $html .= "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
       $html .= empty($this->fields['name']) ? '(' . $sectionId . ')' : $this->fields['name'];
       $html .= '</a>';
 
