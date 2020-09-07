@@ -277,6 +277,6 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-integer-field.png" title="" />';
+      return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
    }
 }

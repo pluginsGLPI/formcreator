@@ -161,6 +161,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-select-field.png" title="" />';
+      return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
 }
