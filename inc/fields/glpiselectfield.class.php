@@ -180,8 +180,4 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    public function isAnonymousFormCompatible() {
       return false;
    }
-
-   public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-glpiselect-field.png" title="" />';
-   }
 }

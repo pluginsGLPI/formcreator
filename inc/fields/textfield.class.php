@@ -262,6 +262,6 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-text-field.png" title="" />';
+      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
    }
 }

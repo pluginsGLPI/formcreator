@@ -132,6 +132,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-description-field.png" title="" />';
+      return '<i class="fas fa-align-left" aria-hidden="true"></i>';
    }
 }

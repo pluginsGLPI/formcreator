@@ -655,7 +655,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<i class="fa fa-caret-down" aria-hidden="true"></i>';
+      return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
 
    /**

@@ -226,6 +226,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-tag-field.png" title="" />';
+      return '<i class="fas fa-tag" aria-hidden="true"></i>';
    }
 }

@@ -321,6 +321,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-multiselect-field.png" title="" />';
+      return '<i class="fas fa-check-double" aria-hidden="true"></i>';
    }
 }
