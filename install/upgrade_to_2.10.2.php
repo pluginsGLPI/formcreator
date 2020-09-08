@@ -28,42 +28,21 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_10_2 {
 
-include ('../../../inc/includes.php');
+   protected $migration;
 
-Session::checkRight("entity", UPDATE);
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      global $DB;
 
-// Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated("formcreator")) {
-   Html::displayNotFoundError();
-}
+      $this->migration = $migration;
 
-$formFk = PluginFormcreatorForm::getForeignKeyField();
-if (isset($_POST["profiles_id"]) && isset($_POST[$formFk])) {
-   if (isset($_POST['access_rights'])) {
-      $form = new PluginFormcreatorForm();
-      $form->update([
-         'id'            => (int) $_POST[$formFk],
-         'access_rights' => (int) $_POST['access_rights']
-      ]);
+      // Versioin 2.10.2 contains fixes on counters requiring repopulation of issues table
+      $table = 'glpi_plugin_formcreator_issues';
+      $DB->query("TRUNCATE `$table`");
+      PluginFormcreatorIssue::cronSyncIssues(new CronTask());
    }
-
-   $form_profile = new PluginFormcreatorForm_Profile();
-   $form_profile->deleteByCriteria([
-         $formFk    => (int) $_POST[$formFk],
-   ]);
-
-   foreach ($_POST["profiles_id"] as $profile_id) {
-      if ($profile_id != 0) {
-         $form_profile = new PluginFormcreatorForm_Profile();
-         $form_profile->add([
-               'plugin_formcreator_forms_id' => (int) $_POST[$formFk],
-               'profiles_id'                 => (int) $profile_id,
-         ]);
-      }
-   }
-   Html::back();
-} else {
-   Html::back();
 }

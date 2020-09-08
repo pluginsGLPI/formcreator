@@ -80,7 +80,7 @@ $(function() {
       autoOpen: false,
       height: "auto",
       modal: true,
-      position: ['center', 50],
+      position: {my: 'center'},
       open: function( event, ui ) {
          //remove existing tinymce when reopen modal (without this, tinymce don't load on 2nd opening of dialog)
          modalWindow.find('.mce-container').remove();
@@ -815,7 +815,7 @@ function plugin_formcreator_toggleCondition(target) {
 function plugin_formcreator_addEmptyCondition(target) {
    var form     = $(target).closest('form');
    var itemtype = form.attr('data-itemtype');
-   // value if the hidden id input field
+   // value of the hidden id input field
    var id       = form.find('[name="id"]').val();
    var parentKey;
    var parentId;
@@ -834,13 +834,11 @@ function plugin_formcreator_addEmptyCondition(target) {
       data: data
    }).done(function (data) {
       $(target).parents('tr').after(data);
-      $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
    });
 }
 
 function plugin_formcreator_removeNextCondition(target) {
    $(target).parents('tr').remove();
-   $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
 }
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
@@ -896,17 +894,6 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    });
 }
 
-function plugin_formcreator_toggleCondition(field, itemtype) {
-   var form = $(field).closest('form');
-   if (field.value == '1') {
-      form.find('.plugin_formcreator_logicRow').hide();
-   } else {
-      if (form.find('.plugin_formcreator_logicRow').length < 1) {
-         plugin_formcreator_addEmptyCondition(field, itemtype);
-      }
-      form.find('.plugin_formcreator_logicRow').show();
-   }
-}
 
 // === FIELDS ===
 

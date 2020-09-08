@@ -175,7 +175,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       }
 
       // Escape text fields
-      foreach (['target_name'] as $key) {
+      foreach (['name'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
       }
 
@@ -608,10 +608,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $data[$changeField] = $this->prepareTemplate(
             $this->fields[$changeField],
             $formanswer,
-            true
+            $changeField == 'content' // only content supports rich text
          );
 
-         $data[$changeField] = $formanswer->parseTags($data[$changeField], $this);
+         $data[$changeField] = $formanswer->parseTags($data[$changeField], $this, $changeField == 'content');
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];

@@ -103,7 +103,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  if(`tv`.`status` IS NULL,`tic`.`status`, if(`tv`.`status` = 2, 101, if(`tv`.`status` = 3, 103, 102))) AS `status`,
+                  if(`tv`.`status` IS NULL,`tic`.`status`, if(`tv`.`status` = 2, 101, if(`tv`.`status` = 3, `tic`.`status`, 102))) AS `status`,
                   `tic`.`date`                  AS `date_creation`,
                   `tic`.`date_mod`              AS `date_mod`,
                   `tic`.`entities_id`           AS `entities_id`,
@@ -117,11 +117,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ON `itic`.`tickets_id` = `tic`.`id`
                   AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
                LEFT JOIN (
-                  SELECT `users_id`, `tickets_id`
+                  SELECT DISTINCT `users_id`, `tickets_id`
                   FROM `glpi_tickets_users` AS `tu`
                   WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
                   ORDER BY `id` ASC
-                  LIMIT 1
                ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
                LEFT JOIN `glpi_ticketvalidations` as `tv`
                   ON (`tic`.`id` = `tv`.`tickets_id`)
@@ -583,16 +582,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
             return $data['raw']['id'];
 
          case "glpi_plugin_formcreator_issues.status":
-            switch ($data['raw']['sub_itemtype']) {
-               case Ticket::class:
-                  $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
-                  return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
-
-               case PluginFormcreatorFormAnswer::class:
-                  $elements = PluginFormcreatorFormAnswer::getStatuses();
-                  return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
-                     ." ".__($elements[$data['raw']["ITEM_$num"]], 'formcreator');
+            if ($data['raw']["ITEM_$num"] > 100) {
+               // The status matches tle values of a FormAnswer
+               $elements = PluginFormcreatorFormAnswer::getStatuses();
+               return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
+                  ." ".__($elements[$data['raw']["ITEM_$num"]], 'formcreator');
             }
+            $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
+            return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
             break;
       }
 

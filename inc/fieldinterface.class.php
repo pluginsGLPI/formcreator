@@ -107,7 +107,7 @@ interface PluginFormcreatorFieldInterface
    /**
     * Gets the documents IDs
     *
-    * @return void
+    * @return integer[]
     */
    public function getDocumentsForTarget();
 

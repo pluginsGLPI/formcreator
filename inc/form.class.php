@@ -55,6 +55,14 @@ PluginFormcreatorConditionnableInterface
    const VALIDATION_USER     = 1;
    const VALIDATION_GROUP    = 2;
 
+   public static function getEnumAccessType() {
+      return [
+         self::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
+         self::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
+         self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+      ];
+   }
+
    public static function canCreate() {
       return Session::haveRight('entity', UPDATE);
    }
@@ -859,24 +867,15 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Find forms accessible by the current user
+      $keywords = trim($keywords);
       if (!empty($keywords)) {
-         // Determine the optimal search mode
-         $searchMode = "BOOLEAN MODE";
-         $formCount = $dbUtils->countElementsInTable($table_form);
-         if ($formCount > 20) {
-            $searchMode = "NATURAL LANGUAGE MODE";
-         } else {
-            $keywords = PluginFormcreatorCommon::prepareBooleanKeywords($keywords);
-         }
-         $keywords = $DB->escape($keywords);
-         $highWeightedMatch = " MATCH($table_form.`name`, $table_form.`description`)
-               AGAINST('$keywords' IN $searchMode)";
-         $lowWeightedMatch = " MATCH($table_question.`name`, $table_question.`description`)
-               AGAINST('$keywords' IN $searchMode)";
+         $keywordsWithWilcards = $DB->escape(PluginFormcreatorCommon::prepareBooleanKeywords($keywords));
          $where_form['AND'][] = [
             'OR' => [
-               new QueryExpression("$highWeightedMatch"),
-               new QueryExpression("$lowWeightedMatch"),
+               new QueryExpression("MATCH($table_form.`name`, $table_form.`description`)
+                  AGAINST('$keywordsWithWilcards' IN BOOLEAN MODE)"),
+               new QueryExpression("MATCH($table_question.`name`, $table_question.`description`)
+                  AGAINST('$keywordsWithWilcards' IN BOOLEAN MODE)"),
             ]
          ];
       }
@@ -1532,6 +1531,12 @@ PluginFormcreatorConditionnableInterface
       return $result;
    }
 
+   public function getForbiddenStandardMassiveAction() {
+      return [
+         'clone',
+      ];
+   }
+
    /**
     * @since version 0.85
     *
@@ -1926,6 +1931,16 @@ PluginFormcreatorConditionnableInterface
       // add the form to the linker
       $linker->addObject($originalId, $item);
 
+      // sort sections
+      if (isset($input['_sections']) && is_array($input['_sections'])) {
+         usort($input['_sections'], function($a, $b) {
+            if ($a['order'] == $b['order']) {
+               return 0;
+            }
+            return ($a['order'] < $b['order']) ? -1 : 1;
+         });
+      }
+
       $subItems = [
          '_profiles'   => PluginFormcreatorForm_Profile::class,
          '_sections'   => PluginFormcreatorSection::class,
@@ -2166,7 +2181,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Get an array of instances of all fields for the form
     *
-    * @return array
+    * @return PluginFormcreatorFields[]
     */
    public function getFields() {
       $fields = [];

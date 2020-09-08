@@ -184,7 +184,12 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function getValueForTargetText($richText) {
-      return $this->value;
+      $value = $this->value;
+      if (!$richText) {
+         $value = Toolbox::unclean_cross_side_scripting_deep($value);
+         $value = strip_tags($value);
+      }
+      return $value;
    }
 
    public function equals($value) {

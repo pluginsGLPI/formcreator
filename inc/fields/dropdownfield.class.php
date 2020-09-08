@@ -385,9 +385,15 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          if (is_a($input['dropdown_values'], "CommonTreeDropdown", true)) {
             // Specific param for ITILCategory
             if ($input['dropdown_values'] == ITILCategory::class) {
+               if (!isset($input['show_ticket_categories'])) {
+                  $input['show_ticket_categories'] = 'all';
+               }
                $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
             }
 
+            if (!isset($input['show_ticket_categories_depth'])) {
+               $input['show_ticket_categories_depth'] = 0;
+            }
             if ($input['show_ticket_categories_depth'] != (int) $input['show_ticket_categories_depth']) {
                $input['values']['show_ticket_categories_depth'] = 0;
             } else {

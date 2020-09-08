@@ -199,7 +199,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * get conditions applied to an item
     *
     * @param PluginFormcreatorConditionnableInterface $item
-    * @return array array of PluginFotrmcreatorCondition
+    * @return PluginFotrmcreatorCondition[]
     */
    public function getConditionsFromItem(PluginFormcreatorConditionnableInterface $item) {
       global $DB;
@@ -213,7 +213,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
          'WHERE'  => [
-            'itemtype' => get_class($item),
+            'itemtype' => $item->getType(),
             'items_id' => $item->getID()
          ],
          'ORDER'  => 'order ASC'
@@ -243,12 +243,16 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          $this->getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
-            'on_change'    => 'plugin_formcreator_toggleCondition(this, "' . $item->getType() . '");',
+            'on_change'    => 'plugin_formcreator_toggleCondition(this);',
             'rand'         => $rand,
          ]
       );
       echo '</td>';
       echo '</tr>';
+
+      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         return;
+      }
 
       // Get existing conditions for the item
       $conditions = $this->getConditionsFromItem($item);

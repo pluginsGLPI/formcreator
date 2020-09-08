@@ -137,6 +137,13 @@ PluginFormcreatorConditionnableInterface
          echo '<tr class="section_row" id="section_row_' . $section->getID() . '">';
          echo '<th onclick="plugin_formcreator_editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')">';
          echo "<a href='#'>";
+         // Show count of conditions
+         $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
+            'itemtype' => PluginFormcreatorSection::getType(),
+            'items_id' => $section->getID(),
+         ]);
+         echo "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
+
          echo $section->fields['name'];
          echo '</a>';
          echo '</th>';
@@ -189,6 +196,14 @@ PluginFormcreatorConditionnableInterface
             echo "<a href='#'>";
             echo $field->getHtmlIcon();
             echo '&nbsp;';
+
+            // Show count of conditions
+            $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
+               'itemtype' => PluginFormcreatorQuestion::getType(),
+               'items_id' => $question->getID(),
+            ]);
+            echo "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
+
             echo $question->fields['name'];
             echo "<a>";
             echo '</td>';
@@ -646,15 +661,15 @@ PluginFormcreatorConditionnableInterface
    public function post_addItem() {
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
+         $this->updateParameters($this->input);
       }
-      $this->updateParameters($this->input);
    }
 
    public function post_updateItem($history = 1) {
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
+         $this->updateParameters($this->input);
       }
-      $this->updateParameters($this->input);
    }
 
    /**
