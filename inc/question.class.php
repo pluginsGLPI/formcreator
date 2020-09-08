@@ -189,7 +189,7 @@ PluginFormcreatorConditionnableInterface
          'itemtype' => PluginFormcreatorQuestion::getType(),
          'items_id' => $this->getID(),
       ]);
-      $html .= "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
+      $html .= "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
       $html .= empty($this->fields['name']) ? '(' . $questionId . ')' : $this->fields['name'];
       $html .= '</a>';
 
