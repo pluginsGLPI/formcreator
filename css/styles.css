@@ -1478,12 +1478,11 @@ span.fc_list_icon {
    border-radius: 50%;
    background-color: #FFF;
    min-width: 18px;
-   margin-right: 5px;
-   display: inline-block;
+   height: 18px;
    text-align: center;
-   vertical-align: top;
-   padding: 3px 2px 5px;
-   box-sizing: border-box;
+   vertical-align: middle;
+   padding: 4px;
+   margin-right: 5px;
 }
 
 /* ################--------------- Responsive  ---------------#################### */
