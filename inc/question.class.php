@@ -186,7 +186,7 @@ PluginFormcreatorConditionnableInterface
       $html .= '<a href="javascript:' . $onclick . '" data-field="name">';
       // Show count of conditions
       $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
-         'itemtype' => PluginFormcreatorSection::getType(),
+         'itemtype' => PluginFormcreatorQuestion::getType(),
          'items_id' => $this->getID(),
       ]);
       $html .= "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
