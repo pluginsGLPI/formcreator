@@ -9,27 +9,31 @@
 [![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Project Status: Active](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![GitHub All Releases](https://img.shields.io/github/downloads/PluginsGLPI/formcreator/total)](https://github.com/pluginsGLPI/formcreator/releases)
 
 Extend GLPI with Plugins.
 
 ## Table of Contents
 
-* [Synopsis](#synopsis)
-* [Build Status](#build-status)
-* [Documentation](#documentation)
-* [Versioning](#versioning)
-* [Contact](#contact)
-* [Professional Services](#professional-services)
-* [Build from source](#build-from-source)
-* [Contribute](#contribute)
-* [Copying](#copying)
+  - [Form Creator](#form-creator)
+  - [Table of Contents](#table-of-contents)
+  - [Synopsis](#synopsis)
+  - [Features](#features)
+  - [Build Status](#build-status)
+  - [Documentation](#documentation)
+  - [Versioning](#versioning)
+  - [Contact](#contact)
+  - [Professional Services](#professional-services)
+  - [Build from source](#build-from-source)
+  - [Contribute](#contribute)
+  - [Copying](#copying)
 
 ## Synopsis
 
 Formcreator is a plugin which allow creation of custom forms of easy access.
 At the same time, the plugin allow the creation of one or more tickets when the form is filled.
 
-### Features
+## Features
 
 1. Direct access to forms self-service interface in main menu
 2. Highlighting forms in homepages
