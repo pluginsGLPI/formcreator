@@ -215,7 +215,6 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
 
       $conditions = [];
       $rows = $DB->request([
-         'SELECT' => ['id'],
          'FROM'   => self::getTable(),
          'WHERE'  => [
             'itemtype' => $item->getType(),
@@ -225,7 +224,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ]);
       foreach ($rows as $row) {
          $condition = new static();
-         $condition->getFromDB($row['id']);
+         $condition->getFromResultSet($row);
          $conditions[] = $condition;
       }
 
