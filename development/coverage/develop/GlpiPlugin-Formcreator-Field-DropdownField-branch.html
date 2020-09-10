@@ -1,0 +1,1066 @@
+---
+layout: coverage
+---
+<html>
+
+<head>
+    <script src="assets/d3.js" charset="utf-8"></script>
+    <script src="assets/dagre-d3.js"></script>
+    <script src="assets/jquery.js"></script>
+    <script src="assets/jquery.tablesorter.js"></script>
+    <script src="assets/report.js"></script>
+
+    <link rel="stylesheet" href="assets/font-awesome.min.css">
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html"><img src="assets/logo.png" alt="atoum"/> Code coverage report</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="col-lg-12">
+            <div class="row">
+        <h1>GlpiPlugin\Formcreator\Field\DropdownField: branches coverage</h1>
+
+        
+
+
+<table class="table table-bordered">
+    <tr>
+        
+                    <td style="text-align: center; width: 100%">
+                <h1 class="text-warning">
+                    43%
+                                            <small>of 393</small>
+                                    </h1>
+                <strong>Lines</strong>
+            </td>
+        
+        
+            </tr>
+</table>
+
+<table class="table table-bordered table-striped table-hover sort">
+    <thead>
+    <tr>
+        <th>Method <i class="fa"></i></th>
+                            <th style="text-align: center">Lines <i class="fa"></i></th>
+            <th style="text-align: center">Line % <i class="fa"></i></th>
+                            </tr>
+    </thead>
+
+    <tbody>
+            <tr>
+            <td><a href="#isPrerequisites">GlpiPlugin\Formcreator\Field\DropdownField::isPrerequisites()</a></td>
+                                        <td style="text-align: center">2</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getDesignSpecializationField">GlpiPlugin\Formcreator\Field\DropdownField::getDesignSpecializationField()</a></td>
+                                        <td style="text-align: center">88</td>
+                <td style="text-align: center">    
+    <span class="label label-success">94%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#buildParams">GlpiPlugin\Formcreator\Field\DropdownField::buildParams()</a></td>
+                                        <td style="text-align: center">90</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getRenderedHtml">GlpiPlugin\Formcreator\Field\DropdownField::getRenderedHtml()</a></td>
+                                        <td style="text-align: center">21</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#serializeValue">GlpiPlugin\Formcreator\Field\DropdownField::serializeValue()</a></td>
+                                        <td style="text-align: center">3</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#deserializeValue">GlpiPlugin\Formcreator\Field\DropdownField::deserializeValue()</a></td>
+                                        <td style="text-align: center">4</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getValueForDesign">GlpiPlugin\Formcreator\Field\DropdownField::getValueForDesign()</a></td>
+                                        <td style="text-align: center">3</td>
+                <td style="text-align: center">    
+    <span class="label label-warning">67%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getValueForTargetText">GlpiPlugin\Formcreator\Field\DropdownField::getValueForTargetText()</a></td>
+                                        <td style="text-align: center">6</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#moveUploads">GlpiPlugin\Formcreator\Field\DropdownField::moveUploads()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getDocumentsForTarget">GlpiPlugin\Formcreator\Field\DropdownField::getDocumentsForTarget()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getName">GlpiPlugin\Formcreator\Field\DropdownField::getName()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isValid">GlpiPlugin\Formcreator\Field\DropdownField::isValid()</a></td>
+                                        <td style="text-align: center">12</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isValidValue">GlpiPlugin\Formcreator\Field\DropdownField::isValidValue()</a></td>
+                                        <td style="text-align: center">14</td>
+                <td style="text-align: center">    
+    <span class="label label-warning">64%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#prepareQuestionInputForSave">GlpiPlugin\Formcreator\Field\DropdownField::prepareQuestionInputForSave()</a></td>
+                                        <td style="text-align: center">42</td>
+                <td style="text-align: center">    
+    <span class="label label-warning">64%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#hasInput">GlpiPlugin\Formcreator\Field\DropdownField::hasInput()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#canRequire">GlpiPlugin\Formcreator\Field\DropdownField::canRequire()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getMyGroups">GlpiPlugin\Formcreator\Field\DropdownField::getMyGroups()</a></td>
+                                        <td style="text-align: center">22</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#equals">GlpiPlugin\Formcreator\Field\DropdownField::equals()</a></td>
+                                        <td style="text-align: center">12</td>
+                <td style="text-align: center">    
+    <span class="label label-success">75%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#notEquals">GlpiPlugin\Formcreator\Field\DropdownField::notEquals()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#greaterThan">GlpiPlugin\Formcreator\Field\DropdownField::greaterThan()</a></td>
+                                        <td style="text-align: center">9</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#lessThan">GlpiPlugin\Formcreator\Field\DropdownField::lessThan()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#parseAnswerValues">GlpiPlugin\Formcreator\Field\DropdownField::parseAnswerValues()</a></td>
+                                        <td style="text-align: center">7</td>
+                <td style="text-align: center">    
+    <span class="label label-success">71%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isAnonymousFormCompatible">GlpiPlugin\Formcreator\Field\DropdownField::isAnonymousFormCompatible()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#parseObjectProperties">GlpiPlugin\Formcreator\Field\DropdownField::parseObjectProperties()</a></td>
+                                        <td style="text-align: center">42</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getHtmlIcon">GlpiPlugin\Formcreator\Field\DropdownField::getHtmlIcon()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isVisibleField">GlpiPlugin\Formcreator\Field\DropdownField::isVisibleField()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#isEditableField">GlpiPlugin\Formcreator\Field\DropdownField::isEditableField()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getSubItemtype">GlpiPlugin\Formcreator\Field\DropdownField::getSubItemtype()</a></td>
+                                        <td style="text-align: center">1</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getSubItemtypeForValues">GlpiPlugin\Formcreator\Field\DropdownField::getSubItemtypeForValues()</a></td>
+                                        <td style="text-align: center">4</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+        </tbody>
+</table>
+
+                    <div class="panel panel-default" id="isPrerequisites">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::isPrerequisites()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#isPrerequisites" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'isPrerequisites');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getDesignSpecializationField">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getDesignSpecializationField()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getDesignSpecializationField" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getDesignSpecializationField');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="buildParams">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::buildParams()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#buildParams" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'buildParams');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getRenderedHtml">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getRenderedHtml()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getRenderedHtml" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getRenderedHtml');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="serializeValue">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::serializeValue()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#serializeValue" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'serializeValue');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="deserializeValue">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::deserializeValue()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#deserializeValue" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'deserializeValue');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getValueForDesign">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getValueForDesign()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getValueForDesign" class="btn btn-sm btn-warning" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getValueForDesign');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getValueForTargetText">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getValueForTargetText()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getValueForTargetText" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getValueForTargetText');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="moveUploads">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::moveUploads()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#moveUploads" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'moveUploads');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getDocumentsForTarget">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getDocumentsForTarget()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getDocumentsForTarget" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getDocumentsForTarget');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getName">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getName()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getName" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getName');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="isValid">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::isValid()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#isValid" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'isValid');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="isValidValue">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::isValidValue()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#isValidValue" class="btn btn-sm btn-warning" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'isValidValue');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="prepareQuestionInputForSave">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::prepareQuestionInputForSave()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#prepareQuestionInputForSave" class="btn btn-sm btn-warning" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'prepareQuestionInputForSave');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="hasInput">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::hasInput()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#hasInput" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'hasInput');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="canRequire">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::canRequire()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#canRequire" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'canRequire');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getMyGroups">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getMyGroups()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getMyGroups" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getMyGroups');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="equals">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::equals()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#equals" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'equals');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="notEquals">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::notEquals()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#notEquals" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'notEquals');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="greaterThan">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::greaterThan()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#greaterThan" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'greaterThan');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="lessThan">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::lessThan()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#lessThan" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'lessThan');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="parseAnswerValues">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::parseAnswerValues()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#parseAnswerValues" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'parseAnswerValues');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="isAnonymousFormCompatible">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::isAnonymousFormCompatible()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#isAnonymousFormCompatible" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'isAnonymousFormCompatible');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="parseObjectProperties">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::parseObjectProperties()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#parseObjectProperties" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'parseObjectProperties');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getHtmlIcon">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getHtmlIcon()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getHtmlIcon" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getHtmlIcon');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="isVisibleField">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::isVisibleField()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#isVisibleField" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'isVisibleField');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="isEditableField">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::isEditableField()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#isEditableField" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'isEditableField');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getSubItemtype">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getSubItemtype()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getSubItemtype" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getSubItemtype');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getSubItemtypeForValues">
+                <div class="panel-heading">
+                    GlpiPlugin\Formcreator\Field\DropdownField::getSubItemtypeForValues()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./GlpiPlugin-Formcreator-Field-DropdownField.html#getSubItemtypeForValues" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('GlpiPlugin\\Formcreator\\Field\\DropdownField', 'getSubItemtypeForValues');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+            </div>
+    </div>
+
+    <footer class="row">
+        <div class="col-lg-12">
+            <small class="pull-right">Powered by <a href="http://atoum.org"><img src="assets/logo.png" alt="atoum"/></a></small>
+        </div>
+    </footer>
+</div>
+
+<script>
+    $(function() {
+        $('table.sort').tablesorter();
+    })
+</script>
+
+</body>
+
+</html>
