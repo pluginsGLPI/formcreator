@@ -107,7 +107,7 @@ class RoboFilePlugin extends \Robo\Tasks
     * @return void
     */
    public function localesPush() {
-      $this->_exec('tx push -s');
+      $this->_exec('python3 tx push -s');
       return $this;
    }
 
