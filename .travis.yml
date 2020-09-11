@@ -1,3 +1,4 @@
+dist: focal
 language: php
 
 sudo: required
@@ -16,7 +17,7 @@ env:
     - DB_NAME=glpitest
     - OLD_DB_NAME=glpiupgradetest
     - PLUGINNAME=formcreator
-    - AFTER_SUCCESS_BRANCH=9.4/bugfixes
+    - AFTER_SUCCESS_BRANCH=9.5/bugfixes
   matrix:
     - GLPI_BRANCH=9.4/bugfixes
     - GLPI_BRANCH=9.5/bugfixes
@@ -82,8 +83,7 @@ script:
 after_success:
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/parallel-lint --exclude vendor .; fi
   # let's update the documentation and locales
-  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then tests/after_success.sh; fi
-  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$APIDOCS_PHP" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then tests/apidocs.sh; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then plugin_after_success; fi
 
 cache:
   directories:
