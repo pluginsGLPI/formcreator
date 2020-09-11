@@ -45,6 +45,20 @@ class PluginFormcreatorLinker
 
    private $totalCount = 0;
 
+   private $options = [];
+
+   public function __construct($options = []) {
+      $params              = [];
+      $params['progress']  = true;
+
+      if (is_array($options) && count($options)) {
+         foreach ($options as $key => $val) {
+            $params[$key] = $val;
+         }
+      }
+      $this->options = $params;
+   }
+
    public function countItems($input, $itemtype) {
       // Get the total count of objects to import, for the progressbar
       $this->totalCount += $itemtype::countItemsToImport($input);
@@ -59,7 +73,7 @@ class PluginFormcreatorLinker
    }
 
    public function initProgressBar() {
-      if (!isCommandLine() && !isAPI()) {
+      if (!isCommandLine() && !isAPI() && $this->options['progress']) {
          echo "<div class='center'>";
          echo "<table class='tab_cadrehov'><tr><th>".__('Importing', 'formcreator')."</th></tr>";
          echo "<tr class='tab_bg_2'><td>";
@@ -84,7 +98,7 @@ class PluginFormcreatorLinker
       }
       $this->imported[$object->getType()][$originalId] = $object;
       $this->progress++;
-      if (!isCommandLine() && !isAPI()) {
+      if (!isCommandLine() && !isAPI() && $this->options['progress']) {
          Html::changeProgressBarPosition($this->getProgress(), $this->getTotalCount(), $this->getProgress() . ' / ' . $this->getTotalCount());
       }
    }

@@ -174,8 +174,8 @@ PluginFormcreatorConditionnableInterface
     *
     * @return integer|boolean ID of the new section, false otherwise
     */
-   public function duplicate() {
-      $linker = new PluginFormcreatorLinker();
+   public function duplicate($options = []) {
+      $linker = new PluginFormcreatorLinker($options);
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $export = $this->export(true);

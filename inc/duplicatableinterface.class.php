@@ -38,5 +38,5 @@ interface PluginFormcreatorDuplicatableInterface
    /**
     * Duplicate the item
     */
-   public function duplicate();
+   public function duplicate($options = []);
 }

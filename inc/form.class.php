@@ -1512,8 +1512,8 @@ PluginFormcreatorConditionnableInterface
     *
     * @return Boolean true if success, false otherwise.
     */
-   public function duplicate() {
-      $linker = new PluginFormcreatorLinker();
+   public function duplicate($options = []) {
+      $linker = new PluginFormcreatorLinker($options);
 
       $export = $this->export(true);
       try {

@@ -50,7 +50,7 @@ if (!$question->canCreate()) {
     exit;
 }
 
-if (($newId = $question->duplicate()) === false) {
+if (($newId = $question->duplicate(['progress' => false])) === false) {
     http_response_code(500);
     exit;
 }
