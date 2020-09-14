@@ -230,6 +230,24 @@ JAVASCRIPT;
 
    /**
     * Get the status to set for an issue matching a ticket
+    * Tightly related to SQL query in SyncIssues automatic actions
+    *
+    * Conversion matrix
+    *
+    *                               Validation Status
+    *                +-------------+---------+---------+----------+
+    *                |NULL or NONE | WAITING | REFUSED | ACCEPTED |
+    *     + ---------+-------------+---------+---------+----------+
+    * T S | INCOMING |     T            V          V         T
+    * i t | ASSIGNED |     T            V          V         T
+    * c a | PLANNED  |     T            V          V         T
+    * k t | WAITING  |     T            V          V         T
+    * e u | SOLVED   |     T            V          T         T
+    * t s | CLOSED   |     T            V          T         T
+    *
+    * T = status picked from Ticket
+    * V = status picked ce qfrom Validation
+    *
     * @param Ticket $item
     * @return integer
     */
@@ -242,6 +260,17 @@ JAVASCRIPT;
       $user = 0;
       if (!$ticketValidation->isNewItem()) {
          $user = $ticketValidation->fields['users_id_validate'];
+         switch ($ticketValidation->fields['status']) {
+            case CommonITILValidation::WAITING:
+               $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
+               break;
+
+            case CommonITILValidation::REFUSED:
+               if ($item->fields['status'] != Ticket::SOLVED && $item->fields['status'] != Ticket::CLOSED) {
+                  $status = PluginFormcreatorFormAnswer::STATUS_REFUSED;
+               }
+               break;
+         }
       }
 
       return ['status' => $status, 'user' => $user];

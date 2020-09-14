@@ -75,6 +75,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
       $itemTicketTable = Item_Ticket::getTable();
       $ticketFk = Ticket::getForeignKeyField();
+      // The columns status of the 2nd part of the UNNION statement
+      // must match the same logic as PluginFormcreatorCommon::getTicketStatusForIssue()
+      // @see PluginFormcreatorCommon::getTicketStatusForIssue()
       $query1 = new QuerySubQuery([
          'SELECT' => [
             new QueryExpression('NULL as `id`'),
@@ -127,7 +130,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("CONCAT('t_', `$ticketTable`.`id`) as `display_id`"),
             "$ticketTable.id as original_id",
             new QueryExpression("'" . Ticket::getType() . "' as `sub_itemtype`"),
-            new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,`$ticketTable`.`status`, IF(`$ticketValidationTable`.`status` = 2, 101, IF(`$ticketValidationTable`.`status` = 3, `$ticketTable`.`status`, 102))) AS `status`"),
+            new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,
+               `$ticketTable`.`status`,
+               IF(`$ticketValidationTable`.`status` IN ('1', '3'),
+                  `$ticketTable`.`status`,
+                  IF(`$ticketTable`.`status` IN ('5', '6') AND `$ticketValidationTable`.`status` = '4',
+                     `$ticketTable`.`status`,
+                     IF(`$ticketValidationTable`.`status` = '" . CommonITILValidation::WAITING . "',
+                        '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
+                        '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
+                     )
+                  )
+               )
+            ) AS `status`"),
             $ticketTable => [
                'date                                     as date_creation',
                'date_mod                                 as date_mod',
