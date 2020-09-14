@@ -2181,7 +2181,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Get an array of instances of all fields for the form
     *
-    * @return PluginFormcreatorFields[]
+    * @return PluginFormcreatorField[]
     */
    public function getFields() {
       $fields = [];
