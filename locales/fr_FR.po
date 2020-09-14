@@ -1311,7 +1311,7 @@ msgstr "Le texte est trop court (minimum %d caractères) : %s"
 #: inc/fields/textfield.class.php:167
 #, php-format
 msgid "The text is too long (maximum %d characters): %s"
-msgstr "Le texte est trop court (maximum %d caractères) : %s"
+msgstr "Le texte est trop long (maximum %d caractères) : %s"
 
 #: inc/fields/textfield.class.php:175
 msgid "Text"
