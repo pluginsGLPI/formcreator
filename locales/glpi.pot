@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-14 08:14+0200\n"
+"POT-Creation-Date: 2020-09-15 08:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgid_plural "Form categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:488
+#: hook.php:491
 msgid "Cancel my ticket"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgstr ""
 msgid "Waiting"
 msgstr ""
 
-#: inc/formanswer.class.php:61 inc/issue.class.php:515
+#: inc/formanswer.class.php:61 inc/issue.class.php:519
 msgid "Refused"
 msgstr ""
 
@@ -452,17 +452,17 @@ msgstr ""
 msgid "Accepted"
 msgstr ""
 
-#: inc/formanswer.class.php:160 inc/issue.class.php:509
+#: inc/formanswer.class.php:160 inc/issue.class.php:513
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/formanswer.class.php:204 inc/issue.class.php:404
+#: inc/formanswer.class.php:204 inc/issue.class.php:408
 msgid "Form approver"
 msgstr ""
 
-#: inc/formanswer.class.php:223 inc/issue.class.php:492
+#: inc/formanswer.class.php:223 inc/issue.class.php:496
 msgid "Form approver group"
 msgstr ""
 
@@ -523,7 +523,7 @@ msgstr ""
 msgid "You must select validator!"
 msgstr ""
 
-#: inc/issue.class.php:40 inc/issue.class.php:312
+#: inc/issue.class.php:40 inc/issue.class.php:316
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] ""
@@ -533,11 +533,11 @@ msgstr[1] ""
 msgid "Update issue data from tickets and form answers"
 msgstr ""
 
-#: inc/issue.class.php:423
+#: inc/issue.class.php:427
 msgid "Ticket approver"
 msgstr ""
 
-#: inc/issue.class.php:514
+#: inc/issue.class.php:518
 msgid "Not validated"
 msgstr ""
 
