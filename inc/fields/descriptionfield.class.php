@@ -67,7 +67,12 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return '';
+      $text = $this->question->fields['description'];
+      if (!$richText) {
+         $text = nl2br(html_entity_decode($text));
+      }
+
+      return $text;
    }
 
    public function moveUploads() {}
