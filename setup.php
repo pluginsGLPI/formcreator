@@ -154,6 +154,9 @@ function plugin_init_formcreator() {
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_purge_ticket'
    ];
+   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation'
+   ];
    $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
       PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
       PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'

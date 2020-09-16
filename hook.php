@@ -440,6 +440,27 @@ function plugin_formcreator_hook_pre_purge_targetChange(CommonDBTM $item) {
    $item->pre_purgeItem();
 }
 
+function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
+   $ticket = new Ticket();
+   $ticket->getFromDB($item->fields['tickets_id']);
+   if ($ticket->isNewItem()) {
+      // Should not happen
+      return;
+   }
+
+   $status = PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+
+   $issue = new PluginFormcreatorIssue();
+   $issue->getFromDBByCrit([
+      'sub_itemtype' => Ticket::getType(),
+      'original_id'  => $item->fields['tickets_id']
+   ]);
+   if ($issue->isNewItem()) {
+      return;
+   }
+   $issue->update(['status' => $status['status']] + $issue->fields);
+}
+
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
       case PluginFormcreatorFormAnswer::class;
