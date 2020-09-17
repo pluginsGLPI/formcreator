@@ -262,6 +262,16 @@ function plugin_init_formcreator() {
             }
          }
 
+         $pages = [
+            FORMCREATOR_ROOTDOC . '/front/issue.form.php',
+         ];
+         foreach ($pages as $page) {
+            if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
+               Html::requireJs('photoswipe');
+               break;
+            }
+         }
+
          if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
                || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
