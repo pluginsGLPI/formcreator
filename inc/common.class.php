@@ -230,16 +230,23 @@ class PluginFormcreatorCommon {
     * t s | CLOSED   |     T            V          T         T
     *
     * T = status picked from Ticket
-    * V = status picked ce qfrom Validation
+    * V = status picked from Validation
     *
     * @param Ticket $item
     * @return integer
     */
    public static function getTicketStatusForIssue(Ticket $item) {
-      $ticketValidation = new TicketValidation();
-      $ticketValidation->getFromDBByCrit([
+      $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
-      ]);
+      ], [
+         'timeline_position ASC'
+      ], 1);
+      $ticketValidation = new TicketValidation();
+      if (count($ticketValidations)) {
+         $row = array_shift($ticketValidation);
+         $ticketValidation->getFromDB($row['id']);
+      }
+
       $status = $item->fields['status'];
       $user = 0;
       if (!$ticketValidation->isNewItem()) {

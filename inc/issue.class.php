@@ -160,6 +160,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
                $volume = 1;
             }
+            Toolbox::logError("Plugin Formcreator: Automatic action SyncIssue detected an inconsticency. Issues were rebuilt.");
          }
       }
       $task->setVolume($volume);
