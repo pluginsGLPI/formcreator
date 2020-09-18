@@ -97,6 +97,41 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       ];
    }
 
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'Target_name',
+         'name'               => __('Ticket title', 'formcreator'),
+         'datatype'           => 'text',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this::getTable(),
+         'field'              => 'content',
+         'name'               => __('Ticket title', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
+   }
+
    /**
     * Show the Form for the adminsitrator to edit in the config page
     *
