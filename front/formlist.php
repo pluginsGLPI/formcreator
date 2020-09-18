@@ -33,8 +33,8 @@ include ('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 

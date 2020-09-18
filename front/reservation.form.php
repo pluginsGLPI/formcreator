@@ -36,8 +36,7 @@ include ("../../../inc/includes.php");
 Session::checkRight("reservation", ReservationItem::RESERVEANITEM);
 
 // Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
+if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
