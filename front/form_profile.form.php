@@ -34,8 +34,7 @@ include ('../../../inc/includes.php');
 Session::checkRight("entity", UPDATE);
 
 // Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated("formcreator")) {
+if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 

@@ -33,8 +33,7 @@ global $CFG_GLPI;
 include ("../../../inc/includes.php");
 
 // Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
+if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
