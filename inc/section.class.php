@@ -61,6 +61,22 @@ PluginFormcreatorConditionnableInterface
       return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'integer',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
+   }
+
    /**
     * Prepare input data for adding the section
     * Check fields values and get the order for the new section

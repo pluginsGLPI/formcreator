@@ -134,6 +134,31 @@ PluginFormcreatorConditionnableInterface
       return false;
    }
 
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'integer',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this::getTable(),
+         'field'              => 'description',
+         'name'               => __('Description'),
+         'datatype'           => 'string',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
+   }
+
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       $formId = $item->getID();
 

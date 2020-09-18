@@ -126,7 +126,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '2',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'id',
          'name'               => __('ID'),
          'searchtype'         => 'contains',
@@ -135,7 +135,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '1',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'name',
          'name'               => __('Name'),
          'datatype'           => 'itemlink',
@@ -144,9 +144,10 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '4',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'description',
          'name'               => __('Description'),
+         'datatype'           => 'string',
          'massiveaction'      => false
       ];
 
@@ -161,7 +162,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '6',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'is_recursive',
          'name'               => __('Recursive'),
          'datatype'           => 'bool',
@@ -170,7 +171,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '7',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'language',
          'name'               => __('Language'),
          'datatype'           => 'specific',
@@ -182,7 +183,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '8',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'helpdesk_home',
          'name'               => __('Homepage', 'formcreator'),
          'datatype'           => 'bool',
@@ -195,7 +196,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '9',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'access_rights',
          'name'               => __('Access', 'formcreator'),
          'datatype'           => 'specific',
@@ -217,7 +218,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '30',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'is_active',
          'name'               => __('Active'),
          'datatype'           => 'specific',
@@ -230,7 +231,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '31',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'icon',
          'name'               => __('Icon', 'formcreator'),
          'massiveaction'      => false
@@ -238,7 +239,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '32',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'icon_color',
          'name'               => __('Icon color', 'formcreator'),
          'massiveaction'      => false
@@ -246,7 +247,7 @@ PluginFormcreatorConditionnableInterface
 
       $tab[] = [
          'id'                 => '33',
-         'table'              => $this->getTable(),
+         'table'              => $this::getTable(),
          'field'              => 'background_color',
          'name'               => __('Background color', 'formcreator'),
          'massiveaction'      => false
