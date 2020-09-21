@@ -71,7 +71,8 @@ class EmailField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -187,5 +188,10 @@ class EmailField extends TextField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return [];
    }
 }

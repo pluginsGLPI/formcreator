@@ -255,10 +255,11 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * get HTML code of rendered question for service catalog
-    * @param bool $canEdit true if the user can edit the answer
+    * @param string $domain  Translation domain of the form
+    * @param boolean $canEdit true if the user can edit the answer
     * @return string HTML code
     */
-   public function getRenderedHtml($canEdit = true) : string;
+   public function getRenderedHtml($domain, $canEdit = true): string;
 
    /**
     * Is the field editable ?
@@ -278,4 +279,8 @@ interface PluginFormcreatorFieldInterface
     */
    public function isVisibleField() : bool;
 
+   /** Get all translatable strings
+    * @return array translatable strings under keys 'string' and 'text'
+    */
+   public function getTranslatableStrings();
 }

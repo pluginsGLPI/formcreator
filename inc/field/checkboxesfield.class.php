@@ -99,7 +99,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string
+   {
       $html = '';
       if (!$canEdit) {
          if (count($this->value)) {
@@ -376,5 +377,10 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return ['text' => array_values($this->getAvailableValues())];
    }
 }

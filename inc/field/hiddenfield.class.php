@@ -74,7 +74,8 @@ class HiddenField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function show($canEdit = true) {
+   public function show($domain, $canEdit = true)
+   {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -173,5 +174,10 @@ class HiddenField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return false;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return ['text' => $this->value];
    }
 }

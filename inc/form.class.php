@@ -38,10 +38,12 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorForm extends CommonDBTM implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
-PluginFormcreatorConditionnableInterface
+PluginFormcreatorConditionnableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    static $rightname = 'entity';
 
@@ -213,6 +215,16 @@ PluginFormcreatorConditionnableInterface
          'field'              => 'name',
          'name'               => __('Form category', 'formcreator'),
          'datatype'           => 'dropdown',
+         'massiveaction'      => true
+      ];
+
+
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => $this::getTable(),
+         'field'              => 'content',
+         'name'               => _n('Header', 'Headers', 1, 'formcreator'),
+         'datatype'           => 'string',
          'massiveaction'      => true
       ];
 
@@ -453,7 +465,7 @@ PluginFormcreatorConditionnableInterface
       echo '<td colspan="3">';
       echo Html::textarea([
          'name'    => 'content',
-         'value'   => $this->fields["content"],
+         'value'   => $this->fields['content'],
          'enable_richtext' => true,
          'display' => false,
       ]);
@@ -762,6 +774,7 @@ PluginFormcreatorConditionnableInterface
       $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorTranslation::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
    }
@@ -1206,15 +1219,16 @@ PluginFormcreatorConditionnableInterface
       . '>';
 
       // form title
+      $domain = self::getTranslationDomain($_SESSION['glpilanguage'], $formId);
       echo "<h1 class='form-title'>";
-      echo $this->fields['name'] . "&nbsp;";
+      echo __($this->fields['name'], $domain) . "&nbsp;";
       echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
       echo '</h1>';
 
       // Form Header
       if (!empty($this->fields['content'])) {
          echo '<div class="form_header">';
-         echo html_entity_decode($this->fields['content']);
+         echo html_entity_decode(__($this->fields['content'], $domain));
          echo '</div>';
       }
 
@@ -1236,7 +1250,7 @@ PluginFormcreatorConditionnableInterface
 
          // section name
          echo '<h2>';
-         echo empty($section->fields['name']) ? '(' . $sectionId . ')' : $section->fields['name'];
+         echo empty($section->fields['name']) ? '(' . $sectionId . ')' : __($section->fields['name'], $domain);
          echo '</h2>';
 
          // Section content
@@ -1258,7 +1272,7 @@ PluginFormcreatorConditionnableInterface
                   }
                }
             }
-            echo $question->getRenderedHtml(true, $_SESSION['formcreator']['data']);
+            echo $question->getRenderedHtml($domain, true, $_SESSION['formcreator']['data']);
             $lastQuestion = $question;
          }
          echo '</div>';
@@ -2394,10 +2408,39 @@ PluginFormcreatorConditionnableInterface
    }
 
    public function post_getFromDB() {
+      global $TRANSLATE;
+
       // Set additional data for the API
       if (isAPI()) {
          $this->fields += \PluginFormcreatorSection::getFullData($this->fields['id']);
       }
+
+      // Load translation for the current language if different from origianl form's language
+      $language = $_SESSION['glpilanguage'];
+      $formId = $this->getID();
+      if ($language != $this->fields['language'] /* && !isset($_SESSION['formcreator']['languages'][$formId][$language])*/) {
+         $eventManagerEnabled = $TRANSLATE->isEventManagerEnabled();
+         $TRANSLATE->enableEventManager();
+         $domain = PluginFormcreatorForm::getTranslationDomain($language, $formId);
+         $TRANSLATE->getEventManager()->attach(
+            Laminas\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
+            static function (Laminas\EventManager\EventInterface $event) use ($formId, $language, $domain, $TRANSLATE) {
+               if ($event->getParams()['text_domain'] == $domain) {
+                  $file = PluginFormcreatorForm::getTranslationFile($language, $formId);
+                  if (!is_readable($file)) {
+                     return;
+                  }
+                  $TRANSLATE->addTranslationFile('phparray', $file, $domain);
+               }
+            }
+         );
+         __('plugin_formcreator_load_check', $domain);
+
+         if (!$eventManagerEnabled) {
+            $TRANSLATE->disableEventManager();
+         }
+      }
+      $_SESSION['formcreator']['languages'][$formId][$language] = true;
    }
 
    /**
@@ -2448,6 +2491,50 @@ PluginFormcreatorConditionnableInterface
       return $restriction;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
-      return true; }
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool { return true; }
+
+   public function getTranslatableStrings() {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
+         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
+      }
+
+      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($this->getID()) as $section) {
+         foreach ($section->getTranslatableStrings() as $type => $subStrings) {
+            $strings[$type] = array_merge($strings[$type], $subStrings);
+         }
+      }
+
+      // deduplicate strings and remove empty strings
+      foreach (array_keys($strings) as $type) {
+         $strings[$type] = array_unique($strings[$type]);
+         $strings[$type] = array_filter($strings[$type]);
+      }
+
+      return $strings;
+   }
+
+   /**
+    * Get the translation file for a form for a given language
+    * @param string  $language   a language in the form fr_FR, rn_US
+    * @param int     $id         Form ID
+    * @return string             filename of the language resource
+    */
+   public static function getTranslationFile($language, $id) {
+      $file = implode('/', [
+         GLPI_LOCAL_I18N_DIR,
+         'formcreator',
+         self::getTranslationDomain($language, $id)
+      ]) . '.php';
+
+      return $file;
+   }
+
+   public static function getTranslationDomain($language, $id) {
+      return "form_${id}_${language}";
+   }
 }
