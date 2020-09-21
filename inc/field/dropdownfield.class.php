@@ -353,7 +353,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $dparams;
    }
 
-   public function getRenderedHtml($canEdit = true): string
+   public function getRenderedHtml($domain, $canEdit = true): string
    {
       $itemtype = $this->getSubItemtype();
       if (!$canEdit) {
@@ -838,5 +838,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
 
       return $decodedValues['itemtype'];
+   }
+
+   public function getTranslatableStrings()
+   {
+      return ['text' => $this->getAvailableValues()];
    }
 }

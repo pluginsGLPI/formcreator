@@ -51,7 +51,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField() : array
+   public function getDesignSpecializationField(): array
    {
       $rand = mt_rand();
 
@@ -97,7 +97,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function getRenderedHtml($canEdit = true) : string
+   public function getRenderedHtml($domain, $canEdit = true): string
    {
       $html = '';
       if (!$canEdit) {
@@ -427,5 +427,10 @@ class ActorField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool
    {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return [];
    }
 }

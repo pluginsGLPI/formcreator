@@ -957,6 +957,28 @@ var plugin_formcreator = new function() {
       sections.find('.moveDown').show();
       sections.last().find('.moveDown').hide();
    }
+
+   this.addTranslation = function (formId) {
+      $('#plugin_formcreator_viewtranslation').load(
+         rootDoc + '/ajax/viewsubitem.php', {
+            type: "PluginFormcreatorTranslation",
+            parenttype: "PluginFormcreatorForm",
+            plugin_formcreator_forms_id: formId,
+            id: -1
+         }
+      );
+   }
+
+   this.editTranslation = function (formId, id) {
+      $('#plugin_formcreator_viewtranslation').load(
+         rootDoc + '/ajax/viewsubitem.php', {
+            type: "PluginFormcreatorTranslation",
+            parenttype: "PluginFormcreatorForm",
+            plugin_formcreator_forms_id: formId,
+            id: id
+         }
+      );
+   }
 }
 
 // === TARGETS ===

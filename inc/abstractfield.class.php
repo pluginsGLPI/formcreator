@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-require_once(realpath(dirname(__FILE__ ) . '/../../../inc/includes.php'));
+require_once(realpath(dirname(__FILE__) . '/../../../inc/includes.php'));
 
 abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldInterface
 {
@@ -47,11 +48,13 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     *
     * @param array $question PluginFormcreatorQuestion instance
     */
-   public function __construct(PluginFormcreatorQuestion $question) {
+   public function __construct(PluginFormcreatorQuestion $question)
+   {
       $this->question  = $question;
    }
 
-   public function getDesignSpecializationField() : array {
+   public function getDesignSpecializationField(): array
+   {
       return [
          'label' => '',
          'field' => '',
@@ -61,45 +64,46 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       ];
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       $this->value = $input['default_values'];
       return $input;
    }
 
-   public function getRawValue() {
+   public function getRawValue()
+   {
       return $this->value;
    }
 
    /**
     * Output HTML to display the field
+    * @param string  $domain  Translation domain of the form
     * @param boolean $canEdit is the field editable ?
     */
-   public function show($canEdit = true) {
+   public function show($domain, $canEdit = true)
+   {
       $html = '';
 
       if ($this->isVisibleField()) {
          $html .= '<label for="formcreator_field_' . $this->question->getID() . '">';
-         $html .= $this->getLabel();
+         $html .= __($this->getLabel(), $domain);
          if ($canEdit && $this->question->fields['required']) {
             $html .= ' <span class="red">*</span>';
          }
          $html .= '</label>';
       }
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
-         $html .= '<div class="help-block">' . html_entity_decode($this->question->fields['description']) . '</div>';
+         $html .= '<div class="help-block">' . html_entity_decode(__($this->question->fields['description'], $domain)) . '</div>';
       }
       $html .= '<div class="form_field">';
-      $html .= $this->getRenderedHtml($canEdit);
+      $html .= $this->getRenderedHtml($domain, $canEdit);
       $html .= '</div>';
 
       return $html;
    }
 
-   /**
-    * Outputs the HTML representing the field
-    * @param string $canEdit
-    */
-   public function getRenderedHtml($canEdit = true) : string {
+   public function getRenderedHtml($domain, $canEdit = true): string
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -126,7 +130,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     *
     * @return string
     */
-   public function getLabel() {
+   public function getLabel()
+   {
       return $this->question->fields['name'];
    }
 
@@ -134,7 +139,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     * Gets the available values for the field
     * @return array available values
     */
-   public function getAvailableValues() {
+   public function getAvailableValues()
+   {
       $values = json_decode($this->question->fields['values']);
       $tab_values = [];
       foreach ($values as $value) {
@@ -145,7 +151,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $tab_values;
    }
 
-   public function isRequired() : bool  {
+   public function isRequired(): bool
+   {
       return ($this->question->fields['required'] != '0');
    }
 
@@ -154,25 +161,28 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     * @param string $value a value or default value
     * @return string
     */
-   protected function trimValue($value) {
+   protected function trimValue($value)
+   {
       global $DB;
 
       $value = explode('\r\n', $value);
       // input has escpaed single quotes
       $value = Toolbox::stripslashes_deep($value);
-      $value = array_filter($value, function($value) {
+      $value = array_filter($value, function ($value) {
          return ($value !== '');
       });
       $value = array_map(
          function ($value) {
             return trim($value);
-         }, $value
+         },
+         $value
       );
 
       return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
    }
 
-   public function getFieldTypeName() : string {
+   public function getFieldTypeName(): string
+   {
       $classname = explode('\\', get_called_class());
       $classname = array_pop($classname);
       $matches = null;
@@ -181,11 +191,13 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return strtolower($matches[1]);
    }
 
-   public function getEmptyParameters() : array {
+   public function getEmptyParameters(): array
+   {
       return [];
    }
 
-   public final function getParameters() : array {
+   public final function getParameters(): array
+   {
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
@@ -200,7 +212,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $parameters;
    }
 
-   public final function addParameters(PluginFormcreatorQuestion $question, array $input) {
+   public final function addParameters(PluginFormcreatorQuestion $question, array $input)
+   {
       $fieldTypeName = $this->getFieldTypeName();
       if (!isset($input['_parameters'][$fieldTypeName])) {
          return;
@@ -212,7 +225,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       }
    }
 
-   public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {
+   public final function updateParameters(PluginFormcreatorQuestion $question, array $input)
+   {
       $fieldTypeName = $this->getFieldTypeName();
       if (!isset($input['_parameters'][$fieldTypeName])) {
          return;
@@ -235,7 +249,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       }
    }
 
-   public final function deleteParameters(PluginFormcreatorQuestion $question) : bool {
+   public final function deleteParameters(PluginFormcreatorQuestion $question): bool
+   {
       foreach ($this->getEmptyParameters() as $parameter) {
          if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
             // Don't make  this error fatal, but log it anyway
@@ -250,7 +265,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     *
     * @return string
     */
-   protected function getParametersHtmlForDesign() {
+   protected function getParametersHtmlForDesign()
+   {
       $parameters = $this->getParameters();
       if (count($parameters) == 0) {
          return '';
@@ -297,7 +313,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $additions;
    }
 
-   public function getQuestion() {
+   public function getQuestion()
+   {
       return $this->question;
    }
 
@@ -307,9 +324,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     * @param string $regex
     * @return boolean true if the regex is valid, false otherwise
     */
-   protected function checkRegex($regex) {
+   protected function checkRegex($regex)
+   {
       // Avoid php notice when validating the regular expression
-      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
+      set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
+      });
       $isValid = !(preg_match($regex, null) === false);
       restore_error_handler();
 

@@ -59,7 +59,7 @@ class FileField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getRenderedHtml($canEdit = true): string
+   public function getRenderedHtml($domain, $canEdit = true): string
    {
       if (!$canEdit) {
          $html = '';
@@ -314,5 +314,10 @@ class FileField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool
    {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return [];
    }
 }

@@ -102,7 +102,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
+   public function getRenderedHtml($domain, $canEdit = true): string
    {
       if (!$canEdit) {
          return $this->value;
@@ -172,12 +172,12 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) : bool
+   public function hasInput($input): bool
    {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) : bool
+   public function parseAnswerValues($input, $nonDestructive = false): bool
    {
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input[$key])) {
@@ -202,7 +202,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->value = array_shift($this->value);
    }
 
-   public function serializeValue():string
+   public function serializeValue(): string
    {
       if ($this->value === null || $this->value === '') {
          return '';
@@ -310,5 +310,10 @@ class RadiosField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool
    {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return ['text' => array_values($this->getAvailableValues())];
    }
 }

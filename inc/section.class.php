@@ -42,6 +42,7 @@ PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
@@ -642,5 +643,29 @@ PluginFormcreatorConditionnableInterface
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public function getTranslatableStrings() {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
+         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
+      }
+
+      foreach ((new PluginFormcreatorQuestion())->getQuestionsFromSection($this->getID()) as $question) {
+         foreach ($question->getTranslatableStrings() as $type => $subStrings) {
+            $strings[$type] = array_merge($strings[$type], $subStrings);
+         }
+      }
+
+      foreach (array_keys($strings) as $type) {
+         $strings[$type] = array_unique($strings[$type]);
+         $strings[$type] = array_filter($strings[$type]);
+      }
+
+      return $strings;
    }
 }

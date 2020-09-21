@@ -300,3 +300,10 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_translations` (
+  `id`                                int(11)       NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_forms_id`       int(11)       NOT NULL,
+  `language`                          varchar(255)  DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

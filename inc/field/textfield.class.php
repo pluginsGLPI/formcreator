@@ -86,7 +86,7 @@ class TextField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
+   public function getRenderedHtml($domain, $canEdit = true): string
    {
       if (!$canEdit) {
          return $this->value;
@@ -309,5 +309,10 @@ class TextField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool
    {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return ['text' => [$this->question->fields['default_values']]];
    }
 }

@@ -57,7 +57,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
+   public function getRenderedHtml($domain, $canEdit = true): string
    {
       return nl2br(html_entity_decode($this->question->fields['description']));
    }
@@ -181,5 +181,10 @@ class DescriptionField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool
    {
       return false;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return [];
    }
 }

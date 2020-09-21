@@ -525,6 +525,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
+      $domain = PluginFormcreatorForm::getTranslationDomain($_SESSION['glpilanguage'], $form->getID());
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach ($sections as $section) {
          $sectionId = $section->getID();
@@ -569,7 +570,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($canEdit, $answers);
+            echo $question->getRenderedHtml($domain, $canEdit, $answers);
             $lastQuestion = $question;
          }
          echo '</div>';

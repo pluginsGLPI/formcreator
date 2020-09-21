@@ -325,4 +325,8 @@ class LdapselectField extends SelectField
    {
       return true;
    }
+
+   public function getTranslatableStrings() {
+      return [];
+   }
 }
