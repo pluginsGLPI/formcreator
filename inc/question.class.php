@@ -42,6 +42,7 @@ PluginFormcreatorConditionnableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
@@ -263,13 +264,12 @@ PluginFormcreatorConditionnableInterface
    }
 
    /**
-    * Get HTML to show a question
-    *
-    * @param bool $canEdit Can the user edit the question ?
-    * @param array $value values of the answers to all questions of the form
-    * @return string
+    * Get the HTML to display the question for a requester
+    * @param string  $domain  Translation domain of the form
+    * @param boolean $canEdit Can the requester edit the field of the question ?
+    * @param array   $value   Values all fields of the form
     */
-   public function getRenderedHtml($canEdit = true, $value = []) : string {
+   public function getRenderedHtml($domain, $canEdit = true, $value = []) : string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -302,7 +302,7 @@ PluginFormcreatorConditionnableInterface
          . ' data-id="' . $this->getID() . '"'
          . ' >';
       $html .= '<div class="grid-stack-item-content form-group ' . $required . '" id="form-group-field-' . $this->getID() . '">';
-      $html .= $field->show($canEdit);
+      $html .= $field->show($domain, $canEdit);
       $html .= '</div>';
       $html .= '</div>';
 
@@ -341,10 +341,7 @@ PluginFormcreatorConditionnableInterface
       if (!isset($input['fieldtype'])) {
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $this
-      );
+      $this->loadField($input['fieldtype']);
       if ($this->field === null) {
          Session::addMessageAfterRedirect(
             // TRANS: $%1$s is a type of field, %2$s is the label of a question
@@ -584,10 +581,7 @@ PluginFormcreatorConditionnableInterface
          $fieldType = $input['fieldtype'];
       }
 
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $fieldType,
-         $this
-      );
+      $this->loadField($fieldType);
       $this->field->updateParameters($this, $input);
    }
 
@@ -600,10 +594,7 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $this->fields['fieldtype'],
-         $this
-      );
+      $this->loadField($this->fields['fieldtype']);
       return $this->field->deleteParameters($this);
    }
 
@@ -1002,7 +993,7 @@ PluginFormcreatorConditionnableInterface
 
       // get question parameters
       $question['_parameters'] = [];
-      $this->field = PluginFormcreatorFields::getFieldInstance($this->fields['fieldtype'], $this);
+      $this->loadField($this->fields['fieldtype']);
       $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
@@ -1285,6 +1276,18 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
+   /**
+    * load instance if field associated to the question
+    *
+    * @return void
+    */
+   private function loadField($fieldType) {
+      if (!$this->field === null || $this->isNewItem()) {
+         return;
+      }
+      $this->field = PluginFormcreatorFields::getFieldInstance($fieldType, $this);
+   }
+
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id => $container->getID(),
@@ -1312,5 +1315,30 @@ PluginFormcreatorConditionnableInterface
       }
 
       return $this->field;
+   }
+
+   public function getTranslatableStrings() {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
+         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
+      }
+
+      // get translatable strings from field
+      $this->loadField($this->fields['fieldtype']);
+
+      foreach ($this->field->getTranslatableStrings() as $type => $subStrings) {
+         $strings[$type] = array_merge($strings[$type], $subStrings);
+      }
+
+      foreach (array_keys($strings) as $type) {
+         $strings[$type] = array_unique($strings[$type]);
+         $strings[$type] = array_filter($strings[$type]);
+      }
+
+      return $strings;
    }
 }

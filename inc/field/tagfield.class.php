@@ -60,7 +60,8 @@ class TagField extends DropdownField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string
+   {
       global $DB;
 
       $html         = '';
@@ -255,5 +256,10 @@ class TagField extends DropdownField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings()
+   {
+      return [];
    }
 }

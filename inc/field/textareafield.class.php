@@ -83,7 +83,8 @@ class TextareaField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string
+   {
       if (!$canEdit) {
          return Toolbox::getHtmlToDisplay($this->value);
       }
@@ -249,5 +250,11 @@ class TextareaField extends TextField
 
    public function getHtmlIcon(): string {
       return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
+   }
+
+
+   public function getTranslatableStrings()
+   {
+      return ['string' => [$this->question->fields['default_values']]];
    }
 }
