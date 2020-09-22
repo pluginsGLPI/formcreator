@@ -68,7 +68,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = PluginFormcreatorAbstractField::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
