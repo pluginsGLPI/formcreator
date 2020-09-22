@@ -36,6 +36,7 @@ use PluginTagTag;
 use Session;
 use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Html;
 
 class TagField extends DropdownField
 {
@@ -106,7 +107,7 @@ class TagField extends DropdownField
          $values[$id] = $data['name'];
       }
 
-      $html .=Dropdown::showFromArray($fieldName, $values, [
+      $html .= Dropdown::showFromArray($fieldName, $values, [
          'values'              => $this->value,
          'comments'            => false,
          'rand'                => $rand,
