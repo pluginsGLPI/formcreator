@@ -171,6 +171,7 @@ class PluginFormcreatorWizard {
    }
 
    public static function footer() {
+      echo '</div>';
       return Html::helpFooter();
    }
 

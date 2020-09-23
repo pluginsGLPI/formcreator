@@ -1151,6 +1151,10 @@ a.plugin_formcreator_formTile_title {
    clear: left;
 }
 
+.plugin_formcreator_leftMenu {
+   z-index: 1;
+}
+
 .plugin_formcreator_leftMenu .plugin_formcreator_services li a {
    font-size: 1.2em;
 }
@@ -1401,6 +1405,11 @@ span.fc_list_icon {
    padding: 3px 2px 5px;
    box-sizing: border-box;
 }
+
+.plugin_formcreator_container .copyright {
+   padding-right: 8px !important;
+}
+
 
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
