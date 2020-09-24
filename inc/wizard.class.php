@@ -161,6 +161,7 @@ class PluginFormcreatorWizard {
       self::showHeaderTopContent();
       echo '</div>'; //.formcreator_header_top
 
+      echo "<main role='main' id='page'>";
       echo '<div id="page" class="plugin_formcreator_page">';
 
       // call static function callcron() every 5min
