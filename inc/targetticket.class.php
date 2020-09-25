@@ -370,7 +370,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
    public function prepareInputForAdd($input) {
       $input = parent::prepareInputForAdd($input);
-
+      if ($input === false) {
+         return false;
+      }
+      if (!isset($input['type_rule'])) {
+         $input['type_rule'] = self::REQUESTTYPE_SPECIFIC;
+      }
+      if ($input['type_rule'] == self::REQUESTTYPE_SPECIFIC) {
+         if (!isset($input['type_question']) || !in_array($input['type_question'], [Ticket::INCIDENT_TYPE, Ticket::DEMAND_TYPE])) {
+            $input['type_question'] = Ticket::INCIDENT_TYPE;
+         }
+      }
       return $input;
    }
 
