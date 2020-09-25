@@ -1,7 +1,8 @@
 #!/bin/sh
 
 install_plugin() {
-    : # nothing to do for this plugin
+   cd plugins/$PLUGINNAME
+   composer install --no-interaction
 }
 
 init_plugin() {

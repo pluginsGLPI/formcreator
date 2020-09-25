@@ -802,7 +802,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Generate targets
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
-      foreach ($all_targets as $targetType => $targets) {
+      foreach ($all_targets as $targets) {
          foreach ($targets as $targetObject) {
             // Check the condition of the target
             if (!PluginFormcreatorFields::isVisible($targetObject, $this->questionFields)) {

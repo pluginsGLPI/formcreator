@@ -18,7 +18,6 @@ init_databases() {
 # GLPI install
 install_glpi() {
    echo Installing GLPI
-   pwd
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
    composer install --no-dev --no-interaction
@@ -27,8 +26,6 @@ install_glpi() {
    if [ ! -e bin/console ]; then composer install --no-dev; fi
    mkdir -p tests/files/_cache
    cp -r ../formcreator plugins/$PLUGINNAME
-   cd plugins/$PLUGINNAME
-   composer install
 }
 
 
@@ -73,8 +70,7 @@ plugin_test_uninstall() {
 }
 
 plugin_test_lint() {
-   # ./vendor/bin/parallel-lint --exclude vendor .
-   echo parallel lint disabled
+   ./vendor/bin/parallel-lint --exclude vendor .
 }
 
 # GLPI Coding Standards

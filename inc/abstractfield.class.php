@@ -265,7 +265,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $column = 0;
       $rowSize = 2;
       $additions = '';
-      foreach ($parameters as $fieldname => $parameter) {
+      foreach ($parameters as $parameter) {
          if ($column == 0) {
             $additions .= '<tr class="plugin_formcreator_question_specific">';
          }
