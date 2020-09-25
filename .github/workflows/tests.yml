@@ -1,0 +1,100 @@
+name: unit tests
+
+on:
+  [push, pull_request]
+
+env:
+  GLPI_SOURCE: "https://github.com/glpi-project/glpi"
+  CS: 7.4
+  DB_HOST: 127.0.0.1
+  MYSQL_ROOT_USER: root
+  DB_USER: glpi
+  DB_PASSWD: glpi
+  DB_NAME: glpitest
+  OLD_DB_NAME: glpiupgradetest
+  PLUGINNAME: formcreator
+  AFTER_SUCCESS_BRANCH: 9.5/bugfixes
+  NOCOVERAGE: -ncc
+  COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
+
+jobs:
+  tests:
+    name: "Tests"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4]
+        env:
+          - { GLPI_BRANCH: 9.4/bugfixes }
+          - { GLPI_BRANCH: 9.5/bugfixes }
+        exclude:
+          - php: 5.6
+            env:
+              GLPI_BRANCH: 9.5/bugfixes
+          - php: 7.0
+            env:
+              GLPI_BRANCH: 9.5/bugfixes
+          - php: 7.1
+            env:
+              GLPI_BRANCH: 9.5/bugfixes
+    services:
+      db:
+        image: mariadb:10.1
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+            - 3306:3306
+        # Set health checks to wait until mysql database has started (it takes some seconds to start)
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - name: "Check tools"
+        run: |
+          which php
+          which mysql
+          php --version
+          mysql --version
+      - name: "Checkout"
+        uses: actions/checkout@v2
+      - name: "Run tests"
+        env: ${{matrix.env}}
+        run: |
+          . ./tests/script-functions.sh
+          . ./tests/script-specific-functions.sh
+          init_databases
+          install_glpi && install_plugin
+          export TEST_GLPI_CONFIG_DIR="tests/config-$OLD_DB_NAME"
+          init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD && init_plugin
+          echo status of plugins
+          mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
+          plugin_test_upgrade
+          export TEST_GLPI_CONFIG_DIR="tests/config-$DB_NAME"
+          init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
+          plugin_test_install
+          plugin_test
+          plugin_test_uninstall
+
+  style:
+    strategy:
+      matrix:
+        php: [7.4]
+        env:
+          - { GLPI_BRANCH: 9.5/bugfixes }
+    name: "Code quality"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+      - name: "Code quality tests"
+        run: |
+          . ./tests/script-functions.sh
+          . ./tests/script-specific-functions.sh
+          composer config --unset platform
+          rm composer.lock
+          composer install --no-interaction --no-progress
+          plugin_test_lint
+          plugin_test_cs
+
