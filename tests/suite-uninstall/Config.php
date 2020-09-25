@@ -51,7 +51,7 @@ class Config extends CommonTestCase
 
       // Uninstall the plugin
       $log = '';
-      ob_start(function($in) use ($log) {
+      ob_start(function($in) use (&$log) {
          $log .= $in;
          return '';
       });
