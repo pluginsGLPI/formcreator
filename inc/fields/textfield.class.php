@@ -189,7 +189,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       if (!$success) {
          return [];
       }
-      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
+      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input['default_values']));
 
       return $input;
    }
