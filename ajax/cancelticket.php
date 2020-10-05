@@ -35,4 +35,9 @@ if (!isset($_POST['id'])) {
     exit;
 }
 $ticketId = (int) $_POST['id'];
-PluginFormcreatorCommon::cancelMyTicket($ticketId);
+if (!PluginFormcreatorCommon::cancelMyTicket($ticketId)) {
+    http_response_code(403);
+    echo implode('<br>', $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+    $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+    exit;
+}

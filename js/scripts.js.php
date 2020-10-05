@@ -1331,6 +1331,6 @@ function plugin_formcreator_cancelMyTicket(id) {
    }).done(function(response) {
       window.location.replace(formcreatorRootDoc + '/front/issue.php?reset=reset');
    }).error(function(response) {
-      alert("<?php echo __('Failed to cancel the ticket', 'formcreator'); ?>");
+      alert(response.responseText);
    });
 }
