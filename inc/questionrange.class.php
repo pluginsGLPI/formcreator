@@ -44,11 +44,36 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorQuestionRange
 extends PluginFormcreatorAbstractQuestionParameter
 {
+   use PluginFormcreatorTranslatable;
 
    protected $domId = 'plugin_formcreator_questionRange';
 
    public static function getTypeName($nb = 0) {
       return _n('Question range', 'Question ranges', $nb, 'formcreator');
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'range_min',
+         'name'               => __('Minimum range', 'formcreator'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false,
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'range_max',
+         'name'               => __('maximum range', 'formcreator'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false,
+      ];
+
+      return $tab;
    }
 
    public function getParameterFormSize() {

@@ -240,8 +240,4 @@ class TimeField extends PluginFormcreatorAbstractField
    {
       return true;
    }
-
-   public function getTranslatableStrings() {
-      return [];
-   }
 }

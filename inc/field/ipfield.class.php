@@ -191,9 +191,4 @@ class IpField extends PluginFormcreatorAbstractField
    {
       return false;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

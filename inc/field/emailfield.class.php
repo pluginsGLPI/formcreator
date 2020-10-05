@@ -202,9 +202,4 @@ class EmailField extends TextField
    {
       return true;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

@@ -182,9 +182,4 @@ class DescriptionField extends PluginFormcreatorAbstractField
    {
       return false;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

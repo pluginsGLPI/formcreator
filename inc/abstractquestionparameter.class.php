@@ -81,7 +81,26 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       return $input;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
+   public function rawSearchOptions() {
+      $tab = [];
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => __('Parameter', 'formcreator')
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this::getTable(),
+         'field'              => 'fieldname',
+         'name'               => __('Field name', 'formcreator'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+      ];
+
+      return $tab;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool
    {
       $keepCriteria = [
          static::$items_id => $container->getID(),
@@ -90,5 +109,23 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public function getTranslatableStrings() {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
+         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
+      }
+
+      foreach (array_keys($strings) as $type) {
+         $strings[$type] = array_unique($strings[$type]);
+         $strings[$type] = array_filter($strings[$type]);
+      }
+
+      return $strings;
    }
 }

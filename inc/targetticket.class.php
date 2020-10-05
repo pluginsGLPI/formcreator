@@ -112,7 +112,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $tab[] = [
          'id'                 => '4',
          'table'              => $this::getTable(),
-         'field'              => 'Target_name',
+         'field'              => 'target_name',
          'name'               => __('Ticket title', 'formcreator'),
          'datatype'           => 'text',
          'searchtype'         => 'contains',
@@ -123,7 +123,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          'id'                 => '5',
          'table'              => $this::getTable(),
          'field'              => 'content',
-         'name'               => __('Ticket title', 'formcreator'),
+         'name'               => __('Content', 'formcreator'),
          'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
@@ -1348,7 +1348,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     * @param integer $formId
     * @return array
     */
-   public function getTargetTicketsForForm($formId) {
+   public function getTargetsForForm($formId) {
       global $DB;
 
       $targets = [];

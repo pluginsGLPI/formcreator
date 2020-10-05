@@ -1278,7 +1278,7 @@ PluginFormcreatorConditionnableInterface
     * @return void
     */
    private function loadField($fieldType) {
-      if (!$this->field === null || $this->isNewItem()) {
+      if (!$this->field === null) {
          return;
       }
       $this->field = PluginFormcreatorFields::getFieldInstance($fieldType, $this);

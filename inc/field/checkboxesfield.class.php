@@ -401,6 +401,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
    public function getTranslatableStrings()
    {
-      return ['text' => array_values($this->getAvailableValues())];
+      $strings = parent::getTranslatableStrings();
+      $strings['text'] = array_merge($strings['text'], array_values($this->getAvailableValues()));
+      return $strings;
    }
 }

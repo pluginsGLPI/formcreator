@@ -183,9 +183,4 @@ class HostnameField extends PluginFormcreatorAbstractField
    {
       return false;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

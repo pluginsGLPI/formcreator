@@ -274,9 +274,4 @@ class TagField extends DropdownField
    {
       return true;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

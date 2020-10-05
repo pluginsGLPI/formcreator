@@ -315,9 +315,4 @@ class FileField extends PluginFormcreatorAbstractField
    {
       return true;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

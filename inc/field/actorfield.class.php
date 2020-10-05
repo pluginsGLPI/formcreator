@@ -428,9 +428,4 @@ class ActorField extends PluginFormcreatorAbstractField
    {
       return true;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }
