@@ -36,15 +36,23 @@ if (!defined('GLPI_ROOT')) {
 interface PluginFormcreatorFieldInterface
 {
    /**
-    * gets the localized name of the field
+    * Get the localized name of the field
+    *
     * @return string
     */
    public static function getName();
 
+   /**
+    * Can the fild be required ?
+    *
+    * @return boolean true if yes, false otherwise
+    */
    public static function canRequire();
 
    /**
     * Are the prerequisites met to use this field ?
+    *
+    * @return boolean true if prerequisites met, false otherwise
     */
    public function isPrerequisites();
 
@@ -57,6 +65,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * Is the field valid for the given value?
+    *
     * @return boolean True if the field has a valid value, false otherwise
     */
    public function isValid();
@@ -71,6 +80,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * Is the field required?
+    *
     * @return boolean
     */
    public function isRequired();
@@ -103,6 +113,7 @@ interface PluginFormcreatorFieldInterface
     * Get the value of the field for display in a target
     *
     * @param  boolean $richText    Enable rich text mode for field rendering
+    *
     * @return string
     */
    public function getValueForTargetText($richText);
@@ -122,6 +133,7 @@ interface PluginFormcreatorFieldInterface
    /**
     * Transform input to properly save it in the database
     * @param array $input data to transform before save
+    *
     * @return array|false input data to save or false if data is rejected
     */
    public function prepareQuestionInputForSave($input);
@@ -129,6 +141,7 @@ interface PluginFormcreatorFieldInterface
    /**
     * Do the argument has an user input ?
     * @param array $input answers of all questions of the form
+    *
     * @return boolean
     */
    public function hasInput($input);
@@ -137,6 +150,7 @@ interface PluginFormcreatorFieldInterface
     * Read the value of the field from answers
     * @param array $input answers of all questions of the form
     * @param boolean $nonDestructive for File field, ensure that the file uploads imported as document
+    *
     * @return boolean true on sucess, false otherwise
     */
    public function parseAnswerValues($input, $nonDestructive = false);
@@ -144,24 +158,28 @@ interface PluginFormcreatorFieldInterface
    /**
     * Prepares an answer value for output in a target object
     * @param  string|array $input the answer to format for a target (ticket or change)
+    *
     * @return string
     */
    //public function prepareQuestionInputForTarget($input);
 
    /**
     * Gets the parameters of the field
+    *
     * @return PluginFormcreatorQuestionParameter[]
     */
    public function getEmptyParameters();
 
    /**
     * Gets parameters of the field with their settings
+    *
     * @return PluginFormcreatorQuestionParameter[]
     */
    public function getParameters();
 
    /**
     * Gets the name of the field type
+    *
     * @return string
     */
    public function getFieldTypeName();
@@ -183,36 +201,42 @@ interface PluginFormcreatorFieldInterface
    /**
     * Deletes all parameters of the field applied to the question
     * @param PluginFormcreatorQuestion $question
+    *
     * @return boolean true if success, false otherwise
     */
    public function deleteParameters(PluginFormcreatorQuestion $question);
 
    /**
     * Tests if the given value equals the field value
+    *
     * @return boolean True if the value equals the field value
     */
    public function equals($value);
 
    /**
     * Tests if the given value is not equal to field value
+    *
     * @return boolean True if the value is not equal to the field value
     */
    public function notEquals($value);
 
    /**
     * Tests if the given value is greater than the field value
+    *
     * @return boolean True if the value is greater than the field value
     */
    public function greaterThan($value);
 
    /**
     * Tests if the given value is less than the field value
+    *
     * @return boolean True if the value is less than the field value
     */
    public function LessThan($value);
 
    /**
     * Is the field compatible with anonymous form ?
+    *
     * @return boolean true if the field can work with anonymous forms
     */
    public function isAnonymousFormCompatible();
