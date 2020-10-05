@@ -218,14 +218,28 @@ JAVASCRIPT;
       echo Html::scriptBlock($js);
    }
 
+   /**
+    * Cancel a new ticketn while it is still allowed
+    *
+    * In case of error, a message is added to the session
+    *
+    * @param integer $id
+    * @return boolean true on success, false otherwise
+    */
    public static function cancelMyTicket($id) {
       $ticket = new Ticket();
       $ticket->getFromDB($id);
       if (!$ticket->canRequesterUpdateItem()) {
+         Session::addMessageAfterRedirect(__('You cannot delete this issue. Maybe it is taken into account.', 'formcreator'), true,  ERROR);
          return false;
       }
 
-      return $ticket->delete($ticket->fields);
+      if (!$ticket->delete($ticket->fields)) {
+         Session::addMessageAfterRedirect(__('Failed to delete this issue. An internal error occured.', 'formcreator'), true, ERROR);
+         return false;
+      }
+
+      return true;
    }
 
    /**
