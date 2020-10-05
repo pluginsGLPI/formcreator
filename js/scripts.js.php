@@ -813,6 +813,7 @@ var plugin_formcreator = new function() {
 
    this.addQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/question_add.php',
          type: "POST",
@@ -839,12 +840,14 @@ var plugin_formcreator = new function() {
             1
          );
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
    this.editQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = form.find('[name="id"]').val();
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/question_update.php',
          type: "POST",
@@ -857,12 +860,14 @@ var plugin_formcreator = new function() {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
    this.duplicateQuestion = function (target) {
       var item = $(target).closest('.grid-stack-item');
       var id = item.attr('data-id');
+      var that = this;
       if (typeof(id) === 'undefined') {
          return;
       }
@@ -891,6 +896,7 @@ var plugin_formcreator = new function() {
             1,
             1
          );
+         that.resetTabs();
       });
    };
 
@@ -945,6 +951,7 @@ var plugin_formcreator = new function() {
       if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
          var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
          var sectionId = section.attr('data-id');
+         var that = this;
          $.ajax({
          url: formcreatorRootDoc + '/ajax/section_delete.php',
          type: "POST",
@@ -954,6 +961,7 @@ var plugin_formcreator = new function() {
          }).done(function() {
             section.remove();
             plugin_formcreator.updateSectionControls();
+            that.resetTabs();
          }).fail(function(data) {
             alert(data.responseText);
          });
@@ -1005,6 +1013,7 @@ var plugin_formcreator = new function() {
    this.duplicateSection = function (item) {
       var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
       var sectionId = section.attr('data-id');
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/section_duplicate.php',
       type: "POST",
@@ -1018,6 +1027,7 @@ var plugin_formcreator = new function() {
          sectionId = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last().attr('data-id');
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
+         that.resetTabs();
       }).fail(function(data) {
          alert(data.responseText);
       });
@@ -1035,6 +1045,7 @@ var plugin_formcreator = new function() {
 
    this.addSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/section_add.php',
          type: "POST",
@@ -1049,12 +1060,14 @@ var plugin_formcreator = new function() {
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
    this.editSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
       var sectionId = form.find('[name="id"]').val();
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/section_update.php',
          type: "POST",
@@ -1066,6 +1079,7 @@ var plugin_formcreator = new function() {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
          section.find('> [data-field="name"]').text(data);
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
@@ -1100,6 +1114,20 @@ var plugin_formcreator = new function() {
             id: id
          }
       );
+   }
+
+   /**
+    * Put a spinner inside the given selector
+    */
+   this.showSpinner = function (selector) {
+      return $(selector).html('<img class="plugin_formcreator_spinner" src="../../../pics/spinner.48.gif">');
+   }
+
+   /**
+    * destroy hidden tabs. Useful when their content is obsoleted
+    */
+   this.resetTabs = function () {
+      $('.glpi_tabs [role="tabpanel"][aria-hidden="true"] ').empty();
    }
 }
 
