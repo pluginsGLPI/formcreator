@@ -215,7 +215,13 @@ class GlpiselectField extends DropdownField
       return true;
    }
 
-   public function equals($value): bool {
+   public function getAvailableValues(): bool
+   {
+      return [];
+   }
+
+   public function equals($value)
+   {
       $value = html_entity_decode($value);
       $itemtype = $this->question->fields['values'];
       $item = new $itemtype();

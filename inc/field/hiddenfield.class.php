@@ -178,6 +178,6 @@ class HiddenField extends PluginFormcreatorAbstractField
 
    public function getTranslatableStrings()
    {
-      return ['text' => $this->value];
+      return ['text' => [$this->question->fields['default_values']]];
    }
 }
