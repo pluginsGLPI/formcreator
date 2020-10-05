@@ -204,8 +204,6 @@ class PluginFormcreatorTranslation extends CommonDBTM
 
       if ($canedit) {
          $formId = $item->getID();
-         echo "<div id='plugin_formcreator_viewtranslation'></div>";
-
          echo "<div class='center'>".
               "<a class='vsubmit' href='#' onclick='plugin_formcreator.addTranslation($formId);'>". __('Add a new translation').
               "</a></div><br>";
@@ -254,6 +252,8 @@ class PluginFormcreatorTranslation extends CommonDBTM
          }
          echo "</table>";
          if ($canedit) {
+            echo '<div id="plugin_formcreator_viewtranslation" style="display: none"><img class="plugin_formcreator_spinner" src="../../../pics/spinner.48.gif"></div>';
+
             $massiveactionparams['ontop'] = false;
             Html::showMassiveActions($massiveactionparams);
             Html::closeForm();

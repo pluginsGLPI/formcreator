@@ -58,7 +58,8 @@ class HostnameField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function show($canEdit = true) {
+   public function show($domain, $canEdit = true)
+   {
       if (!$canEdit) {
          return parent::show($canEdit);
       }
@@ -164,7 +165,8 @@ class HostnameField extends PluginFormcreatorAbstractField
       return false;
    }
 
-   public function getTranslatableStrings() {
+   public function getTranslatableStrings()
+   {
       return [];
    }
 }
