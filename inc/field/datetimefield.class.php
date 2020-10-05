@@ -252,4 +252,8 @@ class DatetimeField extends PluginFormcreatorAbstractField
    {
       return true;
    }
+
+   public function getTranslatableStrings() {
+      return [];
+   }
 }

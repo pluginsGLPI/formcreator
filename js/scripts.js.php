@@ -984,14 +984,15 @@ var plugin_formcreator = new function() {
    }
 
    this.editTranslation = function (formId, id) {
-      $('#plugin_formcreator_viewtranslation').load(
+      this.showSpinner(modalWindow);
+      $(modalWindow).load(
          rootDoc + '/ajax/viewsubitem.php', {
             type: "PluginFormcreatorTranslation",
             parenttype: "PluginFormcreatorForm",
             plugin_formcreator_forms_id: formId,
             id: id
          }
-      );
+      ).dialog('open');
    }
 
    /**
