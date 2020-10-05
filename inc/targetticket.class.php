@@ -605,7 +605,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $input;
    }
 
-   public function getDefaultData() {
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer) {
+      Global $DB;
+
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
          '_users_id_requester'         => [],
@@ -653,6 +655,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
+      $data = $this->setTargetCategory($data, $formanswer);
+      $data = $this->setTargetType($data, $formanswer);
+
+      // Set template ticket from itilcategorie when template ticket is not set in the target (=0)
+      if ($this->fields['tickettemplates_id']==0 && $data['itilcategories_id']>0) {
+			$rows = $DB->request([
+				'SELECT' => ['tickettemplates_id_incident', 'tickettemplates_id_demand'],
+				'FROM'   => 'glpi_itilcategories',
+				'WHERE'  => ['id' => $data['itilcategories_id']]
+			]);
+			if ($row=$rows->next()) { // assign ticket template according to resulting ticket category and ticket type
+				$this->fields['tickettemplates_id']=($data['type']==1?$row['tickettemplates_id_incident']:$row['tickettemplates_id_demand']);
+			}
+	  }
+
       // Get predefined Fields
       $ttp                  = new TicketTemplatePredefinedField();
       $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
@@ -697,7 +714,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
    public function save(PluginFormcreatorFormAnswer $formanswer) {
       $ticket  = new Ticket();
       $form = $formanswer->getForm();
-      $data = $this->getDefaultData();
+      $data = $this->getDefaultData($formanswer);
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
@@ -750,10 +767,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
-      $data = $this->setTargetCategory($data, $formanswer);
       $data = $this->setTargetLocation($data, $formanswer);
       $data = $this->setTargetAssociatedItem($data, $formanswer);
-      $data = $this->setTargetType($data, $formanswer);
 
       // There is always at least one requester
       $data = $this->requesters + $data;
