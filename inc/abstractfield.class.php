@@ -334,4 +334,20 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
       return $isValid;
    }
+
+   public function getTranslatableStrings() {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+
+      foreach ($this->getParameters() as $fieldName => $parameter) {
+         foreach ($parameter->getTranslatableStrings() as $type => $subStrings) {
+            $strings[$type] = array_merge($strings[$type], $subStrings);
+         }
+      }
+
+      return $strings;
+   }
 }

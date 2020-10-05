@@ -233,8 +233,4 @@ class DateField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool {
       return true;
    }
-
-   public function getTranslatableStrings() {
-      return [];
-   }
 }

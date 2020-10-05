@@ -255,6 +255,8 @@ class TextareaField extends TextField
 
    public function getTranslatableStrings()
    {
-      return ['string' => [$this->question->fields['default_values']]];
+      $strings = parent::getTranslatableStrings();
+      $strings['string'] = array_merge($strings['string'], array_values($this->getAvailableValues()));
+      return $strings;
    }
 }

@@ -870,9 +870,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target tickets
-      $all_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetTicketsForForm($form->getID());
+      $all_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetTicketsForForm($new_form->getID());
+      $all_new_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($new_form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
       // check that all sections uuid are new
@@ -885,9 +885,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target changes
-      $all_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetChangesForForm($form->getID());
+      $all_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetsForForm($form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetChangesForForm($new_form->getID());
+      $all_new_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetsForForm($new_form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
       // check that all sections uuid are new

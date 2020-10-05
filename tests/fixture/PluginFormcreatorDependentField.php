@@ -37,10 +37,15 @@ use PluginFormcreatorQuestionDependency;
 use Toolbox;
 use Html;
 use Session;
+use PluginFormcreatorTranslatable;
 
 class DependentField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
+
+   use PluginFormcreatorTranslatable;
+
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
