@@ -260,7 +260,8 @@ class PluginFormcreatorTranslation extends CommonDBTM
          }
       } else {
          echo "<table class='tab_cadre_fixe'><tr class='tab_bg_2'>";
-         echo "<th class='b'>" . __('No translation found', 'formcreator')."</th></tr></table>";
+         echo "<th class='b'>" . __('No translation found', 'formcreator')."</th></tr>";
+         echo "</table>";
       }
       return true;
    }
