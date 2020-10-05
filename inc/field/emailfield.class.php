@@ -189,9 +189,4 @@ class EmailField extends TextField
    public function isEditableField(): bool {
       return true;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

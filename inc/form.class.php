@@ -2509,6 +2509,14 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
+      foreach (self::getTargetTypes() as $targetType) {
+         foreach ((new $targetType())->getTargetsForForm($this->getID()) as $target) {
+            foreach ($target->getTranslatableStrings() as $type => $subStrings) {
+               $strings[$type] = array_merge($strings[$type], $subStrings);
+            }
+         }
+      }
+
       // deduplicate strings and remove empty strings
       foreach (array_keys($strings) as $type) {
          $strings[$type] = array_unique($strings[$type]);

@@ -39,7 +39,7 @@ trait PluginFormcreatorTranslatable
       $searchOptions = $this->searchOptions();
       $translatable = [];
       $table = $this::getTable();
-      foreach ($searchOptions as $searchOption) {
+      foreach ($searchOptions as $id => $searchOption) {
          if (!isset($searchOption['field'])) {
             continue;
          }
@@ -50,6 +50,9 @@ trait PluginFormcreatorTranslatable
             continue;
          }
          if (!in_array($searchOption['datatype'], ['itemlink', 'text', 'string'])) {
+            continue;
+         }
+         if ($searchOption['datatype'] == 'itemlink' && $id != '1') {
             continue;
          }
          $translatable[] = $searchOption;

@@ -311,8 +311,4 @@ class LdapselectField extends SelectField
    public function isEditableField(): bool {
       return true;
    }
-
-   public function getTranslatableStrings() {
-      return [];
-   }
 }

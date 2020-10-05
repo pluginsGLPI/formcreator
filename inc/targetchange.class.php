@@ -268,6 +268,91 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return 1 + self::countChildren($subItems, $input);
    }
 
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'target_name',
+         'name'               => __('Change title', 'formcreator'),
+         'datatype'           => 'text',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this::getTable(),
+         'field'              => 'content',
+         'name'               => __('Content', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this::getTable(),
+         'field'              => 'impactcontent',
+         'name'               => __('Impact', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this::getTable(),
+         'field'              => 'controlistcontent',
+         'name'               => __('Control list', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this::getTable(),
+         'field'              => 'rolloutplancontent',
+         'name'               => __('Rollout plan', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => $this::getTable(),
+         'field'              => 'backoutplancontent',
+         'name'               => __('Backup plan', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this::getTable(),
+         'field'              => 'checklistcontent',
+         'name'               => __('Check list', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
+   }
 
    public function showForm($ID, $options = []) {
       if ($ID == 0) {
@@ -723,7 +808,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     * @param int $formId
     * @return array
     */
-   public function getTargetChangesForForm($formId) {
+   public function getTargetsForForm($formId) {
       global $DB;
 
       $targets = [];

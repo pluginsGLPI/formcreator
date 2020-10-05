@@ -172,9 +172,4 @@ class IpField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool {
       return false;
    }
-
-   public function getTranslatableStrings()
-   {
-      return [];
-   }
 }

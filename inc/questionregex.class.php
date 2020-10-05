@@ -44,12 +44,29 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorQuestionRegex
 extends PluginFormcreatorAbstractQuestionParameter
 {
+   use PluginFormcreatorTranslatable;
 
    protected $domId = 'plugin_formcreator_questionRegex';
 
    public static function getTypeName($nb = 0) {
       return _n('Question regular expression', 'Question regular expressions', $nb, 'formcreator');
    }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'regex',
+         'name'               => __('Regular expression', 'formcreator'),
+         'datatype'           => 'text',
+         'massiveaction'      => false,
+      ];
+
+      return $tab;
+   }
+
 
    public function getParameterFormSize() {
       return 1;
