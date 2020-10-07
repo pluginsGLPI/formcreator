@@ -74,10 +74,22 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
          // Does not exists in GLPI 9.4
          $optgroup['Assets'][PassiveDCEquipment::class] = PassiveDCEquipment::getTypeName(2);
       }
+
+      //TODO : need hook instead of check if plugins are available
       $plugin = new Plugin();
       if ($plugin->isActivated('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2);
       }
+
+      if ($plugin->isActivated('genericobject')) {
+         foreach (PluginGenericobjectType::getTypes(false) as $id => $objecttype) {
+            $itemtype = $objecttype['itemtype'];
+            if (class_exists($itemtype)) {
+               $optgroup[__("Objects management", "genericobject")][$itemtype] = $itemtype::getTypeName(2);
+            }
+         }
+      }
+
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
          'value'     => $this->question->fields['values'],
