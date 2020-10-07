@@ -196,7 +196,7 @@ class DropdownField extends PluginFormcreatorField
          'value'    => $this->value,
          'display'  => false,
          'comments' => false,
-         'entity'   => $_SESSION['glpiactiveentities'],
+         'entity'   => $_SESSION['glpiactive_entity'], // TODO: replace by Session::getActiveEntity when dropping GLPI 9.4
          'displaywith' => ['id'],
       ];
 
