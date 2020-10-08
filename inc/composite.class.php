@@ -60,38 +60,40 @@ class PluginFormcreatorComposite
    public function buildCompositeRelations() {
       global $DB;
 
-      if (isset($this->targets['PluginFormcreatorTargetTicket'])) {
-         foreach ($this->targets['PluginFormcreatorTargetTicket'] as $targetId => $generatedObject) {
-            $rows = $DB->request([
-               'SELECT' => [
-                  'itemtype',
-                  'items_id',
-                  'link'
-               ],
-               'FROM'   => $this->item_targetTicket->getTable(),
-               'WHERE'  => [
-                  'plugin_formcreator_targettickets_id' => $targetId
-               ]
-            ]);
-            foreach ($rows as $row) {
-               switch ($row['itemtype']) {
-                  case 'Ticket':
-                     $this->ticket_ticket->add([
-                        'link' => $row['link'],
-                        'tickets_id_1' => $generatedObject->getID(),
-                        'tickets_id_2' => $row['items_id'],
-                     ]);
-                     break;
+      if (!isset($this->targets[PluginFormcreatorTargetTicket::class])) {
+         return;
+      }
 
-                  case 'PluginFormcreatorTargetTicket':
-                     $ticket = $this->targets['PluginFormcreatorTargetTicket'][$row['items_id']];
-                     $this->ticket_ticket->add([
-                        'link' => $row['link'],
-                        'tickets_id_1' => $generatedObject->getID(),
-                        'tickets_id_2' => $ticket->getID(),
-                     ]);
-                     break;
-               }
+      foreach ($this->targets[PluginFormcreatorTargetTicket::class] as $targetId => $generatedObject) {
+         $rows = $DB->request([
+            'SELECT' => [
+               'itemtype',
+               'items_id',
+               'link'
+            ],
+            'FROM'   => $this->item_targetTicket->getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_targettickets_id' => $targetId
+            ]
+         ]);
+         foreach ($rows as $row) {
+            switch ($row['itemtype']) {
+               case Ticket::class:
+                  $this->ticket_ticket->add([
+                     'link' => $row['link'],
+                     'tickets_id_1' => $generatedObject->getID(),
+                     'tickets_id_2' => $row['items_id'],
+                  ]);
+                  break;
+
+               case PluginFormcreatorTargetTicket::class:
+                  $ticket = $this->targets[PluginFormcreatorTargetTicket::class][$row['items_id']];
+                  $this->ticket_ticket->add([
+                     'link' => $row['link'],
+                     'tickets_id_1' => $generatedObject->getID(),
+                     'tickets_id_2' => $ticket->getID(),
+                  ]);
+                  break;
             }
          }
       }
