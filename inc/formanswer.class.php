@@ -974,7 +974,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $generatedTarget = $targetObject->save($this);
             if ($generatedTarget === null) {
                $success = false;
-               break;
+               continue;
             }
             $this->targetList[] = $generatedTarget;
             // Map [itemtype of the target] [item ID of the target] = ID of the generated target
@@ -1158,7 +1158,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
          }
       }
-      $this->sendNotification();
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
@@ -1172,11 +1171,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
       $this->createIssue();
+      $this->sendNotification();
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }
 
    public function post_updateItem($history = 1) {
-      $this->sendNotification();
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
@@ -1190,6 +1189,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
       $this->updateIssue();
+      $this->sendNotification();
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }
 
@@ -1339,8 +1339,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             break;
          case self::STATUS_ACCEPTED :
             // Notify the requester
-            $form = new PluginFormcreatorForm();
-            $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+            $form = $this->getForm();
             if ($form->fields['validation_required'] != PluginFormcreatorForm::VALIDATION_NONE) {
                NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
             } else {
