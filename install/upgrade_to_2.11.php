@@ -78,6 +78,9 @@ class PluginFormcreatorUpgradeTo2_11 {
          ) or plugin_formcreator_upgrade_error($migration);
       }
 
+      $this->migration->changeField('glpi_plugin_formcreator_questions', 'values', 'values', 'mediumtext');
+      $this->migration->changeField('glpi_plugin_formcreator_questions', 'default_values', 'default_values', 'mediumtext');
+
       $this->migrateCheckboxesAndMultiselect();
       $this->migrateRadiosAndSelect();
 
