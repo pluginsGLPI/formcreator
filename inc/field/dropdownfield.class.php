@@ -284,7 +284,6 @@ class DropdownField extends PluginFormcreatorField
                         $groupFk => $groups,
                      ] + $dparams_cond_crit
                   ];
-                  $groups = implode("', '", $groups);
                }
                // Check if helpdesk availability is fine tunable on a per item basis
                if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
