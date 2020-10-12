@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-15 08:58+0200\n"
+"POT-Creation-Date: 2020-10-12 15:25+0200\n"
 "PO-Revision-Date: 2020-01-22 11:04+0000\n"
 "Last-Translator: Markku Vepsä, 2020\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/teclib/teams/28042/fi_FI/)\n"
@@ -27,17 +27,17 @@ msgid_plural "Form categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:491
+#: hook.php:509
 msgid "Cancel my ticket"
 msgstr ""
 
-#: setup.php:233 inc/form.class.php:108 inc/formlist.class.php:59
+#: setup.php:236 inc/form.class.php:108 inc/formlist.class.php:59
 #: inc/formlist.class.php:60
 msgid "Forms waiting for validation"
 msgstr "Vahvistusta odottavat lomakkeet"
 
-#: setup.php:243 ajax/homepage_link.php:37 inc/entityconfig.class.php:55
-#: inc/form.class.php:101 inc/form.class.php:712 inc/form.class.php:2030
+#: setup.php:246 ajax/homepage_link.php:37 inc/entityconfig.class.php:55
+#: inc/form.class.php:101 inc/form.class.php:712 inc/form.class.php:2035
 #: inc/formanswer.class.php:184 inc/formlist.class.php:46 js/scripts.js.php:72
 msgid "Form"
 msgid_plural "Forms"
@@ -57,22 +57,22 @@ msgid "No limit"
 msgstr "Ei rajoitusta"
 
 #: front/form.php:45 front/formanswer.form.php:83 front/formanswer.form.php:88
-#: front/formanswer.php:46 front/formanswer.php:51 front/issue.php:46
-#: front/issue.php:51 front/targetchange.form.php:74
-#: front/targetticket.form.php:74 inc/form.class.php:2098
-#: inc/form.class.php:2105
+#: front/formanswer.php:46 front/formanswer.php:51 front/issue.php:48
+#: front/issue.php:53 front/targetchange.form.php:74
+#: front/targetticket.form.php:74 inc/form.class.php:2103
+#: inc/form.class.php:2110
 msgid "Form Creator"
 msgstr "Lomakkeen tekijä"
 
 #: front/formanswer.form.php:79 front/formanswer.php:42
-#: front/issue.form.php:58 front/issue.php:42 front/knowbaseitem.form.php:45
+#: front/issue.form.php:58 front/issue.php:44 front/knowbaseitem.form.php:45
 #: front/reservation.form.php:46 front/reservation.php:46
 #: front/reservationitem.php:42 front/wizard.php:45 front/wizardfeeds.php:46
-#: inc/form.class.php:2093
+#: inc/form.class.php:2098
 msgid "Service catalog"
 msgstr "Palveluluettelo"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2095
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2100
 msgid "Form list"
 msgstr "Lomakelista"
 
@@ -120,13 +120,13 @@ msgstr "Piilotettu, ellei"
 msgid "Displayed unless"
 msgstr "Näytetään vain, jos"
 
-#: inc/condition.class.php:159 inc/form.class.php:1928
+#: inc/condition.class.php:159 inc/form.class.php:1933
 #: inc/form_profile.class.php:215 inc/form_validator.class.php:109
 #: inc/item_targetticket.class.php:141 inc/question.class.php:970
 #: inc/questiondependency.class.php:200 inc/questionrange.class.php:178
 #: inc/questionregex.class.php:173 inc/section.class.php:269
 #: inc/target_actor.class.php:173 inc/targetchange.class.php:233
-#: inc/targetticket.class.php:1114
+#: inc/targetticket.class.php:1124
 #, php-format
 msgid "failed to add or update the %1$s %2$s"
 msgstr ""
@@ -228,7 +228,7 @@ msgstr[1] ""
 msgid "Delete"
 msgstr "Poista"
 
-#: inc/form.class.php:668 inc/form.class.php:2252
+#: inc/form.class.php:668 inc/form.class.php:2257
 msgid "Add a target"
 msgstr ""
 
@@ -285,148 +285,148 @@ msgstr "Ei vahvistusta odottavaa lomaketta"
 msgid "All my forms (validator)"
 msgstr "Kaikki lomakkeeni (vahvistaja)"
 
-#: inc/form.class.php:1255
+#: inc/form.class.php:1260
 msgid "Validation"
 msgstr ""
 
-#: inc/form.class.php:1257
+#: inc/form.class.php:1262
 msgid "Choose a validator"
 msgstr "Valitse vahvistaja"
 
-#: inc/form.class.php:1292 inc/targetbase.class.php:1311
+#: inc/form.class.php:1297 inc/targetbase.class.php:1311
 msgid "The name cannot be empty!"
 msgstr "Nimi ei voi olla tyhjä!"
 
-#: inc/form.class.php:1355
+#: inc/form.class.php:1360
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "Kysymys %s ei ole yhteensopiva julkisten lomakkeiden kanssa"
 
-#: inc/form.class.php:1493
+#: inc/form.class.php:1498
 msgid "Errored duplicate"
 msgstr ""
 
-#: inc/form.class.php:1504
+#: inc/form.class.php:1509
 msgid "Duplicate"
 msgstr "Monista"
 
-#: inc/form.class.php:1569
+#: inc/form.class.php:1574
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Lomake monistettu: %s"
 
-#: inc/form.class.php:1580
+#: inc/form.class.php:1585
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Lomake siirretty: %s"
 
-#: inc/form.class.php:1703
+#: inc/form.class.php:1708
 msgid "Upload of JSON files not allowed."
 msgstr "JSON-tiedostojen lataaminen ei ole sallittua."
 
-#: inc/form.class.php:1706
+#: inc/form.class.php:1711
 msgid "You may allow JSON files right now."
 msgstr "Nyt voit sallia JSON-tiedostot."
 
-#: inc/form.class.php:1707
+#: inc/form.class.php:1712
 msgctxt "button"
 msgid "Create"
 msgstr "Luo"
 
-#: inc/form.class.php:1710 inc/form.class.php:1721
+#: inc/form.class.php:1715 inc/form.class.php:1726
 msgid "Please contact your GLPI administrator."
 msgstr "Ota yhteyttä GLPI-ylläpitäjään."
 
-#: inc/form.class.php:1711 inc/form.class.php:1722
+#: inc/form.class.php:1716 inc/form.class.php:1727
 msgctxt "button"
 msgid "Back"
 msgstr "Takaisin"
 
-#: inc/form.class.php:1714
+#: inc/form.class.php:1719
 msgid "Upload of JSON files not enabled."
 msgstr "JSON-tiedostojen lataus ei ole käytössä."
 
-#: inc/form.class.php:1717 inc/form.class.php:1720
+#: inc/form.class.php:1722 inc/form.class.php:1725
 msgid "You may enable JSON files right now."
 msgstr "Nyt voit ottaa käyttöön JSON-tiedostot."
 
-#: inc/form.class.php:1718
+#: inc/form.class.php:1723
 msgctxt "button"
 msgid "Enable"
 msgstr "Ota käyttöön"
 
-#: inc/form.class.php:1783
+#: inc/form.class.php:1788
 msgid "No file uploaded"
 msgstr ""
 
-#: inc/form.class.php:1792
+#: inc/form.class.php:1797
 msgid "Forms import impossible, the file is empty"
 msgstr ""
 
-#: inc/form.class.php:1796 inc/form.class.php:1800
+#: inc/form.class.php:1801 inc/form.class.php:1805
 msgid "Forms import impossible, the file seems corrupt"
 msgstr ""
 
-#: inc/form.class.php:1806
+#: inc/form.class.php:1811
 msgid "Forms import impossible, the file was generated with another version"
 msgstr ""
 
-#: inc/form.class.php:1813
+#: inc/form.class.php:1818
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10 and import is expected to create incomplete "
 "or buggy forms."
 msgstr ""
 
-#: inc/form.class.php:1831
+#: inc/form.class.php:1836
 #, php-format
 msgid "Failed to import %s"
 msgstr ""
 
-#: inc/form.class.php:1836
+#: inc/form.class.php:1841
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Lomakkeet on tuotu onnistuneesti %s"
 
-#: inc/form.class.php:1883
+#: inc/form.class.php:1888
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr ""
 
-#: inc/form.class.php:1891
+#: inc/form.class.php:1896
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr ""
 
-#: inc/form.class.php:1965
+#: inc/form.class.php:1970
 msgid "Failed to create JSON document type"
 msgstr "JSON-asiakirjatyyppiä ei voitu luoda"
 
-#: inc/form.class.php:1972
+#: inc/form.class.php:1977
 msgid "JSON document type not found"
 msgstr "JSON-dokumenttityyppiä ei löydy"
 
-#: inc/form.class.php:1979
+#: inc/form.class.php:1984
 msgid "Failed to update JSON document type"
 msgstr "JSON-dokumenttityypin päivittäminen epäonnistui"
 
-#: inc/form.class.php:1999
+#: inc/form.class.php:2004
 msgid "Forms without category"
 msgstr "Lomakkeet ilman kategoriaa"
 
-#: inc/form.class.php:2022
+#: inc/form.class.php:2027
 msgid "No form available"
 msgstr ""
 
-#: inc/form.class.php:2294
+#: inc/form.class.php:2299
 msgid "Unsupported target type."
 msgstr ""
 
-#: inc/form.class.php:2306
+#: inc/form.class.php:2311
 msgid "The form does not exists."
 msgstr ""
 
-#: inc/form.class.php:2329
+#: inc/form.class.php:2334
 msgid "Unsuported target type."
 msgstr ""
 
@@ -448,7 +448,7 @@ msgstr "Aktivoi lomake nähdäksesi linkin"
 msgid "Waiting"
 msgstr ""
 
-#: inc/formanswer.class.php:61 inc/issue.class.php:519
+#: inc/formanswer.class.php:61 inc/issue.class.php:515
 msgid "Refused"
 msgstr ""
 
@@ -456,17 +456,17 @@ msgstr ""
 msgid "Accepted"
 msgstr ""
 
-#: inc/formanswer.class.php:160 inc/issue.class.php:513
+#: inc/formanswer.class.php:160 inc/issue.class.php:509
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/formanswer.class.php:204 inc/issue.class.php:408
+#: inc/formanswer.class.php:204 inc/issue.class.php:404
 msgid "Form approver"
 msgstr "Lomakkeen hyväksyjä"
 
-#: inc/formanswer.class.php:223 inc/issue.class.php:496
+#: inc/formanswer.class.php:223 inc/issue.class.php:492
 msgid "Form approver group"
 msgstr "Lomakkeen hyväksyjäryhmä"
 
@@ -527,7 +527,7 @@ msgstr "Kohteita ei voi luoda!"
 msgid "You must select validator!"
 msgstr "Sinun on valittava vahvistaja!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:316
+#: inc/issue.class.php:40 inc/issue.class.php:312
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] ""
@@ -537,11 +537,11 @@ msgstr[1] ""
 msgid "Update issue data from tickets and form answers"
 msgstr "Päivitä teemat tiketeistä ja lomakevastauksista"
 
-#: inc/issue.class.php:427
+#: inc/issue.class.php:423
 msgid "Ticket approver"
 msgstr "Tiketin hyväksyjä"
 
-#: inc/issue.class.php:518
+#: inc/issue.class.php:514
 msgid "Not validated"
 msgstr ""
 
@@ -602,7 +602,7 @@ msgstr "Pyyntö #"
 #: inc/question.class.php:59 inc/targetbase.class.php:907
 #: inc/targetbase.class.php:945 inc/targetbase.class.php:1023
 #: inc/targetbase.class.php:1152 inc/targetbase.class.php:1403
-#: inc/targetticket.class.php:848 inc/targetticket.class.php:889
+#: inc/targetticket.class.php:858 inc/targetticket.class.php:899
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] ""
@@ -1009,31 +1009,31 @@ msgstr "Toinen kohde tässä lomakkeessa"
 msgid "An existing ticket"
 msgstr "Olemassa oleva tiketti"
 
-#: inc/targetticket.class.php:513
+#: inc/targetticket.class.php:523
 msgid "Invalid link type"
 msgstr "Virheellinen linkkityyppi"
 
-#: inc/targetticket.class.php:529
+#: inc/targetticket.class.php:539
 msgid "Invalid linked item type"
 msgstr "Virheellinen linkitetyn kohteen tyyppi"
 
-#: inc/targetticket.class.php:542
+#: inc/targetticket.class.php:552
 msgid "Linked item does not exists"
 msgstr "Linkitetty kohde ei ole olemassa"
 
-#: inc/targetticket.class.php:555
+#: inc/targetticket.class.php:565
 msgid "Failed to link the item"
 msgstr "Kohteen linkittäminen epäonnistui"
 
-#: inc/targetticket.class.php:748 install/install.php:285
+#: inc/targetticket.class.php:758 install/install.php:285
 msgid "Your form has been accepted by the validator"
 msgstr "Vahvistaja on hyväksynyt lomakkeesi"
 
-#: inc/targetticket.class.php:849
+#: inc/targetticket.class.php:859
 msgid "Type "
 msgstr ""
 
-#: inc/targetticket.class.php:890
+#: inc/targetticket.class.php:900
 msgid "Item "
 msgstr ""
 
@@ -1078,7 +1078,7 @@ msgstr[1] ""
 #: inc/fields/actorfield.class.php:242
 #: inc/fields/checkboxesfield.class.php:187 inc/fields/datefield.class.php:87
 #: inc/fields/datetimefield.class.php:90
-#: inc/fields/dropdownfield.class.php:349 inc/fields/emailfield.class.php:94
+#: inc/fields/dropdownfield.class.php:348 inc/fields/emailfield.class.php:94
 #: inc/fields/floatfield.class.php:127
 #: inc/fields/glpiselectfield.class.php:135
 #: inc/fields/integerfield.class.php:128
@@ -1113,7 +1113,7 @@ msgid "Checkboxes"
 msgstr "Valintaruudut"
 
 #: inc/fields/checkboxesfield.class.php:227
-#: inc/fields/dropdownfield.class.php:363
+#: inc/fields/dropdownfield.class.php:362
 #: inc/fields/glpiselectfield.class.php:118
 #: inc/fields/multiselectfield.class.php:187
 #: inc/fields/radiosfield.class.php:141
@@ -1131,7 +1131,7 @@ msgstr "Alue"
 msgid "Date & time"
 msgstr "Päivämäärä & aika"
 
-#: inc/fields/descriptionfield.class.php:91
+#: inc/fields/descriptionfield.class.php:96
 msgid "A description field should have a description:"
 msgstr "Kuvauskentällä pitäisi olla kuvaus:"
 
@@ -1151,7 +1151,7 @@ msgstr "Tapauksen luokat"
 msgid "Change categories"
 msgstr ""
 
-#: inc/fields/dropdownfield.class.php:375
+#: inc/fields/dropdownfield.class.php:374
 msgid "Invalid dropdown type:"
 msgstr "Virheellinen pudotustyyppi:"
 
