@@ -605,7 +605,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $input;
    }
 
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer) {
+   /**
+    * Set default values for the ticket to create
+    *
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer) : array {
       Global $DB;
 
       // Prepare actors structures for creation of the ticket
@@ -660,10 +666,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       // Set template ticket from itilcategorie when template ticket is not set in the target (=0)
       $itilCategory = new ITILCategory();
+      $ticket = new Ticket();
       if ($ticket->isNewID($this->fields['tickettemplates_id']) && !$itilCategory->isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([
             'SELECT' => ['tickettemplates_id_incident', 'tickettemplates_id_demand'],
-            'FROM'   => 'glpi_itilcategories',
+            'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
          if ($row = $rows->next()) { // assign ticket template according to resulting ticket category and ticket type
@@ -671,7 +678,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                                                   ? $row['tickettemplates_id_incident']
                                                   : $row['tickettemplates_id_demand']);
          }
-     }
+      }
 
       // Get predefined Fields
       $ttp                  = new TicketTemplatePredefinedField();

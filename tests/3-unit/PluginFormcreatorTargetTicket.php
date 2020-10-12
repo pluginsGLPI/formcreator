@@ -1004,7 +1004,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $instance->getFromDB($instance->getID());
       $dummyInstance->fields = $instance->fields;
 
-      $data = $dummyInstance->publicGetDefaultData();
+      $data = $dummyInstance->publicGetDefaultData($formanswer);
       $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }

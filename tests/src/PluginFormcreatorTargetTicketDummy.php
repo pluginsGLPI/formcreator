@@ -89,7 +89,7 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
       return $this->setTargetType($data, $formanswer);
    }
 
-   public function publicGetDefaultData() {
-      return $this->getDefaultData();
+   public function publicGetDefaultData($formanswer) {
+      return $this->getDefaultData($formanswer);
    }
 }
