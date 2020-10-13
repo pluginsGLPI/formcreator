@@ -330,7 +330,6 @@ class DropdownField extends PluginFormcreatorField
 
       $emptyItem = new $itemtype();
       $emptyItem->getEmpty();
-      $dparams['displaywith'] = [];
       if (isset($emptyItem->fields['serial'])) {
          $dparams['displaywith'][] = 'serial';
       }
