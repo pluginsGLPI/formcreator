@@ -31,12 +31,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Toolbox;
 
-class RadiosField extends PluginFormcreatorField
+class RadiosField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

@@ -31,14 +31,14 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use DateTime;
 use Toolbox;
 use Session;
 
 
-class DateField extends PluginFormcreatorField
+class DateField extends PluginFormcreatorAbstractField
 {
    const DATE_FORMAT = 'Y-m-d';
 

@@ -166,14 +166,14 @@ interface PluginFormcreatorFieldInterface
    /**
     * Gets the parameters of the field
     *
-    * @return PluginFormcreatorQuestionParameter[]
+    * @return PluginFormcreatorAbstractQuestionParameter[]
     */
    public function getEmptyParameters();
 
    /**
     * Gets parameters of the field with their settings
     *
-    * @return PluginFormcreatorQuestionParameter[]
+    * @return PluginFormcreatorAbstractQuestionParameter[]
     */
    public function getParameters();
 
@@ -251,7 +251,7 @@ interface PluginFormcreatorFieldInterface
     * @param boolean $canEdit true if the user can edit the answer
     * @return string HTML code
     */
-   public function getRenderedHtml($canEdit);
+   public function getRenderedHtml($canEdit = true);
 
    /**
     * Is the field editable ?

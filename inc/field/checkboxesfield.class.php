@@ -31,13 +31,13 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
 use Session;
 use PluginFormcreatorQuestionRange;
 
-class CheckboxesField extends PluginFormcreatorField
+class CheckboxesField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

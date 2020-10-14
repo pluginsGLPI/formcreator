@@ -31,7 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use User;
 use Toolbox;
@@ -43,7 +43,7 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
  * users from the itemtype User or email addresses. Email addresses allows to
  * add actors who don't have an account in GLPI.
  */
-class ActorField extends PluginFormcreatorField
+class ActorField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

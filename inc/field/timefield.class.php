@@ -32,11 +32,11 @@
 namespace GlpiPlugin\Formcreator\Field;
 use DateTime;
 use Html;
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Session;
 use Toolbox;
 
-class TimeField extends PluginFormcreatorField
+class TimeField extends PluginFormcreatorAbstractField
 {
    const DATE_FORMAT = 'H:i';
 

@@ -31,12 +31,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
-class IpField extends PluginFormcreatorField
+class IpField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

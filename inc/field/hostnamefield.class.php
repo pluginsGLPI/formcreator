@@ -30,11 +30,11 @@
  */
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
 
-class HostnameField extends PluginFormcreatorField
+class HostnameField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

@@ -31,7 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Toolbox;
@@ -68,7 +68,7 @@ class TextareaField extends TextField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = PluginFormcreatorField::getDesignSpecializationField();
+      $common = PluginFormcreatorAbstractField::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [

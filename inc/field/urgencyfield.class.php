@@ -31,11 +31,11 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Ticket;
-class UrgencyField extends PluginFormcreatorField
+class UrgencyField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;
@@ -68,7 +68,7 @@ class UrgencyField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = PluginFormcreatorField::getDesignSpecializationField();
+      $common = PluginFormcreatorAbstractField::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [

@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorExportableTrait;
 
    static public $itemtype = 'itemtype';
    static public $items_id = 'items_id';

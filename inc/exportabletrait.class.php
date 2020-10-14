@@ -33,7 +33,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-trait PluginFormcreatorExportable
+trait PluginFormcreatorExportableTrait
 {
     /**
      * Insert the export of sub items in the export

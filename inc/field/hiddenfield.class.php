@@ -31,11 +31,11 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
 
-class HiddenField extends PluginFormcreatorField
+class HiddenField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

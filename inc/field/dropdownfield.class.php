@@ -31,7 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
 use Session;
@@ -50,7 +50,7 @@ use SLM;
 use OLA;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
-class DropdownField extends PluginFormcreatorField
+class DropdownField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       $itemtype = $this->getSubItemtype();

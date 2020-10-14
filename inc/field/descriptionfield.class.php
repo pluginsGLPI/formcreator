@@ -31,11 +31,11 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Session;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
-class DescriptionField extends PluginFormcreatorField
+class DescriptionField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;
