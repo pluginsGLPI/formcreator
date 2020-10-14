@@ -35,6 +35,9 @@ if (!defined('GLPI_ROOT')) {
 
 trait PluginFormcreatorExportableTrait
 {
+
+    protected $useAutomaticOrdering = true;
+
     /**
      * Insert the export of sub items in the export
      *

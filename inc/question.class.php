@@ -379,14 +379,16 @@ PluginFormcreatorConditionnableInterface
       }
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       // Get next row
+      if ($this->useAutomaticOrdering) {
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $maxRow = PluginFormcreatorCommon::getMax($this, [
-         $sectionFk => $input[$sectionFk]
-      ], 'row');
-      if ($maxRow === null) {
-         $input['row'] = 0;
-      } else {
-         $input['row'] = $maxRow + 1;
+         $maxRow = PluginFormcreatorCommon::getMax($this, [
+            $sectionFk => $input[$sectionFk]
+         ], 'row');
+         if ($maxRow === null) {
+            $input['row'] = 0;
+         } else {
+            $input['row'] = $maxRow + 1;
+         }
       }
 
       // generate a unique id
@@ -915,6 +917,7 @@ PluginFormcreatorConditionnableInterface
          );
          $item->update($input);
       } else {
+         $item->useAutomaticOrdering = false;
          unset($input['id']);
          $itemId = $item->add($input);
       }
