@@ -31,12 +31,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Toolbox;
 use DateTime;
-class DatetimeField extends PluginFormcreatorField
+class DatetimeField extends PluginFormcreatorAbstractField
 {
    /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
    protected $fields = null;

@@ -42,7 +42,7 @@ if (!defined('GLPI_ROOT')) {
  * question B
  */
 class PluginFormcreatorQuestionDependency
-extends PluginFormcreatorQuestionParameter
+extends PluginFormcreatorAbstractQuestionParameter
 {
 
    /** @var string $fieldtype type of field useable for the dependency */

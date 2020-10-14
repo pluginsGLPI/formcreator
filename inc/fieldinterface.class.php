@@ -166,14 +166,14 @@ interface PluginFormcreatorFieldInterface
    /**
     * Gets the parameters of the field
     *
-    * @return PluginFormcreatorQuestionParameter[]
+    * @return PluginFormcreatorAbstractQuestionParameter[]
     */
    public function getEmptyParameters();
 
    /**
     * Gets parameters of the field with their settings
     *
-    * @return PluginFormcreatorQuestionParameter[]
+    * @return PluginFormcreatorAbstractQuestionParameter[]
     */
    public function getParameters();
 

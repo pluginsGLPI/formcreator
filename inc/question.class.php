@@ -40,8 +40,8 @@ PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
-   use PluginFormcreatorConditionnable;
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorConditionnableTrait;
+   use PluginFormcreatorExportableTrait;
 
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';

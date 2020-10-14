@@ -49,7 +49,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    const STATUS_REFUSED = 102;
    const STATUS_ACCEPTED = 103;
 
-   /** @var null|PluginFormcreatorField[] fields of the form answers */
+   /** @var null|PluginFormcreatorAbstractField[] fields of the form answers */
    private $questionFields = null;
 
    /** @var boolean True if the answers are loaded and are valid */
@@ -975,7 +975,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_addItem() {
       // Save questions answers
       $formAnswerId = $this->getID();
-      /** @var PluginFormcreatorField $field */
+      /** @var PluginFormcreatorAbstractField $field */
       foreach ($this->questionFields as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
@@ -1015,7 +1015,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_updateItem($history = 1) {
       // Save questions answers
       $formAnswerId = $this->getID();
-      /** @var PluginFormcreatorField $field */
+      /** @var PluginFormcreatorAbstractField $field */
       foreach ($this->questionFields as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
@@ -1477,7 +1477,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * get all fields from a form
     *
     * @param integer $formId ID of the form where come the fileds to load
-    * @return PluginFormcreatorField[]
+    * @return PluginFormcreatorAbstractField[]
     */
    private function getQuestionFields($formId) {
       if ($this->questionFields !== null) {

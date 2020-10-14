@@ -31,14 +31,14 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
 use Session;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
 
-class FloatField extends PluginFormcreatorField
+class FloatField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

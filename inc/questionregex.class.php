@@ -42,7 +42,7 @@ if (!defined('GLPI_ROOT')) {
  * question B
  */
 class PluginFormcreatorQuestionRegex
-extends PluginFormcreatorQuestionParameter
+extends PluginFormcreatorAbstractQuestionParameter
 {
 
    protected $domId = 'plugin_formcreator_questionRegex';

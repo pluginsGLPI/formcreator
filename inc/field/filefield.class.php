@@ -31,7 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use Document;
 use Html;
 use Toolbox;
@@ -41,7 +41,7 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use PluginFormcreatorSection;
 use PluginFormcreatorQuestion;
 
-class FileField extends PluginFormcreatorField
+class FileField extends PluginFormcreatorAbstractField
 {
    /**@var $uploadData array uploads saved as documents   */
    private $uploadData = [];

@@ -33,7 +33,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-trait PluginFormcreatorConditionnable
+trait PluginFormcreatorConditionnableTrait
 {
    public function updateConditions($input) {
       if (!isset($input['show_rule'])) {

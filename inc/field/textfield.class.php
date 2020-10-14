@@ -32,13 +32,13 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use Html;
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
 use Session;
 use Toolbox;
 
-class TextField extends PluginFormcreatorField
+class TextField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

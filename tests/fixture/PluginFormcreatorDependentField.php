@@ -29,10 +29,10 @@
  * ---------------------------------------------------------------------
  */
 namespace GlpiPlugin\Formcreator\Field;
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use PluginFormcreatorQuestionDependency;
 
-class DependentField extends PluginFormcreatorField
+class DependentField extends PluginFormcreatorAbstractField
 {
    public function isPrerequisites() {
       return true;

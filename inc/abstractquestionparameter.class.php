@@ -33,11 +33,11 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorQuestionParameter
+abstract class PluginFormcreatorAbstractQuestionParameter
 extends CommonDBChild
 implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorExportableTrait;
 
    // From CommonDBRelation
    static public $itemtype       = PluginFormcreatorQuestion::class;

@@ -31,7 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorField;
+use PluginFormcreatorAbstractField;
 use AuthLDAP;
 use Dropdown;
 use Exception;

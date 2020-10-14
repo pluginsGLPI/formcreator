@@ -38,7 +38,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
 implements PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorExportableTrait;
 
    static public $itemtype_1           = 'itemtype';
    static public $items_id_1           = 'items_id';

@@ -40,8 +40,8 @@ PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
 PluginFormcreatorConditionnableInterface
 {
-   use PluginFormcreatorConditionnable;
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorConditionnableTrait;
+   use PluginFormcreatorExportableTrait;
 
    static $rightname = 'entity';
 
@@ -2238,7 +2238,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Get an array of instances of all fields for the form
     *
-    * @return PluginFormcreatorField[]
+    * @return PluginFormcreatorAbstractField[]
     */
    public function getFields() {
       $fields = [];
