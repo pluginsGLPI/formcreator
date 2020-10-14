@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Field\DropdownField;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -1114,7 +1116,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             }
          }
 
-         if ($this->questionFields[$questionId] instanceof PluginFormcreatorDropdownField) {
+         if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
          }
       }
