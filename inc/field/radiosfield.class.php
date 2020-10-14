@@ -105,7 +105,7 @@ class RadiosField extends PluginFormcreatorAbstractField
    public function getRenderedHtml($domain, $canEdit = true): string
    {
       if (!$canEdit) {
-         return $this->value;
+         return __($this->value, $domain);
       }
       $html         = '';
       $id           = $this->question->getID();
@@ -135,7 +135,7 @@ class RadiosField extends PluginFormcreatorAbstractField
                $html .= '</label>';
                $html .= '</span>';
                $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= $value;
+               $html .= __($value, $domain);
                $html .= '</label>';
                $html .= '</div>';
             }

@@ -106,7 +106,10 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       $html = '';
       if (!$canEdit) {
          if (count($this->value)) {
-            $html .= implode('<br />', $this->value);
+            foreach ($this->value as $value) {
+               $translatedValue[] = __($value, $domain);
+            }
+            $html .= implode('<br />', $translatedValue);
          }
          return $html;
       }
@@ -133,7 +136,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
                   'checked'       => in_array($value, $this->value)
                ]);
                $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= '&nbsp;' . $value;
+               $html .= '&nbsp;' . __($value, $domain);
                $html .= '</label>';
                $html .= "</div>";
             }
