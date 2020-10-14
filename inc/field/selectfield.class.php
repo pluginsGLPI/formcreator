@@ -51,7 +51,7 @@ class SelectField extends RadiosField
    public function getRenderedHtml($domain, $canEdit = true): string
    {
       if (!$canEdit) {
-         return nl2br($this->value) . PHP_EOL;
+         return nl2br(__($this->value, $domain)) . PHP_EOL;
       }
 
       $html         = '';
@@ -59,16 +59,16 @@ class SelectField extends RadiosField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $values       = $this->getAvailableValues();
-      $tab_values   = [];
+      $translatedValues   = [];
 
       if (!empty($this->question->fields['values'])) {
          foreach ($values as $value) {
             if ((trim($value) != '')) {
-               $tab_values[$value] = $value;
+               $translatedValues[$value] = __($value, $domain);
             }
          }
 
-         $html .= Dropdown::showFromArray($fieldName, $tab_values, [
+         $html .= Dropdown::showFromArray($fieldName, $translatedValues, [
             'display_emptychoice' => $this->question->fields['show_empty'] == 1,
             'value'     => $this->value,
             'values'    => [],
