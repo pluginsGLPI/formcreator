@@ -709,7 +709,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Display a list of all forms on the configuration page
     *
-    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
+    * @param  CommonGLPI $item         Instance of a CommonGLPI Item
     * @param  integer    $tabnum       Number of the current tab
     * @param  integer    $withtemplate
     *
@@ -718,14 +718,9 @@ PluginFormcreatorConditionnableInterface
     * @return null                     Nothing, just display the list
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      $uri = strrchr($_SERVER['HTTP_REFERER'], '/');
-      if (strpos($uri, '?')) {
-         $uri = substr($uri, 0, strpos($uri, '?'));
-      }
-      $uri = trim($uri, '/');
-
-      switch ($uri) {
-         case "form.form.php":
+      switch ($item->getType()) {
+         case PluginFormcreatorForm::getType():
+            /** @var PluginFormcreatorForm $item */
             switch ($tabnum) {
                case 1:
                   $item->showTargets($item->getID());
@@ -738,7 +733,7 @@ PluginFormcreatorConditionnableInterface
                   break;
             }
             break;
-         case 'central.php':
+         case Central::getType():
             $form = new static();
             $form->showForCentral();
             break;
