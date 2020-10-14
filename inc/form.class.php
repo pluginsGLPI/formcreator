@@ -1937,16 +1937,6 @@ PluginFormcreatorConditionnableInterface
       // add the form to the linker
       $linker->addObject($originalId, $item);
 
-      // sort sections
-      if (isset($input['_sections']) && is_array($input['_sections'])) {
-         usort($input['_sections'], function($a, $b) {
-            if ($a['order'] == $b['order']) {
-               return 0;
-            }
-            return ($a['order'] < $b['order']) ? -1 : 1;
-         });
-      }
-
       $subItems = [
          '_profiles'   => PluginFormcreatorForm_Profile::class,
          '_sections'   => PluginFormcreatorSection::class,
