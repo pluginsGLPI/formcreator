@@ -57,7 +57,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
 
    public function getRenderedHtml($domain, $canEdit = true): string
    {
-      return nl2br(html_entity_decode($this->question->fields['description']));
+      return nl2br(html_entity_decode(__($this->question->fields['description'], $domain)));
    }
 
    public function serializeValue(): string {
