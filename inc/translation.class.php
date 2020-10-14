@@ -96,7 +96,7 @@ class PluginFormcreatorTranslation extends CommonDBTM
       $translations['plugin_formcreator_load_check'] = 'plugin_formcreator_load_check';
       $translations = Toolbox::stripslashes_deep($translations);
       file_put_contents(
-         PluginFormcreatorForm::getTranslationFile($input['language'], $input[$formFk]),
+         PluginFormcreatorForm::getTranslationFile($input[$formFk], $input['language']),
          "<?php" . PHP_EOL . "return " . var_export($translations, true) . ";"
       );
 
@@ -157,7 +157,7 @@ class PluginFormcreatorTranslation extends CommonDBTM
       echo "</td><td colspan='2'>&nbsp;</td></tr>";
 
       if ($ID > 0) {
-         $translationFile = PluginFormcreatorForm::getTranslationFile($this->fields['language'], $item->getID());
+         $translationFile = PluginFormcreatorForm::getTranslationFile($item->getID(), $this->fields['language']);
          if (is_readable($translationFile)) {
             $translations = include $translationFile;
          }

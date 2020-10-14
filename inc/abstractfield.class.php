@@ -313,6 +313,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $additions;
    }
 
+   /**
+    * get the question matching the  field
+    *
+    * @return PluginFormcreatorQuestion
+    */
    public function getQuestion()
    {
       return $this->question;
@@ -335,7 +340,8 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $isValid;
    }
 
-   public function getTranslatableStrings() {
+   public function getTranslatableStrings()
+   {
       $strings = [
          'itemlink' => [],
          'string'   => [],
