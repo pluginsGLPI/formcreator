@@ -65,7 +65,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       ];
 
       $tab[] = [
-         'id'                 => '4',
+         'id'                 => '5',
          'table'              => $this::getTable(),
          'field'              => 'range_max',
          'name'               => __('maximum range', 'formcreator'),
