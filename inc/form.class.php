@@ -1219,7 +1219,7 @@ PluginFormcreatorTranslatableInterface
       . '>';
 
       // form title
-      $domain = self::getTranslationDomain($_SESSION['glpilanguage'], $formId);
+      $domain = self::getTranslationDomain($formId);
       echo "<h1 class='form-title'>";
       echo __($this->fields['name'], $domain) . "&nbsp;";
       echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
@@ -2426,7 +2426,7 @@ PluginFormcreatorTranslatableInterface
             Laminas\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
             static function (Laminas\EventManager\EventInterface $event) use ($formId, $language, $domain, $TRANSLATE) {
                if ($event->getParams()['text_domain'] == $domain) {
-                  $file = PluginFormcreatorForm::getTranslationFile($language, $formId);
+                  $file = PluginFormcreatorForm::getTranslationFile($formId);
                   if (!is_readable($file)) {
                      return;
                   }
@@ -2528,21 +2528,24 @@ PluginFormcreatorTranslatableInterface
 
    /**
     * Get the translation file for a form for a given language
-    * @param string  $language   a language in the form fr_FR, rn_US
     * @param int     $id         Form ID
+    * @param string  $language   a language in the form fr_FR, rn_US
     * @return string             filename of the language resource
     */
-   public static function getTranslationFile($language, $id) {
+   public static function getTranslationFile($id, $language = '') {
       $file = implode('/', [
          GLPI_LOCAL_I18N_DIR,
          'formcreator',
-         self::getTranslationDomain($language, $id)
+         self::getTranslationDomain($id, $language)
       ]) . '.php';
 
       return $file;
    }
 
-   public static function getTranslationDomain($language, $id) {
+   public static function getTranslationDomain($id, $language = '') {
+      if ($language == '') {
+         $language = $_SESSION['glpilanguage'];
+      }
       return "form_${id}_${language}";
    }
 }
