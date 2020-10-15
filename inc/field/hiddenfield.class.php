@@ -119,8 +119,7 @@ class HiddenField extends PluginFormcreatorAbstractField
       return _n('Hidden field', 'Hidden fields', 1);
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       return str_replace("\n", '\r\n', Toolbox::addslashes_deep($this->value));
    }
 

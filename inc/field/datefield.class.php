@@ -121,7 +121,7 @@ class DateField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
+   public function getValueForTargetText($domain, $richText): string
    {
       return Toolbox::addslashes_deep(Html::convDate($this->value));
    }

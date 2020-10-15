@@ -291,7 +291,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText): string
+   public function getValueForTargetText($domain, $richText): string
    {
       $value = [];
       $values = $this->getAvailableValues();
@@ -302,7 +302,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       foreach ($this->value as $input) {
          if (in_array($input, $values)) {
-            $value[] = $input;
+            $value[] = __($input, $domain);
          }
       }
 

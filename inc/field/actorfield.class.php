@@ -198,7 +198,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return implode("\r\n", $value);
    }
 
-   public function getValueForTargetText($richText): string
+   public function getValueForTargetText($domain, $richText): string
    {
       $value = [];
       foreach ($this->value as $item) {

@@ -227,9 +227,9 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
+   public function getValueForTargetText($domain, $richText): string
    {
-      return $this->value;
+      return __($this->value, $domain);
    }
 
    public function moveUploads()

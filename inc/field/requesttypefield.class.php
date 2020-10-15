@@ -180,8 +180,7 @@ class RequestTypeField extends SelectField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $available = $this->getAvailableValues();
       return $available[$this->value];
    }

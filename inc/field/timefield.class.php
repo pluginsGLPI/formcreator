@@ -85,7 +85,8 @@ class TimeField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -121,7 +122,7 @@ class TimeField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
+   public function getValueForTargetText($domain, $richText): string
    {
       $date = DateTime::createFromFormat("H:i:s", $this->value);
       if ($date === false) {

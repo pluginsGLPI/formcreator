@@ -1094,6 +1094,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form = $this->getForm();
       $this->getQuestionFields($form->getID());
       $this->deserializeAnswers();
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
 
       foreach ($this->questionFields as $questionId => $field) {
          $question = $field->getQuestion();
@@ -1101,7 +1102,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $value = '';
          if (PluginFormcreatorFields::isVisible($question, $this->questionFields)) {
             $name  = $question->fields['name'];
-            $value = $this->questionFields[$questionId]->getValueForTargetText($richText);
+            $value = $this->questionFields[$questionId]->getValueForTargetText($domain, $richText);
          }
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);

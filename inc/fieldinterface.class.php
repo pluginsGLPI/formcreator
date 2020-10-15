@@ -112,11 +112,12 @@ interface PluginFormcreatorFieldInterface
    /**
     * Get the value of the field for display in a target
     *
-    * @param  boolean $richText    Enable rich text mode for field rendering
+    * @param string  $domain      locales domain
+    * @param boolean $richText    Enable rich text mode for field rendering
     *
     * @return string
     */
-   public function getValueForTargetText($richText) : string;
+   public function getValueForTargetText($domain, $richText): string;
 
    /**
     * Move uploaded files and make Document items
