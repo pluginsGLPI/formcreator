@@ -88,7 +88,7 @@ class HostnameField extends PluginFormcreatorAbstractField
       return '';
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($domain, $richText): string {
       return $this->value;
    }
 
