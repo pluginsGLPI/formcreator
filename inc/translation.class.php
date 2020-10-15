@@ -115,6 +115,18 @@ class PluginFormcreatorTranslation extends CommonDBTM
       $TRANSLATE->clearCache($domain, $this->fields['language']);
    }
 
+   public function pre_deleteItem() {
+      // Delete translation file
+      $file = PluginFormcreatorForm::getTranslationFile(
+         $this->fields[PluginFormcreatorForm::getForeignKeyField()],
+         $this->fields['language']
+      );
+      if (file_exists($file)) {
+         return unlink($file);
+      }
+      return true;
+   }
+
    public function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
