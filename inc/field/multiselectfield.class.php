@@ -40,13 +40,13 @@ class MultiSelectField extends CheckboxesField
    public function getRenderedHtml($domain, $canEdit = true): string
    {
       $html         = '';
+      $translatedValues = [];
       if (!$canEdit) {
          if (count($this->value)) {
-            $translatedValues = [];
             foreach ($this->value as $value) {
-               $translatedValue[] = __($value, $domain);
+               $translatedValues[] = __($value, $domain);
             }
-            $html .= implode('<br />', $translatedValue);
+            $html .= implode('<br />', $translatedValues);
          }
          return $html;
       }
