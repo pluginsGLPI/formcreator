@@ -278,7 +278,9 @@ class PluginFormcreatorTranslation extends CommonDBTM
       return true;
    }
 
-   // Note : reset translation cache : Config::getCache('cache_trans')->clear();
-
-   // $translator->clearCache('default', 'en_US');
+   public function getForbiddenStandardMassiveAction() {
+      return [
+         'update', 'clone', 'add_note'
+      ];
+   }
 }
