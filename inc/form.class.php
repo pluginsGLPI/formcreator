@@ -2404,13 +2404,13 @@ PluginFormcreatorTranslatableInterface
       // Load translation for the current language if different from origianl form's language
       $language = $_SESSION['glpilanguage'];
       $formId = $this->getID();
-      if ($language != $this->fields['language'] /* && !isset($_SESSION['formcreator']['languages'][$formId][$language])*/) {
+      if ($language != $this->fields['language']) {
          $eventManagerEnabled = $TRANSLATE->isEventManagerEnabled();
          $TRANSLATE->enableEventManager();
          $domain = PluginFormcreatorForm::getTranslationDomain($language, $formId);
          $TRANSLATE->getEventManager()->attach(
             Laminas\I18n\Translator\Translator::EVENT_MISSING_TRANSLATION,
-            static function (Laminas\EventManager\EventInterface $event) use ($formId, $language, $domain, $TRANSLATE) {
+            static function (Laminas\EventManager\EventInterface $event) use ($formId, $domain, $TRANSLATE) {
                if ($event->getParams()['text_domain'] == $domain) {
                   $file = PluginFormcreatorForm::getTranslationFile($formId);
                   if (!is_readable($file)) {

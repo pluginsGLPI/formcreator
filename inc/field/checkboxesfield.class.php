@@ -106,6 +106,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       $html = '';
       if (!$canEdit) {
          if (count($this->value)) {
+            $translatedValue = [];
             foreach ($this->value as $value) {
                $translatedValue[] = __($value, $domain);
             }
