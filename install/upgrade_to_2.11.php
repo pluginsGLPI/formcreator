@@ -135,6 +135,8 @@ class PluginFormcreatorUpgradeTo2_11 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addPostQuery("ALTER TABLE `$table` MODIFY `uuid` varchar(255) DEFAULT NULL AFTER `ola_question_ttr`");
       $migration->migrationOneTable($table);
+      $migration->changeField($table, 'type_rule', 'type_rule', 'integer', ['value' => '0']);
+
 
       // sort setting in entityes
       $table = 'glpi_plugin_formcreator_entityconfigs';
