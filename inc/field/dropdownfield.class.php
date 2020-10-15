@@ -406,7 +406,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($domain, $richText): string
+   {
       $DbUtil = new DbUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {

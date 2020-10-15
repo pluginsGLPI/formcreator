@@ -197,12 +197,8 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->value = array_shift($this->value);
    }
 
-<<<<<<< HEAD
-   public function serializeValue():string {
-=======
    public function serializeValue(): string
    {
->>>>>>> f10ec68e... feat: translatable forms
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -224,8 +220,9 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string {
-      return $this->value;
+   public function getValueForTargetText($domain, $richText): string
+   {
+      return __($this->value, $domain);
    }
 
    public function moveUploads() {
