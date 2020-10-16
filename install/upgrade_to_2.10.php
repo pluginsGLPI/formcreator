@@ -55,7 +55,7 @@ class PluginFormcreatorUpgradeTo2_10 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->changeField($table, 'type', 'type_question', 'integer', ['after' => 'target_name', 'value' => '0']);
       $migration->migrationOneTable($table);
-      $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '1']);
+      $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '0']);
 
       // conditions on targets
       $table = 'glpi_plugin_formcreator_targetchanges';
