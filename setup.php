@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.10.2');
+define('PLUGIN_FORMCREATOR_VERSION', '2.10.3');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.10');
 // is or is not an official release of the plugin
@@ -154,6 +154,9 @@ function plugin_init_formcreator() {
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_purge_ticket'
    ];
+   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation'
+   ];
    $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
       PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
       PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
@@ -254,6 +257,8 @@ function plugin_init_formcreator() {
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
+               Html::requireJs('photoswipe');
+               echo Html::css('public/lib/photoswipe.css');
                Html::requireJs('tinymce');
                break;
             }

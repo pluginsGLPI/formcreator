@@ -58,7 +58,7 @@ class PluginFormcreatorLinker
     *
     * @param integer $originalId
     * @param string $itemtype
-    * @return PluginFormcreatorExportableInterface
+    * @return PluginFormcreatorExportableInterface|false
     */
    public function getObject($originalId, $itemtype) {
       if (!isset($this->imported[$itemtype][$originalId])) {
@@ -82,7 +82,7 @@ class PluginFormcreatorLinker
     * @param string $itemtype itemtype of object to find
     * @param integer $id ID of object to fiind
     * @param string $idField fieldname where the ID is searched for
-    * @return void
+    * @return CommonDBTM
     */
    public function findObject($itemtype, $idField, $id) {
       if (!strpos($itemtype, 'PluginFormcreator') !== 0) {

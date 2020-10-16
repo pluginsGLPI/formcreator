@@ -163,7 +163,7 @@ class PluginFormcreatorWizard {
       self::showHeaderTopContent();
       echo '</div>'; //.formcreator_header_top
 
-      echo '<div id="page" class="plugin_formcreator_page">';
+      echo '<main id="page" class="plugin_formcreator_page">';
 
       // call static function callcron() every 5min
       CronTask::callCron();

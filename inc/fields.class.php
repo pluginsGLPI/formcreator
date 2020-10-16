@@ -170,44 +170,38 @@ class PluginFormcreatorFields
       // Get conditions to show or hide the item
       $conditions = [];
       $condition = new PluginFormcreatorCondition();
-      foreach ($condition->getConditionsFromItem($item) as $condition) {
-         $conditions[] = [
-            'logic'    => $condition->fields['show_logic'],
-            'field'    => $condition->fields['plugin_formcreator_questions_id'],
-            'operator' => $condition->fields['show_condition'],
-            'value'    => $condition->fields['show_value']
-         ];
-      }
+      $conditions = $condition->getConditionsFromItem($item);
       if ($getParentVisibility() === false || count($conditions) < 1) {
          // No condition defined or parent hidden
+         self::$visibility[$itemtype][$itemId] = false;
          return self::$visibility[$itemtype][$itemId];
       }
       self::$visibility[$itemtype][$itemId] = null;
 
       // Force the first logic operator to OR
-      $conditions[0]['logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;
+      $conditions[0]->fields['show_logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;
 
       $return                       = false;
       $lowPrecedenceReturnPart      = false;
       $lowPrecedenceLogic           = 'OR';
       foreach ($conditions as $order => $condition) {
-         $currentLogic = $condition['logic'];
+         $currentLogic = $condition->fields['show_logic'];
          if (isset($conditions[$order + 1])) {
-            $nextLogic = $conditions[$order + 1]['logic'];
+            $nextLogic = $conditions[$order + 1]->fields['show_logic'];
          } else {
             // To ensure the low precedence return part is used at the end of the whole evaluation
             $nextLogic = PluginFormcreatorCondition::SHOW_LOGIC_OR;
          }
 
-         if (!isset($fields[$condition['field']])) {
+         if (!isset($fields[$condition->fields['plugin_formcreator_questions_id']])) {
             // The field does not exists, give up and make the field visible
             return true;
          }
-         $conditionField = $fields[$condition['field']];
+         $conditionField = $fields[$condition->fields['plugin_formcreator_questions_id']];
 
          $value = false;
-         if (in_array($condition['operator'], [PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE, PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_INVISIBLE])) {
-            switch ($condition['operator']) {
+         if (in_array($condition->fields['show_condition'], [PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE, PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_INVISIBLE])) {
+            switch ($condition->fields['show_condition']) {
                case PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE:
                   if (!$conditionField->isPrerequisites()) {
                      self::$visibility[$itemtype][$itemId] = false;
@@ -233,14 +227,14 @@ class PluginFormcreatorFields
             }
          } else {
             if (self::isVisible($conditionField->getQuestion(), $fields)) {
-               switch ($condition['operator']) {
+               switch ($condition->fields['show_condition']) {
                   case PluginFormcreatorCondition::SHOW_CONDITION_NE :
                      if (!$conditionField->isPrerequisites()) {
                         self::$visibility[$itemtype][$itemId] = true;
                         return self::$visibility[$itemtype][$itemId];
                      }
                      try {
-                        $value = $conditionField->notEquals($condition['value']);
+                        $value = $conditionField->notEquals($condition->fields['show_value']);
                      } catch (PluginFormcreatorComparisonException $e) {
                         $value = false;
                      }
@@ -252,7 +246,7 @@ class PluginFormcreatorFields
                         return self::$visibility[$itemtype][$itemId];
                      }
                      try {
-                        $value = $conditionField->equals($condition['value']);
+                        $value = $conditionField->equals($condition->fields['show_value']);
                      } catch (PluginFormcreatorComparisonException $e) {
                         $value = false;
                      }
@@ -264,7 +258,7 @@ class PluginFormcreatorFields
                         return self::$visibility[$itemtype][$itemId];
                      }
                      try {
-                        $value = $conditionField->greaterThan($condition['value']);
+                        $value = $conditionField->greaterThan($condition->fields['show_value']);
                      } catch (PluginFormcreatorComparisonException $e) {
                         $value = false;
                      }
@@ -276,7 +270,7 @@ class PluginFormcreatorFields
                         return self::$visibility[$itemtype][$itemId];
                      }
                      try {
-                        $value = $conditionField->lessThan($condition['value']);
+                        $value = $conditionField->lessThan($condition->fields['show_value']);
                      } catch (PluginFormcreatorComparisonException $e) {
                         $value = false;
                      }
@@ -288,8 +282,8 @@ class PluginFormcreatorFields
                         return self::$visibility[$itemtype][$itemId];
                      }
                      try {
-                        $value = ($conditionField->greaterThan($condition['value'])
-                                 || $conditionField->equals($condition['value']));
+                        $value = ($conditionField->greaterThan($condition->fields['show_value'])
+                        || $conditionField->equals($condition->fields['show_value']));
                      } catch (PluginFormcreatorComparisonException $e) {
                         $value = false;
                      }
@@ -301,8 +295,8 @@ class PluginFormcreatorFields
                         return self::$visibility[$itemtype][$itemId];
                      }
                      try {
-                        $value = ($conditionField->lessThan($condition['value'])
-                                 || $conditionField->equals($condition['value']));
+                        $value = ($conditionField->lessThan($condition->fields['show_value'])
+                        || $conditionField->equals($condition->fields['show_value']));
                      } catch (PluginFormcreatorComparisonException $e) {
                         $value = false;
                      }

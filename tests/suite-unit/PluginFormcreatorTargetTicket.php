@@ -1113,7 +1113,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->boolean($instance->isEntityAssign())->isFalse();
    }
 
-   public function testdeleteObsoleteItems() {
+   public function testDeleteObsoleteItems() {
       $form = $this->getForm();
       $targetTicket1 = $this->getTargetTicket([
          'plugin_formcreator_forms_id' => $form->getID(),
@@ -1128,5 +1128,55 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->boolean($checkDeleted->getFromDB($targetTicket1->getID()))->isFalse();
       $checkDeleted = $this->newTestedInstance();
       $this->boolean($checkDeleted->getFromDB($targetTicket2->getID()))->isTrue();
+   }
+
+   public function providerPrepareInputForAdd() {
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form = $this->getForm();
+      $name = $this->getUniqueString();
+      return [
+         [
+            'input'    => [
+               $formFk => $form->getID(),
+               'name' => $name,
+            ],
+            'expected' => [
+               $formFk => $form->getID(),
+               'name' => $name,
+               'target_name' => $name,
+               'content' => '##FULLFORM##',
+               'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
+               'type_question' => \Ticket::INCIDENT_TYPE
+            ],
+         ],
+         [
+            'input'    => [
+               $formFk => $form->getID(),
+               'name' => $name,
+               'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
+               'type_question' => \Ticket::DEMAND_TYPE
+            ],
+            'expected' => [
+               $formFk => $form->getID(),
+               'name' => $name,
+               'target_name' => $name,
+               'content' => '##FULLFORM##',
+               'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
+               'type_question' => \Ticket::DEMAND_TYPE
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareInputForAdd
+    *
+    */
+   public function testPrepareInputForAdd($input, $expected) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->prepareInputForAdd($input);
+      $this->array($output)->hasKey('uuid');
+      unset($output['uuid']);
+      $this->array($output)->isEqualTo($expected);
    }
 }

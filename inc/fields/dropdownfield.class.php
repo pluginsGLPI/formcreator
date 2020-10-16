@@ -145,7 +145,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
                         'comments' => false,
-                        'entity'   => $_SESSION['glpiactiveentities'],
+                        'entity'   => $_SESSION['glpiactive_entity'], // TODO: replace by Session::getActiveEntity when dropping GLPI 9.4
                         'displaywith' => ['id'],
                         'rand'     => $rand];
 
@@ -216,7 +216,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                               $groupFk => $groups,
                            ] + $dparams_cond_crit
                         ];
-                        $groups = implode("', '", $groups);
                      }
                      // Check if helpdesk availability is fine tunable on a per item basis
                      if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
@@ -453,7 +452,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             ],
          ],
          'WHERE' => [
-            $groupUserTable . '.id' => $userID,
+            $groupUserTable . '.users_id' => $userID,
          ] + $dbUtil->getEntitiesRestrictCriteria(
             $groupTable,
             '',
@@ -655,7 +654,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<i class="fa fa-caret-down" aria-hidden="true"></i>';
+      return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
 
    /**

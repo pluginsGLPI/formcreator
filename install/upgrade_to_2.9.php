@@ -64,7 +64,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                case 'PluginFormcreatorTargetTicket':
                   $table = 'glpi_plugin_formcreator_targettickets';
                   break;
-   
+
                case 'PluginFormcreatorTargetChange':
                   $table = 'glpi_plugin_formcreator_targetchanges';
                   break;
@@ -267,6 +267,8 @@ class PluginFormcreatorUpgradeTo2_9 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
       $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
+
+      // more choice for type of ticket
       $migration->addField($table, 'type', 'integer', ['after' => 'target_name', 'value' => '1']);
 
       $table = 'glpi_plugin_formcreator_forms';
@@ -286,7 +288,7 @@ class PluginFormcreatorUpgradeTo2_9 {
       }
       $migration->addField($table, 'itemtype', 'string', ['after' => 'id', 'value' => '', 'comment' => 'itemtype of the item affected by the condition']);;
       if (!$DB->fieldExists($table, 'items_id' )) {
-         // changefield would drop plugin_formcreator_questions_id if it already exists, this is not wanted because of show_field rename 
+         // changefield would drop plugin_formcreator_questions_id if it already exists, this is not wanted because of show_field rename
          $migration->changeField($table, 'plugin_formcreator_questions_id', 'items_id', 'integer', ['comment' => 'item ID of the item affected by the condition']);
       }
       $migration->migrationOneTable($table);
@@ -363,7 +365,7 @@ class PluginFormcreatorUpgradeTo2_9 {
          $this->migration->changeField(
             $table,
             "new_$field",
-            $field, 
+            $field,
             'integer',
             $options
          );

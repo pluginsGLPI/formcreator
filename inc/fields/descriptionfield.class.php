@@ -67,7 +67,12 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return '';
+      $text = $this->question->fields['description'];
+      if (!$richText) {
+         $text = nl2br(strip_tags(html_entity_decode($text)));
+      }
+
+      return $text;
    }
 
    public function moveUploads() {}
@@ -132,6 +137,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-description-field.png" title="" />';
+      return '<i class="fas fa-align-left" aria-hidden="true"></i>';
    }
 }

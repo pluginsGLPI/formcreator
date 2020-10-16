@@ -153,7 +153,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function prepareQuestionInputForSave($input) {
-      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
+      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input['default_values']));
       return $input;
    }
 
@@ -213,6 +213,6 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-textarea-field.png" title="" />';
+      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
    }
 }

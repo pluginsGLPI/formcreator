@@ -915,7 +915,7 @@ function pluginFormcreatorInitializeField(fieldName, rand) {
  */
 function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
    var field = $('select[name="' + fieldName + '[]"]');
-   dropdownMax = <?php echo $CFG_GLPI['dropdown_max'] ?>;
+   var dropdownMax = CFG_GLPI['dropdown_max'];
    field.select2({
       width: '80%',
       minimumInputLength: 0,

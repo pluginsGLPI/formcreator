@@ -43,11 +43,11 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
             Computer::class         => Computer::getTypeName(2),
             Monitor::class          => Monitor::getTypeName(2),
             Software::class         => Software::getTypeName(2),
-            Networkequipment::class => Networkequipment::getTypeName(2),
+            NetworkEquipment::class => Networkequipment::getTypeName(2),
             Peripheral::class       => Peripheral::getTypeName(2),
             Printer::class          => Printer::getTypeName(2),
-            Cartridgeitem::class    => Cartridgeitem::getTypeName(2),
-            Consumableitem::class   => Consumableitem::getTypeName(2),
+            CartridgeItem::class    => CartridgeItem::getTypeName(2),
+            ConsumableItem::class   => ConsumableItem::getTypeName(2),
             Phone::class            => Phone::getTypeName(2),
             Line::class             => Line::getTypeName(2)],
          __("Assistance") => [
@@ -179,9 +179,5 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 
    public function isAnonymousFormCompatible() {
       return false;
-   }
-
-   public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-glpiselect-field.png" title="" />';
    }
 }

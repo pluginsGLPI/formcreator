@@ -189,7 +189,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       if (!$success) {
          return [];
       }
-      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
+      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input['default_values']));
 
       return $input;
    }
@@ -262,6 +262,6 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      return '<img src="' . FORMCREATOR_ROOTDOC . '/pics/ui-text-field.png" title="" />';
+      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
    }
 }

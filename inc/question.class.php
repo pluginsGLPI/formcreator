@@ -142,7 +142,7 @@ PluginFormcreatorConditionnableInterface
             'itemtype' => PluginFormcreatorSection::getType(),
             'items_id' => $section->getID(),
          ]);
-         echo "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
+         echo "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
 
          echo $section->fields['name'];
          echo '</a>';
@@ -202,7 +202,7 @@ PluginFormcreatorConditionnableInterface
                'itemtype' => PluginFormcreatorQuestion::getType(),
                'items_id' => $question->getID(),
             ]);
-            echo "<sup class='plugin_formcreator_conditions_count'>$nb</sup>";
+            echo "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
 
             echo $question->fields['name'];
             echo "<a>";
