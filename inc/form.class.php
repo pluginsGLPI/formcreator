@@ -1261,6 +1261,7 @@ PluginFormcreatorConditionnableInterface
             echo '<div class="form-group required liste" id="form-validator">';
             echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
             Dropdown::showFromArray('formcreator_validator', $validators);
+            echo '</div>';
          }
       }
 
