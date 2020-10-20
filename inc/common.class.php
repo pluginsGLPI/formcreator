@@ -214,18 +214,54 @@ class PluginFormcreatorCommon {
 
    /**
     * Get the status to set for an issue matching a ticket
+    * Tightly related to SQL query in SyncIssues automatic actions
+    *
+    * Conversion matrix
+    *
+    *                               Validation Status
+    *                +-------------+---------+---------+----------+
+    *                |NULL or NONE | WAITING | REFUSED | ACCEPTED |
+    *     + ---------+-------------+---------+---------+----------+
+    * T S | INCOMING |     T            V          V         T
+    * i t | ASSIGNED |     T            V          V         T
+    * c a | PLANNED  |     T            V          V         T
+    * k t | WAITING  |     T            V          V         T
+    * e u | SOLVED   |     T            V          T         T
+    * t s | CLOSED   |     T            V          T         T
+    *
+    * T = status picked from Ticket
+    * V = status picked from Validation
+    *
     * @param Ticket $item
     * @return integer
     */
    public static function getTicketStatusForIssue(Ticket $item) {
-      $ticketValidation = new TicketValidation();
-      $ticketValidation->getFromDBByCrit([
+      $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
-      ]);
+      ], [
+         'timeline_position ASC'
+      ], 1);
+      $ticketValidation = new TicketValidation();
+      if (count($ticketValidations)) {
+         $row = array_shift($ticketValidation);
+         $ticketValidation->getFromDB($row['id']);
+      }
+
       $status = $item->fields['status'];
       $user = 0;
       if (!$ticketValidation->isNewItem()) {
          $user = $ticketValidation->fields['users_id_validate'];
+         switch ($ticketValidation->fields['status']) {
+            case CommonITILValidation::WAITING:
+               $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
+               break;
+
+            case CommonITILValidation::REFUSED:
+               if ($item->fields['status'] != Ticket::SOLVED && $item->fields['status'] != Ticket::CLOSED) {
+                  $status = PluginFormcreatorFormAnswer::STATUS_REFUSED;
+               }
+               break;
+         }
       }
 
       return ['status' => $status, 'user' => $user];
