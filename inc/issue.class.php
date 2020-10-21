@@ -68,6 +68,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return 1;
    }
 
+   /**
+    * Sync issues table
+    *
+    * @return int
+    */
    public static function syncIssues() {
       global $DB;
       $volume = 0;
