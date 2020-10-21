@@ -61,9 +61,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @return number
     */
    public static function cronSyncIssues(CronTask $task) {
-      global $DB;
 
       $task->log("Sync issues from forms answers and tickets");
+      $task->setVolume(self::syncIssues());
+
+      return 1;
+   }
+
+   public static function syncIssues() {
+      global $DB;
       $volume = 0;
 
       // Request which merges tickets and formanswers
@@ -198,7 +204,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $union = new QueryUnion([$query1, $query2], true);
       $rawQuery = $union->getQuery();
 
-      $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($rawQuery)";
+      $countQuery = "SELECT COUNT(*) AS `cpt` FROM $rawQuery";
       $result = $DB->query($countQuery);
       if ($result !== false) {
          if (version_compare(GLPI_VERSION, '9.5') < 0) {
@@ -210,14 +216,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $table = static::getTable();
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
-               $DB->query("INSERT INTO `$table` SELECT * FROM ($rawQuery)");
+               $DB->query("INSERT INTO `$table` SELECT * FROM $rawQuery");
                $volume = 1;
             }
          }
       }
-      $task->setVolume($volume);
 
-      return 1;
+      return $volume;
    }
 
    public static function hook_update_ticket(CommonDBTM $item) {
