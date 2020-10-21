@@ -143,7 +143,8 @@ function plugin_init_formcreator() {
       Ticket::class => 'plugin_formcreator_hook_add_ticket'
    ];
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_update_ticket'
+      Ticket::class => 'plugin_formcreator_hook_update_ticket',
+      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
@@ -152,10 +153,8 @@ function plugin_init_formcreator() {
       Ticket::class => 'plugin_formcreator_hook_restore_ticket'
    ];
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_purge_ticket'
-   ];
-   $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation'
+      Ticket::class => 'plugin_formcreator_hook_purge_ticket',
+      TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
    ];
    $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
       PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
