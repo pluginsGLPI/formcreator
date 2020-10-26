@@ -204,6 +204,9 @@ function plugin_init_formcreator() {
             ];
             foreach ($pages as $srcPage => $dstPage) {
                if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
+                  if ($srcPage == 'front/reservationitem.php') {
+                     $_SESSION['plugin_formcreator']['redirected']['POST'] = $_POST;
+                  }
                   Html::redirect($dstPage);
                   break;
                }
