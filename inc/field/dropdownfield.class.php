@@ -196,7 +196,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          'value'    => $this->value,
          'display'  => false,
          'comments' => false,
-         'entity'   => $_SESSION['glpiactive_entity'], // TODO: replace by Session::getActiveEntity when dropping GLPI 9.4
+         'entity'   => $_SESSION['glpiactiveentities'],
          'displaywith' => ['id'],
       ];
 
@@ -220,6 +220,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             break;
 
          case Entity::class:
+         case Document::class:
             unset($dparams['entity']);
 
          case User::class:
