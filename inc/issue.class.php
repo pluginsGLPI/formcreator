@@ -211,20 +211,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $countQuery = "SELECT COUNT(*) AS `cpt` FROM $rawQuery";
       $result = $DB->query($countQuery);
-      if ($result !== false) {
-         if (version_compare(GLPI_VERSION, '9.5') < 0) {
-            $fa = 'fetch_assoc';
-         } else {
-            $fa = 'fetchAssoc';
-         }
-         $count = $DB->$fa($result);
-         $table = static::getTable();
-         if (countElementsInTable($table) != $count['cpt']) {
-            if ($DB->query("TRUNCATE `$table`")) {
-               $DB->query("INSERT INTO `$table` SELECT * FROM $rawQuery");
-               $volume = 1;
-            }
-         }
+      if ($result === false) {
+         return 0;
+      }
+
+      if (version_compare(GLPI_VERSION, '9.5') < 0) {
+         $fa = 'fetch_assoc';
+      } else {
+         $fa = 'fetchAssoc';
+      }
+      $count = $DB->$fa($result);
+      $table = static::getTable();
+      if (countElementsInTable($table) == $count['cpt']) {
+         return 0;
+      }
+
+      $volume = 0;
+      if ($DB->query("TRUNCATE `$table`")) {
+         $DB->query("INSERT INTO `$table` SELECT * FROM $rawQuery");
+         $volume = 1;
       }
 
       return $volume;
