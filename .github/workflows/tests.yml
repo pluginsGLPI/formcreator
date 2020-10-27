@@ -55,8 +55,10 @@ jobs:
         run: |
           which php
           which mysql
+          which composer
           php --version
           mysql --version
+          composer --version
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Run tests"
