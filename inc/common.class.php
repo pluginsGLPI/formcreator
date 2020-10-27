@@ -39,7 +39,12 @@ class PluginFormcreatorCommon {
 
       $enum = [];
       if ($res = $DB->query( "SHOW COLUMNS FROM `$table` WHERE Field = '$field'" )) {
-         $data = $DB->fetch_array($res);
+         if (version_compare(GLPI_VERSION, '9.5') >= 0) {
+            $fa = 'fetchArray';
+         } else {
+            $fa = 'fetch_array';
+         }
+         $data = $DB->$fa($res);
          $type = $data['Type'];
          $matches = null;
          preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
