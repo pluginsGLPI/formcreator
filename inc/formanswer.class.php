@@ -764,7 +764,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Update questions answers
          if ($status == self::STATUS_WAITING) {
-            foreach ($questions as $questionId => $question) {
+            foreach ($fields as $questionId => $field) {
+               $field->moveUploads();
                $answer = new PluginFormcreatorAnswer();
                $answer->getFromDBByCrit([
                   'plugin_formcreator_formanswers_id' => $formanswers_id,
