@@ -54,7 +54,7 @@ At the same time, the plugin allow the creation of one or more tickets when the 
 
 | **LTS** | **Bleeding Edge** |
 |:---:|:---:|
-| [![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg?branch=master)](https://travis-ci.org/pluginsGLPI/formcreator) | [![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg?branch=develop)](https://travis-ci.org/pluginsGLPI/formcreator) |
+| ![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=support%2F2.10.0) | ![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=develop) |
 
 ## Documentation
 
