@@ -20,7 +20,11 @@ install_glpi() {
    echo Installing GLPI
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
+   echo Downloading dependencies
+   composer remove fzaninotto/faker
+   composer install --dev fzaninotto/faker
    composer install --no-dev --no-interaction
+   ls -la .*
    if [ -e bin/console ]; then php bin/console dependencies install; fi
    if [ -e bin/console ]; then php bin/console glpi:system:check_requirements; fi
    if [ ! -e bin/console ]; then composer install --no-dev; fi
