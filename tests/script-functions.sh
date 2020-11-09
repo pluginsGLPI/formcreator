@@ -2,6 +2,7 @@
 
 NOCOVERAGE="-ncc"
 COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation"
+COMPOSER=`which composer`
 
 # init databases
 init_databases() {
@@ -17,13 +18,16 @@ init_databases() {
 
 # GLPI install
 install_glpi() {
+   if [ "$GLPI_BRANCH" = '9.4/bugfixes' ]; then
+      echo "Downgrading to composer 1"
+      sudo wget https://getcomposer.org/composer-1.phar -O "$COMPOSER"
+   fi
    echo Installing GLPI
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
    composer install --no-dev --no-interaction
-   if [ -e bin/console ]; then php bin/console dependencies install; fi
-   if [ -e bin/console ]; then php bin/console glpi:system:check_requirements; fi
-   if [ ! -e bin/console ]; then composer install --no-dev; fi
+   php bin/console dependencies install
+   php bin/console glpi:system:check_requirements
    mkdir -p tests/files/_cache
    cp -r ../formcreator plugins/$PLUGINNAME
 }
@@ -43,9 +47,7 @@ init_glpi() {
    rm ../../$TEST_GLPI_CONFIG_DIR/config_db.php || true
    echo Installing GLPI on database $1
    mkdir -p ../../$TEST_GLPI_CONFIG_DIR
-   if [ -e ../../tools/cliinstall.php ] ; then php  ./tests/install_glpi.php --host $DB_HOST --db=$1 --user=$2 --pass=$3 ; fi
-   if [ -e ../../scripts/cliinstall.php ] ; then php ./tests/install_glpi.php --host $DB_HOST --db=$1 --user=$2 --pass=$3 ; fi
-   if [ -e ../../bin/console ]; then php ../../bin/console glpi:database:install --db-host=$DB_HOST --db-user=$2 --db-password=$3 --db-name=$1 --config-dir=../../$TEST_GLPI_CONFIG_DIR --no-interaction --no-plugins --force; fi
+   php ../../bin/console glpi:database:install --db-host=$DB_HOST --db-user=$2 --db-password=$3 --db-name=$1 --config-dir=../../$TEST_GLPI_CONFIG_DIR --no-interaction --no-plugins --force
 }
 
 # Plugin upgrade test
