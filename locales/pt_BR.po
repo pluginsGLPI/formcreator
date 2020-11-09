@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-12 15:25+0200\n"
+"POT-Creation-Date: 2020-11-09 10:25+0100\n"
 "PO-Revision-Date: 2020-01-22 11:04+0000\n"
 "Last-Translator: Jean Vergaças <jvergacas@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
@@ -38,17 +38,17 @@ msgid_plural "Form categories"
 msgstr[0] "Categoria do formulário"
 msgstr[1] "Categorias do formulário"
 
-#: hook.php:509
+#: hook.php:513
 msgid "Cancel my ticket"
 msgstr ""
 
-#: setup.php:236 inc/form.class.php:108 inc/formlist.class.php:59
+#: setup.php:238 inc/form.class.php:108 inc/formlist.class.php:59
 #: inc/formlist.class.php:60
 msgid "Forms waiting for validation"
 msgstr "Formulários aguardando validação"
 
-#: setup.php:246 ajax/homepage_link.php:37 inc/entityconfig.class.php:55
-#: inc/form.class.php:101 inc/form.class.php:712 inc/form.class.php:2035
+#: setup.php:248 ajax/homepage_link.php:37 inc/entityconfig.class.php:55
+#: inc/form.class.php:101 inc/form.class.php:712 inc/form.class.php:2036
 #: inc/formanswer.class.php:184 inc/formlist.class.php:46 js/scripts.js.php:72
 msgid "Form"
 msgid_plural "Forms"
@@ -70,8 +70,8 @@ msgstr "Nenhum limite"
 #: front/form.php:45 front/formanswer.form.php:83 front/formanswer.form.php:88
 #: front/formanswer.php:46 front/formanswer.php:51 front/issue.php:48
 #: front/issue.php:53 front/targetchange.form.php:74
-#: front/targetticket.form.php:74 inc/form.class.php:2103
-#: inc/form.class.php:2110
+#: front/targetticket.form.php:74 inc/form.class.php:2104
+#: inc/form.class.php:2111
 msgid "Form Creator"
 msgstr "Form Creator"
 
@@ -79,11 +79,11 @@ msgstr "Form Creator"
 #: front/issue.form.php:58 front/issue.php:44 front/knowbaseitem.form.php:45
 #: front/reservation.form.php:46 front/reservation.php:46
 #: front/reservationitem.php:42 front/wizard.php:45 front/wizardfeeds.php:46
-#: inc/form.class.php:2098
+#: inc/form.class.php:2099
 msgid "Service catalog"
 msgstr "Catálogo de serviços"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2100
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2101
 msgid "Form list"
 msgstr "Lista de formulários"
 
@@ -104,6 +104,14 @@ msgstr[1] "Respostas"
 #: inc/category.class.php:67
 msgid "Knowbase category"
 msgstr "Categoria da base de conhecimento"
+
+#: inc/common.class.php:222
+msgid "You cannot delete this issue. Maybe it is taken into account."
+msgstr ""
+
+#: inc/common.class.php:227
+msgid "Failed to delete this issue. An internal error occured."
+msgstr ""
 
 #: inc/condition.class.php:62
 msgid "Condition"
@@ -131,13 +139,13 @@ msgstr "Escondido a menos que"
 msgid "Displayed unless"
 msgstr "Exibido a menos que"
 
-#: inc/condition.class.php:159 inc/form.class.php:1933
+#: inc/condition.class.php:159 inc/form.class.php:1934
 #: inc/form_profile.class.php:215 inc/form_validator.class.php:109
 #: inc/item_targetticket.class.php:141 inc/question.class.php:970
 #: inc/questiondependency.class.php:200 inc/questionrange.class.php:178
 #: inc/questionregex.class.php:173 inc/section.class.php:269
-#: inc/target_actor.class.php:173 inc/targetchange.class.php:233
-#: inc/targetticket.class.php:1124
+#: inc/target_actor.class.php:173 inc/targetchange.class.php:237
+#: inc/targetticket.class.php:1128
 #, php-format
 msgid "failed to add or update the %1$s %2$s"
 msgstr "falha ao adicionar ou atualizar o %1$s %2$s"
@@ -241,7 +249,7 @@ msgstr[1] ""
 msgid "Delete"
 msgstr "Deletar"
 
-#: inc/form.class.php:668 inc/form.class.php:2257
+#: inc/form.class.php:668 inc/form.class.php:2258
 msgid "Add a target"
 msgstr "Adicionar um destino"
 
@@ -306,85 +314,85 @@ msgstr "Validação"
 msgid "Choose a validator"
 msgstr "Escolha um validador"
 
-#: inc/form.class.php:1297 inc/targetbase.class.php:1311
+#: inc/form.class.php:1298 inc/targetbase.class.php:1311
 msgid "The name cannot be empty!"
 msgstr "O nome não pode ser vazio!"
 
-#: inc/form.class.php:1360
+#: inc/form.class.php:1361
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "A pergunta 1%s não é compatível com formulários públicos"
 
-#: inc/form.class.php:1498
+#: inc/form.class.php:1499
 msgid "Errored duplicate"
 msgstr ""
 
-#: inc/form.class.php:1509
+#: inc/form.class.php:1510
 msgid "Duplicate"
 msgstr "Duplicar"
 
-#: inc/form.class.php:1574
+#: inc/form.class.php:1575
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulário duplicado: %s"
 
-#: inc/form.class.php:1585
+#: inc/form.class.php:1586
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulário transferido: %s"
 
-#: inc/form.class.php:1708
+#: inc/form.class.php:1709
 msgid "Upload of JSON files not allowed."
 msgstr "O upload de arquivos JSON não é permitido."
 
-#: inc/form.class.php:1711
+#: inc/form.class.php:1712
 msgid "You may allow JSON files right now."
 msgstr "Você pode permitir arquivos JSON agora."
 
-#: inc/form.class.php:1712
+#: inc/form.class.php:1713
 msgctxt "button"
 msgid "Create"
 msgstr "Criar"
 
-#: inc/form.class.php:1715 inc/form.class.php:1726
+#: inc/form.class.php:1716 inc/form.class.php:1727
 msgid "Please contact your GLPI administrator."
 msgstr "Entre em contato com o administrador do GLPI."
 
-#: inc/form.class.php:1716 inc/form.class.php:1727
+#: inc/form.class.php:1717 inc/form.class.php:1728
 msgctxt "button"
 msgid "Back"
 msgstr "Voltar"
 
-#: inc/form.class.php:1719
+#: inc/form.class.php:1720
 msgid "Upload of JSON files not enabled."
 msgstr "O upload de arquivos JSON não esta habilitado."
 
-#: inc/form.class.php:1722 inc/form.class.php:1725
+#: inc/form.class.php:1723 inc/form.class.php:1726
 msgid "You may enable JSON files right now."
 msgstr "Você pode habilitar os arquivos JSON agora."
 
-#: inc/form.class.php:1723
+#: inc/form.class.php:1724
 msgctxt "button"
 msgid "Enable"
 msgstr "Habilitar"
 
-#: inc/form.class.php:1788
+#: inc/form.class.php:1789
 msgid "No file uploaded"
 msgstr ""
 
-#: inc/form.class.php:1797
+#: inc/form.class.php:1798
 msgid "Forms import impossible, the file is empty"
 msgstr "Impossível importar o formulário, o arquivo está vazio"
 
-#: inc/form.class.php:1801 inc/form.class.php:1805
+#: inc/form.class.php:1802 inc/form.class.php:1806
 msgid "Forms import impossible, the file seems corrupt"
 msgstr "Impossível importar o formulário, arquivo corrompido"
 
-#: inc/form.class.php:1811
+#: inc/form.class.php:1812
 msgid "Forms import impossible, the file was generated with another version"
 msgstr "Impossível importar o formulário, arquivo gerado em outra versão"
 
-#: inc/form.class.php:1818
+#: inc/form.class.php:1819
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10 and import is expected to create incomplete "
@@ -394,55 +402,55 @@ msgstr ""
 "uma versão anterior a 2.10 e a importação pode criar formulários incompletos"
 " ou de falhos."
 
-#: inc/form.class.php:1836
+#: inc/form.class.php:1837
 #, php-format
 msgid "Failed to import %s"
 msgstr "Falha ao importar %s"
 
-#: inc/form.class.php:1841
+#: inc/form.class.php:1842
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formulários importados com sucesso de %s"
 
-#: inc/form.class.php:1888
+#: inc/form.class.php:1889
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "O formulário %1$s já existe e está em uma entidade não modificável."
 
-#: inc/form.class.php:1896
+#: inc/form.class.php:1897
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "A entidade %1$s é necessária para o formulário %2$s."
 
-#: inc/form.class.php:1970
+#: inc/form.class.php:1971
 msgid "Failed to create JSON document type"
 msgstr "Falha ao criar o tipo de documento JSON"
 
-#: inc/form.class.php:1977
+#: inc/form.class.php:1978
 msgid "JSON document type not found"
 msgstr "Tipo de documento JSON não encontrado"
 
-#: inc/form.class.php:1984
+#: inc/form.class.php:1985
 msgid "Failed to update JSON document type"
 msgstr "Falha ao atualizar o tipo de documento JSON"
 
-#: inc/form.class.php:2004
+#: inc/form.class.php:2005
 msgid "Forms without category"
 msgstr "Formulários sem categoria"
 
-#: inc/form.class.php:2027
+#: inc/form.class.php:2028
 msgid "No form available"
 msgstr "Nenhum formulário disponível"
 
-#: inc/form.class.php:2299
+#: inc/form.class.php:2300
 msgid "Unsupported target type."
 msgstr "Tipo de destino não suportado."
 
-#: inc/form.class.php:2311
+#: inc/form.class.php:2312
 msgid "The form does not exists."
 msgstr "O formulário não existe."
 
-#: inc/form.class.php:2334
+#: inc/form.class.php:2335
 msgid "Unsuported target type."
 msgstr "Tipo de destino não suportado."
 
@@ -464,7 +472,7 @@ msgstr "Por favor, ative o formulário para ver o link"
 msgid "Waiting"
 msgstr "Aguardando"
 
-#: inc/formanswer.class.php:61 inc/issue.class.php:515
+#: inc/formanswer.class.php:61 inc/issue.class.php:533
 msgid "Refused"
 msgstr "Rejeitado"
 
@@ -472,17 +480,17 @@ msgstr "Rejeitado"
 msgid "Accepted"
 msgstr "Aceito"
 
-#: inc/formanswer.class.php:160 inc/issue.class.php:509
+#: inc/formanswer.class.php:160 inc/issue.class.php:527
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Resposta do formulário"
 msgstr[1] "Respostas do formulário"
 
-#: inc/formanswer.class.php:204 inc/issue.class.php:404
+#: inc/formanswer.class.php:204 inc/issue.class.php:422
 msgid "Form approver"
 msgstr "Aprovador do requisição"
 
-#: inc/formanswer.class.php:223 inc/issue.class.php:492
+#: inc/formanswer.class.php:223 inc/issue.class.php:510
 msgid "Form approver group"
 msgstr "Grupo aprovador da requisição"
 
@@ -498,7 +506,8 @@ msgstr "Formulário aceito pelo validador."
 msgid "Form successfully saved."
 msgstr "Formulário salvo com sucesso."
 
-#: inc/formanswer.class.php:596 inc/notificationtargetformanswer.class.php:80
+#: inc/formanswer.class.php:596 inc/notificationtargetformanswer.class.php:86
+#: inc/notificationtargetformanswer.class.php:101
 msgid "Requester"
 msgstr "Requerente"
 
@@ -522,16 +531,16 @@ msgstr "Aceitar"
 msgid "Refused comment is required!"
 msgstr "É necessário o comentário de rejeição !"
 
-#: inc/formanswer.class.php:837 inc/formanswer.class.php:986
-#: inc/formanswer.class.php:1175 inc/formanswer.class.php:1193
+#: inc/formanswer.class.php:838 inc/formanswer.class.php:987
+#: inc/formanswer.class.php:1176 inc/formanswer.class.php:1194
 msgid "The form has been successfully saved!"
 msgstr "Formulário salvo com sucesso!"
 
-#: inc/formanswer.class.php:903 inc/formanswer.class.php:930
+#: inc/formanswer.class.php:904 inc/formanswer.class.php:931
 msgid "You are not the validator of these answers"
 msgstr "Você não é o validados destas respostas"
 
-#: inc/formanswer.class.php:1043 inc/formanswer.class.php:1045
+#: inc/formanswer.class.php:1044 inc/formanswer.class.php:1046
 msgid "Form data"
 msgstr "Dados do formulário"
 
@@ -539,11 +548,11 @@ msgstr "Dados do formulário"
 msgid "Cannot generate targets!"
 msgstr "Impossível gerar destinos!"
 
-#: inc/formanswer.class.php:1314
+#: inc/formanswer.class.php:1317
 msgid "You must select validator!"
 msgstr "Você precisa selecionar um validador!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:312
+#: inc/issue.class.php:40 inc/issue.class.php:330
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Questão"
@@ -553,11 +562,11 @@ msgstr[1] "Questões"
 msgid "Update issue data from tickets and form answers"
 msgstr "Atualizar dados de emissão de chamados e respostas de formulário"
 
-#: inc/issue.class.php:423
+#: inc/issue.class.php:441
 msgid "Ticket approver"
 msgstr "Aprovador do Chamado"
 
-#: inc/issue.class.php:514
+#: inc/issue.class.php:532
 msgid "Not validated"
 msgstr "Não validado"
 
@@ -587,33 +596,45 @@ msgstr "Formulário aceito"
 msgid "The form is deleted"
 msgstr "Formulário deletado"
 
-#: inc/notificationtargetformanswer.class.php:78
+#: inc/notificationtargetformanswer.class.php:84
+#: inc/notificationtargetformanswer.class.php:99
 msgid "Form #"
 msgstr "Formulário #"
 
-#: inc/notificationtargetformanswer.class.php:79
+#: inc/notificationtargetformanswer.class.php:85
+#: inc/notificationtargetformanswer.class.php:100
 msgid "Form name"
 msgstr "Nome do formulário"
 
-#: inc/notificationtargetformanswer.class.php:81
+#: inc/notificationtargetformanswer.class.php:87
+#: inc/notificationtargetformanswer.class.php:102
 msgid "Validator"
 msgstr "Validador"
 
-#: inc/notificationtargetformanswer.class.php:83
+#: inc/notificationtargetformanswer.class.php:89
+#: inc/notificationtargetformanswer.class.php:104
 msgid "Full form answers"
 msgstr "Respostas de formulário completo"
 
-#: inc/notificationtargetformanswer.class.php:84
+#: inc/notificationtargetformanswer.class.php:90
+#: inc/notificationtargetformanswer.class.php:105
 msgid "Refused comment"
 msgstr "Comentário rejeitado"
 
-#: inc/notificationtargetformanswer.class.php:85
+#: inc/notificationtargetformanswer.class.php:91
+#: inc/notificationtargetformanswer.class.php:106
 msgid "Validation link"
 msgstr "Link de validação"
 
-#: inc/notificationtargetformanswer.class.php:86
+#: inc/notificationtargetformanswer.class.php:92
+#: inc/notificationtargetformanswer.class.php:107
 msgid "Request #"
 msgstr "Requisição #"
+
+#: inc/notificationtargetformanswer.class.php:93
+#: inc/notificationtargetformanswer.class.php:108
+msgid "List of generated targets"
+msgstr ""
 
 #: inc/question.class.php:59 inc/targetbase.class.php:907
 #: inc/targetbase.class.php:945 inc/targetbase.class.php:1023
@@ -947,7 +968,7 @@ msgstr "Formulário completo"
 msgid "Add"
 msgstr "Adicionar"
 
-#: inc/targetbase.class.php:1586 inc/targetchange.class.php:389
+#: inc/targetbase.class.php:1586 inc/targetchange.class.php:393
 #: inc/targetticket.class.php:223
 msgid "Cancel"
 msgstr "Cancelar"
@@ -960,7 +981,7 @@ msgstr "Grupo do objeto"
 msgid "Tech group from the object"
 msgstr "Grupo técnico do objeto"
 
-#: inc/targetchange.class.php:41 inc/targetchange.class.php:275
+#: inc/targetchange.class.php:41 inc/targetchange.class.php:279
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] "Alterar o destino"
@@ -974,15 +995,22 @@ msgstr "Médio"
 msgid "None"
 msgstr "Nenhum"
 
-#: inc/targetchange.class.php:265 inc/targetticket.class.php:119
+#: inc/targetchange.class.php:221 inc/targetticket.class.php:1112
+#, php-format
+msgid ""
+"failed to add or update the %1$s %2$s: a question is missing and is used in "
+"a parameter of the target"
+msgstr ""
+
+#: inc/targetchange.class.php:269 inc/targetticket.class.php:119
 msgid "Edit a destination"
 msgstr "Editar um destino"
 
-#: inc/targetchange.class.php:278
+#: inc/targetchange.class.php:282
 msgid "Change title"
 msgstr "Mudar título"
 
-#: inc/targetchange.class.php:376 inc/targetticket.class.php:210
+#: inc/targetchange.class.php:380 inc/targetticket.class.php:210
 msgid "Condition to show the target"
 msgstr "Condições de exibição do destino"
 
@@ -1418,7 +1446,3 @@ msgstr "Tem certeza que quer deletar esta seção?"
 #: js/scripts.js.php:600
 msgid "Are you sure you want to delete this destination:"
 msgstr "Tem certeza que quer deletar este destino:"
-
-#: js/scripts.js.php:1334
-msgid "Failed to cancel the ticket"
-msgstr ""
