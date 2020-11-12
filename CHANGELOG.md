@@ -1,3 +1,27 @@
+## [2.10.4](https://github.com/pluginsglpi/formcreator/compare/v2.10.3...v2.10.4) (2020-11-09)
+
+
+### Bug Fixes
+
+* **dropdownfield:** compatibility with Document itemtype ([bdd533a](https://github.com/pluginsglpi/formcreator/commit/bdd533a2dcc4257258191ae287095c247292b7cb))
+* **form:** missinb closing tag ([faab454](https://github.com/pluginsglpi/formcreator/commit/faab454304907be07602557b75dc3289ed2ea8e8))
+* **formanswer:** uploads lost when re-submitting answers ([962eafa](https://github.com/pluginsglpi/formcreator/commit/962eafa6e6f74ee028a6bb1cdd57f1e165038831))
+* **issue:** enhance error message when canceling an issue ([cf21817](https://github.com/pluginsglpi/formcreator/commit/cf21817507b15caf33b8fe814e32b915b2f448a2))
+* **issue:** handle deletion of validation ([385eee4](https://github.com/pluginsglpi/formcreator/commit/385eee465eb2e76220ae6d4ad7292d5d4e52a995))
+* **issue:** update issue status on ticket validation update ([ca68eb4](https://github.com/pluginsglpi/formcreator/commit/ca68eb4f6402dbebef12f534aaa8ece3402c4c04))
+* **locales:** reapply bad translation fix ([b8d6466](https://github.com/pluginsglpi/formcreator/commit/b8d64662d011b41f4e036d2f1e2d57d88935efef))
+* **notificationtargetformanswer:** not rendered fullform tag ([f83ce3f](https://github.com/pluginsglpi/formcreator/commit/f83ce3f270b1edce3fda5d10d8dad9d0f5da118e))
+* **targetticket,targetchange:** handle import failure on missing question ([e17c5a3](https://github.com/pluginsglpi/formcreator/commit/e17c5a37adc6ab5bcd479f7d1e9a7e0a6206c935))
+* **wizard:** reservation search failure ([b6e0dd8](https://github.com/pluginsglpi/formcreator/commit/b6e0dd868a03bc5bdf6832e08b416e9c01b3b6ad))
+* update hooks ([d2d9980](https://github.com/pluginsglpi/formcreator/commit/d2d99805c63dd6a51edde6ab1da01733e8915cd2))
+
+
+### Features
+
+* **targetticket,targetchange:** add tag for notification ([9da6fb5](https://github.com/pluginsglpi/formcreator/commit/9da6fb5c71a87c105ee68a62ff85e7ccc90f120c))
+
+
+
 ## [2.10.3](https://github.com/pluginsglpi/formcreator/compare/v2.10.2...v2.10.3) (2020-10-13)
 
 
