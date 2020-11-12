@@ -71,6 +71,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
       // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
+
+      // The columns status of the 2nd part of the UNNION statement
+      // must match the same logic as PluginFormcreatorCommon::getTicketStatusForIssue()
+      // @see PluginFormcreatorCommon::getTicketStatusForIssue()
       $query = "SELECT DISTINCT
                   NULL                            AS `id`,
                   `f`.`name`                      AS `name`,
@@ -103,7 +107,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  if(`tv`.`status` IS NULL,`tic`.`status`, if(`tv`.`status` = 2, 101, if(`tv`.`status` = 3, `tic`.`status`, 102))) AS `status`,
+                  if(`tv`.`status` IS NULL,
+                     `tic`.`status`,
+                     if(`tv`.`status` IN ('1', '3'),
+                        `tic`.`status`,
+                        if(`tic`.`status` IN ('5', '6') AND `tv`.`status` = '4',
+                           `tic`.`status`,
+                           if(`tv`.`status` = '" . CommonITILValidation::WAITING . "',
+                              '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
+                              '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
+                           )
+                        )
+                     )
+                  )                             AS `status`,
+
                   `tic`.`date`                  AS `date_creation`,
                   `tic`.`date_mod`              AS `date_mod`,
                   `tic`.`entities_id`           AS `entities_id`,
@@ -143,6 +160,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
                $volume = 1;
             }
+            Toolbox::logError("Plugin Formcreator: Automatic action SyncIssue detected an inconsticency. Issues were rebuilt.");
          }
       }
       $task->setVolume($volume);

@@ -467,6 +467,10 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
    $issue->update(['status' => $status['status']] + $issue->fields);
 }
 
+function plugin_formcreator_hook_purge_ticketvalidation(CommonDBTM $item) {
+   plugin_formcreator_hook_update_ticketvalidation($item);
+}
+
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
       case PluginFormcreatorFormAnswer::class;

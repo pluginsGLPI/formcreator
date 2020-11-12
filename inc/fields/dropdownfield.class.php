@@ -145,13 +145,14 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
                         'comments' => false,
-                        'entity'   => $_SESSION['glpiactive_entity'], // TODO: replace by Session::getActiveEntity when dropping GLPI 9.4
+                        'entity'   => $_SESSION['glpiactiveentities'],
                         'displaywith' => ['id'],
                         'rand'     => $rand];
 
             $dparams_cond_crit = [];
             switch ($itemtype) {
                case Entity::class:
+               case Document::class:
                   unset($dparams['entity']);
 
                case User::class:
@@ -262,7 +263,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $emptyItem = new $itemtype();
             $emptyItem->getEmpty();
-            $dparams['displaywith'] = [];
             if (isset($emptyItem->fields['serial'])) {
                $dparams['displaywith'][] = 'serial';
             }

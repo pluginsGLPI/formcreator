@@ -25,8 +25,9 @@
       "glpi-project/coding-standard": "0.7.1",
       "atoum/reports-extension": "^3.0",
       "jakub-onderka/php-parallel-lint": "^1.0",
-      "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-      "sirbrillig/phpcs-variable-analysis": "^2.7"
+      "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+      "sirbrillig/phpcs-variable-analysis": "^2.9",
+      "phpcsstandards/phpcsutils": "^1.0@alpha"
     },
     "autoload-dev": {
         "psr-4": {

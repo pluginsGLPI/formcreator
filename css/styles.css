@@ -1325,6 +1325,7 @@ span.fc_list_icon {
    right: 0;
    left: 0;
    bottom: 0;
+   margin-bottom: 20px;
 }
 
 .plugin_formcreator_page .navigationheader .tab_cadre_pager {

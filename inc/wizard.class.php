@@ -110,7 +110,7 @@ class PluginFormcreatorWizard {
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
          echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-         echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/reservationitem.php' . '">';
+         echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/reservationitem.php?reset=reset' . '">';
          echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
          echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
          echo '</a></li>';

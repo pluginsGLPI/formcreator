@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.10.3');
+define('PLUGIN_FORMCREATOR_VERSION', '2.10.4');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.10');
 // is or is not an official release of the plugin
@@ -143,7 +143,8 @@ function plugin_init_formcreator() {
       Ticket::class => 'plugin_formcreator_hook_add_ticket'
    ];
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_update_ticket'
+      Ticket::class => 'plugin_formcreator_hook_update_ticket',
+      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
@@ -152,10 +153,8 @@ function plugin_init_formcreator() {
       Ticket::class => 'plugin_formcreator_hook_restore_ticket'
    ];
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_purge_ticket'
-   ];
-   $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation'
+      Ticket::class => 'plugin_formcreator_hook_purge_ticket',
+      TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
    ];
    $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
       PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
@@ -205,6 +204,9 @@ function plugin_init_formcreator() {
             ];
             foreach ($pages as $srcPage => $dstPage) {
                if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
+                  if ($srcPage == 'front/reservationitem.php') {
+                     $_SESSION['plugin_formcreator']['redirected']['POST'] = $_POST;
+                  }
                   Html::redirect($dstPage);
                   break;
                }
