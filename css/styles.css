@@ -239,10 +239,6 @@ form#plugin_formcreator_form {
    line-height: 1.4em;
 }
 
-#bloc > #plugin_formcreator_form {
-   width: 850px;
-}
-
 .form_answer h1,
 #plugin_formcreator_form > h1 {
    text-align: center;
@@ -329,9 +325,7 @@ form#plugin_formcreator_form {
    text-align: justify;
    word-wrap: break-word;
 }
-#bloc > #plugin_formcreator_form .form-group .form_field {
-   width: 415px;
-}
+
 #plugin_formcreator_form .form-group .form_field .select2-container {
    width: 100% !important;
 }
@@ -503,9 +497,6 @@ input[type = radio]:checked + label.label-radio .check {
    padding: 3px 0;
 }
 
-#bloc > #plugin_formcreator_form .form-group .form_field > input, #bloc > #plugin_formcreator_form textarea {
-   width: 545px;
-}
 #bloc > #plugin_formcreator_form select {
    width: 567px;
 }
