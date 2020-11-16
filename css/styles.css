@@ -312,7 +312,7 @@ form.formcreator_form {
 }
 
 .formcreator_form input[type = checkbox]:focus + label,
-.formcreator_form input[type = radio]:focus + label,
+.formcreator_form input[type = radio].new_radio:focus + label,
 .formcreator_form input[type = file]:focus {
    color: #66afe9;
    color: rgba(102,175,233, 1);
@@ -353,31 +353,31 @@ form.formcreator_form {
 .radios .form-group-radio + label {
    margin-left: 7px;
 }
-input[type = radio] {
+input[type = radio].new_radio {
    display: none;
 }
 .label-radio .radio {
    padding: 2px 0;
 }
-input[type = radio] + label.label-radio span {
+input[type = radio].new_radio + label.label-radio span {
    display: inline-block;
    position: absolute;
    width: 16px;
    height: 16px;
 }
-input[type = radio] + label.label-radio .box {
+input[type = radio].new_radio + label.label-radio .box {
    background-color: #fff;
    border: 2px solid #727272;
    border-radius: 50%;
 }
-input[type = radio] + label.label-radio .check {
+input[type = radio].new_radio + label.label-radio .check {
    left: 4px;
    top: 4px;
    width: 0px;
    height: 0px;
    opacity: 0;
 }
-input[type = radio]:checked + label.label-radio .check {
+input[type = radio].new_radio:checked + label.label-radio .check {
    border: 6px solid #727272;
    border-radius: 50%;
    transition: opacity 0.3s ease;
@@ -1024,7 +1024,7 @@ a.plugin_formcreator_formTile_title {
    opacity: 1;
    color: #3874BC;
 }
-.plugin_formcreator_sort:hover .formcreator_radios input[type = radio] + label:before {
+.plugin_formcreator_sort:hover .formcreator_radios input[type = radio].new_radio + label:before {
    background-color: #3874BC;
    border: 2px solid #3874BC;
 }
@@ -1035,7 +1035,7 @@ a.plugin_formcreator_formTile_title {
    text-align: left;
    margin: 0 20px;
 }
-.plugin_formcreator_sort .formcreator_radios input[type = radio] + label {
+.plugin_formcreator_sort .formcreator_radios input[type = radio].new_radio + label {
    display: inline-block;
    margin-right: 10px;
 }
