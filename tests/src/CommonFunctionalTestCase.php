@@ -61,6 +61,9 @@ class CommonFunctionalTestCase extends CommonTestCase {
    }
 
    public function tearDown() {
+      if ($this->client === null) {
+         return;
+      }
       $this->client->quit();
    }
 }
