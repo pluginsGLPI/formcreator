@@ -16,6 +16,9 @@ env:
   AFTER_SUCCESS_BRANCH: 9.5/bugfixes
   NOCOVERAGE: -ncc
   COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
+  PANTHER_CHROME_ARGUMENTS: --headless --no-sandbox --disable-gpu --no-sandbox
+  PANTHER_NO_SANDBOX: 1
+  PANTHER_CHROME_BINARY: /usr/bin/chromium-browser
 
 jobs:
   tests:
@@ -64,6 +67,8 @@ jobs:
           chromium-browser --version
       - name: "Checkout"
         uses: actions/checkout@v2
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: "Run tests"
         env: ${{matrix.env}}
         run: |
@@ -79,8 +84,11 @@ jobs:
           export TEST_GLPI_CONFIG_DIR="tests/config-$DB_NAME"
           init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
           plugin_test_install
+          mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
           plugin_test
-          export PANTHER_CHROME_DRIVER_BINARY=$(which chromuim.chromedriver)
+          export PANTHER_CHROME_DRIVER_BINARY=chromedriver
+          $PANTHER_CHROME_DRIVER_BINARY --version
+
           plugin_test_functional
           plugin_test_uninstall
 

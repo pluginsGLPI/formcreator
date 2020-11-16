@@ -179,7 +179,6 @@ plugin_test_functional() {
    if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
    # symfony requires PHP 7.2+, but the project is still compatible with older versions
    composer require --dev --ignore-platform-req=php symfony/panther symfony/process:^4.0 atoum/atoum
-   echo $PANTHER_CHROME_DRIVER_BINARY
    RESOURCE="tests/functional"
    if [ "$1" != "" ]; then
       RESOURCE=$1
@@ -191,6 +190,7 @@ plugin_test_functional() {
       RESOURCE_TYPE="-d"
    fi
    #export GLPI_CONFIG_DIR=$TEST_GLPI_CONFIG_DIR
+   echo $PANTHER_NO_HEADLESS
    php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
    PROCESS=$!
    echo php started with PID=$PROCESS
