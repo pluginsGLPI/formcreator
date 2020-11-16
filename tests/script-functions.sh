@@ -175,3 +175,26 @@ plugin_after_success() {
       fi
    fi
 }
+plugin_test_functional() {
+   if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
+   # symfony requires PHP 7.2+, but the project is still compatible with older versions
+   composer require --dev --ignore-platform-req=php symfony/panther symfony/process:^4.0 atoum/atoum
+   echo $PANTHER_CHROME_DRIVER_BINARY
+   RESOURCE="tests/functional"
+   if [ "$1" != "" ]; then
+      RESOURCE=$1
+   fi
+
+   if [ -f $RESOURCE ]; then
+      RESOURCE_TYPE="-f"
+   elif [ -d $RESOURCE ]; then
+      RESOURCE_TYPE="-d"
+   fi
+   #export GLPI_CONFIG_DIR=$TEST_GLPI_CONFIG_DIR
+   php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
+   PROCESS=$!
+   echo php started with PID=$PROCESS
+   vendor/bin/atoum -ft -bf tests/bootstrap.php $RESOURCE_TYPE $RESOURCE $NOCOVERAGE -mcn 1
+   kill $PROCESS
+   kill $(pidof $PANTHER_CHROME_DRIVER_BINARY)
+}

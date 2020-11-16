@@ -21,10 +21,10 @@
       "pear/archive_tar": "^1.4",
       "atoum/atoum": "^3.4",
       "atoum/stubs": "^2.5",
+      "atoum/reports-extension": "^3.0",
       "glpi-project/tools": "^0.1.0",
       "glpi-project/coding-standard": "0.7.1",
-      "atoum/reports-extension": "^3.0",
-      "jakub-onderka/php-parallel-lint": "^1.0",
+      "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
       "sirbrillig/phpcs-variable-analysis": "^2.9",
       "phpcsstandards/phpcsutils": "^1.0@alpha"

@@ -550,7 +550,7 @@ PluginFormcreatorConditionnableInterface
 
       // Add a question
       $html .= '<div class="plugin_formcreator_question">';
-      $html .= '<a href="javascript:plugin_formcreator.showQuestionForm('. $sectionId . ');">';
+      $html .= '<a href="#" onclick="plugin_formcreator.showQuestionForm('. $sectionId . ');">';
       $html .= '<i class="fas fa-plus"></i>&nbsp;';
       $html .= __('Add a question', 'formcreator');
       $html .= '</a>';

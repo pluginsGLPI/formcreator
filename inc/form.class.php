@@ -2082,11 +2082,11 @@ PluginFormcreatorConditionnableInterface
          if ($currentCategoryId != $row[$formCategoryFk]) {
             // show header for the category
             $currentCategoryId = $row[$formCategoryFk];
-            echo '<tr class="noHover"><th>' . $categories[$currentCategoryId] . '</th></tr>';
+            echo '<tr class="noHover" data-itemtype="PluginFormcreatorCategory" data-id="' . $currentCategoryId . '"><th>' . $categories[$currentCategoryId] . '</th></tr>';
          }
 
-         // Show a rox for the form
-         echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
+         // Show a row for the form
+         echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
@@ -2104,19 +2104,17 @@ PluginFormcreatorConditionnableInterface
 
       echo '</table>';
       echo '<br />';
-      echo '<script type="text/javascript">
-         function showDescription(id, img){
-            if(img.alt == "+") {
-               img.alt = "-";
-               img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
-               document.getElementById("desc" + id).style.display = "table-row";
-            } else {
-               img.alt = "+";
-               img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
-               document.getElementById("desc" + id).style.display = "none";
-            }
+      echo Html::scriptBlock('function showDescription(id, img){
+         if(img.alt == "+") {
+            img.alt = "-";
+            img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
+            document.getElementById("desc" + id).style.display = "table-row";
+         } else {
+            img.alt = "+";
+            img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
+            document.getElementById("desc" + id).style.display = "none";
          }
-      </script>';
+      }');
    }
 
    public static function getInterface() {
