@@ -25,8 +25,8 @@ jobs:
       matrix:
         php-versions: [5.6, 7.4]
         env:
-          - { GLPI_BRANCH: 9.4/bugfixes }
-          - { GLPI_BRANCH: 9.5/bugfixes }
+          - { GLPI_BRANCH: 9.4/bugfixes, SKIP_FUNCTIONAL_TESTS: true }
+          - { GLPI_BRANCH: 9.5/bugfixes, SKIP_FUNCTIONAL_TESTS: false }
         exclude:
           - php-versions: 5.6
             env:
@@ -51,6 +51,8 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: curl, fileinfo, gd, json, mbstring, mysqli, zlib, simplexml, xml, intl, bz2
           coverage: xdebug
+      - name: "get browser"
+        run: sudo apt install chromium-browser
       - name: "Check tools"
         run: |
           which php
@@ -59,6 +61,7 @@ jobs:
           php --version
           mysql --version
           composer --version
+          chromium-browser --version
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Run tests"
@@ -77,6 +80,8 @@ jobs:
           init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
           plugin_test_install
           plugin_test
+          export PANTHER_CHROME_DRIVER_BINARY=$(which chromuim.chromedriver)
+          plugin_test_functional
           plugin_test_uninstall
 
   style:
