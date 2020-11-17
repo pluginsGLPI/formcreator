@@ -23,18 +23,12 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4]
+        php-versions: [5.6, 7.4]
         env:
           - { GLPI_BRANCH: 9.4/bugfixes }
           - { GLPI_BRANCH: 9.5/bugfixes }
         exclude:
-          - php: 5.6
-            env:
-              GLPI_BRANCH: 9.5/bugfixes
-          - php: 7.0
-            env:
-              GLPI_BRANCH: 9.5/bugfixes
-          - php: 7.1
+          - php-versions: 5.6
             env:
               GLPI_BRANCH: 9.5/bugfixes
     services:
@@ -51,6 +45,12 @@ jobs:
           --health-timeout=5s
           --health-retries=3
     steps:
+      - name: Setup PHP with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: curl, fileinfo, gd, json, mbstring, mysqli, zlib, simplexml, xml, intl, bz2
+          coverage: xdebug
       - name: "Check tools"
         run: |
           which php
