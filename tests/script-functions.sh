@@ -196,5 +196,5 @@ plugin_test_functional() {
    echo php started with PID=$PROCESS
    vendor/bin/atoum -ft -bf tests/bootstrap.php $RESOURCE_TYPE $RESOURCE $NOCOVERAGE -mcn 1
    kill $PROCESS
-   kill $(pidof $PANTHER_CHROME_DRIVER_BINARY)
+   kill $(pidof chromedriver)
 }
