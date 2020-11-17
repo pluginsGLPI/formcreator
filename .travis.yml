@@ -1,4 +1,6 @@
 language: php
+addons:
+  chrome: stable
 
 sudo: required
 
@@ -9,6 +11,7 @@ env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - CS=7.4
+    - FUNCTIONAL_TESTS=7.4
     - DB_HOST=127.0.0.1
     - MYSQL_ROOT_USER=root
     - DB_USER=glpi
@@ -17,6 +20,7 @@ env:
     - OLD_DB_NAME=glpiupgradetest
     - PLUGINNAME=formcreator
     - AFTER_SUCCESS_BRANCH=9.5/bugfixes
+    - PANTHER_CHROME_DRIVER_BINARY=$(which chromuim.chromedriver)
   matrix:
     - GLPI_BRANCH=9.4/bugfixes
     - GLPI_BRANCH=9.5/bugfixes
@@ -76,13 +80,17 @@ script:
   - # fresh install test
   - plugin_test_install
   - plugin_test
+  - SKIP_PANTHER_INSTALL=false
+  - SKIP_FUNCTIONAL_TESTS=true
+  - if [ ${TRAVIS_PHP_VERSION:0:3} = "${FUNCTIONAL_TESTS}" ]; then SKIP_FUNCTIONAL_TESTS=false; fi
+  - plugin_test_functional
   - plugin_test_uninstall
-  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then plugin_test_cs; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then plugin_test_cs; fi
 
 after_success:
-  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/parallel-lint --exclude vendor .; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/parallel-lint --exclude vendor .; fi
   # let's update the documentation and locales
-  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then plugin_after_success; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then plugin_after_success; fi
 
 cache:
   directories:

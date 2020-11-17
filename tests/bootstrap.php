@@ -1,6 +1,6 @@
 <?php
 // fix empty CFG_GLPI on boostrap; see https://github.com/sebastianbergmann/phpunit/issues/325
-global $CFG_GLPI, $GLPI_CACHE;
+global $CFG_GLPI, $GLPI_CACHE, $CHROME_CLIENT;
 
 
 //disable session cookies
@@ -9,8 +9,13 @@ ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 
 require_once __DIR__ . '/../vendor/autoload.php';
+if (is_readable(getenv('HOME') . '/.config/composer/vendor/symfony/panther/composer.json')) {
+   // To use globally installed packages
+   require_once getenv('HOME') . '/.config/composer/vendor/autoload.php';
+}
 
 define('TEST_PLUGIN_NAME', 'formcreator');
+define('TEST_SCREENSHOTS_DIR', __DIR__ . '/logs/screenshots');
 
 // glpi/inc/oolbox.class.php tests TU_USER to decide if it warns or not about mcrypt extension
 define('TU_USER', '_test_user');
@@ -33,6 +38,17 @@ define('GLPI_LOG_DIR', __DIR__ . '/logs');
 // if (!defined('STDERR')) {
 //    define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
 // }
+
+// Terminate the webdriver on fatal error or it will continue to run and prevent
+// subsequent execution because the listening port is still in use
+register_shutdown_function(function() {
+   global $CHROME_CLIENT;
+
+   if ($CHROME_CLIENT) {
+      $CHROME_CLIENT->quit();
+   }
+});
+
 
 
 // Giving --debug argument to atoum will be detected by GLPI too
