@@ -325,7 +325,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
-   public  function testUpdateValidators() {
+   public function testUpdateValidators() {
       $form = $this->getForm();
 
       $formValidator = new \PluginFormcreatorForm_Validator();
