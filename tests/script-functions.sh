@@ -59,16 +59,37 @@ plugin_test_upgrade() {
 
 # Plugin test
 plugin_test_install() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-install $NOCOVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/1-install $NOCOVERAGE
 }
 
 plugin_test() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration -mcn 1 $COVERAGE
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit $COVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/2-integration -mcn 1 $COVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/3-unit $COVERAGE
+}
+
+plugin_test_functional() {
+   if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
+   # symfony requires PHP 7.2+, but the project is still compatible with older versions
+   composer require --dev --ignore-platform-req=php symfony/panther symfony/process:^4.0 atoum/atoum
+   RESOURCE="tests/4-functional"
+   if [ "$1" != "" ]; then
+      RESOURCE=$1
+   fi
+
+   if [ -f $RESOURCE ]; then
+      RESOURCE_TYPE="-f"
+   elif [ -d $RESOURCE ]; then
+      RESOURCE_TYPE="-d"
+   fi
+   #export GLPI_CONFIG_DIR=$TEST_GLPI_CONFIG_DIR
+   php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
+   PROCESS=$!
+   echo php started with PID=$PROCESS
+   vendor/bin/atoum -ft -bf tests/bootstrap.php $RESOURCE_TYPE $RESOURCE $NOCOVERAGE -mcn 1
 }
 
 plugin_test_uninstall() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall $NOCOVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/5-uninstall $NOCOVERAGE
 }
 
 plugin_test_lint() {
@@ -174,25 +195,4 @@ plugin_after_success() {
          git push --quiet --set-upstream origin-pages gh-pages --force
       fi
    fi
-}
-plugin_test_functional() {
-   if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
-   # symfony requires PHP 7.2+, but the project is still compatible with older versions
-   composer require --dev --ignore-platform-req=php symfony/panther symfony/process:^4.0 atoum/atoum
-   RESOURCE="tests/functional"
-   if [ "$1" != "" ]; then
-      RESOURCE=$1
-   fi
-
-   if [ -f $RESOURCE ]; then
-      RESOURCE_TYPE="-f"
-   elif [ -d $RESOURCE ]; then
-      RESOURCE_TYPE="-d"
-   fi
-   #export GLPI_CONFIG_DIR=$TEST_GLPI_CONFIG_DIR
-   echo $PANTHER_NO_HEADLESS
-   php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
-   PROCESS=$!
-   echo php started with PID=$PROCESS
-   vendor/bin/atoum -ft -bf tests/bootstrap.php $RESOURCE_TYPE $RESOURCE $NOCOVERAGE -mcn 1
 }
