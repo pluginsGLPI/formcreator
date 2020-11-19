@@ -3,9 +3,6 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 
-/**
- * @engine inline
- */
 class Central extends CommonFunctionalTestCase {
    private $selectors = [
       'formsTab' => '#page > div > div > ul > li > a[title="Forms"]',

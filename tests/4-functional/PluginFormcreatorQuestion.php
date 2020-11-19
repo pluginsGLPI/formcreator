@@ -3,9 +3,6 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 
-/**
- * @engine inline
- */
 class PluginFormcreatorQuestion extends CommonFunctionalTestCase {
    public function testCreateQuestion() {
       $form = $this->getForm();
