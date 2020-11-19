@@ -111,7 +111,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $form = $this->getForm();
 
-      echo '<div class="center" style="width: 950px; margin: 0 auto;">';
+      echo '<div class="center" style="margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . self::getFormURL() . '" data-itemtype="' . self::class . '">';
 
       // General information: target_name
@@ -119,7 +119,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:100%" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
       echo '</table>';
 
@@ -130,7 +130,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Ticket title', 'formcreator') . ' </strong></td>';
-      echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"/></td>';
+      echo '<td colspan="3"><input type="text" name="target_name" style="width:100%;" value="' . $this->fields['target_name'] . '"/></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
