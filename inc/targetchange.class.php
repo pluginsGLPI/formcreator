@@ -126,10 +126,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          // Convert IDs into UUIDs
          $export = $this->convertTags($export);
          $questionLinks = [
-            'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
-            'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
-            'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
-            'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+            'due_date_rule'      => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+            'urgency_rule'       => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+            'tag_type'           => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+            'category_rule'      => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+            'destination_entity' => [
+               'values' => [
+                  self::DESTINATION_ENTITY_ENTITY,
+                  self::DESTINATION_ENTITY_USER,
+               ],
+               'field' => 'destination_entity_value',
+            ],
          ];
          foreach ($questionLinks as $field => $fieldSetting) {
             if (!is_array($fieldSetting['values'])) {
@@ -202,10 +209,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Update links to other questions
       $questionLinks = [
-         'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
-         'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
-         'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
-         'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+         'due_date_rule'      => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+         'urgency_rule'       => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+         'tag_type'           => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+         'category_rule'      => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+         'destination_entity' => [
+            'values' => [
+               self::DESTINATION_ENTITY_ENTITY,
+               self::DESTINATION_ENTITY_USER,
+            ],
+            'field' => 'destination_entity_value',
+         ],
       ];
       foreach ($questionLinks as $field => $fieldSetting) {
          if (!is_array($fieldSetting['values'])) {
