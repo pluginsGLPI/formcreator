@@ -34,7 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 use Html;
 use Session;
 use Ticket;
-
+use Dropdown;
 class RequestTypeField extends SelectField
 {
    public function getDesignSpecializationField() {
@@ -55,6 +55,9 @@ class RequestTypeField extends SelectField
             'value'   => $this->value,
             'rand'    => $rand,
             'display' => false,
+            'toadd' => [
+               0  => Dropdown::EMPTY_VALUE,
+            ],
          ]
       );
       $additions .= '</td>';
@@ -70,7 +73,7 @@ class RequestTypeField extends SelectField
          'label' => $label,
          'field' => $field,
          'additions' => $additions,
-         'may_be_empty' => false,
+         'may_be_empty' => true,
          'may_be_required' => true,
       ];
    }
@@ -85,11 +88,17 @@ class RequestTypeField extends SelectField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
 
-      $html .= Ticket::dropdownType($fieldName, [
+      $options = [
          'value'     => $this->value,
          'rand'      => $rand,
          'display'   => false,
-      ]);
+      ];
+      if ($this->question->fields['show_empty'] != '0' ) {
+         $options['toadd'] = [
+            0  => Dropdown::EMPTY_VALUE,
+         ];
+      }
+      $html .= Ticket::dropdownType($fieldName, $options);
       $html .=  PHP_EOL;
       $html .=  Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeRequestType('$fieldName', '$rand');
