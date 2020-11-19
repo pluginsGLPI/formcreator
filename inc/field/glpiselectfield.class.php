@@ -39,6 +39,7 @@ use Group;
 use Ticket;
 use Computer;
 use Monitor;
+use Appliance;
 use Software;
 use NetworkEquipment;
 use Peripheral;
@@ -108,9 +109,13 @@ class GlpiselectField extends DropdownField
          // Does not exists in GLPI 9.4
          $optgroup['Assets'][PassiveDCEquipment::class] = PassiveDCEquipment::getTypeName(2);
       }
+      if (class_exists(Appliance::class)) {
+         // Does not exists in GLPI 9.4
+         $optgroup['Assets'][Appliance::class] = Appliance::getTypeName(2);
+      }
       $plugin = new Plugin();
       if ($plugin->isActivated('appliances')) {
-         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2);
+         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
