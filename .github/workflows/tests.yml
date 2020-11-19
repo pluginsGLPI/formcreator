@@ -52,7 +52,9 @@ jobs:
           extensions: curl, fileinfo, gd, json, mbstring, mysqli, zlib, simplexml, xml, intl, bz2
           coverage: xdebug
       - name: "get browser"
-        run: sudo apt install chromium-browser
+        run: |
+          sudo apt update
+          sudo apt install chromium-browser
       - name: "Check tools"
         run: |
           which php
