@@ -1090,13 +1090,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // Update links to other questions
       $questionLinks = [
-         'type_rule'      => ['values' => self::REQUESTTYPE_ANSWER, 'field' => 'type_question'],
-         'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
-         'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
-         'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
-         'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
-         'associate_rule' => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
-         'location_rule'  => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+         'type_rule'          => ['values' => self::REQUESTTYPE_ANSWER, 'field' => 'type_question'],
+         'due_date_rule'      => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+         'urgency_rule'       => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+         'tag_type'           => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+         'category_rule'      => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+         'associate_rule'     => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
+         'location_rule'      => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+         'destination_entity' => [
+            'values' => [
+               self::DESTINATION_ENTITY_ENTITY,
+               self::DESTINATION_ENTITY_USER,
+            ],
+            'field' => 'destination_entity_value',
+         ],
       ];
       foreach ($questionLinks as $field => $fieldSetting) {
          if (!is_array($fieldSetting['values'])) {
@@ -1187,13 +1194,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          // Convert IDs into UUIDs
          $export = $this->convertTags($export);
          $questionLinks = [
-            'type_rule'      => ['values' => self::REQUESTTYPE_ANSWER, 'field' => 'type_question'],
-            'due_date_rule'  => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
-            'urgency_rule'   => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
-            'tag_type'       => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
-            'category_rule'  => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
-            'associate_rule' => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
-            'location_rule'  => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+            'type_rule'          => ['values' => self::REQUESTTYPE_ANSWER, 'field' => 'type_question'],
+            'due_date_rule'      => ['values' => self::DUE_DATE_RULE_ANSWER, 'field' => 'due_date_question'],
+            'urgency_rule'       => ['values' => self::URGENCY_RULE_ANSWER, 'field' => 'urgency_question'],
+            'tag_type'           => ['values' => self::TAG_TYPE_QUESTIONS, 'field' => 'tag_questions'],
+            'category_rule'      => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
+            'associate_rule'     => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
+            'location_rule'      => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+            'destination_entity' => [
+               'values' => [
+                  self::DESTINATION_ENTITY_ENTITY,
+                  self::DESTINATION_ENTITY_USER,
+               ],
+               'field' => 'destination_entity_value'
+            ],
          ];
          foreach ($questionLinks as $field => $fieldSetting) {
             if (!is_array($fieldSetting['values'])) {
