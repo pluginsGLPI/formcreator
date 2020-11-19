@@ -53,6 +53,9 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
             'value'   => $this->value,
             'rand'    => $rand,
             'display' => false,
+            'toadd' => [
+               0  => Dropdown::EMPTY_VALUE,
+            ],
          ]
       );
       $additions .= '</td>';
@@ -69,7 +72,7 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
          'label' => $label,
          'field' => $field,
          'additions' => $additions,
-         'may_be_empty' => false,
+         'may_be_empty' => true,
          'may_be_required' => true,
       ];
    }
@@ -79,10 +82,16 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
          $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         Ticket::dropdownType($fieldName, [
+         $options = [
             'value' => $this->value,
             'rand'  => $rand,
-         ]);
+         ];
+         if ($this->question->fields['show_empty'] != '0' ) {
+            $options['toadd'] = [
+               0  => Dropdown::EMPTY_VALUE,
+            ];
+         }
+         Ticket::dropdownType($fieldName, $options);
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeRequestType('$fieldName', '$rand');
