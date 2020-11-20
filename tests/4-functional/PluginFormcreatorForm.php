@@ -54,7 +54,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       $this->integer($output)->isEqualTo(1);
    }
 
-   public function testBackgroundColor()
+   public function testBackgroundColorOfTile()
    {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -113,7 +113,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       $this->string($output)->isEqualTo("rgb(0, 144, 0)");
    }
 
-   public function testIconColor()
+   public function testIconColorOfTile()
    {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');

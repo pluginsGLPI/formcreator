@@ -135,6 +135,47 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->string($new_question->getField('uuid'))->isNotEqualTo($question->getField('uuid'));
    }
 
+   public function providerPrepareInputForAddEmail() {
+      $section1 = $this->getSection(
+         [],
+         []
+      );
+
+      return [
+         [
+            'input' => [
+               'plugin_formcreator_sections_id' => $section1->getID(),
+               'fieldtype'                      => 'email',
+               'name'                           => "email field",
+               'values'                         => "",
+               'required'                       => '0',
+               'default_values'                 => 'empty@example.com',
+               'desription'                     => "",
+               'row'                            => '1',
+               'col'                            => '0',
+               'width'                          => '4',
+               'height'                         => '1',
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+            ],
+            'expected' => [
+               'plugin_formcreator_sections_id' => $section1->getID(),
+               'fieldtype'                      => 'email',
+               'name'                           => "email field",
+               'values'                         => "",
+               'required'                       => '1',
+               'default_values'                 => 'empty@example.com',
+               'desription'                     => "",
+               'row'                            => '1',
+               'col'                            => '0',
+               'width'                          => '4',
+               'height'                         => '1',
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+            ],
+            'expectedError' => null,
+         ],
+      ];
+   }
+
    public function providerPrepareInputForAdd() {
       $section1 = $this->getSection(
          [],
@@ -303,6 +344,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
 
    /**
     * @dataProvider providerPrepareInputForAdd
+    * @dataProvider providerPrepareInputForAddEmail
     */
    public function testPrepareInputForAdd($input, $expected, $expectedError) {
       $instance = new \PluginFormcreatorQuestion();
