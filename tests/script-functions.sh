@@ -74,6 +74,7 @@ plugin_test_functional() {
    RESOURCE="tests/4-functional"
    if [ "$1" != "" ]; then
       RESOURCE=$1
+      shift
    fi
 
    if [ -f $RESOURCE ]; then
@@ -81,11 +82,13 @@ plugin_test_functional() {
    elif [ -d $RESOURCE ]; then
       RESOURCE_TYPE="-d"
    fi
+   echo $@
+   EXTRA=$@
    #export GLPI_CONFIG_DIR=$TEST_GLPI_CONFIG_DIR
    php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
    PROCESS=$!
    echo php started with PID=$PROCESS
-   vendor/bin/atoum -ft -bf tests/bootstrap.php $RESOURCE_TYPE $RESOURCE $NOCOVERAGE -mcn 1
+   vendor/bin/atoum -ft -bf tests/bootstrap.php $NOCOVERAGE -mcn 1 $RESOURCE_TYPE $RESOURCE $EXTRA
 }
 
 plugin_test_uninstall() {
