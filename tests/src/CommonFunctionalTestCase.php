@@ -36,25 +36,10 @@ class CommonFunctionalTestCase extends CommonTestCase {
       $this->client = \Symfony\Component\Panther\Client::createChromeClient(null, null, [], 'http://localhost:8000');
       //$this->client = \Symfony\Component\Panther\Client::createFirefoxClient(null, null, [], 'http://localhost:8000');
 
+      $this->currentTestMethod = $method;
       $this->browsing = new CommonBrowsing($this);
 
-      // Browse to login page
-      $this->crawler = $this->client->request('GET', '/');
-
-      // screenshot
-      $this->currentTestMethod = $method;
-      $this->client->waitForVisibility('#boxlogin > form');
-      $this->takeScreenshot();
-      $form = $this->crawler->filter('#boxlogin > form')->form();
-
-      // Login as glpi
-      $login = $this->crawler->filter('input#login_name')->attr('name');
-      $passwd = $this->crawler->filter('input#login_password')->attr('name');
-      $form[$login] = 'glpi';
-      $form[$passwd] = 'glpi';
-      $this->crawler = $this->client->submit($form);
-
-      $this->client->waitFor('#footer');
+      $this->browsing->login('glpi', 'glpi');
    }
 
    public function takeScreenshot() {
