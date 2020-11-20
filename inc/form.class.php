@@ -1397,6 +1397,7 @@ PluginFormcreatorConditionnableInterface
 
          return $input;
       } else {
+         // TODO: this call is done in post_updateItem. Shoud probably be removed here
          $this->updateValidators();
          return $this->prepareInputForAdd($input);
       }

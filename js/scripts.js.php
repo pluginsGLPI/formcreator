@@ -407,7 +407,7 @@ function buildTiles(list) {
 
          if (item.type == 'form') {
             forms.push(
-               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
                + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name

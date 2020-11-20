@@ -8,8 +8,11 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
  * @engine inline
  */
 class CommonFunctionalTestCase extends CommonTestCase {
+   /** @var \Symfony\Component\DomCrawler\Crawler */
    public $crawler;
+   /** @var \Symfony\Component\Panther\Client */
    public $client;
+   /** @var CommonBrowsing */
    protected $browsing;
    protected $screenshotPath;
    private $currentTestMethod;
