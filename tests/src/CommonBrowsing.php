@@ -23,6 +23,30 @@ class CommonBrowsing {
       $this->test = $test;
    }
 
+   public function login($user, $password) {
+      // Browse to login page
+      $this->test->crawler = $this->test->client->request('GET', '/');
+
+      // screenshot
+      $this->test->client->waitForVisibility('#boxlogin > form');
+      $this->test->takeScreenshot();
+      $form = $this->test->crawler->filter('#boxlogin > form')->form();
+
+      // Login as glpi
+      $login = $this->test->crawler->filter('input#login_name')->attr('name');
+      $passwd = $this->test->crawler->filter('input#login_password')->attr('name');
+      $form[$login] = $user;
+      $form[$passwd] = $password;
+      $this->test->crawler = $this->test->client->submit($form);
+
+      $this->test->client->waitFor('#footer');
+   }
+
+   public function logout() {
+      $this->test->crawler = $this->test->client->request('GET', '/front/logout.php?noAUTO=1');
+      $this->test->client->waitFor('#display-login');
+   }
+
    /**
     * Change the active entity
     *
