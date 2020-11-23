@@ -26,8 +26,9 @@ install_glpi() {
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
    composer install --no-dev --no-interaction
-   php bin/console dependencies install
+   php bin/console dependencies install composer-options=--no-dev
    php bin/console glpi:system:check_requirements
+   rm .atoum.php
    mkdir -p tests/files/_cache
    cp -r ../formcreator plugins/$PLUGINNAME
 }
