@@ -324,7 +324,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    }
 
    public function providerPrepareInputForUpdate() {
-      return providerPrepareInputForAdd();
+      return $this->providerPrepareInputForAdd();
    }
 
    /**
