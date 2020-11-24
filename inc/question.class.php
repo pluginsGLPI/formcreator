@@ -427,13 +427,15 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Get next order
-      $maxOrder = PluginFormcreatorCommon::getMax($this, [
-         "plugin_formcreator_sections_id" => $input['plugin_formcreator_sections_id']
-      ], 'order');
-      if ($maxOrder === null) {
-         $input['order'] = 1;
-      } else {
-         $input['order'] = $maxOrder + 1;
+      if ($this->useAutomaticOrdering) {
+         $maxOrder = PluginFormcreatorCommon::getMax($this, [
+            "plugin_formcreator_sections_id" => $input['plugin_formcreator_sections_id']
+         ], 'order');
+         if ($maxOrder === null) {
+            $input['order'] = 1;
+         } else {
+            $input['order'] = $maxOrder + 1;
+         }
       }
 
       return $input;
@@ -962,6 +964,7 @@ PluginFormcreatorConditionnableInterface
          );
          $item->update($input);
       } else {
+         $item->useAutomaticOrdering = false;
          unset($input['id']);
          $itemId = $item->add($input);
       }
