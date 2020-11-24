@@ -44,7 +44,7 @@ class PluginFormcreatorSection extends CommonFunctionalTestCase
       sleep(1);
       $newSections = $section->find([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'NOT' => ['id' => [$existingSectionsId]]
+         'NOT' => ['id' => $existingSectionsId]
       ]);
       $this->integer(count($newSections))->isEqualTo(1);
       $newSectionId = array_pop($newSections)['id'];
