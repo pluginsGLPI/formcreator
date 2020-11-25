@@ -67,7 +67,7 @@ class RequestTypeField extends SelectField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $additions .= $$this->getParametersHtmlForDesign();
+      $additions .= $this->getParametersHtmlForDesign();
 
       return [
          'label' => $label,
