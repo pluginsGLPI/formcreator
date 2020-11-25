@@ -38,10 +38,6 @@ if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (!isset($_REQUEST['sub_itemtype'])) {
-   Html::displayNotFoundError();
-}
-
 // force layout of glpi
 $layout = $_SESSION['glpilayout'];
 $_SESSION['glpilayout'] = "lefttab";
@@ -60,10 +56,7 @@ if (isset($_POST['save_formanswer'])) {
       Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
    }
 
-   $issue->getFromDBByCrit([
-      'original_id' => (int) $_REQUEST['id'],
-      'sub_itemtype' => $_REQUEST['sub_itemtype'],
-   ]);
+   $issue->getFromDB((int) $_REQUEST['id']);
    $issue->display($_REQUEST);
 
    if (plugin_formcreator_replaceHelpdesk()) {

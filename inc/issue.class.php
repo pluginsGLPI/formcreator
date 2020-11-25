@@ -238,10 +238,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function display($options = []) {
-      $itemtype = $options['sub_itemtype'];
-      if (!in_array($itemtype, [Ticket::class, PluginFormcreatorFormAnswer::class])) {
-         html::displayRightError();
-      }
       Html::requireJs('tinymce');
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
          $this->displaySimplified($options);
@@ -251,13 +247,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public function displayExtended($options = []) {
-      $item = new $options['sub_itemtype'];
-
-      if (isset($options['id'])
-            && !$item->isNewID($options['id'])) {
-         if (!$item->getFromDB($options['id'])) {
-            Html::displayNotFoundError();
-         }
+      $itemtype = $this->fields['sub_itemtype'];
+      $item = new $itemtype();
+      if (!$item->getFromDB($this->fields['original_id'])) {
+         Html::displayNotFoundError();
       }
 
       // if ticket(s) exist(s), show it/them
@@ -266,6 +259,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item = $this->getTicketsForDisplay($options);
       }
       unset($options['_item']);
+
+      // Header if the item + link to the list of items
+      $this->showNavigationHeader($options);
 
       $item->showTabsContent($options);
    }
@@ -276,20 +272,17 @@ class PluginFormcreatorIssue extends CommonDBTM {
    public function displaySimplified($options = []) {
       global $CFG_GLPI;
 
-      $item = new $options['sub_itemtype'];
-
-      if (isset($options['id'])
-          && !$item->isNewID($options['id'])) {
-         if (!$item->getFromDB($options['id'])) {
-            Html::displayNotFoundError();
-         }
+      $itemtype = $this->fields['sub_itemtype'];
+      $item = new $itemtype();
+      if (!$item->getFromDB($this->fields['original_id'])) {
+         Html::displayNotFoundError();
       }
 
       // in case of left tab layout, we couldn't see "right error" message
       if ($item->get_item_to_display_tab) {
-         if (isset($options["id"])
-             && $options["id"]
-             && !$item->can($options["id"], READ)) {
+         if (isset($this->fields['original_id'])
+             && $this->fields['original_id']
+             && !$item->can($this->fields['original_id'], READ)) {
             // This triggers from a profile switch.
             // If we don't have right, redirect instead to central page
             if (isset($_SESSION['_redirected_from_profile_selector'])
@@ -302,8 +295,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
-      if (!isset($options['id'])) {
+      if (!isset($this->fields['original_id'])) {
          $options['id'] = 0;
+      } else {
+         $options['id'] = $item->getID();
       }
 
       // Header if the item + link to the list of items
@@ -657,6 +652,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $content = '';
             }
             $link = self::getFormURLWithID($id) . "&sub_itemtype=".$data['raw']['sub_itemtype'];
+            $link =  self::getFormURLWithID($data['id']);
             $key = 'id';
             $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
                'applyto' => $itemtype.$data['raw'][$key],
