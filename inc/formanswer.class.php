@@ -1205,156 +1205,84 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       global $DB;
 
       $issue = new PluginFormcreatorIssue();
-      if ($this->input['status'] != self::STATUS_REFUSED) {
-         // If cannot get itemTicket from DB it happens either
-         // when no item exist
-         // or when several rows matches
-         // Both are processed the same way
-         $rows = $DB->request([
-            'SELECT' => ['id'],
-            'FROM'   => Item_Ticket::getTable(),
-            'WHERE'  => [
-               'itemtype' => PluginFormcreatorFormAnswer::class,
-               'items_id' => $this->getID(),
-            ]
-         ]);
-         if ($rows->count() != 1) {
-            // There are several tickets for this form answer
-            // The issue must be created from this form answer
-            $issue->add([
-               'original_id'        => $this->getID(),
-               'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
-               'name'               => addslashes($this->fields['name']),
-               'status'             => $this->fields['status'],
-               'date_creation'      => $this->fields['request_date'],
-               'date_mod'           => $this->fields['request_date'],
-               'entities_id'        => $this->fields['entities_id'],
-               'is_recursive'       => $this->fields['is_recursive'],
-               'requester_id'       => $this->fields['requester_id'],
-               'users_id_validator' => $this->fields['users_id_validator'],
-               'groups_id_validator'=> $this->fields['groups_id_validator'],
-               'comment'            => '',
-            ]);
-         } else {
-            // There is one ticket for this form answer
-            // The issue must be created from this ticket
-            $result = $rows->next();
-            $itemTicket = new Item_Ticket();
-            $itemTicket->getFromDB($result['id']);
-            $ticket = new Ticket();
-            if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
-               throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
-            }
-            $ticketId = $ticket->getID();
-            $ticketUser = new Ticket_User();
-            $ticketUserRow = $ticketUser->find([
-               'tickets_id' => $ticketId,
-               'type' => CommonITILActor::REQUESTER,
-               ], [
-                  'id ASC'
-               ],
-               1
-            );
-            $ticketUserRow = array_pop($ticketUserRow);
-            $issue->add([
-               'original_id'        => $ticketId,
-               'sub_itemtype'       => Ticket::class,
-               'name'               => addslashes($ticket->getField('name')),
-               'status'             => $ticket->getField('status'),
-               'date_creation'      => $ticket->getField('date'),
-               'date_mod'           => $ticket->getField('date_mod'),
-               'entities_id'        => $ticket->getField('entities_id'),
-               'is_recursive'       => '0',
-               'requester_id'       => $ticketUserRow['users_id'],
-               'users_id_validator' => '',
-               'groups_id_validator'=> '',
-               'comment'            => addslashes($ticket->getField('content')),
-            ]);
-         }
+      if ($this->input['status'] == self::STATUS_REFUSED) {
+         return;
       }
+
+      // If cannot get itemTicket from DB it happens either
+      // when no item exist
+      // or when several rows matches
+      // Both are processed the same way
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id' => $this->getID(),
+         ]
+      ]);
+      if ($rows->count() != 1) {
+         // There are several tickets for this form answer
+         // The issue must be created from this form answer
+         $issue->add([
+            'original_id'        => $this->getID(),
+            'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
+            'name'               => addslashes($this->fields['name']),
+            'status'             => $this->fields['status'],
+            'date_creation'      => $this->fields['request_date'],
+            'date_mod'           => $this->fields['request_date'],
+            'entities_id'        => $this->fields['entities_id'],
+            'is_recursive'       => $this->fields['is_recursive'],
+            'requester_id'       => $this->fields['requester_id'],
+            'users_id_validator' => $this->fields['users_id_validator'],
+            'groups_id_validator'=> $this->fields['groups_id_validator'],
+            'comment'            => '',
+         ]);
+
+         return;
+      }
+
+      // There is one ticket for this form answer
+      // The issue must be created from this ticket
+      $result = $rows->next();
+      $itemTicket = new Item_Ticket();
+      $itemTicket->getFromDB($result['id']);
+      $ticket = new Ticket();
+      if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
+         throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
+      }
+      $ticketId = $ticket->getID();
+      $ticketUser = new Ticket_User();
+      $ticketUserRow = $ticketUser->find([
+         'tickets_id' => $ticketId,
+         'type' => CommonITILActor::REQUESTER,
+         ], [
+            'id ASC'
+         ],
+         1
+      );
+      $ticketUserRow = array_pop($ticketUserRow);
+      $issue->add([
+         'original_id'        => $ticketId,
+         'sub_itemtype'       => Ticket::class,
+         'name'               => addslashes($ticket->getField('name')),
+         'status'             => $ticket->getField('status'),
+         'date_creation'      => $ticket->getField('date'),
+         'date_mod'           => $ticket->getField('date_mod'),
+         'entities_id'        => $ticket->getField('entities_id'),
+         'is_recursive'       => '0',
+         'requester_id'       => $ticketUserRow['users_id'],
+         'users_id_validator' => '',
+         'groups_id_validator'=> '',
+         'comment'            => addslashes($ticket->getField('content')),
+      ]);
    }
 
    private function updateIssue() {
       global $DB;
 
       $issue = new PluginFormcreatorIssue();
-      if ($this->input['status'] != self::STATUS_REFUSED) {
-         $rows = $DB->request([
-            'SELECT' => ['id'],
-            'FROM'   => Item_Ticket::getTable(),
-            'WHERE'  => [
-               'itemtype' => PluginFormcreatorFormAnswer::class,
-               'items_id' => $this->getID(),
-            ]
-         ]);
-         if ($rows->count() != 1) {
-            // There are several tickets for this form answer
-            // The issue must be updated from this form answer
-            $issue->getFromDBByCrit([
-               'AND' => [
-               'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-               'original_id'  => $this->getID()
-               ]
-            ]);
-            $issue->update([
-               'id'                 => $issue->getID(),
-               'original_id'        => $this->getID(),
-               'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
-               'name'               => addslashes($this->fields['name']),
-               'status'             => $this->fields['status'],
-               'date_creation'      => $this->fields['request_date'],
-               'date_mod'           => $this->fields['request_date'],
-               'entities_id'        => $this->fields['entities_id'],
-               'is_recursive'       => $this->fields['is_recursive'],
-               'requester_id'       => $this->fields['requester_id'],
-               'users_id_validator' => $this->fields['users_id_validator'],
-               'groups_id_validator'=> $this->fields['groups_id_validator'],
-               'comment'            => '',
-            ]);
-         } else {
-            // There is one ticket for this form answer
-            // The issue must be updated from this ticket
-            $result = $rows->next();
-            $itemTicket = new Item_Ticket();
-            $itemTicket->getFromDB($result['id']);
-            $ticket = new Ticket();
-            if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
-               throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
-            }
-            $ticketId = $ticket->getID();
-            $ticketUser = new Ticket_User();
-            $ticketUserRow = $ticketUser->find([
-                  'tickets_id' => $ticketId,
-                  'type' => CommonITILActor::REQUESTER,
-               ], [
-                  'id ASC'
-               ],
-               1
-            );
-            $ticketUserRow = array_pop($ticketUserRow);
-            $issue->getFromDBByCrit([
-               'AND' => [
-                 'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-                 'original_id'  => $this->getID()
-               ]
-             ]);
-             $issue->update([
-                'id'                 => $issue->getID(),
-                'original_id'        => $ticketId,
-                'sub_itemtype'       => Ticket::class,
-                'name'               => addslashes($ticket->getField('name')),
-                'status'             => $ticket->getField('status'),
-                'date_creation'      => $ticket->getField('date'),
-                'date_mod'           => $ticket->getField('date_mod'),
-                'entities_id'        => $ticket->getField('entities_id'),
-                'is_recursive'       => '0',
-                'requester_id'       => $ticketUserRow['users_id'],
-                'users_id_validator' => '',
-                'groups_id_validator'=> '',
-                'comment'            => addslashes($ticket->getField('content')),
-             ]);
-         }
-      } else {
+      if ($this->input['status'] == self::STATUS_REFUSED) {
          $issue->getFromDBByCrit([
             'AND' => [
               'sub_itemtype' => PluginFormcreatorFormAnswer::class,
@@ -1367,7 +1295,85 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'original_id'     => $this->getID(),
             'status'          => $this->fields['status'],
          ]);
+         return;
       }
+
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id' => $this->getID(),
+         ]
+      ]);
+      if ($rows->count() != 1) {
+         // There are several tickets for this form answer
+         // The issue must be updated from this form answer
+         $issue->getFromDBByCrit([
+            'AND' => [
+            'sub_itemtype' => PluginFormcreatorFormAnswer::class,
+            'original_id'  => $this->getID()
+            ]
+         ]);
+         $issue->update([
+            'id'                 => $issue->getID(),
+            'original_id'        => $this->getID(),
+            'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
+            'name'               => addslashes($this->fields['name']),
+            'status'             => $this->fields['status'],
+            'date_creation'      => $this->fields['request_date'],
+            'date_mod'           => $this->fields['request_date'],
+            'entities_id'        => $this->fields['entities_id'],
+            'is_recursive'       => $this->fields['is_recursive'],
+            'requester_id'       => $this->fields['requester_id'],
+            'users_id_validator' => $this->fields['users_id_validator'],
+            'groups_id_validator'=> $this->fields['groups_id_validator'],
+            'comment'            => '',
+         ]);
+
+         return;
+      }
+      // There is one ticket for this form answer
+      // The issue must be updated from this ticket
+      $result = $rows->next();
+      $itemTicket = new Item_Ticket();
+      $itemTicket->getFromDB($result['id']);
+      $ticket = new Ticket();
+      if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
+         throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
+      }
+      $ticketId = $ticket->getID();
+      $ticketUser = new Ticket_User();
+      $ticketUserRow = $ticketUser->find([
+            'tickets_id' => $ticketId,
+            'type' => CommonITILActor::REQUESTER,
+         ], [
+            'id ASC'
+         ],
+         1
+      );
+      $ticketUserRow = array_pop($ticketUserRow);
+      $issue->getFromDBByCrit([
+         'AND' => [
+            'sub_itemtype' => PluginFormcreatorFormAnswer::class,
+            'original_id'  => $this->getID()
+         ]
+      ]);
+      $issue->update([
+         'id'                 => $issue->getID(),
+         'original_id'        => $ticketId,
+         'sub_itemtype'       => Ticket::class,
+         'name'               => addslashes($ticket->getField('name')),
+         'status'             => $ticket->getField('status'),
+         'date_creation'      => $ticket->getField('date'),
+         'date_mod'           => $ticket->getField('date_mod'),
+         'entities_id'        => $ticket->getField('entities_id'),
+         'is_recursive'       => '0',
+         'requester_id'       => $ticketUserRow['users_id'],
+         'users_id_validator' => '',
+         'groups_id_validator'=> '',
+         'comment'            => addslashes($ticket->getField('content')),
+      ]);
    }
 
    /**
