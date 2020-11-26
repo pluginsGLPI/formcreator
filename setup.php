@@ -259,8 +259,10 @@ function plugin_init_formcreator() {
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
-               Html::requireJs('photoswipe');
-               echo Html::css('public/lib/photoswipe.css');
+               if (version_compare(GLPI_VERSION, '9.5') >= 0) {
+                  Html::requireJs('photoswipe');
+                  echo Html::css('public/lib/photoswipe.css');
+               }
                Html::requireJs('tinymce');
                break;
             }
