@@ -405,7 +405,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       // -------------------------------------------------------------------------------------------
       echo '<tr>';
       echo '<th colspan="4">';
-      echo __('Condition to show the target', 'formcreator');
+      echo __('Condition to create the target', 'formcreator');
       echo '</label>';
       echo '</th>';
       echo '</tr>';
