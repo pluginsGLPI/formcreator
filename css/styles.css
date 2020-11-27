@@ -212,7 +212,16 @@ input.submit_button:focus {
 
 /* actions on sections or questions */
 #plugin_formcreator_form.plugin_formcreator_form_design .form_control {
+   width: 23px;
+   float: right;
+   min-height: 1px;
    font-size: larger;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design .form_control > i {
+   display: table-cell;
+   vertical-align: middle;
+   height: 32px;
 }
 
 /*
@@ -1423,12 +1432,6 @@ span.fc_list_icon {
 .section_row,
 .section_row th {
    background-color: #CCC;
-}
-
-.form_control {
-   width: 23px;
-   float: right;
-   min-height: 1px;
 }
 
 .form_header ul {
