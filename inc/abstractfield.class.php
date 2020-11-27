@@ -348,7 +348,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          'text'     => [],
       ];
 
-      foreach ($this->getParameters() as $fieldName => $parameter) {
+      foreach ($this->getParameters() as $parameter) {
          foreach ($parameter->getTranslatableStrings() as $type => $subStrings) {
             $strings[$type] = array_merge($strings[$type], $subStrings);
          }
