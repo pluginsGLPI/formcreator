@@ -1919,7 +1919,7 @@ PluginFormcreatorConditionnableInterface
                   false,
                   WARNING
                );
-               throw new ImportFailureException('failed to add or update the item');
+               throw new ImportFailureException('Failed to add or update the item');
             } else {
                // The form is in an entity which does not exists yet
                Session::addMessageAfterRedirect(
@@ -1927,7 +1927,7 @@ PluginFormcreatorConditionnableInterface
                   false,
                   WARNING
                );
-               throw new ImportFailureException('failed to add or update the item');
+               throw new ImportFailureException('Failed to add or update the item');
             }
          }
       }
@@ -1960,7 +1960,7 @@ PluginFormcreatorConditionnableInterface
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the form to the linker

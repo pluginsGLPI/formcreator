@@ -1155,7 +1155,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          $question = $linker->getObject($input[$fieldSetting['field']], PluginFormcreatorQuestion::class);
          if ($question === false) {
             $typeName = strtolower(self::getTypeName());
-            throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s: a question is missing and is used in a parameter of the target', 'formceator'), $typeName, $input['name']));
+            throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: a question is missing and is used in a parameter of the target', 'formceator'), $typeName, $input['name']));
          }
          $input[$fieldSetting['field']] = $question->getID();
       }
@@ -1171,7 +1171,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the target to the linker

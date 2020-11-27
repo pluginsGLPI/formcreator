@@ -137,7 +137,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                $user = new User;
                $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
                if ($users_id === false) {
-                  throw new ImportFailureException(sprintf(__('failed to find a user: ID %1$d'), $users_id));
+                  throw new ImportFailureException(sprintf(__('Failed to find a user: ID %1$d'), $users_id));
                }
                $input['actor_value'] = $users_id;
                break;
@@ -146,7 +146,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                $group = new Group;
                $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
                if ($groups_id === false) {
-                  throw new ImportFailureException(sprintf(__('failed to find a group: ID %1$d'), $groups_id));
+                  throw new ImportFailureException(sprintf(__('Failed to find a group: ID %1$d'), $groups_id));
                }
                $input['actor_value'] = $groups_id;
                break;
@@ -155,7 +155,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                $supplier = new Supplier;
                $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
                if ($suppliers_id === false) {
-                  throw new ImportFailureException(sprintf(__('failed to find a supplier: ID %1$d'), $suppliers_id));
+                  throw new ImportFailureException(sprintf(__('Failed to find a supplier: ID %1$d'), $suppliers_id));
                }
                $input['actor_value'] = $suppliers_id;
                break;
@@ -172,7 +172,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the question to the linker

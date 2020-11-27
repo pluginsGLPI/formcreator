@@ -212,7 +212,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the form_profile to the linker

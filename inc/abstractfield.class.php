@@ -239,7 +239,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       foreach ($this->getEmptyParameters() as $parameter) {
          if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
             // Don't make  this error fatal, but log it anyway
-            Toolbox::logInFile('php-errors', 'failed to delete parameter for question ' . $question->getID() . PHP_EOL);
+            Toolbox::logInFile('php-errors', 'Failed to delete parameter for question ' . $question->getID() . PHP_EOL);
          }
       }
       return true;
