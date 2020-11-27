@@ -179,7 +179,6 @@ input.submit_button:focus {
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item {
    line-height: 32px;
    background: #F0F0F0;
-   position: absolute;
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content {
