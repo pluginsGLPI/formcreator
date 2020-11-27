@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-09 10:25+0100\n"
+"POT-Creation-Date: 2020-11-27 12:20+0100\n"
 "PO-Revision-Date: 2020-01-22 11:04+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2020\n"
 "Language-Team: French (Canada) (https://www.transifex.com/teclib/teams/28042/fr_CA/)\n"
@@ -38,7 +38,7 @@ msgid "Forms waiting for validation"
 msgstr "Formulaires en attente de validation"
 
 #: setup.php:248 ajax/homepage_link.php:37 inc/entityconfig.class.php:55
-#: inc/form.class.php:101 inc/form.class.php:712 inc/form.class.php:2036
+#: inc/form.class.php:101 inc/form.class.php:712 inc/form.class.php:2026
 #: inc/formanswer.class.php:184 inc/formlist.class.php:46 js/scripts.js.php:72
 msgid "Form"
 msgid_plural "Forms"
@@ -60,8 +60,8 @@ msgstr "Aucune limite"
 #: front/form.php:45 front/formanswer.form.php:83 front/formanswer.form.php:88
 #: front/formanswer.php:46 front/formanswer.php:51 front/issue.php:48
 #: front/issue.php:53 front/targetchange.form.php:74
-#: front/targetticket.form.php:74 inc/form.class.php:2104
-#: inc/form.class.php:2111
+#: front/targetticket.form.php:74 inc/form.class.php:2094
+#: inc/form.class.php:2101
 msgid "Form Creator"
 msgstr "Formcreator"
 
@@ -69,11 +69,11 @@ msgstr "Formcreator"
 #: front/issue.form.php:58 front/issue.php:44 front/knowbaseitem.form.php:45
 #: front/reservation.form.php:46 front/reservation.php:46
 #: front/reservationitem.php:42 front/wizard.php:45 front/wizardfeeds.php:46
-#: inc/form.class.php:2099
+#: inc/form.class.php:2089
 msgid "Service catalog"
 msgstr "Catalogue de service"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2101
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2091
 msgid "Form list"
 msgstr "Liste des formulaires"
 
@@ -131,14 +131,13 @@ msgstr "Affiché par défaut, sauf si"
 
 #: inc/condition.class.php:159 inc/form.class.php:1934
 #: inc/form_profile.class.php:215 inc/form_validator.class.php:109
-#: inc/item_targetticket.class.php:141 inc/question.class.php:970
-#: inc/questiondependency.class.php:200 inc/questionrange.class.php:178
-#: inc/questionregex.class.php:173 inc/section.class.php:269
-#: inc/target_actor.class.php:173 inc/targetchange.class.php:237
-#: inc/targetticket.class.php:1128
+#: inc/item_targetticket.class.php:141 inc/question.class.php:973
+#: inc/questiondependency.class.php:200 inc/questionregex.class.php:173
+#: inc/section.class.php:272 inc/target_actor.class.php:173
+#: inc/targetchange.class.php:251 inc/targetticket.class.php:1135
 #, php-format
-msgid "failed to add or update the %1$s %2$s"
-msgstr "échec lors de l'ajout ou de la mise à jour de %1$s %2$s"
+msgid "Failed to add or update the %1$s %2$s"
+msgstr ""
 
 #: inc/entityconfig.class.php:89
 msgid "Helpdesk"
@@ -239,7 +238,7 @@ msgstr[1] "Destinations"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: inc/form.class.php:668 inc/form.class.php:2258
+#: inc/form.class.php:668 inc/form.class.php:2248
 msgid "Add a target"
 msgstr "Ajouter une cible"
 
@@ -415,35 +414,35 @@ msgstr ""
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "L'entité %1$s est requise pour le formulaire %2$s."
 
-#: inc/form.class.php:1971
+#: inc/form.class.php:1961
 msgid "Failed to create JSON document type"
 msgstr "Échec de création du type de fichiers JSON"
 
-#: inc/form.class.php:1978
+#: inc/form.class.php:1968
 msgid "JSON document type not found"
 msgstr "Type de document JSON introuvable"
 
-#: inc/form.class.php:1985
+#: inc/form.class.php:1975
 msgid "Failed to update JSON document type"
 msgstr "Échec lors de la mise à jour du type de document JSON"
 
-#: inc/form.class.php:2005
+#: inc/form.class.php:1995
 msgid "Forms without category"
 msgstr "Formulaires sans catégorie"
 
-#: inc/form.class.php:2028
+#: inc/form.class.php:2018
 msgid "No form available"
 msgstr "Aucun formulaire disponible"
 
-#: inc/form.class.php:2300
+#: inc/form.class.php:2290
 msgid "Unsupported target type."
 msgstr "Type de cible non supporté."
 
-#: inc/form.class.php:2312
+#: inc/form.class.php:2302
 msgid "The form does not exists."
 msgstr "Le formulaire n'existe pas."
 
-#: inc/form.class.php:2335
+#: inc/form.class.php:2325
 msgid "Unsuported target type."
 msgstr "Type de cible non supporté."
 
@@ -644,15 +643,15 @@ msgstr[1] "Questions"
 msgid "Count of conditions"
 msgstr "Nombre de conditions"
 
-#: inc/question.class.php:234 inc/question.class.php:826
+#: inc/question.class.php:234 inc/question.class.php:828
 msgid "Required"
 msgstr "Champ obligatoire"
 
-#: inc/question.class.php:275 inc/question.class.php:747
+#: inc/question.class.php:275 inc/question.class.php:749
 msgid "Add a question"
 msgstr "Ajouter une question"
 
-#: inc/question.class.php:285 inc/section.class.php:339
+#: inc/question.class.php:285 inc/section.class.php:342
 msgid "Add a section"
 msgstr "Ajouter une section"
 
@@ -661,7 +660,7 @@ msgid "Show submit button"
 msgstr "Affichage du bouton de soumission"
 
 #: inc/question.class.php:322 inc/section.class.php:72
-#: inc/section.class.php:108
+#: inc/section.class.php:110
 msgid "The title is required"
 msgstr "L'intitulé est obligatoire"
 
@@ -690,22 +689,22 @@ msgstr "Ce type de question requiert des paramètres"
 msgid "A parameter is missing for this question type"
 msgstr "Il manque un paramètre pour ce type de question"
 
-#: inc/question.class.php:747
+#: inc/question.class.php:749
 msgid "Edit a question"
 msgstr "Modifier une question"
 
-#: inc/question.class.php:774 inc/section.class.php:56
+#: inc/question.class.php:776 inc/section.class.php:56
 #: inc/targetbase.class.php:1406
 msgid "Section"
 msgid_plural "Sections"
 msgstr[0] "Section"
 msgstr[1] "Sections"
 
-#: inc/question.class.php:843
+#: inc/question.class.php:845
 msgid "Show empty"
 msgstr "Afficher une valeur vide"
 
-#: inc/question.class.php:884
+#: inc/question.class.php:886
 msgid "Show field"
 msgstr "Affichage du champ"
 
@@ -729,6 +728,11 @@ msgstr "Min"
 msgid "Max"
 msgstr "Max"
 
+#: inc/questionrange.class.php:178
+#, php-format
+msgid "faFailediled to add or update the %1$s %2$s"
+msgstr ""
+
 #: inc/questionregex.class.php:51
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
@@ -743,11 +747,11 @@ msgstr ""
 "Indiquez les conditions de validation supplémentaire dans la description de "
 "la question pour aider les utilisateurs."
 
-#: inc/section.class.php:341
+#: inc/section.class.php:344
 msgid "Edit a section"
 msgstr "Modifier une section"
 
-#: inc/section.class.php:361
+#: inc/section.class.php:364
 msgid "Show section"
 msgstr "Affichage de la section"
 
@@ -963,7 +967,7 @@ msgstr "Formulaire complet"
 msgid "Add"
 msgstr "Ajouter"
 
-#: inc/targetbase.class.php:1586 inc/targetchange.class.php:393
+#: inc/targetbase.class.php:1586 inc/targetchange.class.php:407
 #: inc/targetticket.class.php:223
 msgid "Cancel"
 msgstr "Annuler"
@@ -976,7 +980,7 @@ msgstr "Groupe à partir de l'objet"
 msgid "Tech group from the object"
 msgstr "Tech groupe à partir de l'objet"
 
-#: inc/targetchange.class.php:41 inc/targetchange.class.php:279
+#: inc/targetchange.class.php:41 inc/targetchange.class.php:293
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] "Changement cible"
@@ -990,22 +994,22 @@ msgstr "Moyen"
 msgid "None"
 msgstr "Aucun"
 
-#: inc/targetchange.class.php:221 inc/targetticket.class.php:1112
+#: inc/targetchange.class.php:235 inc/targetticket.class.php:1119
 #, php-format
 msgid ""
-"failed to add or update the %1$s %2$s: a question is missing and is used in "
+"Failed to add or update the %1$s %2$s: a question is missing and is used in "
 "a parameter of the target"
 msgstr ""
 
-#: inc/targetchange.class.php:269 inc/targetticket.class.php:119
+#: inc/targetchange.class.php:283 inc/targetticket.class.php:119
 msgid "Edit a destination"
 msgstr "Modifier une destination"
 
-#: inc/targetchange.class.php:282
+#: inc/targetchange.class.php:296
 msgid "Change title"
 msgstr "Titre du changement"
 
-#: inc/targetchange.class.php:380 inc/targetticket.class.php:210
+#: inc/targetchange.class.php:394
 msgid "Condition to show the target"
 msgstr "Condition pour afficher la cible"
 
@@ -1034,6 +1038,10 @@ msgstr "Titre du billet"
 #: inc/targetticket.class.php:199
 msgid "Add validation message as first ticket followup"
 msgstr "Ajouter le message de validation en premier dans le suivi de billet"
+
+#: inc/targetticket.class.php:210
+msgid "Condition to generate the target"
+msgstr ""
 
 #: inc/targetticket.class.php:250
 msgid "Link to an other ticket"
@@ -1118,12 +1126,12 @@ msgstr[1] "Acteurs"
 #: inc/fields/datetimefield.class.php:90
 #: inc/fields/dropdownfield.class.php:348 inc/fields/emailfield.class.php:94
 #: inc/fields/floatfield.class.php:127
-#: inc/fields/glpiselectfield.class.php:135
+#: inc/fields/glpiselectfield.class.php:139
 #: inc/fields/integerfield.class.php:128
 #: inc/fields/ldapselectfield.class.php:184
 #: inc/fields/multiselectfield.class.php:151
 #: inc/fields/radiosfield.class.php:229
-#: inc/fields/requesttypefield.class.php:169
+#: inc/fields/requesttypefield.class.php:178
 #: inc/fields/selectfield.class.php:121 inc/fields/tagfield.class.php:142
 #: inc/fields/textareafield.class.php:145 inc/fields/textfield.class.php:128
 #: inc/fields/timefield.class.php:141 inc/fields/urgencyfield.class.php:176
@@ -1152,7 +1160,7 @@ msgstr "Boites à cocher"
 
 #: inc/fields/checkboxesfield.class.php:227
 #: inc/fields/dropdownfield.class.php:362
-#: inc/fields/glpiselectfield.class.php:118
+#: inc/fields/glpiselectfield.class.php:122
 #: inc/fields/multiselectfield.class.php:187
 #: inc/fields/radiosfield.class.php:141
 msgid "The field value is required:"
@@ -1249,7 +1257,7 @@ msgid "Additional validation"
 msgstr "Validation supplémentaire"
 
 #: inc/fields/glpiselectfield.class.php:38
-#: inc/fields/glpiselectfield.class.php:111
+#: inc/fields/glpiselectfield.class.php:115
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "Objet GLPI"
@@ -1309,7 +1317,7 @@ msgstr "Sélection multiple"
 msgid "Radios"
 msgstr "Boutons radio"
 
-#: inc/fields/requesttypefield.class.php:96
+#: inc/fields/requesttypefield.class.php:105
 msgid "Request type"
 msgstr "Type de requête"
 
