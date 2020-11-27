@@ -134,11 +134,11 @@ msgstr "Bilgi bankası kategorisi"
 
 #: inc/condition.class.php:81
 msgid "is visible"
-msgstr ""
+msgstr "görünür"
 
 #: inc/condition.class.php:82
 msgid "is not visible"
-msgstr ""
+msgstr "görünmez"
 
 #: inc/condition.class.php:88
 msgid "Always displayed"
@@ -379,15 +379,15 @@ msgstr "Etkinleştir"
 
 #: inc/form.class.php:1867
 msgid "Forms import impossible, the file is empty"
-msgstr ""
+msgstr "Form içe aktarılamadı, dosya boş"
 
 #: inc/form.class.php:1871 inc/form.class.php:1875
 msgid "Forms import impossible, the file seems corrupt"
-msgstr ""
+msgstr "Form içe aktarılamadı, dosya bozulmuş gibi görünüyor"
 
 #: inc/form.class.php:1881
 msgid "Forms import impossible, the file was generated with another version"
-msgstr ""
+msgstr "Form içe aktarılamadı, dosya başka bir sürümde oluşturulmuş"
 
 #: inc/form.class.php:1888
 msgid ""
@@ -395,6 +395,9 @@ msgid ""
 "with a version older than 2.10 and import is expected to create incomplete "
 "or buggy forms."
 msgstr ""
+"Dosyada şema sürümü belirtilmemiş. Dosya büyük olasılıkla 2.10 öncesindeki "
+"bir sürüm ile oluşturulmuş. İçe aktarma sonucunda form eksik ya da hatalı "
+"olabilir."
 
 #: inc/form.class.php:1906
 #, php-format
@@ -434,7 +437,7 @@ msgstr "Kategorisi bulunmayan formlar"
 
 #: inc/form.class.php:2199
 msgid "No form available"
-msgstr ""
+msgstr "Kullanılabilecek bir form yok"
 
 #: inc/form.class.php:2478
 msgid "Unsupported target type."
@@ -731,11 +734,11 @@ msgstr "Sorudan grup"
 
 #: inc/target_actor.class.php:65
 msgid "Group from an object"
-msgstr ""
+msgstr "Bir nesneden grup"
 
 #: inc/target_actor.class.php:66
 msgid "Tech group from an object"
-msgstr ""
+msgstr "Bir nesneden teknik grup"
 
 #: inc/target_actor.class.php:67
 msgid "Specific supplier"
@@ -838,7 +841,7 @@ msgstr "Belirli kategori"
 
 #: inc/targetbase.class.php:225 inc/targetticket.class.php:92
 msgid "Last valid answer"
-msgstr ""
+msgstr "Geçerli son yanıt"
 
 #: inc/targetbase.class.php:231
 msgid "Location from template or none"
@@ -894,7 +897,7 @@ msgstr "Tam form"
 
 #: inc/targetbase.class.php:1572
 msgid "Add"
-msgstr ""
+msgstr "Ekle"
 
 #: inc/targetbase.class.php:1574
 msgid "Cancel"
@@ -902,11 +905,11 @@ msgstr "İptal"
 
 #: inc/targetbase.class.php:1785
 msgid "Group from the object"
-msgstr ""
+msgstr "Nesneden grup"
 
 #: inc/targetbase.class.php:1791
 msgid "Tech group from the object"
-msgstr ""
+msgstr "Nesneden teknik grup"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:279
 msgid "Target change"
@@ -950,11 +953,11 @@ msgstr "Belirli varlık"
 
 #: inc/targetticket.class.php:98
 msgid "Default or from a template"
-msgstr ""
+msgstr "Varsayılan ya da bir kalıptan"
 
 #: inc/targetticket.class.php:99
 msgid "Specific type"
-msgstr ""
+msgstr "Belirli tür"
 
 #: inc/targetticket.class.php:145
 msgid "Ticket title"
@@ -998,7 +1001,7 @@ msgstr "Formunuz değerlendiren tarafından onaylandı"
 
 #: inc/targetticket.class.php:861
 msgid "Type "
-msgstr ""
+msgstr "Tür"
 
 #: inc/targetticket.class.php:902
 msgid "Item "
@@ -1061,12 +1064,12 @@ msgstr "Değer geçersiz:"
 #: inc/fields/actorfield.class.php:271
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr ""
+msgstr "Kullanıcı bulunamadı ya da e-posta adresi geçersiz: %s"
 
 #: inc/fields/checkboxesfield.class.php:222
 #, php-format
 msgid "The following question needs at least %d answers"
-msgstr ""
+msgstr "Şu sorunun en az %d yanıtı olmalıdır"
 
 #: inc/fields/checkboxesfield.class.php:228
 #, php-format
@@ -1111,7 +1114,7 @@ msgstr "Olay kategorileri"
 
 #: inc/fields/dropdownfield.class.php:99
 msgid "Change categories"
-msgstr ""
+msgstr "Değişiklik kategorileri"
 
 #: inc/fields/dropdownfield.class.php:378
 msgid "Invalid dropdown type:"
@@ -1137,7 +1140,7 @@ msgstr "Zorunlu bir dosya eksik:"
 #: inc/fields/floatfield.class.php:128
 #, php-format
 msgid "A required field is empty: %s"
-msgstr ""
+msgstr "Zorunlu bir alan boş bırakılmış: %s"
 
 #: inc/fields/floatfield.class.php:147
 #, php-format
@@ -1239,7 +1242,7 @@ msgstr "Radyo düğmeleri"
 
 #: inc/fields/requesttypefield.class.php:101
 msgid "Request type"
-msgstr ""
+msgstr "İstek türü"
 
 #: inc/fields/selectfield.class.php:82
 msgid "Select"

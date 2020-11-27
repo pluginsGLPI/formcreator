@@ -9,13 +9,13 @@
 # Rafael Viana <rafaelvian@gmail.com>, 2020
 # Thierry Bugier <tbugier@teclib.com>, 2020
 # Andrei Bernardo Simoni <andrei_simoni@hotmail.com>, 2020
-# Eduardo Spinola <eduardo.spinola@gmail.com>, 2020
 # Marco Antonio Martins Junior <somatorio@gmail.com>, 2020
 # Paulo Gobbato <paulo.paag@gmail.com>, 2020
 # Arthur Ramos Schaefer <arthur.r.schaefer@gmail.com>, 2020
 # Felipe Amaral <felipeamaral.santos@hotmail.com>, 2020
-# Jean Vergaças <jvergacas@gmail.com>, 2020
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2020
+# Jean Vergaças <jvergacas@gmail.com>, 2020
+# Eduardo Spinola <eduardo.spinola@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-13 10:41+0200\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
-"Last-Translator: Pedro de Oliveira Lira <pedrolira@live.com>, 2020\n"
+"Last-Translator: Eduardo Spinola <eduardo.spinola@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,11 +145,11 @@ msgstr "Categoria da base de conhecimento"
 
 #: inc/condition.class.php:81
 msgid "is visible"
-msgstr ""
+msgstr "é visível"
 
 #: inc/condition.class.php:82
 msgid "is not visible"
-msgstr ""
+msgstr "não é visível"
 
 #: inc/condition.class.php:88
 msgid "Always displayed"
@@ -265,7 +265,7 @@ msgstr ""
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Destino"
-msgstr[1] "Destinos"
+msgstr[1] "Alvos"
 
 #: inc/form.class.php:652
 msgid "Delete"
@@ -273,7 +273,7 @@ msgstr "Deletar"
 
 #: inc/form.class.php:665 inc/form.class.php:2436
 msgid "Add a target"
-msgstr "Adicionar um destino"
+msgstr "Adicionar em alvo"
 
 #: inc/form.class.php:785 inc/targetbase.class.php:888
 #: inc/targetbase.class.php:902
@@ -392,15 +392,15 @@ msgstr "Habilitar"
 
 #: inc/form.class.php:1867
 msgid "Forms import impossible, the file is empty"
-msgstr ""
+msgstr "Impossível importar o formulário, o arquivo está vazio"
 
 #: inc/form.class.php:1871 inc/form.class.php:1875
 msgid "Forms import impossible, the file seems corrupt"
-msgstr ""
+msgstr "Impossível importar o formulário, arquivo corrompido"
 
 #: inc/form.class.php:1881
 msgid "Forms import impossible, the file was generated with another version"
-msgstr ""
+msgstr "Impossível importar o formulário, arquivo gerado em outra versão"
 
 #: inc/form.class.php:1888
 msgid ""
@@ -408,6 +408,9 @@ msgid ""
 "with a version older than 2.10 and import is expected to create incomplete "
 "or buggy forms."
 msgstr ""
+"O arquivo não especifica a versão do esquema. Provavelmente foi gerado com "
+"uma versão anterior a 2.10 e a importação pode criar formulários incompletos"
+" ou de falhos."
 
 #: inc/form.class.php:1906
 #, php-format
@@ -447,11 +450,11 @@ msgstr "Formulários sem categoria"
 
 #: inc/form.class.php:2199
 msgid "No form available"
-msgstr ""
+msgstr "Nenhum formulário disponível"
 
 #: inc/form.class.php:2478
 msgid "Unsupported target type."
-msgstr "Tipo de destino não suportado."
+msgstr "Tipo de alvo não suportado."
 
 #: inc/form.class.php:2490
 msgid "The form does not exists."
@@ -459,7 +462,7 @@ msgstr "O formulário não existe."
 
 #: inc/form.class.php:2513
 msgid "Unsuported target type."
-msgstr "Tipo de destino não suportado."
+msgstr "Tipo de alvo não suportado."
 
 #: inc/form_profile.class.php:45 inc/form_profile.class.php:85
 msgid "Access type"
@@ -552,7 +555,7 @@ msgstr "Dados do formulário"
 
 #: inc/formanswer.class.php:1113 inc/formanswer.class.php:1131
 msgid "Cannot generate targets!"
-msgstr "Impossível gerar destinos!"
+msgstr "Impossível gerar alvos!"
 
 #: inc/formanswer.class.php:1263
 msgid "You must select validator!"
@@ -744,11 +747,11 @@ msgstr "Grupo da questão"
 
 #: inc/target_actor.class.php:65
 msgid "Group from an object"
-msgstr ""
+msgstr "Grupo de um objeto"
 
 #: inc/target_actor.class.php:66
 msgid "Tech group from an object"
-msgstr ""
+msgstr "Grupo técnico de um objeto"
 
 #: inc/target_actor.class.php:67
 msgid "Specific supplier"
@@ -851,7 +854,7 @@ msgstr "Categoria específica"
 
 #: inc/targetbase.class.php:225 inc/targetticket.class.php:92
 msgid "Last valid answer"
-msgstr ""
+msgstr "Última resposta válida"
 
 #: inc/targetbase.class.php:231
 msgid "Location from template or none"
@@ -891,11 +894,11 @@ msgstr "Localização "
 
 #: inc/targetbase.class.php:1269
 msgid "A target must be associated to a form."
-msgstr "Um destino deve ser associado a um formulário."
+msgstr "Um alvo deve ser associado a um formulário."
 
 #: inc/targetbase.class.php:1274
 msgid "A target must be associated to an existing form."
-msgstr "Um destino deve ser associado a um formulário existente."
+msgstr "Um alvo deve ser associado a um formulário existente."
 
 #: inc/targetbase.class.php:1307
 msgid "The description cannot be empty!"
@@ -907,7 +910,7 @@ msgstr "Formulário completo"
 
 #: inc/targetbase.class.php:1572
 msgid "Add"
-msgstr ""
+msgstr "Adicionar"
 
 #: inc/targetbase.class.php:1574
 msgid "Cancel"
@@ -915,17 +918,17 @@ msgstr "Cancelar"
 
 #: inc/targetbase.class.php:1785
 msgid "Group from the object"
-msgstr ""
+msgstr "Grupo do objeto"
 
 #: inc/targetbase.class.php:1791
 msgid "Tech group from the object"
-msgstr ""
+msgstr "Grupo técnico do objeto"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:279
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] "Mudança de destino"
-msgstr[1] "Mudança de destinos"
+msgstr[1] "Alvo para uma Mudança"
 
 #: inc/targetchange.class.php:46
 msgid "Medium"
@@ -937,7 +940,7 @@ msgstr "Nenhum"
 
 #: inc/targetchange.class.php:250 inc/targetticket.class.php:113
 msgid "Add a target "
-msgstr "Adicionar um destino "
+msgstr "Adicionar um alvo"
 
 #: inc/targetchange.class.php:252 inc/targetticket.class.php:115
 msgid "Edit a target"
@@ -955,7 +958,7 @@ msgstr "Condições de exibição do destino"
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Chamado de destino"
-msgstr[1] "Chamados de destino"
+msgstr[1] "Alvo para um chamado"
 
 #: inc/targetticket.class.php:90
 msgid "Specific asset"
@@ -963,11 +966,11 @@ msgstr "Ativo específico"
 
 #: inc/targetticket.class.php:98
 msgid "Default or from a template"
-msgstr ""
+msgstr "Padrão ou a partir de um modelo"
 
 #: inc/targetticket.class.php:99
 msgid "Specific type"
-msgstr ""
+msgstr "Tipo específico"
 
 #: inc/targetticket.class.php:145
 msgid "Ticket title"
@@ -1012,7 +1015,7 @@ msgstr "Seu formulário foi aceito pelo validador"
 
 #: inc/targetticket.class.php:861
 msgid "Type "
-msgstr ""
+msgstr "Tipo "
 
 #: inc/targetticket.class.php:902
 msgid "Item "
@@ -1075,12 +1078,12 @@ msgstr "Valor inválido:"
 #: inc/fields/actorfield.class.php:271
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr ""
+msgstr "Usuário não encontrado ou endereço de e-mail inválido: %s"
 
 #: inc/fields/checkboxesfield.class.php:222
 #, php-format
 msgid "The following question needs at least %d answers"
-msgstr ""
+msgstr "A questão precisa de pelo menos %d respostas"
 
 #: inc/fields/checkboxesfield.class.php:228
 #, php-format
@@ -1125,7 +1128,7 @@ msgstr "Categorias de incidente"
 
 #: inc/fields/dropdownfield.class.php:99
 msgid "Change categories"
-msgstr ""
+msgstr "Mudar categorias"
 
 #: inc/fields/dropdownfield.class.php:378
 msgid "Invalid dropdown type:"
@@ -1151,7 +1154,7 @@ msgstr "Um arquivo obrigatório está ausente:"
 #: inc/fields/floatfield.class.php:128
 #, php-format
 msgid "A required field is empty: %s"
-msgstr ""
+msgstr "Um campo obrigatório está vazio: %s"
 
 #: inc/fields/floatfield.class.php:147
 #, php-format
@@ -1253,7 +1256,7 @@ msgstr "Abrangência"
 
 #: inc/fields/requesttypefield.class.php:101
 msgid "Request type"
-msgstr ""
+msgstr "Tipo de Solicitação"
 
 #: inc/fields/selectfield.class.php:82
 msgid "Select"

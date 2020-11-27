@@ -131,11 +131,11 @@ msgstr "지식기반 분류"
 
 #: inc/condition.class.php:81
 msgid "is visible"
-msgstr ""
+msgstr "보임"
 
 #: inc/condition.class.php:82
 msgid "is not visible"
-msgstr ""
+msgstr "보이지 않음"
 
 #: inc/condition.class.php:88
 msgid "Always displayed"
@@ -373,15 +373,15 @@ msgstr "활성화"
 
 #: inc/form.class.php:1867
 msgid "Forms import impossible, the file is empty"
-msgstr ""
+msgstr "양식 불러오기를 할 수 없습니다, 파일이 비었습니다"
 
 #: inc/form.class.php:1871 inc/form.class.php:1875
 msgid "Forms import impossible, the file seems corrupt"
-msgstr ""
+msgstr "양식 불러오기를 할 수 없습니다, 파일이 손상된 것 같습니다"
 
 #: inc/form.class.php:1881
 msgid "Forms import impossible, the file was generated with another version"
-msgstr ""
+msgstr "양식 불러오기를 할 수 없습니다, 파일이 다른 버전으로 생성되었습니다"
 
 #: inc/form.class.php:1888
 msgid ""
@@ -389,6 +389,8 @@ msgid ""
 "with a version older than 2.10 and import is expected to create incomplete "
 "or buggy forms."
 msgstr ""
+"파일이 스키마 버전을 지정하지 않습니다. 아마도 2.10 이전 버전으로 생성되었을 수 있으며 가져오기는 불완전하거나 오류가 있는 양식을 "
+"생성할 것으로 예상됩니다."
 
 #: inc/form.class.php:1906
 #, php-format
@@ -428,7 +430,7 @@ msgstr "분류 없는 양식"
 
 #: inc/form.class.php:2199
 msgid "No form available"
-msgstr ""
+msgstr "사용가능한 양식 없음"
 
 #: inc/form.class.php:2478
 msgid "Unsupported target type."
@@ -718,11 +720,11 @@ msgstr "질문 그룹"
 
 #: inc/target_actor.class.php:65
 msgid "Group from an object"
-msgstr ""
+msgstr "객체에서의 그룹"
 
 #: inc/target_actor.class.php:66
 msgid "Tech group from an object"
-msgstr ""
+msgstr "객체에서의 기술 그룹"
 
 #: inc/target_actor.class.php:67
 msgid "Specific supplier"
@@ -825,7 +827,7 @@ msgstr "분류 지정"
 
 #: inc/targetbase.class.php:225 inc/targetticket.class.php:92
 msgid "Last valid answer"
-msgstr ""
+msgstr "최근 검증한 답변"
 
 #: inc/targetbase.class.php:231
 msgid "Location from template or none"
@@ -881,7 +883,7 @@ msgstr "전체 양식"
 
 #: inc/targetbase.class.php:1572
 msgid "Add"
-msgstr ""
+msgstr "추가"
 
 #: inc/targetbase.class.php:1574
 msgid "Cancel"
@@ -889,11 +891,11 @@ msgstr "취소"
 
 #: inc/targetbase.class.php:1785
 msgid "Group from the object"
-msgstr ""
+msgstr "객체에서의 그룹"
 
 #: inc/targetbase.class.php:1791
 msgid "Tech group from the object"
-msgstr ""
+msgstr "객체에서의 기술 그룹"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:279
 msgid "Target change"
@@ -935,11 +937,11 @@ msgstr "자산 지정"
 
 #: inc/targetticket.class.php:98
 msgid "Default or from a template"
-msgstr ""
+msgstr "기본 또는 양식 견본"
 
 #: inc/targetticket.class.php:99
 msgid "Specific type"
-msgstr ""
+msgstr "특정 유형"
 
 #: inc/targetticket.class.php:145
 msgid "Ticket title"
@@ -983,7 +985,7 @@ msgstr "당신의 양식이 확인자에 의해 승인되었습니다."
 
 #: inc/targetticket.class.php:861
 msgid "Type "
-msgstr ""
+msgstr "유형"
 
 #: inc/targetticket.class.php:902
 msgid "Item "
@@ -1045,12 +1047,12 @@ msgstr "잘못된 값:"
 #: inc/fields/actorfield.class.php:271
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr ""
+msgstr "사용자를 찾을 수 없거나 잘못된 이메일 주소: %s"
 
 #: inc/fields/checkboxesfield.class.php:222
 #, php-format
 msgid "The following question needs at least %d answers"
-msgstr ""
+msgstr "다음 질문은 최소 %d개의 답변이 필요합니다"
 
 #: inc/fields/checkboxesfield.class.php:228
 #, php-format
@@ -1095,7 +1097,7 @@ msgstr "사건 분류"
 
 #: inc/fields/dropdownfield.class.php:99
 msgid "Change categories"
-msgstr ""
+msgstr "분류 변경"
 
 #: inc/fields/dropdownfield.class.php:378
 msgid "Invalid dropdown type:"
@@ -1121,7 +1123,7 @@ msgstr "필수 파일이 누락됨:"
 #: inc/fields/floatfield.class.php:128
 #, php-format
 msgid "A required field is empty: %s"
-msgstr ""
+msgstr "필수 항목이 비었습니다: %s"
 
 #: inc/fields/floatfield.class.php:147
 #, php-format
@@ -1222,7 +1224,7 @@ msgstr "라디오"
 
 #: inc/fields/requesttypefield.class.php:101
 msgid "Request type"
-msgstr ""
+msgstr "요청 유형"
 
 #: inc/fields/selectfield.class.php:82
 msgid "Select"

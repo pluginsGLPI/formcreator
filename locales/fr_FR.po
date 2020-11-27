@@ -2,16 +2,16 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Johan Cwiklinski <jcwiklinski@teclib.com>, 2020
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2020
 # gerald antoniolli <deeper26@gmail.com>, 2020
-# Tiago Graça, 2020
-# Tristan GUICHARD <t.guichard@mut25.fr>, 2020
+# Tiago Graca, 2020
 # 06c8e5f1ec78ded2ceb41498ec52b068, 2020
+# tguichard25 <t.guichard@mut25.fr>, 2020
 # Thierry Bugier <tbugier@teclib.com>, 2020
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -140,11 +140,11 @@ msgstr "Catégorie de la base de connaissance"
 
 #: inc/condition.class.php:81
 msgid "is visible"
-msgstr ""
+msgstr "Est visible"
 
 #: inc/condition.class.php:82
 msgid "is not visible"
-msgstr ""
+msgstr "N'est pas visible"
 
 #: inc/condition.class.php:88
 msgid "Always displayed"
@@ -338,7 +338,7 @@ msgstr "La question %s n'est pas compatible avec les formulaires publics"
 
 #: inc/form.class.php:1523
 msgid "Duplicate"
-msgstr "COPIE"
+msgstr "Copie"
 
 #: inc/form.class.php:1582
 #, php-format
@@ -387,15 +387,17 @@ msgstr "Activer"
 
 #: inc/form.class.php:1867
 msgid "Forms import impossible, the file is empty"
-msgstr ""
+msgstr "Importation du formulaire impossible, le fichier est vide"
 
 #: inc/form.class.php:1871 inc/form.class.php:1875
 msgid "Forms import impossible, the file seems corrupt"
-msgstr ""
+msgstr "Importation du formulaire impossible, le fichier semble corrompu"
 
 #: inc/form.class.php:1881
 msgid "Forms import impossible, the file was generated with another version"
 msgstr ""
+"Importation du formulaire impossible, le fichier a été généré avec une autre"
+" version"
 
 #: inc/form.class.php:1888
 msgid ""
@@ -403,6 +405,9 @@ msgid ""
 "with a version older than 2.10 and import is expected to create incomplete "
 "or buggy forms."
 msgstr ""
+"Le fichier ne spécifie pas la version du schéma. Il a probablement été "
+"généré avec une version antérieure à 2.10 et l'importation devrait créer des"
+" formulaires incomplets ou bogués."
 
 #: inc/form.class.php:1906
 #, php-format
@@ -442,7 +447,7 @@ msgstr "Formulaires sans catégorie"
 
 #: inc/form.class.php:2199
 msgid "No form available"
-msgstr ""
+msgstr "Aucun formulaire disponible"
 
 #: inc/form.class.php:2478
 msgid "Unsupported target type."
@@ -741,11 +746,11 @@ msgstr "Groupe depuis la question"
 
 #: inc/target_actor.class.php:65
 msgid "Group from an object"
-msgstr ""
+msgstr "Groupe à partir d'un objet"
 
 #: inc/target_actor.class.php:66
 msgid "Tech group from an object"
-msgstr ""
+msgstr "Tech groupe à partir d'un objet"
 
 #: inc/target_actor.class.php:67
 msgid "Specific supplier"
@@ -848,7 +853,7 @@ msgstr "Catégorie spécifique"
 
 #: inc/targetbase.class.php:225 inc/targetticket.class.php:92
 msgid "Last valid answer"
-msgstr ""
+msgstr "Dernière réponse valide"
 
 #: inc/targetbase.class.php:231
 msgid "Location from template or none"
@@ -904,7 +909,7 @@ msgstr "Formulaire complet"
 
 #: inc/targetbase.class.php:1572
 msgid "Add"
-msgstr ""
+msgstr "Ajouter"
 
 #: inc/targetbase.class.php:1574
 msgid "Cancel"
@@ -912,11 +917,11 @@ msgstr "Annuler"
 
 #: inc/targetbase.class.php:1785
 msgid "Group from the object"
-msgstr ""
+msgstr "Groupe à partir de l'objet"
 
 #: inc/targetbase.class.php:1791
 msgid "Tech group from the object"
-msgstr ""
+msgstr "Tech groupe à partir de l'objet"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:279
 msgid "Target change"
@@ -960,11 +965,11 @@ msgstr "Equipement spécifique "
 
 #: inc/targetticket.class.php:98
 msgid "Default or from a template"
-msgstr ""
+msgstr "Par défaut ou à partir d'un modèle"
 
 #: inc/targetticket.class.php:99
 msgid "Specific type"
-msgstr ""
+msgstr "Type spécifique"
 
 #: inc/targetticket.class.php:145
 msgid "Ticket title"
@@ -1008,7 +1013,7 @@ msgstr "Votre formulaire a été accepté par le valideur"
 
 #: inc/targetticket.class.php:861
 msgid "Type "
-msgstr ""
+msgstr "Type"
 
 #: inc/targetticket.class.php:902
 msgid "Item "
@@ -1071,12 +1076,12 @@ msgstr "Valeur non valide :"
 #: inc/fields/actorfield.class.php:271
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr ""
+msgstr "Utilisateur non trouvé ou adresse e-mail non valide:%s"
 
 #: inc/fields/checkboxesfield.class.php:222
 #, php-format
 msgid "The following question needs at least %d answers"
-msgstr ""
+msgstr "La question suivante nécessite au moins %d réponses"
 
 #: inc/fields/checkboxesfield.class.php:228
 #, php-format
@@ -1147,7 +1152,7 @@ msgstr "Un fichier requis est manquant:"
 #: inc/fields/floatfield.class.php:128
 #, php-format
 msgid "A required field is empty: %s"
-msgstr ""
+msgstr "Un champ obligatoire est vide: %s"
 
 #: inc/fields/floatfield.class.php:147
 #, php-format
@@ -1249,7 +1254,7 @@ msgstr "Boutons radio"
 
 #: inc/fields/requesttypefield.class.php:101
 msgid "Request type"
-msgstr ""
+msgstr "Type de demande"
 
 #: inc/fields/selectfield.class.php:82
 msgid "Select"
@@ -1327,7 +1332,7 @@ msgid ""
 "below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr ""
-"Bonjour,\\\\nNous somme désolé de vous informer que votre demande a été "
+"Bonjour,\\\\nNous somme désolés de vous informer que votre demande a été "
 "refusé par le valideur pour les raisons suivantes "
 ":\\\\n##formcreator.validation_comment##\\\\n\\\\nVous pouvez toutefois "
 "modifier et renvoyer votre demande en cliquant sur le lien ci-dessous "

@@ -28,10 +28,10 @@ msgstr ""
 #: hook.php:67 inc/category.class.php:46 inc/form.class.php:206
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Kategoria formularzy"
+msgstr[1] "Kategorie formularzy"
+msgstr[2] "Kategorii formularzy"
+msgstr[3] "Kategorie formularzy"
 
 #: setup.php:224 inc/form.class.php:101 inc/formlist.class.php:57
 #: inc/formlist.class.php:58
@@ -43,10 +43,10 @@ msgstr "Formularze czekające na weryfikację"
 #: inc/formanswer.class.php:181 inc/formlist.class.php:46 js/scripts.js.php:72
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Formularz"
+msgstr[1] "Formularze"
+msgstr[2] "Formularzy"
+msgstr[3] "Formularze"
 
 #: ajax/commontree.php:25
 msgid "Subtree root"
@@ -75,7 +75,7 @@ msgstr ""
 #: ajax/question_move.php:45 ajax/question_toggle_required.php:49
 #: ajax/question_update.php:45
 msgid "Question not found"
-msgstr ""
+msgstr "Nie znaleziono pytania"
 
 #: ajax/question_move.php:72
 msgid "Could not move some questions"
@@ -87,7 +87,7 @@ msgstr ""
 
 #: ajax/section_add.php:44
 msgid "Could not add the section"
-msgstr ""
+msgstr "Nie można dodać sekcji"
 
 #: ajax/section_delete.php:44 ajax/section_duplicate.php:44
 #: ajax/section_move.php:49
@@ -133,10 +133,10 @@ msgstr "Lista formularzy"
 #: inc/answer.class.php:66 inc/targetbase.class.php:1395
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Odpowiedź"
+msgstr[1] "Odpowiedzi"
+msgstr[2] "Odpowiedzi"
+msgstr[3] "Odpowiedzi"
 
 #: inc/category.class.php:67
 msgid "Knowbase category"
@@ -243,10 +243,10 @@ msgstr "Ikona formularza"
 #: inc/form.class.php:434
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Nagłówek"
+msgstr[1] "Nagłówki"
+msgstr[2] "Nagłówków"
+msgstr[3] "Nagłówki"
 
 #: inc/form.class.php:446
 msgid "Need to be validate?"
@@ -280,10 +280,10 @@ msgstr "Dodaj cel"
 #: inc/targetbase.class.php:902
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Kategoria"
+msgstr[1] "Kategorie"
+msgstr[2] "Kategorii"
+msgstr[3] "Kategorie"
 
 #: inc/form.class.php:786
 msgid "see all"
@@ -1146,7 +1146,7 @@ msgstr "Kategorie incydentów"
 
 #: inc/fields/dropdownfield.class.php:99
 msgid "Change categories"
-msgstr ""
+msgstr "Zmień kategorie"
 
 #: inc/fields/dropdownfield.class.php:378
 msgid "Invalid dropdown type:"
