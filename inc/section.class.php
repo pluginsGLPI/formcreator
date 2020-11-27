@@ -196,6 +196,8 @@ PluginFormcreatorConditionnableInterface
     * @return boolean true on success, false otherwise
     */
    public function moveUp() {
+      global $DB;
+
       $order         = $this->fields['order'];
       $formId        = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
@@ -213,14 +215,21 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
       $success = true;
+      $DB->beginTransaction();
       $success = $success && $this->update([
          'id'     => $this->getID(),
-         'order'  => $otherItem->getField('order'),
+         'order'  => $otherItem->fields['order'],
       ]);
       $success = $success && $otherItem->update([
          'id'     => $otherItem->getID(),
          'order'  => $order,
       ]);
+
+      if (!$success) {
+         $DB->rollBack();
+      } else {
+         $DB->commit();
+      }
 
       return $success;
    }
@@ -230,8 +239,10 @@ PluginFormcreatorConditionnableInterface
     * @return boolean true on success, false otherwise
     */
    public function moveDown() {
-      $order         = $this->fields['order'];
-      $formId     = $this->fields['plugin_formcreator_forms_id'];
+      global $DB;
+
+      $order     = $this->fields['order'];
+      $formId    = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
       $otherItem->getFromDBByRequest([
          'WHERE' => [
@@ -247,14 +258,21 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
       $success = true;
+      $DB->beginTransaction();
       $success = $success && $this->update([
          'id'     => $this->getID(),
-         'order'  => $otherItem->getField('order'),
+         'order'  => $otherItem->fields['order'],
       ]);
       $success = $success && $otherItem->update([
          'id'     => $otherItem->getID(),
          'order'  => $order,
       ]);
+
+      if (!$success) {
+         $DB->rollBack();
+      } else {
+         $DB->commit();
+      }
 
       return $success;
    }
