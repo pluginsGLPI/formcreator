@@ -58,7 +58,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '</tr>';
 
-      $common = $common = parent::getDesignSpecializationField();
+      $common = parent::getDesignSpecializationField();
       $additions .= $common['additions'];
 
       return [
@@ -178,7 +178,6 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
-      // Add leading and trailing regex marker automaticaly
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
          $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
          $success = $this->checkRegex($regex);
