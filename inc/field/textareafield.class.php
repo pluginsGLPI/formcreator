@@ -61,10 +61,11 @@ class TextareaField extends TextField
          'name'             => 'default_values',
          'id'               => 'default_values',
          'value'            => $this->getValueForDesign(),
-         'enable_rich_text' => true,
+         'enable_richtext'  => true,
+         'filecontainer'   => 'default_values_info',
          'display'          => false,
       ]);
-      $additions .= Html::initEditorSystem('default_values', '', false);
+      //$additions .= Html::initEditorSystem('default_values', '', false);
       $additions .= '</td>';
       $additions .= '</tr>';
 
@@ -116,6 +117,16 @@ class TextareaField extends TextField
          return '';
       }
 
+      $key = 'formcreator_field_' . $this->question->getID();
+      $this->value = $this->question->addFiles(
+         [$key => $this->value] + $this->uploads,
+         [
+            'force_update'  => true,
+            'content_field' => $key,
+            'name'          => $key,
+         ]
+      )[$key];
+
       return Toolbox::addslashes_deep($this->value);
    }
 
@@ -149,7 +160,29 @@ class TextareaField extends TextField
    }
 
    public function prepareQuestionInputForSave($input) {
+      $success = true;
+      $fieldType = $this->getFieldTypeName();
+      if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
+         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
+         $success = $this->checkRegex($regex);
+         if (!$success) {
+            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+         }
+      }
+      if (!$success) {
+         return [];
+      }
       $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input['default_values']));
+
+      // Handle uploads
+      $key = 'formcreator_field_' . $this->question->getID();
+      if (isset($input['_tag_default_values']) && isset($input['_default_values']) && isset($input['_prefix_default_values'])) {
+         $this->uploads['_' . $key] = $input['_default_values'];
+         $this->uploads['_prefix_' . $key] = $input['_prefix_default_values'];
+         $this->uploads['_tag_' . $key] = $input['_tag_default_values'];
+      }
+      $input[$key] = $input['default_values'];
+
       return $input;
    }
 

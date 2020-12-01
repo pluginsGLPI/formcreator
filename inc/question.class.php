@@ -819,6 +819,7 @@ PluginFormcreatorConditionnableInterface
          'id'      => 'description',
          'value'   => $this->fields['description'],
          'enable_richtext' => true,
+         'filecontainer'   => 'description_info',
          'display' => false,
       ]);
       echo '</td>';
