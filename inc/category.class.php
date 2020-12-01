@@ -92,12 +92,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'faq'      => '1',
          'contains' => ''
       ]);
-      if (version_compare(GLPI_VERSION, "9.5") >= 0) {
-         // GLPI 9.5 returns an array
-         $subQuery = new DBMysqlIterator($DB);
-         $subQuery->buildQuery($query_faqs);
-         $query_faqs = $subQuery->getSQL();
-      }
+      // GLPI 9.5 returns an array
+      $subQuery = new DBMysqlIterator($DB);
+      $subQuery->buildQuery($query_faqs);
+      $query_faqs = $subQuery->getSQL();
 
       $dbUtils = new DbUtils();
       $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);

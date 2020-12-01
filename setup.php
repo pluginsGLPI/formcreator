@@ -38,7 +38,7 @@ define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.4');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
 

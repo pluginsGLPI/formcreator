@@ -944,11 +944,9 @@ PluginFormcreatorConditionnableInterface
          'faq'      => '1',
          'contains' => $keywords
       ]);
-      if (version_compare(GLPI_VERSION, "9.4") > 0) {
-         $subQuery = new DBMysqlIterator($DB);
-         $subQuery->buildQuery($query_faqs);
-         $query_faqs = '(' . $subQuery->getSQL() . ')';
-      }
+      $subQuery = new DBMysqlIterator($DB);
+      $subQuery->buildQuery($query_faqs);
+      $query_faqs = '(' . $subQuery->getSQL() . ')';
 
       $query_faqs = [
          'SELECT' => ['faqs' => '*'],
