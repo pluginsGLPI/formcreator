@@ -132,7 +132,7 @@ class PluginFormcreatorFields
     * Check if an item should be shown or not
     *
     * @param   integer     $item       Item tested for visibility
-    * @param   PluginFormcreatorFieldInterface $fields     Array of fields instances (question id => instance)
+    * @param   PluginFormcreatorFieldInterface[] $fields     Array of fields instances (question id => instance)
     * @return  boolean                 If true the question should be visible
     */
    public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
