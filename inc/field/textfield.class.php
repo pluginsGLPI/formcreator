@@ -190,7 +190,6 @@ class TextField extends PluginFormcreatorAbstractField
    public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
-      // Add leading and trailing regex marker automaticaly
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
          $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
          $success = $this->checkRegex($regex);
