@@ -65,12 +65,7 @@ class Config extends CommonTestCase
       // Check all plugin's tables are dropped
       $tables = [];
       $result = $DB->query("SHOW TABLES LIKE 'glpi_plugin_" . $pluginName . "_%'");
-      if (version_compare(GLPI_VERSION, '9.5') < 0) {
-         $fa = 'fetch_assoc';
-      } else {
-         $fa = 'fetchAssoc';
-      }
-      while ($row = $DB->$fa($result)) {
+      while ($row = $DB->fetchAssoc($result)) {
          $tables[] = array_pop($row);
       }
       $this->integer(count($tables))->isEqualTo(0, "not deleted tables \n" . json_encode($tables, JSON_PRETTY_PRINT));

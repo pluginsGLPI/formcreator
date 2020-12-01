@@ -39,12 +39,7 @@ class PluginFormcreatorCommon {
 
       $enum = [];
       if ($res = $DB->query( "SHOW COLUMNS FROM `$table` WHERE Field = '$field'" )) {
-         if (version_compare(GLPI_VERSION, '9.5') >= 0) {
-            $fa = 'fetchArray';
-         } else {
-            $fa = 'fetch_array';
-         }
-         $data = $DB->$fa($res);
+         $data = $DB->fetchArray($res);
          $type = $data['Type'];
          $matches = null;
          preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
@@ -169,12 +164,6 @@ class PluginFormcreatorCommon {
     * @return string
     */
    public static function getPictoFilename($version) {
-      if (version_compare($version, '9.4') < 0) {
-         return 'data/font-awesome_9.3.php';
-      }
-      if (version_compare($version, '9.5') < 0) {
-         return 'data/font-awesome_9.4.php';
-      }
       if (version_compare($version, '9.6') < 0) {
          return 'data/font-awesome_9.5.php';
       }

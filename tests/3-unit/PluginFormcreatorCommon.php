@@ -65,18 +65,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
    public function providerGetPictoFilename() {
       return [
          [
-            'version' => '9.3.0',
-            'expected' => 'data/font-awesome_9.3.php',
-         ],
-         [
-            'version' => '9.3.1',
-            'expected' => 'data/font-awesome_9.3.php',
-         ],
-         [
-            'version' => '9.4.0',
-            'expected' => 'data/font-awesome_9.4.php',
-         ],
-         [
             'version' => '9.5.0',
             'expected' => 'data/font-awesome_9.5.php',
          ],

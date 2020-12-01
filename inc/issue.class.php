@@ -215,12 +215,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          return 0;
       }
 
-      if (version_compare(GLPI_VERSION, '9.5') < 0) {
-         $fa = 'fetch_assoc';
-      } else {
-         $fa = 'fetchAssoc';
-      }
-      $count = $DB->$fa($result);
+      $count = $DB->fetchAssoc($result);
       $table = static::getTable();
       if (countElementsInTable($table) == $count['cpt']) {
          return 0;
