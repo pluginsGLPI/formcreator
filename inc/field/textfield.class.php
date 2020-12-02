@@ -127,7 +127,7 @@ class TextField extends PluginFormcreatorAbstractField
          : '';
    }
 
-   public function getValueForDesign()
+   public function getValueForDesign(): string
    {
       if ($this->value === null) {
          return '';
@@ -198,7 +198,7 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName()
+   public static function getName(): string
    {
       return __('Text', 'formcreator');
    }

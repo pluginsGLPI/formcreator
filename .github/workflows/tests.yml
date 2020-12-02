@@ -23,7 +23,7 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php-versions: [7.4]
+        php-versions: [7.2]
         env:
           - { GLPI_BRANCH: 9.5/bugfixes, SKIP_FUNCTIONAL_TESTS: false }
     services:

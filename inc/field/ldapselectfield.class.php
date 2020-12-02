@@ -185,7 +185,7 @@ class LdapselectField extends SelectField
       return $this->value;
    }
 
-   public function deserializeValue($value): string
+   public function deserializeValue($value)
    {
       $this->value = $value;
    }
@@ -311,7 +311,7 @@ class LdapselectField extends SelectField
       return false;
    }
 
-   public function getHtmlIcon():string
+   public function getHtmlIcon(): string
    {
       return '<i class="fa fa-sitemap" aria-hidden="true"></i>';
    }

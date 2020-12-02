@@ -38,7 +38,7 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class EmailField extends TextField
 {
-   public function getDesignSpecializationField()
+   public function getDesignSpecializationField(): array
    {
       $rand = mt_rand();
 
@@ -72,7 +72,7 @@ class EmailField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true)
+   public function getRenderedHtml($canEdit = true): string
    {
       if (!$canEdit) {
          return $this->value;
@@ -140,7 +140,7 @@ class EmailField extends TextField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false)
+   public function parseAnswerValues($input, $nonDestructive = false): bool
    {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
@@ -188,7 +188,7 @@ class EmailField extends TextField
       return true;
    }
 
-   public function getHtmlIcon()
+   public function getHtmlIcon(): string
    {
       return '<i class="fa fa-envelope" aria-hidden="true"></i>';
    }
