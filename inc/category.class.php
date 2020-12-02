@@ -81,7 +81,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @param boolean $helpdeskHome
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
+   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) : array {
       global $DB;
 
       $cat_table  = PluginFormcreatorCategory::getTable();
@@ -195,10 +195,27 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       return $nodes;
    }
 
-   public static function  getAvailableCategories($helpdeskHome = 1) {
+   /**
+    * Get available categories
+    *
+    * @param integer $helpdeskHome
+    * @return DBmysqlIterator
+    */
+   public static function  getAvailableCategories($helpdeskHome = 1) : DBmysqlIterator {
       global $DB;
 
-      // Define tables
+      $result = $DB->request(self::getAvailableCategoriesCriterias($helpdeskHome));
+
+      return $result;
+   }
+
+   /**
+    * Get available categories
+    *
+    * @param integer $helpdeskHome
+    * @return array
+    */
+    public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {
       $cat_table       = PluginFormcreatorCategory::getTable();
       $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();
       $formTable       = PluginFormcreatorForm::getTable();
@@ -206,7 +223,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $formRestriction["$formTable.helpdesk_home"] = $helpdeskHome;
 
-      $result = $DB->request([
+      return [
          'SELECT' => [
             $cat_table => [
                'name', 'id'
@@ -225,12 +242,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'GROUPBY' => [
             "$cat_table.id"
          ]
-      ]);
-
-      return $result;
-   }
-
-   public static function getAvailableCategoriesCriterias() {
-
+      ];
    }
 }
