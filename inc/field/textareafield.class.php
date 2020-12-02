@@ -196,12 +196,12 @@ class TextareaField extends TextField
       return $input;
    }
 
-   public function hasInput($input) : bool
+   public function hasInput($input): bool
    {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false)
+   public function parseAnswerValues($input, $nonDestructive = false): bool
    {
       parent::parseAnswerValues($input, $nonDestructive);
       $key = 'formcreator_field_' . $this->question->getID();
@@ -244,7 +244,7 @@ class TextareaField extends TextField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
