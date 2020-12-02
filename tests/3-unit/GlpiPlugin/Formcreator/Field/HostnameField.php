@@ -108,7 +108,7 @@ class HostnameField extends CommonTestCase {
    public function testDeserializeValue($value, $expected) {
       $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetText(false);
+      $output = $instance->getValueForTargetText('', false);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -147,7 +147,7 @@ class HostnameField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
 
-      $output = $instance->getValueForTargetText(true);
+      $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo($expected);
    }
 
