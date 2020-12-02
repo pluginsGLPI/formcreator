@@ -876,7 +876,7 @@ PluginFormcreatorConditionnableInterface
       return $newQuestionId;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -952,7 +952,7 @@ PluginFormcreatorConditionnableInterface
       return $itemId;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport(array $input) : int {
       // TODO: need improvement to handle parameters
       $subItems = [
          '_conditions' => PluginFormcreatorCondition::class,
@@ -961,7 +961,7 @@ PluginFormcreatorConditionnableInterface
       return 1 + self::countChildren($input, $subItems);
    }
 
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -1249,7 +1249,7 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          self::$items_id => $container->getID(),

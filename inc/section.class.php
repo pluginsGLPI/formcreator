@@ -337,7 +337,7 @@ PluginFormcreatorConditionnableInterface
       return $itemId;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport(array $input) : int {
       $subItems = [
          '_questions'   => PluginFormcreatorQuestion::class,
          '_conditions' => PluginFormcreatorCondition::class,
@@ -345,7 +345,7 @@ PluginFormcreatorConditionnableInterface
       return 1 + self::countChildren($input, $subItems);
    }
 
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -617,7 +617,7 @@ PluginFormcreatorConditionnableInterface
       return ($count < 1);
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          self::$items_id => $container->getID(),

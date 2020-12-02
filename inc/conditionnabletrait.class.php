@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
 
 trait PluginFormcreatorConditionnableTrait
 {
-   public function updateConditions($input) {
+   public function updateConditions($input) : bool {
       if (!isset($input['show_rule'])) {
          return false;
       }

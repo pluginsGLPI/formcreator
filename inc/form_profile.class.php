@@ -227,7 +227,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -254,11 +254,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       return $form_profile;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport($input) : int {
       return 1;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          self::$items_id_1 => $container->getID(),

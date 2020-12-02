@@ -57,6 +57,11 @@ class PluginFormcreatorComposite
       $this->targets[$itemtype][$target->getID()] = $generatedTarget;
    }
 
+   /**
+    * Undocumented function
+    *
+    * @return void
+    */
    public function buildCompositeRelations() {
       global $DB;
 

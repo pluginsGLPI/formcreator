@@ -73,14 +73,24 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $input;
    }
 
-   public static function getEnumShowLogic() {
+   /**
+    * Undocumented function
+    *
+    * @return array
+    */
+   public static function getEnumShowLogic() : array {
       return [
          self::SHOW_LOGIC_AND => 'AND',
          self::SHOW_LOGIC_OR  => 'OR',
       ];
    }
 
-   public static function getEnumShowCondition() {
+   /**
+    * Undocumented function
+    *
+    * @return array
+    */
+    public static function getEnumShowCondition() : array {
       return [
          self::SHOW_CONDITION_EQ => '=',
          self::SHOW_CONDITION_NE => '≠',
@@ -93,7 +103,12 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ];
    }
 
-   public function getEnumShowRule() {
+   /**
+    * Undocumented function
+    *
+    * @return array
+    */
+    public function getEnumShowRule() : array {
       return [
          self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
          self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
@@ -101,7 +116,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       ];
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -166,7 +181,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    }
 
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport(array $input) : int {
       return 1;
    }
 
@@ -176,7 +191,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -206,7 +221,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * @param CommonDBTM $item
     * @return PluginFotrmcreatorCondition[]
     */
-   public function getConditionsFromItem(CommonDBTM $item) {
+   public function getConditionsFromItem(CommonDBTM $item) : array {
       global $DB;
 
       if ($item->isNewItem()) {
@@ -272,7 +287,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return string HTML to insert in a rendered web page
     */
-   public function getConditionHtml($input) {
+   public function getConditionHtml(array $input) : string {
       if ($this->isNewItem()) {
          $this->getEmpty();
          $itemtype       = $input['itemtype'];
@@ -415,7 +430,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $html;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          'itemtype' => $container->getType(),

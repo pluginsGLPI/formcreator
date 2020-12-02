@@ -74,7 +74,7 @@ PluginFormcreatorConditionnableInterface
    /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
    protected $skipCreateActors = false;
 
-   abstract public function export($remove_uuid = false);
+   abstract public function export(bool $remove_uuid = false);
 
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
 
@@ -2076,7 +2076,7 @@ SCRIPT;
       echo '</td>';
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          self::$items_id => $container->getID(),

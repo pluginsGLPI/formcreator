@@ -1677,7 +1677,7 @@ PluginFormcreatorConditionnableInterface
       return $nb;
    }
 
-   function export($remove_uuid = false) {
+   function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -1976,7 +1976,7 @@ PluginFormcreatorConditionnableInterface
       return $itemId;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport(array $input) : int {
       // Code similar to ImportChildrenObjects
       $subItems = [
          '_profiles'   => PluginFormcreatorForm_Profile::class,
@@ -2433,5 +2433,5 @@ PluginFormcreatorConditionnableInterface
       return $restriction;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {}
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool { return true; }
 }

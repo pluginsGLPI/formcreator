@@ -58,7 +58,7 @@ implements PluginFormcreatorExportableInterface
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -154,7 +154,7 @@ implements PluginFormcreatorExportableInterface
       return $itemId;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport($input) : int {
       return 1;
    }
 
@@ -187,7 +187,7 @@ implements PluginFormcreatorExportableInterface
       return false;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          self::$items_id_2 => $container->getID(),

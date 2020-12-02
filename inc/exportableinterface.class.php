@@ -41,7 +41,7 @@ interface PluginFormcreatorExportableInterface
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false);
+   public function export(bool $remove_uuid = false);
 
    /**
     * Import an itemtype into the db
@@ -52,7 +52,7 @@ interface PluginFormcreatorExportableInterface
     * @param  array   $input the target data (match the target table)
     * @return integer|false the id of the imported item or false on error
     */
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0);
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0);
 
    /**
     * Delete all items belonging to a container and not in the list of items to keep
@@ -63,7 +63,7 @@ interface PluginFormcreatorExportableInterface
     *
     * @return boolean
     */
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude);
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool;
 
    /**
     * get the count of inner objects to import
@@ -71,5 +71,5 @@ interface PluginFormcreatorExportableInterface
     *
     * return integer
     */
-   public static function countItemsToImport($input);
+   public static function countItemsToImport(array $input) : int;
 }

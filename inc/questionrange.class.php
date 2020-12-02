@@ -105,7 +105,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $this->fieldName;
    }
 
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -184,7 +184,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $itemId;
    }
 
-   public static function countItemsToImport($input)
+   public static function countItemsToImport($input) : int
    {
       return 1;
    }
