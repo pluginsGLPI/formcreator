@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -38,12 +39,14 @@ use Exception;
 use Html;
 use Session;
 use RuleRightParameter;
+
 class LdapselectField extends SelectField
 {
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
-      $label = '<label for="dropdown_ldap_auth'.$rand.'">';
+      $label = '<label for="dropdown_ldap_auth' . $rand . '">';
       $label .= _n('LDAP directory', 'LDAP directories', 1);
       $label .= '</label>';
 
@@ -113,7 +116,8 @@ class LdapselectField extends SelectField
       ];
    }
 
-   public function getAvailableValues() {
+   public function getAvailableValues()
+   {
       if (empty($this->question->fields['values'])) {
          return [];
       }
@@ -149,8 +153,10 @@ class LdapselectField extends SelectField
             array_shift($entries);
 
             foreach ($entries as $id => $attr) {
-               if (isset($attr[$attribute[0]])
-                  && !in_array($attr[$attribute[0]][0], $tab_values)) {
+               if (
+                  isset($attr[$attribute[0]])
+                  && !in_array($attr[$attribute[0]][0], $tab_values)
+               ) {
                   $tab_values[$id] = $attr[$attribute[0]][0];
                }
             }
@@ -158,7 +164,6 @@ class LdapselectField extends SelectField
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
                ldap_control_paged_result_response($ds, $result, $cookie);
             }
-
          } while ($cookie !== null && $cookie != '');
 
          asort($tab_values);
@@ -170,29 +175,35 @@ class LdapselectField extends SelectField
       restore_error_handler();
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('LDAP Select', 'formcreator');
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       return $this->value;
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value): string
+   {
       $this->value = $value;
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       return '';
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '0') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -200,11 +211,13 @@ class LdapselectField extends SelectField
       return true;
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       return true;
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
       if (!isset($input['ldap_auth'])) {
          Session::addMessageAfterRedirect(__('LDAP directory not defined!', 'formcreator'), false, ERROR);
@@ -249,15 +262,18 @@ class LdapselectField extends SelectField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '';
@@ -266,40 +282,46 @@ class LdapselectField extends SelectField
          return false;
       }
 
-       $this->value = $input[$key];
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return $this->value == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       return $this->value > $value;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible(): bool
+   {
       return false;
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon():string
+   {
       return '<i class="fa fa-sitemap" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField()
+   public function isVisibleField(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function isEditableField(): bool
    {
       return true;
    }

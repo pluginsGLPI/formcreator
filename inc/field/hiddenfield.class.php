@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -37,16 +38,18 @@ use Toolbox;
 
 class HiddenField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default value');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -73,7 +76,8 @@ class HiddenField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function show($canEdit = true) {
+   public function show($canEdit = true)
+   {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -85,49 +89,62 @@ class HiddenField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       return $this->value;
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = $value;
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       return $this->value;
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       return true;
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return _n('Hidden field', 'Hidden fields', 1);
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       return str_replace("\n", '\r\n', Toolbox::addslashes_deep($this->value));
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return false;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
@@ -137,36 +154,42 @@ class HiddenField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return $this->value == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       return $this->value > $value;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible(): bool
+   {
       return true;
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon()
+   {
       return '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField()
+   public function isVisibleField(): bool
    {
       return false;
    }
 
-   public function isEditableField()
+   public function isEditableField(): bool
    {
       return false;
    }

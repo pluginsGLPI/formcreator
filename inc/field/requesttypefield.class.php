@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -35,9 +36,11 @@ use Html;
 use Session;
 use Ticket;
 use Dropdown;
+
 class RequestTypeField extends SelectField
 {
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -45,12 +48,13 @@ class RequestTypeField extends SelectField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= Ticket::dropdownType('default_values',
+      $additions .= Ticket::dropdownType(
+         'default_values',
          [
             'value'   => $this->value,
             'rand'    => $rand,
@@ -78,7 +82,8 @@ class RequestTypeField extends SelectField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       $html = "";
       if (!$canEdit) {
          return Ticket::getTicketTypeName($this->value);
@@ -93,7 +98,7 @@ class RequestTypeField extends SelectField
          'rand'      => $rand,
          'display'   => false,
       ];
-      if ($this->question->fields['show_empty'] != '0' ) {
+      if ($this->question->fields['show_empty'] != '0') {
          $options['toadd'] = [
             0  => Dropdown::EMPTY_VALUE,
          ];
@@ -107,18 +112,21 @@ class RequestTypeField extends SelectField
       return $html;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Request type', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       $this->value = $input['default_values'] != ''
-                     ? (int) $input['default_values']
-                     : '3';
+         ? (int) $input['default_values']
+         : '3';
       return $input;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '3';
@@ -132,15 +140,18 @@ class RequestTypeField extends SelectField
       return true;
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function getAvailableValues() {
+   public function getAvailableValues()
+   {
       return Ticket::getTypes();
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '2';
       }
@@ -148,13 +159,15 @@ class RequestTypeField extends SelectField
       return $this->value;
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '2';
+         ? $value
+         : '2';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -162,28 +175,35 @@ class RequestTypeField extends SelectField
       return $this->value;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $available = $this->getAvailableValues();
       return $available[$this->value];
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '0') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -191,42 +211,49 @@ class RequestTypeField extends SelectField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       return in_array($value, array_keys($this->getAvailableValues()));
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) === 0;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) > 0;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon(): string
+   {
+      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }

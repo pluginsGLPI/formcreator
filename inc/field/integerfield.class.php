@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,7 +37,8 @@ use Toolbox;
 
 class IntegerField extends FloatField
 {
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -44,9 +46,12 @@ class IntegerField extends FloatField
       return strval((int) $this->value);
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       if (strlen($value) == 0) {
          return true;
       }
@@ -66,7 +71,8 @@ class IntegerField extends FloatField
                Session::addMessageAfterRedirect(
                   sprintf(__('Specific format does not match: %s', 'formcreator'), $this->getLabel()),
                   false,
-                  ERROR);
+                  ERROR
+               );
                return false;
             }
          }
@@ -92,11 +98,13 @@ class IntegerField extends FloatField
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Integer', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       $success = true;
       $fieldType = $this->getFieldTypeName();
       // Add leading and trailing regex marker automaticaly
@@ -123,11 +131,13 @@ class IntegerField extends FloatField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          $this->value = '';
@@ -138,15 +148,18 @@ class IntegerField extends FloatField
       return true;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return ((int) $this->value) === ((int) $value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       return ((int) $this->value) > ((int) $value);
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon()
+   {
       return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
    }
 }

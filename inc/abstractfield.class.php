@@ -51,7 +51,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $this->question  = $question;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField() : array {
       return [
          'label' => '',
          'field' => '',
@@ -99,7 +99,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     * Outputs the HTML representing the field
     * @param string $canEdit
     */
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true) : string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -145,7 +145,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $tab_values;
    }
 
-   public function isRequired() {
+   public function isRequired() : bool  {
       return ($this->question->fields['required'] != '0');
    }
 
@@ -172,7 +172,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
    }
 
-   public function getFieldTypeName() {
+   public function getFieldTypeName() : string {
       $classname = explode('\\', get_called_class());
       $classname = array_pop($classname);
       $matches = null;
@@ -181,11 +181,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return strtolower($matches[1]);
    }
 
-   public function getEmptyParameters() {
+   public function getEmptyParameters() : array {
       return [];
    }
 
-   public final function getParameters() {
+   public final function getParameters() : array {
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
@@ -235,7 +235,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       }
    }
 
-   public final function deleteParameters(PluginFormcreatorQuestion $question) {
+   public final function deleteParameters(PluginFormcreatorQuestion $question) : bool {
       foreach ($this->getEmptyParameters() as $parameter) {
          if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
             // Don't make  this error fatal, but log it anyway

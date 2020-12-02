@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -53,11 +54,13 @@ class FileField extends PluginFormcreatorAbstractField
       '_tag_filename' => [],
    ];
 
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       if (!$canEdit) {
          $html = '';
          $doc = new Document();
@@ -81,11 +84,13 @@ class FileField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       return json_encode($this->uploadData, true);
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->uploadData = json_decode($value, true);
       if ($this->uploadData === null) {
          $this->uploadData = [];
@@ -96,11 +101,13 @@ class FileField extends PluginFormcreatorAbstractField
       }
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       return '';
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       return $this->value;
    }
 
@@ -123,11 +130,13 @@ class FileField extends PluginFormcreatorAbstractField
       $this->uploadData = $answer_value;
    }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return $this->uploadData;
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       if (!$this->isRequired()) {
          return true;
       }
@@ -137,32 +146,38 @@ class FileField extends PluginFormcreatorAbstractField
          Session::addMessageAfterRedirect(
             sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       // If the field is required it can't be empty
       $key = 'formcreator_field_' . $this->question->getID();
       return (count($this->uploads["_$key"]) > 0);
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('File');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       return $input;
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function saveUploads($input) {
+   public function saveUploads($input)
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       $index = 0;
       $answer_value = [];
@@ -177,7 +192,8 @@ class FileField extends PluginFormcreatorAbstractField
       $this->uploadData = $answer_value;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['_formcreator_field_' . $this->question->getID()]);
    }
 
@@ -190,7 +206,8 @@ class FileField extends PluginFormcreatorAbstractField
     *
     * @return integer|NULL
     */
-   private function saveDocument($file, $prefix) {
+   private function saveDocument($file, $prefix)
+   {
       $sectionTable = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questionTable = PluginFormcreatorQuestion::getTable();
@@ -198,23 +215,23 @@ class FileField extends PluginFormcreatorAbstractField
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = new PluginFormcreatorForm();
       $form->getFromDBByRequest([
-        'LEFT JOIN' => [
-           $sectionTable => [
-              'FKEY' => [
-                 $sectionTable => $formFk,
-                 $formTable => 'id'
-              ]
-           ],
-           $questionTable => [
-              'FKEY' => [
-                 $sectionTable => 'id',
-                 $questionTable => $sectionFk
-              ]
-           ]
-        ],
-        'WHERE' => [
-           "$questionTable.id" => $this->question->getID(),
-        ],
+         'LEFT JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $sectionTable => $formFk,
+                  $formTable => 'id'
+               ]
+            ],
+            $questionTable => [
+               'FKEY' => [
+                  $sectionTable => 'id',
+                  $questionTable => $sectionFk
+               ]
+            ]
+         ],
+         'WHERE' => [
+            "$questionTable.id" => $this->question->getID(),
+         ],
       ]);
       if ($form->isNewItem()) {
          // A problem occured while finding the form of the field
@@ -223,10 +240,10 @@ class FileField extends PluginFormcreatorAbstractField
 
       $doc                             = new Document();
       $file_data                       = [];
-      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->question->fields['name']);
+      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name') . ' - ' . $this->question->fields['name']);
       $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
-                                       ? $_SESSION['glpiactive_entity']
-                                       : $form->getField('entities_id');
+         ? $_SESSION['glpiactive_entity']
+         : $form->getField('entities_id');
       $file_data["is_recursive"]       = $form->getField('is_recursive');
       $file_data['_filename']          = [$file];
       $file_data['_prefix_filename']   = [$prefix];
@@ -236,7 +253,8 @@ class FileField extends PluginFormcreatorAbstractField
       return null;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
          $this->uploads['_' . $key] = $input['_' . $key];
@@ -258,36 +276,42 @@ class FileField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fa fa-file" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon()
+   {
+      return '<i class="fa fa-file" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }

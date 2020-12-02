@@ -40,35 +40,35 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public static function getName();
+   public static function getName() : string;
 
    /**
     * Can the fild be required ?
     *
     * @return boolean true if yes, false otherwise
     */
-   public static function canRequire();
+   public static function canRequire() : bool;
 
    /**
     * Are the prerequisites met to use this field ?
     *
     * @return boolean true if prerequisites met, false otherwise
     */
-   public function isPrerequisites();
+   public function isPrerequisites() : bool;
 
    /**
     * get HTML for specific properties of the field type at design time
     *
     * @return array
     */
-   public function getDesignSpecializationField();
+   public function getDesignSpecializationField() : array;
 
    /**
     * Is the field valid for the given value?
     *
     * @return boolean True if the field has a valid value, false otherwise
     */
-   public function isValid();
+   public function isValid() : bool;
 
    /**
     * Check if a value is valid for the field type
@@ -76,14 +76,14 @@ interface PluginFormcreatorFieldInterface
     * @param string|array $value
     * @return boolean true if valid, false otherwise
     */
-   public function isValidValue($value);
+   public function isValidValue($value) : bool;
 
    /**
     * Is the field required?
     *
     * @return boolean
     */
-   public function isRequired();
+   public function isRequired() : bool;
 
    /**
     * Serialize a value for save in the database
@@ -91,7 +91,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string JSON encoded string
     */
-   public function serializeValue();
+   public function serializeValue() : string;
 
    /**
     * Deserialize a JSON encoded value or default value
@@ -107,7 +107,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public function getValueForDesign();
+   public function getValueForDesign() : string;
 
    /**
     * Get the value of the field for display in a target
@@ -116,7 +116,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public function getValueForTargetText($richText);
+   public function getValueForTargetText($richText) : string;
 
    /**
     * Move uploaded files and make Document items
@@ -128,7 +128,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return integer[]
     */
-   public function getDocumentsForTarget();
+   public function getDocumentsForTarget() : array;
 
    /**
     * Transform input to properly save it in the database
@@ -144,7 +144,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function hasInput($input);
+   public function hasInput($input) : bool;
 
    /**
     * Read the value of the field from answers
@@ -153,7 +153,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true on sucess, false otherwise
     */
-   public function parseAnswerValues($input, $nonDestructive = false);
+   public function parseAnswerValues($input, $nonDestructive = false) : bool;
 
    /**
     * Prepares an answer value for output in a target object
@@ -168,21 +168,21 @@ interface PluginFormcreatorFieldInterface
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public function getEmptyParameters();
+   public function getEmptyParameters() : array;
 
    /**
     * Gets parameters of the field with their settings
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public function getParameters();
+   public function getParameters() : array;
 
    /**
     * Gets the name of the field type
     *
     * @return string
     */
-   public function getFieldTypeName();
+   public function getFieldTypeName() : string;
 
    /**
     * Adds parameters of the field into the database
@@ -204,42 +204,42 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true if success, false otherwise
     */
-   public function deleteParameters(PluginFormcreatorQuestion $question);
+   public function deleteParameters(PluginFormcreatorQuestion $question) : bool;
 
    /**
     * Tests if the given value equals the field value
     *
     * @return boolean True if the value equals the field value
     */
-   public function equals($value);
+   public function equals($value) : bool;
 
    /**
     * Tests if the given value is not equal to field value
     *
     * @return boolean True if the value is not equal to the field value
     */
-   public function notEquals($value);
+   public function notEquals($value) : bool;
 
    /**
     * Tests if the given value is greater than the field value
     *
     * @return boolean True if the value is greater than the field value
     */
-   public function greaterThan($value);
+   public function greaterThan($value) : bool;
 
    /**
     * Tests if the given value is less than the field value
     *
     * @return boolean True if the value is less than the field value
     */
-   public function LessThan($value);
+   public function LessThan($value) : bool;
 
    /**
     * Is the field compatible with anonymous form ?
     *
     * @return boolean true if the field can work with anonymous forms
     */
-   public function isAnonymousFormCompatible();
+   public function isAnonymousFormCompatible() : bool;
 
    /**
     * Gets HTML code for the icon of a field
@@ -251,7 +251,7 @@ interface PluginFormcreatorFieldInterface
     * @param boolean $canEdit true if the user can edit the answer
     * @return string HTML code
     */
-   public function getRenderedHtml($canEdit = true);
+   public function getRenderedHtml($canEdit = true) : string;
 
    /**
     * Is the field editable ?
@@ -260,7 +260,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function isEditableField();
+   public function isEditableField() : bool;
 
    /**
     * Is the field visible ?
@@ -269,6 +269,6 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function isVisibleField();
+   public function isVisibleField() : bool;
 
 }

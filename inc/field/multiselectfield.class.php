@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,7 +37,8 @@ use Html;
 
 class MultiSelectField extends CheckboxesField
 {
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       $html         = '';
       if (!$canEdit) {
          if (count($this->value)) {
@@ -67,17 +69,22 @@ class MultiSelectField extends CheckboxesField
       return $html;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Multiselect', 'formcreator');
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon(): string
+   {
       return '<i class="fas fa-check-double" aria-hidden="true"></i>';
    }
 }

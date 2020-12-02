@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -38,11 +39,13 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class IpField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $common = parent::getDesignSpecializationField();
       $additions = $common['additions'];
 
@@ -55,11 +58,13 @@ class IpField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       return $input;
    }
 
-   public function show($canEdit = true) {
+   public function show($canEdit = true)
+   {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -72,7 +77,8 @@ class IpField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -80,13 +86,15 @@ class IpField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
+         ? $value
+         : '';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -94,33 +102,42 @@ class IpField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       return true;
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return _n('IP address', 'Adresses IP', 1);
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return false;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
@@ -130,40 +147,47 @@ class IpField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return $this->value == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible(): bool
+   {
       return true;
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon()
+   {
       return '<i class="fa fa-desktop" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField()
+   public function isVisibleField(): bool
    {
       return false;
    }
 
-   public function isEditableField()
+   public function isEditableField(): bool
    {
       return false;
    }

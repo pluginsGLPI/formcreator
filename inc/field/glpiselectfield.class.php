@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -66,10 +67,11 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class GlpiselectField extends DropdownField
 {
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
-      $label = '<label for="dropdown_glpi_objects'.$rand.'" id="label_dropdown_values">';
+      $label = '<label for="dropdown_glpi_objects' . $rand . '" id="label_dropdown_values">';
       $label .= _n('GLPI object', 'GLPI objects', 1, 'formcreator');
       $label .= '</label>';
 
@@ -84,26 +86,31 @@ class GlpiselectField extends DropdownField
             CartridgeItem::class    => CartridgeItem::getTypeName(2),
             ConsumableItem::class   => ConsumableItem::getTypeName(2),
             Phone::class            => Phone::getTypeName(2),
-            Line::class             => Line::getTypeName(2)],
+            Line::class             => Line::getTypeName(2)
+         ],
          __("Assistance") => [
             Ticket::class           => Ticket::getTypeName(2),
             Problem::class          => Problem::getTypeName(2),
-            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)],
+            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)
+         ],
          __("Management") => [
             Budget::class           => Budget::getTypeName(2),
             Supplier::class         => Supplier::getTypeName(2),
             Contact::class          => Contact::getTypeName(2),
             Contract::class         => Contract::getTypeName(2),
             Document::class         => Document::getTypeName(2),
-            Project::class          => Project::getTypeName(2)],
+            Project::class          => Project::getTypeName(2)
+         ],
          __("Tools") => [
             Reminder::class         => __("Notes"),
-            RSSFeed::class          => __("RSS feed")],
+            RSSFeed::class          => __("RSS feed")
+         ],
          __("Administration") => [
             User::class             => User::getTypeName(2),
             Group::class            => Group::getTypeName(2),
             Entity::class           => Entity::getTypeName(2),
-            Profile::class          => Profile::getTypeName(2)],
+            Profile::class          => Profile::getTypeName(2)
+         ],
       ];
       if (class_exists(PassiveDCEquipment::class)) {
          // Does not exists in GLPI 9.4
@@ -127,7 +134,7 @@ class GlpiselectField extends DropdownField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -146,25 +153,29 @@ class GlpiselectField extends DropdownField
       ];
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       $itemtype = $this->getSubItemtype();
-      if  ($itemtype == Entity::getType() && $value == '-1') {
+      if ($itemtype == Entity::getType() && $value == '-1') {
          return true;
       }
 
       return parent::isValidValue($value);
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       if (!isset($input['glpi_objects']) || empty($input['glpi_objects'])) {
          Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
+            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            false,
+            ERROR
+         );
          return [];
       }
 
@@ -175,11 +186,13 @@ class GlpiselectField extends DropdownField
       return $input;
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       $value = html_entity_decode($value);
       $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
@@ -192,11 +205,13 @@ class GlpiselectField extends DropdownField
       return $item->getField($item->getNameField()) == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       $value = html_entity_decode($value);
       $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
@@ -206,11 +221,13 @@ class GlpiselectField extends DropdownField
       return $item->getField($item->getNameField()) > $value;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible(): bool
+   {
       return false;
    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -40,11 +41,13 @@ use PluginFormcreatorQuestionRegex;
 
 class FloatField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -52,7 +55,7 @@ class FloatField extends PluginFormcreatorAbstractField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default value');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -79,7 +82,8 @@ class FloatField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -94,14 +98,15 @@ class FloatField extends PluginFormcreatorAbstractField
          'id'    => $domId,
          'value' => $defaultValue
       ]);
-      $html .=Html::scriptBlock("$(function() {
+      $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeField('$fieldName', '$rand');
       });");
 
       return $html;
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -109,13 +114,15 @@ class FloatField extends PluginFormcreatorAbstractField
       return strval((float) $this->value);
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
+         ? $value
+         : '';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -123,29 +130,36 @@ class FloatField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       if (strlen($value) == 0) {
          return true;
       }
@@ -154,7 +168,8 @@ class FloatField extends PluginFormcreatorAbstractField
          Session::addMessageAfterRedirect(
             sprintf(__('This is not a number: %s', 'formcreator'), $this->getLabel()),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -191,11 +206,13 @@ class FloatField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Float', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       $success = true;
       $fieldType = $this->getFieldTypeName();
       // Add leading and trailing regex marker automaticaly
@@ -222,11 +239,13 @@ class FloatField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          $this->value = '';
@@ -237,15 +256,17 @@ class FloatField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function getEmptyParameters() {
+   public function getEmptyParameters(): array
+   {
       $regexDoc = '<small>';
-      $regexDoc.= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
-      $regexDoc.= '('.__('Regular expression', 'formcreator').')';
-      $regexDoc.= '</small>';
+      $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
+      $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
+      $regexDoc .= '</small>';
       return [
          'regex' => new PluginFormcreatorQuestionRegex(
             $this,
@@ -267,36 +288,42 @@ class FloatField extends PluginFormcreatorAbstractField
    }
 
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return ((float) $this->value) === ((float) $value);
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       return ((float) $this->value) > ((float) $value);
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon()
+   {
+      return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }

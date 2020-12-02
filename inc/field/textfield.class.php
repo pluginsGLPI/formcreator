@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -40,11 +41,13 @@ use Toolbox;
 
 class TextField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -52,14 +55,15 @@ class TextField extends PluginFormcreatorAbstractField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
       $value = Html::entities_deep($this->question->fields['default_values']);
       $additions .= Html::input(
-         'default_values', [
+         'default_values',
+         [
             'type'  => 'text',
             'id'    => 'default_values',
             'value' => $value,
@@ -82,7 +86,8 @@ class TextField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -106,7 +111,8 @@ class TextField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -114,13 +120,15 @@ class TextField extends PluginFormcreatorAbstractField
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
+         ? $value
+         : '';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign()
+   {
       if ($this->value === null) {
          return '';
       }
@@ -128,30 +136,37 @@ class TextField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       if (strlen($value) == 0) {
          return true;
       }
@@ -183,11 +198,13 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName() {
+   public static function getName()
+   {
       return __('Text', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       $success = true;
       $fieldType = $this->getFieldTypeName();
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
@@ -204,15 +221,18 @@ class TextField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          return false;
@@ -225,11 +245,12 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getEmptyParameters() {
+   public function getEmptyParameters(): array
+   {
       $regexDoc = '<small>';
-      $regexDoc.= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
-      $regexDoc.= '('.__('Regular expression', 'formcreator').')';
-      $regexDoc.= '</small>';
+      $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
+      $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
+      $regexDoc .= '</small>';
       return [
          'regex' => new PluginFormcreatorQuestionRegex(
             $this,
@@ -250,36 +271,42 @@ class TextField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return Toolbox::stripslashes_deep($this->value) == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       return Toolbox::stripslashes_deep($this->value) > $value;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon(): string
+   {
+      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }

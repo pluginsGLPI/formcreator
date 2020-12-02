@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,6 +31,7 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field;
+
 use DateTime;
 use Html;
 use PluginFormcreatorAbstractField;
@@ -40,11 +42,13 @@ class TimeField extends PluginFormcreatorAbstractField
 {
    const DATE_FORMAT = 'H:i';
 
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -52,7 +56,7 @@ class TimeField extends PluginFormcreatorAbstractField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -81,7 +85,8 @@ class TimeField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -102,19 +107,23 @@ class TimeField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       return $this->value;
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = $value;
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       return $this->value;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $date = DateTime::createFromFormat("H:i:s", $this->value);
       if ($date === false) {
          return ' ';
@@ -122,19 +131,24 @@ class TimeField extends PluginFormcreatorAbstractField
       return Toolbox::addslashes_deep($date->format('H:i'));
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) === false)) {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -142,23 +156,28 @@ class TimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Time', 'formcreator');
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       if ($this->value === '') {
          $answer = '00:00';
       } else {
@@ -169,11 +188,13 @@ class TimeField extends PluginFormcreatorAbstractField
       return $answerDatetime == $compareDatetime;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       if (empty($this->value)) {
          $answer = '00:00';
       } else {
@@ -184,11 +205,13 @@ class TimeField extends PluginFormcreatorAbstractField
       return $answerDatetime > $compareDatetime;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
 
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
@@ -199,20 +222,22 @@ class TimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fa fa-clock" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon(): string
+   {
+      return '<i class="fa fa-clock" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }
