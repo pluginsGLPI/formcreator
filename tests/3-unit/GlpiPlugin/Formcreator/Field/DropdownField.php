@@ -264,7 +264,7 @@ class DropdownField extends CommonTestCase {
       $instance = $this->newTestedInstance($fields);
       $instance->deserializeValue($value);
 
-      $output = $instance->getValueForTargetText(true);
+      $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo($expected);
    }
 
