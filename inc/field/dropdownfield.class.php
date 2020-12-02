@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -52,16 +53,18 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DropdownField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       $itemtype = $this->getSubItemtype();
 
       return class_exists($itemtype);
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
-      $label = '<label for="dropdown_dropdown_values'.$rand.'" id="label_dropdown_values">';
+      $label = '<label for="dropdown_dropdown_values' . $rand . '" id="label_dropdown_values">';
       $label .= _n('Dropdown', 'Dropdowns', 1);
       $label .= '</label>';
 
@@ -101,7 +104,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -114,7 +117,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       // Ticket category specific
       $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_ticket">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_show_ticket_categories'.$rand.'" id="label_show_ticket_categories">';
+      $additions .= '<label for="dropdown_show_ticket_categories' . $rand . '" id="label_show_ticket_categories">';
       $additions .= __('Show ticket categories', 'formcreator');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -122,15 +125,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       $ticketCategoriesOptions = [
          'request'  => __('Request categories', 'formcreator'),
          'incident' => __('Incident categories', 'formcreator'),
-         'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
+         'both'     => __('Request categories', 'formcreator') . " + " . __('Incident categories', 'formcreator'),
          'change'   => __('Change categories', 'formcreator'),
          'all'      => __('All'),
       ];
       $additions .= dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
          'rand'  => $rand,
          'value' => isset($decodedValues['show_ticket_categories'])
-                    ? $decodedValues['show_ticket_categories']
-                    : 'both',
+            ? $decodedValues['show_ticket_categories']
+            : 'both',
          'display' => false,
       ]);
       $additions .= '</td>';
@@ -149,7 +152,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       // Service level specific
       $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_service_level">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_show_service_level_types'.$rand.'" id="label_show_service_level_types">';
+      $additions .= '<label for="dropdown_show_service_level_types' . $rand . '" id="label_show_service_level_types">';
       $additions .= __('Type', 'formcreator');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -161,8 +164,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       $additions .= dropdown::showFromArray('show_service_level_types', $serviceLevelTypes, [
          'rand'  => $rand,
          'value' => isset($decodedValues['show_service_level_types'])
-                    ? $decodedValues['show_service_level_types']
-                    : SLM::TTO,
+            ? $decodedValues['show_service_level_types']
+            : SLM::TTO,
          'display' => false,
       ]);
       $additions .= '</td>';
@@ -184,7 +187,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function buildParams($rand = null) {
+   public function buildParams($rand = null)
+   {
       global $DB, $CFG_GLPI;
 
       $id        = $this->question->getID();
@@ -273,13 +277,17 @@ class DropdownField extends PluginFormcreatorAbstractField
                if ($canViewGroupHardware) {
                   $groups = $this->getMyGroups(Session::getLoginUserID());
                }
-               if ($DB->fieldExists($itemtype::getTable(), $userFk)
-                  && !$canViewAllHardware && $canViewMyHardware) {
+               if (
+                  $DB->fieldExists($itemtype::getTable(), $userFk)
+                  && !$canViewAllHardware && $canViewMyHardware
+               ) {
                   $userId = $_SESSION['glpiID'];
                   $dparams_cond_crit[$userFk] = $userId;
                }
-               if ($DB->fieldExists($itemtype::getTable(), $groupFk)
-                  && !$canViewAllHardware && count($groups) > 0) {
+               if (
+                  $DB->fieldExists($itemtype::getTable(), $groupFk)
+                  && !$canViewAllHardware && count($groups) > 0
+               ) {
                   $dparams_cond_crit = [
                      'OR' => [
                         $groupFk => $groups,
@@ -297,12 +305,14 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       // Set specific root if defined (CommonTreeDropdown)
       $baseLevel = 0;
-      if (isset($decodedValues['show_ticket_categories_root'])
-         && (int) $decodedValues['show_ticket_categories_root'] > 0) {
-            $sons = (new DBUtils)->getSonsOf(
-               $itemtype::getTable(),
-               $decodedValues['show_ticket_categories_root']
-            );
+      if (
+         isset($decodedValues['show_ticket_categories_root'])
+         && (int) $decodedValues['show_ticket_categories_root'] > 0
+      ) {
+         $sons = (new DBUtils)->getSonsOf(
+            $itemtype::getTable(),
+            $decodedValues['show_ticket_categories_root']
+         );
          $dparams_cond_crit['id'] = $sons;
          $rootItem = new $itemtype();
          if ($rootItem->getFromDB($decodedValues['show_ticket_categories_root'])) {
@@ -311,8 +321,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
 
       // Apply max depth if defined (CommonTreeDropdown)
-      if (isset($decodedValues['show_ticket_categories_depth'])
-         && $decodedValues['show_ticket_categories_depth'] > 0) {
+      if (
+         isset($decodedValues['show_ticket_categories_depth'])
+         && $decodedValues['show_ticket_categories_depth'] > 0
+      ) {
          $dparams_cond_crit['level'] = ['<=', $decodedValues['show_ticket_categories_depth'] + $baseLevel];
       }
 
@@ -341,7 +353,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $dparams;
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       $itemtype = $this->getSubItemtype();
       if (!$canEdit) {
          $item = new $itemtype();
@@ -373,7 +386,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -381,13 +395,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
+         ? $value
+         : '';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -395,7 +411,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $DbUtil = new DbUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
@@ -406,17 +423,22 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $value;
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return _n('Dropdown', 'Dropdowns', 1);
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       $itemtype = json_decode($this->question->fields['values'], true);
       if ($itemtype === null) {
@@ -429,7 +451,8 @@ class DropdownField extends PluginFormcreatorAbstractField
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -437,7 +460,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       if ($value == '0') {
          return true;
       }
@@ -455,18 +479,21 @@ class DropdownField extends PluginFormcreatorAbstractField
          Session::addMessageAfterRedirect(
             __('Invalid value for ', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
       }
 
       return $isValid;
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       if (!isset($input['dropdown_values']) || empty($input['dropdown_values'])) {
          Session::addMessageAfterRedirect(
             sprintf(__('The field value is required: %s', 'formcreator'), $input['name']),
             false,
-            ERROR);
+            ERROR
+         );
          return [];
       }
       $allowedDropdownValues = [];
@@ -479,9 +506,10 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
          Session::addMessageAfterRedirect(
-               sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
-               false,
-               ERROR);
+            sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
+            false,
+            ERROR
+         );
          return [];
       }
       $itemtype = $input['dropdown_values'];
@@ -502,9 +530,10 @@ class DropdownField extends PluginFormcreatorAbstractField
             $input['values']['show_ticket_categories_depth'] = $input['show_ticket_categories_depth'];
          }
          $input['values']['show_ticket_categories_root'] = isset($input['show_ticket_categories_root'])
-                                                            ? $input['show_ticket_categories_root']
-                                                            : '';
-      } else if ($input['dropdown_values'] == SLA::getType()
+            ? $input['show_ticket_categories_root']
+            : '';
+      } else if (
+         $input['dropdown_values'] == SLA::getType()
          || $input['dropdown_values'] == OLA::getType()
       ) {
          $input['values']['show_service_level_types'] = $input['show_service_level_types'];
@@ -523,11 +552,13 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
@@ -537,7 +568,8 @@ class DropdownField extends PluginFormcreatorAbstractField
     * @param integer $userID
     * @return array
     */
-   private function getMyGroups($userID) {
+   private function getMyGroups($userID)
+   {
       global $DB;
 
       // from Item_Ticket::dropdownMyDevices()
@@ -578,7 +610,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $a_groups;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       $value = html_entity_decode($value);
       $itemtype = json_decode($this->question->fields['values'], true);
       $itemtype = $itemtype['itemtype'];
@@ -597,11 +630,13 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $name == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       $value = html_entity_decode($value);
       $itemtype = $this->question->fields['values'];
       $dropdown = new $itemtype();
@@ -616,11 +651,13 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $name > $value;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '0';
@@ -633,7 +670,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible(): bool
+   {
       return false;
    }
 
@@ -740,9 +778,9 @@ class DropdownField extends PluginFormcreatorAbstractField
          foreach ($data['data']['rows'] as $row) {
             $targetKey = get_class($item) . "_" . $searchOption['id'];
             // Add each result
-            for ($i=0; $i < $row[$targetKey]['count']; $i++) {
-               $propertyValue .=$row[$targetKey][$i]['name'];
-               if ($i+1 < $row[$targetKey]['count']) {
+            for ($i = 0; $i < $row[$targetKey]['count']; $i++) {
+               $propertyValue .= $row[$targetKey][$i]['name'];
+               if ($i + 1 < $row[$targetKey]['count']) {
                   $propertyValue .= ", ";
                }
             }
@@ -760,16 +798,17 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $content;
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon()
+   {
       return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField()
+   public function isVisibleField(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function isEditableField(): bool
    {
       return true;
    }
@@ -779,7 +818,8 @@ class DropdownField extends PluginFormcreatorAbstractField
     *
     * @return string
     */
-   protected function getSubItemtype() {
+   protected function getSubItemtype()
+   {
       return self::getSubItemtypeForValues($this->question->fields['values']);
    }
 
@@ -790,7 +830,8 @@ class DropdownField extends PluginFormcreatorAbstractField
     *
     * @return string
     */
-   public static function getSubItemtypeForValues($values) {
+   public static function getSubItemtypeForValues($values)
+   {
       $decodedValues = json_decode($values, JSON_OBJECT_AS_ARRAY);
       if ($decodedValues === null) {
          return $values;

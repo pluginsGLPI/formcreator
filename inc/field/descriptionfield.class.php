@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -37,11 +38,13 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DescriptionField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $common = parent::getDesignSpecializationField();
       $additions = $common['additions'];
 
@@ -54,23 +57,28 @@ class DescriptionField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       return nl2br(html_entity_decode($this->question->fields['description']));
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       return '';
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = '';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       return '';
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $text = $this->question->fields['description'];
       if (!$richText) {
          $text = nl2br(strip_tags(html_entity_decode($text)));
@@ -79,31 +87,39 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return $text;
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       return true;
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Description');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       if (isset($input['description'])) {
          if (strlen($input['description']) < 1) {
             Session::addMessageAfterRedirect(
                __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
                false,
-               ERROR);
+               ERROR
+            );
             return [];
          }
       }
@@ -112,48 +128,57 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return false;
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return false;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
-      return true;
-   }
-
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fas fa-align-left" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function parseAnswerValues($input, $nonDestructive = false): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function isAnonymousFormCompatible(): bool
+   {
+      return true;
+   }
+
+   public function getHtmlIcon()
+   {
+      return '<i class="fas fa-align-left" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return false;
    }

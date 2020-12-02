@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,18 +37,21 @@ use Html;
 
 class SelectField extends RadiosField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $specialization = parent::getDesignSpecializationField();
       $specialization['may_be_empty'] = true;
 
       return $specialization;
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       if (!$canEdit) {
          return nl2br($this->value) . PHP_EOL;
       }
@@ -83,11 +87,13 @@ class SelectField extends RadiosField
       return $html;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Select', 'formcreator');
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       if ($value == '') {
          // empty string means no selection
          $value = '0';
@@ -96,7 +102,8 @@ class SelectField extends RadiosField
    }
 
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon(): string
+   {
       return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
 }

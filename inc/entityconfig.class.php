@@ -63,7 +63,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       return $tabNames;
    }
 
-   public static function getEnumHelpdeskMode() {
+   public static function getEnumHelpdeskMode() : array {
       return [
          self::CONFIG_PARENT                     => __('Inheritance of the parent entity'),
          self::CONFIG_GLPI_HELPDSK               => __('GLPi\'s helpdesk', 'formcreator'),
@@ -72,7 +72,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       ];
    }
 
-   public static function getEnumSort() {
+   public static function getEnumSort() : array {
       return [
          self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
          self::CONFIG_SORT_POPULARITY   => __('Popularity sort', 'formcreator'),

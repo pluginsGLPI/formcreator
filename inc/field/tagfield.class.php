@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -40,11 +41,13 @@ use Html;
 
 class TagField extends DropdownField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return class_exists(PluginTagTag::class);
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $label = '';
       $field = '';
 
@@ -59,7 +62,8 @@ class TagField extends DropdownField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       global $DB;
 
       $html         = '';
@@ -103,7 +107,7 @@ class TagField extends DropdownField
          'ORDER'  => 'name'
       ]);
       $values = [];
-      foreach ($result AS $id => $data) {
+      foreach ($result as $id => $data) {
          $values[$id] = $data['name'];
       }
 
@@ -122,7 +126,8 @@ class TagField extends DropdownField
       return $html;
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -130,13 +135,15 @@ class TagField extends DropdownField
       return implode("\r\n", $this->value);
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? explode("\r\n", $value)
-                  : [];
+         ? explode("\r\n", $value)
+         : [];
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -144,18 +151,21 @@ class TagField extends DropdownField
       return implode("\r\n", $this->value);
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
       return Toolbox::addslashes_deep($value);
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -163,15 +173,18 @@ class TagField extends DropdownField
       return true;
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
@@ -185,15 +198,18 @@ class TagField extends DropdownField
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return _n('Tag', 'Tags', 2, 'tag');
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return false;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       if (!class_exists(PluginTagTag::class)) {
          // Plugin Tag not available
          return false;
@@ -210,7 +226,8 @@ class TagField extends DropdownField
 
       // Check it is available for the target itemtypes
       $types = json_decode($tag->fields['type_menu'], true);
-      if (!isset($types[Ticket::class])
+      if (
+         !isset($types[Ticket::class])
          && !isset($types[Change::class])
          && !isset($types['0'])
       ) {
@@ -223,32 +240,37 @@ class TagField extends DropdownField
       return (in_array($tag->getID(), $this->value));
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible(): bool
+   {
       return false;
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon()
+   {
       return '<i class="fas fa-tag" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField()
+   public function isVisibleField(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function isEditableField(): bool
    {
       return true;
    }

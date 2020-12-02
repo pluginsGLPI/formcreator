@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -35,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Toolbox;
+
 class TextareaField extends TextField
 {
    /** @var $uploads array uploaded files on form submit */
@@ -44,7 +46,8 @@ class TextareaField extends TextField
       '_tag_filename' => [],
    ];
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -52,7 +55,7 @@ class TextareaField extends TextField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -81,7 +84,8 @@ class TextareaField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       if (!$canEdit) {
          return Toolbox::getHtmlToDisplay($this->value);
       }
@@ -108,11 +112,13 @@ class TextareaField extends TextField
       return $html;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Textarea', 'formcreator');
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -130,14 +136,15 @@ class TextareaField extends TextField
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
-      //$this->value = str_replace('\r\n', "\r\n", $this->value);
+         ? $value
+         : '';
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -145,13 +152,15 @@ class TextareaField extends TextField
       return $this->value;
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -159,7 +168,8 @@ class TextareaField extends TextField
       return true;
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input): array
+   {
       $success = true;
       $fieldType = $this->getFieldTypeName();
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
@@ -186,11 +196,13 @@ class TextareaField extends TextField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input) : bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false)
+   {
       parent::parseAnswerValues($input, $nonDestructive);
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
@@ -202,7 +214,8 @@ class TextareaField extends TextField
       return true;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $value = $this->value;
       if (!$richText) {
          $value = Toolbox::unclean_cross_side_scripting_deep($value);
@@ -211,27 +224,33 @@ class TextareaField extends TextField
       return $value;
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return $this->value == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       return $this->value > $value;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible() {
+   public function isAnonymousFormCompatible()
+   {
       return true;
    }
 
-   public function getHtmlIcon() {
+   public function getHtmlIcon(): string
+   {
       return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
    }
 }

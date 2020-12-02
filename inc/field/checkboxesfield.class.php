@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -39,11 +40,13 @@ use PluginFormcreatorQuestionRange;
 
 class CheckboxesField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool
+   {
       return true;
    }
 
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField(): array
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -51,9 +54,9 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="default_values'.$rand.'">';
+      $additions .= '<label for="default_values' . $rand . '">';
       $additions .= __('Default values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
+      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
@@ -66,9 +69,9 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       ]);
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= '<label for="values'.$rand.'">';
+      $additions .= '<label for="values' . $rand . '">';
       $additions .= __('Values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
+      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
@@ -98,7 +101,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true): string
+   {
       $html = '';
       if (!$canEdit) {
          if (count($this->value)) {
@@ -122,7 +126,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
                $html .= "<div class='checkbox'>";
                $html .= Html::getCheckbox([
                   'title'         => htmlentities($value, ENT_QUOTES),
-                  'id'            => $domId.'_'.$i,
+                  'id'            => $domId . '_' . $i,
                   'name'          => htmlentities($fieldName, ENT_QUOTES) . '[]',
                   'value'         => htmlentities($value, ENT_QUOTES),
                   'zero_on_empty' => false,
@@ -143,21 +147,24 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string
+   {
       if ($this->value === null || $this->value === '') {
          return '';
       }
 
-      return Toolbox::addslashes_deep(json_encode($this->value, JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE));
+      return Toolbox::addslashes_deep(json_encode($this->value, JSON_OBJECT_AS_ARRAY + JSON_UNESCAPED_UNICODE));
    }
 
-   public function deserializeValue($value) {
+   public function deserializeValue($value)
+   {
       $this->value = ($value !== null && $value !== '')
-                  ? json_decode($value)
-                  : [];
+         ? json_decode($value)
+         : [];
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string
+   {
       if ($this->value === null) {
          return '';
       }
@@ -171,7 +178,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return implode("\r\n", $value);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
@@ -185,7 +193,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isValid() {
+   public function isValid(): bool
+   {
       $value = $this->value;
       if (is_null($value)) {
          $value = [];
@@ -196,14 +205,16 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          Session::addMessageAfterRedirect(
             sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
       return $this->isValidValue($value);
    }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       if ($value === '') {
          return true;
       }
@@ -245,16 +256,19 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return __('Checkboxes', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       if (!isset($input['values']) || empty($input['values'])) {
          Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
+            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+            false,
+            ERROR
+         );
          return [];
       }
 
@@ -269,11 +283,13 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string
+   {
       $value = [];
       $values = $this->getAvailableValues();
 
@@ -295,17 +311,22 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return $value;
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array
+   {
       return [];
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function getEmptyParameters() {
+   public function getEmptyParameters(): array
+   {
       return [
          'range' => new PluginFormcreatorQuestionRange(
             $this,
@@ -318,7 +339,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       if (!is_array($this->value)) {
          // No selection
          return ($value === '');
@@ -326,11 +348,13 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return in_array($value, $this->value);
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       if (count($this->value) < 1) {
          return false;
       }
@@ -342,7 +366,8 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       if (count($this->value) < 1) {
          return false;
       }
@@ -354,20 +379,22 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fa fa-check-square" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon(): string
+   {
+      return '<i class="fa fa-check-square" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }

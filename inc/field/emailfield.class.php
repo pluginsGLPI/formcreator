@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -37,7 +38,8 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class EmailField extends TextField
 {
-   public function getDesignSpecializationField() {
+   public function getDesignSpecializationField()
+   {
       $rand = mt_rand();
 
       $label = '';
@@ -45,7 +47,7 @@ class EmailField extends TextField
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= '<label for="dropdown_default_values' . $rand . '">';
       $additions .= __('Default value');
       $additions .= '</label>';
       $additions .= '</td>';
@@ -70,7 +72,8 @@ class EmailField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true) {
+   public function getRenderedHtml($canEdit = true)
+   {
       if (!$canEdit) {
          return $this->value;
       }
@@ -93,9 +96,12 @@ class EmailField extends TextField
       return $html;
    }
 
-   public function moveUploads() {}
+   public function moveUploads()
+   {
+   }
 
-   public function isValidValue($value) {
+   public function isValidValue($value): bool
+   {
       if ($value === '') {
          return true;
       }
@@ -104,32 +110,38 @@ class EmailField extends TextField
          Session::addMessageAfterRedirect(
             sprintf(__('This is not a valid e-mail: %s', 'formcreator'), $this->getLabel()),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string
+   {
       return _n('Email', 'Emails', 1);
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool
+   {
       return true;
    }
 
-   public function prepareQuestionInputForSave($input) {
+   public function prepareQuestionInputForSave($input)
+   {
       $input['values'] = '';
       $this->value = $input['default_values'];
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool
+   {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false)
+   {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          return false;
@@ -146,40 +158,47 @@ class EmailField extends TextField
       return true;
    }
 
-   public function getEmptyParameters() {
+   public function getEmptyParameters(): array
+   {
       return [];
    }
 
-   public function equals($value) {
+   public function equals($value): bool
+   {
       return $this->value == $value;
    }
 
-   public function notEquals($value) {
+   public function notEquals($value): bool
+   {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value) {
+   public function greaterThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value) {
+   public function lessThan($value): bool
+   {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible() {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fa fa-envelope" aria-hidden="true"></i>';
-   }
-
-   public function isVisibleField()
+   public function isAnonymousFormCompatible(): bool
    {
       return true;
    }
 
-   public function isEditableField()
+   public function getHtmlIcon()
+   {
+      return '<i class="fa fa-envelope" aria-hidden="true"></i>';
+   }
+
+   public function isVisibleField(): bool
+   {
+      return true;
+   }
+
+   public function isEditableField(): bool
    {
       return true;
    }
