@@ -34,7 +34,14 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginFormcreatorCommon {
-   public static function getEnumValues($table, $field) {
+   /**
+    * Get enum values for a field in the DB
+    *
+    * @param string $table table name
+    * @param string $field field name
+    * @return array enum values extracted from the CREATE TABLE statement
+    */
+   public static function getEnumValues(string $table, string $field) : array {
       global $DB;
 
       $enum = [];
@@ -57,7 +64,7 @@ class PluginFormcreatorCommon {
     *
     * @return boolean
     */
-   public static function isNotificationEnabled() {
+   public static function isNotificationEnabled() : bool {
       global $CFG_GLPI;
       $notification = $CFG_GLPI['use_notifications'];
 
@@ -70,22 +77,18 @@ class PluginFormcreatorCommon {
     * @param boolean $enable
     * @return void
     */
-   public static function setNotification($enable) {
+   public static function setNotification(bool $enable) {
       global $CFG_GLPI;
 
       $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
    }
 
-   public static function getGlpiVersion() {
-      return defined('GLPI_PREVER')
-             ? GLPI_PREVER
-             : GLPI_VERSION;
-   }
-
    /**
     * Gets the ID of Formcreator request type
+    *
+    * @return int
     */
-   public static function getFormcreatorRequestTypeId() {
+   public static function getFormcreatorRequestTypeId() : int {
       global $DB;
 
       $requesttypes_id = 0;
@@ -108,7 +111,7 @@ class PluginFormcreatorCommon {
     * @param string $fieldName
     * @return null|integer
     */
-   public static function getMax(CommonDBTM $item, array $condition, $fieldName) {
+   public static function getMax(CommonDBTM $item, array $condition, string $fieldName) {
       global $DB;
 
       $line = $DB->request([
@@ -132,7 +135,7 @@ class PluginFormcreatorCommon {
     * @param string $keywords
     * @return string
     */
-   public static function prepareBooleanKeywords($keywords) {
+   public static function prepareBooleanKeywords(string $keywords) : string {
       // @see https://stackoverflow.com/questions/2202435/php-explode-the-string-but-treat-words-in-quotes-as-a-single-word
       preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $keywords, $matches);
       $matches = $matches[0];
@@ -148,11 +151,11 @@ class PluginFormcreatorCommon {
    }
 
    /**
-    * get the list of pictograms available for the current version of GLPI
+    * Get the list of pictograms available for the current version of GLPI
     *
     * @return array
     */
-   public static function getFontAwesomePictoNames() {
+   public static function getFontAwesomePictoNames() : array {
       $list = require_once(__DIR__ . '/../' . self::getPictoFilename(GLPI_VERSION));
       return $list;
    }
@@ -163,7 +166,7 @@ class PluginFormcreatorCommon {
     * @param $version string GLPI version
     * @return string
     */
-   public static function getPictoFilename($version) {
+   public static function getPictoFilename(string $version) : string {
       if (version_compare($version, '9.6') < 0) {
          return 'data/font-awesome_9.5.php';
       }
@@ -176,9 +179,9 @@ class PluginFormcreatorCommon {
     *
     * @param string $name name of the HTML input
     * @param array $options
-    * @return mixed
+    * @return void
     */
-   public static function showFontAwesomeDropdown($name, $options = []) {
+   public static function showFontAwesomeDropdown(string $name, array $options = []) {
       $items = static::getFontAwesomePictoNames();
 
       $options = [
@@ -220,7 +223,7 @@ JAVASCRIPT;
     * @param integer $id
     * @return boolean true on success, false otherwise
     */
-   public static function cancelMyTicket($id) {
+   public static function cancelMyTicket(int $id) : bool {
       $ticket = new Ticket();
       $ticket->getFromDB($id);
       if (!$ticket->canRequesterUpdateItem()) {
@@ -257,9 +260,9 @@ JAVASCRIPT;
     * V = status picked ce qfrom Validation
     *
     * @param Ticket $item
-    * @return integer
+    * @return array
     */
-   public static function getTicketStatusForIssue(Ticket $item) {
+   public static function getTicketStatusForIssue(Ticket $item) : array {
       $ticketValidation = new TicketValidation();
       $ticketValidation->getFromDBByCrit([
          'tickets_id' => $item->getID(),
@@ -284,7 +287,12 @@ JAVASCRIPT;
       return ['status' => $status, 'user' => $user];
    }
 
-   public static function canValidate() {
+   /**
+    * Undocumented function
+    *
+    * @return boolean
+    */
+   public static function canValidate() : bool {
       return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
    }
