@@ -48,19 +48,19 @@ class FileField extends CommonTestCase {
    public function testDeserializeValue() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue('invalid Json');
-      $this->string($instance->getValueForTargetText(true))
+      $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('No attached document');
 
       $instance->deserializeValue('[]');
-      $this->string($instance->getValueForTargetText(true))
+      $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('No attached document');
 
       $instance->deserializeValue('[1]');
-      $this->string($instance->getValueForTargetText(true))
+      $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('Attached document');
 
       $instance->deserializeValue('[1,2]');
-      $this->string($instance->getValueForTargetText(true))
+      $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('Attached document');
    }
 

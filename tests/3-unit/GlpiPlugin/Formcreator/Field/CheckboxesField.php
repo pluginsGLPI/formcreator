@@ -207,7 +207,7 @@ class CheckboxesField extends CommonTestCase {
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetText(false);
+      $output = $instance->getValueForTargetText('', false);
       $this->string($output)->isEqualTo(implode(', ', $expected));
    }
 
@@ -304,7 +304,7 @@ class CheckboxesField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
 
-      $output = $instance->getValueForTargetText(true);
+      $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo($expected);
    }
 

@@ -174,7 +174,7 @@ class RadiosField extends CommonTestCase {
    public function testDeserializeValue($instance, $value, $expected) {
       $instance->parseAnswerValues(['formcreator_field_' . $instance->getQuestion()->getID() => $value]);
       $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetText(false);
+      $output = $instance->getValueForTargetText('', false);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -203,7 +203,7 @@ class RadiosField extends CommonTestCase {
       $output = $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $this->boolean($output)->isEqualTo($expected);
 
-      $outputValue = $instance->getValueForTargetText(false);
+      $outputValue = $instance->getValueForTargetText('', false);
       if ($expected === false) {
          $this->variable($outputValue)->isNull();
       } else {

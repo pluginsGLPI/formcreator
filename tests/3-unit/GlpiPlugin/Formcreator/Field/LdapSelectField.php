@@ -118,7 +118,7 @@ class LdapSelectField extends CommonTestCase {
    public function testDeserializeValue($value, $expected) {
       $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetText(false);
+      $output = $instance->getValueForTargetText('', false);
       $this->string($output)->isEqualTo($expected);
    }
 

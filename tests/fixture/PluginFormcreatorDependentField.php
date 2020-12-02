@@ -121,7 +121,7 @@ class DependentField extends PluginFormcreatorAbstractField
          : '';
    }
 
-   public function show($canEdit = true)
+   public function show($domain, $canEdit = true)
    {
       parent::show($canEdit);
       $questionId = $this->fields['id'];
@@ -176,7 +176,7 @@ class DependentField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
+   public function getValueForTargetText($domain, $richText): string
    {
       return Toolbox::addslashes_deep($this->value);
    }
