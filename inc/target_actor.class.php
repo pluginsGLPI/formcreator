@@ -181,7 +181,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
       return $itemId;
    }
 
-   public static function countItemsToImport($input)
+   public static function countItemsToImport($input) : int
    {
       return 1;
    }
@@ -192,7 +192,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -245,7 +245,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
       return $target_actor;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
    {
       $keepCriteria = [
          static::$itemtype => $container->getType(),

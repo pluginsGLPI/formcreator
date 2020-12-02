@@ -97,7 +97,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     * Export in an array all the data of the current instanciated target ticket
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -151,7 +151,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return $export;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -259,7 +259,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return $itemId;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport(array $input) : int {
       $subItems = [
          '_actors'            => PluginFormcreatorTarget_Actor::class,
          '_conditions'        => PluginFormcreatorCondition::class,

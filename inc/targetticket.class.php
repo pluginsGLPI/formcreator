@@ -1075,7 +1075,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $data;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -1187,7 +1187,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $itemId;
    }
 
-   public static function countItemsToImport($input) {
+   public static function countItemsToImport(array $input) : int {
       $subItems = [
          '_actors'            => PluginFormcreatorTarget_Actor::class,
          '_ticket_relations'  => PluginFormcreatorItem_TargetTicket::class,
@@ -1208,7 +1208,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }

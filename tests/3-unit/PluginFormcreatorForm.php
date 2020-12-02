@@ -42,7 +42,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testCanPurgeItem':
          case 'testDuplicate':
          case 'testCreateValidationNotification':
-            self::login('glpi', 'glpi');
+            $this->login('glpi', 'glpi');
       }
    }
 

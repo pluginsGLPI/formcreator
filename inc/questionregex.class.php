@@ -100,7 +100,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $this->fieldName;
    }
 
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -120,7 +120,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -179,7 +179,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $itemId;
    }
 
-   public static function countItemsToImport($input)
+   public static function countItemsToImport($input) : int
    {
       return 1;
    }
