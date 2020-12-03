@@ -16,6 +16,7 @@ env:
   AFTER_SUCCESS_BRANCH: 9.5/bugfixes
   NOCOVERAGE: -ncc
   COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
+  PANTHER_CHROME_DRIVER_BINARY: chromedriver
 
 jobs:
   tests:
@@ -49,7 +50,7 @@ jobs:
       - name: "get browser"
         run: |
           sudo apt update
-          sudo apt install chromium-browser
+          sudo apt install chromium-browser chromium-chromedriver
       - name: "Check tools"
         run: |
           which php
@@ -59,6 +60,8 @@ jobs:
           mysql --version
           composer --version
           chromium-browser --version
+          ls -l /usr/bin/chromium*
+          $PANTHER_CHROME_DRIVER_BINARY --version
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Run tests"
