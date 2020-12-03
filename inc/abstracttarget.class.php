@@ -38,7 +38,8 @@ if (!defined('GLPI_ROOT')) {
 abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorTargetInterface,
-PluginFormcreatorConditionnableInterface
+PluginFormcreatorConditionnableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;

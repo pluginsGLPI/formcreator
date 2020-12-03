@@ -44,6 +44,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorQuestionDependency
 extends PluginFormcreatorAbstractQuestionParameter
 {
+   use PluginFormcreatorTranslatable;
 
    /** @var string $fieldtype type of field useable for the dependency */
    protected $fieldType;

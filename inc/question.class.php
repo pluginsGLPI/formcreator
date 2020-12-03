@@ -38,7 +38,8 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorQuestion extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
-PluginFormcreatorConditionnableInterface
+PluginFormcreatorConditionnableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;

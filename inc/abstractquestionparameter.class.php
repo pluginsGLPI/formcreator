@@ -35,7 +35,10 @@ if (!defined('GLPI_ROOT')) {
 
 abstract class PluginFormcreatorAbstractQuestionParameter
 extends CommonDBChild
-implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExportableInterface
+implements
+PluginFormcreatorQuestionParameterInterface,
+PluginFormcreatorExportableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorExportableTrait;
 
