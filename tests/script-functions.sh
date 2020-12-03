@@ -60,12 +60,12 @@ plugin_test_upgrade() {
 
 # Plugin test
 plugin_test_install() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/1-install $NOCOVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/1-install $NOCOVERAGE $ATOUM_ARG
 }
 
 plugin_test() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/2-integration -mcn 1 $COVERAGE
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/3-unit $COVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/2-integration -mcn 1 $COVERAGE $ATOUM_ARG
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/3-unit $COVERAGE $ATOUM_ARG
 }
 
 plugin_test_functional() {
@@ -89,11 +89,11 @@ plugin_test_functional() {
    php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
    PROCESS=$!
    echo php started with PID=$PROCESS
-   vendor/bin/atoum -ft -bf tests/bootstrap.php $NOCOVERAGE -mcn 1 $RESOURCE_TYPE $RESOURCE $EXTRA
+   vendor/bin/atoum -ft -bf tests/bootstrap.php $NOCOVERAGE -mcn 1 $RESOURCE_TYPE $RESOURCE $EXTRA $ATOUM_ARG
 }
 
 plugin_test_uninstall() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/5-uninstall $NOCOVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/5-uninstall $NOCOVERAGE $ATOUM_ARG
 }
 
 plugin_test_lint() {
