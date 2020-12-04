@@ -6,13 +6,13 @@
     "prefer-stable": true,
     "config": {
       "platform": {
-          "php": "5.6.0"
+          "php": "7.2"
       },
       "optimize-autoloader": true,
       "apcu-autoloader": true
   },
   "require": {
-      "php": ">= 5.6.0",
+      "php": ">= 7.2",
       "ext-xml": "*",
       "docopt/docopt": "^1.0"
     },
