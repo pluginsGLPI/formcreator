@@ -251,7 +251,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $form = $this->getForm();
       $output = $form->defineTabs();
       $this->array($output)->isEqualTo([
-         'PluginFormcreatorTranslation$1' => 'Translations',
+         'PluginFormcreatorForm_Language$1' => 'Form languages',
          'PluginFormcreatorForm$main' => "Form",
          'PluginFormcreatorQuestion$1' => "Questions",
          'PluginFormcreatorForm_Profile$1' => "Access types",
