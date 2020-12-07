@@ -41,6 +41,7 @@ PluginFormcreatorExportableInterface,
 PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    // From CommonDBRelation
    static public $itemtype       = PluginFormcreatorQuestion::class;
@@ -103,8 +104,7 @@ PluginFormcreatorTranslatableInterface
       return $tab;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool {
       $keepCriteria = [
          static::$items_id => $container->getID(),
       ];
@@ -114,15 +114,23 @@ PluginFormcreatorTranslatableInterface
       return $this->deleteByCriteria($keepCriteria);
    }
 
-   public function getTranslatableStrings() {
+   public function getTranslatableStrings(array $options = []) : array {
       $strings = [
          'itemlink' => [],
          'string'   => [],
          'text'     => [],
       ];
-      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
-         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
-      }
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $strings = $this->getMyTranslatableStrings($options);
 
       foreach (array_keys($strings) as $type) {
          $strings[$type] = array_unique($strings[$type]);

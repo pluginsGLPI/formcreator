@@ -29,16 +29,35 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
-
-Session::checkRight('entity', UPDATE);
+include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
+if (!isset($_POST['action'])) {
+   http_response_code(400);
+   die();
+}
+if (!isset($_POST['id'])) {
+   http_response_code(400);
+   die();
+}
 
-// Return to form list
-Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
+$_POSt['id'] = (int) $_POST['id'];
+$formLanguage = new PluginFormcreatorForm_Language();
+if (!$formLanguage->getFromDB((int) $_POST['id'])) {
+   http_response_code(404);
+   die();
+}
 
+switch ($_POST['action']) {
+   case 'newTranslation':
+      $formLanguage->showNewTranslation();
+      break;
+
+   case 'translation':
+      $formLanguage->showTranslationEntry($_POST);
+      break;
+}

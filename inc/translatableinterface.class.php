@@ -35,10 +35,12 @@ if (!defined('GLPI_ROOT')) {
 
 interface PluginFormcreatorTranslatableInterface
 {
-   public function getTranslatableSearchOptions();
+   public function getTranslatableSearchOptions() : array;
 
    /**
     * Get all translatable strings from the item and subitems
+    *
+    * @param array $options
     *
     * @return array strings array of translatable strings and medatadata
     *                       [PluginFormcreatotrForm][name] => [
@@ -46,5 +48,5 @@ interface PluginFormcreatorTranslatableInterface
     *                                                          'string'   => 'string to translate'
     *                                                         ]
     */
-   public function getTranslatableStrings();
+   public function getTranslatableStrings(array $options = []) : array;
 }

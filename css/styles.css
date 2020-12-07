@@ -259,6 +259,21 @@ input.submit_button:focus {
 }
 
 /*
+ * Translations
+ */
+.plugin_formcreator_filter_translations {
+   position: absolute;
+   right: 3%;
+   top: 10px;
+}
+
+.plugin_formcreator_filter_translations input {
+   padding-left: 20px !important;
+   width: 200px;
+   height: 28px;
+}
+
+/*
 * Form Render
 */
 #plugin_formcreator_form.plugin_formcreator_form > ol {

@@ -48,8 +48,7 @@ class SelectField extends RadiosField
       return $specialization;
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return nl2br(__($this->value, $domain)) . PHP_EOL;
       }

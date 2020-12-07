@@ -55,8 +55,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       return nl2br(html_entity_decode(__($this->question->fields['description'], $domain)));
    }
 
@@ -72,8 +71,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return '';
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $text = $this->question->fields['description'];
       if (!$richText) {
          $text = nl2br(strip_tags(html_entity_decode(__($text, $domain))));

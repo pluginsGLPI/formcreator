@@ -60,8 +60,7 @@ class TagField extends DropdownField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       global $DB;
 
       $html         = '';
@@ -146,8 +145,7 @@ class TagField extends DropdownField
       return implode("\r\n", $this->value);
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
       return $value;
    }

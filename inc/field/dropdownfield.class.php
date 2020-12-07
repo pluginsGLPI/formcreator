@@ -347,8 +347,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $dparams;
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $itemtype = $this->getSubItemtype();
       if (!$canEdit) {
          $item = new $itemtype();
@@ -406,8 +405,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $DbUtil = new DbUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
@@ -817,8 +815,31 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $decodedValues['itemtype'];
    }
 
-   public function getTranslatableStrings()
-   {
-      return ['text' => $this->getAvailableValues()];
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = parent::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      foreach ($this->getAvailableValues() as $value) {
+         if ($searchString != '' && stripos($value, $searchString) === false) {
+            continue;
+         }
+         $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
+         if ($options['id'] != '' && $id != $options['id']) {
+            continue;
+         }
+         $strings['text'][$id] = $value;
+         $strings['id'][$id] = 'text';
+      }
+
+      return $strings;
    }
 }

@@ -50,8 +50,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -95,8 +94,9 @@ class ActorField extends PluginFormcreatorAbstractField
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
+      global $CFG_GLPI;
+
       $html = '';
       if (!$canEdit) {
          if (empty($this->value)) {
@@ -213,8 +213,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return implode("\r\n", $value);
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $value = [];
       foreach ($this->value as $item) {
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {

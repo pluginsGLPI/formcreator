@@ -29,7 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...

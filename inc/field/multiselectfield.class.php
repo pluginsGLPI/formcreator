@@ -37,8 +37,7 @@ use Html;
 
 class MultiSelectField extends CheckboxesField
 {
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html         = '';
       $translatedValues = [];
       if (!$canEdit) {

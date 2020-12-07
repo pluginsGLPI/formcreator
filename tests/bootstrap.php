@@ -2,7 +2,6 @@
 // fix empty CFG_GLPI on boostrap; see https://github.com/sebastianbergmann/phpunit/issues/325
 global $CFG_GLPI, $GLPI_CACHE, $CHROME_CLIENT;
 
-
 //disable session cookies
 ini_set('session.use_cookies', 0);
 ini_set("memory_limit", "-1");
@@ -54,7 +53,7 @@ register_shutdown_function(function() {
 // Giving --debug argument to atoum will be detected by GLPI too
 // the error handler in Toolbox may output to stdout a message and break process communication
 // in atoum
-$key = array_search('--debug', $_SERVER['argv']);
+//$key = array_search('--debug', $_SERVER['argv']);
 // if ($key) {
    //unset($_SERVER['argv'][$key]);
 // }

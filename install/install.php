@@ -463,7 +463,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorQuestionDependency',
          'PluginFormcreatorQuestionRange',
          'PluginFormcreatorQuestionRegex',
-         'PluginFormcreatorTranslations',
+         'PluginFormcreatorForm_Language',
       ];
 
       foreach ($itemtypes as $itemtype) {

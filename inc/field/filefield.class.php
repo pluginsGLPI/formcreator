@@ -58,8 +58,7 @@ class FileField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          $html = '';
          $doc = new Document();
@@ -102,8 +101,7 @@ class FileField extends PluginFormcreatorAbstractField
       return '';
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       return $this->value;
    }
 
