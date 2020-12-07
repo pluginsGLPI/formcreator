@@ -340,7 +340,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'massiveaction'      => false
       ];
 
-
       $tab[] = [
          'id'                 => '10',
          'table'              => $this::getTable(),

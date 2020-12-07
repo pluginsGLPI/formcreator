@@ -84,8 +84,7 @@ class TextField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -291,10 +290,30 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getTranslatableStrings()
-   {
-      $strings = parent::getTranslatableStrings();
-      $strings['text'][] = $this->question->fields['default_values'];
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = parent::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      if ($searchString != '' && stripos($this->question->fields['default_values'], $searchString) === false) {
+         return $strings;
+      }
+      $id = \PluginFormcreatorTranslation::getTranslatableStringId($this->question->fields['default_values']);
+      if ($options['id'] != '' && $id != $options['id']) {
+         return $strings;
+      }
+      $strings['text'][$id] = $this->question->fields['default_values'];
+      $strings['id'][$id] = 'text';
+
       return $strings;
    }
 }

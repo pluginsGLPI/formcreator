@@ -58,8 +58,7 @@ class HostnameField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function show($domain, $canEdit = true)
-   {
+   public function show($domain, $canEdit = true) {
       if (!$canEdit) {
          return parent::show($canEdit);
       }

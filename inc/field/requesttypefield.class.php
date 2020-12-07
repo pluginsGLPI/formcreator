@@ -82,8 +82,7 @@ class RequestTypeField extends SelectField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html = "";
       if (!$canEdit) {
          return Ticket::getTicketTypeName($this->value);

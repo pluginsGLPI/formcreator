@@ -802,6 +802,7 @@ PluginFormcreatorTranslatableInterface
     * @return boolean true on sucess, false on error
     */
    protected function addGroupActor($role, $group) {
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       $actorType = null;
       switch ($role) {
          case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
@@ -2073,16 +2074,7 @@ SCRIPT;
       return $this->deleteByCriteria($keepCriteria);
    }
 
-   public function getTranslatableStrings() {
-      $strings = [
-         'itemlink' => [],
-         'string'   => [],
-         'text'     => [],
-      ];
-      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
-         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
-      }
-
-      return $strings;
+   public function getTranslatableStrings(array $options = []) : array {
+      return $this->getMyTranslatableStrings($options);
    }
 }

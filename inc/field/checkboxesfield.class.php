@@ -99,8 +99,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html = '';
       if (!$canEdit) {
          if (count($this->value)) {
@@ -147,6 +146,10 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       });");
 
       return $html;
+   }
+
+   public static function getName(): string {
+      return __('Checkboxes', 'formcreator');
    }
 
    public function serializeValue(): string {
@@ -252,10 +255,6 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName(): string {
-      return __('Checkboxes', 'formcreator');
-   }
-
    public function prepareQuestionInputForSave($input) {
       if (!isset($input['values']) || empty($input['values'])) {
          Session::addMessageAfterRedirect(
@@ -281,8 +280,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $value = [];
       $values = $this->getAvailableValues();
 
@@ -384,10 +382,31 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getTranslatableStrings()
-   {
-      $strings = parent::getTranslatableStrings();
-      $strings['text'] = array_merge($strings['text'], array_values($this->getAvailableValues()));
+   public function getTranslatableStrings(array $options = []) : array {
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      $strings = parent::getTranslatableStrings($options);
+      foreach (array_values($this->getAvailableValues()) as $value) {
+         if ($searchString != '' && stripos($value, $searchString) === false) {
+            continue;
+         }
+         $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
+         if ($options['id'] != '' && $id != $options['id']) {
+            continue;
+         }
+         $strings['text'][$id] = $value;
+         $strings['id'][$id] = 'text';
+
+      }
       return $strings;
    }
 }

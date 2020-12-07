@@ -642,18 +642,24 @@ PluginFormcreatorTranslatableInterface
       return $this->deleteByCriteria($keepCriteria);
    }
 
-   public function getTranslatableStrings() {
+   public function getTranslatableStrings(array $options = []) : array {
       $strings = [
          'itemlink' => [],
          'string'   => [],
          'text'     => [],
       ];
-      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
-         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
-      }
+      $params = [
+         'searchText'      => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $strings = $this->getMyTranslatableStrings($options);
 
       foreach ((new PluginFormcreatorQuestion())->getQuestionsFromSection($this->getID()) as $question) {
-         foreach ($question->getTranslatableStrings() as $type => $subStrings) {
+         foreach ($question->getTranslatableStrings($options) as $type => $subStrings) {
             $strings[$type] = array_merge($strings[$type], $subStrings);
          }
       }

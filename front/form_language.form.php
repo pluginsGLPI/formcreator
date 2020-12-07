@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -29,7 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include ('../../../inc/includes.php');
 
 Session::checkRight('entity', UPDATE);
 
@@ -37,21 +37,55 @@ Session::checkRight('entity', UPDATE);
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-$section = new PluginFormcreatorSection();
+$formLanguage = new PluginFormcreatorForm_Language();
 
 if (isset($_POST['add'])) {
-   // Add a new Section
-   Session::checkRight('entity', UPDATE);
-   $section->add($_POST);
+   $formLanguage->add($_POST);
    Html::back();
-
 } else if (isset($_POST['update'])) {
-   // Edit an existing section
-   Session::checkRight('entity', UPDATE);
-   $section->update($_POST);
+   $formLanguage->update($_POST);
    Html::back();
-
+} else if (isset($_POST['save_translation'])) {
+   if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
+      http_response_code(400);
+      die();
+   }
+   if (!isset($_POST['id'])) {
+      http_response_code(400);
+      die();
+   }
+   if (!isset($_POST['value'])) {
+      http_response_code(400);
+      die();
+   }
+   if (!(new PluginFormcreatorTranslation())->add($_POST)) {
+      http_response_code(400);
+      die();
+   }
+   Html::back();
+} else if (isset($_POST['delete'])) {
+   if ($formLanguage->getFromDB((int) $_POST['id'])) {
+      $formLanguage->massDeleteTranslations($_POST);
+   }
+   Html::back();
 } else {
-   // Return to form list
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
+   Html::header(
+      PluginFormcreatorForm_Language::getTypeName(2),
+      $_SERVER['PHP_SELF'],
+      'admin',
+      'PluginFormcreatorForm_Language',
+      'option'
+   );
+
+   $_GET['id'] = (int) ($_GET['id'] ?? -1);
+   if (!$formLanguage->getFromDB($_GET['id'])) {
+      $_SESSION['glpilisturl'][$formLanguage::getType()] = Html::getBackUrl();
+   } else {
+      $_SESSION['glpilisturl'][$formLanguage::getType()] = PluginFormcreatorForm::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
+   }
+   $formLanguage->display([
+      'ids' => $_GET['id']
+   ]);
+
+   Html::footer();
 }

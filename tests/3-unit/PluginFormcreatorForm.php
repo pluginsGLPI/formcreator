@@ -251,7 +251,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $form = $this->getForm();
       $output = $form->defineTabs();
       $this->array($output)->isEqualTo([
-         'PluginFormcreatorTranslation$1' => 'Translations',
+         'PluginFormcreatorForm_Language$1' => 'Form languages',
          'PluginFormcreatorForm$main' => "Form",
          'PluginFormcreatorQuestion$1' => "Questions",
          'PluginFormcreatorForm_Profile$1' => "Access types",
@@ -899,5 +899,117 @@ class PluginFormcreatorForm extends CommonTestCase {
          $new_uuids[] = $targetChange->fields['uuid'];
       }
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+   }
+
+   public function providerGetBestLanguage() {
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form0 = $this->newTestedInstance();
+      $form1 = $this->getForm([
+         'language' => '',
+      ]);
+      $form2 = $this->getForm([
+         'language' => 'fr_FR',
+      ]);
+      $form3 = $this->getForm([
+         'language' => '',
+      ]);
+
+      $form4 = $this->getForm([
+         'language' => 'fr_FR',
+      ]);
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form3->getID(),
+         'name'  => 'en_GB',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form3->getID(),
+         'name'  => 'it_IT',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form4->getID(),
+         'name'  => 'en_GB',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form4->getID(),
+         'name'  => 'it_IT',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      return [
+         'not instanciated, no session language' => [
+            'form' => $form0,
+            'sessionLanguage' => '',
+            'expected' => '',
+         ],
+         'not instanciated' => [
+            'form' => $form0,
+            'sessionLanguage' => 'fr_CA',
+            'expected' => 'fr_CA',
+         ],
+         'no language set, no session langnage' => [
+            'form' => $form1,
+            'sessionLanguage' => '',
+            'expected' => '',
+         ],
+         'no language set' => [
+            'form' => $form1,
+            'sessionLanguage' => 'pt_PT',
+            'expected' => 'pt_PT',
+         ],
+         'only a language set' => [
+            'form' => $form2,
+            'sessionLanguage' => '',
+            'expected' => 'fr_FR',
+         ],
+         'only translations set 1' => [
+            'form' => $form3,
+            'sessionLanguage' => 'it_IT',
+            'expected' => 'it_IT',
+         ],
+         'only translations set 2' => [
+            'form' => $form3,
+            'sessionLanguage' => 'en_GB',
+            'expected' => 'en_GB',
+         ],
+         'language and translations set 1' => [
+            'form' => $form4,
+            'sessionLanguage' => 'fr_FR',
+            'expected' => 'fr_FR',
+         ],
+         'language and translations set 2' => [
+            'form' => $form4,
+            'sessionLanguage' => 'it_IT',
+            'expected' => 'it_IT',
+         ],
+         'language and translations set 2' => [
+            'form' => $form4,
+            'sessionLanguage' => 'fr_CA',
+            'expected' => 'fr_FR',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetBestLanguage
+    *
+    * @return void
+    */
+   public function testGetBestLanguage(\PluginFormcreatorForm $form, string $sessionLanguage, string $expected) {
+      $backupLanguage = $_SESSION['glpilanguage'];
+      $_SESSION['glpilanguage'] = $sessionLanguage;
+      $output = $form->getBestLanguage();
+      $_SESSION['glpilanguage'] = $backupLanguage;
+      $this->string($output)->isEqualTo($expected);
    }
 }

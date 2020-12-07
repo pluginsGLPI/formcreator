@@ -563,6 +563,21 @@ function buildTiles(list) {
 }
 
 var plugin_formcreator = new function() {
+   this.spinner = '<div"><img src="../../../pics/spinner.48.gif" style="margin-left: auto; margin-right: auto; display: block;" width="48px"></div>'
+
+   this.modalSetings = {
+      autoOpen: false,
+      height: 'auto',
+      width: '600px',
+      minWidth: '600px',
+      modal: true,
+      position: {my: 'center'},
+      close: function() {
+         $(this).dialog('close');
+         $(this).remove();
+      }
+   }
+
    // Properties of the item when the user begins to change it
    this.initialPosition = {};
    this.changingItemId = 0;
@@ -1094,28 +1109,17 @@ var plugin_formcreator = new function() {
       sections.last().find('.moveDown').hide();
    }
 
-   this.addTranslation = function (formId) {
-      this.showSpinner(modalWindow);
-      $(modalWindow).load(
+   this.createLanguage = function (formId, id = -1) {
+      var placeholder = $('#plugin_formcreator_formLanguage');
+      this.showSpinner(placeholder);
+      $(placeholder).load(
          rootDoc + '/ajax/viewsubitem.php', {
-            type: "PluginFormcreatorTranslation",
-            parenttype: "PluginFormcreatorForm",
-            plugin_formcreator_forms_id: formId,
-            id: -1
-         }
-      ).dialog('open');
-   }
-
-   this.editTranslation = function (formId, id) {
-      this.showSpinner(modalWindow);
-      $(modalWindow).load(
-         rootDoc + '/ajax/viewsubitem.php', {
-            type: "PluginFormcreatorTranslation",
+            type: "PluginFormcreatorForm_Language",
             parenttype: "PluginFormcreatorForm",
             plugin_formcreator_forms_id: formId,
             id: id
          }
-      ).dialog('open');
+      );
    }
 
    /**
@@ -1131,6 +1135,75 @@ var plugin_formcreator = new function() {
    this.resetTabs = function () {
       $('.glpi_tabs [role="tabpanel"][aria-hidden="true"] ').empty();
    }
+
+   this.showTranslationEditor = function (object) {
+      var formlanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      $('#plugin_formcreator_editTranslation').load(formcreatorRootDoc + '/ajax/edit_translation.php', {
+         plugin_formcreator_form_languages_id: formlanguageId,
+         plugin_formcreator_translations_id: $(object).val()
+      });
+   }
+
+   this.newTranslation = function (formLanguageId) {
+      var modal = $(this.spinner)
+         .dialog(this.modalSetings);
+      modal.load(
+         '../ajax/form_language.php', {
+            action: 'newTranslation',
+            id: formLanguageId,
+         }, function (response, status) {
+            if (status == 'error') {
+               // fix for GLPI <= 9.5.2
+               $('[id^="message_after_redirect_"]').remove();
+               displayAjaxMessageAfterRedirect();
+               modal.html('');
+            } else {
+               modal.dialog('open');
+            }
+         }
+      )
+   }
+
+   this.showUpdateTranslationForm = function (object) {
+      var formLanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      var translationId = $(object.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
+      var modal = $(this.spinner);
+      modal.dialog(this.modalSetings);
+      modal.load(
+         '../ajax/form_language.php', {
+            action: 'translation',
+            id: formLanguageId,
+            plugin_formcreator_translations_id: translationId
+         }
+      ).dialog('open');
+   }
+
+   // make a new selector equivalent to :contains(...) but case insensitive
+   jQuery.expr[":"].icontains = jQuery.expr.createPseudo(function (arg) {
+      return function (elem) {
+         return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+      };
+   });
+
+   // filter override results
+   var debounce;
+   $(document).on('change paste keyup', '.plugin_formcreator_filter_translations > input', function() {
+      var text = $(this).val();
+
+      // delay event by a little time to avoid trigger on each key press
+      window.clearTimeout(debounce);
+      debounce = window.setTimeout(function() {
+         // reshow all tr
+         $(".translation_list tbody tr").show();
+
+         // find tr with searched text inside
+         var tr_with_text = $(".translation_list tbody tr:has(td:icontains("+text+"))");
+
+         // hide other tr
+         var tr_inverse = $(".translation_list tbody tr").not(tr_with_text);
+         tr_inverse.hide();
+      }, 200);
+   });
 }
 
 // === TARGETS ===

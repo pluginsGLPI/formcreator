@@ -218,7 +218,6 @@ PluginFormcreatorTranslatableInterface
          'massiveaction'      => true
       ];
 
-
       $tab[] = [
          'id'                 => '11',
          'table'              => $this::getTable(),
@@ -706,14 +705,6 @@ PluginFormcreatorTranslatableInterface
       echo "</table>";
    }
 
-   /**
-    * Return the name of the tab for item including forms like the config page
-    *
-    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
-    * @param  integer    $withtemplate
-    *
-    * @return String                   Name to be displayed
-    */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
@@ -774,7 +765,8 @@ PluginFormcreatorTranslatableInterface
       $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
-      $this->addStandardTab(PluginFormcreatorTranslation::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
+      //$this->addStandardTab(PluginFormcreatorTranslation::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
    }
@@ -854,11 +846,12 @@ PluginFormcreatorTranslatableInterface
    public function showFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false) : array {
       global $DB;
 
-      $table_cat     = getTableForItemType('PluginFormcreatorCategory');
-      $table_form    = getTableForItemType('PluginFormcreatorForm');
-      $table_fp      = getTableForItemType('PluginFormcreatorForm_Profile');
-      $table_section = getTableForItemType('PluginFormcreatorSections');
-      $table_question= getTableForItemType('PluginFormcreatorQuestions');
+      $table_cat          = getTableForItemType('PluginFormcreatorCategory');
+      $table_form         = getTableForItemType('PluginFormcreatorForm');
+      $table_fp           = getTableForItemType('PluginFormcreatorForm_Profile');
+      $table_section      = getTableForItemType('PluginFormcreatorSections');
+      $table_question     = getTableForItemType('PluginFormcreatorQuestions');
+      $table_formLanguage = getTableForItemType(PluginFormcreatorForm_Language::class);
 
       $order         = "$table_form.name ASC";
 
@@ -871,7 +864,10 @@ PluginFormcreatorTranslatableInterface
          'AND' => [
             "$table_form.is_active" => '1',
             "$table_form.is_deleted" => '0',
-            "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+            'OR' => [
+               "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+               "$table_formLanguage.name" => $_SESSION['glpilanguage']
+            ],
          ] + $entityRestrict
       ];
       if ($helpdeskHome) {
@@ -935,7 +931,13 @@ PluginFormcreatorTranslatableInterface
                   $table_fp => PluginFormcreatorForm::getForeignKeyField(),
                   $table_form => 'id',
                ]
-            ]
+            ],
+            $table_formLanguage => [
+               'FKEY' => [
+                  $table_form => 'id',
+                  $table_formLanguage => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ],
          ],
          'WHERE' => $where_form,
          'GROUPBY' => [
@@ -1031,7 +1033,10 @@ PluginFormcreatorTranslatableInterface
             'AND' => [
                "$table_form.is_active" => '1',
                "$table_form.is_deleted" => '0',
-               "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+               'OR' => [
+                  "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                  "$table_formLanguage.name" => $_SESSION['glpilanguage'],
+               ],
                "$table_form.is_default" => ['<>', '0']
             ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false),
          ];
@@ -1060,6 +1065,12 @@ PluginFormcreatorTranslatableInterface
                      $table_form => PluginFormcreatorCategory::getForeignKeyField(),
                   ]
                ],
+               $table_formLanguage => [
+                  'FKEY' => [
+                     $table_form => 'id',
+                     $table_formLanguage => PluginFormcreatorForm::getForeignKeyField(),
+                  ]
+               ]
             ],
             'WHERE' => $where_form,
             'ORDER' => [
@@ -1188,6 +1199,8 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function displayUserForm() : void {
+      global $TRANSLATE;
+
       // Print css media
       $css = '/' . Plugin::getWebDir('formcreator', false) . '/css/print_form.css';
       echo Html::css($css, ['media' => 'print']);
@@ -1218,8 +1231,14 @@ PluginFormcreatorTranslatableInterface
       . ' id="plugin_formcreator_form"'
       . '>';
 
-      // form title
+      // load thanguage for the form, if any
       $domain = self::getTranslationDomain($formId);
+      $phpfile = self::getTranslationFile($formId, $_SESSION['glpilanguage']);
+      if (file_exists($phpfile)) {
+         $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
+      }
+
+      // form title
       echo "<h1 class='form-title'>";
       echo __($this->fields['name'], $domain) . "&nbsp;";
       echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
@@ -1685,6 +1704,7 @@ PluginFormcreatorTranslatableInterface
       $formTable        = PluginFormcreatorForm::getTable();
       $formFk           = PluginFormcreatorForm::getForeignKeyField();
       $formProfileTable = PluginFormcreatorForm_Profile::getTable();
+      $formLanguage     = PluginFormcreatorForm_Language::getTable();
 
       if ($DB->tableExists($formTable)
           && $DB->tableExists($formProfileTable)
@@ -1692,10 +1712,21 @@ PluginFormcreatorTranslatableInterface
          $nb = (new DBUtils())->countElementsInTableForMyEntities(
             $formTable,
             [
+               'LEFT JOIN' => [
+                  $formLanguage => [
+                     'FKEY' => [
+                        $formLanguage => $formFk,
+                        $formTable    => 'id',
+                     ],
+                  ],
+               ],
                'WHERE' => [
                   "$formTable.is_active" => '1',
                   "$formTable.is_deleted" => '0',
-                  "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                  'OR' => [
+                     "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                     "$formLanguage.name"  => $_SESSION['glpilanguage'],
+                  ],
                   [
                      'OR' => [
                         "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
@@ -2491,33 +2522,63 @@ PluginFormcreatorTranslatableInterface
       return $restriction;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool { return true; }
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
+      return true;
+   }
 
-   public function getTranslatableStrings() {
+   public function getTranslatableStrings(array $options = []) : array {
       $strings = [
          'itemlink' => [],
          'string'   => [],
          'text'     => [],
       ];
-      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
-         $strings[$searchOption['datatype']][] = $this->fields[$searchOption['field']];
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if is_translated is true or id is not empty
+      ];
+      $options = array_merge($params, $options);
+
+      if ($this->isNewItem()) {
+         return $strings;
       }
 
+      $strings = $this->getMyTranslatableStrings($options);
+
       foreach ((new PluginFormcreatorSection())->getSectionsFromForm($this->getID()) as $section) {
-         foreach ($section->getTranslatableStrings() as $type => $subStrings) {
+         foreach ($section->getTranslatableStrings($options) as $type => $subStrings) {
             $strings[$type] = array_merge($strings[$type], $subStrings);
          }
       }
 
       foreach (self::getTargetTypes() as $targetType) {
          foreach ((new $targetType())->getTargetsForForm($this->getID()) as $target) {
-            foreach ($target->getTranslatableStrings() as $type => $subStrings) {
+            foreach ($target->getTranslatableStrings($options) as $type => $subStrings) {
                $strings[$type] = array_merge($strings[$type], $subStrings);
             }
          }
       }
 
-      // deduplicate strings and remove empty strings
+      if ($options['is_translated'] !== null) {
+         $translations = $this->getTranslations($options['language']);
+         foreach ($strings as $type => $list) {
+            if ($type == 'id') {
+               continue;
+            }
+            foreach ($strings[$type] as $id => $original) {
+               if ($options['is_translated'] === true && !isset($translations[$original])
+                  || $options['is_translated'] === false && isset($translations[$original]))
+               {
+                  unset($strings[$type][$id]);
+                  unset($strings['id'][$id]);
+               }
+            }
+         }
+      }
+
+      // deduplicate strings, remove empty strings and filter if only_translated is set
       foreach (array_keys($strings) as $type) {
          $strings[$type] = array_unique($strings[$type]);
          $strings[$type] = array_filter($strings[$type]);
@@ -2547,5 +2608,99 @@ PluginFormcreatorTranslatableInterface
          $language = $_SESSION['glpilanguage'];
       }
       return "form_${id}_${language}";
+   }
+
+   /**
+    * get all translations for strings of the form
+    * @param string $language the language to load (i.e. en_US)
+    * @return array
+    */
+   public function getTranslations(string $language) : array {
+      $file = $this->getTranslationFile($this->getID(), $language);
+      if (!is_readable($file)) {
+         return [];
+      }
+
+      $translations = include_once($file);
+      if (!is_array($translations)) {
+         return [];
+      }
+      return $translations;
+   }
+
+   /**
+    * Overwrite translations with new data
+    *
+    * @param string $language
+    * @param array  $translations array of translations
+    *               - key original string
+    *               - value: translated string
+    * @return boolean true if sucess
+    */
+   public function setTranslations(string $language, array $translations) : bool {
+      $file = $this->getTranslationFile($this->getID(), $language);
+      if (is_file($file) && !is_writable($file)) {
+         return false;
+      }
+
+      $output = "<?php" . PHP_EOL . "return " . var_export($translations, true) . ";";
+      $written = file_put_contents(
+         $file,
+         $output
+      );
+      return ($written == strlen($output));
+   }
+
+   /**
+    * Choose the best language for anonymous form
+    *
+    * @return string the best language for this form and session context
+    */
+    public function getBestLanguage() {
+       global $DB;
+
+      if ($this->isNewItem()) {
+         return $_SESSION['glpilanguage'] ?? '';
+      }
+
+      // get original of the form, if any
+      $availableLanguages = [];
+      $defaultLanguage = '';
+      if ($this->fields['language'] != '') {
+         $availableLanguages = [$this->fields['language']];
+         $defaultLanguage = $this->fields['language'];
+      }
+      if ($defaultLanguage == '') {
+         $defaultLanguage = $_SESSION['glpilanguage'] ?? '';
+      }
+
+      //  get all available other languages for the form
+      $formLanguageTable = PluginFormcreatorForm_Language::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $result = $DB->request([
+         'SELECT'    => ["$formLanguageTable.name"],
+         'FROM'      => $formLanguageTable,
+         'LEFT JOIN' => [
+            $formTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formLanguageTable => PluginFormcreatorForm::getForeignKeyField(),
+               ],
+            ],
+         ],
+         'WHERE'     => [
+            "$formTable.id" => $this->getID()
+         ],
+      ]);
+      foreach ($result as $row) {
+         $availableLanguages[] = $row['name'];
+      }
+
+      if (count($availableLanguages) < 1) {
+         // Empty array does let \Locale::lookup return the default language
+         // @see https://www.php.net/manual/fr/locale.lookup.php#115459
+         $availableLanguages = [false];
+      }
+      return \Locale::lookup($availableLanguages, $_SESSION['glpilanguage'], false, $defaultLanguage);
    }
 }

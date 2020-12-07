@@ -35,7 +35,13 @@ if (!defined('GLPI_ROOT')) {
 
 trait PluginFormcreatorTranslatable
 {
-   public function getTranslatableSearchOptions() {
+
+   /**
+    * Find search options of translatable fields
+    *
+    * @return array
+    */
+   public function getTranslatableSearchOptions() : array {
       $searchOptions = $this->searchOptions();
       $translatable = [];
       $table = $this::getTable();
@@ -59,5 +65,47 @@ trait PluginFormcreatorTranslatable
       }
 
       return $translatable;
+   }
+
+   /**
+    * get translatable strings of the item
+    *
+    * @param array $options
+    * @return array
+    */
+   public function getMyTranslatableStrings(array $options) : array {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+         'id'       => []
+      ];
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
+         if ($searchString != '' && stripos($this->fields[$searchOption['field']], $searchString) === false) {
+            continue;
+         }
+         $id = PluginFormcreatorTranslation::getTranslatableStringId($this->fields[$searchOption['field']]);
+         if ($options['id'] != '' && $id != $options['id']) {
+            continue;
+         }
+         if (isset($options['is_untranslated']) && $options['is_untranslated']) {
+
+         }
+         $strings[$searchOption['datatype']][$id] = $this->fields[$searchOption['field']];
+         $strings['id'][$id] = $searchOption['datatype'];
+      }
+
+      return $strings;
    }
 }

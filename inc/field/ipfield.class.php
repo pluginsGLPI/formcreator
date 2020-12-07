@@ -60,8 +60,7 @@ class IpField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function show($domain, $canEdit = true)
-   {
+   public function show($domain, $canEdit = true) {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;

@@ -29,258 +29,218 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorTranslation extends CommonDBTM
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
+class PluginFormcreatorTranslation
 {
-
-   static $rightname = 'entity';
-
    /**
-    * Returns the type name with consideration of plural
+    * get a HTML dropdown of translatable strings
     *
-    * @param number $nb Number of item(s)
-    * @return string Itemtype name
+    * @param array $options
+    * @return string
     */
-    public static function getTypeName($nb = 0) {
-      return _n('Translation', 'Translations', $nb, 'formcreator');
-   }
+   public static function dropdown(array $options) {
+      $params = [
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
 
-   /**
-    * Return the name of the tab for item including forms like the config page
-    *
-    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
-    * @param  integer    $withtemplate
-    *
-    * @return String                   Name to be displayed
-    */
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      switch ($item->getType()) {
-         case PluginFormcreatorForm::class:
-            return self::getTypeName(Session::getPluralNumber());
-            break;
+      $options['url'] = Plugin::getWebDir('formcreator') . '/ajax/gettranslationsvalues.php';
+      $options['display'] = false;
+      $options['display_emptychoice'] = true;
+      $options['comments'] = false;
+      $options['name'] = 'plugin_formcreator_translations_id';
+
+      $out = Dropdown::show(PluginFormcreatorForm_Language::getType(), $options);
+      if (!$options['display']) {
+         return $out;
       }
-      return '';
+      echo $out;
    }
 
    /**
+    * Get dropdown value
     *
-    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Form Item)
-    * @param  integer    $tabnum       Number of the current tab
-    * @param  integer    $withtemplate
+    * @param array   $post Posted values
+    * @param boolean $json Encode to JSON, default to true
     *
-    * @see CommonDBTM::displayTabContentForItem
-    *
-    * @return null                     Nothing, just display the list
+    * @return string|array
     */
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      switch (get_class($item)) {
-         case PluginFormcreatorForm::class:
-            self::showForForm($item, $withtemplate);
+   public static function getDropdownValue($post, $json = true) {
+      // Count real items returned
+      $count = 0;
+
+      if (isset($post['condition']) && !empty($post['condition']) && !is_array($post['condition'])) {
+         // Retreive conditions from SESSION using its key
+         $key = $post['condition'];
+         $post['condition'] = [];
+         if (isset($_SESSION['glpicondition']) && isset($_SESSION['glpicondition'][$key])) {
+            $post['condition'] = $_SESSION['glpicondition'][$key];
+         }
+      }
+      $formLanguageId = $post['condition'][PluginFormcreatorForm_Language::getForeignKeyField()];
+
+      $formLanguage = new PluginFormcreatorForm_Language();
+      if (!$formLanguage->getFromDB($formLanguageId)) {
+         return [];
+      }
+      if (!isset($post['searchText'])) {
+         $post['searchText'] = '';
+      }
+
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
+      $strings = $form->getTranslatableStrings([
+         'language' => $formLanguage->fields['name'],
+         'searchText' => $post['searchText'],
+         'is_translated' => $post['condition']['is_translated'],
+      ]);
+
+      // Clean HTML in strings
+      // foreach ($strings['string'] as &$string) {
+      //    $string = htmlentities(strip_tags(html_entity_decode($string)));
+      // }
+
+      $foundCount = 0;
+      $data = [];
+      foreach(['itemlink', 'string', 'text'] as $stringType) {
+         foreach ($strings[$stringType] as $id => $string) {
+            $foundCount++;
+            if ($foundCount < ((int) $post['page'] - 1) * (int) $post['page_limit']) {
+               // before the requested page
+               continue;
+            }
+            if ($foundCount > ((int) $post['page']) * (int) $post['page_limit']) {
+               // after the requested page
+               break;
+            }
+            $data[] = [
+               // 'level' => 1,
+               'id'    => $id,
+               'text'  => strip_tags(html_entity_decode($string)),
+            ];
+            $count++;
+            if ($count >= $post['page_limit']) {
+               break 2;
+            }
+         }
+      }
+
+      $ret['results'] = Toolbox::unclean_cross_side_scripting_deep($data);
+      $ret['count']   = $count;
+
+      return ($json === true) ? json_encode($ret) : $ret;
+   }
+
+   /**
+    * get an HTML input for a translatable string
+    *
+    * @param PluginFormcreatorForm_Language $formLanguage
+    * @param string $id
+    * @return void
+    */
+   public static function getEditor(PluginFormcreatorForm_Language $formLanguage, string $id) {
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
+
+      // Find the string from its ID
+      $translatableString = $form->getTranslatableStrings([
+         'id' => $id,
+         'language' => $formLanguage->fields['name'],
+      ]);
+
+      if (!isset($translatableString['id'][$id])) {
+         return '';
+      }
+
+      $type = $translatableString['id'][$id] ?? 'text';
+      $original = $translatableString[$type][$id];
+
+      $translations = $form->getTranslations($formLanguage->fields['name']);
+      $translatedString = $translations[$original] ?? '';
+
+      switch ($type) {
+         case 'text':
+         case 'itemlink':
+            echo '<td>' . $original . Html::hidden("id", ['value' => $id]) . '</td>';
+            echo '<td>' . Html::input("value", ['value' => $translatedString]) . '</td>';
             break;
+
+         case 'string':
+            echo '<td>' . Html::entity_decode_deep($original) . Html::hidden("id", ['value' => $id]) . '</td>';
+            echo '<td>' . Html::textarea([
+               'name'  => "value",
+               'value' => $translatedString,
+               'enable_richtext' => true,
+               'display' => false,
+            ]) . '</td>';
       }
    }
 
-   public function prepareInputForAdd($input)
-   {
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      if (!isset($input[$formFk]) || !isset($input['language'])) {
+   /**
+    * Compute ID of a translatable string (using a hash function as there is no table in DB)
+    *
+    * @param string $string translatable string
+    * @return string
+    */
+   public static function getTranslatableStringId($string) {
+      return hash('md5', $string);
+   }
+
+   /**
+    * Add a translation
+    *
+    * @param array $input
+    * @return bool
+    */
+   public function add(array $input) : bool {
+      $formLanguage = new PluginFormcreatorForm_Language();
+      if (!$formLanguage->getFromDB($input['plugin_formcreator_forms_languages_id'])) {
          return false;
       }
+      $form = new PluginFormcreatorForm();
+      if (!$form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id'])) {
+         return false;
+      }
+      $translations = $form->getTranslations($formLanguage->fields['name']);
+      $translatableStrings = $form->getTranslatableStrings([
+         'id' => $input['id'],
+      ]);
+      $type = $translatableStrings['id'][$input['id']];
+      $original = $translatableStrings[$type][$input['id']];
 
-      return $input;
+      $translations[$original] = $input['value'];
+
+      return $form->setTranslations($formLanguage->fields['name'], $translations);
    }
 
-   public function prepareInputForUpdate($input)
-   {
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $translations = array_combine($input['string'], $input['translated']);
-      $translations['plugin_formcreator_load_check'] = 'plugin_formcreator_load_check';
-      $translations = Toolbox::stripslashes_deep($translations);
-      file_put_contents(
-         PluginFormcreatorForm::getTranslationFile($input[$formFk], $input['language']),
-         "<?php" . PHP_EOL . "return " . var_export($translations, true) . ";"
-      );
-
-      unset($input[$formFk]);
-      unset($input['language']);
-
-      return $input;
-   }
-
-   public function post_updateItem($history = 1) {
+   /**
+    * Delete a translation
+    *
+    * @param array $input with keys domain and original
+    * @return bool
+    */
+   public function delete(PluginFormcreatorForm_Language $formLanguage, $input) : bool {
       global $TRANSLATE;
 
-      // Reset cache for the edited translations
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $domain = PluginFormcreatorForm::getTranslationDomain($this->fields['language'], $this->fields[$formFk]);
-      $TRANSLATE->clearCache($domain, $this->fields['language']);
-   }
-
-   public function pre_deleteItem() {
-      // Delete translation file
-      $file = PluginFormcreatorForm::getTranslationFile(
-         $this->fields[PluginFormcreatorForm::getForeignKeyField()],
-         $this->fields['language']
-      );
-      if (file_exists($file)) {
-         return unlink($file);
+      $form = new PluginFormcreatorForm();
+      if (!$form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id'])) {
+         return false;
       }
-      return true;
-   }
-
-   public function showForm($ID, $options = []) {
-      global $CFG_GLPI;
-
-      if (isset($options['parent']) && !empty($options['parent'])) {
-         /** @var PluginFormcreatorForm */
-         $item = $options['parent'];
-      }
-      if ($ID > 0) {
-         $this->check($ID, READ);
-      } else {
-         $options['plugin_formcreator_forms_id'] = $item->getID();
-
-         // Create item
-         $this->check(-1, CREATE, $options);
-      }
-
-      $this->showFormHeader($options);
-      echo "<tr class='tab_bg_1'>";
-      echo "<td width='50%'>".__('Language')."</td>";
-      echo "<td>";
-      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $item->getID()]);
-      if ($ID > 0) {
-         echo Html::hidden('language', ['value' => $this->fields['language']]);
-         echo Dropdown::getLanguageName($this->fields['language']);
-      } else {
-         $rand = Dropdown::showLanguages(
-            "language", [
-               'display_none' => false,
-               'value'        => $_SESSION['glpilanguage']
-            ]
-         );
-         $params = ['language' => '__VALUE__',
-                    'plugin_formcreator_forms_id' => $item->getID()
-                   ];
-         Ajax::updateItemOnSelectEvent("dropdown_language$rand",
-                                       "span_fields",
-                                       $CFG_GLPI["root_doc"]."/ajax/updateTranslationFields.php",
-                                       $params);
-      }
-      echo "</td><td colspan='2'>&nbsp;</td></tr>";
-
-      if ($ID > 0) {
-         $translationFile = PluginFormcreatorForm::getTranslationFile($item->getID(), $this->fields['language']);
-         if (is_readable($translationFile)) {
-            $translations = include $translationFile;
-         }
-         foreach ($item->getTranslatableStrings() as $type => $strings) {
-            foreach ($strings as $string) {
-               if (isset($translations[$string])) {
-                  $translatedString = $translations[$string];
-               } else {
-                  $translatedString = '';
-               }
-               echo "<tr class='tab_bg_1'>";
-               switch ($type) {
-                  case 'text':
-                  case 'itemlink':
-                     echo "<td>" . $string . Html::hidden('string[]', ['value' => $string]) . "</td>";
-                     echo "<td>" . Html::input('translated[]', ['value' => $translatedString]) . "</td>";
-                     break;
-
-                  case 'string':
-                     echo "<td>" . Html::entity_decode_deep($string) . Html::hidden('string[]', ['value' => $string]) . "</td>";
-                     echo "<td>" . Html::textarea([
-                        'name'  => 'translated[]',
-                        'value' => $translatedString,
-                        'enable_richtext' => true,
-                        'display' => false,
-                     ]) . "</td>";
-               }
-               echo "</tr>";
-            }
-         }
-
-      }
-
-      $this->showFormButtons($options);
-      return true;
-
-   }
-
-   public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      global $DB;
-
-      $rand    = mt_rand();
-      $canedit = $item->can($item->getID(), UPDATE);
-
-      if ($canedit) {
-         $formId = $item->getID();
-         echo "<div class='center'>".
-              "<a class='vsubmit' href='#' onclick='plugin_formcreator.addTranslation($formId);'>". __('Add a new translation').
-              "</a></div><br>";
-      }
-
-      $iterator = $DB->request([
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id'  => $item->getID(),
-         ],
-         'ORDER'  => ['language ASC']
+      $translations = $form->getTranslations($formLanguage->fields['name']);
+      $translated = $form->getTranslatableStrings([
+         'id'       => $input['id'],
+         'language' => $formLanguage->fields['name'],
       ]);
-      if (count($iterator)) {
-         if ($canedit) {
-            Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-            $massiveactionparams = ['container' => 'mass'.__CLASS__.$rand];
-            Html::showMassiveActions($massiveactionparams);
-         }
-         echo "<div class='center'>";
-         echo "<table class='tab_cadre_fixehov'><tr class='tab_bg_2'>";
-         echo "<th colspan='4'>".__("List of translations")."</th></tr><tr>";
-         if ($canedit) {
-            echo "<th width='10'>";
-            echo Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand);
-            echo "</th>";
-         }
-         echo "<th>".__("Language")."</th>";
-         while ($data = $iterator->next()) {
-            $id = $data['id'];
-            $onhover = '';
-            if ($canedit) {
-               $onhover = "style='cursor:pointer'
-                           onClick=\"plugin_formcreator.editTranslation($formId, $id);\"";
-            }
-            echo "<tr class='tab_bg_1'>";
-            if ($canedit) {
-               echo "<td class='center'>";
-               Html::showMassiveActionCheckBox(__CLASS__, $data["id"]);
-               echo "</td>";
-            }
+      $original = $translated[$translated['id'][$input['id']]][$input['id']];
+      unset($translations[$original]);
 
-            echo "<td $onhover>";
-            echo Dropdown::getLanguageName($data['language']);
-            echo "</td>";
-            echo "</tr>";
-         }
-         echo "</table>";
-         if ($canedit) {
-            echo '<div id="plugin_formcreator_viewtranslation" style="display: none"><img class="plugin_formcreator_spinner" src="../../../pics/spinner.48.gif"></div>';
-
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-         }
-      } else {
-         echo "<table class='tab_cadre_fixe'><tr class='tab_bg_2'>";
-         echo "<th class='b'>" . __('No translation found', 'formcreator')."</th></tr>";
-         echo "</table>";
-      }
+      $form->setTranslations($formLanguage->fields['name'], $translations);
+      $TRANSLATE->clearCache('formcreator', $formLanguage->fields['name']);
       return true;
-   }
-
-   public function getForbiddenStandardMassiveAction() {
-      return [
-         'update', 'clone', 'add_note'
-      ];
    }
 }

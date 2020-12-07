@@ -100,8 +100,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return __($this->value, $domain);
       }
@@ -168,13 +167,11 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input[$key])) {
          if (!is_string($input[$key])) {
@@ -197,8 +194,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->value = array_shift($this->value);
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -220,8 +216,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       return __($this->value, $domain);
    }
 
@@ -296,10 +291,32 @@ class RadiosField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getTranslatableStrings()
-   {
-      $strings = parent::getTranslatableStrings();
-      $strings['text'] = array_merge($strings['text'], array_values($this->getAvailableValues()));
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = parent::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => true,
+         'is_untranslated' => true,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      foreach ($this->getAvailableValues() as $value) {
+         if ($searchString != '' && stripos($value, $searchString) === false) {
+            continue;
+         }
+         $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
+         if ($options['id'] != '' && $id != $options['id']) {
+            continue;
+         }
+         $strings['text'][$id] = $value;
+         $strings['id'][$id] = 'text';
+      }
+
       return $strings;
    }
 }
