@@ -135,26 +135,33 @@ class PluginFormcreatorForm_Language extends CommonDBTM
 
    public function showForm($ID, $options = [])
    {
-      if (isset($options['parent']) && !empty($options['parent'])) {
-         /** @var PluginFormcreatorForm */
-         $item = $options['parent'];
-      }
-
-      if (!$this->isNewItem($ID) && !$this->getFromDB($ID)) {
+      if (!isset($options['parent']) || empty($options['parent'])) {
          return false;
+      }
+      if (!$this->isNewID($ID)) {
+         if (!$this->getFromDB($ID)) {
+            return false;
+         }
       } else {
          $this->getEmpty();
       }
 
+      /** @var PluginFormcreatorForm */
+      $item = $options['parent'];
+
+      $this->fields['plugin_formcreator_forms_id'] = $item->getID();
+
       $item->check($this->fields['plugin_formcreator_forms_id'], UPDATE);
 
+      $options['colspan'] = 1;
+
       $this->showFormHeader($options);
-      echo "<tr class='tab_bg_1'>";
-      echo "<td width='50%'>" . __('Language') . "</td>";
-      echo "<td>";
-      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $item->getID()]);
       if ($this->isNewID($ID)) {
-         // Find existing languages for the form
+         echo "<tr class='tab_bg_1'>";
+         echo "<td width='50%'>" . __('Language') . "</td>";
+         echo "<td>";
+         echo Html::hidden('plugin_formcreator_forms_id', ['value' => $item->getID()]);
+            // Find existing languages for the form
          $used = [$item->fields['language'] => $item->fields['language']];
          $rows = $this->find([
             PluginFormcreatorForm::getForeignKeyField() => $item->getID(),
@@ -178,9 +185,11 @@ class PluginFormcreatorForm_Language extends CommonDBTM
          return true;
       }
 
+      //$this->getFromDB($ID);
+      echo "<tr class='tab_bg_1'>";
       echo Html::hidden('name', ['value' => $this->fields['name']]);
-      echo Dropdown::getLanguageName($this->fields['name']);
-      echo "</td><td colspan='2'>&nbsp;</td></tr>";
+      //echo Dropdown::getLanguageName($this->fields['name']);
+      echo "</td><td width='50%'>&nbsp;</td></tr>";
 
       $translationFile = PluginFormcreatorForm::getTranslationFile($item->getID(), $this->fields['name']);
       if (is_readable($translationFile)) {
