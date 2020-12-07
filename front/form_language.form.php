@@ -37,13 +37,13 @@ Session::checkRight('entity', UPDATE);
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-$translation = new PluginFormcreatorTranslation();
+$formLanguage = new PluginFormcreatorForm_Language();
 
 if (isset($_POST['add'])) {
-   $translation->add($_POST);
+   $formLanguage->add($_POST);
    Html::back();
 } else if (isset($_POST['update'])) {
-   $translation->update($_POST);
+   $formLanguage->update($_POST);
    Html::back();
 }
 Html::back();

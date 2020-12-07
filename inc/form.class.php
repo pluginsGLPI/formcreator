@@ -761,6 +761,7 @@ PluginFormcreatorTranslatableInterface
       $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorTranslation::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
@@ -840,11 +841,12 @@ PluginFormcreatorTranslatableInterface
    public function showFormList($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
       global $DB;
 
-      $table_cat     = getTableForItemType('PluginFormcreatorCategory');
-      $table_form    = getTableForItemType('PluginFormcreatorForm');
-      $table_fp      = getTableForItemType('PluginFormcreatorForm_Profile');
-      $table_section = getTableForItemType('PluginFormcreatorSections');
-      $table_question= getTableForItemType('PluginFormcreatorQuestions');
+      $table_cat          = getTableForItemType('PluginFormcreatorCategory');
+      $table_form         = getTableForItemType('PluginFormcreatorForm');
+      $table_fp           = getTableForItemType('PluginFormcreatorForm_Profile');
+      $table_section      = getTableForItemType('PluginFormcreatorSections');
+      $table_question     = getTableForItemType('PluginFormcreatorQuestions');
+      $table_formLanguage = getTableForItemType(PluginFormcreatorForm_Language::class);
 
       $order         = "$table_form.name ASC";
 
@@ -857,7 +859,10 @@ PluginFormcreatorTranslatableInterface
          'AND' => [
             "$table_form.is_active" => '1',
             "$table_form.is_deleted" => '0',
-            "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+            'OR' => [
+               "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+               "$table_formLanguage.name" => $_SESSION['glpilanguage']
+            ],
          ] + $entityRestrict
       ];
       if ($helpdeskHome) {
@@ -921,7 +926,13 @@ PluginFormcreatorTranslatableInterface
                   $table_fp => PluginFormcreatorForm::getForeignKeyField(),
                   $table_form => 'id',
                ]
-            ]
+            ],
+            $table_formLanguage => [
+               'FKEY' => [
+                  $table_form => 'id',
+                  $table_formLanguage => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ],
          ],
          'WHERE' => $where_form,
          'GROUPBY' => [
@@ -1016,7 +1027,10 @@ PluginFormcreatorTranslatableInterface
             'AND' => [
                "$table_form.is_active" => '1',
                "$table_form.is_deleted" => '0',
-               "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+               'OR' => [
+                  "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                  "$table_formLanguage.name" => $_SESSION['glpilanguage'],
+               ],
                "$table_form.is_default" => ['<>', '0']
             ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false),
          ];
@@ -1045,6 +1059,12 @@ PluginFormcreatorTranslatableInterface
                      $table_form => PluginFormcreatorCategory::getForeignKeyField(),
                   ]
                ],
+               $table_formLanguage => [
+                  'FKEY' => [
+                     $table_form => 'id',
+                     $table_formLanguage => PluginFormcreatorForm::getForeignKeyField(),
+                  ]
+               ]
             ],
             'WHERE' => $where_form,
             'ORDER' => [
@@ -1661,6 +1681,7 @@ PluginFormcreatorTranslatableInterface
       $formTable        = PluginFormcreatorForm::getTable();
       $formFk           = PluginFormcreatorForm::getForeignKeyField();
       $formProfileTable = PluginFormcreatorForm_Profile::getTable();
+      $formLanguage     = PluginFormcreatorForm_Language::getTable();
 
       if ($DB->tableExists($formTable)
           && $DB->tableExists($formProfileTable)
@@ -1668,10 +1689,21 @@ PluginFormcreatorTranslatableInterface
          $nb = (new DBUtils())->countElementsInTableForMyEntities(
             $formTable,
             [
+               'LEFT JOIN' => [
+                  $formLanguage => [
+                     'FKEY' => [
+                        $formLanguage => $formFk,
+                        $formTable    => 'id',
+                     ],
+                  ],
+               ],
                'WHERE' => [
                   "$formTable.is_active" => '1',
                   "$formTable.is_deleted" => '0',
-                  "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                  'OR' => [
+                     "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                     "$formLanguage.name"  => $_SESSION['glpilanguage'],
+                  ],
                   [
                      'OR' => [
                         "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],

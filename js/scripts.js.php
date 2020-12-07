@@ -972,23 +972,11 @@ var plugin_formcreator = new function() {
       sections.last().find('.moveDown').hide();
    }
 
-   this.addTranslation = function (formId) {
+   this.editLanguage = function (formId, id = -1) {
       this.showSpinner(modalWindow);
       $(modalWindow).load(
          rootDoc + '/ajax/viewsubitem.php', {
-            type: "PluginFormcreatorTranslation",
-            parenttype: "PluginFormcreatorForm",
-            plugin_formcreator_forms_id: formId,
-            id: -1
-         }
-      ).dialog('open');
-   }
-
-   this.editTranslation = function (formId, id) {
-      this.showSpinner(modalWindow);
-      $(modalWindow).load(
-         rootDoc + '/ajax/viewsubitem.php', {
-            type: "PluginFormcreatorTranslation",
+            type: "PluginFormcreatorForm_Language",
             parenttype: "PluginFormcreatorForm",
             plugin_formcreator_forms_id: formId,
             id: id
