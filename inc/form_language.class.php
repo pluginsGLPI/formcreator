@@ -135,8 +135,6 @@ class PluginFormcreatorForm_Language extends CommonDBTM
 
    public function showForm($ID, $options = [])
    {
-      global $CFG_GLPI;
-
       if (isset($options['parent']) && !empty($options['parent'])) {
          /** @var PluginFormcreatorForm */
          $item = $options['parent'];
@@ -216,7 +214,9 @@ class PluginFormcreatorForm_Language extends CommonDBTM
          }
       }
 
-      PluginFormcreatorTranslation::dropdown();
+      // PluginFormcreatorForm_Language::dropdown([
+      //    'display' => false
+      // ]);
       $this->showFormButtons($options);
       return true;
    }

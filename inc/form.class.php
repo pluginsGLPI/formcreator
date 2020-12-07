@@ -1193,6 +1193,8 @@ PluginFormcreatorTranslatableInterface
     * @return Null                     Nothing, just display the form
     */
    public function displayUserForm() {
+      global $TRANSLATE;
+
       // Print css media
       if (method_exists(Plugin::class, 'getWebDir')) {
          $css = '/' . Plugin::getWebDir('formcreator', false) . '/css/print_form.css';
@@ -1229,6 +1231,11 @@ PluginFormcreatorTranslatableInterface
 
       // form title
       $domain = self::getTranslationDomain($formId);
+      $phpfile = self::getTranslationFile($formId, $_SESSION['glpilanguage']);
+      if (file_exists($phpfile)) {
+         $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
+      }
+
       echo "<h1 class='form-title'>";
       echo __($this->fields['name'], $domain) . "&nbsp;";
       echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
