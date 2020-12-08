@@ -169,7 +169,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
          foreach ($rows as $row) {
             $used[$row['name']] = $row['name'];
          }
-         $rand = Dropdown::showLanguages(
+         Dropdown::showLanguages(
             "name",
             [
                'display_none' => false,
@@ -177,10 +177,6 @@ class PluginFormcreatorForm_Language extends CommonDBTM
                'used'         => $used,
             ]
          );
-         $params = [
-            'language' => '__VALUE__',
-            'plugin_formcreator_forms_id' => $item->getID()
-         ];
          $this->showFormButtons($options);
          return true;
       }

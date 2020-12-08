@@ -36,7 +36,6 @@ if (!isset($_REQUEST['id'])) {
     http_response_code(400);
     exit;
 }
-$sectionId = (int) $_REQUEST['id'];
 
 $section = new PluginFormcreatorSection();
 if (!$section->canUpdate()) {
