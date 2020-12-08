@@ -792,6 +792,7 @@ PluginFormcreatorTranslatableInterface
     * @return boolean true on sucess, false on error
     */
    protected function addGroupActor($role, $group) {
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       $actorType = null;
       switch ($role) {
          case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
@@ -2078,8 +2079,7 @@ SCRIPT;
       echo '</td>';
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id => $container->getID(),
       ];

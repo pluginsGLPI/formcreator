@@ -313,7 +313,7 @@ class PluginFormcreatorFields
                         $value = false;
                      }
                      break;
-                  }
+               }
             }
          }
          // Combine all condition with respect of operator precedence
@@ -392,7 +392,7 @@ class PluginFormcreatorFields
       // Get the visibility result of sections
       $sectionToShow = [];
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
-      foreach($sections as $section) {
+      foreach ($sections as $section) {
          $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);
       }
 

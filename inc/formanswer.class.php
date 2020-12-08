@@ -168,7 +168,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
                           && $_SESSION['formcreator']['form_search_answers'];
 
-
       $tab[] = [
          'id'                 => '2',
          'table'              => $this::getTable(),
@@ -632,13 +631,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             __('Refuse', 'formcreator'), [
                'name'      => 'refuse_formanswer',
                'onclick'   => 'return plugin_formcreator_checkComment(this)',
-         ]);
+            ]);
          echo '</div>';
          echo '<div class="center">';
          echo Html::submit(
             __('Accept', 'formcreator'), [
                'name'      => 'accept_formanswer',
-         ]);
+            ]);
          echo '</div>';
          echo '</div>';
          $options['canedit'] = true;

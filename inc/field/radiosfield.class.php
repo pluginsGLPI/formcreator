@@ -39,13 +39,11 @@ use Toolbox;
 
 class RadiosField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -102,8 +100,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return __($this->value, $domain);
       }
@@ -149,13 +146,11 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Radios', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       if (!isset($input['values']) || empty($input['values'])) {
          Session::addMessageAfterRedirect(
             __('The field value is required:', 'formcreator') . ' ' . $input['name'],
@@ -172,13 +167,11 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input[$key])) {
          if (!is_string($input[$key])) {
@@ -193,8 +186,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function parseDefaultValue($defaultValue)
-   {
+   public function parseDefaultValue($defaultValue) {
       $this->value = explode('\r\n', $defaultValue);
       $this->value = array_filter($this->value, function ($value) {
          return ($value !== '');
@@ -202,8 +194,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->value = array_shift($this->value);
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -211,15 +202,13 @@ class RadiosField extends PluginFormcreatorAbstractField
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -227,22 +216,18 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       return __($this->value, $domain);
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
@@ -257,8 +242,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       if ($value == '') {
          return true;
       }
@@ -267,53 +251,43 @@ class RadiosField extends PluginFormcreatorAbstractField
       return in_array($value, $this->getAvailableValues());
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       return $this->value == $value;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       return $this->value > $value;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fa fa-check-circle" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 
-   public function getTranslatableStrings()
-   {
+   public function getTranslatableStrings() {
       $strings = parent::getTranslatableStrings();
       $strings['text'] = array_merge($strings['text'], array_values($this->getAvailableValues()));
       return $strings;

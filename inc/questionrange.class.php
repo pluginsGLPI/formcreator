@@ -209,8 +209,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $itemId;
    }
 
-   public static function countItemsToImport($input) : int
-   {
+   public static function countItemsToImport($input) : int {
       return 1;
    }
 }

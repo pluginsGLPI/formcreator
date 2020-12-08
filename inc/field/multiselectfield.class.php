@@ -37,8 +37,7 @@ use Html;
 
 class MultiSelectField extends CheckboxesField
 {
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html         = '';
       $translatedValues = [];
       if (!$canEdit) {
@@ -76,22 +75,18 @@ class MultiSelectField extends CheckboxesField
       return $html;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Multiselect', 'formcreator');
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fas fa-check-double" aria-hidden="true"></i>';
    }
 }

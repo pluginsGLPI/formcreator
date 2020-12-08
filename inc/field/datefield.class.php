@@ -43,13 +43,11 @@ class DateField extends PluginFormcreatorAbstractField
 {
    const DATE_FORMAT = 'Y-m-d';
 
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -83,8 +81,7 @@ class DateField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -106,42 +103,34 @@ class DateField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       return $this->value;
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = $value;
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       return $this->value;
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       return Toolbox::addslashes_deep(Html::convDate($this->value));
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) == '')) {
          Session::addMessageAfterRedirect(
@@ -156,8 +145,7 @@ class DateField extends PluginFormcreatorAbstractField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       if (!$this->isRequired() && empty($value)) {
          return true;
       }
@@ -166,18 +154,15 @@ class DateField extends PluginFormcreatorAbstractField
       return $check !== false;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Date');
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       if ($this->value === '') {
          $answer = '0000-00-00';
       } else {
@@ -188,13 +173,11 @@ class DateField extends PluginFormcreatorAbstractField
       return $answerDatetime == $compareDatetime;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       if (empty($this->value)) {
          $answer = '0000-00-00';
       } else {
@@ -205,13 +188,11 @@ class DateField extends PluginFormcreatorAbstractField
       return $answerDatetime > $compareDatetime;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '';
@@ -221,8 +202,7 @@ class DateField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      if (
-         $input[$key] != ''
+      if ($input[$key] != ''
          && DateTime::createFromFormat(self::DATE_FORMAT, $input[$key]) === false
       ) {
          return false;
@@ -232,23 +212,19 @@ class DateField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fa fa-calendar" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

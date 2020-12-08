@@ -149,7 +149,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $result = $DB->request($request);
 
       $categories = [];
-      foreach($result as $category) {
+      foreach ($result as $category) {
          $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
          // Keep the short name only
          // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
@@ -215,7 +215,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @param integer $helpdeskHome
     * @return array
     */
-    public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {
+   public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {
       $cat_table       = PluginFormcreatorCategory::getTable();
       $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();
       $formTable       = PluginFormcreatorForm::getTable();
@@ -224,24 +224,24 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $formRestriction["$formTable.helpdesk_home"] = $helpdeskHome;
 
       return [
-         'SELECT' => [
-            $cat_table => [
-               'name', 'id'
-            ]
-         ],
-         'FROM' => $cat_table,
-         'INNER JOIN' => [
-            $formTable => [
-               'FKEY' => [
-                  $cat_table => 'id',
-                  $formTable => $categoryFk
-               ]
-            ]
-         ],
-         'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
-         'GROUPBY' => [
-            "$cat_table.id"
-         ]
+        'SELECT' => [
+           $cat_table => [
+              'name', 'id'
+           ]
+        ],
+        'FROM' => $cat_table,
+        'INNER JOIN' => [
+           $formTable => [
+              'FKEY' => [
+                 $cat_table => 'id',
+                 $formTable => $categoryFk
+              ]
+           ]
+        ],
+        'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
+        'GROUPBY' => [
+           "$cat_table.id"
+        ]
       ];
    }
 }

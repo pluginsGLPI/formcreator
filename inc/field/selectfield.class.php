@@ -37,21 +37,18 @@ use Html;
 
 class SelectField extends RadiosField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $specialization = parent::getDesignSpecializationField();
       $specialization['may_be_empty'] = true;
 
       return $specialization;
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return nl2br(__($this->value, $domain)) . PHP_EOL;
       }
@@ -87,13 +84,11 @@ class SelectField extends RadiosField
       return $html;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Select', 'formcreator');
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       if ($value == '') {
          // empty string means no selection
          $value = '0';
@@ -102,8 +97,7 @@ class SelectField extends RadiosField
    }
 
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
    }
 }

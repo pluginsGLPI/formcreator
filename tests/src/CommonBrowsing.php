@@ -64,7 +64,7 @@ class CommonBrowsing {
       // Develop all ancestors to the entity to select
       $dbUtils = new DbUtils();
       $ancestors = $dbUtils->getAncestorsOf($entity->getTable(), $entity->getID());
-      foreach($ancestors as $ancestor) {
+      foreach ($ancestors as $ancestor) {
          if ($ancestor == '0') {
             $ancestor = $ancestor . 'r';
          }

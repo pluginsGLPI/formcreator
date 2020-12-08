@@ -54,13 +54,11 @@ class FileField extends PluginFormcreatorAbstractField
       '_tag_filename' => [],
    ];
 
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          $html = '';
          $doc = new Document();
@@ -84,13 +82,11 @@ class FileField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       return json_encode($this->uploadData, true);
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->uploadData = json_decode($value, true);
       if ($this->uploadData === null) {
          $this->uploadData = [];
@@ -101,18 +97,15 @@ class FileField extends PluginFormcreatorAbstractField
       }
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       return '';
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       return $this->value;
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_array($this->uploads) || !isset($this->uploads["_$key"])) {
          return;
@@ -130,13 +123,11 @@ class FileField extends PluginFormcreatorAbstractField
       $this->uploadData = $answer_value;
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return $this->uploadData;
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       if (!$this->isRequired()) {
          return true;
       }
@@ -154,30 +145,25 @@ class FileField extends PluginFormcreatorAbstractField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       // If the field is required it can't be empty
       $key = 'formcreator_field_' . $this->question->getID();
       return (count($this->uploads["_$key"]) > 0);
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('File');
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       return $input;
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function saveUploads($input)
-   {
+   public function saveUploads($input) {
       $key = 'formcreator_field_' . $this->question->getID();
       $index = 0;
       $answer_value = [];
@@ -192,8 +178,7 @@ class FileField extends PluginFormcreatorAbstractField
       $this->uploadData = $answer_value;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['_formcreator_field_' . $this->question->getID()]);
    }
 
@@ -206,8 +191,7 @@ class FileField extends PluginFormcreatorAbstractField
     *
     * @return integer|NULL
     */
-   private function saveDocument($file, $prefix)
-   {
+   private function saveDocument($file, $prefix) {
       $sectionTable = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questionTable = PluginFormcreatorQuestion::getTable();
@@ -253,8 +237,7 @@ class FileField extends PluginFormcreatorAbstractField
       return null;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
          $this->uploads['_' . $key] = $input['_' . $key];
@@ -276,43 +259,35 @@ class FileField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon()
-   {
+   public function getHtmlIcon() {
       return '<i class="fa fa-file" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

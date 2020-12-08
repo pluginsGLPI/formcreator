@@ -41,13 +41,11 @@ use Html;
 
 class TagField extends DropdownField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return class_exists(PluginTagTag::class);
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $label = '';
       $field = '';
 
@@ -62,8 +60,7 @@ class TagField extends DropdownField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       global $DB;
 
       $html         = '';
@@ -126,8 +123,7 @@ class TagField extends DropdownField
       return $html;
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -135,15 +131,13 @@ class TagField extends DropdownField
       return implode("\r\n", $this->value);
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
          ? explode("\r\n", $value)
          : [];
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -151,14 +145,12 @@ class TagField extends DropdownField
       return implode("\r\n", $this->value);
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
       return Toolbox::addslashes_deep($value);
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
@@ -173,18 +165,15 @@ class TagField extends DropdownField
       return true;
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
@@ -198,18 +187,15 @@ class TagField extends DropdownField
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return _n('Tag', 'Tags', 2, 'tag');
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return false;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       if (!class_exists(PluginTagTag::class)) {
          // Plugin Tag not available
          return false;
@@ -226,8 +212,7 @@ class TagField extends DropdownField
 
       // Check it is available for the target itemtypes
       $types = json_decode($tag->fields['type_menu'], true);
-      if (
-         !isset($types[Ticket::class])
+      if (!isset($types[Ticket::class])
          && !isset($types[Change::class])
          && !isset($types['0'])
       ) {
@@ -240,38 +225,31 @@ class TagField extends DropdownField
       return (in_array($tag->getID(), $this->value));
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return false;
    }
 
-   public function getHtmlIcon()
-   {
+   public function getHtmlIcon() {
       return '<i class="fas fa-tag" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

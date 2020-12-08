@@ -364,11 +364,11 @@ class PluginFormcreatorInstall {
 
       $itemtypes = [
          PluginFormcreatorFormAnswer::class,
-     ];
+      ];
 
-     if (count($itemtypes) == 0) {
+      if (count($itemtypes) == 0) {
          return;
-     }
+      }
 
       // Delete translations
       $translation = new NotificationTemplateTranslation();

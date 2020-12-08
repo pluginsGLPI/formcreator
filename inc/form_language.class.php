@@ -41,8 +41,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0)
-   {
+   public static function getTypeName($nb = 0) {
       return _n('Form language', 'Form languages', $nb, 'formcreator');
    }
 
@@ -54,8 +53,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
             return self::getTypeName(Session::getPluralNumber());
@@ -74,8 +72,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch (get_class($item)) {
          case PluginFormcreatorForm::class:
             self::showForForm($item, $withtemplate);
@@ -83,8 +80,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       }
    }
 
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk]) || !isset($input['name'])) {
          return false;
@@ -93,8 +89,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       return $input;
    }
 
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $translations = array_combine($input['string'], $input['translated']);
       $translations['plugin_formcreator_load_check'] = 'plugin_formcreator_load_check';
@@ -110,8 +105,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       return $input;
    }
 
-   public function post_updateItem($history = 1)
-   {
+   public function post_updateItem($history = 1) {
       global $TRANSLATE;
 
       // Reset cache for the edited translations
@@ -120,8 +114,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       $TRANSLATE->clearCache($domain, $this->fields['name']);
    }
 
-   public function pre_deleteItem()
-   {
+   public function pre_deleteItem() {
       // Delete translation file
       $file = PluginFormcreatorForm::getTranslationFile(
          $this->fields[PluginFormcreatorForm::getForeignKeyField()],
@@ -133,8 +126,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       return true;
    }
 
-   public function showForm($ID, $options = [])
-   {
+   public function showForm($ID, $options = []) {
       if (!isset($options['parent']) || empty($options['parent'])) {
          return false;
       }
@@ -226,8 +218,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       return true;
    }
 
-   public static function showForForm(CommonDBTM $item, $withtemplate = '')
-   {
+   public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       global $DB;
 
       $rand    = mt_rand();
@@ -311,8 +302,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       return true;
    }
 
-   public function getForbiddenStandardMassiveAction()
-   {
+   public function getForbiddenStandardMassiveAction() {
       return [
          'update', 'clone', 'add_note',
       ];

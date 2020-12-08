@@ -46,13 +46,11 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
  */
 class ActorField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -92,13 +90,11 @@ class ActorField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html = '';
       if (!$canEdit) {
          if (empty($this->value)) {
@@ -149,8 +145,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -158,8 +153,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return json_encode($this->value);
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $deserialized  = [];
       $serialized = ($value !== null && $value !== '')
          ? json_decode($value, JSON_OBJECT_AS_ARRAY)
@@ -176,8 +170,7 @@ class ActorField extends PluginFormcreatorAbstractField
       $this->value = $deserialized;
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -198,8 +191,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return implode("\r\n", $value);
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $value = [];
       foreach ($this->value as $item) {
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
@@ -223,12 +215,10 @@ class ActorField extends PluginFormcreatorAbstractField
       return $value;
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
@@ -237,8 +227,7 @@ class ActorField extends PluginFormcreatorAbstractField
     * @param array list of users and emails
     * @return array cleaned list of users and emails
     */
-   protected function sanitizeValue($value): array
-   {
+   protected function sanitizeValue($value): array {
       $unknownUsers = [];
       $knownUsers = [];
       foreach ($value as $item) {
@@ -261,8 +250,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return $knownUsers + $unknownUsers;
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       $sanitized = $this->sanitizeValue($this->value);
 
       // If the field is required it can't be empty
@@ -288,8 +276,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       if ($value === '') {
          return true;
       }
@@ -314,13 +301,11 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       $parsed  = [];
       $defaultValue = $input['default_values'];
       $serialized = ($defaultValue !== null && $defaultValue !== '')
@@ -346,13 +331,11 @@ class ActorField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $this->value = [];
@@ -367,8 +350,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       $user = new User();
       if (!$user->getFromDBByName($value)) {
          // value does not match any user, test if it is an email address
@@ -394,38 +376,31 @@ class ActorField extends PluginFormcreatorAbstractField
       return in_array($user->getID(), $this->value);
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return false;
    }
 
-   public function getHtmlIcon()
-   {
+   public function getHtmlIcon() {
       return '<i class="fa fa-user" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

@@ -38,13 +38,11 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DescriptionField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $common = parent::getDesignSpecializationField();
       $additions = $common['additions'];
 
@@ -57,28 +55,23 @@ class DescriptionField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string
-   {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       return nl2br(html_entity_decode(__($this->question->fields['description'], $domain)));
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       return '';
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = '';
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       return '';
    }
 
-   public function getValueForTargetText($domain, $richText): string
-   {
+   public function getValueForTargetText($domain, $richText): string {
       $text = $this->question->fields['description'];
       if (!$richText) {
          $text = nl2br(strip_tags(html_entity_decode(__($text, $domain))));
@@ -87,32 +80,26 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return $text;
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       return true;
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Description');
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       if (isset($input['description'])) {
          if (strlen($input['description']) < 1) {
             Session::addMessageAfterRedirect(
@@ -128,58 +115,47 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return false;
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return false;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       return true;
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon()
-   {
+   public function getHtmlIcon() {
       return '<i class="fas fa-align-left" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return false;
    }
 }
