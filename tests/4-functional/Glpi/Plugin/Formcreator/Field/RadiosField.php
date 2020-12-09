@@ -36,8 +36,7 @@ use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 
 class RadiosField extends CommonFunctionalTestCase
 {
-   public function testCreateForm()
-   {
+   public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
 

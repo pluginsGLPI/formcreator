@@ -145,7 +145,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $tab_values;
    }
 
-   public function isRequired() : bool  {
+   public function isRequired() : bool {
       return ($this->question->fields['required'] != '0');
    }
 

@@ -35,7 +35,7 @@ Session::checkRight('entity', UPDATE);
 if ($_REQUEST['way'] !== 'up' && $_REQUEST['way'] !== 'down') {
     http_response_code(400);
     exit;
-} 
+}
 
 if (!isset($_REQUEST['id'])) {
     http_response_code(400);
@@ -60,7 +60,7 @@ if ($_REQUEST['way'] === 'up') {
     $success = $section->moveUp();
 } else if ($_REQUEST['way'] === 'down') {
     $success = $section->moveDown();
-} 
+}
 if (!$success) {
     http_response_code(500);
     echo __('Could not move the section', 'formcreator');

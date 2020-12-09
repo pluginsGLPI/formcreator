@@ -38,8 +38,7 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class EmailField extends TextField
 {
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -72,8 +71,7 @@ class EmailField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
-   {
+   public function getRenderedHtml($canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -96,12 +94,10 @@ class EmailField extends TextField
       return $html;
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       if ($value === '') {
          return true;
       }
@@ -118,30 +114,25 @@ class EmailField extends TextField
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return _n('Email', 'Emails', 1);
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       $input['values'] = '';
       $this->value = $input['default_values'];
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          return false;
@@ -158,48 +149,39 @@ class EmailField extends TextField
       return true;
    }
 
-   public function getEmptyParameters(): array
-   {
+   public function getEmptyParameters(): array {
       return [];
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       return $this->value == $value;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fa fa-envelope" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

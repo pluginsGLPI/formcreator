@@ -208,8 +208,7 @@ PluginFormcreatorExportableInterface
       return $result;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id_1 => $container->getID(),
       ];

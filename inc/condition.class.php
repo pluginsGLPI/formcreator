@@ -90,16 +90,16 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return array
     */
-    public static function getEnumShowCondition() : array {
+   public static function getEnumShowCondition() : array {
       return [
-         self::SHOW_CONDITION_EQ => '=',
-         self::SHOW_CONDITION_NE => '≠',
-         self::SHOW_CONDITION_LT => '<',
-         self::SHOW_CONDITION_GT => '>',
-         self::SHOW_CONDITION_LE => '≤',
-         self::SHOW_CONDITION_GE => '≥',
-         self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
-         self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
+        self::SHOW_CONDITION_EQ => '=',
+        self::SHOW_CONDITION_NE => '≠',
+        self::SHOW_CONDITION_LT => '<',
+        self::SHOW_CONDITION_GT => '>',
+        self::SHOW_CONDITION_LE => '≤',
+        self::SHOW_CONDITION_GE => '≥',
+        self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
+        self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
       ];
    }
 
@@ -108,11 +108,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return array
     */
-    public function getEnumShowRule() : array {
+   public function getEnumShowRule() : array {
       return [
-         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
-         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
-         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
+        self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
+        self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
+        self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
       ];
    }
 
@@ -430,8 +430,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $html;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          'itemtype' => $container->getType(),
          'items_id' => $container->getID(),
