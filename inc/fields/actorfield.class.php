@@ -100,14 +100,38 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
 
-         // Value needs to be non empty to allow execition of select2's initSelection
-         echo '<select multiple
-            name="' . $fieldName . '[]"
-            id="' . $domId . '"
-            value=""></select>';
-         echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
-         });");
+         if (version_compare(GLPI_VERSION, '9.5') < 0) {
+            // Value needs to be non empty to allow execution of select2's initSelection
+            echo '<select multiple
+               name="' . $fieldName . '[]"
+               id="' . $domId . '"
+               value=""></select>';
+            echo Html::scriptBlock("$(function() {
+               pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
+            });");
+         } else {
+            $params = [
+               'specific_tags' => [
+                  'multiple' => 'multiple',
+               ],
+               'entity_restrict' => -1,
+               'itemtype'        => User::getType(),
+               'values'          => array_keys($value),
+               'valuesnames'     => array_values($value),
+            ];
+            if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
+               $params['_idor_token'] = Session::getNewIDORToken(User::getType());
+            }
+            echo PluginFormcreatorCommon::jsAjaxDropdown(
+               $fieldName . '[]',
+               $domId,
+               $CFG_GLPI['root_doc']."/ajax/getDropdownUsers.php",
+               $params
+            );
+            echo Html::scriptBlock("$(function() {
+               pluginFormcreatorInitializeActor2('$fieldName', '$rand');
+            });");
+         }
       } else {
          if (empty($this->value)) {
             echo '';

@@ -285,4 +285,185 @@ class PluginFormcreatorCommon {
 
       return ['status' => $status, 'user' => $user];
    }
+
+   /**
+    * Create Ajax dropdown to clean JS
+    * Code copied and modified from Html::jsAjaxDropdown to allow
+    * item creation in dropdown
+    *
+    * @param $name
+    * @param $field_id   string   id of the dom element
+    * @param $url        string   URL to get datas
+    * @param $params     array    of parameters
+    *            must contains :
+    *                if single select
+    *                   - 'value'       : default value selected
+    *                   - 'valuename'   : default name of selected value
+    *                if multiple select
+    *                   - 'values'      : default values selected
+    *                   - 'valuesnames' : default names of selected values
+    *
+    * @since 0.85.
+    *
+    * @return String
+   **/
+   public static function jsAjaxDropdown($name, $field_id, $url, $params = []) {
+      global $CFG_GLPI;
+
+      if (!isset($params['value'])) {
+         $value = 0;
+      } else {
+         $value = $params['value'];
+      }
+      if (!isset($params['value'])) {
+         $valuename = Dropdown::EMPTY_VALUE;
+      } else {
+         $valuename = $params['valuename'];
+      }
+      $on_change = '';
+      if (isset($params["on_change"])) {
+         $on_change = $params["on_change"];
+         unset($params["on_change"]);
+      }
+      $width = '80%';
+      if (isset($params["width"])) {
+         $width = $params["width"];
+         unset($params["width"]);
+      }
+
+      $placeholder = isset($params['placeholder']) ? $params['placeholder'] : '';
+      $allowclear =  "false";
+      if (strlen($placeholder) > 0 && !$params['display_emptychoice']) {
+         $allowclear = "true";
+      }
+
+      unset($params['placeholder']);
+      unset($params['value']);
+      unset($params['valuename']);
+
+      $options = [
+         'id'        => $field_id,
+         'selected'  => $value
+      ];
+      if (!empty($params['specific_tags'])) {
+         foreach ($params['specific_tags'] as $tag => $val) {
+            if (is_array($val)) {
+               $val = implode(' ', $val);
+            }
+            $options[$tag] = $val;
+         }
+      }
+
+      // manage multiple select (with multiple values)
+      if (isset($params['values']) && count($params['values'])) {
+         $values = array_combine($params['values'], $params['valuesnames']);
+         $options['multiple'] = 'multiple';
+         $options['selected'] = $params['values'];
+      } else {
+         $values = [];
+
+         // simple select (multiple = no)
+         if ((isset($params['display_emptychoice']) && $params['display_emptychoice'])
+             || isset($params['toadd'][$value])
+             || $value > 0) {
+            $values = ["$value" => $valuename];
+         }
+      }
+
+      // display select tag
+      $output = Html::select($name, $values, $options);
+
+      $js = "
+         var params_$field_id = {";
+      foreach ($params as $key => $val) {
+         // Specific boolean case
+         if (is_bool($val)) {
+            $js .= "$key: ".($val?1:0).",\n";
+         } else {
+            $js .= "$key: ".json_encode($val).",\n";
+         }
+      }
+      $js.= "};
+
+         $('#$field_id').select2({
+            width: '$width',
+            placeholder: '$placeholder',
+            allowClear: $allowclear,
+            minimumInputLength: 0,
+            quietMillis: 100,
+            dropdownAutoWidth: true,
+            minimumResultsForSearch: ".$CFG_GLPI['ajax_limit_count'].",
+            tokenSeparators: [',', ';'],
+            tags: true,
+            ajax: {
+               url: '$url',
+               dataType: 'json',
+               type: 'POST',
+               data: function (params) {
+                  query = params;
+                  return $.extend({}, params_$field_id, {
+                     searchText: params.term,
+                     page_limit: ".$CFG_GLPI['dropdown_max'].", // page size
+                     page: params.page || 1, // page number
+                  });
+               },
+               processResults: function (data, params) {
+                  params.page = params.page || 1;
+                  var more = (data.count >= ".$CFG_GLPI['dropdown_max'].");
+
+                  return {
+                     results: data.results,
+                     pagination: {
+                           more: more
+                     }
+                  };
+               }
+            },
+            templateResult: templateResult,
+            templateSelection: templateSelection
+         })
+         .bind('setValue', function(e, value) {
+            $.ajax('$url', {
+               data: $.extend({}, params_$field_id, {
+                  _one_id: value,
+               }),
+               dataType: 'json',
+               type: 'POST',
+            }).done(function(data) {
+
+               var iterate_options = function(options, value) {
+                  var to_return = false;
+                  $.each(options, function(index, option) {
+                     if (option.hasOwnProperty('id')
+                         && option.id == value) {
+                        to_return = option;
+                        return false; // act as break;
+                     }
+
+                     if (option.hasOwnProperty('children')) {
+                        to_return = iterate_options(option.children, value);
+                     }
+                  });
+
+                  return to_return;
+               };
+
+               var option = iterate_options(data.results, value);
+               if (option !== false) {
+                  var newOption = new Option(option.text, option.id, true, true);
+                   $('#$field_id').append(newOption).trigger('change');
+               }
+            });
+         });
+         ";
+      if (!empty($on_change)) {
+         $js .= " $('#$field_id').on('change', function(e) {".
+                  stripslashes($on_change)."});";
+      }
+
+      $js .= " $('label[for=$field_id]').on('click', function(){ $('#$field_id').select2('open'); });";
+
+      $output .= Html::scriptBlock('$(function() {' . $js . '});');
+      return $output;
+   }
 }
