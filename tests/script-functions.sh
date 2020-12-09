@@ -78,7 +78,7 @@ plugin_test_lint() {
 
 # GLPI Coding Standards
 plugin_test_cs() {
-   vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ --standard=tests/rulest.xml *.php install/ inc/ front/ ajax/ tests/ RoboFile.php
+   vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php
 }
 
 # please set $TX_USER and $TX_TOKEN in your CI dashboard

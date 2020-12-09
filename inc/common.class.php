@@ -219,7 +219,7 @@ class PluginFormcreatorCommon {
       $ticket = new Ticket();
       $ticket->getFromDB($id);
       if (!$ticket->canRequesterUpdateItem()) {
-         Session::addMessageAfterRedirect(__('You cannot delete this issue. Maybe it is taken into account.', 'formcreator'), true,  ERROR);
+         Session::addMessageAfterRedirect(__('You cannot delete this issue. Maybe it is taken into account.', 'formcreator'), true, ERROR);
          return false;
       }
 

@@ -189,7 +189,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             } else {
                $value[] = Toolbox::addslashes_deep($user->getRawName());
             }
-       }
+         }
       }
 
       if ($richText) {

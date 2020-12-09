@@ -132,6 +132,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          $cookie = '';
          do {
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
+               // phpcs:ignore Generic.PHP.DeprecatedFunctions
                ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
             }
 
@@ -147,6 +148,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
             }
 
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
+               // phpcs:ignore Generic.PHP.DeprecatedFunctions
                ldap_control_paged_result_response($ds, $result, $cookie);
             }
 
@@ -218,6 +220,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       try {
          $ds            = $config_ldap->connect();
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+         // phpcs:ignore Generic.PHP.DeprecatedFunctions
          ldap_control_paged_result($ds, 1);
          $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
          ldap_get_entries($ds, $sn);

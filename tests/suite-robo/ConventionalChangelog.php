@@ -37,73 +37,73 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 require_once __DIR__ . '/../../RoboFile.php';
 
 class ConventionalChangelog extends CommonTestCase {
-    public function providerFilterCommits() {
-        $commits = [];
-        $i = 0;
+   public function providerFilterCommits() {
+       $commits = [];
+       $i = 0;
 
-        $commit = new \StdClass();
-        $commit->hash = '12345';
-        $commit->message = 'fix: valid';
-        $commits[$i++] = $commit;
+       $commit = new \StdClass();
+       $commit->hash = '12345';
+       $commit->message = 'fix: valid';
+       $commits[$i++] = $commit;
 
-        $commit = new \StdClass();
-        $commit->hash = '12345';
-        $commit->message = 'fix(main): valid';
-        $commits[$i++] = $commit;
+       $commit = new \StdClass();
+       $commit->hash = '12345';
+       $commit->message = 'fix(main): valid';
+       $commits[$i++] = $commit;
 
-        $commit = new \StdClass();
-        $commit->hash = '12345';
-        $commit->message = 'feat: valid';
-        $commits[$i++] = $commit;
+       $commit = new \StdClass();
+       $commit->hash = '12345';
+       $commit->message = 'feat: valid';
+       $commits[$i++] = $commit;
 
-        $commit = new \StdClass();
-        $commit->hash = '12345';
-        $commit->message = 'feat(main): valid';
-        $commits[$i++] = $commit;
+       $commit = new \StdClass();
+       $commit->hash = '12345';
+       $commit->message = 'feat(main): valid';
+       $commits[$i++] = $commit;
 
-        $commit = new \StdClass();
-        $commit->hash = '12345';
-        $commit->message = 'foo(main): invalid';
-        $commits[$i++] = $commit;
+       $commit = new \StdClass();
+       $commit->hash = '12345';
+       $commit->message = 'foo(main): invalid';
+       $commits[$i++] = $commit;
 
-        $commit = new \StdClass();
-        $commit->hash = '12345';
-        $commit->message = 'foo: invalid';
-        $commits[$i++] = $commit;
+       $commit = new \StdClass();
+       $commit->hash = '12345';
+       $commit->message = 'foo: invalid';
+       $commits[$i++] = $commit;
 
-        return [
-            [
-                'commits' => [
-                    $commits[0],
-                    $commits[1],
-                    $commits[2],
-                    $commits[3],
-                    $commits[4],
-                    $commits[5],
-                ],
-                'expected' => [
-                    $commits[0],
-                    $commits[1],
-                    $commits[2],
-                    $commits[3],
-                ]
-            ]
-        ];
-    }
+       return [
+           [
+               'commits' => [
+                   $commits[0],
+                   $commits[1],
+                   $commits[2],
+                   $commits[3],
+                   $commits[4],
+                   $commits[5],
+               ],
+               'expected' => [
+                   $commits[0],
+                   $commits[1],
+                   $commits[2],
+                   $commits[3],
+               ]
+           ]
+       ];
+   }
 
     /**
      * @dataProvider providerFilterCommits
      */
-    public function testFilterCommits($commits, $expected) {
-        $output = \ConventionalChangelog::filterCommits($commits);
-        $this->array($output)->isEqualTo($expected);
-    }
+   public function testFilterCommits($commits, $expected) {
+       $output = \ConventionalChangelog::filterCommits($commits);
+       $this->array($output)->isEqualTo($expected);
+   }
 
-    public function providerBuildLog() {
-        return [
-            [
+   public function providerBuildLog() {
+       return [
+           [
 
-            ]
-        ];
-    }
+           ]
+       ];
+   }
 }

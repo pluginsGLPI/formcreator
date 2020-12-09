@@ -680,5 +680,5 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       return $decodedValues['itemtype'];
-      }
    }
+}

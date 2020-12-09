@@ -90,8 +90,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_array($this->uploads) || !isset($this->uploads["_$key"])) {
          return;
