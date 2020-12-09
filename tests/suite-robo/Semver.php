@@ -37,36 +37,36 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 require_once __DIR__ . '/../../RoboFile.php';
 
 class Semver extends CommonTestCase {
-    public  function providerIsSemver() {
-        return [
-            [
-                'foo',
-                false
-            ],
-            [
-                '0.0.1',
-                true
-            ],
-            [
-                '1.0.0-dev',
-                true
-            ],
-            [
-                '1.0.0-nightly',
-                true
-            ],
-            [
-                '1.0.0-beta.1',
-                true
-            ],
-        ];
-    }
+   public  function providerIsSemver() {
+       return [
+           [
+               'foo',
+               false
+           ],
+           [
+               '0.0.1',
+               true
+           ],
+           [
+               '1.0.0-dev',
+               true
+           ],
+           [
+               '1.0.0-nightly',
+               true
+           ],
+           [
+               '1.0.0-beta.1',
+               true
+           ],
+       ];
+   }
 
     /**
      * @dataProvider providerIsSemver
      */
-    public function testIsSemver($version, $expected) {
-        $output = \Semver::isSemver($version);
-        $this->boolean($output)->isEqualTo($expected);
-    }
+   public function testIsSemver($version, $expected) {
+       $output = \Semver::isSemver($version);
+       $this->boolean($output)->isEqualTo($expected);
+   }
 }

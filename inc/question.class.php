@@ -1257,8 +1257,7 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {
       $keepCriteria = [
          self::$items_id => $container->getID(),
       ];

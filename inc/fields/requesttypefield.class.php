@@ -86,7 +86,7 @@ class PluginFormcreatorRequestTypeField extends PluginFormcreatorField
             'value' => $this->value,
             'rand'  => $rand,
          ];
-         if ($this->question->fields['show_empty'] != '0' ) {
+         if ($this->question->fields['show_empty'] != '0') {
             $options['toadd'] = [
                0  => Dropdown::EMPTY_VALUE,
             ];

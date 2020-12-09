@@ -46,49 +46,49 @@ trait PluginFormcreatorExportable
      * @param boolean $remove_uuid
      * @return array
      */
-    public function exportChildrenObjects($subItems, $export, $remove_uuid = false) {
-        global $DB;
+   public function exportChildrenObjects($subItems, $export, $remove_uuid = false) {
+       global $DB;
 
-        foreach ($subItems as $key => $itemtypes) {
-            if (!is_array($itemtypes)) {
-                $itemtypes = [$itemtypes];
+      foreach ($subItems as $key => $itemtypes) {
+         if (!is_array($itemtypes)) {
+            $itemtypes = [$itemtypes];
+         }
+          $export[$key] = [];
+         foreach ($itemtypes as $itemtype) {
+             // $itemtype may be a CommonDBRelation type
+             // In such case it is still to the itemtype to build the export data
+             // because it may contain additinal data
+             // @see PluginFormcreatorItem_Ticket and its attribute 'link'
+             $list = [];
+             $allSubItems = $itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID());
+            foreach ($DB->request($allSubItems) as $row) {
+               /** @var CommonDBConnexity $subItem */
+               $subItem = new $itemtype();
+               $subItem->getFromDB($row['id']);
+               if (is_subclass_of($subItem, CommonDBRelation::class)) {
+                  if ($row['itemtype_1'] == $row['itemtype_2'] && $row['is_1']) {
+                     // the linked object is the same itemtype as the parent's itemtype
+                     // this relation will be also exported in the reverse order
+                     // Let's ignore it
+                     // TODO: if someday an CommonDBRelation itemtype links 2 objects
+                     // belonging to different forms, then we must ignore the relation
+                     // only when the 2 linked objects belong to the same form.
+                     // This will needs an extra check here.
+                     continue;
+                  }
+               }
+               $list[] = $subItem->export($remove_uuid);
             }
-            $export[$key] = [];
-            foreach ($itemtypes as $itemtype) {
-                // $itemtype may be a CommonDBRelation type
-                // In such case it is still to the itemtype to build the export data
-                // because it may contain additinal data
-                // @see PluginFormcreatorItem_Ticket and its attribute 'link'
-                $list = [];
-                $allSubItems = $itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID());
-                foreach ($DB->request($allSubItems) as $row) {
-                    /** @var CommonDBConnexity $subItem */
-                    $subItem = new $itemtype();
-                    $subItem->getFromDB($row['id']);
-                    if (is_subclass_of($subItem, CommonDBRelation::class)) {
-                        if ($row['itemtype_1'] == $row['itemtype_2'] && $row['is_1']) {
-                            // the linked object is the same itemtype as the parent's itemtype
-                            // this relation will be also exported in the reverse order
-                            // Let's ignore it
-                            // TODO: if someday an CommonDBRelation itemtype links 2 objects
-                            // belonging to different forms, then we must ignore the relation
-                            // only when the 2 linked objects belong to the same form.
-                            // This will needs an extra check here.
-                            continue;
-                        }
-                    }
-                    $list[] = $subItem->export($remove_uuid);
-                }
-                if (!is_array($subItems[$key])) {
-                    $export[$key] = $list;
-                } else {
-                    $export[$key][$itemtype] = $list;
-                }
+            if (!is_array($subItems[$key])) {
+                $export[$key] = $list;
+            } else {
+                $export[$key][$itemtype] = $list;
             }
-        }
+         }
+      }
 
-        return $export;
-    }
+       return $export;
+   }
 
     /**
      * Import children objects
@@ -98,37 +98,37 @@ trait PluginFormcreatorExportable
      * @param array $input
      * @return void
      */
-    public function importChildrenObjects($item, $linker, $subItems, $input) {
-        $itemId = $item->getID();
-        foreach ($subItems as $key => $itemtypes) {
-            if (!is_array($itemtypes)) {
-               if (!isset($input[$key])) {
-                  $input[$key] = [];
-               }
-               $input[$key] = [$itemtypes => $input[$key]];
-               $itemtypes = [$itemtypes];
+   public function importChildrenObjects($item, $linker, $subItems, $input) {
+       $itemId = $item->getID();
+      foreach ($subItems as $key => $itemtypes) {
+         if (!is_array($itemtypes)) {
+            if (!isset($input[$key])) {
+                $input[$key] = [];
             }
-            foreach ($itemtypes as $itemtype) {
-               $importedItems = [];
-               if (!isset($input[$key][$itemtype])) {
-                  continue;
-               }
-               foreach ($input[$key][$itemtype] as $subInput) {
-                  $importedItem = $itemtype::import(
-                     $linker,
-                     $subInput,
-                     $itemId
-                  );
+            $input[$key] = [$itemtypes => $input[$key]];
+            $itemtypes = [$itemtypes];
+         }
+         foreach ($itemtypes as $itemtype) {
+            $importedItems = [];
+            if (!isset($input[$key][$itemtype])) {
+               continue;
+            }
+            foreach ($input[$key][$itemtype] as $subInput) {
+               $importedItem = $itemtype::import(
+                  $linker,
+                  $subInput,
+                  $itemId
+               );
 
-                  // If $importedItem === false the item import is postponed
-                  if ($importedItem !== false) {
-                     $importedItems[] = $importedItem;
-                  }
+               // If $importedItem === false the item import is postponed
+               if ($importedItem !== false) {
+                  $importedItems[] = $importedItem;
                }
-               // Delete all other restrictions
-               $subItem = new $itemtype();
-               $subItem->deleteObsoleteItems($item, $importedItems);
             }
-        }
-    }
+            // Delete all other restrictions
+            $subItem = new $itemtype();
+            $subItem->deleteObsoleteItems($item, $importedItems);
+         }
+      }
+   }
 }

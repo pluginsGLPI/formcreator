@@ -382,7 +382,7 @@ class RoboFile extends RoboFilePlugin
     * @throws Exception
     * @return string
     */
-   protected static function getHeaderTemplate() {
+   protected function getHeaderTemplate() {
       if (empty($this->headerTemplate)) {
          $this->headerTemplate = file_get_contents(__DIR__ . '/tools/HEADER');
          if (empty($this->headerTemplate)) {
@@ -664,7 +664,7 @@ class Git
     * get highest sember tag from list
     * @param array $tags list of tags
     */
-    public static function getLastTag($tags, $prefix = '') {
+   public static function getLastTag($tags, $prefix = '') {
       // Remove prefix from all tags
       if ($prefix !== '') {
          $newTags = [];
@@ -691,7 +691,7 @@ class Git
    public static function createCommitList($commits) {
       // Biuld list of commits, latest is oldest
       $commitObjects = [];
-      foreach ($commits as $commit)  {
+      foreach ($commits as $commit) {
          $line = explode(' ', $commit, 2);
          $commitObject = new StdClass();
          $commitObject->hash = $line[0];
@@ -764,7 +764,7 @@ class Git
     * @throws Exception
     * @return string content of the file
     */
-    public static function getFileFromGit($path, $rev) {
+   public static function getFileFromGit($path, $rev) {
       $output = shell_exec("git show $rev:$path");
       if ($output === null) {
          throw new Exception ("coult not get file from git: $rev:$path");
@@ -821,7 +821,7 @@ class ConventionalChangelog
       // comapre scopes
       if ($a->scope < $b->scope) {
          return -1;
-      } else if($a->scope > $b->scope) {
+      } else if ($a->scope > $b->scope) {
          return 1;
       }
 
@@ -843,12 +843,12 @@ class ConventionalChangelog
     * @return void
     */
    public static function buildLog($a, $b = 'HEAD') {
-      if (!Git::tagExists($b)) {
-         // $b is not a tag, try to find a matching one
-         if (Git::getTagOfCommit($b) === false) {
-            // throw new Exception("current HEAD does not match a tag");
-         }
-      }
+      // if (!Git::tagExists($b)) {
+      //    // $b is not a tag, try to find a matching one
+      //    if (Git::getTagOfCommit($b) === false) {
+      //       throw new Exception("current HEAD does not match a tag");
+      //    }
+      // }
 
       // get All tags between $a and $b
       $tags = Git::getAllTags();
@@ -1027,7 +1027,7 @@ class SemVer
     * @param string $version
     * @return boolean
     */
-    public static function isSemVer($version) {
+   public static function isSemVer($version) {
       $semverPattern = '#\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?\b#i';
       if (preg_match($semverPattern, $version) !== 1) {
          return false;

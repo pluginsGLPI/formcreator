@@ -68,7 +68,7 @@ PluginFormcreatorConditionnableInterface
       // Control fields values :
       // - name is required
       if (!isset($input['name']) ||
-         (isset($input['name']) && empty($input['name'])) ) {
+         (isset($input['name']) && empty($input['name']))) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return [];
       }
@@ -140,7 +140,7 @@ PluginFormcreatorConditionnableInterface
          ],
       ]);
       $section = new self();
-      foreach($rows as $row) {
+      foreach ($rows as $row) {
          $section->update([
             'id' => $row['id'],
             'order' => $section->fields['order'] - 1,
@@ -441,8 +441,7 @@ PluginFormcreatorConditionnableInterface
       $this->updateConditions($this->input);
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {
       $keepCriteria = [
          self::$items_id => $container->getID(),
       ];

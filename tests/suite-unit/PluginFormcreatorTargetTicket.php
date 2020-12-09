@@ -832,7 +832,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'name' => $this->getUniqueString(),
             'entities_id' => 0,
          ]);
-      }  while($taskCategoryId == $category1Id || $taskCategoryId == $category2Id);
+      } while ($taskCategoryId == $category1Id || $taskCategoryId == $category2Id);
 
       $question1 = $this->getQuestion([
          'name'      => 'request type',

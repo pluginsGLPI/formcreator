@@ -254,8 +254,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       return $form_profile;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {
       $keepCriteria = [
          self::$items_id_1 => $container->getID(),
       ];

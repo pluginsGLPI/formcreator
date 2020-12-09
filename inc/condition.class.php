@@ -267,7 +267,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return string HTML to insert in a rendered web page
     */
-    public function getConditionHtml($input) {
+   public function getConditionHtml($input) {
       if ($this->isNewItem()) {
          $this->getEmpty();
          $itemtype       = $input['itemtype'];
@@ -303,13 +303,13 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       // Boolean operator
       $html.= '<div class="div_show_condition_logic">';
       $html.= Dropdown::showFromArray('_conditions[show_logic][]',
-            self::getEnumShowLogic(),
-            [
-               'display'               => false,
-               'value'                 => $show_logic,
-               'display_emptychoice'   => false,
-               'rand'                  => $rand,
-            ]);
+           self::getEnumShowLogic(),
+           [
+              'display'               => false,
+              'value'                 => $show_logic,
+              'display_emptychoice'   => false,
+              'rand'                  => $rand,
+           ]);
       $html.= '</div>';
 
       // dropdown of questions
@@ -348,12 +348,12 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       $questionsInForm = (new PluginFormcreatorQuestion())->getQuestionsFromFormBySection($form->getID(), $questionListExclusion);
       $html.= '<div class="div_show_condition_field">';
       $html.= Dropdown::showFromArray(
-         '_conditions[plugin_formcreator_questions_id][]',
-         $questionsInForm, [
-            'display'      => false,
-            'value'        => $questionId,
-            'rand'         => $rand,
-         ]
+        '_conditions[plugin_formcreator_questions_id][]',
+        $questionsInForm, [
+           'display'      => false,
+           'value'        => $questionId,
+           'rand'         => $rand,
+        ]
       );
       $html.= '</div>';
 
@@ -363,25 +363,25 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          function ($item) {
             return htmlentities($item);
          },
-         static::getEnumShowCondition()
+        static::getEnumShowCondition()
       );
 
       $html.= Dropdown::showFromArray(
-         '_conditions[show_condition][]',
-         $showConditions, [
-            'display'      => false,
-            'value'        => $show_condition,
-            'rand'         => $rand,
-         ]
+        '_conditions[show_condition][]',
+        $showConditions, [
+           'display'      => false,
+           'value'        => $show_condition,
+           'rand'         => $rand,
+        ]
       );
       $html.= '</div>';
 
       // Value of comparison
       $html.= '<div class="div_show_condition_value">';
       $html.= Html::input('_conditions[show_value][]', [
-         'class' => 'small_text',
-         'size'  => '8',
-         'value' => $show_value,
+        'class' => 'small_text',
+        'size'  => '8',
+        'value' => $show_value,
       ]);
       $html.= '</div>';
 
@@ -401,8 +401,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $html;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) {
       $keepCriteria = [
          'itemtype' => $container->getType(),
          'items_id' => $container->getID(),
