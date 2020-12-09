@@ -1289,7 +1289,7 @@ function pluginFormcreatorInitializeField(fieldName, rand) {
 }
 
 /**
- * Initialize an actor field
+ * Initialize an actor field (< GLPI 9.5.3)
  */
 function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
    var field = $('[name="' + fieldName + '[]"]');
@@ -1350,6 +1350,17 @@ function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
       plugin_formcreator.showFields($(field[0].form));
    });
 }
+
+/**
+ * Initialize an actor field (>= GLPI 9.5.3)
+ */
+function pluginFormcreatorInitializeActor2(fieldName, rand) {
+   var field = $('select[name="' + fieldName + '[]"]');
+   field.on("change", function(e) {
+      formcreatorShowFields($(field[0].form));
+   });
+}
+
 
 /**
  * Initialize a checkboxes field
