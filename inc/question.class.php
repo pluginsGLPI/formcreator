@@ -380,7 +380,7 @@ PluginFormcreatorConditionnableInterface
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       // Get next row
       if ($this->useAutomaticOrdering) {
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $maxRow = PluginFormcreatorCommon::getMax($this, [
             $sectionFk => $input[$sectionFk]
          ], 'row');
@@ -1249,8 +1249,7 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id => $container->getID(),
       ];

@@ -139,11 +139,11 @@ class PluginFormcreatorLinker
          // The itemtype is not part of Formcreator
          // Cannot use uuid column
          $idField = 'id';
-     }
-     $item = new $itemtype();
-     plugin_formcreator_getFromDBByField($item, $id, $idField);
+      }
+      $item = new $itemtype();
+      plugin_formcreator_getFromDBByField($item, $id, $idField);
 
-     return $item;
+      return $item;
    }
 
    /**

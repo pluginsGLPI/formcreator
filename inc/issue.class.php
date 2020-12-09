@@ -763,7 +763,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                'searchtype' => 'equals',
                                'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
                                'link'       => 'OR']
-                             ]],
+                              ]],
                              ['link'       => 'OR',
                              'criteria' => [[
                               'link'       => 'AND',
@@ -776,7 +776,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                               'searchtype' => 'equals',
                               'value'      => 'mygroups',
                              ],
-                            ]],
+                             ]],
                             ['link'       => 'AND',
                                'field' => 4,
                                'searchtype' => 'equals',

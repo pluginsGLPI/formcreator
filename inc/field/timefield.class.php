@@ -42,13 +42,11 @@ class TimeField extends PluginFormcreatorAbstractField
 {
    const DATE_FORMAT = 'H:i';
 
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -85,8 +83,7 @@ class TimeField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
-   {
+   public function getRenderedHtml($canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -107,23 +104,19 @@ class TimeField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       return $this->value;
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = $value;
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($richText): string {
       $date = DateTime::createFromFormat("H:i:s", $this->value);
       if ($date === false) {
          return ' ';
@@ -131,17 +124,14 @@ class TimeField extends PluginFormcreatorAbstractField
       return Toolbox::addslashes_deep($date->format('H:i'));
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) === false)) {
          Session::addMessageAfterRedirect(
@@ -156,28 +146,23 @@ class TimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Time', 'formcreator');
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       if ($this->value === '') {
          $answer = '00:00';
       } else {
@@ -188,13 +173,11 @@ class TimeField extends PluginFormcreatorAbstractField
       return $answerDatetime == $compareDatetime;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       if (empty($this->value)) {
          $answer = '00:00';
       } else {
@@ -205,13 +188,11 @@ class TimeField extends PluginFormcreatorAbstractField
       return $answerDatetime > $compareDatetime;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
 
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
@@ -222,23 +203,19 @@ class TimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fa fa-clock" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

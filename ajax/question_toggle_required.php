@@ -42,7 +42,7 @@ if (!isset($_REQUEST['required'])) {
     http_response_code(400);
     exit();
 }
- 
+
 $question = new PluginFormcreatorQuestion();
 if (!$question->getFromDB($questionId)) {
     http_response_code(404);
@@ -63,5 +63,5 @@ $success = $question->update([
 ]);
 if (!$success) {
     http_response_code(500);
-    exit(); 
+    exit();
 }

@@ -46,32 +46,32 @@ trait PluginFormcreatorExportableTrait
      * @param boolean $remove_uuid
      * @return array
      */
-    public function exportChildrenObjects($subItems, $export, $remove_uuid = false) {
-        global $DB;
+   public function exportChildrenObjects($subItems, $export, $remove_uuid = false) {
+       global $DB;
 
-        foreach ($subItems as $key => $itemtypes) {
-            if (!is_array($itemtypes)) {
-                $itemtypes = [$itemtypes];
+      foreach ($subItems as $key => $itemtypes) {
+         if (!is_array($itemtypes)) {
+            $itemtypes = [$itemtypes];
+         }
+          $export[$key] = [];
+         foreach ($itemtypes as $itemtype) {
+             $allSubItems = $DB->request($itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID()));
+             $list = [];
+             $subItem = new $itemtype();
+            foreach ($allSubItems as $row) {
+               $subItem->getFromDB($row['id']);
+               $list[] = $subItem->export($remove_uuid);
             }
-            $export[$key] = [];
-            foreach ($itemtypes as $itemtype) {
-                $allSubItems = $DB->request($itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID()));
-                $list = [];
-                $subItem = new $itemtype();
-                foreach ($allSubItems as $row) {
-                    $subItem->getFromDB($row['id']);
-                    $list[] = $subItem->export($remove_uuid);
-                }
-                if (!is_array($subItems[$key])) {
-                    $export[$key] = $list;
-                } else {
-                    $export[$key][$itemtype] = $list;
-                }
+            if (!is_array($subItems[$key])) {
+                $export[$key] = $list;
+            } else {
+                $export[$key][$itemtype] = $list;
             }
-        }
+         }
+      }
 
-        return $export;
-    }
+       return $export;
+   }
 
     /**
      * Import children objects
@@ -82,39 +82,39 @@ trait PluginFormcreatorExportableTrait
      * @param array $input
      * @return void
      */
-    public function importChildrenObjects($item, $linker, $subItems, $input) {
-        $itemId = $item->getID();
-        foreach ($subItems as $key => $itemtypes) {
-            if (!is_array($itemtypes)) {
-               if (!isset($input[$key])) {
-                  $input[$key] = [];
-               }
-               $input[$key] = [$itemtypes => $input[$key]];
-               $itemtypes = [$itemtypes];
+   public function importChildrenObjects($item, $linker, $subItems, $input) {
+       $itemId = $item->getID();
+      foreach ($subItems as $key => $itemtypes) {
+         if (!is_array($itemtypes)) {
+            if (!isset($input[$key])) {
+                $input[$key] = [];
             }
-            foreach ($itemtypes as $itemtype) {
-               $importedItems = [];
-               if (!isset($input[$key][$itemtype])) {
-                  continue;
-               }
-               foreach ($input[$key][$itemtype] as $subInput) {
-                  $importedItem = $itemtype::import(
-                     $linker,
-                     $subInput,
-                     $itemId
-                  );
+            $input[$key] = [$itemtypes => $input[$key]];
+            $itemtypes = [$itemtypes];
+         }
+         foreach ($itemtypes as $itemtype) {
+            $importedItems = [];
+            if (!isset($input[$key][$itemtype])) {
+               continue;
+            }
+            foreach ($input[$key][$itemtype] as $subInput) {
+               $importedItem = $itemtype::import(
+                  $linker,
+                  $subInput,
+                  $itemId
+               );
 
-                  // If $importedItem === false the item import is postponed
-                  if ($importedItem !== false) {
-                     $importedItems[] = $importedItem;
-                  }
+               // If $importedItem === false the item import is postponed
+               if ($importedItem !== false) {
+                  $importedItems[] = $importedItem;
                }
-               // Delete all other restrictions
-               $subItem = new $itemtype();
-               $subItem->deleteObsoleteItems($item, $importedItems);
             }
-        }
-    }
+            // Delete all other restrictions
+            $subItem = new $itemtype();
+            $subItem->deleteObsoleteItems($item, $importedItems);
+         }
+      }
+   }
 
     /**
      * Count sub items
@@ -123,34 +123,34 @@ trait PluginFormcreatorExportableTrait
      * @param array $subItems
      * @return int
      */
-    public static function countChildren($input, $subItems = []) {
-        if (count($subItems) < 1) {
-            return 1;
-        }
+   public static function countChildren($input, $subItems = []) {
+      if (count($subItems) < 1) {
+          return 1;
+      }
 
-        $count = 0;
-        foreach($subItems as $key => $itemtypes) {
-           if (isset($input[$key])) {
-              // force array of itemtypes
-              if (!is_array($itemtypes)) {
-                if (!isset($input[$key])) {
-                    $input[$key] = [];
-                }
-                $input[$key] = [$itemtypes => $input[$key]];
-                $itemtypes = [$itemtypes];
-              }
+       $count = 0;
+      foreach ($subItems as $key => $itemtypes) {
+         if (isset($input[$key])) {
+            // force array of itemtypes
+            if (!is_array($itemtypes)) {
+               if (!isset($input[$key])) {
+                   $input[$key] = [];
+               }
+               $input[$key] = [$itemtypes => $input[$key]];
+               $itemtypes = [$itemtypes];
+            }
 
-              foreach ($itemtypes as $itemtype) {
-                if (!isset($input[$key][$itemtype])) {
-                    continue;
-                }
-                foreach ($input[$key][$itemtype] as $subInput) {
-                    $count += $itemtype::countItemsToImport($subInput);
-                }
-              }
-           }
-        }
+            foreach ($itemtypes as $itemtype) {
+               if (!isset($input[$key][$itemtype])) {
+                   continue;
+               }
+               foreach ($input[$key][$itemtype] as $subInput) {
+                   $count += $itemtype::countItemsToImport($subInput);
+               }
+            }
+         }
+      }
 
-        return $count;
-    }
+       return $count;
+   }
 }

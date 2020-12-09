@@ -35,8 +35,7 @@ use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 
 class PluginFormcreatorSection extends CommonFunctionalTestCase
 {
-   public function testSectionCreation()
-   {
+   public function testSectionCreation() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
 

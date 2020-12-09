@@ -73,7 +73,7 @@ PluginFormcreatorConditionnableInterface
       // Control fields values :
       // - name is required
       if (!isset($input['name']) ||
-         (isset($input['name']) && empty($input['name'])) ) {
+         (isset($input['name']) && empty($input['name']))) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return [];
       }
@@ -159,7 +159,7 @@ PluginFormcreatorConditionnableInterface
          ],
       ]);
       $section = new self();
-      foreach($rows as $row) {
+      foreach ($rows as $row) {
          $section->update([
             'id' => $row['id'],
             'order' => $section->fields['order'] - 1,
@@ -508,14 +508,14 @@ PluginFormcreatorConditionnableInterface
     *
     * @return string HTML
     */
-    public function getDesignHtml() {
+   public function getDesignHtml() {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $formId = $this->fields[$formFk];
       $sectionId = $this->getID();
       $lastSectionOrder = PluginFormcreatorCommon::getMax(
-         new PluginFormcreatorSection(),
-         [PluginFormcreatorForm::getForeignKeyField() => $formId],
-         'order'
+        new PluginFormcreatorSection(),
+        [PluginFormcreatorForm::getForeignKeyField() => $formId],
+        'order'
       );
 
       $html = '';
@@ -531,8 +531,8 @@ PluginFormcreatorConditionnableInterface
       $html .= '<a href="#" ' . $onclick . ' data-field="name">';
       // Show count of conditions
       $nb = (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
-         'itemtype' => PluginFormcreatorSection::getType(),
-         'items_id' => $this->getID(),
+        'itemtype' => PluginFormcreatorSection::getType(),
+        'items_id' => $this->getID(),
       ]);
       $html .= "<sup class='plugin_formcreator_conditions_count' title='" . __('Count of conditions', 'formcreator') ."'>$nb</sup>";
       $html .= empty($this->fields['name']) ? '(' . $sectionId . ')' : $this->fields['name'];
@@ -617,8 +617,7 @@ PluginFormcreatorConditionnableInterface
       return ($count < 1);
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id => $container->getID(),
       ];

@@ -516,7 +516,7 @@ PluginFormcreatorConditionnableInterface
          'WHERE' => $usersCondition,
       ]);
       $validatorUsers = [];
-      foreach($users as $user) {
+      foreach ($users as $user) {
          $validatorUsers[$user['id']] = $user['name'];
       }
       echo '<div id="validators_users">';
@@ -581,11 +581,11 @@ PluginFormcreatorConditionnableInterface
       ]);
       $formValidator = new PluginFormcreatorForm_Validator();
       $selectecValidatorGroups = [];
-      foreach($formValidator->getValidatorsForForm($this, Group::class) as $group) {
+      foreach ($formValidator->getValidatorsForForm($this, Group::class) as $group) {
          $selectecValidatorGroups[$group->getID()] = $group->getID();
       }
       $validatorGroups = [];
-      foreach($groups as $group) {
+      foreach ($groups as $group) {
          $validatorGroups[$group['id']] = $group['name'];
       }
       echo '<div id="validators_groups" style="width: 100%">';
@@ -1079,17 +1079,17 @@ PluginFormcreatorConditionnableInterface
          echo "<ul>";
       } else {
          foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
+            switch ($form['status']) {
+               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+                  $status = 'waiting';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_REFUSED:
+                  $status = 'refused';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
+                  $status = 'accepted';
+                  break;
+            }
                echo '<li class="plugin_formcreator_answer">';
                echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
@@ -1356,7 +1356,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @return void
     */
-    public function post_updateItem($history = 1) {
+   public function post_updateItem($history = 1) {
       $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
@@ -1843,7 +1843,7 @@ PluginFormcreatorConditionnableInterface
 
          // Get the total count of objects to import, for the progressbar
          $linker = new PluginFormcreatorLinker();
-         foreach($forms_toimport['forms'] as $form) {
+         foreach ($forms_toimport['forms'] as $form) {
             $linker->countItems($form, self::class);
          }
          $linker->initProgressBar();
@@ -2433,5 +2433,6 @@ PluginFormcreatorConditionnableInterface
       return $restriction;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool { return true; }
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
+      return true; }
 }

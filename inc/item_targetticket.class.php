@@ -87,9 +87,9 @@ implements PluginFormcreatorExportableInterface
       $linkedItem->getFromDBByCrit([
          $identifierColumn => $linkedItemId
       ]);
-      if ($linkedItem->isNewItem()) {
-         // TODO: error linked item not found
-      }
+      // if ($linkedItem->isNewItem()) {
+      //    TODO: error linked item not found
+      // }
       $item_targetTicket['items_id'] = $linkedItem->fields[$identifierColumn];
 
       return $item_targetTicket;
@@ -187,8 +187,7 @@ implements PluginFormcreatorExportableInterface
       return false;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id_2 => $container->getID(),
       ];

@@ -40,23 +40,19 @@ use Session;
 
 class DependentField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return _n('User ID', 'User IDs', 1, 'formcreator');
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function getEmptyParameters(): array
-   {
+   public function getEmptyParameters(): array {
       return [
          'firstname' => new PluginFormcreatorQuestionDependency(
             $this,
@@ -77,8 +73,7 @@ class DependentField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
       if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
@@ -96,13 +91,11 @@ class DependentField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -110,15 +103,13 @@ class DependentField extends PluginFormcreatorAbstractField
       return strval((int) $this->value);
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
    }
 
-   public function show($canEdit = true)
-   {
+   public function show($canEdit = true) {
       parent::show($canEdit);
       $questionId = $this->fields['id'];
       $domId = "input[name=\"formcreator_field_$questionId\"]";
@@ -147,8 +138,7 @@ class DependentField extends PluginFormcreatorAbstractField
       }");
    }
 
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -163,8 +153,7 @@ class DependentField extends PluginFormcreatorAbstractField
       }
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -172,22 +161,18 @@ class DependentField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($richText): string {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       if ($this->isRequired() && $this->value === '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
@@ -213,8 +198,7 @@ class DependentField extends PluginFormcreatorAbstractField
     * Checks the value of the field is in the expected form
     * @param string $value the value of the field
     */
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       // TODO: use all fields of the form to check the scheme of the string
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
@@ -235,8 +219,7 @@ class DependentField extends PluginFormcreatorAbstractField
       return ($value === $expected);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!is_string($input[$key])) {
          return false;
@@ -246,43 +229,35 @@ class DependentField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       return ($this->value) === ($value);
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       return ($this->value) > ($value);
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '';
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 }

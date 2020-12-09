@@ -39,7 +39,7 @@ class TagField extends CommonTestCase {
       $this->string($output)->isEqualTo('Tags');
    }
 
-  public function testIsPrerequisites() {
+   public function testIsPrerequisites() {
       // $instance = $this->newTestedInstance([]);
       // $output = $instance->isPrerequisites();
       // $this->boolean($output)->isEqualTo(false);

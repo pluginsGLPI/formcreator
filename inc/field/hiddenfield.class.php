@@ -38,13 +38,11 @@ use Toolbox;
 
 class HiddenField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
@@ -76,8 +74,7 @@ class HiddenField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function show($canEdit = true)
-   {
+   public function show($canEdit = true) {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -89,62 +86,50 @@ class HiddenField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       return $this->value;
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = $value;
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       return $this->value;
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       return true;
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return _n('Hidden field', 'Hidden fields', 1);
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($richText): string {
       return str_replace("\n", '\r\n', Toolbox::addslashes_deep($this->value));
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return false;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
@@ -154,43 +139,35 @@ class HiddenField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       return $this->value == $value;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       return $this->value > $value;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon()
-   {
+   public function getHtmlIcon() {
       return '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return false;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return false;
    }
 }

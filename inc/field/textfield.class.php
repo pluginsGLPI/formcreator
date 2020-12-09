@@ -41,13 +41,11 @@ use Toolbox;
 
 class TextField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -86,8 +84,7 @@ class TextField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
-   {
+   public function getRenderedHtml($canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -111,8 +108,7 @@ class TextField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -120,15 +116,13 @@ class TextField extends PluginFormcreatorAbstractField
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -136,22 +130,18 @@ class TextField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($richText): string {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function isValid(): bool
-   {
+   public function isValid(): bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
@@ -165,8 +155,7 @@ class TextField extends PluginFormcreatorAbstractField
       return $this->isValidValue($this->value);
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       if (strlen($value) == 0) {
          return true;
       }
@@ -198,13 +187,11 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Text', 'formcreator');
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
@@ -221,18 +208,15 @@ class TextField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          return false;
@@ -245,8 +229,7 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getEmptyParameters(): array
-   {
+   public function getEmptyParameters(): array {
       $regexDoc = '<small>';
       $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
       $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
@@ -271,43 +254,35 @@ class TextField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       return Toolbox::stripslashes_deep($this->value) == $value;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       return Toolbox::stripslashes_deep($this->value) > $value;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

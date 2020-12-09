@@ -67,8 +67,7 @@ use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class GlpiselectField extends DropdownField
 {
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '<label for="dropdown_glpi_objects' . $rand . '" id="label_dropdown_values">';
@@ -153,13 +152,11 @@ class GlpiselectField extends DropdownField
       ];
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       $itemtype = $this->getSubItemtype();
       if ($itemtype == Entity::getType() && $value == '-1') {
          return true;
@@ -168,8 +165,7 @@ class GlpiselectField extends DropdownField
       return parent::isValidValue($value);
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       if (!isset($input['glpi_objects']) || empty($input['glpi_objects'])) {
          Session::addMessageAfterRedirect(
             __('The field value is required:', 'formcreator') . ' ' . $input['name'],
@@ -186,13 +182,11 @@ class GlpiselectField extends DropdownField
       return $input;
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       $value = html_entity_decode($value);
       $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
@@ -205,13 +199,11 @@ class GlpiselectField extends DropdownField
       return $item->getField($item->getNameField()) == $value;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       $value = html_entity_decode($value);
       $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
@@ -221,13 +213,11 @@ class GlpiselectField extends DropdownField
       return $item->getField($item->getNameField()) > $value;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return false;
    }
 }

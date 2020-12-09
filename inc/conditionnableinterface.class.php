@@ -40,5 +40,5 @@ interface PluginFormcreatorConditionnableInterface
     * @param  array $input
     * @return boolean true if success, false otherwise
     */
-    public function updateConditions($input) : bool;
+   public function updateConditions($input) : bool;
 }

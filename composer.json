@@ -26,7 +26,6 @@
       "glpi-project/coding-standard": "0.7.1",
       "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-      "sirbrillig/phpcs-variable-analysis": "^2.9",
       "phpcsstandards/phpcsutils": "^1.0@alpha"
     },
     "autoload-dev": {

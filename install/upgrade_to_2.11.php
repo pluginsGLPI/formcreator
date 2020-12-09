@@ -51,7 +51,7 @@ class PluginFormcreatorUpgradeTo2_11 {
          INNER JOIN glpi_plugin_formcreator_questions ON (glpi_plugin_formcreator_sections.id = glpi_plugin_formcreator_questions.plugin_formcreator_sections_id)
          GROUP BY glpi_plugin_formcreator_sections.id
          HAVING MIN(glpi_plugin_formcreator_questions.`row`) > 0");
-      foreach($result as $row) {
+      foreach ($result as $row) {
          $DB->update($table, [
             'row' => new QueryExpression("`row` - 1")
          ],
@@ -137,7 +137,6 @@ class PluginFormcreatorUpgradeTo2_11 {
       $migration->migrationOneTable($table);
       $migration->changeField($table, 'type_rule', 'type_rule', 'integer', ['value' => '0']);
 
-
       // sort setting in entityes
       $table = 'glpi_plugin_formcreator_entityconfigs';
       if (!$DB->fieldExists($table, 'sort_order')) {
@@ -157,7 +156,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       // Merge targettickets_actors and targetchanges_actors
       $this->migrateTargetTicket_Actor();
       $this->migrateTargetChange_Actor();
-}
+   }
 
    /**
     * Migrate checkboxes and multiselect data to JSON
@@ -174,7 +173,7 @@ class PluginFormcreatorUpgradeTo2_11 {
          'FROM' => $questionTable,
          'WHERE' => ['fieldtype' => ['checkboxes', 'multiselect']],
       ];
-      foreach($DB->request($request) as $row) {
+      foreach ($DB->request($request) as $row) {
          $newValues = $row['values'];
          if (json_decode($row['values']) === null) {
             // Seems already migrated, skipping
@@ -231,7 +230,7 @@ class PluginFormcreatorUpgradeTo2_11 {
          'FROM' => $questionTable,
          'WHERE' => ['fieldtype' => ['radios', 'select']],
       ];
-      foreach($DB->request($request) as $row) {
+      foreach ($DB->request($request) as $row) {
          $newValues = $row['values'];
          if (json_decode($row['values']) === null) {
             // Seems already migrated, skipping
@@ -254,7 +253,7 @@ class PluginFormcreatorUpgradeTo2_11 {
          'FROM' => $table
       ]);
       $table = 'glpi_plugin_formcreator_targets_actors';
-      foreach($result as $row) {
+      foreach ($result as $row) {
          $row['itemtype'] = PluginFormcreatorTargetTicket::class;
          $row['items_id'] = $row['plugin_formcreator_targettickets_id'];
          unset($row['plugin_formcreator_targettickets_id']);
@@ -278,7 +277,7 @@ class PluginFormcreatorUpgradeTo2_11 {
          'FROM' => $table
       ]);
       $table = 'glpi_plugin_formcreator_targets_actors';
-      foreach($result as $row) {
+      foreach ($result as $row) {
          $row['itemtype'] = PluginFormcreatorTargetChange::class;
          $row['items_id'] = $row['plugin_formcreator_targettickets_id'];
          unset($row['plugin_formcreator_targettickets_id']);

@@ -35,8 +35,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class GlpiselectField extends CommonTestCase {
 
-   public function beforeTestMethod($method)
-   {
+   public function beforeTestMethod($method) {
       switch ($method) {
          case 'testIsValid':
             $this->login('glpi', 'glpi');

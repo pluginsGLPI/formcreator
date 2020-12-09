@@ -39,13 +39,11 @@ use Ticket;
 
 class UrgencyField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool
-   {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public function getDesignSpecializationField(): array
-   {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -84,8 +82,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string
-   {
+   public function getRenderedHtml($canEdit = true): string {
       if (!$canEdit) {
          return Ticket::getPriorityName($this->value);
       }
@@ -109,26 +106,22 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public static function getName(): string
-   {
+   public static function getName(): string {
       return __('Urgency');
    }
 
-   public function prepareQuestionInputForSave($input)
-   {
+   public function prepareQuestionInputForSave($input) {
       $this->value = $input['default_values'] != ''
          ? (int) $input['default_values']
          : '3';
       return $input;
    }
 
-   public function hasInput($input): bool
-   {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool
-   {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '3';
@@ -142,13 +135,11 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function canRequire(): bool
-   {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function getAvailableValues()
-   {
+   public function getAvailableValues() {
       return [
          5 => _x('urgency', 'Very high'),
          4 => _x('urgency', 'High'),
@@ -158,8 +149,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function serializeValue(): string
-   {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '3';
       }
@@ -167,15 +157,13 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function deserializeValue($value)
-   {
+   public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
          ? $value
          : '3';
    }
 
-   public function getValueForDesign(): string
-   {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -183,23 +171,19 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string
-   {
+   public function getValueForTargetText($richText): string {
       $available = $this->getAvailableValues();
       return $available[$this->value];
    }
 
-   public function moveUploads()
-   {
+   public function moveUploads() {
    }
 
-   public function getDocumentsForTarget(): array
-   {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function isValid() : bool
-   {
+   public function isValid() : bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '0') {
          Session::addMessageAfterRedirect(
@@ -214,50 +198,41 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isValidValue($value): bool
-   {
+   public function isValidValue($value): bool {
       return in_array($value, array_keys($this->getAvailableValues()));
    }
 
-   public function equals($value): bool
-   {
+   public function equals($value): bool {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) === 0;
    }
 
-   public function notEquals($value): bool
-   {
+   public function notEquals($value): bool {
       return !$this->equals($value);
    }
 
-   public function greaterThan($value): bool
-   {
+   public function greaterThan($value): bool {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) > 0;
    }
 
-   public function lessThan($value): bool
-   {
+   public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function isAnonymousFormCompatible(): bool
-   {
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
-   public function getHtmlIcon(): string
-   {
+   public function getHtmlIcon(): string {
       return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
    }
 
-   public function isVisibleField(): bool
-   {
+   public function isVisibleField(): bool {
       return true;
    }
 
-   public function isEditableField(): bool
-   {
+   public function isEditableField(): bool {
       return true;
    }
 }

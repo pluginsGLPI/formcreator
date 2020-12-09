@@ -2076,8 +2076,7 @@ SCRIPT;
       echo '</td>';
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id => $container->getID(),
       ];
