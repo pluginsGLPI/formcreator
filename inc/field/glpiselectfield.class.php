@@ -85,7 +85,9 @@ class GlpiselectField extends DropdownField
             CartridgeItem::class    => CartridgeItem::getTypeName(2),
             ConsumableItem::class   => ConsumableItem::getTypeName(2),
             Phone::class            => Phone::getTypeName(2),
-            Line::class             => Line::getTypeName(2)
+            Line::class             => Line::getTypeName(2),
+            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
+            Appliance::class          => Appliance::getTypeName(2),
          ],
          __("Assistance") => [
             Ticket::class           => Ticket::getTypeName(2),
@@ -111,16 +113,7 @@ class GlpiselectField extends DropdownField
             Profile::class          => Profile::getTypeName(2)
          ],
       ];
-      if (class_exists(PassiveDCEquipment::class)) {
-         // Does not exists in GLPI 9.4
-         $optgroup['Assets'][PassiveDCEquipment::class] = PassiveDCEquipment::getTypeName(2);
-      }
-      if (class_exists(Appliance::class)) {
-         // Does not exists in GLPI 9.4
-         $optgroup['Assets'][Appliance::class] = Appliance::getTypeName(2);
-      }
-      $plugin = new Plugin();
-      if ($plugin->isActivated('appliances')) {
+      if ((new Plugin())->isActivated('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
       array_unshift($optgroup, '---');
