@@ -195,11 +195,7 @@ class ActorField extends PluginFormcreatorAbstractField
          } else {
             $user = new User();
             $user->getFromDB($item);
-            if (method_exists($user, 'getFriendlyName')) {
-               $value[] = Toolbox::addslashes_deep($user->getFriendlyName());
-            } else {
-               $value[] = Toolbox::addslashes_deep($user->getRawName());
-            }
+            $value[] = Toolbox::addslashes_deep($user->getFriendlyName());
          }
       }
 
