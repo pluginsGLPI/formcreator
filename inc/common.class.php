@@ -255,14 +255,12 @@ class PluginFormcreatorCommon {
     * @return integer
     */
    public static function getTicketStatusForIssue(Ticket $item) {
+      // Must match a sub query in the automatic actions of issues
       $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
-         'NOT' => [
-            'status' => [TicketValidation::ACCEPTED, TicketValidation::NONE]
-         ]
       ], [
-         'timeline_position ASC',
-         'status DESC',
+         'timeline_position ASC', // TODO: maybe DSC would be more appropriate
+         'validation_date ASC', // refused takes precedence over waiting. Might need to be tunable
       ], 1);
       $ticketValidation = new TicketValidation();
       if (count($ticketValidations)) {

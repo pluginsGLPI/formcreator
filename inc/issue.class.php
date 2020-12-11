@@ -107,13 +107,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  if(`tv`.`status` IS NULL,
+                  if(`tic`.`global_validation` IS NULL,
                      `tic`.`status`,
-                     if(`tv`.`status` IN ('1', '3'),
+                     if(`tic`.`global_validation` IN ('1', '3'),
                         `tic`.`status`,
-                        if(`tic`.`status` IN ('5', '6') AND `tv`.`status` = '4',
+                        if(`tic`.`status` IN ('5', '6') AND `tic`.`global_validation` = '4',
                            `tic`.`status`,
-                           if(`tv`.`status` = '" . CommonITILValidation::WAITING . "',
+                           if(`tic`.`global_validation` = '" . CommonITILValidation::WAITING . "',
                               '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
                               '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
                            )
@@ -140,7 +140,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ORDER BY `id` ASC
                ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
                LEFT JOIN `glpi_ticketvalidations` as `tv`
-                  ON (`tic`.`id` = `tv`.`tickets_id`)
+                  ON (`tv`.`tickets_id` = (
+                     SELECT `tv2`.`tickets_id`
+                     FROM `glpi_ticketvalidations` AS `tv2`
+                     WHERE `tic`.`id` = `tv2`.`tickets_id`
+                     ORDER BY timeline_position ASC, validation_date ASC,
+                     LIMIT 1
+                  ))
                WHERE `tic`.`is_deleted` = 0
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`items_id`) <= 1";
