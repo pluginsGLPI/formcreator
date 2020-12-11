@@ -237,7 +237,7 @@ class PluginFormcreatorCommon {
     *
     * Conversion matrix
     *
-    *                               Validation Status
+    *                           Ticket Validation Status
     *                +-------------+---------+---------+----------+
     *                |NULL or NONE | WAITING | REFUSED | ACCEPTED |
     *     + ---------+-------------+---------+---------+----------+
@@ -249,7 +249,7 @@ class PluginFormcreatorCommon {
     * t s | CLOSED   |     T            V          T         T
     *
     * T = status picked from Ticket
-    * V = status picked from Validation
+    * V = status picked from Ticket Validation
     *
     * @param Ticket $item
     * @return integer
@@ -262,7 +262,7 @@ class PluginFormcreatorCommon {
       ], 1);
       $ticketValidation = new TicketValidation();
       if (count($ticketValidations)) {
-         $row = array_shift($ticketValidation);
+         $row = array_shift($ticketValidations);
          $ticketValidation->getFromDB($row['id']);
       }
 
