@@ -126,4 +126,139 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $output = \PluginFormcreatorCommon::prepareBooleanKeywords($input);
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function providerGetTicketStatusForIssue() {
+      global $CFG_GLPI;
+
+      $data = [];
+      $this->login('post-only', 'postonly');
+      $CFG_GLPI['use_notifications'] = '0';
+
+      $i = 0;
+      $ticket[$i] = new \Ticket();
+      $ticket[$i]->add([
+         'name'    => 'ticket',
+         'content' => 'content',
+      ]);
+      $data[] = [
+         'ticket'          => $ticket[$i++],
+         'expectedStatus'  => \Ticket::INCOMING,
+      ];
+
+      $this->login('glpi', 'glpi');
+      $CFG_GLPI['use_notifications'] = '0';
+      $i++;
+      $ticket[$i] = new \Ticket();
+      $ticket[$i]->add([
+         'name'    => 'ticket',
+         'content' => 'content',
+      ]);
+      $data[] = [
+         'ticket'          => $ticket[$i++],
+         'expectedStatus'  => \Ticket::ASSIGNED,
+      ];
+
+      $i++;
+      $ticket[$i] = new \Ticket();
+      $ticket[$i]->add([
+         'name'    => 'ticket',
+         'content' => 'content',
+         'status'  => \ Ticket::PLANNED,
+      ]);
+      $data[] = [
+         'ticket'          => $ticket[$i++],
+         'expectedStatus'  => \Ticket::PLANNED,
+      ];
+
+      $i++;
+      $ticket[$i] = new \Ticket();
+      $ticket[$i]->add([
+         'name'    => 'ticket',
+         'content' => 'content',
+         'status'  => \ Ticket::WAITING,
+      ]);
+      $data[] = [
+         'ticket'          => $ticket[$i++],
+         'expectedStatus'  => \Ticket::WAITING,
+      ];
+
+      $i++;
+      $ticket[$i] = new \Ticket();
+      $ticket[$i]->add([
+         'name'    => 'ticket',
+         'content' => 'content',
+         'status'  => \ Ticket::SOLVED,
+      ]);
+      $data[] = [
+         'ticket'          => $ticket[$i++],
+         'expectedStatus'  => \Ticket::SOLVED,
+      ];
+
+      $i++;
+      $ticket[$i] = new \Ticket();
+      $ticket[$i]->add([
+         'name'    => 'ticket',
+         'content' => 'content',
+         'status'  => \ Ticket::CLOSED,
+      ]);
+      $data[] = [
+         'ticket'          => $ticket[$i++],
+         'expectedStatus'  => \Ticket::CLOSED,
+      ];
+
+      return $data;
+   }
+
+   /**
+    * @dataProvider providerGetTicketStatusForIssue
+    */
+   public function testGetTicketStatusForIssue($ticket, $expectedStatus) {
+      // Reload the ticket from DB
+      $ticket->getFromDB($ticket->getID());
+      $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+      $this->array($output);
+      $this->integer((int) $output['status'])->isEqualTo($expectedStatus);
+
+      // Add a waiting validation
+      $ticketValidation = new \TicketValidation();
+      $ticketValidation->add([
+         'entities_id' => $ticket->fields['entities_id'],
+         'users_id'    => 2, // Glpi
+         'tickets_id'  => $ticket->getID(),
+         'users_id_validate' => 2, // Glpi,
+         'status'            => \TicketValidation::WAITING,
+      ]);
+      $this->boolean($ticketValidation->isNewItem())->isFalse();
+
+      // If the validation is waiting, the status must be waiting, no matter the ticket's status
+      $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+      $this->array($output);
+      $this->integer((int) $output['status'])->isEqualTo(\PluginFormcreatorFormAnswer::STATUS_WAITING);
+
+      // Test when a validation is refused
+      $success = $ticketValidation->update([
+         'id'     => $ticketValidation->getID(),
+         'status' => \TicketValidation::REFUSED,
+         'comment_validation' => 'refused',
+      ]);
+      $this->boolean($success)->isTrue();
+
+      $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+      $this->array($output);
+      if (in_array($ticket->fields['status'], [\Ticket::SOLVED, \Ticket::CLOSED ])) {
+         $this->integer((int) $output['status'])->isEqualTo($ticket->fields['status']);
+      } else {
+         $this->integer((int) $output['status'])->isEqualTo(\PluginFormcreatorFormAnswer::STATUS_REFUSED);
+      }
+
+      // Test when a validation is accepted
+      // If the validation is accepted, the issue gets the status of the ticket
+      $ticketValidation->update([
+         'id'     => $ticketValidation->getID(),
+         'status' => \TicketValidation::ACCEPTED,
+      ]);
+      $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+      $this->array($output);
+      $this->integer((int) $output['status'])->isEqualTo($ticket->fields['status']);
+   }
 }
