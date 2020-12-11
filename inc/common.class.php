@@ -257,8 +257,12 @@ class PluginFormcreatorCommon {
    public static function getTicketStatusForIssue(Ticket $item) {
       $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
+         'NOT' => [
+            'status' => [TicketValidation::ACCEPTED, TicketValidation::NONE]
+         ]
       ], [
-         'timeline_position ASC'
+         'timeline_position ASC',
+         'status DESC',
       ], 1);
       $ticketValidation = new TicketValidation();
       if (count($ticketValidations)) {
