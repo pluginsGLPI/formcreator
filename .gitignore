@@ -8,8 +8,8 @@ vendor/
 .project
 /.gtm/
 
-# Ignore content of data expect for the index
-data/
+# Ignore content of data except for the index
+data/*
 !data/index.php
 
 # Ignore tests logs
