@@ -33,9 +33,12 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class IntegerField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -71,5 +74,7 @@ class IntegerField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[integer][regex][regex]"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[integer][range][range_min]"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[integer][range][range_max]"]');
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }

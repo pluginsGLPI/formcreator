@@ -33,9 +33,12 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class TextField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -70,5 +73,7 @@ class TextField extends CommonFunctionalTestCase
       $this->client->waitFor('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[text][range][range_min]"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[text][range][range_max]"]');
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }

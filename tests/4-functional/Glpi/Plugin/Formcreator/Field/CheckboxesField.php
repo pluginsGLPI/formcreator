@@ -33,9 +33,12 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class CheckboxesField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -71,5 +74,10 @@ class CheckboxesField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="values"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[checkboxes][range][range_min]"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[checkboxes][range][range_max]"]');
+
+      $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
+      $browserForm['values'] = "a\r\nb\r\nc";
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }

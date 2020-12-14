@@ -10,8 +10,10 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class CommonFunctionalTestCase extends CommonTestCase {
    /** @var \Symfony\Component\DomCrawler\Crawler */
    public $crawler;
+
    /** @var \Symfony\Component\Panther\Client */
    public $client;
+
    /** @var CommonBrowsing */
    protected $browsing;
    protected $screenshotPath;

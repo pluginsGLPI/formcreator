@@ -33,9 +33,12 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class MultiselectField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -69,5 +72,10 @@ class MultiselectField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="default_values"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="values"]');
+
+      $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
+      $browserForm['values'] = "a\r\nb\r\nc";
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }
