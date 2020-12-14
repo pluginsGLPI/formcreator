@@ -33,9 +33,12 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class RequesttypeField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -69,5 +72,7 @@ class RequesttypeField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="default_values"]');
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }

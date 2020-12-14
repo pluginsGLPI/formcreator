@@ -33,9 +33,28 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class LdapSelectField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
+   public function beforeTestMethod($method) {
+      parent::beforeTestMethod($method);
+      switch ($method) {
+         case 'testCreateForm':
+            $authLdap = new \AuthLDAP();
+            $authLdap->add([
+               'name' => 'LDAP for Formcreator',
+               'condition'   => '(&(objectClass=user)(objectCategory=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))',
+               'login_field' => 'samaccountname',
+               'sync_field'  => 'objectguid',
+            ]);
+            $this->boolean($authLdap->isNewItem())->isFalse();
+            break;
+      }
+   }
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -60,8 +79,8 @@ class LdapSelectField extends CommonFunctionalTestCase
       $link = $this->crawler->filter('.plugin_formcreator_section .plugin_formcreator_question:not([data-id]) a');
       $this->crawler = $this->client->click($link->link());
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"]');
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("ldapselect")
+      $this->client->executeScript('
+         $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("ldapselect")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
          '
       );
@@ -72,5 +91,17 @@ class LdapSelectField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="ldap_attribute"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="values"]');
+
+      $authLdap = new \AuthLDAP();
+      $ldaps = $authLdap->find([], [], 1);
+      $this->array($ldaps)->size->isGreaterThan(0);
+      $ldap = array_pop($ldaps);
+      $this->client->executeScript(
+         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_auth"]\').val("' . $ldap['id'] . '")
+         $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_auth"]\').select2().trigger("change")
+         '
+      );
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }

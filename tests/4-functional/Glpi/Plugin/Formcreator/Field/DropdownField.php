@@ -33,9 +33,12 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class DropdownField extends CommonFunctionalTestCase
 {
+   use CommonQuestionTest;
+
    public function testCreateForm() {
       // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
@@ -70,5 +73,10 @@ class DropdownField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="dropdown_values"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="dropdown_default_value"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
+
+      $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
+      $browserForm['dropdown_values'] = \ITILCategory::gettype();
+
+      $this->_testQuestionCreated($form, __METHOD__);
    }
 }
