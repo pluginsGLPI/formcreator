@@ -67,7 +67,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
    public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
-      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
+      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_1'] === '0') {
          Session::addMessageAfterRedirect(__('No text field selected for firstname', 'formcreator'), false, ERROR);
          $success =  false;
       }
@@ -111,7 +111,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
             'fieldname'                         => $fieldName,
          ]);
       }
-      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_2');
+      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
       $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
       echo Html::scriptBlock("$(function() {
          plugin_formcreator_field_$questionId()
@@ -195,7 +195,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
             'fieldname'                         => $fieldname,
          ]);
       }
-      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_2');
+      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
       $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
 
       $firstname = strtoupper($this->fields['answer']["formcreator_field_$firstnameQuestionId"]);
