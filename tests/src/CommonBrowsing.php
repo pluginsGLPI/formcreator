@@ -119,4 +119,30 @@ class CommonBrowsing {
 
       // TODO : Check the tab area is now visible
    }
+
+   /**
+    * Select an item in a select2 input
+    * @param string $value
+    * @param string $name name of the option
+    *
+    * @return void
+    */
+   public function selectInDropdown($selector, $value, $name = '') {
+
+      $slashSelector = addslashes($selector);
+      $htmlValue = htmlentities($value);
+      $slashValue = addslashes($value);
+      $slashName = addslashes($name);
+      $js = "
+         var selector = '$slashSelector';
+         var exists = $('$slashSelector option[value=\"$htmlValue\"]');
+         if (exists.length < 1) {
+            var newOption = new Option('$slashName', '$slashValue', true, true);
+         } else {
+            $('$slashSelector').val('$slashValue');
+         }
+         $('$slashSelector').append(newOption).trigger('change');
+      ";
+      $this->test->client->executeScript($js);
+   }
 }
