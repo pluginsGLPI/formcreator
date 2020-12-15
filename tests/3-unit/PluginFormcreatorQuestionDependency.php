@@ -78,7 +78,7 @@ class PluginFormcreatorQuestionDependency extends CommonTestCase {
          '_parameters' => [
             'dependent' => [
                'firstname' => [
-                  'plugin_formcreator_questions_id_2' => '1',
+                  'plugin_formcreator_questions_id_1' => '1',
                ],
                'lastname' => [
                   'plugin_formcreator_questions_id_2' => '2',
