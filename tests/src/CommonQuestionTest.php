@@ -5,6 +5,34 @@ namespace GlpiPlugin\Formcreator\Tests;
 trait CommonQuestionTest
 {
 
+   public function showCreateQuestionForm() {
+      // Use a clean entity for the tests
+      $this->login('glpi', 'glpi');
+
+      // Create a form and a section
+      $section = $this->getSection([
+         'name'          => __METHOD__ . ' ' . $this->getUniqueString(),
+         'helpdesk_home' => '0',
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+      $form = new \PluginFormcreatorForm();
+      $form->getFromDBBySection($section);
+      $this->boolean($form->isNewItem())->isFalse();
+
+      // navigate to the form designer
+      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/form.form.php?id=' . $form->getID());
+      $this->client->waitFor('footer');
+      $this->browsing->openTab('Questions');
+      $this->client->waitFor('#plugin_formcreator_form.plugin_formcreator_form_design');
+
+      // show create question form
+      $link = $this->crawler->filter('.plugin_formcreator_section .plugin_formcreator_question:not([data-id]) a');
+      $this->crawler = $this->client->click($link->link());
+      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"]');
+
+      return $form;
+   }
+
    /**
     * Submit a questin form then check it is created and displayed
     *
