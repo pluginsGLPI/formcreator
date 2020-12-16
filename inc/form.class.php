@@ -1160,11 +1160,7 @@ PluginFormcreatorConditionnableInterface
     */
    public function displayUserForm() {
       // Print css media
-      if (method_exists(Plugin::class, 'getWebDir')) {
-         $css = '/' . Plugin::getWebDir('formcreator', false) . '/css/print_form.css';
-      } else {
-         $css =  '/plugins/formcreator/css/print_form.css';
-      }
+      $css = '/' . Plugin::getWebDir('formcreator', false) . '/css/print_form.css';
       echo Html::css($css, ['media' => 'print']);
 
       $style = "<style>";
