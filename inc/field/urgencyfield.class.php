@@ -57,11 +57,12 @@ class UrgencyField extends PluginFormcreatorAbstractField
       $additions .= '</td>';
       $additions .= '<td>';
       $additions .= Ticket::dropdownUrgency([
-         'name'     => 'default_values',
-         'value'    => $this->question->fields['default_values'],
-         'comments' => false,
-         'rand'     => $rand,
-         'display'  => false,
+         'name'                => 'default_values',
+         'value'               => $this->question->fields['default_values'],
+         'comments'            => false,
+         'rand'                => $rand,
+         'display'             => false,
+         'display_emptychoice' => true,
       ]);
       $additions .= '</td>';
       $additions .= '<td>';
@@ -74,10 +75,10 @@ class UrgencyField extends PluginFormcreatorAbstractField
       $additions .= $common['additions'];
 
       return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
+         'label'           => $label,
+         'field'           => $field,
+         'additions'       => $additions,
+         'may_be_empty'    => true,
          'may_be_required' => true,
       ];
    }
@@ -92,11 +93,12 @@ class UrgencyField extends PluginFormcreatorAbstractField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $html .= Ticket::dropdownUrgency([
-         'name'     => $fieldName,
-         'value'    => $this->value,
-         'comments' => false,
-         'rand'     => $rand,
-         'display'  => false,
+         'name'                => $fieldName,
+         'value'               => $this->value,
+         'comments'            => false,
+         'rand'                => $rand,
+         'display'             => false,
+         'display_emptychoice' => true,
       ]);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
