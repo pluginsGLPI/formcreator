@@ -399,7 +399,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '8',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -408,6 +408,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '9',
@@ -643,9 +648,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process'],
-                             ['field'      => 8,
-                             'searchtype'  => 'equals',
-                             'value'       => $currentUser]],
+                           //   ['field'      => 8,
+                           //   'searchtype'  => 'equals',
+                           //   'value'       => $currentUser]
+                           ],
               'reset'    => 'reset'];
    }
 
@@ -654,9 +660,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => Ticket::WAITING],
-                              ['field'      => 8,
-                              'searchtype'  => 'equals',
-                              'value'       => $currentUser]],
+                              // ['field'      => 8,
+                              // 'searchtype'  => 'equals',
+                              // 'value'       => $currentUser]
+                           ],
               'reset'    => 'reset'];
    }
 
@@ -673,11 +680,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getSolvedCriteria() {
       $currentUser = Session::getLoginUserID();
-      return ['criteria' => [['link'       => 'AND',
-                              'field'      => 8,
-                              'searchtype'  => 'equals',
-                              'value'       => $currentUser,
-                              ],
+      return ['criteria' => [
+                           //   ['link'       => 'AND',
+                           //    'field'      => 8,
+                           //    'searchtype'  => 'equals',
+                           //    'value'       => $currentUser,
+                           //    ],
                               ['link'       => 'AND',
                               'criteria' => [[
                                'link'       => 'AND',
