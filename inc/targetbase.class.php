@@ -469,7 +469,7 @@ PluginFormcreatorConditionnableInterface
             $urgency = $this->fields['urgency_question'];
             break;
       }
-      if (!is_null($urgency)) {
+      if (!is_null($urgency) && $urgency != 0) {
          $data['urgency'] = $urgency;
       }
 
