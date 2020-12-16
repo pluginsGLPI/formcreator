@@ -142,10 +142,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
             $itemtype = $this->getSubItemtype();
 
+            $form = $this->getQuestion()->getForm();
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
                         'comments' => false,
-                        'entity'   => $_SESSION['glpiactiveentities'],
+                        'entity'   => $form->fields['entities_id'],
+                        'entity_sons' => (bool) $form->isRecursive(),
                         'displaywith' => ['id'],
                         'rand'     => $rand];
 

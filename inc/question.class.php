@@ -1035,6 +1035,13 @@ PluginFormcreatorConditionnableInterface
       return $question;
    }
 
+   public function getForm() {
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBByQuestion($this);
+
+      return $form;
+   }
+
    /**
     * return array of question objects belonging to a form
     * @param integer $formId
