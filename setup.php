@@ -44,11 +44,7 @@ define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
 
 define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
 
-if (method_exists(Plugin::class, 'getWebDir')) {
-   define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
-} else {
-   define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
-}
+define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
 
 /**
  * Define the plugin's version and informations
