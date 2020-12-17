@@ -814,51 +814,200 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
    }
 
-   /*
-   public function testSetTargetCategory() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $question = $this->getQuestion([
-         'fieldtype' => 'dropdown',
-         'values' => json_encode([
-            'itemtype' => 'ITILCategory',
-            'show_ticket_categories' =>'both',
-            'show_ticket_categories_depth' => '0',
-            'show_ticket_categories_root' => '0',
-         ]),
+   public function providerSetTargetCategory() {
+      $category1 = new \ITILCategory();
+      $category1Id = $category1->import([
+         'name' => 'category 1',
+         'entities_id' => 0,
       ]);
-      $form = new \PluginFormcreatorForm();
-      $form->getByQuestionId($question->getID());
-      $fields = $form->getFields();
-      $instance->add([
-         'name' => 'foo',
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER,
-         'category_question' => $question->getID(),
+      $category2 = new \ITILCategory();
+      $category2Id = $category2->import([
+         'name' => 'category 2',
+         'entities_id' => 0,
       ]);
-      $input = [
-         'formcreator_field_' . $question->getID() => '42',
-      ];
-      foreach ($fields as $id => $field) {
-         $field->parseAnswerValues($input);
-      }
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      // // $this->disableDebug();
-      $formAnswer->saveAnswers(
-         $form,
-         $input,
-         $fields
-      );
-      // // $this->restoreDebug();
 
-      $data = [];
-      $expected = [
-         'itilcategories_id' => '42',
-      ];
+      // Crate a task category and ensure its ID is not the
+      // same as the ticket categories created above
+      $taskCategoryId = 0;
+      do {
+         $taskCategory = new \TaskCategory();
+         $taskCategoryId = $taskCategory->import([
+            'name' => $this->getUniqueString(),
+            'entities_id' => 0,
+         ]);
+      } while ($taskCategoryId == $category1Id || $taskCategoryId == $category2Id);
 
-      $output = $instance->publicSetTargetCategory($data, $formAnswer);
-      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected['itilcategories_id']);
+      $question1 = $this->getQuestion([
+         'name'      => 'request type',
+         'fieldtype' => 'requesttype',
+      ]);
+      $this->boolean($question1->isNewItem())->isFalse();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
+      $this->boolean($section->isNewItem())->isFalse();
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'request category',
+         'fieldtype'                      => 'dropdown',
+         'dropdown_values'                => \ITILCategory::class,
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions'                    => [
+            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'                      => ['Incident'],
+         ]
+      ]);
+      $question3 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'incident category',
+         'fieldtype'                      => 'dropdown',
+         'dropdown_values'                => \ITILCategory::class,
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions'                    => [
+            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'                      => ['Request'],
+         ]
+      ]);
+      $question4 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'other category',
+         'fieldtype'                      => 'dropdown',
+         'dropdown_values'                => \TaskCategory::class,
+         '_conditions'                    => [
+            'show_logic' => [],
+            'plugin_formcreator_questions_id' => [],
+            'show_condition'                  => [],
+            'show_value'                      => [],
+         ]
+      ]);
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $category1Id,
+         'formcreator_field_' . $question3->getID() => (string) $category2Id,
+         'formcreator_field_' . $question4->getID() => (string) $taskCategoryId,
+      ]);
+
+      $formanswer2 = new \PluginFormcreatorFormAnswer();
+      $formanswer2->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $category1Id,
+         'formcreator_field_' . $question3->getID() => (string) $category2Id,
+         'formcreator_field_' . $question4->getID() => (string) $taskCategoryId,
+      ]);
+
+      $formanswer3 = new \PluginFormcreatorFormAnswer();
+      $formanswer3->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $category1Id,
+         'formcreator_field_' . $question3->getID() => (string) 0,
+         'formcreator_field_' . $question4->getID() => (string) $taskCategoryId,
+      ]);
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $formanswer1->getForm()->getID(),
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER,
+      ]);
+
+      return [
+         // Check visibility is taken into acount
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $category1Id,
+         ],
+         // Check not ticketcategory dropdown is ignored
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer2,
+            'expected'   => $category2Id,
+         ],
+         // Check zero value is ignored
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer3,
+            'expected'   => $category1Id,
+         ]
+      ];
    }
-   */
+
+   /**
+    * Test if a template with a predefined category is properly applied
+    *
+    * @return array
+    */
+   public function providerSetTargetCategory_FromTemplate() {
+      // When the target ticket uses a ticket template and does not specify a category
+      $category1 = new \ITILCategory();
+      $category1Id = $category1->import([
+         'name' => 'category 1',
+         'entities_id' => 0,
+      ]);
+
+      $ticketTemplate = $this->getGlpiCoreItem(
+         \TicketTemplate::getType(), [
+            'name' => 'template with predefined category',
+         ]
+      );
+      $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'num'                => 7, // ITIL category
+         'value'              => $category1Id
+      ]);
+
+      $form = $this->getForm();
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer1->isNewItem())->isFalse();
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE,
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $category1Id,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSetTargetCategory
+    * @dataProvider providerSetTargetCategory_FromTemplate
+    */
+   public function testSetTargetCategory($instance, $formanswer, $expected) {
+      // Substitute a dummy class to access protected / private methods
+      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
+      $dummyInstance = new $dummyItemtype();
+      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
+      $instance->getFromDB($instance->getID());
+      $dummyInstance->fields = $instance->fields;
+
+      $data = $dummyInstance->publicGetDefaultData();
+      $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
+      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
+   }
 
    public function testSetTargetAssociatedItem() {
       global $CFG_GLPI;

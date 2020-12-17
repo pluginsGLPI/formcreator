@@ -396,7 +396,7 @@ PluginFormcreatorConditionnableInterface
       return $data;
    }
 
-   protected function setTargetCategory($data, $formanswer) {
+   protected function setTargetCategory(array $data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
       $category = null;
