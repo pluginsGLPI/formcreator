@@ -149,6 +149,28 @@ $(function() {
          $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
          $(this).addClass('category_active');
       });
+   } else if ($('#plugin_formcreator_kb_categories').length > 0) {
+      updateKbCategoriesView();
+      updateKbitemsView(0);
+      $("#kb_seeall").parent().addClass('category_active');
+
+      // Setup events
+      $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
+         sortByName = false;
+         showTiles(tiles);
+      });
+
+      $('.plugin_formcreator_sort input[value=alphabeticSort]').click(function () {
+         sortByName = true;
+         showTiles(tiles);
+      });
+
+      $('#plugin_formcreator_kb_categories #kb_seeall').click(function () {
+         slinkyCategories.home();
+         updateKbitemsView(0);
+         $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
+         $(this).addClass('category_active');
+      });
    }
 
    // Initialize search bar
@@ -156,8 +178,14 @@ $(function() {
    if (searchInput.length == 1) {
       // Dynamically update forms and faq items while the user types in the search bar
       var timer = getTimer(searchInput);
-      var callback = function() {
-         updateWizardFormsView(currentCategory);
+      if ($('#plugin_formcreator_kb_categories .category_active').length > 0) {
+         var callback = function() {
+            updateKbitemsView(currentCategory);
+         }
+      } else {
+         var callback = function() {
+            updateWizardFormsView(currentCategory);
+         }
       }
       timer(300, callback);
       timers.push(timer);
@@ -178,8 +206,7 @@ $(function() {
    }
 
    // === Add better multi-select on form configuration validators ===
-   // initialize the pqSelect widget.
-      fcInitMultiSelect();
+   fcInitMultiSelect();
 
    $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
       fcInitMultiSelect();
@@ -242,6 +269,62 @@ function updateCategoriesView() {
          }
       );
    });
+}
+
+function updateKbCategoriesView() {
+   $.ajax({
+      url: formcreatorRootDoc + '/ajax/kb_category.php',
+      type: "GET",
+      dataType: "json"
+   }).done(function(response) {
+      html = '<div class="slinky-menu">';
+      html = html + buildKbCategoryList(response);
+      html = html + '</div>';
+
+      //Display categories
+      $('#plugin_formcreator_kb_categories .slinky-menu').remove();
+      $('#plugin_formcreator_kb_categories').append(html);
+
+      // Setup slinky
+      slinkyCategories = $('.slinky-menu').slinky({
+         label: true
+      });
+      $('#plugin_formcreator_kb_categories a.back').click(
+         function(event) {
+            parentItem = $(event.target).parentsUntil('#plugin_formcreator_kb_categories > div', 'li')[1];
+            parentAnchor = $(parentItem).children('a')[0];
+            updateKbitemsView(parentAnchor.getAttribute('data-parent-category-id'));
+         }
+      );
+
+      $('#plugin_formcreator_kb_categories a[data-category-id]').click(
+         function (event) {
+            $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
+            $(this).addClass('category_active');
+            updateKbitemsView(event.target.getAttribute('data-category-id'));
+         }
+      );
+   });
+}
+
+function getFaqItems(categoryId) {
+   currentCategory = categoryId;
+   keywords = $('#plugin_formcreator_searchBar input:first').val();
+   deferred = jQuery.Deferred();
+   $.ajax({
+      url: formcreatorRootDoc + '/ajax/knowbaseitem.php',
+      data: {
+         categoriesId: categoryId,
+         keywords: keywords,
+         helpdeskHome: 0},
+      type: "GET",
+      dataType: "json"
+   }).done(function (response) {
+      deferred.resolve(response);
+   }).fail(function (response) {
+      deferred.reject();
+   });
+   return deferred.promise();
 }
 
 /**
@@ -330,6 +413,49 @@ function updateWizardFormsView(categoryId) {
       }
    );
 }
+
+function updateKbitemsView(categoryId) {
+   $.when(getFaqItems(categoryId)).done(
+      function (response) {
+         tiles = response.forms;
+         showTiles(tiles, false);
+      }
+   ).fail(
+      function () {
+         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         $('#plugin_formcreator_wizard_forms').empty();
+         $('#plugin_formcreator_wizard_forms').prepend(html);
+         $('#plugin_formcreator_formlist').masonry({
+            horizontalOrder: true
+         });
+         $('#plugin_formcreator_faqlist').masonry({
+            horizontalOrder: true
+         });
+      }
+   );
+}
+
+function buildKbCategoryList(tree) {
+   if (tree.id != 0) {
+      html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
+         + ' data-category-id="' + tree.id + '"'
+         + ' onclick="updateKbitemsView(' + tree.id + ')">'
+         + tree.name
+         + '</a>';
+   } else {
+      html = '';
+   }
+   if (Object.keys(tree.subcategories).length == 0) {
+      return html;
+   }
+   html = html + '<ul>';
+   $.each(tree.subcategories, function (key, val) {
+      html = html + '<li>' + buildKbCategoryList(val) + '</li>';
+   });
+   html = html + '</ul>';
+   return html;
+}
+
 
 function buildCategoryList(tree) {
    var html = '';

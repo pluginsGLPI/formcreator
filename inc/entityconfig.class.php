@@ -48,6 +48,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SORT_POPULARITY   = 0;
    const CONFIG_SORT_ALPHABETICAL = 1;
 
+   const CONFIG_KB_MERGED = 1;
+   const CONFIG_KB_DISTINCT = 1;
+
    /**
     * @var bool $dohistory maintain history
     */
@@ -77,6 +80,14 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
          self::CONFIG_SORT_POPULARITY   => __('Popularity sort', 'formcreator'),
          self::CONFIG_SORT_ALPHABETICAL => __('Alphabetic sort', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumKbMode() : array {
+      return [
+         self::CONFIG_PARENT      => __('Inheritance of the parent entity'),
+         self::CONFIG_KB_MERGED   => __('Merged with Forms', 'formcreator'),
+         self::CONFIG_KB_DISTINCT => __('Distinct menu entry', 'formcreator'),
       ];
    }
 
@@ -138,6 +149,22 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('sort_order', $elements, ['value' => $this->fields['sort_order']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('sort_order', $ID);
+         echo '<div class="green">';
+         echo $elements[$tid];
+         echo '</div>';
+      }
+      echo '</td></tr>';
+      // Knowledge base settiing : merged with forms (legacy) separated menu on the left
+      $elements = self::getEnumKbMode();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Knowledge base', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_kb_separated', $elements, ['value' => $this->fields['is_kb_separated']]);
+      if ($this->fields['is_kb_separated'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_kb_separated', $ID);
          echo '<div class="green">';
          echo $elements[$tid];
          echo '</div>';

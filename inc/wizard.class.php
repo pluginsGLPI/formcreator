@@ -41,6 +41,7 @@ class PluginFormcreatorWizard {
    const MENU_FEEDS        = 4;
    const MENU_BOOKMARKS    = 5;
    const MENU_HELP         = 6;
+   const MENU_FAQ          = 7;
 
    public static function header($title) {
       global $CFG_GLPI, $HEADER_LOADED;
@@ -105,6 +106,14 @@ class PluginFormcreatorWizard {
       echo '<span class="fa fa-list fc_list_icon" title="'.__('My requests for assistance', 'formcreator').'"></span>';
       echo '<span class="label">'.__('My requests for assistance', 'formcreator').'</span>';
       echo '</a></li>';
+
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == '1') {
+         echo '<li class="' . ($activeMenuItem == self::MENU_FAQ ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
+         echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/knowbaseitem.php' . '">';
+         echo '<span class="fc_list_icon fas fa-question" title="'.__('Knowledge Base', 'formcreator').'"></span>';
+         echo '<span class="label">'.__('Knowledge Base', 'formcreator').'</span>';
+         echo '</a></li>';
+      }
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
          echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
@@ -264,6 +273,12 @@ class PluginFormcreatorWizard {
    }
 
    protected static function findActiveMenuItem() {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == '1') {
+         if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.php") !== false
+            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.form.php") !== false) {
+            return self::MENU_FAQ;
+         }
+      }
       if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false
           || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formdisplay.php") !== false
           || strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.form.php") !== false) {

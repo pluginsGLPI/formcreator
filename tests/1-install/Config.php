@@ -129,7 +129,7 @@ class Config extends CommonTestCase {
       while ($fresh_table = $fresh_tables->next()) {
          $table = $fresh_table['TABLE_NAME'];
          $this->boolean($this->olddb->tableExists($table, false))
-            ->isTrue("Table $table does not exists from migration!");
+            ->isTrue("Table $table does not exists in after an upgrade from an old version!");
 
          $create = $DB->getTableSchema($table);
          $fresh = $create['schema'];

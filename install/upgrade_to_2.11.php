@@ -158,6 +158,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       $this->migrateTargetTicket_Actor();
       $this->migrateTargetChange_Actor();
       $this->addCaptchaOption();
+      $this->addKbModeOption();
    }
 
    /**
@@ -294,5 +295,10 @@ class PluginFormcreatorUpgradeTo2_11 {
    public function addCaptchaOption() {
       $table = 'glpi_plugin_formcreator_forms';
       $this->migration->addField($table, 'is_captcha_enabled', 'bool', ['after' => 'is_default']);
+   }
+
+   public function addKbModeOption() {
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+      $this->migration->addField($table, 'is_kb_separated', 'integer', ['after' => 'sort_order']);
    }
 }
