@@ -321,4 +321,68 @@ abstract class CommonTestCase extends CommonDBTestCase
       $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING]))->isFalse();
       $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]))->isFalse();
    }
+
+   protected function getSessionMessage() {
+      if ($this->sessionHasNoMessage()) {
+         return null;
+      }
+
+      $messages = '';
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][INFO])) {
+         $messages .= implode(' ', $_SESSION['MESSAGE_AFTER_REDIRECT'][INFO]);
+      }
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING])) {
+         $messages .= ' ' . implode(' ', $_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING]);
+      }
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])) {
+         $messages .= ' ' . implode(' ', $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+      }
+      return $messages;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param string $itemtype
+    * @param array $input
+    * @return \CommonDBTM|void
+    */
+   protected function getGlpiCoreItem($itemtype, array $input) {
+      /** @var \CommonDBTM */
+      $item = new $itemtype();
+
+      // assign entity
+      if ($item->isEntityAssign()) {
+         $entity = 0;
+         if (Session::getLoginUserID(true)) {
+            $entity = Session::getActiveEntity();
+         }
+         if (!isset($input[\Entity::getForeignKeyField()])) {
+            $input[\Entity::getForeignKeyField()] = $entity;
+         }
+      }
+
+      // assign recursiviy
+      if ($item->maybeRecursive()) {
+         $recursive = 0;
+         if (Session::getLoginUserID(true)) {
+            $recursive = Session::getActiveEntity();
+         }
+         if (!isset($input['is_recursive'])) {
+            $input['is_recursive'] = $recursive;
+         }
+      }
+
+      // set name
+      if (!isset($item->fields['name'])) {
+         if (!isset($input['name'])) {
+            $input['name'] = $this->getUniqueString();
+         }
+      }
+
+      $item->add($input);
+      $this->boolean($item->isNewItem())->isFalse($this->getSessionMessage());
+
+      return $item;
+   }
 }

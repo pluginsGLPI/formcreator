@@ -918,17 +918,17 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       return [
          // Check visibility is taken into acount
-         // [
-         //    'instance'   => $instance1,
-         //    'formanswer' => $formanswer1,
-         //    'expected'   => $category1Id,
-         // ],
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $category1Id,
+         ],
          // Check not ticketcategory dropdown is ignored
-         // [
-         //    'instance'   => $instance1,
-         //    'formanswer' => $formanswer2,
-         //    'expected'   => $category2Id,
-         // ],
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer2,
+            'expected'   => $category2Id,
+         ],
          // Check zero value is ignored
          [
             'instance'   => $instance1,
@@ -939,10 +939,62 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    /**
+    * Test if a template with a predefined category is properly applied
+    *
+    * @return array
+    */
+   public function providerSetTargetCategory_FromTemplate() {
+      // disabled for now. needs
+      // - refactor of targetticket
+      // - build $data from entity defaults and template
+      return [];
+
+      // When the target ticket uses a ticket template and does not specify a category
+      $category1 = new \ITILCategory();
+      $category1Id = $category1->import([
+         'name' => 'category 1',
+         'entities_id' => 0,
+      ]);
+
+      $ticketTemplate = $this->getGlpiCoreItem(
+         \TicketTemplate::getType(), [
+         'name' => 'template with predefined category',
+      ]);
+      $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'num'                => 7, // ITIL category
+         'value'              => $category1Id
+      ]);
+
+      $form = $this->getForm();
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE,
+      ]);
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $category1Id,
+         ],
+      ];
+   }
+
+   /**
     * @dataProvider providerSetTargetCategory
+    * @dataProvider providerSetTargetCategory_FromTemplate
     */
    public function testSetTargetCategory($instance, $formanswer, $expected) {
-
       // Substitute a dummy class to access protected / private methods
       $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
       $dummyInstance = new $dummyItemtype();

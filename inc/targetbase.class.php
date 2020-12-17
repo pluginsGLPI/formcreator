@@ -380,7 +380,7 @@ PluginFormcreatorConditionnableInterface
    protected function setTargetCategory($data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
-      $category = 0;
+      $category = null;
 
       switch ($this->fields['category_rule']) {
          case self::CATEGORY_RULE_ANSWER:
@@ -444,7 +444,9 @@ PluginFormcreatorConditionnableInterface
             }
             break;
       }
-      $data['itilcategories_id'] = $category;
+      if ($category !== null) {
+         $data['itilcategories_id'] = $category;
+      }
 
       return $data;
    }
