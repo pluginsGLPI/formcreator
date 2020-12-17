@@ -82,12 +82,17 @@ jobs:
   style:
     strategy:
       matrix:
-        php: [7.4]
+        php-versions: [7.4]
         env:
           - { GLPI_BRANCH: 9.5/bugfixes }
     name: "Code quality"
     runs-on: "ubuntu-latest"
     steps:
+      - name: Setup PHP with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: xdebug
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Code quality tests"

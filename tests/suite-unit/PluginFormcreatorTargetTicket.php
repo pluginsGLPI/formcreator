@@ -958,8 +958,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $ticketTemplate = $this->getGlpiCoreItem(
          \TicketTemplate::getType(), [
-         'name' => 'template with predefined category',
-      ]);
+            'name' => 'template with predefined category',
+         ]
+      );
       $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
          'tickettemplates_id' => $ticketTemplate->getID(),
          'num'                => 7, // ITIL category
