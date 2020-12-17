@@ -605,14 +605,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $input;
    }
 
-   /**
-    * Save form data to the target
-    *
-    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
-    *
-    * @return Ticket|null Generated ticket if success, null otherwise
-    */
-   public function save(PluginFormcreatorFormAnswer $formanswer) {
+   public function getDefaultData() {
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
          '_users_id_requester'         => [],
@@ -657,8 +650,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       ];
 
       $data = Ticket::getDefaultValues();
-      $ticket  = new Ticket();
-      $form    = $formanswer->getForm();
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
@@ -693,6 +684,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
 
       $data = array_merge($data, $predefined_fields);
+      return $data;
+   }
+
+   /**
+    * Save form data to the target
+    *
+    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
+    *
+    * @return Ticket|null Generated ticket if success, null otherwise
+    */
+   public function save(PluginFormcreatorFormAnswer $formanswer) {
+      $ticket  = new Ticket();
+      $form = $formanswer->getForm();
+      $data = $this->getDefaultData();
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
@@ -852,7 +857,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $data;
    }
 
-   protected function setTargetType($data, $formanswer) {
+   protected function setTargetType(array $data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
       $type = null;
@@ -974,7 +979,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       echo '</tr>';
    }
 
-   protected function setTargetAssociatedItem($data, $formanswer) {
+   protected function setTargetAssociatedItem(array $data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB, $CFG_GLPI;
 
       switch ($this->fields['associate_rule']) {

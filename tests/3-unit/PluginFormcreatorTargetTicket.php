@@ -947,11 +947,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
     * @return array
     */
    public function providerSetTargetCategory_FromTemplate() {
-      // disabled for now. needs
-      // - refactor of targetticket
-      // - build $data from entity defaults and template
-      return [];
-
       // When the target ticket uses a ticket template and does not specify a category
       $category1 = new \ITILCategory();
       $category1Id = $category1->import([
@@ -976,14 +971,17 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $formanswer1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
+      $this->boolean($formanswer1->isNewItem())->isFalse();
 
       $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'target ticket',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
+         'tickettemplates_id' => $ticketTemplate->getID(),
          'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE,
       ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
 
       return [
          [
@@ -1002,10 +1000,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Substitute a dummy class to access protected / private methods
       $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
       $dummyInstance = new $dummyItemtype();
+      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
+      $instance->getFromDB($instance->getID());
       $dummyInstance->fields = $instance->fields;
 
-      $output = $instance->publicSetTargetCategory([], $formanswer);
-      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected['itilcategories_id']);
+      $data = $dummyInstance->publicGetDefaultData();
+      $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
+      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }
 
    public function testSetTargetAssociatedItem() {
