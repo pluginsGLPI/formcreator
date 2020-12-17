@@ -33,10 +33,11 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-interface PluginFormcreatorDuplicatableInterface
-{
+interface PluginFormcreatorDuplicatableInterface {
    /**
-    * Duplicate the item
+    * Duplicate a form. Execute duplicate action for massive action.
+    *
+    * @return int|bool true if success, false otherwise.
     */
-   public function duplicate($options = []);
+   public function duplicate(array $options = []);
 }

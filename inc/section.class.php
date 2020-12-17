@@ -171,12 +171,7 @@ PluginFormcreatorConditionnableInterface
       $question->deleteByCriteria([$sectionFk => $this->getID()], 1);
    }
 
-   /**
-    * Duplicate a section
-    *
-    * @return integer|boolean ID of the new section, false otherwise
-    */
-   public function duplicate($options = []) {
+   public function duplicate(array $options = []) {
       $linker = new PluginFormcreatorLinker($options);
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
