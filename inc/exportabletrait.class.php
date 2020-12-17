@@ -46,7 +46,7 @@ trait PluginFormcreatorExportableTrait
      * @param boolean $remove_uuid
      * @return array
      */
-   public function exportChildrenObjects($subItems, $export, $remove_uuid = false) {
+   public function exportChildrenObjects(array $subItems, array $export, bool $remove_uuid = false) : array {
        global $DB;
 
       foreach ($subItems as $key => $itemtypes) {
@@ -76,14 +76,14 @@ trait PluginFormcreatorExportableTrait
     /**
      * Import children objects
      *
-     * @param array PluginFormcreatorExportableInterface $item
+     * @param PluginFormcreatorExportableInterface $item
      * @param PluginFormcreatorLinker $linker
-     * @param $subItems
+     * @param array $subItems
      * @param array $input
      * @return void
      */
-   public function importChildrenObjects($item, $linker, $subItems, $input) {
-       $itemId = $item->getID();
+   public function importChildrenObjects(PluginFormcreatorExportableInterface $item, PluginFormcreatorLinker $linker, array $subItems, array $input) {
+      $itemId = $item->getID();
       foreach ($subItems as $key => $itemtypes) {
          if (!is_array($itemtypes)) {
             if (!isset($input[$key])) {
@@ -123,7 +123,7 @@ trait PluginFormcreatorExportableTrait
      * @param array $subItems
      * @return int
      */
-   public static function countChildren($input, $subItems = []) {
+   public static function countChildren(array $input, array $subItems = []) : int {
       if (count($subItems) < 1) {
           return 1;
       }
