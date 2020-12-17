@@ -774,7 +774,7 @@ PluginFormcreatorConditionnableInterface
       echo "<div id='formcreator_servicecatalogue'>";
 
       // show wizard
-      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder">';
+      echo '<div id="plugin_formcreator_wizard">';
       $this->showWizard(true);
       echo '</div>';
 
@@ -941,57 +941,59 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      // Find FAQ entries
-      $query_faqs = KnowbaseItem::getListRequest([
-         'faq'      => '1',
-         'contains' => $keywords
-      ]);
-      $subQuery = new DBMysqlIterator($DB);
-      $subQuery->buildQuery($query_faqs);
-      $query_faqs = '(' . $subQuery->getSQL() . ')';
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != '1') {
+         // Find FAQ entries
+         $query_faqs = KnowbaseItem::getListRequest([
+            'faq'      => '1',
+            'contains' => $keywords
+         ]);
+         $subQuery = new DBMysqlIterator($DB);
+         $subQuery->buildQuery($query_faqs);
+         $query_faqs = '(' . $subQuery->getSQL() . ')';
 
-      $query_faqs = [
-         'SELECT' => ['faqs' => '*'],
-         'FROM' => new QueryExpression('(' . $query_faqs . ') AS `faqs`'),
-      ];
-      if (count($selectedCategories) > 0) {
-         $query_faqs['WHERE'] = [
-            'knowbaseitemcategories_id' => new QuerySubQuery([
-               'SELECT' => 'knowbaseitemcategories_id',
-               'FROM' => $table_cat,
-               'WHERE' => [
-                  'id' => $selectedCategories,
-                  'knowbaseitemcategories_id' => ['!=', 0],
-               ],
-            ]),
+         $query_faqs = [
+            'SELECT' => ['faqs' => '*'],
+            'FROM' => new QueryExpression('(' . $query_faqs . ') AS `faqs`'),
          ];
-      } else {
-         $query_faqs['INNER JOIN'] = [
-            $table_cat => [
-               'FKEY' => [
-                  'faqs' => 'knowbaseitemcategories_id',
-                  $table_cat => 'knowbaseitemcategories_id'
-               ]
-            ]
-         ];
-         $query_faqs['WHERE'] = [
-            'faqs.knowbaseitemcategories_id' => ['!=', 0],
-         ];
-      }
-      $result_faqs = $DB->request($query_faqs);
-      if ($result_faqs->count() > 0) {
-         foreach ($result_faqs as $faq) {
-            $formList[] = [
-               'id'           => $faq['id'],
-               'name'         => $faq['name'],
-               'icon'         => '',
-               'icon_color'   => '',
-               'background_color'   => '',
-               'description'  => '',
-               'type'         => 'faq',
-               'usage_count'  => $faq['view'],
-               'is_default'   => false
+         if (count($selectedCategories) > 0) {
+            $query_faqs['WHERE'] = [
+               'knowbaseitemcategories_id' => new QuerySubQuery([
+                  'SELECT' => 'knowbaseitemcategories_id',
+                  'FROM' => $table_cat,
+                  'WHERE' => [
+                     'id' => $selectedCategories,
+                     'knowbaseitemcategories_id' => ['!=', 0],
+                  ],
+               ]),
             ];
+         } else {
+            $query_faqs['INNER JOIN'] = [
+               $table_cat => [
+                  'FKEY' => [
+                     'faqs' => 'knowbaseitemcategories_id',
+                     $table_cat => 'knowbaseitemcategories_id'
+                  ]
+               ]
+            ];
+            $query_faqs['WHERE'] = [
+               'faqs.knowbaseitemcategories_id' => ['!=', 0],
+            ];
+         }
+         $result_faqs = $DB->request($query_faqs);
+         if ($result_faqs->count() > 0) {
+            foreach ($result_faqs as $faq) {
+               $formList[] = [
+                  'id'           => $faq['id'],
+                  'name'         => $faq['name'],
+                  'icon'         => '',
+                  'icon_color'   => '',
+                  'background_color'   => '',
+                  'description'  => '',
+                  'type'         => 'faq',
+                  'usage_count'  => $faq['view'],
+                  'is_default'   => false
+               ];
+            }
          }
       }
 
@@ -1062,10 +1064,10 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showSearchBar() : void {
-      echo '<form name="formcreator_search" onsubmit="javascript: return false;" >';
-      echo '<input type="text" name="words" id="formcreator_search_input" required/>';
-      echo '<span id="formcreator_search_input_bar"></span>';
-      echo '<label for="formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
+      echo '<form name="plugin_formcreator_search" onsubmit="javascript: return false;" >';
+      echo '<input type="text" name="words" id="plugin_formcreator_search_input" required/>';
+      echo '<span id="plugin_formcreator_search_input_bar"></span>';
+      echo '<label for="plugin_formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
       echo '</form>';
    }
 

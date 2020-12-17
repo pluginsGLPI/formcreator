@@ -684,14 +684,14 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    left: 0;
    float: left;
 }
-.plugin_formcreator_page #plugin_formcreator_wizard_categories {
+#plugin_formcreator_wizard_categories {
    height: calc(100vh - 28px - 65px);
    background-color: #f8f7f3;
    border-right: 1px solid #DDD;
    position: relative;
 }
 
-.plugin_formcreator_page #plugin_formcreator_wizard_categories .slinky-menu {
+#plugin_formcreator_wizard_categories .slinky-menu {
    position: absolute;
    left: 0;
    right: -1px;
@@ -853,6 +853,109 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    background-color: inherit;
 }
 
+/* KB page */
+
+#plugin_formcreator_kb_categories div > a {
+   display: inline-block;
+   width: 100%;
+   padding: 14px;
+   box-sizing: border-box;
+}
+
+#plugin_formcreator_kb_categories {
+   width: 275px;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   float: left;
+}
+#plugin_formcreator_kb_categories {
+   height: calc(100vh - 28px - 65px);
+   background-color: #f8f7f3;
+   border-right: 1px solid #DDD;
+   position: relative;
+}
+
+#plugin_formcreator_kb_categories .slinky-menu {
+   position: absolute;
+   left: 0;
+   right: -1px;
+}
+
+#plugin_formcreator_kb_categories a {
+   background-color: inherit;
+   font-size: 1.2em;
+}
+
+#plugin_formcreator_kb_categories  a[data-category-id]:not([data-parent-category-id="0"])  {
+   margin-left: 20px;
+}
+
+#plugin_formcreator_kb_categories .category_active:not(.next),
+#plugin_formcreator_kb_categories .category_active ~ul .header {
+   /* background-color: rgba(0, 0, 0, 0.05); */
+   border-bottom: 1px dashed #DDD;
+   position: relative;
+}
+
+#plugin_formcreator_kb_categories .category_active:not(.next):after,
+#plugin_formcreator_kb_categories .category_active ~ul .header:after {
+   position: absolute;
+   left: calc(100% - 45px);
+   top: 50%;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   border-right-color: #FFF;
+   border-width: 23px;
+   margin-top: -23px;
+   z-index: 20;
+}
+
+#plugin_formcreator_kb_categories .category_active:not(.next):before,
+#plugin_formcreator_kb_categories .category_active ~ul .header:before {
+   position: absolute;
+   left: calc(100% - 46px);
+   top: 50%;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   border-right-color: #DDD;
+   border-width: 23px;
+   margin-top: -23px;
+   z-index: 20;
+}
+
+#plugin_formcreator_kb_categories h2 {
+   margin: 0;
+   padding: 0.83em 0;
+   border-bottom: 1px solid #DDD;
+}
+
+#plugin_formcreator_kb_categories a, #plugin_formcreator_kb_categories h2 {
+   font-size: 1.2em;
+}
+
+#plugin_formcreator_kb_categories h2 {
+   margin: 0;
+   padding: 14px;
+   color: #000;
+}
+#plugin_formcreator_kb_categories .header h2 {
+   text-align: left;
+}
+#plugin_formcreator_kb_categories .header .back {
+   right: 20px;
+   color: #000;
+   left: inherit;
+}
+
+#plugin_formcreator_kb_categories li {
+   background-color: inherit;
+}
+
 .plugin_formcreator_card {
    background: #FFF;
    border-radius: 2px;
@@ -1008,13 +1111,13 @@ a.plugin_formcreator_formTile_title {
    font-size: 1em;
 }
 
-#formcreator_search_input_bar {
+#plugin_formcreator_search_input_bar {
    position:relative;
    display:block;
    width:100%;
 }
-#formcreator_search_input_bar:before,
-#formcreator_search_input_bar:after {
+#plugin_formcreator_search_input_bar:before,
+#plugin_formcreator_search_input_bar:after {
    content:'';
    position: absolute;
    width: 0;
@@ -1023,14 +1126,14 @@ a.plugin_formcreator_formTile_title {
    transition:0.2s ease all;
    background-color: #3874BC;
 }
-#formcreator_search_input_bar:before {
+#plugin_formcreator_search_input_bar:before {
   left:50%;
 }
-#formcreator_search_input_bar:after {
+#plugin_formcreator_search_input_bar:after {
   right:50%;
 }
-#plugin_formcreator_searchBar input:focus ~ #formcreator_search_input_bar:before,
-#plugin_formcreator_searchBar input:focus ~ #formcreator_search_input_bar:after {
+#plugin_formcreator_searchBar input:focus ~ #plugin_formcreator_search_input_bar:before,
+#plugin_formcreator_searchBar input:focus ~ #plugin_formcreator_search_input_bar:after {
    width:50%;
 }
 
