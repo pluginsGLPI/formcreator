@@ -755,7 +755,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Show the list of forms to be displayed to the end-user
     */
-   public function showList() {
+   public function showList() : void {
       echo '<div class="center" id="plugin_formcreator_wizard">';
 
       echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
@@ -769,7 +769,7 @@ PluginFormcreatorConditionnableInterface
       echo '</div>';
    }
 
-   public function showServiceCatalog() {
+   public function showServiceCatalog() : void {
       echo "<div id='formcreator_servicecatalogue'>";
 
       // show wizard
@@ -780,7 +780,7 @@ PluginFormcreatorConditionnableInterface
       echo '</div>'; // formcreator_servicecatalogue
    }
 
-   public function showWizard($service_catalog = false) {
+   public function showWizard($service_catalog = false) : void {
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '<div><h2>'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
       echo '<div><a href="#" id="wizard_seeall">' . __('see all', 'formcreator') . '</a></div>';
@@ -821,9 +821,10 @@ PluginFormcreatorConditionnableInterface
     * Show form and FAQ items
     * @param number $rootCategory Items of this subtree only. 0 = no filtering
     * @param string $keywords Filter items with keywords
-    * @param string $helpdeskHome show items for helpdesk only
+    * @param bool $helpdeskHome show items for helpdesk only
+    * @return array
     */
-   public function showFormList($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
+   public function showFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false) : array {
       global $DB;
 
       $table_cat     = getTableForItemType('PluginFormcreatorCategory');
@@ -1060,7 +1061,7 @@ PluginFormcreatorConditionnableInterface
       return ['default' => $defaultForms, 'forms' => $formList];
    }
 
-   protected function showSearchBar() {
+   protected function showSearchBar() : void {
       echo '<form name="formcreator_search" onsubmit="javascript: return false;" >';
       echo '<input type="text" name="words" id="formcreator_search_input" required/>';
       echo '<span id="formcreator_search_input_bar"></span>';
@@ -1068,7 +1069,7 @@ PluginFormcreatorConditionnableInterface
       echo '</form>';
    }
 
-   protected function showMyLastForms() {
+   protected function showMyLastForms() : void {
       $limit = 5;
       $userId = Session::getLoginUserID();
       echo '<div class="plugin_formcreator_card">';
@@ -1156,9 +1157,9 @@ PluginFormcreatorConditionnableInterface
    /**
     * Display the Form end-user form to be filled
     *
-    * @return Null                     Nothing, just display the form
+    * @return void
     */
-   public function displayUserForm() {
+   public function displayUserForm() : void {
       // Print css media
       $css = '/' . Plugin::getWebDir('formcreator', false) . '/css/print_form.css';
       echo Html::css($css, ['media' => 'print']);
@@ -1421,7 +1422,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @return void
     */
-   private function updateValidators() {
+   private function updateValidators() : void {
       if (!isset($this->input['validation_required'])) {
          return;
       }
@@ -1463,7 +1464,7 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
-   public function increaseUsageCount() {
+   public function increaseUsageCount() : void {
       // Increase usage count of the form
       $this->update([
             'id' => $this->getID(),
@@ -1476,7 +1477,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @param integer $questionId
     */
-   public function getByQuestionId($questionId) {
+   public function getByQuestionId(int $questionId) : void {
       $formTable = PluginFormcreatorForm::getTable();
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $sectionTable = PluginFormcreatorSection::getTable();
@@ -1503,12 +1504,7 @@ PluginFormcreatorConditionnableInterface
       ]);
    }
 
-   /**
-    * Duplicate a form. Execute duplicate action for massive action.
-    *
-    * @return Boolean true if success, false otherwise.
-    */
-   public function duplicate($options = []) {
+   public function duplicate(array $options = []) {
       $linker = new PluginFormcreatorLinker($options);
 
       $export = $this->export(true);

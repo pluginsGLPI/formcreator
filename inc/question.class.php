@@ -856,12 +856,7 @@ PluginFormcreatorConditionnableInterface
       Html::closeForm();
    }
 
-   /**
-    * Duplicate a question
-    *
-    * @return integer|boolean ID of  the new question, false otherwise
-    */
-   public function duplicate($options = []) {
+   public function duplicate(array $options = []) {
       $linker = new PluginFormcreatorLinker($options);
 
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
