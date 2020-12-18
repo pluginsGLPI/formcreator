@@ -32,5 +32,9 @@
         "psr-4": {
             "GlpiPlugin\\Formcreator\\Tests\\": "tests/src/"
         }
+    },
+    "scripts": {
+        "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
+        "lint": "vendor/bin/parallel-lint --exclude vendor ."
     }
 }

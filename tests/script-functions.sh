@@ -97,12 +97,12 @@ plugin_test_uninstall() {
 }
 
 plugin_test_lint() {
-   ./vendor/bin/parallel-lint --exclude vendor .
+   composer run lint
 }
 
 # GLPI Coding Standards
 plugin_test_cs() {
-   vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php
+   composer run cs
 }
 
 # please set $TX_USER and $TX_TOKEN in your CI dashboard
