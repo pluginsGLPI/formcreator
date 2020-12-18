@@ -713,9 +713,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process'],
-                             ['field'      => 8,
-                             'searchtype'  => 'equals',
-                             'value'       => $currentUser]],
+                           //   ['field'      => 8,
+                           //   'searchtype'  => 'equals',
+                           //   'value'       => $currentUser]
+                           ],
               'reset'    => 'reset'];
    }
 
@@ -724,9 +725,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => Ticket::WAITING],
-                              ['field'      => 8,
-                              'searchtype'  => 'equals',
-                              'value'       => $currentUser]],
+                              // ['field'      => 8,
+                              // 'searchtype'  => 'equals',
+                              // 'value'       => $currentUser]
+                           ],
               'reset'    => 'reset'];
    }
 
@@ -743,11 +745,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getSolvedCriteria() {
       $currentUser = Session::getLoginUserID();
-      return ['criteria' => [['link'       => 'AND',
-                              'field'      => 8,
-                              'searchtype'  => 'equals',
-                              'value'       => $currentUser,
-                              ],
+      return ['criteria' => [
+                           //   ['link'       => 'AND',
+                           //    'field'      => 8,
+                           //    'searchtype'  => 'equals',
+                           //    'value'       => $currentUser,
+                           //    ],
                               ['link'       => 'AND',
                               'criteria' => [[
                                'link'       => 'AND',
