@@ -311,10 +311,10 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       return;
    }
    if (isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
+      // run this hook only if the plugin is not generating tickets
       return;
    }
 
-   // run this hook only if the plugin is not generating tickets
    $requester = $DB->request([
       'SELECT' => 'users_id',
       'FROM' => Ticket_User::getTable(),
