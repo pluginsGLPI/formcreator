@@ -465,7 +465,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '8',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -474,6 +474,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '9',
