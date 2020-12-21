@@ -1251,6 +1251,23 @@ PluginFormcreatorConditionnableInterface
          echo '</li>';
       }
 
+      // Captcha for anonymous forms
+      if ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+         $captchaTime = time();
+         $captchaId = md5($captchaTime . $this->getID());
+         $captcha = PluginFormcreatorCommon::getCaptcha($captchaId);
+         echo '<li class="plugin_formcreator_section" id="plugin_formcreator_captcha_section">';
+         echo '<h2>' . __('Are you a robot ?', 'formcreator') . '</h2>';
+         echo '<div class="form-group line1"><label for="plugin_formcreator_captcha">' . __('Are you a robot ?', 'formcreator') . '</label>';
+         echo '<div><i onclick="plugin_formcreator_refreshCaptcha()" class="fas fa-sync-alt"></i>&nbsp;<img src="' . $captcha['img'] . '">';
+         echo '<div style="width: 50%; float: right" class="form_field"><span class="no-wrap">';
+         echo Html::input('plugin_formcreator_captcha');
+         echo Html::hidden('plugin_formcreator_captcha_id', ['value' => $captchaId]);
+         echo '</div></div>';
+         echo '</div>';
+         echo '</li>';
+      }
+
       // Delete saved answers if any
       unset($_SESSION['formcreator']['data']);
 

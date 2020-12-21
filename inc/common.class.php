@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Gregwar\Captcha\CaptchaBuilder;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -476,5 +478,50 @@ JAVASCRIPT;
 
       $output .= Html::scriptBlock('$(function() {' . $js . '});');
       return $output;
+   }
+
+   public static function getCaptcha($captchaId = null) {
+      $captchaBuilder = new CaptchaBuilder();
+      $captchaBuilder->build();
+      $inlineImg = 'data:image/png;base64,' . base64_encode($captchaBuilder->get());
+
+      $_SESSION['plugin_formcreator']['captcha'][$captchaId] = [
+         'time'   => time(),
+         'phrase' => $captchaBuilder->getPhrase()
+      ];
+
+      return ['img' => $inlineImg, 'phrase' => $captchaBuilder->getPhrase()];
+   }
+
+   public static function checkCaptcha($captchaId, $challenge, $expiration = 600) {
+      self::cleanOldCaptchas($expiration);
+      if (!isset($_SESSION['plugin_formcreator']['captcha'][$captchaId])) {
+         return false;
+      }
+
+      if ($_SESSION['plugin_formcreator']['captcha'][$captchaId]['time'] + $expiration < time()) {
+         unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
+         return false;
+      }
+
+      $result = $_SESSION['plugin_formcreator']['captcha'][$captchaId]['phrase'] == (string) $challenge;
+      unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
+
+      return $result;
+   }
+
+   public static function cleanOldCaptchas($expiration = 600) {
+      // cleanup expired captchas
+      $now = time();
+      $count = 10; // Cleanup at most 10 captchas
+      foreach ($_SESSION['plugin_formcreator']['captcha'] as &$captcha) {
+         if ($captcha['time'] + $expiration < $now) {
+            unset($captcha);
+            $count--;
+            if ($count <= 0) {
+               break;
+            }
+         }
+      }
    }
 }
