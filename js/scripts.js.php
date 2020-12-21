@@ -1722,3 +1722,18 @@ function plugin_formcreator_cancelMyTicket(id) {
       alert(response.responseText);
    });
 }
+
+function plugin_formcreator_refreshCaptcha() {
+   var captchaId = $('input[name="plugin_formcreator_captcha_id"]').val();
+   $('form[name="plugin_formcreator_form"] button[type="submit"]').attr('disabled', 'disabled');
+   $.ajax({
+      url : formcreatorRootDoc + '/ajax/getcaptcha.php',
+      data: {captcha_id: captchaId},
+      type: 'POST',
+      dataType: 'text'
+   }).done(function(response) {
+      $('#plugin_formcreator_captcha_section img').attr('src', response);
+   }).complete(function(response) {
+      $('form[name="plugin_formcreator_form"] button[type="submit"]').removeAttr('disabled');
+   });
+}

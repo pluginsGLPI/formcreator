@@ -91,6 +91,11 @@ function plugin_formcreator_check_prerequisites() {
       $prerequisitesSuccess = false;
    }
 
+   if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+      echo "Run composer install --no-dev in the plugin directory<br>";
+      $prerequisitesSuccess = false;
+   }
+
    $fi = new FilesystemIterator(__DIR__ . '/data/', FilesystemIterator::SKIP_DOTS);
    if (iterator_count($fi) < 2) {
       // There is index.html at least in  the directory, then 2 files must estxist
@@ -161,6 +166,7 @@ function plugin_init_formcreator() {
 
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+      require_once(__DIR__ . '/vendor/autoload.php');
       spl_autoload_register('plugin_formcreator_autoload');
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
