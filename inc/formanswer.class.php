@@ -670,13 +670,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($input['plugin_formcreator_forms_id']);
+
       if (!$this->validateFormAnswer($input)) {
          // Validation of answers failed
          return false;
       }
 
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($input['plugin_formcreator_forms_id']);
       $input['name'] = Toolbox::addslashes_deep($form->getName());
 
       // Does the form need to be validated?
@@ -1287,25 +1288,41 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form->getFromDB($input['plugin_formcreator_forms_id']);
       $this->getQuestionFields($input['plugin_formcreator_forms_id']);
 
-      // Parse form answers
-      $fieldValidities = [];
-      foreach (array_keys($this->questionFields) as $id) {
-         // Test integrity of the value
-         $fieldValidities[$id] = $this->questionFields[$id]->parseAnswerValues($input);
-      }
-      // any invalid field will invalidate the answers
-      $this->isAnswersValid = !in_array(false, $fieldValidities, true);
+      $this->isAnswersValid = true;
 
-      // Mandatory field must be filled
-      // and fields must contain a value matching the constraints of the field (range for example)
+      // check captcha if any
+      if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+         if (!isset($_SESSION['plugin_formcreator']['captcha'])) {
+            Session::addMessageAfterRedirect(__('No turing test set', 'formcreator'));
+            $this->isAnswersValid = false;
+         }
+         $this->isAnswersValid = PluginFormcreatorCommon::checkCaptcha($input['plugin_formcreator_captcha_id'], $input['plugin_formcreator_captcha']);
+         if (!$this->isAnswersValid) {
+            Session::addMessageAfterRedirect(__('You failed the Turing test', 'formcreator'));
+         }
+      }
+
       if ($this->isAnswersValid) {
-         foreach ($this->questionFields as $id => $field) {
-            if (!$this->questionFields[$id]->isPrerequisites()) {
-               continue;
-            }
-            if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
-               $this->isAnswersValid = false;
-               break;
+         // Parse form answers
+         $fieldValidities = [];
+         foreach (array_keys($this->questionFields) as $id) {
+            // Test integrity of the value
+            $fieldValidities[$id] = $this->questionFields[$id]->parseAnswerValues($input);
+         }
+         // any invalid field will invalidate the answers
+         $this->isAnswersValid = !in_array(false, $fieldValidities, true);
+
+         // Mandatory field must be filled
+         // and fields must contain a value matching the constraints of the field (range for example)
+         if ($this->isAnswersValid) {
+            foreach ($this->questionFields as $id => $field) {
+               if (!$this->questionFields[$id]->isPrerequisites()) {
+                  continue;
+               }
+               if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
+                  $this->isAnswersValid = false;
+                  break;
+               }
             }
          }
       }

@@ -126,4 +126,42 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $output = \PluginFormcreatorCommon::prepareBooleanKeywords($input);
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function testGetCaptcha() {
+      unset($_SESSION['plugin_formcreator']['captcha']);
+
+      $captchaId = 'someRandomId';
+      $output = \PluginFormcreatorCommon::getCaptcha($captchaId);
+      $this->array($output)->hasKeys([
+         'img',
+         'phrase'
+      ])->size->isEqualTo(2);
+      $this->array($_SESSION['plugin_formcreator']['captcha'])
+         ->hasKeys([$captchaId])
+         ->size->isEqualTo(1);
+      $this->array($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
+   }
+
+   public function testCheckCaptcha() {
+      unset($_SESSION['plugin_formcreator']['captcha']);
+
+      $captchaId = 'someRandomId';
+      $output = \PluginFormcreatorCommon::getCaptcha($captchaId);
+      $challenge = $_SESSION['plugin_formcreator']['captcha'][$captchaId]['phrase'];
+      $output = \PluginFormcreatorCommon::checkCaptcha($captchaId, $challenge);
+      $this->boolean($output)->isTrue();
+      $output = \PluginFormcreatorCommon::checkCaptcha($captchaId, $challenge . 'foo');
+      $this->boolean($output)->isFalse();
+   }
+
+   public function testCleanOldCaptchas() {
+      $output = \PluginFormcreatorCommon::getCaptcha('captcha1');
+      $challenge = $_SESSION['plugin_formcreator']['captcha']['captcha1']['phrase'];
+      sleep(2); // Wait 5 seconds
+      $output = \PluginFormcreatorCommon::getCaptcha('captcha2');
+      $output = \PluginFormcreatorCommon::checkCaptcha('captcha1', $challenge, 1);
+      $this->boolean($output)->isFalse();
+      $this->array($challenge = $_SESSION['plugin_formcreator']['captcha'])
+         ->notHasKey('captcha1');
+   }
 }
