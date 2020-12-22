@@ -54,8 +54,7 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
-      $link = $CFG_GLPI['url_base'];
-      $link .= FORMCREATOR_ROOTDOC . '/front/formanswer.form.php?id=' . $this->obj->getID();
+      $link = $CFG_GLPI['url_base'] . $this->obj->getFormURLWithID($this->obj->getID(), false);
 
       $requester = new User();
       $requester->getFromDB($this->obj->fields['requester_id']);
