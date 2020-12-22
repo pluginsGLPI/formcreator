@@ -54,9 +54,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      if ($item->getType()==__CLASS__) {
-         $item->showChildren();
+      if ($item->getType() != __CLASS__) {
+         return;
       }
+      $item->showChildren();
    }
 
    public function getAdditionalFields() {
