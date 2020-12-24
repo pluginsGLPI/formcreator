@@ -249,7 +249,6 @@ function updateCategoriesView() {
  * Returns a promise
  */
 function getFormAndFaqItems(categoryId) {
-   var currentCategory = categoryId;
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
    $.ajax({
