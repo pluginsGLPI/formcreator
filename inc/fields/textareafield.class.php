@@ -87,6 +87,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          }
          echo Html::textarea([
             'name'              => $fieldName,
+            'editor_id'         => "$fieldName$rand",
             'rand'              => $rand,
             'value'             => $value,
             'rows'              => 5,
@@ -99,6 +100,14 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
             // for GLPI 9.4 without patch https://github.com/glpi-project/glpi/pull/6936
             echo '<div class="fileupload_info"></div>';
          }
+         // The following file upload area is needed to allow embedded pics in the tetarea
+         echo '<div style="display:none;">';
+         Html::file(['editor_id' => "$fieldName$rand",
+                     'filecontainer' => "filecontainer$rand",
+                     'onlyimages' => true,
+                     'showtitle' => false,
+                     'multiple' => true]);
+         echo '</div>';
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
