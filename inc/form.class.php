@@ -286,15 +286,14 @@ PluginFormcreatorConditionnableInterface
             break;
 
          case 'access_rights' :
-            return Dropdown::showFromArray($name, [
-               self::ACCESS_PUBLIC => __('Public access', 'formcreator'),
-               self::ACCESS_PRIVATE => __('Private access', 'formcreator'),
-               self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-            ], [
-               'value'               => $values[$field],
-               'display_emptychoice' => false,
-               'display'             => false
-            ]);
+            return Dropdown::showFromArray(
+               $name,
+               self::getEnumAccessType(), [
+                  'value'               => $values[$field],
+                  'display_emptychoice' => false,
+                  'display'             => false
+               ]
+            );
             break;
 
          case 'language' :
@@ -608,8 +607,10 @@ PluginFormcreatorConditionnableInterface
       echo '<tr>';
       echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
       echo '<td>';
-      Dropdown::showYesNo("is_default", $this->fields["is_default"]);
+      Dropdown::showYesNo('is_default', $this->fields['is_default']);
       echo '</td>';
+      echo '<td></td>';
+      echo '<td></td>';
       echo '</tr>';
 
       if (!$this->canPurgeItem()) {
@@ -1252,7 +1253,8 @@ PluginFormcreatorConditionnableInterface
       }
 
       // Captcha for anonymous forms
-      if ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+      if ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
+         && $this->fields['is_captcha_enabled'] != '0') {
          $captchaTime = time();
          $captchaId = md5($captchaTime . $this->getID());
          $captcha = PluginFormcreatorCommon::getCaptcha($captchaId);
@@ -2173,11 +2175,11 @@ PluginFormcreatorConditionnableInterface
     * Is the form accessible anonymously (without being logged in) ?
     * @return boolean true if the form is accessible anonymously
     */
-   public function isPublicAccess() {
+   public function isPublicAccess() : bool {
       if ($this->isNewItem()) {
          return false;
       }
-      return ($this->fields['access_rights'] == \PluginFormcreatorForm::ACCESS_PUBLIC);
+      return ($this->fields['access_rights'] == self::ACCESS_PUBLIC);
    }
 
    /**
