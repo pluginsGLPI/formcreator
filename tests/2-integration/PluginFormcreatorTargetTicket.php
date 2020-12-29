@@ -88,6 +88,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testUrgency() {
       global $DB;
 
+      // Create a form with a urgency question and 2 target tickets
       $form = $this->getForm([
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => __METHOD__,
@@ -96,178 +97,78 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'is_active'             => 1,
          'validation_required'   => 0
       ]);
-      $formId = $form->getID();
       $this->boolean($form->isNewItem())->isFalse();
 
-      $sectionsData = [
-         [
-            'name'                  => 'a section',
-            'questions'             =>  [
-               [
-                  'name'                  => 'custom urgency',
-                  'fieldtype'             => 'urgency',
-                  'default_values'        => '3',
-               ],
-            ],
-         ],
+      $section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'name'                        => 'a section',
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+
+      $question = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'custom urgency',
+         'fieldtype'                      => 'urgency',
+         'default_values'                 => '3',
+      ]);
+      $this->boolean($question->isNewItem())->isFalse();
+
+      $targetTicket1 = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'name'                  => 'urgency from answer',
+         'target_name'           => 'urgency from answer',
+         'content'               => '##FULLFORM##',
+         'itemtype'              => \PluginFormcreatorTargetTicket::class,
+         'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER,
+         'urgency_question'      => $question->getID(),
+      ]);
+      $this->boolean($targetTicket1->isNewItem())->isFalse();
+
+      $targetTicket2 = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'name'                  => 'default urgency',
+         'target_name'           => 'default urgency',
+         'content'               => '##FULLFORM##',
+         'itemtype'              => \PluginFormcreatorTargetTicket::class,
+         'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE,
+         'urgency_question'      => '',
+      ]);
+      $this->boolean($targetTicket2->isNewItem())->isFalse();
+
+      // create a formanswer
+      $saveFormData = [
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_field_' . $question->getID() => '5',
       ];
-      foreach ($sectionsData as $sectionData) {
-         // Keep questions data set apart from sections data
-         $questionsData = $sectionData['questions'];
-         unset($sectionData['questions']);
-
-         // Create section
-         $sectionData['plugin_formcreator_forms_id'] = $form->getID();
-         $section = new \PluginFormcreatorSection();
-         $section->add($sectionData);
-         $this->boolean($section->isNewItem())->isFalse();
-         $sectionId = $section->getID();
-         foreach ($questionsData as $questionData) {
-            // Create question
-            $questionData ['plugin_formcreator_sections_id'] = $section->getID();
-            $question = new \PluginFormcreatorQuestion();
-            $question->add($questionData);
-            $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
-            $question->updateParameters($questionData);
-            $questionData['id'] = $question->getID();
-            if (isset($questionData['show_rule']) && $questionData['show_rule'] !=\PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-               $showFieldName = $questionData['show_field'];
-               $showfield = new \PluginFormcreatorQuestion();
-               $showfield->getFromDBByCrit([
-                  'AND' => [
-                     'plugin_formcreator_sections_id' => $sectionId,
-                     'name' => $showFieldName
-                  ]
-               ]);
-               $question->updateConditions($questionData);
-            }
-         }
-      }
-
-      $urgencyQuestions = [];
-      $formId = $form->getID();
-      $targetTicketsData = [
-         [
-            'name'                  => 'target 1',
-            'plugin_formcreator_forms_id' => $formId,
-            'content'               => '##FULLFORM##',
-            'itemtype'              => \PluginFormcreatorTargetTicket::class,
-            'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER,
-            'urgency_question'      => 'custom urgency',
-            'expected'              => '5'
-         ],
-         [
-            'name'                  => 'target 2',
-            'plugin_formcreator_forms_id' => $formId,
-            'content'               => '##FULLFORM##',
-            'itemtype'              => \PluginFormcreatorTargetTicket::class,
-            'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE,
-            'urgency_question'      => '',
-            'expected'              => '3'
-         ]
-      ];
-      foreach ($targetTicketsData as $targetData) {
-         // Create target ticket
-         $itemtype = $targetData['itemtype'];
-         $targetTicket = new $itemtype();
-         $targetTicket->add($targetData);
-         $this->boolean($targetTicket->isNewItem())->isFalse();
-
-         // Find urgency question
-         if (!empty($targetData['urgency_question'])) {
-            $questionName = $targetData['urgency_question'];
-            $question = new \PluginFormcreatorQuestion();
-            $question->getFromDBByRequest([
-               'LEFT JOIN' => [
-                  \PluginFormcreatorSection::getTable() => [
-                     'FKEY' => [
-                        \PluginFormcreatorSection::getTable() => 'id',
-                        \PluginFormcreatorQuestion::getTable() => \PluginFormcreatorSection::getForeignKeyField()
-                     ]
-                  ],
-                  \PluginFormcreatorForm::getTable() => [
-                     'FKEY' => [
-                           \PluginFormcreatorForm::getTable() => 'id',
-                           \PluginFormcreatorSection::getTable() => \PluginFormcreatorForm::getForeignKeyField()
-                     ]
-                  ]
-               ],
-               'WHERE' => [
-                  'AND' => [
-                     \PluginFormcreatorQuestion::getTable() . '.name' => $questionName,
-                     \PluginFormcreatorForm::getForeignKeyField() => $formId,
-                  ]
-               ]
-            ]);
-            $this->boolean($question->isNewItem())->isFalse();
-            $questionId = $question->getID();
-            $urgencyQuestions[] = [
-               'question'     => $question,
-               'targetTicket' => $targetTicket,
-               'expected'     => $targetData['expected']
-            ];
-         } else {
-            $urgencyQuestions[] = [
-               'question'     => null,
-               'targetTicket' => $targetTicket,
-               'expected'     => $targetData['expected']
-            ];
-         }
-
-         // Update target ticket
-         $targetTicketData = $targetTicket->fields;
-         $targetTicketData['id'] = $targetTicket->getID();
-         $targetTicketData['title'] = $targetTicketData['name'];
-         $targetTicketData['urgency_rule'] = $targetData['urgency_rule'];
-         $targetTicketData['_urgency_question'] = $questionId;
-         $targetTicketData['destination_entity'] = 'NULL';
-         $targetTicketData['category_rule'] = '';
-         $targetTicketData['location_rule'] = '';
-         $targetTicketData['sla_rule'] = (string) \PluginFormcreatorTargetTicket::SLA_RULE_NONE;
-         $targetTicketData['ola_rule'] = (string) \PluginFormcreatorTargetTicket::OLA_RULE_NONE;
-         $targetTicketData['type_rule'] = \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC;
-         $targetTicketData['_type_specific'] = \Ticket::INCIDENT_TYPE;
-         $this->boolean($targetTicket->update($targetTicketData))->isTrue();
-      }
-
-      $saveFormData = [];
-      foreach ($urgencyQuestions as $question) {
-         if ($question['question'] !== null) {
-            $saveFormData['formcreator_field_' . $question['question']->getID()] = $question['expected'];
-         }
-      }
-      $saveFormData['plugin_formcreator_forms_id'] = $form->getID();
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $form->getFromDB($form->getID());
       $formAnswer->add($saveFormData);
+      // Let's assume thre are no previous formanswers for this foreign key
       $formAnswer->getFromDbByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
 
-      // Check urgency for each target ticket
-      foreach ($urgencyQuestions as $question) {
-         $targetTicket = $question['targetTicket'];
-         $targetName = $targetTicket->getField('name');
-         $tickets = [];
-         $rows = $DB->request([
-            'SELECT' => ['tickets_id'],
-            'FROM'   => \Item_Ticket::getTable(),
-            'WHERE'  => [
-               'itemtype' => \PluginFormcreatorFormAnswer::class,
-               'items_id' => $formAnswer->getID()
-            ]
-         ]);
-         $this->integer($rows->count())->isGreaterThan(0);
-         foreach ($rows as $row) {
-            $tickets[] = $row['tickets_id'];
-         }
+      $rows = $DB->request([
+         'SELECT' => ['tickets_id'],
+         'FROM'   => \Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => \PluginFormcreatorFormAnswer::class,
+            'items_id' => $formAnswer->getID(),
+         ]
+      ]);
+      $this->variable($rows)->isNotNull();
+      foreach ($rows as $row) {
          $ticket = new \Ticket();
-         $ticket->getFromDBByCrit([
-            'name' => $targetName,
-            'id'   => $tickets
-         ]);
+         $ticket->getFromDB($row['tickets_id']);
          $this->boolean($ticket->isNewItem())->isFalse();
-         $this->integer((int) $ticket->fields['urgency'])->isEqualTo($question['expected']);
+         if ($ticket->fields['name'] == 'urgency from answer') {
+            $this->integer((int) $ticket->fields['urgency'])->isEqualTo(5);
+         } else if ($ticket->fields['name'] == 'default urgency') {
+            // expected medium urgency
+            $this->integer((int) $ticket->fields['urgency'])->isEqualTo(3);
+         } else {
+            throw new \RuntimeException('Unexpected ticket');
+         }
       }
    }
 }
