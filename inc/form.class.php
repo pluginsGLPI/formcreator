@@ -2144,7 +2144,9 @@ PluginFormcreatorConditionnableInterface
             );
          case "public";
          default:
-            return Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
+            Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
+            Html::displayMessageAfterRedirect();
+            return true;
       }
    }
 
