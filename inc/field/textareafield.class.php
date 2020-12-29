@@ -95,6 +95,7 @@ class TextareaField extends TextField
       $html = '';
       $html .= Html::textarea([
          'name'              => $fieldName,
+         'editor_id'         => "$fieldName$rand",
          'rand'              => $rand,
          'value'             => $value,
          'rows'              => 5,
@@ -103,6 +104,15 @@ class TextareaField extends TextField
          'enable_fileupload' => false,
          'uploads'           => $this->uploads,
       ]);
+      // The following file upload area is needed to allow embedded pics in the tetarea
+      $html .=  '<div style="display:none;">';
+      Html::file(['editor_id'    => "$fieldName$rand",
+                  'filecontainer' => "filecontainer$rand",
+                  'onlyimages'    => true,
+                  'showtitle'     => false,
+                  'multiple'      => true,
+                  'display'       => false]);
+      $html .=  '</div>';
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");
