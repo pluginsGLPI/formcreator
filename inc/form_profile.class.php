@@ -64,7 +64,6 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
-
       return $input;
    }
 
@@ -82,16 +81,19 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo "<form name='form_profiles_form' id='form_profiles_form'
              method='post' action=' ";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
-      echo "<table class    ='tab_cadre_fixe'>";
+      echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">'._n('Access type', 'Access types', 1, 'formcreator').'</th>';
       echo '</tr>';
+
+      // Access type
+      echo '<tr>';
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
          PluginFormcreatorForm::getEnumAccessType(),
          [
-            'value' => (isset($item->fields["access_rights"])) ? $item->fields["access_rights"] : 1,
+            'value' => (isset($item->fields['access_rights'])) ? $item->fields['access_rights'] : '1',
          ]
       );
       echo '</td>';
@@ -108,10 +110,20 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          echo '<i class="fas fa-envelope"><i/>';
          echo '</a>';
       } else {
-         echo __('Please active the form to view the link', 'formcreator');
+         echo __('Please activate the form to view the link', 'formcreator');
       }
       echo '</td>';
-      echo "</tr>";
+      echo '</tr>';
+
+      // Captcha
+      if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+         echo '<tr>';
+         echo '<td>' . __('Enable captcha', 'formcreator') . '</td>';
+         echo '<td>';
+         Dropdown::showYesNo('is_captcha_enabled', $item->fields['is_captcha_enabled']);
+         echo '</td>';
+         echo '</tr>';
+      }
 
       if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
          echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';

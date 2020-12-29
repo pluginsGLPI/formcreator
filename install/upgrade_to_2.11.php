@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_11 {
+   /** @var Migration */
    protected $migration;
 
    /**
@@ -156,6 +157,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       // Merge targettickets_actors and targetchanges_actors
       $this->migrateTargetTicket_Actor();
       $this->migrateTargetChange_Actor();
+      $this->addCaptchaOption();
    }
 
    /**
@@ -287,5 +289,10 @@ class PluginFormcreatorUpgradeTo2_11 {
 
       $table = 'glpi_plugin_formcreator_targetchanges_actors';
       $this->migration->backupTables([$table]);
+   }
+
+   public function addCaptchaOption() {
+      $table = 'glpi_plugin_formcreator_forms';
+      $this->migration->addField($table, 'is_captcha_enabled', 'bool', ['after' => 'is_default']);
    }
 }
