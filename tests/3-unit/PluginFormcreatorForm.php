@@ -466,6 +466,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'is_deleted',
          'validation_required',
          'is_default',
+         'is_captcha_enabled',
          'show_rule',
       ];
       $extraFields = [
