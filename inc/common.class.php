@@ -259,7 +259,7 @@ JAVASCRIPT;
     * t s | CLOSED   |     T            V          T         T
     *
     * T = status picked from Ticket
-    * V = status picked ce qfrom Validation
+    * V = status picked from Validation
     *
     * @param Ticket $item
     * @return array
