@@ -265,10 +265,17 @@ JAVASCRIPT;
     * @return array
     */
    public static function getTicketStatusForIssue(Ticket $item) : array {
-      $ticketValidation = new TicketValidation();
-      $ticketValidation->getFromDBByCrit([
+      $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
-      ]);
+      ], [
+         'timeline_position ASC'
+      ], 1);
+      $ticketValidation = new TicketValidation();
+      if (count($ticketValidations)) {
+         $row = array_shift($ticketValidation);
+         $ticketValidation->getFromDB($row['id']);
+      }
+
       $status = $item->fields['status'];
       $user = 0;
       if (!$ticketValidation->isNewItem()) {
