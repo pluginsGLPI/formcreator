@@ -979,7 +979,6 @@ PluginFormcreatorConditionnableInterface
          ];
       }
       $result_faqs = $DB->request($query_faqs);
-      Toolbox::logSqlDebug($result_faqs->getSQL());
       if ($result_faqs->count() > 0) {
          foreach ($result_faqs as $faq) {
             $formList[] = [
