@@ -247,7 +247,7 @@ JAVASCRIPT;
     *
     * Conversion matrix
     *
-    *                               Validation Status
+    *                           Ticket Validation Status
     *                +-------------+---------+---------+----------+
     *                |NULL or NONE | WAITING | REFUSED | ACCEPTED |
     *     + ---------+-------------+---------+---------+----------+
@@ -259,7 +259,7 @@ JAVASCRIPT;
     * t s | CLOSED   |     T            V          T         T
     *
     * T = status picked from Ticket
-    * V = status picked from Validation
+    * V = status picked from Ticket Validation
     *
     * @param Ticket $item
     * @return array
@@ -268,11 +268,12 @@ JAVASCRIPT;
       $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
       ], [
-         'timeline_position ASC'
+         'timeline_position ASC', // TODO: maybe DSC would be more appropriate
+         'validation_date ASC', // refused takes precedence over waiting. Might need to be tunable
       ], 1);
       $ticketValidation = new TicketValidation();
       if (count($ticketValidations)) {
-         $row = array_shift($ticketValidation);
+         $row = array_shift($ticketValidations);
          $ticketValidation->getFromDB($row['id']);
       }
 

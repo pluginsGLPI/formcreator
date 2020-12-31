@@ -141,13 +141,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("CONCAT('t_', `$ticketTable`.`id`) as `display_id`"),
             "$ticketTable.id as original_id",
             new QueryExpression("'" . Ticket::getType() . "' as `sub_itemtype`"),
-            new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,
+            new QueryExpression("IF(`$ticketTable`.`global_validation` IS NULL,
                `$ticketTable`.`status`,
-               IF(`$ticketValidationTable`.`status` IN ('1', '3'),
+               IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
                   `$ticketTable`.`status`,
-                  IF(`$ticketTable`.`status` IN ('5', '6') AND `$ticketValidationTable`.`status` = '4',
+                  IF(`$ticketTable`.`status` IN ('" . Ticket::SOLVED . "', '" . Ticket::CLOSED . "') AND `$ticketTable`.`global_validation` = '" . CommonITILValidation::REFUSED . "',
                      `$ticketTable`.`status`,
-                     IF(`$ticketValidationTable`.`status` = '" . CommonITILValidation::WAITING . "',
+                     IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
                      )
@@ -192,11 +192,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $ticketUserTable => $ticketFk,
                ],
             ],
-            $ticketValidationTable => [
-               'FKEY' => [
-                  $ticketTable => 'id',
-                  $ticketValidationTable => $ticketFk,
-               ],
+            [
+               'TABLE' => new QuerySubQuery([
+                  'SELECT' => 'tickets_id',
+                  'FROM'   => $ticketValidationTable,
+                  'WHERE'  => [
+                     "$ticketTable.id" => "$ticketValidationTable.$ticketFk"
+                  ],
+                  'ORDER' => [
+                     'timeline_position ASC',
+                     'validation_date ASC,'
+                  ],
+                  'LIMIT' => '1',
+               ]),
             ],
          ],
          'WHERE' => [
