@@ -68,15 +68,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return 1;
    }
 
-   /**
-    * Sync issues table
-    *
-    * @return int
-    */
-   public static function syncIssues() {
-      global $DB;
-      $volume = 0;
-
+   public static function getSyncIssuesQuery() : AbstractQuery {
       // Request which merges tickets and formanswers
       // 1 ticket not linked to a formanswer => 1 issue which is the ticket sub_itemtype
       // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
@@ -215,7 +207,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
       ]);
 
       $union = new QueryUnion([$query1, $query2], true);
-      $rawQuery = $union->getQuery();
+      return $union;
+   }
+
+   /**
+    * Sync issues table
+    *
+    * @return int
+    */
+   public static function syncIssues() {
+      global $DB;
+      $volume = 0;
+
+      $rawQuery = (self::getSyncIssuesQuery())->getQuery();
 
       $countQuery = "SELECT COUNT(*) AS `cpt` FROM $rawQuery";
       $result = $DB->query($countQuery);
