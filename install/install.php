@@ -512,7 +512,8 @@ class PluginFormcreatorInstall {
       CronTask::Register(PluginFormcreatorIssue::class, 'SyncIssues', HOUR_TIMESTAMP,
          [
             'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
-            'mode'      => CronTask::MODE_EXTERNAL
+            'mode'      => CronTask::MODE_EXTERNAL,
+            'state'     => '0', // Deprecated since 2.11
          ]
       );
    }

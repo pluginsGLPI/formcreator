@@ -159,6 +159,7 @@ class PluginFormcreatorUpgradeTo2_11 {
       $this->migrateTargetChange_Actor();
       $this->addCaptchaOption();
       $this->addKbModeOption();
+      $this->disableAutomaticAction();
    }
 
    /**
@@ -300,5 +301,26 @@ class PluginFormcreatorUpgradeTo2_11 {
    public function addKbModeOption() {
       $table = 'glpi_plugin_formcreator_entityconfigs';
       $this->migration->addField($table, 'is_kb_separated', 'integer', ['after' => 'sort_order']);
+   }
+
+   /**
+    * SDeprecate SyncIssues automatic action
+    * SyncIssues should be now used only for fresh instals or rebuild of corrupted issues table
+    *
+    * @return void
+    */
+   public function disableAutomaticAction() {
+      $cronTask = new CronTask();
+      $cronTask->getFromDBByCrit([
+         'itemtype' => 'PluginFormcreatorISsue',
+         'name'     => 'SyncIssues'
+      ]);
+      if ($cronTask->isNewItem()) {
+         return;
+      }
+      $cronTask->update([
+         'id'    => $cronTask->getID(),
+         'state' => '0'
+      ]);
    }
 }
