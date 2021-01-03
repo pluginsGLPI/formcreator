@@ -216,23 +216,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
       global $DB;
       $volume = 0;
 
-      $rawQuery = self::getSyncIssuesRequest()->getQuery();
-
-      $countQuery = "SELECT COUNT(*) AS `cpt` FROM $rawQuery";
-
-      $result = $DB->query($countQuery);
+      $result = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => self::getSyncIssuesRequest()
+      ]);
       if ($result === false) {
          return 0;
       }
 
-      $count = $DB->fetchAssoc($result);
+      $count = ($result->next())['cpt'];
       $table = static::getTable();
-      if (countElementsInTable($table) == $count['cpt']) {
+      if (countElementsInTable($table) == $count) {
          return 0;
       }
 
       $volume = 0;
       if ($DB->query("TRUNCATE `$table`")) {
+         $rawQuery = self::getSyncIssuesRequest()->getQuery();
          $DB->query("INSERT INTO `$table` SELECT * FROM $rawQuery");
          $volume = 1;
       }
