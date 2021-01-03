@@ -114,6 +114,7 @@ class Config extends CommonTestCase {
       // Check the version saved in configuration
       $this->checkConfig();
       $this->testPluginName();
+      $this->checkAutomaticAction();
    }
 
    public function testUpgradedPlugin() {
@@ -149,6 +150,7 @@ class Config extends CommonTestCase {
       }
 
       $this->testRequestType();
+      $this->checkAutomaticAction();
    }
 
    public function testPluginName() {
@@ -172,5 +174,15 @@ class Config extends CommonTestCase {
       $requestType = new \RequestType();
       $requestType->getFromDBByCrit(['name' => 'Formcreator']);
       $this->boolean($requestType->isNewItem())->isFalse();
+   }
+
+   public function checkAutomaticAction() {
+      $cronTask = new \CronTask();
+      $cronTask->getFromDBByCrit([
+         'itemtype' => 'PluginFormcreatorISsue',
+         'name'     => 'SyncIssues'
+      ]);
+      $this->boolean($cronTask->isNewItem())->isFalse();
+      $this->integer((int) $cronTask->fields['state'])->isEqualTo(0);
    }
 }
