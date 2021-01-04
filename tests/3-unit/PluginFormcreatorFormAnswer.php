@@ -368,4 +368,33 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          $this->boolean(in_array($row['id'], $formAnswers))->isTrue();
       }
    }
+
+   public function testDeserialiseAnswers() {
+
+   }
+
+   public function testIsFieldVisible() {
+      $instance = $this->newTestedInstance();
+
+      // Check exceptions are properly thrown
+      $this->exception(
+         function() use ($instance) {
+            $instance->isFieldVisible(42);
+         }
+      )->isInstanceOf(\RuntimeException::class);
+      $this->string($this->exception->getMessage())->isEqualTo('Instance is empty');
+
+      // Check exceptions are properly thrown
+      $form = $this->getForm();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $this->exception(
+         function() use ($instance) {
+            $instance->isFieldVisible(42);
+         }
+      )->isInstanceOf(\RuntimeException::class);
+      $this->string($this->exception->getMessage())->isEqualTo('Question not found');
+   }
 }

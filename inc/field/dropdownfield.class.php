@@ -503,9 +503,17 @@ class DropdownField extends PluginFormcreatorAbstractField
       if (is_a($itemtype, CommonTreeDropdown::class, true)) {
          // Specific param for ITILCategory
          if ($itemtype == ITILCategory::class) {
+            // Set default for depth setting
+            if (!isset($input['show_ticket_categories'])) {
+               $input['show_ticket_categories'] = 'all';
+            }
             $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
          }
 
+         // Set default for depth setting
+         if (!isset($input['show_ticket_categories_depth'])) {
+            $input['show_ticket_categories_depth'] = -1;
+         }
          if ($input['show_ticket_categories_depth'] != (int) $input['show_ticket_categories_depth']) {
             $input['values']['show_ticket_categories_depth'] = 0;
          } else {

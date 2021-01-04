@@ -2237,7 +2237,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @return PluginFormcreatorAbstractField[]
     */
-   public function getFields() {
+   public function getFields() : array {
       $fields = [];
       if ($this->isNewItem()) {
          return $fields;
@@ -2260,7 +2260,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @return array
     */
-   public static function getTargetTypes() {
+   public static function getTargetTypes() : array {
       return [
          PluginFormcreatorTargetTicket::class,
          PluginFormcreatorTargetChange::class
@@ -2273,7 +2273,7 @@ PluginFormcreatorConditionnableInterface
     * @param integer $formId
     * @return array
     */
-   public function getTargetsFromForm() {
+   public function getTargetsFromForm() : array {
       global $DB;
 
       $targets = [];

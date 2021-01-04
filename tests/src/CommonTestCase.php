@@ -329,7 +329,9 @@ abstract class CommonTestCase extends CommonDBTestCase
    }
 
    protected function getSessionMessage() {
-      if ($this->sessionHasNoMessage()) {
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][INFO])
+         || isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING])
+         || isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])) {
          return null;
       }
 
