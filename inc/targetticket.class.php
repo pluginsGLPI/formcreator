@@ -1004,7 +1004,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       echo '</tr>';
    }
 
-   protected function setTargetAssociatedItem(array $data, PluginFormcreatorFormAnswer $formanswer) {
+   /**
+    * @param array $data data of the target
+    * @param PluginFormcreatorFormAnswer $formanswer Answers to the form used to populate the target
+    * @return array
+    */
+   protected function setTargetAssociatedItem(array $data, PluginFormcreatorFormAnswer $formanswer) : array {
       global $DB, $CFG_GLPI;
 
       switch ($this->fields['associate_rule']) {
@@ -1055,7 +1060,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             // Get all answers for glpiselect questions of this form, ordered
             // from last to first displayed
             $answers = $DB->request([
-               'SELECT' => ['answer.answer', 'question.values'],
+               'SELECT' => ['answer.plugin_formcreator_questions_id', 'answer.answer', 'question.values'],
                'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
                'JOIN' => [
                   PluginFormcreatorQuestion::getTable() . ' AS question' => [
@@ -1077,12 +1082,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
             foreach ($answers as $answer) {
                // Skip if the object type is not valid asset type
-               if (!in_array($answer['values'], $CFG_GLPI["asset_types"])) {
+               if (!in_array($answer['values'], $CFG_GLPI['asset_types'])) {
                   continue;
                }
 
                // Skip if question was not answered
                if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Skip if question is not visible
+               if (!$formanswer->isFieldVisible($answer['plugin_formcreator_questions_id'])) {
                   continue;
                }
 
@@ -1094,7 +1104,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
                // Found a valid answer, stop here
                $data['items_id'] = [
-                  $answer['values'] => [$answer['answer']]
+                  $answer['values'] => [$answer['answer'] => $answer['answer']]
                ];
                break;
             }
