@@ -76,7 +76,7 @@ class PluginFormcreatorCommon {
    /**
     * Enable or disable notifications
     *
-    * @param boolean $enable
+    * @param bool $enable
     * @return void
     */
    public static function setNotification(bool $enable) {
@@ -222,7 +222,7 @@ JAVASCRIPT;
     *
     * In case of error, a message is added to the session
     *
-    * @param integer $id
+    * @param int $id
     * @return boolean true on success, false otherwise
     */
    public static function cancelMyTicket(int $id) : bool {

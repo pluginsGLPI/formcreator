@@ -552,7 +552,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    /**
     * get groups of the current user
     *
-    * @param integer $userID
+    * @param int $userID
     * @return array
     */
    private function getMyGroups($userID) {

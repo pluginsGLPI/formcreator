@@ -106,7 +106,7 @@ class PluginFormcreatorLinker
    /**
     * Get a previously imported object
     *
-    * @param integer $originalId
+    * @param int $originalId
     * @param string $itemtype
     * @return PluginFormcreatorExportableInterface|false
     */
@@ -130,7 +130,7 @@ class PluginFormcreatorLinker
     * are not and will not be imported
     *
     * @param string $itemtype itemtype of object to find
-    * @param integer $id ID of object to fiind
+    * @param int $id ID of object to fiind
     * @param string $idField fieldname where the ID is searched for
     * @return CommonDBTM
     */

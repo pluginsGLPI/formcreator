@@ -78,8 +78,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    /**
-    * @param integer $rootId id of the subtree root
-    * @param boolean $helpdeskHome
+    * @param int $rootId id of the subtree root
+    * @param bool $helpdeskHome
     * @return array Tree of form categories as nested array
     */
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) : array {
@@ -199,7 +199,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    /**
     * Get available categories
     *
-    * @param integer $helpdeskHome
+    * @param int $helpdeskHome
     * @return DBmysqlIterator
     */
    public static function  getAvailableCategories($helpdeskHome = 1) : DBmysqlIterator {
@@ -213,7 +213,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    /**
     * Get available categories
     *
-    * @param integer $helpdeskHome
+    * @param int $helpdeskHome
     * @return array
     */
    public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {

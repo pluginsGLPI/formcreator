@@ -149,7 +149,7 @@ interface PluginFormcreatorFieldInterface
    /**
     * Read the value of the field from answers
     * @param array $input answers of all questions of the form
-    * @param boolean $nonDestructive for File field, ensure that the file uploads imported as document
+    * @param bool $nonDestructive for File field, ensure that the file uploads imported as document
     *
     * @return boolean true on sucess, false otherwise
     */
@@ -248,7 +248,7 @@ interface PluginFormcreatorFieldInterface
 
    /**
     * get HTML code of rendered question for service catalog
-    * @param boolean $canEdit true if the user can edit the answer
+    * @param bool $canEdit true if the user can edit the answer
     * @return string HTML code
     */
    public function getRenderedHtml($canEdit = true) : string;

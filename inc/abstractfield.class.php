@@ -72,7 +72,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
    /**
     * Output HTML to display the field
-    * @param boolean $canEdit is the field editable ?
+    * @param bool $canEdit is the field editable ?
     */
    public function show($canEdit = true) {
       $html = '';

@@ -43,7 +43,7 @@ trait PluginFormcreatorExportableTrait
      *
      * @param array $subItems key/value pair list of sub items
      * @param array $export the export of the object
-     * @param boolean $remove_uuid
+     * @param bool $remove_uuid
      * @return array
      */
    public function exportChildrenObjects(array $subItems, array $export, bool $remove_uuid = false) : array {

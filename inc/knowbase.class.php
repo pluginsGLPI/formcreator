@@ -93,8 +93,8 @@ class PluginFormcreatorKnowbase {
    /**
     * @see Knowbase::getJstreeCategoryList()
     *
-    * @param integer $rootId id of the subtree root
-    * @param boolean $helpdeskHome
+    * @param int $rootId id of the subtree root
+    * @param bool $helpdeskHome
     *
     * @return array Tree of form categories as nested array
     */

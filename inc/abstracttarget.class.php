@@ -278,7 +278,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @param array $data input data of the target
     * @param PluginFormcreatorFormAnswer $formanswer
-    * @param integer $requesters_id ID of the requester of the answers
+    * @param int $requesters_id ID of the requester of the answers
     * @return integer ID of the entity where the target must be generated
     */
    protected function setTargetEntity($data, PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
@@ -732,7 +732,7 @@ PluginFormcreatorConditionnableInterface
     *
     * @param string $role role of the user
     * @param string $user user ID or email address for anonymous users
-    * @param boolean $notify true to enable notification for the actor
+    * @param bool $notify true to enable notification for the actor
     * @return boolean true on success, false on error
     */
    protected function addActor($role, $user, $notify) {
@@ -1631,7 +1631,7 @@ SCRIPT;
     *
     * @param string $template
     * @param PluginFormcreatorFormAnswer $formAnswer form answer to render
-    * @param boolean $richText Disable rich text output
+    * @param bool $richText Disable rich text output
     * @return string
     */
    protected function prepareTemplate($template, PluginFormcreatorFormAnswer $formAnswer, $richText = false) {
@@ -1688,7 +1688,7 @@ SCRIPT;
     * Associate tags to the target item
     *
     * @param PluginFormcreatorFormanswer $formanswer the source formanswer
-    * @param integer $targetId ID of the generated target
+    * @param int $targetId ID of the generated target
     * @return void
     */
    protected function saveTags(PluginFormcreatorFormanswer $formanswer, $targetId) {
@@ -1803,7 +1803,7 @@ SCRIPT;
    /**
     * Show header for actors edition
     *
-    * @param integer $type see CommonITILActor constants
+    * @param int $type see CommonITILActor constants
     * @return void
     */
    protected function showActorSettingsHeader($type) {
@@ -1843,7 +1843,7 @@ SCRIPT;
    /**
     * Show header for actors edition
     *
-    * @param integer $actorType see CommonITILActor constants
+    * @param int $actorType see CommonITILActor constants
     * @param array $actors actors to show
     * @return void
     */
