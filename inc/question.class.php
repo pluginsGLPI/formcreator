@@ -544,7 +544,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * set or reset the required flag
     *
-    * @param boolean $isRequired
+    * @param bool $isRequired
     */
    public function setRequired($isRequired) {
       $this->update([
@@ -995,7 +995,7 @@ PluginFormcreatorConditionnableInterface
 
    /**
     * return array of question objects belonging to a form
-    * @param integer $formId
+    * @param int $formId
     * @param array $crit array for the WHERE clause
     * @return PluginFormcreatorQuestion[]
     */
@@ -1040,7 +1040,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * Gets questions belonging to a section
     *
-    * @param integer $sectionId
+    * @param int $sectionId
     *
     * @return PluginFormcreatorQuestion[]
     */
@@ -1068,7 +1068,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * get questions of a form grouped by section name and filtered by criteria
     *
-    * @param integer $formId
+    * @param int $formId
     * @param array $crit additional slection criterias criterias
     * @return array 1st level is the section name, 2nd level is id and name of the question
     */

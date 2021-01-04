@@ -831,7 +831,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * Gets answers of all fields of a form answer
     *
-    * @param integer $formAnswerId
+    * @param int $formAnswerId
     * @return array
     */
    public function getAnswers($formAnswerId) {
@@ -869,7 +869,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * Get entire form to be inserted into a target content
     *
-    * @param boolean $richText If true, enable rich text output
+    * @param bool $richText If true, enable rich text output
     * @return String Full form questions and answers to be print
     */
    public function getFullForm($richText = false) {
@@ -1387,7 +1387,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * @param integer $limit The N last answers found
+    * @param int $limit The N last answers found
     * @return DBMysqlIterator
     */
    public static function getMyLastAnswersAsRequester($limit = 5) {
@@ -1424,7 +1424,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * @param integer $limit The N last answers found
+    * @param int $limit The N last answers found
     * @return DBMysqlIterator
     */
    public static function getMyLastAnswersAsValidator($limit = 5) : DBMysqlIterator {
@@ -1494,7 +1494,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * get all fields from a form
     *
-    * @param integer $formId ID of the form where come the fileds to load
+    * @param int $formId ID of the form where come the fileds to load
     * @return PluginFormcreatorAbstractField[]
     */
    private function getQuestionFields($formId) : array {
@@ -1539,8 +1539,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Computes visibility of a field from all field values of the form answer
+    * get visibility of a field from all field values of the form answer
     *
+    * @param int $id
     * @return bool
     */
    public function isFieldVisible(int $id) : bool {

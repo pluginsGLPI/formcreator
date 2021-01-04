@@ -235,7 +235,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
 
    /**
     * Export in an array all the data of the current instanciated form_profile
-    * @param boolean $remove_uuid remove the uuid key
+    * @param bool $remove_uuid remove the uuid key
     *
     * @return array the array with all data (with sub tables)
     */

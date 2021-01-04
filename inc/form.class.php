@@ -1495,7 +1495,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * gets a form from database from a question
     *
-    * @param integer $questionId
+    * @param int $questionId
     */
    public function getByQuestionId(int $questionId) : void {
       $formTable = PluginFormcreatorForm::getTable();
@@ -2270,7 +2270,7 @@ PluginFormcreatorConditionnableInterface
    /**
     * get all targets associated to the form
     *
-    * @param integer $formId
+    * @param int $formId
     * @return array
     */
    public function getTargetsFromForm() : array {

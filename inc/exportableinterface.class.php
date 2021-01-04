@@ -37,7 +37,7 @@ interface PluginFormcreatorExportableInterface
 {
    /**
     * Export in an array all the data of the current instanciated form
-    * @param boolean $remove_uuid remove the uuid key
+    * @param bool $remove_uuid remove the uuid key
     *
     * @return array the array with all data (with sub tables)
     */

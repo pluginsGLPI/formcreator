@@ -1340,7 +1340,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
    /**
     * get all target tickets for a form
     *
-    * @param integer $formId
+    * @param int $formId
     * @return array
     */
    public function getTargetTicketsForForm($formId) {

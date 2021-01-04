@@ -369,7 +369,7 @@ PluginFormcreatorConditionnableInterface
 
    /**
     * gets all sections in a form
-    * @param integer $formId ID of a form
+    * @param int $formId ID of a form
     * @return self[] sections in a form
     */
    public function getSectionsFromForm($formId) {
