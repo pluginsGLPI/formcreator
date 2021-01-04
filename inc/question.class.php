@@ -159,9 +159,9 @@ PluginFormcreatorConditionnableInterface
    /**
     * Get the HTML for the question in form designer
     *
-    * @return void
+    * @return string
     */
-   public function getDesignHtml() {
+   public function getDesignHtml() : string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -219,7 +219,14 @@ PluginFormcreatorConditionnableInterface
       return $html;
    }
 
-   public function getRenderedHtml($canEdit = true, $value = []) {
+   /**
+    * Get HTML to show a question
+    *
+    * @param bool $canEdit Can the user edit the question ?
+    * @param array $value values of the answers to all questions of the form
+    * @return string
+    */
+   public function getRenderedHtml($canEdit = true, $value = []) : string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -264,7 +271,7 @@ PluginFormcreatorConditionnableInterface
     * @param  array $input Datas used to add the item
     * @return array        The modified $input array
     */
-   private function checkBeforeSave($input) {
+   private function checkBeforeSave($input) : array {
       // Control fields values :
       // - name is required
       if (isset($input['name'])) {
@@ -427,35 +434,6 @@ PluginFormcreatorConditionnableInterface
             $input['uuid'] = plugin_formcreator_getUuid();
          }
       }
-
-      // $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      // if (isset($input[$sectionFk])) {
-      //    // If change section, reorder questions
-      //    if ($input[$sectionFk] != $this->fields[$sectionFk]) {
-      //       $oldId = $this->fields[$sectionFk];
-      //       $newId = $input[$sectionFk];
-      //       $row = $this->fields['row'];
-      //       Reorder other questions from the old section (handled by code client side)
-      //       $DB->update(
-      //          self::getTable(),
-      //          new QueryExpression("`row` = `row` - 1"),
-      //          [
-      //             'row' => ['>', $row],
-      //             $sectionFk => $oldId,
-      //          ]
-      //       );
-
-      //       Get the order for the new question
-      //       $maxRow = PluginFormcreatorCommon::getMax($this, [
-      //          $sectionFk => $newId
-      //       ], 'row');
-      //       if ($maxRow === null) {
-      //          $input['row'] = 1;
-      //       } else {
-      //          $input['row'] = $maxRow + 1;
-      //       }
-      //    }
-      // }
 
       return $input;
    }

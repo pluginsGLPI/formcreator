@@ -38,6 +38,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testSaveForm':
          case 'testGetFullForm':
          case 'testCanValidate':
+         case 'testIsFieldVisible':
             $this->login('glpi', 'glpi');
       }
    }
