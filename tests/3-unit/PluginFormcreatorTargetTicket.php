@@ -66,81 +66,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
-   public function providerSetTargetAssociatedItemLastAnswer() {
-      global $CFG_GLPI;
-
-      $validItemtype = $CFG_GLPI["asset_types"][0];
-      $invalidItemtype = "dzqdqzdkqzkdoz";
-
-      return [
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $validItemtype],
-               ['answer' => 9, 'values' => $validItemtype]
-            ],
-            'getItemSucess' => true,
-            'result'        => [
-               'items_id' => [$validItemtype => [7]]
-            ],
-         ],
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $invalidItemtype],
-               ['answer' => 9, 'values' => $validItemtype]
-            ],
-            'getItemSucess' => true,
-            'result'        => [
-               'items_id' => [$validItemtype => [9]]
-            ],
-         ],
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $invalidItemtype],
-               ['answer' => 9, 'values' => $invalidItemtype]
-            ],
-            'getItemSucess' => true,
-            'result'        => [],
-         ],
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $validItemtype],
-               ['answer' => 9, 'values' => $validItemtype]
-            ],
-            'getItemSucess' => false,
-            'result'        => [],
-         ],
-      ];
-   }
-
-   public function providerSetTargetAssociatedCategoryLastAnswer() {
-      $validItemtype = json_encode(["itemtype" => "ITILCategory"]);
-      $invalidItemtype = json_encode(["itemtype" => "dzqdqzdkqzkdoz"]);
-
-      return [
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $validItemtype],
-               ['answer' => 9, 'values' => $validItemtype]
-            ],
-            'result'        => ['itilcategories_id' => 7],
-         ],
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $invalidItemtype],
-               ['answer' => 9, 'values' => $validItemtype]
-            ],
-            'result'        => ['itilcategories_id' => 9],
-         ],
-         [
-            'answers' => [
-               ['answer' => 7, 'values' => $invalidItemtype],
-               ['answer' => 9, 'values' => $invalidItemtype]
-            ],
-            'result'        => [],
-         ],
-      ];
-   }
-
    /**
     * @dataProvider providerGetTypeName
     * @param integer $number
@@ -814,6 +739,31 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
    }
 
+   public function providerSetTargetCategory_nothing() {
+      $form = $this->getForm();
+      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer->isNewItem())->isFalse();
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE,
+      ]);
+      $this->boolean($targetTicket->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $targetTicket,
+            'formanswer' => $formanswer,
+            'expected'   => 0
+         ],
+      ];
+   }
+
    public function providerSetTargetCategory_noTemplate() {
       $category1 = new \ITILCategory();
       $category1Id = $category1->import([
@@ -993,8 +943,11 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    public function providerSetTargetCategory() {
-      return array_merge($this->providerSetTargetCategory_noTemplate(),
-         $this->providerSetTargetCategory_FromTemplate());
+      return array_merge(
+         $this->providerSetTargetCategory_nothing(),
+         $this->providerSetTargetCategory_noTemplate(),
+         $this->providerSetTargetCategory_FromTemplate()
+      );
    }
 
    /**
@@ -1011,16 +964,12 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       \PluginFormcreatorFields::resetVisibilityCache();
       $data = $dummyInstance->publicGetDefaultData($formanswer);
       $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
+
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }
 
-   public function testSetTargetAssociatedItem() {
-      global $CFG_GLPI;
-
-      // Disable notification to avoid output to console
-      $CFG_GLPI['use_notifications'] = '0';
-
-      $instance = new PluginFormcreatorTargetTicketDummy();
+   public function providerSetTargetAssociatedItem_1() {
+      // Prepare form
       $question = $this->getQuestion([
          'fieldtype' => 'glpiselect',
          'glpi_objects' => \Computer::class,
@@ -1028,21 +977,27 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $form = new \PluginFormcreatorForm();
       $form->getByQuestionId($question->getID());
 
+      // Have an item to associate
       $computer = new \Computer();
       $computer->add([
          'name' => $this->getUniqueString(),
          'entities_id' => '0',
       ]);
       $this->boolean($computer->isNewItem())->isFalse();
+
+      // Prepare form answer
       $formAnswer = new \PluginFormcreatorFormAnswer;
       $formAnswer->add([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'name' => $form->fields['name'],
          'requester_d' => 2, // glpi user id
-         'status' => '101',
+         'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
          'formcreator_field_' . $question->getID() => (string) $computer->getID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
+
+      // Prepare target ticket
+      $instance = new PluginFormcreatorTargetTicketDummy();
       $instance->add([
          'name' => '',
          'target_name' => '',
@@ -1052,121 +1007,231 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'associate_question' => $question->getID(),
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
-      $output = $instance->publicSetTargetAssociatedItem([], $formAnswer);
-      $this->array($output['items_id']['Computer'])->hasSize(1);
-      $this->integer((int) $output['items_id']['Computer'][$computer->getID()])->isEqualTo($computer->getID());
+
+      return [
+         [
+            'instance' => $instance,
+            'formanswer' => $formAnswer,
+            'expected' => [
+               'Computer' => [
+                  $computer->getID() => (string) $computer->getID()
+               ]
+            ],
+         ],
+      ];
+   }
+
+   public function providerSetTargetAssociatedItem_LastItem() {
+      global $CFG_GLPI;
+
+      // Prepare form
+      $validItemtype = $CFG_GLPI["asset_types"][0];
+
+      $item1 = new $validItemtype();
+      $item1->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item1->isNewItem())->isFalse();
+      $item2 = new $validItemtype();
+      $item2->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item2->isNewItem())->isFalse();
+
+      $question1 = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'glpi_objects' => $validItemtype,
+      ]);
+      $form1 = new \PluginFormcreatorForm();
+      $form1->getByQuestionId($question1->getID());
+      $sectionId = $question1->fields['plugin_formcreator_sections_id'];
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'glpiselect',
+         'glpi_objects'                   => $validItemtype
+      ]);
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => '',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
+         'associate_question' => $question2->getID(),
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
+         'formcreator_field_' . $question2->getID() => (string) $item2->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      $question3 = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'glpi_objects' => $validItemtype,
+      ]);
+      $form2 = new \PluginFormcreatorForm();
+      $form2->getByQuestionId($question3->getID());
+      $sectionId = $question3->fields['plugin_formcreator_sections_id'];
+      $question4 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'glpiselect',
+         'glpi_objects'                   => 'foo'
+      ]);
+
+      $instance2 = new PluginFormcreatorTargetTicketDummy();
+      $instance2->add([
+         'name' => '',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
+         'content' => '##FULLFORM',
+         'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
+         'associate_question' => $question3->getID(),
+      ]);
+      $this->boolean($instance2->isNewItem())->isFalse();
+      $formAnswer2 = new \PluginFormcreatorFormAnswer();
+      $formAnswer2->add([
+         'plugin_formcreator_forms_id' => $form2->getID(),
+         'formcreator_field_' . $question3->getID() => (string) $item1->getID(),
+         'formcreator_field_' . $question4->getID() => (string) -42,
+      ]);
+      $this->boolean($formAnswer2->isNewItem())->isFalse();
+
+      $question5 = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'glpi_objects' => 'foo',
+      ]);
+      $form3 = new \PluginFormcreatorForm();
+      $form3->getByQuestionId($question5->getID());
+      $sectionId = $question5->fields['plugin_formcreator_sections_id'];
+      $question6 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'glpiselect',
+         'glpi_objects'                   => 'foo'
+      ]);
+      $instance3 = new PluginFormcreatorTargetTicketDummy();
+      $instance3->add([
+         'name' => '',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form3->getID(),
+         'content' => '##FULLFORM',
+         'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
+         'associate_question' => $question5->getID(),
+      ]);
+      $this->boolean($instance3->isNewItem())->isFalse();
+      $formAnswer3 = new \PluginFormcreatorFormAnswer();
+      $formAnswer3->add([
+         'plugin_formcreator_forms_id' => $form3->getID(),
+         'formcreator_field_' . $question5->getID() => (string) -43,
+         'formcreator_field_' . $question6->getID() => (string) -42,
+      ]);
+      $this->boolean($formAnswer3->isNewItem())->isFalse();
+
+      $question7 = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'glpi_objects' => $validItemtype,
+      ]);
+      $form4 = new \PluginFormcreatorForm();
+      $form4->getByQuestionId($question7->getID());
+      $sectionId = $question7->fields['plugin_formcreator_sections_id'];
+      $question8 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'glpiselect',
+         'glpi_objects'                   => $validItemtype
+      ]);
+
+      $instance4 = new PluginFormcreatorTargetTicketDummy();
+      $instance4->add([
+         'name' => '',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form4->getID(),
+         'content' => '##FULLFORM',
+         'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER,
+         'associate_question' => $question7->getID(),
+      ]);
+      $this->boolean($instance4->isNewItem())->isFalse();
+      $formAnswer4 = new \PluginFormcreatorFormAnswer();
+      // use non existing items ids and existing itemtypes
+      $item7 = new $validItemtype();
+      $item7->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item7->isNewItem())->isFalse();
+      $item8 = new $validItemtype();
+      $item8->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item8->isNewItem())->isFalse();
+      $formAnswer4->add([
+         'plugin_formcreator_forms_id' => $form4->getID(),
+         'formcreator_field_' . $question7->getID() => (string) $item7->getID(),
+         'formcreator_field_' . $question8->getID() => (string) $item8->getID(),
+      ]);
+      $this->boolean($formAnswer4->isNewItem())->isFalse();
+      // Make items non existing for ticket generation
+      $item7->delete($item7->fields, 1);
+      $item8->delete($item8->fields, 1);
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => [
+               $validItemtype => [
+                  $item2->getID() => (string) $item2->getID()
+               ]
+            ],
+         ],
+         [
+            'instance'   => $instance2,
+            'formanswer' => $formAnswer2,
+            'expected'   => [
+               $validItemtype => [
+                  $item1->getID() => (string) $item1->getID()
+               ]
+            ],
+         ],
+         [
+            'instance'   => $instance3,
+            'formanswer' => $formAnswer3,
+            'expected'   => null,
+         ],
+         [
+            'instance'   => $instance4,
+            'formanswer' => $formAnswer4,
+            'expected'   => null,
+         ],
+      ];
+   }
+
+   public function providerSetTargetAssociatedItem() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
+      return array_merge(
+         $this->providerSetTargetAssociatedItem_1(),
+         $this->providerSetTargetAssociatedItem_LastItem()
+      );
    }
 
    /**
-    * @dataProvider providerSetTargetAssociatedItemLastAnswer
+    * @dataProvider providerSetTargetAssociatedItem
     */
-   public function testSetTargetAssociatedItemLastAnswer(
-      array $answers,
-      $getItemSucess,
-      array $results
-   ) {
-      global $DB;
-
-      $lastAnswer = \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER;
-
-      // Prepare instance
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $instance->fields = ['associate_rule' => $lastAnswer];
-
-      // Prepare args
-      $data = [];
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->fields = ['id' => 1];
-
-      // Mock call to $DB
-      $DB = new \mock\DB();
-
-      // $db->request()
-      $answerTable = \PluginFormcreatorAnswer::getTable() . ' AS answer';
-      $computerTable = \Computer::getTable();
-
-      $this->calling($DB)->request = function (
-         $tableorsql,
-         $crit = "",
-         $debug = false
-      ) use ($DB, $answers, $answerTable, $computerTable, $getItemSucess) {
-
-         // Check for specific tables
-         if (isset($tableorsql['FROM'])) {
-            if ($tableorsql['FROM'] == $answerTable) {
-               // $DB is trying to load the answers for the form
-               return new \ArrayIterator($answers);
-            } else if ($tableorsql['FROM'] == $computerTable) {
-               // $item->getFromDB check
-               if ($getItemSucess) {
-                  return new \ArrayIterator([1]);
-               } else {
-                  return new \ArrayIterator();
-               }
-            }
-         }
-
-         // Keep normal execution for others requests
-         $iterator = new \DBmysqlIterator($DB);
-         $iterator->execute($tableorsql, $crit, $debug);
-         return $iterator;
-      };
-
-      // Execute the test
-      $res = $instance->publicSetTargetAssociatedItem($data, $formAnswer);
-
-      // Assert results
-      $this->array($res)->isEqualTo($results);
-   }
-
-   /**
-    * @dataProvider providerSetTargetAssociatedCategoryLastAnswer
-    */
-   public function testSetTargetCategoryLastAnswer(
-      array $answers,
-      array $results
-   ) {
-      global $DB;
-
-      $lastAnswer = \PluginFormcreatorAbstractTarget::CATEGORY_RULE_LAST_ANSWER;
-
-      // Prepare instance
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $instance->fields = ['category_rule' => $lastAnswer];
-
-      // Prepare args
-      $data = [];
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->fields = ['id' => 1];
-
-      // Mock call to $DB
-      $DB = new \mock\DB();
-
-      // $db->request()
-      $answerTable = \PluginFormcreatorAnswer::getTable() . ' AS answer';
-
-      $this->calling($DB)->request = function (
-         $tableorsql,
-         $crit = "",
-         $debug = false
-      ) use ($DB, $answers, $answerTable) {
-
-         // $DB is trying to load the answers for the form
-         if (isset($tableorsql['FROM']) && $tableorsql['FROM'] == $answerTable) {
-            return new \ArrayIterator($answers);
-         }
-
-         // Keep normal execution for others requests
-         $iterator = new \DBmysqlIterator($DB);
-         $iterator->execute($tableorsql, $crit, $debug);
-         return $iterator;
-      };
-
-      // Execute the test
-      $res = $instance->publicSetTargetCategory($data, $formAnswer);
-
-      // Assert results
-      $this->array($res)->isEqualTo($results);
+   public function testSetTargetAssociatedItem($instance, $formanswer, $expected) {
+      $output = $instance->publicSetTargetAssociatedItem([], $formanswer);
+      if ($expected !== null) {
+         $this->array($output['items_id'])->isIdenticalTo($expected);
+      } else {
+         $this->array($output)->notHasKey('items_id');
+      }
    }
 
    public function testIsEntityAssign() {

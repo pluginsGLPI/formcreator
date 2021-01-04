@@ -396,7 +396,12 @@ PluginFormcreatorConditionnableInterface
       return $data;
    }
 
-   protected function setTargetCategory(array $data, PluginFormcreatorFormAnswer $formanswer) {
+   /**
+    * @param array $data data of the target
+    * @param PluginFormcreatorFormAnswer $formanswer Answers to the form used to populate the target
+    * @return array
+    */
+   protected function setTargetCategory(array $data, PluginFormcreatorFormAnswer $formanswer) : array {
       global $DB;
 
       $category = null;
@@ -447,7 +452,7 @@ PluginFormcreatorConditionnableInterface
                $itemtype = DropdownField::getSubItemtypeForValues($answer['values']);
 
                // Skip if not a dropdown on categories
-               if ($itemtype !== "ITILCategory") {
+               if ($itemtype !== ITILCategory::class) {
                   continue;
                }
 
