@@ -34,9 +34,11 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorIssue extends CommonTestCase {
    public function beforeTestMethod($method) {
+      global $CFG_GLPI;
       switch ($method) {
          case 'testGetSyncIssuesRequest':
             $this->login('glpi', 'glpi');
+            $CFG_GLPI['use_notifications'] = 0;
             break;
       }
    }
@@ -55,9 +57,11 @@ class PluginFormcreatorIssue extends CommonTestCase {
          [
             'item' => $ticket,
             'expected' => [
-               'name'               => $ticket->fields['name'],
-               'status'             => $ticket->fields['status'],
-               'users_id_recipient' => \Session::getLoginUserID(true),
+               'name'          => $ticket->fields['name'],
+               'status'        => $ticket->fields['status'],
+               'requester_id'  => $ticket->fields['users_id_recipient'],
+               'date_creation' => $ticket->fields['date'],
+               'date_mod'      => $ticket->fields['date_mod'],
             ],
          ],
       ];
@@ -75,17 +79,19 @@ class PluginFormcreatorIssue extends CommonTestCase {
          [
             'item' => $formAnswer,
             'expected' => [
-               'name'         => $formAnswer->fields['name'],
-               'status'       => $formAnswer->fields['status'],
-               'requester_id' => \Session::getLoginUserID(true),
+               'name'          => $formAnswer->fields['name'],
+               'status'        => $formAnswer->fields['status'],
+               'requester_id'  => $formAnswer->fields['requester_id'],
+               'date_creation' => $formAnswer->fields['request_date'],
+               'date_mod'      => $formAnswer->fields['request_date'],
             ],
          ],
       ];
    }
 
    /**
-    * @dataProvider providerGetsyncIssuesRequest_simpleTicket
     * @dataProvider providerGetsyncIssuesRequest_simpleFormanswers
+    * @dataProvider providerGetsyncIssuesRequest_simpleTicket
     *
     * @return void
     */
@@ -106,8 +112,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $row = $result->next();
       $this->array($row);
 
-      // Test all fields desxcribed in expectations
-      foreach($expected as $key => $field) {
+      // Test all fields described in expectations
+      foreach ($expected as $key => $field) {
          $this->variable($row[$key])->isEqualTo($field);
       }
    }

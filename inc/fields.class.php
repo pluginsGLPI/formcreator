@@ -322,14 +322,11 @@ class PluginFormcreatorFields
       $context = new Context();
 
       $tokens = $parser->parse($expression);
-      $result = $evaluator->evaluate($tokens, $context) ? true : false;
+      self::$visibility[$itemtype][$itemId] = $evaluator->evaluate($tokens, $context) ? true : false;
 
-      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
-         // If the field is hidden by default, show it if condition is true
-         self::$visibility[$itemtype][$itemId] = $result;
-      } else {
-         // else show it if condition is false
-         self::$visibility[$itemtype][$itemId] = !$result;
+      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
+         // Reverse condition
+         self::$visibility[$itemtype][$itemId] = !self::$visibility[$itemtype][$itemId];
       }
       return self::$visibility[$itemtype][$itemId];
    }

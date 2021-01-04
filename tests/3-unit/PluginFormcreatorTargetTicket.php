@@ -814,7 +814,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
    }
 
-   public function providerSetTargetCategory() {
+   public function providerSetTargetCategory_noTemplate() {
       $category1 = new \ITILCategory();
       $category1Id = $category1->import([
          'name' => 'category 1',
@@ -826,7 +826,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'entities_id' => 0,
       ]);
 
-      // Crate a task category and ensure its ID is not the
+      // Create a task category and ensure its ID is not the
       // same as the ticket categories created above
       $taskCategoryId = 0;
       do {
@@ -920,20 +920,20 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
 
       return [
-         // Check visibility is taken into acount
-         [
+         // Check visibility is taken into account
+         'visibility taken into account' => [
             'instance'   => $instance1,
             'formanswer' => $formanswer1,
             'expected'   => $category1Id,
          ],
-         // Check not ticketcategory dropdown is ignored
-         [
+         // Check ticketcategory dropdown is ignored
+         '1st ticket category question is ignored' => [
             'instance'   => $instance1,
             'formanswer' => $formanswer2,
             'expected'   => $category2Id,
          ],
          // Check zero value is ignored
-         [
+         'zero value is ignored' => [
             'instance'   => $instance1,
             'formanswer' => $formanswer3,
             'expected'   => $category1Id,
@@ -992,9 +992,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
+   public function providerSetTargetCategory() {
+      return array_merge($this->providerSetTargetCategory_noTemplate(),
+         $this->providerSetTargetCategory_FromTemplate());
+   }
+
    /**
     * @dataProvider providerSetTargetCategory
-    * @dataProvider providerSetTargetCategory_FromTemplate
     */
    public function testSetTargetCategory($instance, $formanswer, $expected) {
       // Substitute a dummy class to access protected / private methods
@@ -1004,6 +1008,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $instance->getFromDB($instance->getID());
       $dummyInstance->fields = $instance->fields;
 
+      \PluginFormcreatorFields::resetVisibilityCache();
       $data = $dummyInstance->publicGetDefaultData($formanswer);
       $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);

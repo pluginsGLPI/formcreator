@@ -1427,7 +1427,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param integer $limit The N last answers found
     * @return DBMysqlIterator
     */
-   public static function getMyLastAnswersAsValidator($limit = 5) {
+   public static function getMyLastAnswersAsValidator($limit = 5) : DBMysqlIterator {
       global $DB;
 
       $userId = Session::getLoginUserID();
@@ -1497,7 +1497,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param integer $formId ID of the form where come the fileds to load
     * @return PluginFormcreatorAbstractField[]
     */
-   private function getQuestionFields($formId) {
+   private function getQuestionFields($formId) : array {
       if ($this->questionFields !== null) {
          return $this->questionFields;
       }
@@ -1516,7 +1516,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return $this->questionFields;
    }
 
-   public function getIsAnswersValid() {
+   public function getIsAnswersValid() : bool {
       return $this->isAnswersValid;
    }
 
@@ -1525,7 +1525,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     *
     * @return boolean True on success
     */
-   public function deserializeAnswers() {
+   public function deserializeAnswers() : bool {
       if ($this->isNewItem()) {
          return false;
       }
@@ -1536,5 +1536,22 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       return true;
+   }
+
+   /**
+    * Computes visibility of a field from all field values of the form answer
+    *
+    * @return bool
+    */
+   public function isFieldVisible(int $id) : bool {
+      if ($this->isNewItem()) {
+         throw new RuntimeException("Instance is empty");
+      }
+
+      if (!isset($this->questionFields[$id])) {
+         throw new RuntimeException("Question not found");
+      }
+
+      return PluginFormcreatorFields::isVisible($this->questionFields[$id]->getQuestion(), $this->questionFields);
    }
 }

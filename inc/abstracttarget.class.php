@@ -422,7 +422,7 @@ PluginFormcreatorConditionnableInterface
             // Get all answers for dropdown questions of this form, ordered
             // from last to first displayed
             $answers = $DB->request([
-               'SELECT' => ['answer.answer', 'question.values'],
+               'SELECT' => ['answer.plugin_formcreator_questions_id', 'answer.answer', 'question.values'],
                'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
                'JOIN' => [
                   PluginFormcreatorQuestion::getTable() . ' AS question' => [
@@ -453,6 +453,11 @@ PluginFormcreatorConditionnableInterface
 
                // Skip if question was not answered
                if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Skip if question is not visible
+               if (!$formanswer->isFieldVisible($answer['plugin_formcreator_questions_id'])) {
                   continue;
                }
 
