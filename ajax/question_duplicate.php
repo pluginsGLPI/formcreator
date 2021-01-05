@@ -50,7 +50,12 @@ if (!$question->canCreate()) {
     exit;
 }
 
-if (($newId = $question->duplicate(['progress' => false])) === false) {
+$newRow = 1 + PluginFormcreatorCommon::getMax(
+    $question, [
+        'plugin_formcreator_sections_id' => $question->fields['plugin_formcreator_sections_id']
+    ], 'row'
+);
+if (($newId = $question->duplicate(['progress' => false, 'fields' => ['row' => $newRow]])) === false) {
     http_response_code(500);
     exit;
 }
@@ -60,6 +65,7 @@ if (!$question->getFromDB($newId)) {
     http_response_code(500);
     exit;
 }
+
 $json = [
     'y'      => $question->fields['row'],
     'x'      => $question->fields['col'],

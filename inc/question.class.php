@@ -316,15 +316,8 @@ PluginFormcreatorConditionnableInterface
          return [];
       }
       // - field type is compatible with accessibility of the form
-      $section = new PluginFormcreatorSection();
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      if (isset($input[$sectionFk])) {
-         $section->getFromDB($input[$sectionFk]);
-      } else {
-         $section->getFromDB($this->fields[$sectionFk]);
-      }
       $form = new PluginFormcreatorForm();
-      $form->getFromDBBySection($section);
+      $form->getFromDBByQuestion($this);
       if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
          Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
          return [];
@@ -839,6 +832,17 @@ PluginFormcreatorConditionnableInterface
 
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $export = $this->export(true);
+
+      // Amend some data (used when duplicating a question from the form designer UI)
+      if (isset($options['fields'])) {
+         foreach ($options['fields'] as $key => $value) {
+            if ($value === null) {
+               unset($export[$key]);
+               continue;
+            }
+            $export[$key] = $value;
+         }
+      }
       $newQuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
 
       if ($newQuestionId === false) {
