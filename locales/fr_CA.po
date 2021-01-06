@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Tiago Graca, 2020
 # Thierry Bugier <tbugier@teclib.com>, 2020
+# Tiago Graca, 2020
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:32+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2020\n"
+"Last-Translator: Tiago Graca, 2020\n"
 "Language-Team: French (Canada) (https://www.transifex.com/teclib/teams/28042/fr_CA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -161,7 +161,7 @@ msgstr "Entité par défaut d'un utilisateur issue d'une question"
 
 #: inc/abstracttarget.class.php:194
 msgid "From a GLPI object > Entity type question answer"
-msgstr "Depuis un objet GLPI > Entité type question answer"
+msgstr "Depuis un objet GLPI > Entité type question réponse"
 
 #: inc/abstracttarget.class.php:201
 msgid "Tags from questions"
@@ -185,7 +185,7 @@ msgstr "égale à la réponse de la question"
 
 #: inc/abstracttarget.class.php:211
 msgid "calculated from the ticket creation date"
-msgstr "calculée à partir de la date de création du billet"
+msgstr "calculée à partir de la date de création du ticket"
 
 #: inc/abstracttarget.class.php:212
 msgid "calculated from the answer to the question"
@@ -193,11 +193,11 @@ msgstr "calculée à partir de la réponse à la question"
 
 #: inc/abstracttarget.class.php:218
 msgid "SLA from template or none"
-msgstr ""
+msgstr "Entente de niveaux de service depuis le gabarit ou aucun"
 
 #: inc/abstracttarget.class.php:219
 msgid "Specific SLA"
-msgstr ""
+msgstr "Entente de niveaux de service spécifique"
 
 #: inc/abstracttarget.class.php:220 inc/abstracttarget.class.php:228
 #: inc/abstracttarget.class.php:236 inc/abstracttarget.class.php:244
@@ -209,11 +209,11 @@ msgstr "Égale à la réponse à la question"
 
 #: inc/abstracttarget.class.php:226
 msgid "OLA from template or none"
-msgstr ""
+msgstr "Entente sur les niveaux opérationnels depuis le gabarit ou aucun"
 
 #: inc/abstracttarget.class.php:227
 msgid "Specific OLA"
-msgstr ""
+msgstr "Entente sur les niveaux opérationnels spécifique"
 
 #: inc/abstracttarget.class.php:234
 msgid "Urgency from template or Medium"
@@ -253,15 +253,15 @@ msgstr "Question de type \"entité\""
 
 #: inc/abstracttarget.class.php:1012
 msgid "SLA (TTO/TTR)"
-msgstr ""
+msgstr "SLA (TTO/TTR)"
 
 #: inc/abstracttarget.class.php:1013 inc/abstracttarget.class.php:1088
 msgid "Question (TTO/TTR)"
-msgstr ""
+msgstr "Question (TTO/TTR)"
 
 #: inc/abstracttarget.class.php:1087
 msgid "OLA (TTO/TTR)"
-msgstr ""
+msgstr "OLA (TTO/TTR)"
 
 #: inc/abstracttarget.class.php:1140 inc/abstracttarget.class.php:1154
 #: inc/form.class.php:785
@@ -285,7 +285,7 @@ msgstr "Urgence"
 
 #: inc/abstracttarget.class.php:1226
 msgid "Ticket tags"
-msgstr "Étiquettes du billet"
+msgstr "Étiquettes du ticket"
 
 #: inc/abstracttarget.class.php:1272
 msgid "Tags"
@@ -342,7 +342,7 @@ msgstr "Annuler"
 
 #: inc/abstracttarget.class.php:2014 inc/target_actor.class.php:64
 msgid "Form author"
-msgstr ""
+msgstr "Auteur du formulaire"
 
 #: inc/abstracttarget.class.php:2017 inc/target_actor.class.php:65
 msgid "Form validator"
@@ -379,16 +379,19 @@ msgstr "Catégorie de la base de connaissance"
 #: inc/common.class.php:238
 msgid "You cannot delete this issue. Maybe it is taken into account."
 msgstr ""
+"Vous ne pouvez pas supprimer cette demande. Peut être est-elle prise en "
+"compte."
 
 #: inc/common.class.php:243
 msgid "Failed to delete this issue. An internal error occured."
 msgstr ""
+"Échec de la suppression de la demande. Une erreur interne est survenue."
 
 #: inc/condition.class.php:62
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Condition"
+msgstr[1] "Conditions"
 
 #: inc/condition.class.php:91
 msgid "is visible"
@@ -419,7 +422,7 @@ msgstr "Affiché par défaut, sauf si"
 #: inc/targetticket.class.php:1174
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
-msgstr ""
+msgstr "Échec de l'ajout ou de la modification de %1$s %2$s"
 
 #: inc/entityconfig.class.php:69
 msgid "GLPi's helpdesk"
@@ -451,7 +454,7 @@ msgstr "Mode d'assistance"
 
 #: inc/entityconfig.class.php:136 inc/entityconfig.class.php:179
 msgid "Sort order"
-msgstr ""
+msgstr "Ordre de tri"
 
 #: inc/form.class.php:60 inc/form.class.php:290 inc/form.class.php:349
 msgid "Public access"
@@ -654,6 +657,8 @@ msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
 msgstr ""
+"Le fichier ne spécifie pas la version de schéma. Il a probablement été "
+"généré avec une version antérieure à 2.10. Abandon."
 
 #: inc/form.class.php:1866
 #, php-format
@@ -814,12 +819,12 @@ msgstr[1] "Problèmes"
 #: inc/issue.class.php:53
 msgid "Update issue data from tickets and form answers"
 msgstr ""
-"Mettre à jour les informations sur les demandes à partir des billets et des "
+"Mettre à jour les informations sur les demandes à partir des tickets et des "
 "réponses aux formulaires"
 
 #: inc/issue.class.php:512
 msgid "Ticket approver"
-msgstr "Approbateur du billet"
+msgstr "Approbateur du ticket"
 
 #: inc/issue.class.php:607
 msgid "Not validated"
@@ -828,12 +833,12 @@ msgstr "Non validé"
 #: inc/item_targetticket.class.php:51
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Relation de ticket composite"
+msgstr[1] "Relations de ticket composite"
 
 #: inc/linker.class.php:78
 msgid "Importing"
-msgstr ""
+msgstr "Importation"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -944,14 +949,14 @@ msgstr "Condition pour afficher la question"
 #: inc/questiondependency.class.php:66
 msgid "Question dependency"
 msgid_plural "Question dependencies"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dépendance de question"
+msgstr[1] "Dépendances de question"
 
 #: inc/questionrange.class.php:51
 msgid "Question range"
 msgid_plural "Question ranges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Étendue de question"
+msgstr[1] "Étendues de question"
 
 #: inc/questionrange.class.php:79
 msgid "Min"
@@ -964,8 +969,8 @@ msgstr "Max"
 #: inc/questionregex.class.php:51
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Expression régulière de question"
+msgstr[1] "Expressions régulières de question"
 
 #: inc/questionregex.class.php:78
 msgid ""
@@ -1006,8 +1011,8 @@ msgstr "Fournisseur spécifique"
 #: inc/target_actor.class.php:88
 msgid "Target actor"
 msgid_plural "Target actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Acteur cible"
+msgstr[1] "Acteurs cibles"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:304
 msgid "Target change"
@@ -1029,6 +1034,8 @@ msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
 "a parameter of the target"
 msgstr ""
+"Échec de l'ajout ou de la modification de %1$s %2$s : une question est "
+"manquante et est utilisée dans un paramètre de la cible"
 
 #: inc/targetchange.class.php:275 inc/targetticket.class.php:109
 msgid "Add a target "
@@ -1044,13 +1051,13 @@ msgstr "Titre du changement"
 
 #: inc/targetchange.class.php:408 inc/targetticket.class.php:222
 msgid "Condition to create the target"
-msgstr ""
+msgstr "Condition pour créer la cible"
 
 #: inc/targetticket.class.php:51 inc/targetticket.class.php:138
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] "Billet cible"
-msgstr[1] "Billets cible"
+msgstr[0] "Ticket cible"
+msgstr[1] "Tickets cible"
 
 #: inc/targetticket.class.php:86
 msgid "Specific asset"
@@ -1066,15 +1073,15 @@ msgstr "Type spécifique"
 
 #: inc/targetticket.class.php:141
 msgid "Ticket title"
-msgstr "Titre du billet"
+msgstr "Titre du ticket"
 
 #: inc/targetticket.class.php:211
 msgid "Add validation message as first ticket followup"
-msgstr "Ajouter le message de validation en premier dans le suivi de billet"
+msgstr "Ajouter le message de validation en premier dans le suivi de ticket"
 
 #: inc/targetticket.class.php:265
 msgid "Link to an other ticket"
-msgstr "Lier à un autre billet"
+msgstr "Lier à un autre ticket"
 
 #: inc/targetticket.class.php:274
 msgid "An other destination of this form"
@@ -1082,7 +1089,7 @@ msgstr "Une autre destination de ce formulaire"
 
 #: inc/targetticket.class.php:275
 msgid "An existing ticket"
-msgstr "Un billet existant"
+msgstr "Un ticket existant"
 
 #: inc/targetticket.class.php:560
 msgid "Invalid link type"
@@ -1158,7 +1165,7 @@ msgstr "Un champ obligatoire est vide: %s"
 #: inc/field/actorfield.class.php:266
 #, php-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Valeur invalide : %s"
 
 #: inc/field/actorfield.class.php:288
 #, php-format
@@ -1199,15 +1206,15 @@ msgstr "Un champ de type description doit avoir une description :"
 
 #: inc/field/dropdownfield.class.php:88
 msgid "SLA"
-msgstr ""
+msgstr "Entente de niveau de service "
 
 #: inc/field/dropdownfield.class.php:89
 msgid "OLA"
-msgstr ""
+msgstr "Entente sur les niveaux opérationnels"
 
 #: inc/field/dropdownfield.class.php:118
 msgid "Show ticket categories"
-msgstr "Afficher les catégories du billet"
+msgstr "Afficher les catégories du ticket"
 
 #: inc/field/dropdownfield.class.php:123 inc/field/dropdownfield.class.php:125
 msgid "Request categories"
@@ -1223,15 +1230,15 @@ msgstr "Catégories de changement"
 
 #: inc/field/dropdownfield.class.php:153
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: inc/field/dropdownfield.class.php:158
 msgid "Time to own"
-msgstr ""
+msgstr "Temps de prise en charge"
 
 #: inc/field/dropdownfield.class.php:159
 msgid "Time to resolve"
-msgstr ""
+msgstr "Temps de résolution"
 
 #: inc/field/dropdownfield.class.php:430
 #: inc/field/ldapselectfield.class.php:193
@@ -1243,22 +1250,22 @@ msgstr "Un champ obligatoire est vide :"
 
 #: inc/field/dropdownfield.class.php:456
 msgid "Invalid value for "
-msgstr ""
+msgstr "Valeur invalide pour"
 
 #: inc/field/dropdownfield.class.php:467
 #, php-format
 msgid "The field value is required: %s"
-msgstr ""
+msgstr "La valeur de ce champ est requis : %s"
 
 #: inc/field/dropdownfield.class.php:482
 #, php-format
 msgid "Invalid dropdown type: %s"
-msgstr ""
+msgstr "Type d'intitulé invalide : %s"
 
 #: inc/field/emailfield.class.php:105
 #, php-format
 msgid "This is not a valid e-mail: %s"
-msgstr ""
+msgstr "Ce n'est pas un courriel valide: %s"
 
 #: inc/field/filefield.class.php:93
 msgid "No attached document"
@@ -1271,7 +1278,7 @@ msgstr "Document joint"
 #: inc/field/filefield.class.php:138
 #, php-format
 msgid "A required file is missing: %s"
-msgstr ""
+msgstr "Un champ requis est manquant : %s"
 
 #: inc/field/floatfield.class.php:155
 #, php-format
@@ -1321,7 +1328,7 @@ msgstr[1] "Objets GLPI"
 #: inc/field/integerfield.class.php:55
 #, php-format
 msgid "This is not an integer: %s"
-msgstr ""
+msgstr "Ce n'est pas un nombre entier : %s"
 
 #: inc/field/integerfield.class.php:96
 msgid "Integer"

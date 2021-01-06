@@ -192,11 +192,11 @@ msgstr "sorunun yanıtından hesaplanan"
 
 #: inc/abstracttarget.class.php:218
 msgid "SLA from template or none"
-msgstr ""
+msgstr "Kalıptan HDA ya da yok"
 
 #: inc/abstracttarget.class.php:219
 msgid "Specific SLA"
-msgstr ""
+msgstr "Belirli bir HDA"
 
 #: inc/abstracttarget.class.php:220 inc/abstracttarget.class.php:228
 #: inc/abstracttarget.class.php:236 inc/abstracttarget.class.php:244
@@ -208,11 +208,11 @@ msgstr "Sorunun yanıtına eşit olan"
 
 #: inc/abstracttarget.class.php:226
 msgid "OLA from template or none"
-msgstr ""
+msgstr "Kalıptan ODA ya da yok"
 
 #: inc/abstracttarget.class.php:227
 msgid "Specific OLA"
-msgstr ""
+msgstr "Belirli bir ODA"
 
 #: inc/abstracttarget.class.php:234
 msgid "Urgency from template or Medium"
@@ -252,15 +252,15 @@ msgstr "Birim türü sorusu"
 
 #: inc/abstracttarget.class.php:1012
 msgid "SLA (TTO/TTR)"
-msgstr ""
+msgstr "HDA (EAZ/ÇÖZ)"
 
 #: inc/abstracttarget.class.php:1013 inc/abstracttarget.class.php:1088
 msgid "Question (TTO/TTR)"
-msgstr ""
+msgstr "Soru (EAZ/ÇÖZ)"
 
 #: inc/abstracttarget.class.php:1087
 msgid "OLA (TTO/TTR)"
-msgstr ""
+msgstr "ODA (EAZ/ÇÖZ)"
 
 #: inc/abstracttarget.class.php:1140 inc/abstracttarget.class.php:1154
 #: inc/form.class.php:785
@@ -341,7 +341,7 @@ msgstr "İptal"
 
 #: inc/abstracttarget.class.php:2014 inc/target_actor.class.php:64
 msgid "Form author"
-msgstr ""
+msgstr "Form sorumlusu"
 
 #: inc/abstracttarget.class.php:2017 inc/target_actor.class.php:65
 msgid "Form validator"
@@ -377,17 +377,17 @@ msgstr "Bilgi bankası kategorisi"
 
 #: inc/common.class.php:238
 msgid "You cannot delete this issue. Maybe it is taken into account."
-msgstr ""
+msgstr "Bu sorunu silemezsiniz. Değerlendirmeye alınmış olabilir."
 
 #: inc/common.class.php:243
 msgid "Failed to delete this issue. An internal error occured."
-msgstr ""
+msgstr "Bu sorun silinemedi. Bir iç sorun çıktı."
 
 #: inc/condition.class.php:62
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Koşul"
+msgstr[1] "Koşullar"
 
 #: inc/condition.class.php:91
 msgid "is visible"
@@ -418,7 +418,7 @@ msgstr "Şu olmadan görüntülensin"
 #: inc/targetticket.class.php:1174
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
-msgstr ""
+msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 
 #: inc/entityconfig.class.php:69
 msgid "GLPi's helpdesk"
@@ -450,7 +450,7 @@ msgstr "Destek merkezi kipi"
 
 #: inc/entityconfig.class.php:136 inc/entityconfig.class.php:179
 msgid "Sort order"
-msgstr ""
+msgstr "Sıralama"
 
 #: inc/form.class.php:60 inc/form.class.php:290 inc/form.class.php:349
 msgid "Public access"
@@ -649,6 +649,8 @@ msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
 msgstr ""
+"Dosyada şema sürümü belirtilmemiş. Dosya büyük olasılıkla 2.10 öncesindeki "
+"bir sürüm tarafından oluşturulmuş. İşlemden vaz geçiliyor."
 
 #: inc/form.class.php:1866
 #, php-format
@@ -820,12 +822,12 @@ msgstr "Değerlendirilmemiş"
 #: inc/item_targetticket.class.php:51
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Karmaşık destek kaydı ilişkisi"
+msgstr[1] "Karmaşık destek kaydı ilişkileri"
 
 #: inc/linker.class.php:78
 msgid "Importing"
-msgstr ""
+msgstr "İçe aktarılıyor"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -936,14 +938,14 @@ msgstr "Sorunun görüntülenme koşulu"
 #: inc/questiondependency.class.php:66
 msgid "Question dependency"
 msgid_plural "Question dependencies"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru bağımlılığı"
+msgstr[1] "Soru bağımlılıkları"
 
 #: inc/questionrange.class.php:51
 msgid "Question range"
 msgid_plural "Question ranges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru aralığı"
+msgstr[1] "Soru aralıkları"
 
 #: inc/questionrange.class.php:79
 msgid "Min"
@@ -956,8 +958,8 @@ msgstr "En büyük"
 #: inc/questionregex.class.php:51
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru kuralları ifadesi"
+msgstr[1] "Soru kuralları ifadeleri"
 
 #: inc/questionregex.class.php:78
 msgid ""
@@ -998,8 +1000,8 @@ msgstr "Belirli sağlayıcı"
 #: inc/target_actor.class.php:88
 msgid "Target actor"
 msgid_plural "Target actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef ilgili"
+msgstr[1] "Hedef ilgililer"
 
 #: inc/targetchange.class.php:41 inc/targetchange.class.php:304
 msgid "Target change"
@@ -1021,6 +1023,8 @@ msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
 "a parameter of the target"
 msgstr ""
+"%1$s %2$s eklenemedi ya da güncellenemedi: Bir soru eksik ve hedefteki bir "
+"parametre tarafından kullanılıyor"
 
 #: inc/targetchange.class.php:275 inc/targetticket.class.php:109
 msgid "Add a target "
@@ -1036,7 +1040,7 @@ msgstr "Başlığı değiştir"
 
 #: inc/targetchange.class.php:408 inc/targetticket.class.php:222
 msgid "Condition to create the target"
-msgstr ""
+msgstr "Hedefin oluşturulacağı koşul"
 
 #: inc/targetticket.class.php:51 inc/targetticket.class.php:138
 msgid "Target ticket"
@@ -1150,7 +1154,7 @@ msgstr "Zorunlu bir alan boş bırakılmış: %s"
 #: inc/field/actorfield.class.php:266
 #, php-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Değer geçersiz: %s"
 
 #: inc/field/actorfield.class.php:288
 #, php-format
@@ -1191,11 +1195,11 @@ msgstr "Bir açıklama alanında açıklama bulunmalıdır:"
 
 #: inc/field/dropdownfield.class.php:88
 msgid "SLA"
-msgstr ""
+msgstr "HDA"
 
 #: inc/field/dropdownfield.class.php:89
 msgid "OLA"
-msgstr ""
+msgstr "ODA"
 
 #: inc/field/dropdownfield.class.php:118
 msgid "Show ticket categories"
@@ -1215,15 +1219,15 @@ msgstr "Değişiklik kategorileri"
 
 #: inc/field/dropdownfield.class.php:153
 msgid "Type"
-msgstr ""
+msgstr "Tür"
 
 #: inc/field/dropdownfield.class.php:158
 msgid "Time to own"
-msgstr ""
+msgstr "Ele alınma zamanı"
 
 #: inc/field/dropdownfield.class.php:159
 msgid "Time to resolve"
-msgstr ""
+msgstr "Çözümlenme zamanı"
 
 #: inc/field/dropdownfield.class.php:430
 #: inc/field/ldapselectfield.class.php:193
@@ -1235,22 +1239,22 @@ msgstr "Zorunlu bir alan boş bırakılmış:"
 
 #: inc/field/dropdownfield.class.php:456
 msgid "Invalid value for "
-msgstr ""
+msgstr "Şunun değeri geçersiz"
 
 #: inc/field/dropdownfield.class.php:467
 #, php-format
 msgid "The field value is required: %s"
-msgstr ""
+msgstr "Alan değeri gerekli: %s"
 
 #: inc/field/dropdownfield.class.php:482
 #, php-format
 msgid "Invalid dropdown type: %s"
-msgstr ""
+msgstr "Açılan kutu türü geçersiz: %s"
 
 #: inc/field/emailfield.class.php:105
 #, php-format
 msgid "This is not a valid e-mail: %s"
-msgstr ""
+msgstr "E-posta adresi geçersiz: %s"
 
 #: inc/field/filefield.class.php:93
 msgid "No attached document"
@@ -1263,7 +1267,7 @@ msgstr "Ekli belge"
 #: inc/field/filefield.class.php:138
 #, php-format
 msgid "A required file is missing: %s"
-msgstr ""
+msgstr "Gerekli bir dosya eksik: %s"
 
 #: inc/field/floatfield.class.php:155
 #, php-format
@@ -1313,7 +1317,7 @@ msgstr[1] "GLPI nesneleri"
 #: inc/field/integerfield.class.php:55
 #, php-format
 msgid "This is not an integer: %s"
-msgstr ""
+msgstr "Bu bir tamsayı değil: %s"
 
 #: inc/field/integerfield.class.php:96
 msgid "Integer"
