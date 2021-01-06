@@ -33,6 +33,7 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
+use PluginFormcreatorForm;
 use Html;
 use Toolbox;
 use Session;
@@ -192,12 +193,15 @@ class DropdownField extends PluginFormcreatorAbstractField
       $fieldName = 'formcreator_field_' . $id;
       $itemtype = $this->getSubItemtype();
 
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBByQuestion($this->getQuestion());
       $dparams = [
          'name'     => $fieldName,
          'value'    => $this->value,
          'display'  => false,
          'comments' => false,
-         'entity'   => $_SESSION['glpiactiveentities'],
+         'entity'   => $form->fields['entities_id'],
+         'entity_sons' => (bool) $form->isRecursive(),
          'displaywith' => ['id'],
       ];
 
@@ -368,7 +372,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       $fieldName    = 'formcreator_field_' . $id;
       if (!empty($this->question->fields['values'])) {
          $dparams = $this->buildParams($rand);
-         $html .= $itemtype::dropdown($dparams + ['display' => false]);
+         $dparams['display'] = false;
+         $html .= $itemtype::dropdown($dparams);
       }
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
