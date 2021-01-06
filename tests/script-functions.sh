@@ -18,10 +18,6 @@ init_databases() {
 
 # GLPI install
 install_glpi() {
-   if [ "$GLPI_BRANCH" = '9.4/bugfixes' ]; then
-      echo "Downgrading to composer 1"
-      sudo wget https://getcomposer.org/composer-1.phar -O "$COMPOSER"
-   fi
    echo Installing GLPI
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
