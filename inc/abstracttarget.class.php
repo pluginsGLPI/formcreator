@@ -1542,6 +1542,11 @@ SCRIPT;
          return false;
       }
 
+      if (!isset($input['name']) || strlen($input['name']) < 1) {
+         Session::addMEssageAfterRedirect(__('Name is required.', 'formcreator'));
+         return false;
+      }
+
       if (!isset($input['target_name']) || strlen($input['target_name']) < 1) {
          $input['target_name'] = $input['name'];
       }
