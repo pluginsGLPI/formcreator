@@ -56,41 +56,108 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
 
    public function testGetUsedConfig() {
       $this->login('glpi', 'glpi');
+
+      // Create an entity with 2 sub entities
       $base = 'Root entity > ' . $this->getUniqueString();
       $entity = new \Entity();
       $entityId = $entity->add([
          'name' => $this->getUniqueString(),
          'entities_id' => '0',
       ]);
+      $this->boolean($entity->isNewID($entityId))->isFalse();
+
       $entityId1 = $entity->add([
          'name' => "$base > a",
          'entities_id' => $entityId,
       ]);
+      $this->boolean($entity->isNewID($entityId1))->isFalse();
+
       $entityId2 = $entity->add([
          'name' => "b",
          'entities_id' => $entityId1,
       ]);
+      $this->boolean($entity->isNewID($entityId2))->isFalse();
+
+      $entityId3 = $entity->add([
+         'name' => "c",
+         'entities_id' => $entityId,
+      ]);
+      $this->boolean($entity->isNewID($entityId3))->isFalse();
+
+      // Set configuration for the 2 sub entities
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         'id' => $entityId,
+         'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG,
+         'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_MERGED,
+         'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL,
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
 
       $instance = $this->newTestedInstance();
       $instance->add([
          'id' => $entityId1,
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
+         'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_MERGED,
+         'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL,
       ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+
+      $instance = $this->newTestedInstance();
       $instance->add([
          'id' => $entityId2,
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG,
+         'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT,
+         'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY,
       ]);
+      $this->boolean($instance->isNewItem())->isFalse();
 
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         'id' => $entityId3,
+         'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
+         'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
+         'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+
+      // Test settings of entities
       $output = $instance::getUsedConfig('replace_helpdesk', $entityId1);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG);
+      $output = $instance::getUsedConfig('is_kb_separated', $entityId1);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_KB_MERGED);
+      $output = $instance::getUsedConfig('sort_order', $entityId1);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL);
+
       $output = $instance::getUsedConfig('replace_helpdesk', $entityId2);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG);
+      $output = $instance::getUsedConfig('is_kb_separated', $entityId2);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT);
+      $output = $instance::getUsedConfig('sort_order', $entityId2);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY);
+
+      $output = $instance::getUsedConfig('replace_helpdesk', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG);
+      $output = $instance::getUsedConfig('is_kb_separated', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_KB_MERGED);
+      $output = $instance::getUsedConfig('sort_order', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL);
+
+      // Check change on parent entity propagates to child with inherited settings
+      $instance = $this->newTestedInstance();
       $instance->update([
-         'id' => $entityId2,
-         'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
+         'id' => $entityId,
+         'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
+         'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT,
+         'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY,
       ]);
-      $output = $instance::getUsedConfig('replace_helpdesk', $entityId2);
-       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG);
+
+      $output = $instance::getUsedConfig('replace_helpdesk', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG);
+      $output = $instance::getUsedConfig('is_kb_separated', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT);
+      $output = $instance::getUsedConfig('sort_order', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY);
    }
 
    public function testgetEnumHelpdeskMode() {
