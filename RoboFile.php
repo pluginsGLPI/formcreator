@@ -533,46 +533,7 @@ class RoboFile extends RoboFilePlugin
    }
 
    public function buildFaData() {
-      $versions = [
-         [
-            [
-               'fa' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.4.2/lib/font-awesome/webfonts/fa-regular-400.svg',
-               'fab' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.4.2/lib/font-awesome/webfonts/fa-brands-400.svg',
-               'fas' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.4.2/lib/font-awesome/webfonts/fa-solid-900.svg',
-            ], // GLPI 9.4
-            'font-awesome_9.4.php',
-         ],
-         /* In GLPI 9.5 Font Awesome is a node dependency
-         [
-            [
-               'fa' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.4.2/lib/font-awesome/webfonts/fa-regular-400.svg',
-               'fab' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.4.2/lib/font-awesome/webfonts/fa-brands-400.svg',
-               'fas' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.4.2/lib/font-awesome/webfonts/fa-solid-900.svg',
-            ],
-            'font-awesome_9.5.php',
-         ],
-         */
-      ];
-
-      foreach ($versions as $version) {
-         $fanames = [];
-         $searchRegex = '#glyph-name=\"([^\"]*)\"#i';
-         foreach ($version[0] as $key => $svgSource) {
-            $svg = file_get_contents($svgSource);
-            $matches = null;
-            preg_match_all($searchRegex, $svg, $matches);
-            foreach ($matches[1] as $name) {
-               $fanames["$key fa-$name"] = $name;
-            }
-
-            $list = '<?php' . PHP_EOL . 'return ' . var_export($fanames, true) . ';';
-            $outFile = __DIR__ . '/data/' . $version[1];
-            $size = file_put_contents($outFile, $list);
-            if ($size != strlen($list)) {
-               throw new RuntimeException('Failed to build the list of font awesome pictograms');
-            }
-         }
-      }
+      $versions = [];
 
       //For GLPI 9.5 and later
       $versions = [
