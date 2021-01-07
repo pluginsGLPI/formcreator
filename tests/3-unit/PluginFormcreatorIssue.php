@@ -89,9 +89,15 @@ class PluginFormcreatorIssue extends CommonTestCase {
       ];
    }
 
+   public function providerGetSyncIssuesRequest() {
+      return array_merge(
+         $this->providerGetsyncIssuesRequest_simpleTicket(),
+         $this->providerGetsyncIssuesRequest_simpleFormanswers()
+      );
+   }
+
    /**
-    * @dataProvider providerGetsyncIssuesRequest_simpleFormanswers
-    * @dataProvider providerGetsyncIssuesRequest_simpleTicket
+    * @dataProvider providerGetSyncIssuesRequest
     *
     * @return void
     */
