@@ -999,7 +999,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Prepare target ticket
       $instance = new PluginFormcreatorTargetTicketDummy();
       $instance->add([
-         'name' => '',
+         'name' => 'foo',
          'target_name' => '',
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'content' => '##FULLFORM',
@@ -1054,7 +1054,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $instance1 = new PluginFormcreatorTargetTicketDummy();
       $instance1->add([
-         'name' => '',
+         'name' => 'foo',
          'target_name' => '',
          \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
          'content' => '##FULLFORM',
@@ -1085,7 +1085,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $instance2 = new PluginFormcreatorTargetTicketDummy();
       $instance2->add([
-         'name' => '',
+         'name' => 'foo',
          'target_name' => '',
          \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
          'content' => '##FULLFORM',
@@ -1115,7 +1115,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $instance3 = new PluginFormcreatorTargetTicketDummy();
       $instance3->add([
-         'name' => '',
+         'name' => 'foo',
          'target_name' => '',
          \PluginFormcreatorForm::getForeignKeyField() => $form3->getID(),
          'content' => '##FULLFORM',
@@ -1146,7 +1146,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $instance4 = new PluginFormcreatorTargetTicketDummy();
       $instance4->add([
-         'name' => '',
+         'name' => 'foo',
          'target_name' => '',
          \PluginFormcreatorForm::getForeignKeyField() => $form4->getID(),
          'content' => '##FULLFORM',
@@ -1261,6 +1261,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $form = $this->getForm();
       $name = $this->getUniqueString();
       return [
+         'name is mandatory' => [
+            'input'    => [
+               $formFk => $form->getID(),
+            ],
+            'expected' => [],
+            'message' => 'Name is required.',
+         ],
          [
             'input'    => [
                $formFk => $form->getID(),
@@ -1272,15 +1279,16 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'target_name' => $name,
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-               'type_question' => \Ticket::INCIDENT_TYPE
+               'type_question' => \Ticket::INCIDENT_TYPE,
             ],
+            'message' => null,
          ],
          [
             'input'    => [
                $formFk => $form->getID(),
                'name' => $name,
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-               'type_question' => \Ticket::DEMAND_TYPE
+               'type_question' => \Ticket::DEMAND_TYPE,
             ],
             'expected' => [
                $formFk => $form->getID(),
@@ -1288,8 +1296,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'target_name' => $name,
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-               'type_question' => \Ticket::DEMAND_TYPE
+               'type_question' => \Ticket::DEMAND_TYPE,
             ],
+            'message' => null,
          ],
       ];
    }
@@ -1298,11 +1307,16 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
     * @dataProvider providerPrepareInputForAdd
     *
     */
-   public function testPrepareInputForAdd($input, $expected) {
+   public function testPrepareInputForAdd($input, $expected, $message) {
       $instance = $this->newTestedInstance();
       $output = $instance->prepareInputForAdd($input);
-      $this->array($output)->hasKey('uuid');
-      unset($output['uuid']);
-      $this->array($output)->isEqualTo($expected);
+      if (count($expected) > 0) {
+         $this->array($output)->hasKey('uuid');
+         unset($output['uuid']);
+         $this->array($output)->isEqualTo($expected);
+      } else {
+         $this->boolean($output)->isFalse();
+         $this->sessionHasMessage($message, ERROR);
+      }
    }
 }
