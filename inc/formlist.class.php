@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -49,11 +49,7 @@ class PluginFormcreatorFormList extends CommonGLPI
    static function getMenuContent() {
       $menu = parent::getMenuContent();
       $menu['title'] = static::getTypeName(2);
-      if (method_exists(Plugin::class, 'getWebDir')) {
-         $menu['page'] = '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php';
-      } else {
-         $menu['page'] =  '/plugins/formcreator/front/formlist.php';
-      }
+      $menu['page'] = '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php';
       $menu['icon'] = 'fas fa-edit';
       $image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                   title="' . __('Forms waiting for validation', 'formcreator') . '"

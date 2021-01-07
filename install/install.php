@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -65,6 +65,7 @@ class PluginFormcreatorInstall {
       '2.8.1'  => '2.9',
       '2.9'    => '2.10',
       '2.10'   => '2.10.2',
+      '2.10.2' => '2.11',
    ];
 
    /**
@@ -361,6 +362,14 @@ class PluginFormcreatorInstall {
    protected function deleteNotifications() {
       global $DB;
 
+      $itemtypes = [
+         PluginFormcreatorFormAnswer::class,
+      ];
+
+      if (count($itemtypes) == 0) {
+         return;
+      }
+
       // Delete translations
       $translation = new NotificationTemplateTranslation();
       $translation->deleteByCriteria([
@@ -373,13 +382,13 @@ class PluginFormcreatorInstall {
             ]
          ],
          'WHERE' => [
-            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorFormAnswer::class
+            NotificationTemplate::getTable() . '.itemtype' => $itemtypes
          ]
       ]);
 
       // Delete notification templates
       $template = new NotificationTemplate();
-      $template->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
+      $template->deleteByCriteria(['itemtype' => $itemtypes]);
 
       // Delete notification targets
       $target = new NotificationTarget();
@@ -393,7 +402,7 @@ class PluginFormcreatorInstall {
             ]
          ],
          'WHERE' => [
-            Notification::getTable() . '.itemtype' => PluginFormcreatorFormAnswer::class
+            Notification::getTable() . '.itemtype' => $itemtypes
          ],
       ]);
 
@@ -404,7 +413,7 @@ class PluginFormcreatorInstall {
          'SELECT' => ['id'],
          'FROM'   => $notification::getTable(),
          'WHERE'  => [
-            'itemtype' => 'PluginFormcreatorFormAnswer'
+            'itemtype' => $itemtypes
          ]
       ]);
       foreach ($rows as $row) {
@@ -412,18 +421,20 @@ class PluginFormcreatorInstall {
          $notification->delete($row);
       }
 
-      $notification->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
+      $notification->deleteByCriteria(['itemtype' => $itemtypes]);
    }
 
    protected function deleteTicketRelation() {
+      global $CFG_GLPI;
+
       // Delete relations with tickets with email notifications disabled
-      $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
-      PluginFormcreatorCommon::setNotification(false);
+      $use_mailing = $CFG_GLPI['use_notifications'] == 1;
+      $CFG_GLPI['use_notifications'] = 0;
 
       $item_ticket = new Item_Ticket();
       $item_ticket->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
 
-      PluginFormcreatorCommon::setNotification($use_mailing);
+      $CFG_GLPI['use_notifications'] = $use_mailing ? '1' : '0';
    }
 
    /**
@@ -444,10 +455,9 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorCondition',
          'PluginFormcreatorQuestion',
          'PluginFormcreatorSection',
-         'PluginFormcreatorTargetChange_Actor',
          'PluginFormcreatorTargetChange',
-         'PluginFormcreatorTargetTicket_Actor',
          'PluginFormcreatorTargetTicket',
+         'PluginFormcreatorTarget_Actor',
          'PluginFormcreatorItem_TargetTicket',
          'PluginFormcreatorIssue',
          'PluginFormcreatorQuestionDependency',
@@ -502,7 +512,8 @@ class PluginFormcreatorInstall {
       CronTask::Register(PluginFormcreatorIssue::class, 'SyncIssues', HOUR_TIMESTAMP,
          [
             'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
-            'mode'      => CronTask::MODE_EXTERNAL
+            'mode'      => CronTask::MODE_EXTERNAL,
+            'state'     => '0', // Deprecated since 2.11
          ]
       );
    }

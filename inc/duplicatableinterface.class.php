@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -33,10 +33,11 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-interface PluginFormcreatorDuplicatableInterface
-{
+interface PluginFormcreatorDuplicatableInterface {
    /**
-    * Duplicate the item
+    * Duplicate a form. Execute duplicate action for massive action.
+    *
+    * @return int|bool true if success, false otherwise.
     */
-   public function duplicate();
+   public function duplicate(array $options = []);
 }

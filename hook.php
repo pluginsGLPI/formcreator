@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -82,18 +82,14 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
    $join = "";
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
+         // Get default joins for tickets
          $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
-         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`original_id`', $join);
+         // but we want to join in issues
+         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`sub_itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`original_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
    }
    return $join;
-}
-
-
-function plugin_formcreator_canValidate() {
-   return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
 }
 
 /**
@@ -108,7 +104,7 @@ function plugin_formcreator_getCondition($itemtype) {
       if (Session::haveRight('config', UPDATE)) {
          return '';
       }
-      if (plugin_formcreator_canValidate()) {
+      if (PluginFormcreatorCommon::canValidate()) {
          $groupUser = new Group_User();
          $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
          $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
@@ -317,10 +313,10 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       return;
    }
    if (isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
+      // run this hook only if the plugin is not generating tickets
       return;
    }
 
-   // run this hook only if the plugin is not generating tickets
    $requester = $DB->request([
       'SELECT' => 'users_id',
       'FROM' => Ticket_User::getTable(),
@@ -467,10 +463,6 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
    $issue->update(['status' => $status['status']] + $issue->fields);
 }
 
-function plugin_formcreator_hook_purge_ticketvalidation(CommonDBTM $item) {
-   plugin_formcreator_hook_update_ticketvalidation($item);
-}
-
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
       case PluginFormcreatorFormAnswer::class;
@@ -490,6 +482,15 @@ function plugin_formcreator_dynamicReport($params) {
    }
 
    return false;
+}
+
+
+function plugin_formcreator_redefine_menus($menus) {
+   if (isset($menus['tickets'])) {
+      unset($menus['tickets']);
+   }
+
+   return $menus;
 }
 
 /**

@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -54,9 +54,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      if ($item->getType()==__CLASS__) {
-         $item->showChildren();
+      if ($item->getType() != __CLASS__) {
+         return;
       }
+      $item->showChildren();
    }
 
    public function getAdditionalFields() {
@@ -77,11 +78,11 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    /**
-    * @param integer $rootId id of the subtree root
-    * @param boolean $helpdeskHome
+    * @param int $rootId id of the subtree root
+    * @param bool $helpdeskHome
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
+   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) : array {
       global $DB;
 
       $cat_table  = PluginFormcreatorCategory::getTable();
@@ -92,12 +93,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'faq'      => '1',
          'contains' => ''
       ]);
-      if (version_compare(GLPI_VERSION, "9.4") > 0) {
-         // GLPI 9.5 returns an array
-         $subQuery = new DBMysqlIterator($DB);
-         $subQuery->buildQuery($query_faqs);
-         $query_faqs = $subQuery->getSQL();
-      }
+      // GLPI 9.5 returns an array
+      $subQuery = new DBMysqlIterator($DB);
+      $subQuery->buildQuery($query_faqs);
+      $query_faqs = $subQuery->getSQL();
 
       $dbUtils = new DbUtils();
       $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);
@@ -151,7 +150,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $result = $DB->request($request);
 
       $categories = [];
-      foreach($result as $category) {
+      foreach ($result as $category) {
          $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
          // Keep the short name only
          // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
@@ -197,10 +196,27 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       return $nodes;
    }
 
-   public static function  getAvailableCategories($helpdeskHome = 1) {
+   /**
+    * Get available categories
+    *
+    * @param int $helpdeskHome
+    * @return DBmysqlIterator
+    */
+   public static function  getAvailableCategories($helpdeskHome = 1) : DBmysqlIterator {
       global $DB;
 
-      // Define tables
+      $result = $DB->request(self::getAvailableCategoriesCriterias($helpdeskHome));
+
+      return $result;
+   }
+
+   /**
+    * Get available categories
+    *
+    * @param int $helpdeskHome
+    * @return array
+    */
+   public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {
       $cat_table       = PluginFormcreatorCategory::getTable();
       $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();
       $formTable       = PluginFormcreatorForm::getTable();
@@ -208,31 +224,25 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $formRestriction["$formTable.helpdesk_home"] = $helpdeskHome;
 
-      $result = $DB->request([
-         'SELECT' => [
-            $cat_table => [
-               'name', 'id'
-            ]
-         ],
-         'FROM' => $cat_table,
-         'INNER JOIN' => [
-            $formTable => [
-               'FKEY' => [
-                  $cat_table => 'id',
-                  $formTable => $categoryFk
-               ]
-            ]
-         ],
-         'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
-         'GROUPBY' => [
-            "$cat_table.id"
-         ]
-      ]);
-
-      return $result;
-   }
-
-   public static function getAvailableCategoriesCriterias() {
-
+      return [
+        'SELECT' => [
+           $cat_table => [
+              'name', 'id'
+           ]
+        ],
+        'FROM' => $cat_table,
+        'INNER JOIN' => [
+           $formTable => [
+              'FKEY' => [
+                 $cat_table => 'id',
+                 $formTable => $categoryFk
+              ]
+           ]
+        ],
+        'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
+        'GROUPBY' => [
+           "$cat_table.id"
+        ]
+      ];
    }
 }

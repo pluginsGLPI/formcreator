@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -36,7 +36,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorExportableTrait;
 
    static public $itemtype_1 = PluginFormcreatorForm::class;
    static public $items_id_1 = 'plugin_formcreator_forms_id';
@@ -64,7 +64,6 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
-
       return $input;
    }
 
@@ -82,16 +81,19 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       echo "<form name='form_profiles_form' id='form_profiles_form'
              method='post' action=' ";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
-      echo "<table class    ='tab_cadre_fixe'>";
+      echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">'._n('Access type', 'Access types', 1, 'formcreator').'</th>';
       echo '</tr>';
+
+      // Access type
+      echo '<tr>';
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
          PluginFormcreatorForm::getEnumAccessType(),
          [
-            'value' => (isset($item->fields["access_rights"])) ? $item->fields["access_rights"] : 1,
+            'value' => (isset($item->fields['access_rights'])) ? $item->fields['access_rights'] : '1',
          ]
       );
       echo '</td>';
@@ -105,13 +107,23 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          $form_url = $baseUrl . FORMCREATOR_ROOTDOC . '/front/formdisplay.php?id='.$item->getID();
          echo '<a href="'.$form_url.'">'.$form_url.'</a>&nbsp;';
          echo '<a href="mailto:?subject='.$item->getName().'&body='.$form_url.'" target="_blank">';
-         echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/email.png" />';
+         echo '<i class="fas fa-envelope"><i/>';
          echo '</a>';
       } else {
-         echo __('Please active the form to view the link', 'formcreator');
+         echo __('Please activate the form to view the link', 'formcreator');
       }
       echo '</td>';
-      echo "</tr>";
+      echo '</tr>';
+
+      // Captcha
+      if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+         echo '<tr>';
+         echo '<td>' . __('Enable captcha', 'formcreator') . '</td>';
+         echo '<td>';
+         Dropdown::showYesNo('is_captcha_enabled', $item->fields['is_captcha_enabled']);
+         echo '</td>';
+         echo '</tr>';
+      }
 
       if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
          echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
@@ -212,7 +224,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the form_profile to the linker
@@ -223,11 +235,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
 
    /**
     * Export in an array all the data of the current instanciated form_profile
-    * @param boolean $remove_uuid remove the uuid key
+    * @param bool $remove_uuid remove the uuid key
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -254,8 +266,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       return $form_profile;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public static function countItemsToImport($input) : int {
+      return 1;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id_1 => $container->getID(),
       ];

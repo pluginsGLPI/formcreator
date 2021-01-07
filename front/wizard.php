@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -30,7 +30,7 @@
  */
 
 global $CFG_GLPI;
-include ("../../../inc/includes.php");
+include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -39,7 +39,7 @@ if (!$plugin->isActivated('formcreator')) {
 }
 
 if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC."/front/formlist.php");
+   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
 }
 
 PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));

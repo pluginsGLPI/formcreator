@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -31,24 +31,20 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.10.4');
+define('PLUGIN_FORMCREATOR_VERSION', '2.11.0-beta.1');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.10');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.4');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
 
 define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
 
-if (method_exists(Plugin::class, 'getWebDir')) {
-   define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
-} else {
-   define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
-}
+define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
 
 /**
  * Define the plugin's version and informations
@@ -92,6 +88,11 @@ function plugin_formcreator_check_prerequisites() {
    if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')
        || PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE && version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MAX_VERSION, 'ge')) {
       echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . " and GLPI < " . PLUGIN_FORMCREATOR_GLPI_MAX_VERSION . "<br>";
+      $prerequisitesSuccess = false;
+   }
+
+   if (!is_readable(__DIR__ . '/vendor/autoload.php') || !is_file(__DIR__ . '/vendor/autoload.php')) {
+      echo "Run composer install --no-dev in the plugin directory<br>";
       $prerequisitesSuccess = false;
    }
 
@@ -164,15 +165,16 @@ function plugin_init_formcreator() {
    $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+   if ($plugin->isActivated('formcreator')) {
       spl_autoload_register('plugin_formcreator_autoload');
+      require_once(__DIR__ . '/vendor/autoload.php');
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
          // Redirect to helpdesk replacement
          if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
             if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
                // Not changing profile or active entity
-               if (isset($_SESSION['glpiactiveprofile']['interface'])
+               if (Session::getCurrentInterface() !== false
                      && isset($_SESSION['glpiactive_entity'])) {
                   // Interface and active entity are set in session
                   if (plugin_formcreator_replaceHelpdesk()) {
@@ -220,7 +222,7 @@ function plugin_init_formcreator() {
          if (isset($_SESSION['glpiID'])) {
             // If user have acces to one form or more, add link
             if (PluginFormcreatorForm::countAvailableForm() > 0) {
-               $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
+               $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
             }
 
             // Add a link in the main menu plugins for technician and admin panel
@@ -232,7 +234,7 @@ function plugin_init_formcreator() {
                $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
                $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
                $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
-               $links['add']    = FORMCREATOR_ROOTDOC .  '/front/form.form.php';
+               $links['add']    = FORMCREATOR_ROOTDOC . '/front/form.form.php';
             }
             $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
                         title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
@@ -269,6 +271,7 @@ function plugin_init_formcreator() {
          if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
                || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
@@ -285,17 +288,30 @@ function plugin_init_formcreator() {
          ]);
 
          Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+
+         if (Session::getCurrentInterface() == "helpdesk"
+            && PluginFormcreatorEntityconfig::getUsedConfig(
+               'replace_helpdesk',
+               $_SESSION['glpiactive_entity']
+            )
+         ) {
+            $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
+         }
       }
 
       // Load JS and CSS files if we are on a page which need them
-      if (strpos($_SERVER['REQUEST_URI'], '/formcreator') !== false
+      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
-            $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+            Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
       }
+
+      //Html::requireJs('gridstack');
+      $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
+      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
    }
 }
 
@@ -412,13 +428,6 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
  */
 function plugin_formcreator_autoload($classname) {
    if (strpos($classname, 'PluginFormcreator') === 0) {
-      // Search first for field clases
-      $filename = __DIR__ . '/inc/fields/' . strtolower(str_replace('PluginFormcreator', '', $classname)) . '.class.php';
-      if (is_readable($filename) && is_file($filename)) {
-         include_once($filename);
-         return true;
-      }
-
       // useful only for installer GLPi autoloader already handles inc/ folder
       $filename = __DIR__ . '/inc/' . strtolower(str_replace('PluginFormcreator', '', $classname)). '.class.php';
       if (is_readable($filename) && is_file($filename)) {

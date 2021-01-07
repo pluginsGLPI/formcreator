@@ -246,23 +246,29 @@ abstract class CommonTestCase extends CommonDBTestCase
          'show_empty'                     => '0',
          'default_values'                 => '',
          'desription'                     => '',
-         'order'                          => '1',
+         'row'                            => '0',
+         'col'                            => '0',
+         'width'                          => '4',
          'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-         '_parameters'     => [
-            'text' => [
-               'range' => [
-                  'range_min' => '',
-                  'range_max' => '',
-               ],
-               'regex' => [
-                  'regex' => ''
-               ]
-            ]
-         ],
+         '_parameters'                    => [],
       ];
       $input = array_merge($defaultInput, $input);
+      $defaultParams = [
+         $input['fieldtype'] => [
+            'range' => [
+               'range_min' => '',
+               'range_max' => '',
+            ],
+            'regex' => [
+               'regex' => ''
+            ]
+         ]
+      ];
+      $input['_parameters'] = array_merge($defaultParams, $input['_parameters']);
+
       $question = new \PluginFormcreatorQuestion();
       $question->add($input);
+      $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->getFromDB($question->getID());
 
       return $question;
@@ -308,7 +314,7 @@ abstract class CommonTestCase extends CommonDBTestCase
     * @param string $message
     * @param integer $message_type
     */
-   protected function sessionHasMessage($message, $message_type = INFO) {
+   protected function sessionHasMessage(string $message, int $message_type = INFO) {
       if (!is_array($message)) {
          $message = [$message];
       }
@@ -320,5 +326,71 @@ abstract class CommonTestCase extends CommonDBTestCase
       $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][INFO]))->isFalse();
       $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING]))->isFalse();
       $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]))->isFalse();
+   }
+
+   protected function getSessionMessage() {
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][INFO])
+         || isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING])
+         || isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])) {
+         return null;
+      }
+
+      $messages = '';
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][INFO])) {
+         $messages .= implode(' ', $_SESSION['MESSAGE_AFTER_REDIRECT'][INFO]);
+      }
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING])) {
+         $messages .= ' ' . implode(' ', $_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING]);
+      }
+      if (isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR])) {
+         $messages .= ' ' . implode(' ', $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+      }
+      return $messages;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param string $itemtype
+    * @param array $input
+    * @return \CommonDBTM|void
+    */
+   protected function getGlpiCoreItem(string $itemtype, array $input) {
+      /** @var \CommonDBTM */
+      $item = new $itemtype();
+
+      // assign entity
+      if ($item->isEntityAssign()) {
+         $entity = 0;
+         if (Session::getLoginUserID(true)) {
+            $entity = Session::getActiveEntity();
+         }
+         if (!isset($input[\Entity::getForeignKeyField()])) {
+            $input[\Entity::getForeignKeyField()] = $entity;
+         }
+      }
+
+      // assign recursiviy
+      if ($item->maybeRecursive()) {
+         $recursive = 0;
+         if (Session::getLoginUserID(true)) {
+            $recursive = Session::getActiveEntity();
+         }
+         if (!isset($input['is_recursive'])) {
+            $input['is_recursive'] = $recursive;
+         }
+      }
+
+      // set name
+      if (!isset($item->fields['name'])) {
+         if (!isset($input['name'])) {
+            $input['name'] = $this->getUniqueString();
+         }
+      }
+
+      $item->add($input);
+      $this->boolean($item->isNewItem())->isFalse($this->getSessionMessage());
+
+      return $item;
    }
 }

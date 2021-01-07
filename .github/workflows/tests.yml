@@ -14,8 +14,10 @@ env:
   OLD_DB_NAME: glpiupgradetest
   PLUGINNAME: formcreator
   AFTER_SUCCESS_BRANCH: 9.5/bugfixes
+  ATOUM_ARG: --force-terminal
   NOCOVERAGE: -ncc
   COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
+  PANTHER_CHROME_DRIVER_BINARY: chromedriver
 
 jobs:
   tests:
@@ -23,20 +25,9 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4]
+        php-versions: [7.2]
         env:
-          - { GLPI_BRANCH: 9.4/bugfixes }
-          - { GLPI_BRANCH: 9.5/bugfixes }
-        exclude:
-          - php: 5.6
-            env:
-              GLPI_BRANCH: 9.5/bugfixes
-          - php: 7.0
-            env:
-              GLPI_BRANCH: 9.5/bugfixes
-          - php: 7.1
-            env:
-              GLPI_BRANCH: 9.5/bugfixes
+          - { GLPI_BRANCH: 9.5/bugfixes, SKIP_FUNCTIONAL_TESTS: false }
     services:
       db:
         image: mariadb:10.1
@@ -51,6 +42,16 @@ jobs:
           --health-timeout=5s
           --health-retries=3
     steps:
+      - name: Setup PHP with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: curl, fileinfo, gd, json, mbstring, mysqli, zlib, simplexml, xml, intl, bz2
+          coverage: xdebug
+      - name: "get browser"
+        run: |
+          sudo apt update
+          sudo apt install chromium-browser chromium-chromedriver
       - name: "Check tools"
         run: |
           which php
@@ -59,6 +60,9 @@ jobs:
           php --version
           mysql --version
           composer --version
+          chromium-browser --version
+          ls -l /usr/bin/chromium*
+          $PANTHER_CHROME_DRIVER_BINARY --version
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Run tests"
@@ -76,18 +80,25 @@ jobs:
           export TEST_GLPI_CONFIG_DIR="tests/config-$DB_NAME"
           init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
           plugin_test_install
+          mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
           plugin_test
+          plugin_test_functional
           plugin_test_uninstall
 
   style:
     strategy:
       matrix:
-        php: [7.4]
+        php-versions: [7.4]
         env:
           - { GLPI_BRANCH: 9.5/bugfixes }
     name: "Code quality"
     runs-on: "ubuntu-latest"
     steps:
+      - name: Setup PHP with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: xdebug
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Code quality tests"

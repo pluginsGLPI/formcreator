@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -54,8 +54,7 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
-      $link = $CFG_GLPI['url_base'];
-      $link .= FORMCREATOR_ROOTDOC . '/front/formanswer.form.php?id=' . $this->obj->getID();
+      $link = $CFG_GLPI['url_base'] . $this->obj->getFormURLWithID($this->obj->getID(), false);
 
       $requester = new User();
       $requester->getFromDB($this->obj->fields['requester_id']);
@@ -67,31 +66,10 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
       $this->data['##formcreator.form_requester##']     = $requester->getName();
       $this->data['##formcreator.form_validator##']     = $validator->getName();
       $this->data['##formcreator.form_creation_date##'] = Html::convDateTime($this->obj->fields['request_date']);
-      $this->data['##formcreator.form_full_answers##']  = $this->obj->parseTags($this->obj->getFullForm(), null, true);
+      $this->data['##formcreator.form_full_answers##']  = $this->obj->getFullForm();
       $this->data['##formcreator.validation_comment##'] = $this->obj->fields['comment'];
       $this->data['##formcreator.validation_link##']    = $link;
       $this->data['##formcreator.request_id##']         = $this->obj->fields['id'];
-
-      $targetList = [];
-      foreach ($this->obj->targetList as $target) {
-         /** @var CommonDBTM $target */
-         $typeName = $target->getTypeName(1);
-         $typeId = $target->getID();
-         $targetList[] = "$typeName $typeId";
-      }
-      $this->data['##formcreator.targets##']         = implode(', ', $targetList);
-
-      $this->data['##lang.formcreator.form_id##']            = __('Form #', 'formcreator');
-      $this->data['##lang.formcreator.form_name##']          = __('Form name', 'formcreator');
-      $this->data['##lang.formcreator.form_requester##']     = __('Requester', 'formcreator');
-      $this->data['##lang.formcreator.form_validator##']     = __('Validator', 'formcreator');
-      $this->data['##lang.formcreator.form_creation_date##'] = __('Creation date');
-      $this->data['##lang.formcreator.form_full_answers##']  = __('Full form answers', 'formcreator');
-      $this->data['##lang.formcreator.validation_comment##'] = __('Refused comment', 'formcreator');
-      $this->data['##lang.formcreator.validation_link##']    = __('Validation link', 'formcreator');
-      $this->data['##lang.formcreator.request_id##']         = __('Request #', 'formcreator');
-      $this->data['##lang.formcreator.targets##']            = __('List of generated targets', 'formcreator');
-
    }
 
    public function getTags() {
@@ -105,15 +83,13 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
          'formcreator.validation_comment' => __('Refused comment', 'formcreator'),
          'formcreator.validation_link'    => __('Validation link', 'formcreator'),
          'formcreator.request_id'         => __('Request #', 'formcreator'),
-         'formcreator.targets'            => __('List of generated targets', 'formcreator'),
       ];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'    => $tag,
             'label'  => $label,
             'value'  => true,
-            'events' => NotificationTarget::TAG_FOR_ALL_EVENTS]
-         );
+            'events' => NotificationTarget::TAG_FOR_ALL_EVENTS]);
       }
    }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -21,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2020 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -29,23 +30,29 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+namespace GlpiPlugin\Formcreator\Field;
 
-class PluginFormcreatorDependentField extends PluginFormcreatorField
+use PluginFormcreatorAbstractField;
+use PluginFormcreatorQuestionDependency;
+use Toolbox;
+use Html;
+use Session;
+
+class DependentField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites() {
+   public function isPrerequisites(): bool {
       return true;
    }
 
-   public static function getName() {
+   public static function getName(): string {
       return _n('User ID', 'User IDs', 1, 'formcreator');
    }
 
-   public static function canRequire() {
+   public static function canRequire(): bool {
       return true;
    }
 
-   public function getEmptyParameters() {
+   public function getEmptyParameters(): array {
       return [
          'firstname' => new PluginFormcreatorQuestionDependency(
             $this,
@@ -53,21 +60,23 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
                'fieldName' => 'firstname',
                'label'     => __('First name field', 'formcreator'),
                'fieldType' => ['text'],
-            ]),
+            ]
+         ),
          'lastname' => new PluginFormcreatorQuestionDependency(
             $this,
             [
                'fieldName' => 'lastname',
                'label'     => __('Last name field', 'formcreator'),
                'fieldType' => ['text'],
-            ]),
+            ]
+         ),
       ];
    }
 
    public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
-      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
+      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_1'] === '0') {
          Session::addMessageAfterRedirect(__('No text field selected for firstname', 'formcreator'), false, ERROR);
          $success =  false;
       }
@@ -82,11 +91,11 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       return $input;
    }
 
-   public function hasInput($input) {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function serializeValue() {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -96,8 +105,8 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
 
    public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
-                  ? $value
-                  : '';
+         ? $value
+         : '';
    }
 
    public function show($canEdit = true) {
@@ -111,7 +120,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
             'fieldname'                         => $fieldName,
          ]);
       }
-      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_2');
+      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
       $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
       echo Html::scriptBlock("$(function() {
          plugin_formcreator_field_$questionId()
@@ -144,7 +153,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       }
    }
 
-   public function getValueForDesign() {
+   public function getValueForDesign(): string {
       if ($this->value === null) {
          return '';
       }
@@ -152,29 +161,32 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText) {
+   public function getValueForTargetText($richText): string {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function getDocumentsForTarget() {
+   public function getDocumentsForTarget(): array {
       return [];
    }
 
-   public function moveUploads() {}
+   public function moveUploads() {
+   }
 
-   public function isValid() {
+   public function isValid(): bool {
       if ($this->isRequired() && $this->value === '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
       if (!$this->isValidValue($this->value)) {
          Session::addMessageAfterRedirect(
             __('A field does not match the expected format:', 'formcreator') . ' ' . $this->getLabel(),
             false,
-            ERROR);
+            ERROR
+         );
          return false;
       }
 
@@ -186,7 +198,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
     * Checks the value of the field is in the expected form
     * @param string $value the value of the field
     */
-   private function isValidValue($value) {
+   public function isValidValue($value): bool {
       // TODO: use all fields of the form to check the scheme of the string
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
@@ -195,7 +207,7 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
             'fieldname'                         => $fieldname,
          ]);
       }
-      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_2');
+      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
       $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
 
       $firstname = strtoupper($this->fields['answer']["formcreator_field_$firstnameQuestionId"]);
@@ -207,37 +219,45 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
       return ($value === $expected);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!is_string($input[$key])) {
          return false;
       }
 
-       $this->value = $input[$key];
-       return true;
-   }
-
-   public function equals($value) {
-      return ($this->value) === ($value);
-   }
-
-   public function notEquals($value) {
-      return !$this->equals($value);
-   }
-
-   public function greaterThan($value) {
-      return ($this->value) > ($value);
-   }
-
-   public function lessThan($value) {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
-
-   public function isAnonymousFormCompatible() {
+      $this->value = $input[$key];
       return true;
    }
 
-   public function getHtmlIcon() {
+   public function equals($value): bool {
+      return ($this->value) === ($value);
+   }
+
+   public function notEquals($value): bool {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value): bool {
+      return ($this->value) > ($value);
+   }
+
+   public function lessThan($value): bool {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function isAnonymousFormCompatible(): bool {
+      return true;
+   }
+
+   public function getHtmlIcon(): string {
       return '';
+   }
+
+   public function isEditableField(): bool {
+      return true;
+   }
+
+   public function isVisibleField(): bool {
+      return true;
    }
 }

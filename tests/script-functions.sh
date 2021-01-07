@@ -18,16 +18,13 @@ init_databases() {
 
 # GLPI install
 install_glpi() {
-   if [ "$GLPI_BRANCH" = '9.4/bugfixes' ]; then
-      echo "Downgrading to composer 1"
-      sudo wget https://getcomposer.org/composer-1.phar -O "$COMPOSER"
-   fi
    echo Installing GLPI
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
    composer install --no-dev --no-interaction
-   php bin/console dependencies install
+   php bin/console dependencies install composer-options=--no-dev
    php bin/console glpi:system:check_requirements
+   rm .atoum.php
    mkdir -p tests/files/_cache
    cp -r ../formcreator plugins/$PLUGINNAME
 }
@@ -59,25 +56,49 @@ plugin_test_upgrade() {
 
 # Plugin test
 plugin_test_install() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-install $NOCOVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/1-install $NOCOVERAGE $ATOUM_ARG
 }
 
 plugin_test() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration -mcn 1 $COVERAGE
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit $COVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/2-integration -mcn 1 $COVERAGE $ATOUM_ARG
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/3-unit $COVERAGE $ATOUM_ARG
+}
+
+plugin_test_functional() {
+   if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
+   # symfony requires PHP 7.2+, but the project is still compatible with older versions
+   composer global require --dev symfony/panther
+   RESOURCE="tests/4-functional"
+   if [ "$1" != "" ]; then
+      RESOURCE=$1
+      shift
+   fi
+
+   if [ -f $RESOURCE ]; then
+      RESOURCE_TYPE="-f"
+   elif [ -d $RESOURCE ]; then
+      RESOURCE_TYPE="-d"
+   fi
+   echo $@
+   EXTRA=$@
+   #export GLPI_CONFIG_DIR=$TEST_GLPI_CONFIG_DIR
+   php -S 127.0.0.1:8000 -t ../.. tests/router.php > /dev/null 2>&1 &
+   PROCESS=$!
+   echo php started with PID=$PROCESS
+   vendor/bin/atoum -ft -bf tests/bootstrap.php $NOCOVERAGE -mcn 1 $RESOURCE_TYPE $RESOURCE $EXTRA $ATOUM_ARG
 }
 
 plugin_test_uninstall() {
-   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall $NOCOVERAGE
+   ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/5-uninstall $NOCOVERAGE $ATOUM_ARG
 }
 
 plugin_test_lint() {
-   ./vendor/bin/parallel-lint --exclude vendor .
+   composer run lint
 }
 
 # GLPI Coding Standards
 plugin_test_cs() {
-   vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ --standard=tests/rulest.xml *.php install/ inc/ front/ ajax/ tests/ RoboFile.php
+   composer run cs
 }
 
 # please set $TX_USER and $TX_TOKEN in your CI dashboard

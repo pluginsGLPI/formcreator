@@ -21,9 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -34,5 +32,15 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-$target = new PluginFormcreatorForm();
-$target->showAddTargetForm();
+if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
+    http_response_code(400);
+    exit;
+}
+$formId = $_REQUEST['plugin_formcreator_forms_id'];
+
+$form = new PluginFormcreatorForm();
+if (!$form->getFromDB($formId)) {
+    http_response_code(400);
+    exit;
+}
+$form->showAddTargetForm();

@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -42,7 +42,7 @@ if (!defined('GLPI_ROOT')) {
  * question B
  */
 class PluginFormcreatorQuestionDependency
-extends PluginFormcreatorQuestionParameter
+extends PluginFormcreatorAbstractQuestionParameter
 {
 
    /** @var string $fieldtype type of field useable for the dependency */
@@ -197,7 +197,7 @@ extends PluginFormcreatorQuestionParameter
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the parameter to the linker
@@ -206,7 +206,11 @@ extends PluginFormcreatorQuestionParameter
       return $itemId;
    }
 
-   public function export($remove_uuid = false) {
+   public static function countItemsToImport($input) : int {
+      return 1;
+   }
+
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }

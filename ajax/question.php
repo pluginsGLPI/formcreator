@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -37,7 +37,7 @@ if (empty($_REQUEST['question_id'])) {
    $question_id = 0;
    $question->getEmpty();
    $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST['section_id'];
+   $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
 } else {
    $question_id = (int) $_REQUEST['question_id'];
    $question->getFromDB($question_id);

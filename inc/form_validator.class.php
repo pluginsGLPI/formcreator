@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -41,7 +41,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorForm_Validator extends CommonDBRelation implements
 PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorExportableTrait;
 
    // From CommonDBRelation
    static public $itemtype_1          = PluginFormcreatorForm::class;
@@ -106,7 +106,7 @@ PluginFormcreatorExportableInterface
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the item to the linker
@@ -118,13 +118,17 @@ PluginFormcreatorExportableInterface
       return $itemId;
    }
 
+   public static function countItemsToImport(array $input) : int {
+      return 1;
+   }
+
    /**
     * Export in an array all the data of the current instanciated validator
-    * @param boolean $remove_uuid remove the uuid key
+    * @param bool $remove_uuid remove the uuid key
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -204,8 +208,7 @@ PluginFormcreatorExportableInterface
       return $result;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id_1 => $container->getID(),
       ];

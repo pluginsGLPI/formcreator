@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -40,8 +40,16 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    const CONFIG_PARENT = -2;
+
+   const CONFIG_GLPI_HELPDSK = 0;
    const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
    const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
+
+   const CONFIG_SORT_POPULARITY   = 0;
+   const CONFIG_SORT_ALPHABETICAL = 1;
+
+   const CONFIG_KB_MERGED = 1;
+   const CONFIG_KB_DISTINCT = 1;
 
    /**
     * @var bool $dohistory maintain history
@@ -56,6 +64,31 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          }
       }
       return $tabNames;
+   }
+
+   public static function getEnumHelpdeskMode() : array {
+      return [
+         self::CONFIG_PARENT                     => __('Inheritance of the parent entity'),
+         self::CONFIG_GLPI_HELPDSK               => __('GLPi\'s helpdesk', 'formcreator'),
+         self::CONFIG_SIMPLIFIED_SERVICE_CATALOG => __('Service catalog simplified', 'formcreator'),
+         self::CONFIG_EXTENDED_SERVICE_CATALOG   => __('Service catalog extended', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumSort() : array {
+      return [
+         self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         self::CONFIG_SORT_POPULARITY   => __('Popularity sort', 'formcreator'),
+         self::CONFIG_SORT_ALPHABETICAL => __('Alphabetic sort', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumKbMode() : array {
+      return [
+         self::CONFIG_PARENT      => __('Inheritance of the parent entity'),
+         self::CONFIG_KB_MERGED   => __('Merged with Forms', 'formcreator'),
+         self::CONFIG_KB_DISTINCT => __('Distinct menu entry', 'formcreator'),
+      ];
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
@@ -88,16 +121,10 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
 
-      if ($ID != 0) {
-         $elements = [
-            self::CONFIG_PARENT => __('Inheritance of the parent entity')
-         ];
-      } else {
-         $elements = [];
+      $elements = self::getEnumHelpdeskMode();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
       }
-      $elements[0] = __('GLPi\'s helpdesk', 'formcreator');
-      $elements[1] = __('Service catalog simplified', 'formcreator');
-      $elements[2] = __('Service catalog extended', 'formcreator');
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Helpdesk mode', 'formcreator')."</td>";
@@ -105,6 +132,39 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
+         echo '<div class="green">';
+         echo $elements[$tid];
+         echo '</div>';
+      }
+      echo '</td></tr>';
+
+      $elements = self::getEnumSort();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Sort order', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('sort_order', $elements, ['value' => $this->fields['sort_order']]);
+      if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('sort_order', $ID);
+         echo '<div class="green">';
+         echo $elements[$tid];
+         echo '</div>';
+      }
+      echo '</td></tr>';
+      // Knowledge base settiing : merged with forms (legacy) separated menu on the left
+      $elements = self::getEnumKbMode();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Knowledge base', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_kb_separated', $elements, ['value' => $this->fields['is_kb_separated']]);
+      if ($this->fields['is_kb_separated'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_kb_separated', $ID);
          echo '<div class="green">';
          echo $elements[$tid];
          echo '</div>';
@@ -125,6 +185,32 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
 
       echo "</div>";
+
+   }
+   public function rawSearchOptions() {
+      $tab = [];
+
+      $tab[] = [
+         'id'              => '3',
+         'table'           => self::getTable(),
+         'name'            => __('Helpdesk mode', 'formcreator'),
+         'field'           => 'replace_helpdesk',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '4',
+         'table'           => self::getTable(),
+         'name'            => __('Sort order', 'formcreator'),
+         'field'           => 'sort_order',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      return $tab;
    }
 
    /**

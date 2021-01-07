@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -37,36 +37,36 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 require_once __DIR__ . '/../../RoboFile.php';
 
 class Semver extends CommonTestCase {
-    public  function providerIsSemver() {
-        return [
-            [
-                'foo',
-                false
-            ],
-            [
-                '0.0.1',
-                true
-            ],
-            [
-                '1.0.0-dev',
-                true
-            ],
-            [
-                '1.0.0-nightly',
-                true
-            ],
-            [
-                '1.0.0-beta.1',
-                true
-            ],
-        ];
-    }
+   public  function providerIsSemver() {
+       return [
+           [
+               'foo',
+               false
+           ],
+           [
+               '0.0.1',
+               true
+           ],
+           [
+               '1.0.0-dev',
+               true
+           ],
+           [
+               '1.0.0-nightly',
+               true
+           ],
+           [
+               '1.0.0-beta.1',
+               true
+           ],
+       ];
+   }
 
     /**
      * @dataProvider providerIsSemver
      */
-    public function testIsSemver($version, $expected) {
-        $output = \Semver::isSemver($version);
-        $this->boolean($output)->isEqualTo($expected);
-    }
+   public function testIsSemver($version, $expected) {
+       $output = \Semver::isSemver($version);
+       $this->boolean($output)->isEqualTo($expected);
+   }
 }

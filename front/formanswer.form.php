@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -41,25 +41,21 @@ if (!$plugin->isActivated("formcreator")) {
 
 $formanswer = new PluginFormcreatorFormAnswer();
 
-// Edit an existing target ticket
 if (isset($_POST['update'])) {
+   // Edit an existing target ticket
    $formanswer->update($_POST);
    Html::back();
 
 } else if (isset($_POST['refuse_formanswer'])) {
-
-   $formanswer->getFromDB(intval($_POST['id']));
-   $formanswer->refuseAnswers($_POST);
+   $formanswer->update($_POST);
    $formanswer->redirectToList();
 
 } else if (isset($_POST['accept_formanswer'])) {
-
-   $formanswer->getFromDB(intval($_POST['id']));
-   $formanswer->acceptAnswers($_POST);
+   $formanswer->update($_POST);
    $formanswer->redirectToList();
 
 } else if (isset($_POST['save_formanswer'])) {
-   if (!$formanswer->updateAnswers($_POST)) {
+   if (!$formanswer->update($_POST)) {
       Html::back();
    }
    if (plugin_formcreator_replaceHelpdesk()) {
@@ -69,8 +65,8 @@ if (isset($_POST['update'])) {
       $formanswer->redirectToList();
    }
 
-   // Show target ticket form
 } else {
+   // Show target ticket form
    $formanswer->getFromDB((int) $_GET['id']);
    if (!$formanswer->checkEntity()) {
       Html::displayRightError();
@@ -78,7 +74,7 @@ if (isset($_POST['update'])) {
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+      if (Session::getCurrentInterface() == 'helpdesk') {
          Html::helpHeader(
             __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF']

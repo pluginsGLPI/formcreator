@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -35,10 +35,6 @@ require_once ('../../../inc/includes.php');
 // Check if plugin is activated...
 $plugin = new Plugin();
 if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
-
-if (!isset($_REQUEST['sub_itemtype'])) {
    Html::displayNotFoundError();
 }
 
@@ -57,13 +53,10 @@ if (isset($_POST['save_formanswer'])) {
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {
-      Html::redirect($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
+      Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
    }
 
-   $issue->getFromDBByCrit([
-      'original_id' => (int) $_REQUEST['id'],
-      'sub_itemtype' => $_REQUEST['sub_itemtype'],
-   ]);
+   $issue->getFromDB((int) $_REQUEST['id']);
    $issue->display($_REQUEST);
 
    if (plugin_formcreator_replaceHelpdesk()) {

@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -49,51 +49,54 @@ class PluginFormcreatorComposite
    /**
     * Add a target and generated target
     *
-    * @param PluginFormcreatorTargetBase $target
+    * @param PluginFormcreatorAbstractTarget $target
     * @param CommonDBTM $generatedTarget
     */
-   public function addTarget(PluginFormcreatorTargetBase $target, CommonDBTM $generatedTarget) {
+   public function addTarget(PluginFormcreatorAbstractTarget $target, CommonDBTM $generatedTarget) {
       $itemtype = get_class($target);
       $this->targets[$itemtype][$target->getID()] = $generatedTarget;
    }
 
+   /**
+    * Undocumented function
+    *
+    * @return void
+    */
    public function buildCompositeRelations() {
       global $DB;
 
-      if (!isset($this->targets[PluginFormcreatorTargetTicket::class])) {
-         return;
-      }
+      if (isset($this->targets['PluginFormcreatorTargetTicket'])) {
+         foreach ($this->targets['PluginFormcreatorTargetTicket'] as $targetId => $generatedObject) {
+            $rows = $DB->request([
+               'SELECT' => [
+                  'itemtype',
+                  'items_id',
+                  'link'
+               ],
+               'FROM'   => $this->item_targetTicket->getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_targettickets_id' => $targetId
+               ]
+            ]);
+            foreach ($rows as $row) {
+               switch ($row['itemtype']) {
+                  case 'Ticket':
+                     $this->ticket_ticket->add([
+                        'link' => $row['link'],
+                        'tickets_id_1' => $generatedObject->getID(),
+                        'tickets_id_2' => $row['items_id'],
+                     ]);
+                     break;
 
-      foreach ($this->targets[PluginFormcreatorTargetTicket::class] as $targetId => $generatedObject) {
-         $rows = $DB->request([
-            'SELECT' => [
-               'itemtype',
-               'items_id',
-               'link'
-            ],
-            'FROM'   => $this->item_targetTicket->getTable(),
-            'WHERE'  => [
-               'plugin_formcreator_targettickets_id' => $targetId
-            ]
-         ]);
-         foreach ($rows as $row) {
-            switch ($row['itemtype']) {
-               case Ticket::class:
-                  $this->ticket_ticket->add([
-                     'link' => $row['link'],
-                     'tickets_id_1' => $generatedObject->getID(),
-                     'tickets_id_2' => $row['items_id'],
-                  ]);
-                  break;
-
-               case PluginFormcreatorTargetTicket::class:
-                  $ticket = $this->targets[PluginFormcreatorTargetTicket::class][$row['items_id']];
-                  $this->ticket_ticket->add([
-                     'link' => $row['link'],
-                     'tickets_id_1' => $generatedObject->getID(),
-                     'tickets_id_2' => $ticket->getID(),
-                  ]);
-                  break;
+                  case 'PluginFormcreatorTargetTicket':
+                     $ticket = $this->targets['PluginFormcreatorTargetTicket'][$row['items_id']];
+                     $this->ticket_ticket->add([
+                        'link' => $row['link'],
+                        'tickets_id_1' => $generatedObject->getID(),
+                        'tickets_id_2' => $ticket->getID(),
+                     ]);
+                     break;
+               }
             }
          }
       }

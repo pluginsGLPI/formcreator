@@ -6,32 +6,37 @@
     "prefer-stable": true,
     "config": {
       "platform": {
-          "php": "5.6.0"
+          "php": "7.2.0"
       },
       "optimize-autoloader": true,
       "apcu-autoloader": true
   },
   "require": {
-      "php": ">= 5.6.0",
+      "php": ">= 7.2.0",
       "ext-xml": "*",
-      "docopt/docopt": "^1.0"
+      "docopt/docopt": "^1.0",
+      "gregwar/captcha": "^1.1",
+      "xylemical/php-expressions": "^1.0"
     },
     "require-dev": {
       "ext-bz2": "*",
       "pear/archive_tar": "^1.4",
-      "atoum/atoum": "^3.4",
+      "atoum/atoum": "^3.4|^4.0",
       "atoum/stubs": "^2.5",
-      "glpi-project/tools": "^0.1.0",
-      "glpi-project/coding-standard": "0.7.1",
       "atoum/reports-extension": "^3.0",
-      "jakub-onderka/php-parallel-lint": "^1.0",
+      "glpi-project/tools": "^0.1.0",
+      "glpi-project/coding-standard": "^0.7.1",
+      "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-      "sirbrillig/phpcs-variable-analysis": "^2.9",
       "phpcsstandards/phpcsutils": "^1.0@alpha"
     },
     "autoload-dev": {
         "psr-4": {
             "GlpiPlugin\\Formcreator\\Tests\\": "tests/src/"
         }
+    },
+    "scripts": {
+        "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
+        "lint": "vendor/bin/parallel-lint --exclude vendor ."
     }
 }

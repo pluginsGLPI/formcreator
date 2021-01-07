@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -42,8 +42,7 @@
 
 .form-group {
    margin:  20px 10px;
-   page-break-inside: avoid;
-   page-break-after:auto;
+   break-inside: avoid-page;
 }
 
 .form_field {
@@ -133,17 +132,4 @@ label[for] {
    border-radius: 3px;
    height:16px;
    width:16px;
-}
-
-#c_menu, #header_top {
-   display: none;
-}
-
-#page.plugin_formcreator_page {
-   margin: 0;
-   width: auto;
-}
-
-#page.plugin_formcreator_page {
-   height: auto;
 }

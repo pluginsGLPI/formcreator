@@ -21,13 +21,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Xylemical\Expressions\Math\BcMath;
+use Xylemical\Expressions\Context;
+use Xylemical\Expressions\ExpressionFactory;
+use Xylemical\Expressions\Evaluator;
+use Xylemical\Expressions\Lexer;
+use Xylemical\Expressions\Parser;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -53,9 +61,9 @@ class PluginFormcreatorFields
    public static function getTypes() {
       $tab_field_types     = [];
 
-      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+      foreach (glob(dirname(__FILE__).'/field/*field.class.php') as $class_file) {
          $matches = null;
-         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         preg_match("#field/(.+)field\.class.php$#", $class_file, $matches);
 
          if (PluginFormcreatorFields::fieldTypeExists($matches[1])) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
@@ -72,9 +80,9 @@ class PluginFormcreatorFields
     */
    public static function getClasses() {
       $classes = [];
-      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+      foreach (glob(dirname(__FILE__).'/field/*field.class.php') as $class_file) {
          $matches = null;
-         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         preg_match("#field/(.+)field\.class.php$#", $class_file, $matches);
          $classname = self::getFieldClassname($matches[1]);
          if (self::fieldTypeExists($matches[1])) {
             $classes[strtolower($matches[1])] = $classname;
@@ -112,8 +120,7 @@ class PluginFormcreatorFields
    }
 
    /**
-    * Reset cache of evaluated visibility
-    * used for unit tests
+    * Reset the cache of visibility of hide-able items
     *
     * @return void
     */
@@ -125,7 +132,7 @@ class PluginFormcreatorFields
     * Check if an item should be shown or not
     *
     * @param   integer     $item       Item tested for visibility
-    * @param   array       $fields     Array of fields instances (question id => instance)
+    * @param   PluginFormcreatorFieldInterface[] $fields     Array of fields instances (question id => instance)
     * @return  boolean                 If true the question should be visible
     */
    public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
@@ -143,63 +150,59 @@ class PluginFormcreatorFields
        * Get inherit visibility from parent item.
        * @return boolean
        */
-      $getParentVisibility = function() use ($item, $itemtype, $itemId, $fields) {
+      $getParentVisibility = function() use ($item, $fields) {
          // Check if item has a condtionnable visibility parent
          if ($item instanceof CommonDBChild) {
             if (is_subclass_of($item::$itemtype, PluginFormcreatorConditionnableInterface::class)) {
                if ($parent = $item->getItem(true, false)) {
+                  $parentItemtype = $parent->getType();
+                  $parentId = $parent->getID();
                   if ($parent->getType() == PluginFormcreatorForm::class) {
                      // the condition for form is only for its submit button. A form is always visible
-                     return true;
+                     self::$visibility[$parentItemtype][$parentId] = true;
+                     return self::$visibility[$parentItemtype][$parentId];
                   }
                   // Use visibility of the parent item
-                  self::$visibility[$itemtype][$itemId] = self::isVisible($parent, $fields);
-                  return self::$visibility[$itemtype][$itemId];
+                  self::$visibility[$parentItemtype][$parentId] = self::isVisible($parent, $fields);
+                  return self::$visibility[$parentItemtype][$parentId];
                }
             }
          }
-         self::$visibility[$itemtype][$itemId] = true;
-         return self::$visibility[$itemtype][$itemId];
+         return true;
       };
 
       // If the field is always shown
       if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         return $getParentVisibility();
+         self::$visibility[$itemtype][$itemId] = $getParentVisibility();
+         return self::$visibility[$itemtype][$itemId];
       }
 
       // Get conditions to show or hide the item
-      $conditions = [];
       $condition = new PluginFormcreatorCondition();
       $conditions = $condition->getConditionsFromItem($item);
-      if ($getParentVisibility() === false || count($conditions) < 1) {
+      if ($getParentVisibility() === false) {
          // No condition defined or parent hidden
          self::$visibility[$itemtype][$itemId] = false;
          return self::$visibility[$itemtype][$itemId];
       }
-      self::$visibility[$itemtype][$itemId] = null;
-
-      // Force the first logic operator to OR
-      $conditions[0]->fields['show_logic']       = PluginFormcreatorCondition::SHOW_LOGIC_OR;
-
-      $return                       = false;
-      $lowPrecedenceReturnPart      = false;
-      $lowPrecedenceLogic           = 'OR';
-      foreach ($conditions as $order => $condition) {
-         $currentLogic = $condition->fields['show_logic'];
-         if (isset($conditions[$order + 1])) {
-            $nextLogic = $conditions[$order + 1]->fields['show_logic'];
-         } else {
-            // To ensure the low precedence return part is used at the end of the whole evaluation
-            $nextLogic = PluginFormcreatorCondition::SHOW_LOGIC_OR;
+      if (count($conditions) < 1) {
+         if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
+            self::$visibility[$itemtype][$itemId] = false;
+            return self::$visibility[$itemtype][$itemId];
+         } else if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
+            self::$visibility[$itemtype][$itemId] = true;
+            return self::$visibility[$itemtype][$itemId];
          }
+      }
 
+      $expression = [];
+      foreach ($conditions as $condition) {
+         $value = false;
          if (!isset($fields[$condition->fields['plugin_formcreator_questions_id']])) {
             // The field does not exists, give up and make the field visible
             return true;
          }
          $conditionField = $fields[$condition->fields['plugin_formcreator_questions_id']];
-
-         $value = false;
          if (in_array($condition->fields['show_condition'], [PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE, PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_INVISIBLE])) {
             switch ($condition->fields['show_condition']) {
                case PluginFormcreatorCondition::SHOW_CONDITION_QUESTION_VISIBLE:
@@ -209,7 +212,7 @@ class PluginFormcreatorFields
                   }
                   try {
                      $value = self::isVisible($conditionField->getQuestion(), $fields);
-                  } catch (PluginFormcreatorComparisonException $e) {
+                  } catch (ComparisonException $e) {
                      $value = false;
                   }
                   break;
@@ -220,7 +223,7 @@ class PluginFormcreatorFields
                   }
                   try {
                      $value = !self::isVisible($conditionField->getQuestion(), $fields);
-                  } catch (PluginFormcreatorComparisonException $e) {
+                  } catch (ComparisonException $e) {
                      $value = false;
                   }
                   break;
@@ -235,7 +238,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->notEquals($condition->fields['show_value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -247,7 +250,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->equals($condition->fields['show_value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -259,7 +262,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->greaterThan($condition->fields['show_value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -271,7 +274,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->lessThan($condition->fields['show_value']);
-                     } catch (PluginFormcreatorComparisonException $e) {
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -283,8 +286,8 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = ($conditionField->greaterThan($condition->fields['show_value'])
-                        || $conditionField->equals($condition->fields['show_value']));
-                     } catch (PluginFormcreatorComparisonException $e) {
+                                 || $conditionField->equals($condition->fields['show_value']));
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -296,61 +299,35 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = ($conditionField->lessThan($condition->fields['show_value'])
-                        || $conditionField->equals($condition->fields['show_value']));
-                     } catch (PluginFormcreatorComparisonException $e) {
+                                 || $conditionField->equals($condition->fields['show_value']));
+                     } catch (ComparisonException $e) {
                         $value = false;
                      }
                      break;
-                  }
+               }
             }
          }
-         // Combine all condition with respect of operator precedence
-         // AND has precedence over OR and XOR
-         if ($currentLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND) {
-            // next condition has a higher precedence operator
-            // Save the current computed return and operator to use later
-            $lowPrecedenceReturnPart = $return;
-            $lowPrecedenceLogic = $currentLogic;
-            $return = $value;
-         } else {
-            switch ($currentLogic) {
-               case PluginFormcreatorCondition::SHOW_LOGIC_AND :
-                  $return = ($return and $value);
-                  break;
-
-               case PluginFormcreatorCondition::SHOW_LOGIC_OR  :
-                  $return = ($return or $value);
-                  break;
-
-               default :
-                  $return = $value;
-            }
-         }
-
-         if ($currentLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND) {
-            if ($lowPrecedenceLogic == PluginFormcreatorCondition::SHOW_LOGIC_OR) {
-               $return = ($return or $lowPrecedenceReturnPart);
-            } else {
-               $return = ($return xor $lowPrecedenceReturnPart);
-            }
-         }
+         $expression[] = PluginFormcreatorCondition::getEnumShowLogic()[$condition->fields['show_logic']];
+         $expression[] = $value ? '1' : '0';
       }
+      // Drop the first logic operator as it is irrelevant
+      array_shift($expression);
+      $expression = implode(' ', $expression);
 
-      // Ensure the low precedence part is used if last condition has logic == AND
-      if ($lowPrecedenceLogic == PluginFormcreatorCondition::SHOW_LOGIC_OR) {
-         $return = ($return or $lowPrecedenceReturnPart);
-      } else {
-         $return = ($return xor $lowPrecedenceReturnPart);
+      $math = new BcMath();
+      $factory = new ExpressionFactory($math);
+      $lexer = new Lexer($factory);
+      $parser = new Parser($lexer);
+      $evaluator = new Evaluator();
+      $context = new Context();
+
+      $tokens = $parser->parse($expression);
+      self::$visibility[$itemtype][$itemId] = $evaluator->evaluate($tokens, $context) ? true : false;
+
+      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
+         // Reverse condition
+         self::$visibility[$itemtype][$itemId] = !self::$visibility[$itemtype][$itemId];
       }
-
-      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
-         // If the field is hidden by default, show it if condition is true
-         self::$visibility[$itemtype][$itemId] = $return;
-      } else {
-         // else show it if condition is false
-         self::$visibility[$itemtype][$itemId] = !$return;
-      }
-
       return self::$visibility[$itemtype][$itemId];
    }
 
@@ -368,7 +345,6 @@ class PluginFormcreatorFields
       foreach ($fields as $id => $field) {
          $fields[$id]->parseAnswerValues($input, true);
       }
-
       // Get the visibility for the submit button of the form
       $submitShow = PluginFormcreatorFields::isVisible($form, $fields);
 
@@ -381,14 +357,14 @@ class PluginFormcreatorFields
       // Get the visibility result of sections
       $sectionToShow = [];
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
-      foreach($sections as $section) {
+      foreach ($sections as $section) {
          $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);
       }
 
       return [
          PluginFormcreatorQuestion::class => $questionToShow,
-         PluginFormcreatorSection::class => $sectionToShow,
-         PluginFormcreatorForm::class => $submitShow,
+         PluginFormcreatorSection::class  => $sectionToShow,
+         PluginFormcreatorForm::class     => $submitShow,
       ];
    }
 
@@ -399,7 +375,7 @@ class PluginFormcreatorFields
     * @return string
     */
    public static function getFieldClassname($type) {
-      return 'PluginFormcreator' . ucfirst($type) . 'Field';
+      return 'GlpiPlugin\\Formcreator\\Field\\' . ucfirst($type) . 'Field';
    }
 
    /**
@@ -410,7 +386,7 @@ class PluginFormcreatorFields
     */
    public static function fieldTypeExists($type) {
       $className = self::getFieldClassname($type);
-      return is_subclass_of($className, PluginFormcreatorField::class, true);
+      return is_subclass_of($className, PluginFormcreatorAbstractField::class, true);
    }
 
    /**
@@ -419,7 +395,7 @@ class PluginFormcreatorFields
     * @param string $type type of field to get
     * @param PluginFormcreatorQuestion $question question representing the field
     * @param array $data additional data
-    * @return null|PluginFormcreatorField
+    * @return null|PluginFormcreatorAbstractField
     */
    public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
       if (!self::fieldTypeExists($type)) {

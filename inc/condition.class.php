@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportable;
+   use PluginFormcreatorExportableTrait;
 
    static public $itemtype = 'itemtype';
    static public $items_id = 'items_id';
@@ -73,35 +73,50 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $input;
    }
 
-   public static function getEnumShowLogic() {
+   /**
+    * Undocumented function
+    *
+    * @return array
+    */
+   public static function getEnumShowLogic() : array {
       return [
          self::SHOW_LOGIC_AND => 'AND',
          self::SHOW_LOGIC_OR  => 'OR',
       ];
    }
 
-   public static function getEnumShowCondition() {
+   /**
+    * Undocumented function
+    *
+    * @return array
+    */
+   public static function getEnumShowCondition() : array {
       return [
-         self::SHOW_CONDITION_EQ => '=',
-         self::SHOW_CONDITION_NE => '≠',
-         self::SHOW_CONDITION_LT => '<',
-         self::SHOW_CONDITION_GT => '>',
-         self::SHOW_CONDITION_LE => '≤',
-         self::SHOW_CONDITION_GE => '≥',
-         self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
-         self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
+        self::SHOW_CONDITION_EQ => '=',
+        self::SHOW_CONDITION_NE => '≠',
+        self::SHOW_CONDITION_LT => '<',
+        self::SHOW_CONDITION_GT => '>',
+        self::SHOW_CONDITION_LE => '≤',
+        self::SHOW_CONDITION_GE => '≥',
+        self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
+        self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
       ];
    }
 
-   public function getEnumShowRule() {
+   /**
+    * Undocumented function
+    *
+    * @return array
+    */
+   public function getEnumShowRule() : array {
       return [
-         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
-         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
-         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
+        self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
+        self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
+        self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
       ];
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -156,7 +171,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the question to the linker
@@ -165,13 +180,18 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $itemId;
    }
 
+
+   public static function countItemsToImport(array $input) : int {
+      return 1;
+   }
+
    /**
     * Export in an array all the data of the current instanciated condition
-    * @param boolean $remove_uuid remove the uuid key
+    * @param bool $remove_uuid remove the uuid key
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export($remove_uuid = false) {
+   public function export(bool $remove_uuid = false) {
       if ($this->isNewItem()) {
          return false;
       }
@@ -198,10 +218,10 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    /**
     * get conditions applied to an item
     *
-    * @param PluginFormcreatorConditionnableInterface $item
-    * @return PluginFotrmcreatorCondition[]
+    * @param CommonDBTM $item
+    * @return PluginFormcreatorCondition[]
     */
-   public function getConditionsFromItem(PluginFormcreatorConditionnableInterface $item) {
+   public function getConditionsFromItem(CommonDBTM $item) : array {
       global $DB;
 
       if ($item->isNewItem()) {
@@ -229,7 +249,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    /**
     * Display HTML for conditions applied on an item
     *
-    * @param PluginFormcreatorConditionnableInterface $item item where conditions applies to
+    * @param CommonDBTM $item item where conditions applies to
     * @return void
     */
    public function showConditionsForItem(CommonDBTM $item) {
@@ -267,7 +287,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return string HTML to insert in a rendered web page
     */
-    public function getConditionHtml($input) {
+   public function getConditionHtml(array $input) : string {
       if ($this->isNewItem()) {
          $this->getEmpty();
          $itemtype       = $input['itemtype'];
@@ -345,14 +365,23 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             throw new RuntimeException("Unsupported conditionnable");
 
       }
-      $questionsInForm = (new PluginFormcreatorQuestion())->getQuestionsFromFormBySection($form->getID(), $questionListExclusion);
+      $sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
+      $sectionsList = [];
+      foreach ($sections as $section) {
+         $sectionsList[] = $section->getID();
+      }
+      $questionListExclusion[] = [
+         PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
+      ];
       $html.= '<div class="div_show_condition_field">';
-      $html.= Dropdown::showFromArray(
-         '_conditions[plugin_formcreator_questions_id][]',
-         $questionsInForm, [
-            'display'      => false,
-            'value'        => $questionId,
-            'rand'         => $rand,
+      $html.= PluginFormcreatorQuestion::dropdown(
+         [
+            'name' => '_conditions[plugin_formcreator_questions_id][]',
+            'value'     => $questionId,
+            'comments'  => false,
+            'condition' => $questionListExclusion,
+            'rand'      => $rand,
+            'display'   => false,
          ]
       );
       $html.= '</div>';
@@ -401,8 +430,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $html;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude)
-   {
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          'itemtype' => $container->getType(),
          'items_id' => $container->getID(),

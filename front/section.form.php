@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2019 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -36,10 +36,10 @@ Session::checkRight('entity', UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if ($plugin->isActivated("formcreator")) {
+if ($plugin->isActivated('formcreator')) {
    $section = new PluginFormcreatorSection();
 
-   if (isset($_POST["add"])) {
+   if (isset($_POST['add'])) {
       // Add a new Section
       Session::checkRight('entity', UPDATE);
       $section->add($_POST);
@@ -47,36 +47,9 @@ if ($plugin->isActivated("formcreator")) {
 
    } else if (isset($_POST['update'])) {
       // Edit an existing section
-      Session::checkRight("entity", UPDATE);
+      Session::checkRight('entity', UPDATE);
       $section->update($_POST);
       Html::back();
-
-   } else if (isset($_POST['delete_section'])) {
-      // Delete a Section
-      Session::checkRight('entity', UPDATE);
-      $section->delete($_POST);
-      // Page refresh handled by Javascript
-
-   } else if (isset($_POST['duplicate_section'])) {
-      // Duplicate a Section
-      Session::checkRight('entity', UPDATE);
-      if ($section->getFromDB((int) $_POST['id'])) {
-         $section->duplicate();
-      }
-      // Page refresh handled by Javascript
-
-   } else if (isset($_POST['move'])) {
-      // Move a Section
-      Session::checkRight('entity', UPDATE);
-
-      if ($section->getFromDB((int) $_POST['id'])) {
-         if ($_POST["way"] == 'up') {
-            $section->moveUp();
-         } else {
-            $section->moveDown();
-         }
-      }
-      // Page refresh handled by Javascript
 
    } else {
       // Return to form list
