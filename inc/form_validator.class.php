@@ -166,7 +166,7 @@ PluginFormcreatorExportableInterface
     *
     * @param PluginFormcreatorForm $form
     * @param string $itemtype
-    * @return array array of User or Group objects
+    * @return User[]|Group[] array of User or Group objects
     */
    public function getValidatorsForForm(PluginFormcreatorForm $form, $itemtype) {
       global $DB;
