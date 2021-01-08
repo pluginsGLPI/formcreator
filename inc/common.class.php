@@ -270,23 +270,20 @@ JAVASCRIPT;
       ], [
          'timeline_position ASC'
       ], 1);
-      $ticketValidation = new TicketValidation();
+      $user = 0;
       if (count($ticketValidations)) {
-         $row = array_shift($ticketValidation);
-         $ticketValidation->getFromDB($row['id']);
+         $row = array_shift($ticketValidations);
+         $user = $row['users_id_validate'];
       }
 
       $status = $item->fields['status'];
-      $user = 0;
-      if (!$ticketValidation->isNewItem()) {
-         $user = $ticketValidation->fields['users_id_validate'];
-         switch ($ticketValidation->fields['status']) {
+      if (count($ticketValidations) > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
+         switch ($item->fields['global_validation']) {
             case CommonITILValidation::WAITING:
                $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
                break;
-
             case CommonITILValidation::REFUSED:
-               if ($item->fields['status'] != Ticket::SOLVED && $item->fields['status'] != Ticket::CLOSED) {
+               if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
                   $status = PluginFormcreatorFormAnswer::STATUS_REFUSED;
                }
                break;
