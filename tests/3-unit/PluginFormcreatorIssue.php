@@ -54,7 +54,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket->getFromDB($ticket->getID());
 
       return [
-         [
+         'simpleTicket' => [
             'item' => $ticket,
             'expected' => [
                'sub_itemtype'  => \Ticket::getType(),
@@ -65,6 +65,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
+               'users_id_validator'  => '0',
+               'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -79,7 +81,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
       return [
-         [
+         'simpleFormanswers' => [
             'item' => $formAnswer,
             'expected' => [
                'sub_itemtype'  => \PluginFormcreatorFormAnswer::getType(),
@@ -90,6 +92,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $formAnswer->fields['requester_id'],
                'date_creation' => $formAnswer->fields['request_date'],
                'date_mod'      => $formAnswer->fields['request_date'],
+               'users_id_validator'  => '0',
+               'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -117,7 +121,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
       return [
-         [
+         'formAnswerWithSeveralTickets' => [
             'item' => $formAnswer,
             'expected' => [
                'sub_itemtype'  => \PluginFormcreatorFormAnswer::getType(),
@@ -128,6 +132,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $formAnswer->fields['requester_id'],
                'date_creation' => $formAnswer->fields['request_date'],
                'date_mod'      => $formAnswer->fields['request_date'],
+               'users_id_validator'  => '0',
+               'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -153,7 +159,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket = array_pop($formAnswer->targetList);
       $this->object($ticket)->isInstanceOf(\Ticket::class);
       return [
-         [
+         'formAnswerWithOneTickets' => [
             'item' => $formAnswer,
             'expected' => [
                'sub_itemtype'  => \PluginFormcreatorFormAnswer::getType(),
@@ -164,6 +170,116 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $formAnswer->fields['requester_id'],
                'date_creation' => $formAnswer->fields['request_date'],
                'date_mod'      => $formAnswer->fields['request_date'],
+               'users_id_validator'  => '0',
+               'groups_id_validator' => '0',
+            ],
+         ],
+      ];
+   }
+
+   public function providerGetSyncIssuesRequest_formanswerUnderValidation() {
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => [4] // tech
+      ]);
+
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_validator'       => 4 // Tech
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $formAnswer->getFromDB($formAnswer->getID());
+
+      return [
+         'formanswerUnderValidation' => [
+            'item' => $formAnswer,
+            'expected' => [
+               'sub_itemtype'        => \PluginFormcreatorFormAnswer::getType(),
+               'original_id'         => $formAnswer->getID(),
+               'display_id'          => 'f_' . $formAnswer->getID(),
+               'name'                => $formAnswer->fields['name'],
+               'status'              => $formAnswer->fields['status'],
+               'requester_id'        => $formAnswer->fields['requester_id'],
+               'date_creation'       => $formAnswer->fields['request_date'],
+               'date_mod'            => $formAnswer->fields['request_date'],
+               'users_id_validator'  => '4', // Tech
+               'groups_id_validator' => '0',
+            ],
+         ],
+      ];
+   }
+
+   public function providerGetsyncIssuesRequest_ticketUnderValidation() {
+      $ticket = new \Ticket();
+      $ticket->add([
+         'name'    => 'a ticket',
+         'content' => 'foo',
+         'status'  =>  \Ticket::INCOMING,
+         '_add_validation' => '0',
+         'validatortype' => User::class,
+         'users_id_validate' => [4], // Tech
+      ]);
+      $this->boolean($ticket->isNewItem())->isFalse();
+      $ticket->getFromDB($ticket->getID());
+
+      return [
+         'ticketUnderValidation' => [
+            'item' => $ticket,
+            'expected' => [
+               'sub_itemtype'  => \Ticket::getType(),
+               'original_id'   => $ticket->getID(),
+               'display_id'    => 't_' . $ticket->getID(),
+               'name'          => $ticket->fields['name'],
+               'status'        => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'requester_id'  => $ticket->fields['users_id_recipient'],
+               'date_creation' => $ticket->fields['date'],
+               'date_mod'      => $ticket->fields['date_mod'],
+               'users_id_validator'  => '4', // Tech
+               'groups_id_validator' => '0',
+            ],
+         ],
+      ];
+   }
+
+   public function providerGetsyncIssuesRequest_validatedTicket() {
+      $ticket = new \Ticket();
+      $ticket->add([
+         'name'    => 'a ticket',
+         'content' => 'foo',
+         'status'  =>  \Ticket::INCOMING,
+         '_add_validation' => '0',
+         'validatortype' => User::class,
+         'users_id_validate' => [4], // Tech
+      ]);
+      $this->boolean($ticket->isNewItem())->isFalse();
+      $ticket->getFromDB($ticket->getID());
+
+      // Validate the ticket
+      $ticketValidation = new \TicketValidation();
+      $ticketValidation->getFromDBByCrit([
+         'tickets_id' => $ticket->getID(),
+      ]);
+      $this->boolean($ticketValidation->isNewItem())->isFalse();
+      $ticketValidation->update([
+         'id' => $ticketValidation->getID(),
+         'status' => \TicketValidation::ACCEPTED
+      ]);
+
+      return [
+         'validatedTicket' => [
+            'item' => $ticket,
+            'expected' => [
+               'sub_itemtype'  => \Ticket::getType(),
+               'original_id'   => $ticket->getID(),
+               'display_id'    => 't_' . $ticket->getID(),
+               'name'          => $ticket->fields['name'],
+               'status'        => '2',
+               'requester_id'  => $ticket->fields['users_id_recipient'],
+               'date_creation' => $ticket->fields['date'],
+               'date_mod'      => $ticket->fields['date_mod'],
+               'users_id_validator'  => '4', // Tech
+               'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -171,9 +287,12 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
    public function providerGetSyncIssuesRequest() {
       return array_merge(
-         $this->providerGetSyncIssuesRequest_formAnswerWithSeveralTickets(),
          $this->providerGetsyncIssuesRequest_simpleTicket(),
-         $this->providerGetsyncIssuesRequest_simpleFormanswers()
+         $this->providerGetsyncIssuesRequest_simpleFormanswers(),
+         $this->providerGetSyncIssuesRequest_formAnswerWithSeveralTickets(),
+         $this->providerGetSyncIssuesRequest_formanswerUnderValidation(),
+         $this->providerGetsyncIssuesRequest_ticketUnderValidation(),
+         $this->providerGetsyncIssuesRequest_validatedTicket()
       );
    }
 
@@ -201,7 +320,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       // Test all fields described in expectations
       foreach ($expected as $key => $field) {
-         $this->variable($row[$key])->isEqualTo($field);
+         $this->variable($row[$key])->isEqualTo($field, "mismatch in field '$key'");
       }
    }
+
 }
