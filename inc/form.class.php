@@ -2352,18 +2352,6 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      // Check the form exists
-      $form = new self();
-      if (!$form->getFromDB($input[self::getForeignKeyField()])) {
-         // The linked form does not exists
-         Session::addMessageAfterRedirect(
-            __('The form does not exists.', 'formcreator'),
-            false,
-            ERROR
-         );
-         return false;
-      }
-
       // Create the target
       $item = new $itemtype();
       unset($input['itemtype']);

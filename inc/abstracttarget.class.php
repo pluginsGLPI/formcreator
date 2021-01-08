@@ -1538,7 +1538,7 @@ SCRIPT;
       }
       $form = new PluginFormcreatorForm();
       if (!$form->getFromDB((int) $input[$formFk])) {
-         Session::addMessageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'));
+         Session::addMessageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'), false, ERROR);
          return false;
       }
 
