@@ -737,7 +737,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                'plugin_formcreator_forms_id' => $form->getID(),
             ],
             'expected' => false,
-            'message'  => 'The form does not exists.',
+            'message'  => 'A target must be associated to an existing form.',
          ],
          [
             'input' => [
@@ -764,6 +764,9 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @dataProvider providerAddTarget
     */
    public function testAddTarget($input, $expected, $message) {
+      // Clean error messages
+      $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+
       $instance = $this->newTestedInstance();
       $output = $instance->addTarget($input);
 
