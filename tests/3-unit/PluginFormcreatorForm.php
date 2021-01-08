@@ -713,6 +713,9 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function providerAddTarget() {
+      // Empty error messages
+      $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
+
       // Have a non existent form ID
       $form = $this->getForm();
       $form->delete([
@@ -721,33 +724,38 @@ class PluginFormcreatorForm extends CommonTestCase {
       return [
          [
             'input' => [
-               'itemtype' => 'Nothing'
+               'itemtype' => 'Nothing',
+               'plugin_formcreator_forms_id' => $form->getID(),
             ],
             'expected' => false,
+            'message'  => 'Unsupported target type.',
          ],
          [
             'input' => [
-               'name' => '',
+               'name' => 'foo',
                'itemtype' => \PluginFormcreatorTargetTicket::class,
                'plugin_formcreator_forms_id' => $form->getID(),
             ],
             'expected' => false,
+            'message'  => 'The form does not exists.',
          ],
          [
             'input' => [
-               'name' => '',
+               'name' => 'foo',
                'itemtype' => \PluginFormcreatorTargetTicket::class,
                'plugin_formcreator_forms_id' => $this->getForm()->getID(),
             ],
             'expected' => true,
+            'message'  => null,
          ],
          [
             'input' => [
-               'name' => '',
+               'name' => 'foo',
                'itemtype' => \PluginFormcreatorTargetChange::class,
                'plugin_formcreator_forms_id' => $this->getForm()->getID(),
             ],
             'expected' => true,
+            'message'  => null,
          ],
       ];
    }
@@ -755,17 +763,18 @@ class PluginFormcreatorForm extends CommonTestCase {
    /**
     * @dataProvider providerAddTarget
     */
-   public function testAddTarget($input, $expected) {
+   public function testAddTarget($input, $expected, $message) {
       $instance = $this->newTestedInstance();
       $output = $instance->addTarget($input);
 
       if ($expected === false) {
          //End of test on expected failure
          $this->boolean($output)->isEqualTo($expected);
+         $this->sessionHasMessage($message, ERROR);
          return;
       }
-
-      $this->integer((int) $output);
+      $this->variable($output)->isNotFalse();
+      $this->integer($output);
 
       $target = new $input['itemtype']();
       $rows = $target->find([
@@ -783,10 +792,12 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($output)->isFalse();
 
       $output = $instance->addTarget([
-         'name' => '',
+         'name' => 'foo',
          'itemtype' => \PluginFormcreatorTargetChange::class,
          'plugin_formcreator_forms_id' => $this->getForm()->getID(),
       ]);
+      $this->variable($output)->isNotFalse();
+      $this->integer($output);
       $instance->deleteTarget([
          'itemtype' => \PluginFormcreatorTargetChange::class,
          'items_id' => $output,
