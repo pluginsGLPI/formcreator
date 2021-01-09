@@ -151,6 +151,11 @@ class Config extends CommonTestCase {
 
       $this->testRequestType();
       $this->checkAutomaticAction();
+
+      $config = \Config::getConfigurationValues($pluginName);
+      $this->array($config)->isIdenticalTo([
+         'schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION
+      ]);
    }
 
    public function testPluginName() {
