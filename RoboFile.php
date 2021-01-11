@@ -177,7 +177,6 @@ class RoboFile extends RoboFilePlugin
          ->commit('docs(locales): update translations')
          ->run();
 
-      $this->buildFaData();
       $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
@@ -529,47 +528,6 @@ class RoboFile extends RoboFilePlugin
          throw new Exception("Failed to log $a..$b");
       }
       return $output;
-   }
-
-   public function buildFaData() {
-      $versions = [];
-
-      //For GLPI 9.5 and later
-      $versions = [
-         'font-awesome_9.5.php' => [
-            'package-lock.json' => 'https://raw.githubusercontent.com/glpi-project/glpi/9.5/bugfixes/package-lock.json',
-         ],
-      ];
-
-      $faRepo = 'https://raw.githubusercontent.com/FortAwesome/Font-Awesome';
-      $searchRegex = '#glyph-name=\"([^\"]*)\"#i';
-      foreach ($versions as $outFile => $version) {
-         // Determine all Font Awesome files sources
-         $outFile = __DIR__ . '/data/' . $outFile;
-         $json = $version['package-lock.json'];
-         $json = json_decode(file_get_contents($json), true);
-         $faVersion = $json['dependencies']['@fortawesome/fontawesome-free']['version'];
-         $faSvgFiles = [
-            'fa' => "$faRepo/$faVersion/webfonts/fa-regular-400.svg",
-            'fab' => "$faRepo/$faVersion/webfonts/fa-brands-400.svg",
-            'fas' => "$faRepo/$faVersion/webfonts/fa-solid-900.svg",
-         ];
-
-         $fanames = [];
-         foreach ($faSvgFiles as $key => $svgSource) {
-            $svg = file_get_contents($svgSource);
-            $matches = null;
-            preg_match_all($searchRegex, $svg, $matches);
-            foreach ($matches[1] as $name) {
-               $fanames["$key fa-$name"] = $name;
-            }
-            $list = '<?php' . PHP_EOL . 'return ' . var_export($fanames, true) . ';';
-            $size = file_put_contents($outFile, $list);
-            if ($size != strlen($list)) {
-               throw new RuntimeException('Failed to build the list of font awesome pictograms');
-            }
-         }
-      }
    }
 
    public function buildLog($a, $b = 'HEAD') {
