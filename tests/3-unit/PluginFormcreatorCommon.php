@@ -66,11 +66,11 @@ class PluginFormcreatorCommon extends CommonTestCase {
       return [
          [
             'version' => '9.5.0',
-            'expected' => 'data/font-awesome_9.5.php',
+            'expected' => 'font-awesome.php',
          ],
          [
             'version' => '9.9.0',
-            'expected' => '',
+            'expected' => 'font-awesome.php',
          ]
       ];
    }

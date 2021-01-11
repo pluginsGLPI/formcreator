@@ -493,6 +493,19 @@ function plugin_formcreator_redefine_menus($menus) {
    return $menus;
 }
 
+function plugin_formcreator_hook_update_plugin(CommonDBTM $item) {
+   if ($item->fields['directory'] != 'formcreator') {
+      return;
+   }
+
+   if ($item->fields['state'] != Plugin::ACTIVATED) {
+      return;
+   }
+
+   // This is Formcreator, and its state switched to enabled
+   PluginFormcreatorCommon::buildFontAwesomeData();
+}
+
 /**
  * Hook for timeline_actions; display a new action for a CommonITILObject
  * @see CommonITILObject
