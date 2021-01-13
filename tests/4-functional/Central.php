@@ -47,11 +47,11 @@ class Central extends CommonFunctionalTestCase {
          'helpdesk_home' => '0',
       ]);
 
-      // Open the forms tab
-      $this->browsing->openTab('Forms');
-
       // Select the entity for the test
       $this->browsing->changeActiveEntity($entity, true);
+
+      // Open the forms tab
+      $this->browsing->openTab('Forms');
 
       // Check the form is not displayed
       $this->takeScreenshot();
@@ -60,6 +60,7 @@ class Central extends CommonFunctionalTestCase {
       $this->integer($output)->isEqualTo(0);
 
       // Check a message exists to say there is no form
+      $this->client->waitForVisibility('#plugin_formcreatorHomepageForms');
       $output = $this->crawler->filter('#plugin_formcreatorHomepageForms')->text();
       $this->string($output)->isEqualTo('No form available');
 
@@ -71,6 +72,9 @@ class Central extends CommonFunctionalTestCase {
       $this->crawler = $this->client->reload();
 
       // Check the form is displayed in the expected category
+
+      // Open the forms tab
+      $this->browsing->openTab('Forms');
       $this->takeScreenshot();
       $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="PluginFormcreatorCategory"][data-id="0"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $output = $this->crawler->filter($formSelector)->count();
@@ -85,6 +89,8 @@ class Central extends CommonFunctionalTestCase {
          \PluginFormcreatorCategory::getForeignKeyField() => $categoryId,
       ]);
       $this->crawler = $this->client->reload();
+      // Open the forms tab
+      $this->browsing->openTab('Forms');
 
       // Check the form shows in the expected category
       $this->takeScreenshot();

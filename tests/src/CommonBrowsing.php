@@ -115,7 +115,7 @@ class CommonBrowsing {
       $this->test->client->executeScript("
          $('" . $tabNameSelector . "').click();
       ");
-      $this->test->client->waitFor('#' . $tabDisplayId . ' > *');
+      $this->test->client->waitFor('#' . $tabDisplayId . ' > *:not(#loadingtabs)');
 
       // TODO : Check the tab area is now visible
    }
