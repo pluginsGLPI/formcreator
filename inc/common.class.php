@@ -267,13 +267,14 @@ JAVASCRIPT;
          'timeline_position ASC'
       ], 1);
       $user = 0;
-      if (count($ticketValidations)) {
+      $ticketValidationCount = count($ticketValidations);
+      if ($ticketValidationCount) {
          $row = array_shift($ticketValidations);
          $user = $row['users_id_validate'];
       }
 
       $status = $item->fields['status'];
-      if (count($ticketValidations) > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
+      if ($ticketValidationCount > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
          switch ($item->fields['global_validation']) {
             case CommonITILValidation::WAITING:
                $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
