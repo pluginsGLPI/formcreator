@@ -32,6 +32,17 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorCommon extends CommonTestCase {
+   public function beforeTestMethod($method) {
+      global $CFG_GLPI;
+
+      switch ($method) {
+         case 'testGetTicketStatusForIssue':
+            $this->login('glpi', 'glpi');
+            $_SESSION['glpiset_default_tech'] = false;
+            break;
+      }
+   }
+
    public function testGetFormcreatorRequestTypeId() {
       $requestTypeId = \PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
@@ -150,5 +161,189 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->boolean($output)->isFalse();
       $this->array($challenge = $_SESSION['plugin_formcreator']['captcha'])
          ->notHasKey('captcha1');
+   }
+
+   public function beforeGetTicketStatusForIssue() {
+
+   }
+
+   public function providerGetTicketStatusForIssue() {
+      $data = [];
+      $expectedStatus = [
+            \Ticket::INCOMING,
+            \Ticket::ASSIGNED,
+            \Ticket::PLANNED,
+            \Ticket::WAITING,
+            \Ticket::SOLVED,
+            \Ticket::CLOSED,
+      ];
+      foreach ($expectedStatus as $ticketStatus) {
+         // generate tickets with a validation
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'status'  =>  \CommonITILObject::INCOMING,
+            '_add_validation' => '0',
+            'validatortype' => User::class,
+            'users_id_validate' => [4], // Tech
+         ]);
+         $this->boolean($ticket->isNewItem())->isFalse();
+         // Creating a ticket directly with status solved or closed
+         // will prevent credation of ticketvalidation item
+         $ticket->update([
+            'id' => $ticket->getID(),
+            'status' => $ticketStatus,
+            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
+         ]);
+         $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
+         $ticket->fields['global_validation'] = \CommonITILValidation::NONE;
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 4, 'status' => $ticketStatus]
+         ];
+         $data["validation none, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'status'  =>  $ticketStatus,
+         ]);
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 0, 'status' => $ticketStatus]
+         ];
+         $data["no validation, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'status'  =>  \CommonITILObject::INCOMING,
+            '_add_validation' => '0',
+            'validatortype' => User::class,
+            'users_id_validate' => [4], // Tech
+         ]);
+         $this->boolean($ticket->isNewItem())->isFalse();
+         // Creating a ticket directly with status solved or closed
+         // will prevent credation of ticketvalidation item
+         $ticket->update([
+            'id' => $ticket->getID(),
+            'status' => $ticketStatus,
+            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
+         ]);
+         $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
+         $ticket->fields['global_validation'] = \CommonITILValidation::ACCEPTED;
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 4, 'status' => $ticketStatus]
+         ];
+         $data["validation accepted, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'status'  =>  \CommonITILObject::INCOMING,
+            '_add_validation' => '0',
+            'validatortype' => User::class,
+            'users_id_validate' => [4], // Tech
+         ]);
+         $this->boolean($ticket->isNewItem())->isFalse();
+         // Creating a ticket directly with status solved or closed
+         // will prevent credation of ticketvalidation item
+         $ticket->update([
+            'id' => $ticket->getID(),
+            'status' => $ticketStatus,
+            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
+         ]);
+         $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
+         $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING]
+         ];
+         $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+      }
+
+      $expectedStatus = [
+         \Ticket::INCOMING,
+         \Ticket::ASSIGNED,
+         \Ticket::PLANNED,
+         \Ticket::WAITING,
+      ];
+      foreach ($expectedStatus as $ticketStatus) {
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'status'  =>  \CommonITILObject::INCOMING,
+            '_add_validation' => '0',
+            'validatortype' => User::class,
+            'users_id_validate' => [4], // Tech
+         ]);
+         $this->boolean($ticket->isNewItem())->isFalse();
+         // Creating a ticket directly with status solved or closed
+         // will prevent credation of ticketvalidation item
+         $ticket->update([
+            'id' => $ticket->getID(),
+            'status' => $ticketStatus,
+            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
+         ]);
+         $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
+         $ticket->fields['global_validation'] = \CommonITILValidation::REFUSED;
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_REFUSED]
+         ];
+         $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+      }
+
+      $expectedStatus = [
+         \Ticket::SOLVED,
+         \Ticket::CLOSED,
+      ];
+      foreach ($expectedStatus as $ticketStatus) {
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'status'  =>  \CommonITILObject::INCOMING,
+            '_add_validation' => '0',
+            'validatortype' => User::class,
+            'users_id_validate' => [4], // Tech
+         ]);
+         $this->boolean($ticket->isNewItem())->isFalse();
+         // Creating a ticket directly with status solved or closed
+         // will prevent credation of ticketvalidation item
+         $ticket->update([
+            'id' => $ticket->getID(),
+            'status' => $ticketStatus,
+            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
+         ]);
+         $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
+         $ticket->fields['global_validation'] = \CommonITILValidation::REFUSED;
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 4, 'status' => $ticketStatus]
+         ];
+         $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+      }
+
+      return $data;
+   }
+
+   /**
+    * @dataProvider providerGetTicketStatusForIssue
+    *
+    * @param \Ticket $ticket
+    * @param array $expected
+    * @return void
+    */
+   public function testGetTicketStatusForIssue($ticket, $expected) {
+      $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+      $this->integer((int) $output['status'])->isEqualTo($expected['status']);
+      $this->integer((int) $output['user'])->isEqualTo($expected['user']);
    }
 }
