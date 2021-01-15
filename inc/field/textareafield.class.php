@@ -39,7 +39,7 @@ use Toolbox;
 
 class TextareaField extends TextField
 {
-   /** @var $uploads array uploaded files on form submit */
+   /** @var array uploaded files on form submit */
    private $uploads = [
       '_filename' => [],
       '_prefix_filename' => [],
