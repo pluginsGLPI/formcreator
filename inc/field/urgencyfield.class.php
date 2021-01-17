@@ -36,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Ticket;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class UrgencyField extends PluginFormcreatorAbstractField
 {
@@ -220,6 +221,10 @@ class UrgencyField extends PluginFormcreatorAbstractField
 
    public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible(): bool {

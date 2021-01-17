@@ -57,6 +57,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    const SHOW_CONDITION_GE = 6;
    const SHOW_CONDITION_QUESTION_VISIBLE = 7;
    const SHOW_CONDITION_QUESTION_INVISIBLE = 8;
+   const SHOW_CONDITION_REGEX = 9;
 
    public static function getTypeName($nb = 0) {
       return _n('Condition', 'Conditions', $nb, 'formcreator');
@@ -100,6 +101,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
         self::SHOW_CONDITION_GE => '≥',
         self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
         self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
+        self::SHOW_CONDITION_REGEX => __('regular expression matches', 'formcreator'),
       ];
    }
 

@@ -152,6 +152,10 @@ class IpField extends PluginFormcreatorAbstractField
       throw new ComparisonException('Meaningless comparison');
    }
 
+   public function regex($value): bool {
+      return (preg_grep($value, $this->value)) ? true : false;
+   }
+
    public function isAnonymousFormCompatible(): bool {
       return true;
    }

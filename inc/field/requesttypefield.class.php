@@ -36,6 +36,7 @@ use Html;
 use Session;
 use Ticket;
 use Dropdown;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class RequestTypeField extends SelectField
 {
@@ -216,6 +217,10 @@ class RequestTypeField extends SelectField
 
    public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isAnonymousFormCompatible(): bool {
