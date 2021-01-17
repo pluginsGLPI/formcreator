@@ -38,6 +38,7 @@ use Toolbox;
 use Session;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class FloatField extends PluginFormcreatorAbstractField
 {
@@ -285,6 +286,10 @@ class FloatField extends PluginFormcreatorAbstractField
 
    public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function regex($value): bool {
+      return (preg_grep($value, $this->value)) ? true : false;
    }
 
    public function isAnonymousFormCompatible(): bool {

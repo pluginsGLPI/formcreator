@@ -643,6 +643,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
+   }
+
    public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {

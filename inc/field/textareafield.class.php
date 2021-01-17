@@ -239,6 +239,10 @@ class TextareaField extends TextField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
+   public function regex($value): bool {
+      return (preg_grep($value, $this->value)) ? true : false;
+   }
+
    public function isAnonymousFormCompatible(): bool {
       return true;
    }
