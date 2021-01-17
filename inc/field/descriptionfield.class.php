@@ -139,6 +139,10 @@ class DescriptionField extends PluginFormcreatorAbstractField
       throw new ComparisonException('Meaningless comparison');
    }
 
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
+   }
+
    public function parseAnswerValues($input, $nonDestructive = false): bool {
       return true;
    }

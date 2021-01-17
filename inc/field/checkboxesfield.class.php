@@ -358,6 +358,10 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function regex($value): bool {
+      return (preg_grep($value, $this->value)) ? true : false;
+   }
+
    public function isAnonymousFormCompatible(): bool {
       return true;
    }

@@ -37,6 +37,7 @@ use Html;
 use PluginFormcreatorAbstractField;
 use Session;
 use Toolbox;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class TimeField extends PluginFormcreatorAbstractField
 {
@@ -191,6 +192,12 @@ class TimeField extends PluginFormcreatorAbstractField
    public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
+
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
+   }
+
+
 
    public function parseAnswerValues($input, $nonDestructive = false): bool {
 

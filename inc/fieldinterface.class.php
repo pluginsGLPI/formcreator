@@ -235,6 +235,13 @@ interface PluginFormcreatorFieldInterface
    public function LessThan($value) : bool;
 
    /**
+    * Tests if the given value is match with regex
+    *
+    * @return boolean True if the value is match with regex
+    */
+   public function regex($value) : bool;
+
+   /**
     * Is the field compatible with anonymous form ?
     *
     * @return boolean true if the field can work with anonymous forms

@@ -275,6 +275,10 @@ class FileField extends PluginFormcreatorAbstractField
       throw new ComparisonException('Meaningless comparison');
    }
 
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
+   }
+
    public function isAnonymousFormCompatible(): bool {
       return true;
    }
