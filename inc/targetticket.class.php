@@ -1001,8 +1001,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                   'question.fieldtype'                       => "glpiselect",
                ],
                'ORDER' => [
-                  'row DESC',
-                  'col DESC',
+                  'order DESC',
                ]
             ]);
 
