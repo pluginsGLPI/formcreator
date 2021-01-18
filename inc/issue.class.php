@@ -134,10 +134,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ON `itic`.`tickets_id` = `tic`.`id`
                   AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
                LEFT JOIN (
-                  SELECT DISTINCT `users_id`, `tickets_id`
-                  FROM `glpi_tickets_users` AS `tu`
-                  WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
-                  ORDER BY `id` ASC
+                  SELECT * FROM (
+                     SELECT DISTINCT `users_id`, `tickets_id`
+                     FROM `glpi_tickets_users`
+                     WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
+                     ORDER BY `id` ASC
+                  ) AS `inner_tu`
+                  GROUP BY `tickets_id`
                ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
                LEFT JOIN `glpi_ticketvalidations` as `tv`
                   ON (`tic`.`id` = `tv`.`tickets_id`)
