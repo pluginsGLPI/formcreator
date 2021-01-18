@@ -489,7 +489,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form = $this->getForm();
 
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
-                 && $_SESSION['glpiID'] == $this->fields['requester_id'];
+                 && Session::getLoginUserID() == $this->fields['requester_id']
+                 || $this->fields['status'] == self::STATUS_WAITING
+                 && $this->canValidate();
 
       // form title
       echo "<h1 class='form-title'>";
@@ -576,9 +578,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          echo '</li>';
       }
-      if ($canEdit) {
+
+      if ($canEdit || $editMode) {
          echo Html::scriptBlock('$(function() {
-            plugin_formcreator.showFields($("form[name=\'form\']"));
+            plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
          })');
       }
 
@@ -727,8 +730,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $input['status'] = self::STATUS_ACCEPTED;
          if (isset($input['refuse_formanswer'])) {
             $input['status'] = self::STATUS_REFUSED;
+            // Update is restricted to a subset of fields
+            $input = [
+               'id'      => $input['id'],
+               'status'  => $input['status'],
+               'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
+            ];
+            $skipValidation = true;
          }
-         $skipValidation = true;
       } else {
          // The form answer is being updated
          $input['status'] = self::STATUS_WAITING;
@@ -738,13 +747,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Validation of answers failed
          return false;
       }
-
-      // Update is restricted to a subset of fields
-      $input = [
-         'id'      => $input['id'],
-         'status'  => $input['status'],
-         'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
-      ];
 
       return $input;
    }
