@@ -53,7 +53,7 @@ if (isset($_POST['update'])) {
    $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
    $targetTicket_actor = new PluginFormcreatorTarget_Actor();
    $targetTicket_actor->add([
-      'itemtype' => $targetticket->getType(),
+      'itemtype'         => $targetticket->getType(),
       'items_id'         => $id,
       'actor_role'       => $_POST['actor_role'],
       'actor_type'       => $_POST['actor_type'],
