@@ -941,7 +941,7 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != '1') {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT) {
          // Find FAQ entries
          $query_faqs = KnowbaseItem::getListRequest([
             'faq'      => '1',
