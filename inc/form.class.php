@@ -462,7 +462,6 @@ PluginFormcreatorConditionnableInterface
       ]);
       echo '</td>';
       echo '<td colspan="2">';
-
       // Select all users with ticket validation right and the groups
       $userTable = User::getTable();
       $userFk = User::getForeignKeyField();
@@ -519,6 +518,7 @@ PluginFormcreatorConditionnableInterface
          $validatorUsers[$user['id']] = $user['name'];
       }
       echo '<div id="validators_users">';
+      echo User::getTypeName() . '&nbsp';
       Dropdown::showFromArray(
          '_validator_users',
          $validatorUsers, [
@@ -588,6 +588,7 @@ PluginFormcreatorConditionnableInterface
          $validatorGroups[$group['id']] = $group['name'];
       }
       echo '<div id="validators_groups" style="width: 100%">';
+      echo Group::getTypeName() . '&nbsp';
       Dropdown::showFromArray(
          '_validator_groups',
          $validatorGroups,
