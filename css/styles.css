@@ -183,7 +183,7 @@ input.submit_button:focus {
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content {
    text-align: left;
    padding-left: 16px;
-   padding-right: 24px;
+   padding-right: 20px;
    margin: 0 2px;
    background: #F0F0F0;
 }
@@ -192,23 +192,14 @@ input.submit_button:focus {
    z-index: 100;
 }
 
-/* GLPI 9.4 : override abusive CSS rules for gridstack */
-/* TODO: drop when GLPI 9.5 is patched */
-.form_section .grid-stack-item:not(.lock-bottom) .grid-stack-item-content {
-   font-size: inherit;
-   font-weight: inherit;
-   text-align: inherit;
-   overflow: inherit;
-   cursor: inherit;
-   cursor: inherit;
-   cursor: inherit;
-   cursor: inherit;
-}
-
 .form_section .grid-stack .grid-stack-item .grid-stack-item-content,
 .form_section .grid-stack .grid-stack-item .placeholder-content {
 	left: 0;
 	right: 0;
+}
+
+.form_section .grid-stack > .grid-stack-item > .ui-resizable-se {
+   right: 5px;
 }
 
 /* actions on sections or questions */
