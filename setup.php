@@ -293,7 +293,7 @@ function plugin_init_formcreator() {
       }
 
       // Load JS and CSS files if we are on a page which need them
-      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+      if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
             Session::getCurrentInterface() == 'helpdesk') {
