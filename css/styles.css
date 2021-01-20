@@ -168,8 +168,16 @@ input.submit_button:focus {
    padding-bottom: 1px;
 }
 
+#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section > a {
+   font-size: larger;
+}
+
 #plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section:not(:first-of-type) {
    margin-top: 20px;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section.not-sortable > a {
+   padding-left: 15px;
 }
 
 /* questions */
@@ -191,6 +199,15 @@ input.submit_button:focus {
    padding-right: 14px;
    margin: 0 2px;
    background: #F0F0F0;
+   display: flex;
+   align-items: center;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content a[data-field=name] {
+   flex-grow: 1;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item.ui-draggable-dragging {
