@@ -205,7 +205,7 @@ input.submit_button:focus {
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content {
    text-align: left;
    padding-left: 16px;
-   padding-right: 14px;
+   padding-right: 10px;
    margin: 0 2px;
    background: #F0F0F0;
    display: flex;
@@ -230,9 +230,12 @@ input.submit_button:focus {
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack > .grid-stack-item > .ui-resizable-se {
-   right: 2px;
+   right: 3px;
+   bottom: 1px;
    background-image: url("../pics/corner-handle.png");
    transform: inherit;
+   width: 16px;
+   height: 16px;
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design .plugin_formcreator_question {
