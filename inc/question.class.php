@@ -154,6 +154,24 @@ PluginFormcreatorConditionnableInterface
 
       echo '</ol>';
       echo '</div>';
+
+      echo '<form name="form" method="post" action="'.PluginFormcreatorForm::getFormURL().'" data-itemtype="' . PluginFormcreatorForm::class . '">';
+      echo '<table>';
+
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Show submit button', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($item);
+
+      echo '</table>';
+
+      $item->showFormButtons([
+         'candel' => false
+      ]);
+      Html::closeForm();
    }
 
    /**
