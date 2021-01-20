@@ -165,6 +165,7 @@ input.submit_button:focus {
 #plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section {
    line-height: 32px;
    background: #CCC;
+   padding-bottom: 1px;
 }
 
 /* questions */
@@ -183,7 +184,7 @@ input.submit_button:focus {
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content {
    text-align: left;
    padding-left: 16px;
-   padding-right: 20px;
+   padding-right: 14px;
    margin: 0 2px;
    background: #F0F0F0;
 }
@@ -198,8 +199,13 @@ input.submit_button:focus {
 	right: 0;
 }
 
-.form_section .grid-stack > .grid-stack-item > .ui-resizable-se {
-   right: 5px;
+#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack > .grid-stack-item > .ui-resizable-se {
+   right: 3px;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form_design .plugin_formcreator_question {
+   background: #F0F0F0;
+   margin: 5px 2px;
 }
 
 /* actions on sections or questions */
@@ -282,7 +288,7 @@ form#plugin_formcreator_form {
 #plugin_formcreator_form > .form_header,
 #plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"] {
    background: #EEE;
-   box-shadow: 2px 2px 2px #CCC;
+   /*box-shadow: 2px 2px 2px #CCC;*/
    margin: 0 0 10px;
 }
 
