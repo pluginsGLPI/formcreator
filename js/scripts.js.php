@@ -1417,7 +1417,7 @@ function pluginFormcreatorInitializeField(fieldName, rand) {
  */
 function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
    var field = $('[name="' + fieldName + '[]"]');
-   var dropdownMax = <?php echo $CFG_GLPI['dropdown_max'] ?>;
+   var dropdownMax = CFG_GLPI['dropdown_max'];
    field.select2({
       width: '80%',
       minimumInputLength: 0,
@@ -1481,7 +1481,7 @@ function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
 function pluginFormcreatorInitializeActor2(fieldName, rand) {
    var field = $('select[name="' + fieldName + '[]"]');
    field.on("change", function(e) {
-      formcreatorShowFields($(field[0].form));
+      plugin_formcreator.showFields($(field[0].form));
    });
 }
 
