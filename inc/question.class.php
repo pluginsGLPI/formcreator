@@ -1114,6 +1114,16 @@ PluginFormcreatorConditionnableInterface
       return $items;
    }
 
+   /**
+    * Show or return a dropdown to select a question among those of the given form
+    *
+    * @param int $formId
+    * @param array $crit
+    * @param string $name
+    * @param string $value
+    * @param array $options
+    * @return string|int HTML output or random id
+    */
    public static function dropdownForForm($formId, $crit, $name, $value, $options = []) {
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
