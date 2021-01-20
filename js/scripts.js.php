@@ -277,7 +277,7 @@ function updateKbCategoriesView() {
       type: "GET",
       dataType: "json"
    }).done(function(response) {
-      html = '<div class="slinky-menu">';
+      var html = '<div class="slinky-menu">';
       html = html + buildKbCategoryList(response);
       html = html + '</div>';
 
@@ -308,9 +308,9 @@ function updateKbCategoriesView() {
 }
 
 function getFaqItems(categoryId) {
-   currentCategory = categoryId;
-   keywords = $('#plugin_formcreator_searchBar input:first').val();
-   deferred = jQuery.Deferred();
+   var currentCategory = categoryId;
+   var keywords = $('#plugin_formcreator_searchBar input:first').val();
+   var deferred = jQuery.Deferred();
    $.ajax({
       url: formcreatorRootDoc + '/ajax/knowbaseitem.php',
       data: {
@@ -436,14 +436,13 @@ function updateKbitemsView(categoryId) {
 }
 
 function buildKbCategoryList(tree) {
+   var html = '';
    if (tree.id != 0) {
-      html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
+      html += '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
          + ' onclick="updateKbitemsView(' + tree.id + ')">'
          + tree.name
          + '</a>';
-   } else {
-      html = '';
    }
    if (Object.keys(tree.subcategories).length == 0) {
       return html;
