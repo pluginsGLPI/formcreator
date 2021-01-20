@@ -168,6 +168,10 @@ input.submit_button:focus {
    padding-bottom: 1px;
 }
 
+#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section:not(:first-of-type) {
+   margin-top: 20px;
+}
+
 /* questions */
 #plugin_formcreator_form.plugin_formcreator_form_design .grid-stack {
    list-style-type: none;
@@ -206,11 +210,12 @@ input.submit_button:focus {
 #plugin_formcreator_form.plugin_formcreator_form_design .plugin_formcreator_question {
    background: #F0F0F0;
    margin: 5px 2px;
+   padding-left: 15px;
 }
 
 /* actions on sections or questions */
 #plugin_formcreator_form.plugin_formcreator_form_design .form_control {
-   width: 23px;
+   width: 20px;
    float: right;
    min-height: 1px;
    font-size: larger;
