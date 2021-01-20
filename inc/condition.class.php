@@ -376,14 +376,13 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
       ];
       $html.= '<div class="div_show_condition_field">';
-      $html.= PluginFormcreatorQuestion::dropdown(
+      $html .= PluginFormcreatorQuestion::dropdownForForm(
+         $form->getID(),
+         $questionListExclusion,
+         '_conditions[plugin_formcreator_questions_id][]',
+         $questionId,
          [
-            'name' => '_conditions[plugin_formcreator_questions_id][]',
-            'value'     => $questionId,
-            'comments'  => false,
-            'condition' => $questionListExclusion,
-            'rand'      => $rand,
-            'display'   => false,
+            'display' => false,
          ]
       );
       $html.= '</div>';
