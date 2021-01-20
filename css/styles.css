@@ -168,11 +168,16 @@ input.submit_button:focus {
    padding-bottom: 1px;
    display: flex;
    flex-wrap: wrap;
+   align-items: center;
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section > a {
    font-size: larger;
-   flex-grow: 1;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   flex: 1;
+   margin: 5px 0 0 5px;
 }
 
 #plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section:not(:first-of-type) {
