@@ -136,7 +136,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                LEFT JOIN (
                   SELECT * FROM (
                      SELECT DISTINCT `users_id`, `tickets_id`
-                     FROM `glpi_tickets_users`
+                     FROM `glpi_tickets_users` AS `tu`
                      WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
                      ORDER BY `id` ASC
                   ) AS `inner_tu`
