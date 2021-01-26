@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-21 10:12+0100\n"
+"POT-Creation-Date: 2021-01-26 12:55+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
 "Last-Translator: SeongHyeon Cho <jaymz9634@gmail.com>, 2021\n"
 "Language-Team: Korean (Korea) (https://www.transifex.com/teclib/teams/28042/ko_KR/)\n"
@@ -734,7 +734,7 @@ msgstr ""
 msgid "Waiting"
 msgstr "대기 중"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:613
+#: inc/formanswer.class.php:63 inc/issue.class.php:617
 msgid "Refused"
 msgstr "거부됨"
 
@@ -742,16 +742,16 @@ msgstr "거부됨"
 msgid "Accepted"
 msgstr "승인됨"
 
-#: inc/formanswer.class.php:162 inc/issue.class.php:607
+#: inc/formanswer.class.php:162 inc/issue.class.php:611
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "양식 답변"
 
-#: inc/formanswer.class.php:205 inc/issue.class.php:498
+#: inc/formanswer.class.php:205 inc/issue.class.php:502
 msgid "Form approver"
 msgstr "양식 승인자"
 
-#: inc/formanswer.class.php:224 inc/issue.class.php:590
+#: inc/formanswer.class.php:224 inc/issue.class.php:594
 msgid "Form approver group"
 msgstr "양식 승인자 그룹"
 
@@ -820,7 +820,7 @@ msgstr ""
 msgid "You must select validator!"
 msgstr "확인자를 선택해야 합니다!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:401
+#: inc/issue.class.php:40 inc/issue.class.php:405
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "문제사항"
@@ -829,11 +829,11 @@ msgstr[0] "문제사항"
 msgid "Update issue data from tickets and form answers"
 msgstr "티켓과 양식 답변에서 문제사항 데이터를 갱신"
 
-#: inc/issue.class.php:517
+#: inc/issue.class.php:521
 msgid "Ticket approver"
 msgstr "티켓 승인자"
 
-#: inc/issue.class.php:612
+#: inc/issue.class.php:616
 msgid "Not validated"
 msgstr "확인 안됨"
 

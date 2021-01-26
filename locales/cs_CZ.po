@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-21 10:12+0100\n"
+"POT-Creation-Date: 2021-01-26 12:55+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2021\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -766,7 +766,7 @@ msgstr ""
 msgid "Waiting"
 msgstr "Čeká se"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:613
+#: inc/formanswer.class.php:63 inc/issue.class.php:617
 msgid "Refused"
 msgstr "Odmítnuto"
 
@@ -774,7 +774,7 @@ msgstr "Odmítnuto"
 msgid "Accepted"
 msgstr "Přijato"
 
-#: inc/formanswer.class.php:162 inc/issue.class.php:607
+#: inc/formanswer.class.php:162 inc/issue.class.php:611
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Odpověď formuláře"
@@ -782,11 +782,11 @@ msgstr[1] "Odpovědi formuláře"
 msgstr[2] "Odpovědí formuláře"
 msgstr[3] "Odpovědi formuláře"
 
-#: inc/formanswer.class.php:205 inc/issue.class.php:498
+#: inc/formanswer.class.php:205 inc/issue.class.php:502
 msgid "Form approver"
 msgstr "Schvalovatel formuláře"
 
-#: inc/formanswer.class.php:224 inc/issue.class.php:590
+#: inc/formanswer.class.php:224 inc/issue.class.php:594
 msgid "Form approver group"
 msgstr "Skupina schvalovatele formuláře"
 
@@ -855,7 +855,7 @@ msgstr ""
 msgid "You must select validator!"
 msgstr "Je třeba vybrat ověřovatele!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:401
+#: inc/issue.class.php:40 inc/issue.class.php:405
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Problém"
@@ -867,11 +867,11 @@ msgstr[3] "Problémy"
 msgid "Update issue data from tickets and form answers"
 msgstr "Aktualizovat data problému z požadavků a odpovědí z formulářů"
 
-#: inc/issue.class.php:517
+#: inc/issue.class.php:521
 msgid "Ticket approver"
 msgstr "Schvalovatel požadavku"
 
-#: inc/issue.class.php:612
+#: inc/issue.class.php:616
 msgid "Not validated"
 msgstr "Neověřeno"
 

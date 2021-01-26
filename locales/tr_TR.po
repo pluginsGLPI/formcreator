@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-21 10:12+0100\n"
+"POT-Creation-Date: 2021-01-26 12:55+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2021\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/teclib/teams/28042/tr_TR/)\n"
@@ -308,7 +308,7 @@ msgstr "Var olan bir forma bir hedef atanmalıdır."
 
 #: inc/abstracttarget.class.php:1546
 msgid "Name is required."
-msgstr ""
+msgstr "Ad zorunludur"
 
 #: inc/abstracttarget.class.php:1573 inc/form.class.php:1348
 msgid "The name cannot be empty!"
@@ -403,7 +403,7 @@ msgstr "görünmez"
 
 #: inc/condition.class.php:104
 msgid "regular expression matches"
-msgstr ""
+msgstr "kurallı ifade eşleşmeleri"
 
 #: inc/condition.class.php:115
 msgid "Always displayed"
@@ -450,11 +450,11 @@ msgstr "Alfabetik sıralama"
 
 #: inc/entityconfig.class.php:89
 msgid "Merged with Forms"
-msgstr ""
+msgstr "Formlar ile Birleştirilmiş"
 
 #: inc/entityconfig.class.php:90
 msgid "Distinct menu entry"
-msgstr ""
+msgstr "Farklı menü kaydı"
 
 #: inc/entityconfig.class.php:122
 msgid "Helpdesk"
@@ -470,7 +470,7 @@ msgstr "Sıralama"
 
 #: inc/entityconfig.class.php:163
 msgid "Knowledge base"
-msgstr ""
+msgstr "Bilgi bankası"
 
 #: inc/form.class.php:60 inc/form.class.php:348
 msgid "Public access"
@@ -588,7 +588,7 @@ msgstr "Tüm formlarım (değerlendiren)"
 
 #: inc/form.class.php:1264 inc/form.class.php:1265
 msgid "Are you a robot ?"
-msgstr ""
+msgstr "Robot musunuz?"
 
 #: inc/form.class.php:1306
 msgid "Validation"
@@ -736,17 +736,17 @@ msgstr "Form bağlantısı"
 
 #: inc/form_profile.class.php:113
 msgid "Please activate the form to view the link"
-msgstr ""
+msgstr "Bağlantının görüntülenmesi için formu etkinleştirin"
 
 #: inc/form_profile.class.php:121
 msgid "Enable captcha"
-msgstr ""
+msgstr "Güvenlik kodu kullanılsın"
 
 #: inc/formanswer.class.php:62
 msgid "Waiting"
 msgstr "Bekliyor"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:613
+#: inc/formanswer.class.php:63 inc/issue.class.php:617
 msgid "Refused"
 msgstr "Reddedilmiş"
 
@@ -754,17 +754,17 @@ msgstr "Reddedilmiş"
 msgid "Accepted"
 msgstr "Onaylandı"
 
-#: inc/formanswer.class.php:162 inc/issue.class.php:607
+#: inc/formanswer.class.php:162 inc/issue.class.php:611
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Form yanıtı"
 msgstr[1] "Form yanıtları"
 
-#: inc/formanswer.class.php:205 inc/issue.class.php:498
+#: inc/formanswer.class.php:205 inc/issue.class.php:502
 msgid "Form approver"
 msgstr "Form onaylayıcı"
 
-#: inc/formanswer.class.php:224 inc/issue.class.php:590
+#: inc/formanswer.class.php:224 inc/issue.class.php:594
 msgid "Form approver group"
 msgstr "Form onaylayıcı grubu"
 
@@ -823,17 +823,17 @@ msgstr "Hedefler oluşturulamadı."
 
 #: inc/formanswer.class.php:1152
 msgid "No turing test set"
-msgstr ""
+msgstr "Herhangi bir Turing sınaması ayarlanmamış"
 
 #: inc/formanswer.class.php:1157
 msgid "You failed the Turing test"
-msgstr ""
+msgstr "Turing sınamasını geçemediniz"
 
 #: inc/formanswer.class.php:1175
 msgid "You must select validator!"
 msgstr "Bir değerlendiren seçmelisiniz!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:401
+#: inc/issue.class.php:40 inc/issue.class.php:405
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Sorun"
@@ -843,11 +843,11 @@ msgstr[1] "Sorunlar"
 msgid "Update issue data from tickets and form answers"
 msgstr "Sorun verileri çağrı kaydı ve form yanıtlarından güncellensin"
 
-#: inc/issue.class.php:517
+#: inc/issue.class.php:521
 msgid "Ticket approver"
 msgstr "Çağrıyı onaylayan"
 
-#: inc/issue.class.php:612
+#: inc/issue.class.php:616
 msgid "Not validated"
 msgstr "Değerlendirilmemiş"
 
@@ -1154,7 +1154,7 @@ msgstr "Destek isteklerim"
 
 #: inc/wizard.class.php:113 inc/wizard.class.php:114
 msgid "Knowledge Base"
-msgstr ""
+msgstr "Bilgi Bankası"
 
 #: inc/wizard.class.php:121 inc/wizard.class.php:122
 msgid "Book an asset"
