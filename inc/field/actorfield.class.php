@@ -217,11 +217,11 @@ class ActorField extends PluginFormcreatorAbstractField
       $value = [];
       foreach ($this->value as $item) {
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-            $value[] = Toolbox::addslashes_deep($item);
+            $value[] = $item;
          } else {
             $user = new User();
             $user->getFromDB($item);
-            $value[] = Toolbox::addslashes_deep($user->getFriendlyName());
+            $value[] = $user->getFriendlyName();
          }
       }
 
