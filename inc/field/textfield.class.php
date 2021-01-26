@@ -131,7 +131,7 @@ class TextField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($richText): string {
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function moveUploads() {
