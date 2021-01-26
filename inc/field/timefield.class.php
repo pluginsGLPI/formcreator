@@ -122,7 +122,7 @@ class TimeField extends PluginFormcreatorAbstractField
       if ($date === false) {
          return ' ';
       }
-      return Toolbox::addslashes_deep($date->format('H:i'));
+      return $date->format('H:i');
    }
 
    public function moveUploads() {

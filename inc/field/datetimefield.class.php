@@ -123,7 +123,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($richText): string {
-      return Toolbox::addslashes_deep(Html::convDateTime($this->value));
+      return Html::convDateTime($this->value);
    }
 
    public function moveUploads() {

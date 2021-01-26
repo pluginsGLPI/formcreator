@@ -147,7 +147,7 @@ class TagField extends DropdownField
 
    public function getValueForTargetText($richText): string {
       $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
-      return Toolbox::addslashes_deep($value);
+      return $value;
    }
 
    public function isValid(): bool {
