@@ -107,7 +107,7 @@ class PluginFormcreatorTranslation
 
       $foundCount = 0;
       $data = [];
-      foreach(['itemlink', 'string', 'text'] as $stringType) {
+      foreach (['itemlink', 'string', 'text'] as $stringType) {
          foreach ($strings[$stringType] as $id => $string) {
             $foundCount++;
             if ($foundCount < ((int) $post['page'] - 1) * (int) $post['page_limit']) {

@@ -167,7 +167,7 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       echo '<tr class="tab_bg_1">';
       echo '<td><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
       $used = [];
-      $rows = $this->find();
+      $rows = $this->find([PluginFormcreatorForm::getForeignKeyField() => $item->getID()]);
       foreach ($rows as $row) {
          $used[$row['name']] = $row['name'];
       }

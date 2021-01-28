@@ -34,6 +34,7 @@ include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
+   PluginFormcreatorForm::header();
    Html::displayNotFoundError();
 }
 
