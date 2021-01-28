@@ -42,7 +42,7 @@ $root     = $_GET['root'];
 $depth    = $_GET['maxDepth'];
 
 // This should only be used for dropdowns
-if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
+if ((int) $itemtype == $itemtype || !is_a($itemtype, CommonTreeDropdown::class, true)) {
    http_response_code(400);
    die;
 }
