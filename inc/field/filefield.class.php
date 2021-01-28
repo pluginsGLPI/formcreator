@@ -133,7 +133,8 @@ class FileField extends PluginFormcreatorAbstractField
       }
 
       // If the field is required it can't be empty
-      if (($this->isRequired() && count($this->uploadData) < 1)) {
+      $key = '_formcreator_field_' . $this->question->getID();
+      if (($this->isRequired() && count($this->uploads[$key]) < 1)) {
          Session::addMessageAfterRedirect(
             sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
             false,
@@ -179,7 +180,11 @@ class FileField extends PluginFormcreatorAbstractField
    }
 
    public function hasInput($input): bool {
-      return isset($input['_formcreator_field_' . $this->question->getID()]);
+      // key with unserscore when testing unput from a requester
+      // key without underscore when testing data from DB (display a saved answer)
+      $key = 'formcreator_field_' . $this->question->getID();
+      return isset($input["_$key"])
+         || isset($input[$key]);
    }
 
    /**
@@ -253,6 +258,13 @@ class FileField extends PluginFormcreatorAbstractField
             $this->value = __('Attached document', 'formcreator');
          }
          return true;
+      }
+      if (isset($input[$key])) {
+         // To restore input from database
+         $this->uploadData = json_decode($input[$key]);
+         $this->value = __('Attached document', 'formcreator');
+         return true;
+
       }
       $this->uploadData = [];
       $this->value = '';
