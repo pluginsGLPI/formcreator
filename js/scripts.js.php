@@ -1318,6 +1318,11 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
       $('.plugin_formcreator_dropdown_service_level').toggle();
 
+      if (!isNaN(dropdown_type)) {
+         // The variable seems not to be a itemtype
+         return;
+      }
+
       $.ajax({
          url: formcreatorRootDoc + '/ajax/commontree.php',
          type: 'GET',
