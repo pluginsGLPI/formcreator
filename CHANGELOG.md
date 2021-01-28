@@ -1,3 +1,34 @@
+# [2.11.0](https://github.com/pluginsglpi/formcreator/compare/v2.11.0-beta.1...v2.11.0) (2021-01-26)
+
+
+### Bug Fixes
+
+* **actorsfield:** missed function rename ([8d26857](https://github.com/pluginsglpi/formcreator/commit/8d2685720b6750b1492cad1857633b1c1539a1bc))
+* **condition:** loss of condition on submit button ([bc69358](https://github.com/pluginsglpi/formcreator/commit/bc69358ef6e1db0dfa95fce40b30480fa6a0de8f))
+* **entityconfig:** bad constant value ([114f6d1](https://github.com/pluginsglpi/formcreator/commit/114f6d14564fe4d82b1b59d55adb85466369499b))
+* **form:** add label to validator inputs ([73295e3](https://github.com/pluginsglpi/formcreator/commit/73295e311821c0dffd624475d635da81406481e7))
+* **form:** add spacing between questions ([2946d74](https://github.com/pluginsglpi/formcreator/commit/2946d745acd6db82a302ec0197f99583d90b8bb9))
+* **form:** reimplement submit button conditions ([9211926](https://github.com/pluginsglpi/formcreator/commit/92119263008cb253331f5d1fe6a404bb7d5525fb))
+* **issue:** loss of issue on automatic action ([436035c](https://github.com/pluginsglpi/formcreator/commit/436035c893077764f04c084093107dccc4dd9d28))
+* **question:** handle long label display ([7705e58](https://github.com/pluginsglpi/formcreator/commit/7705e589bdddf378954267578f6ed561843caa83))
+* **question:** reduce spacing in edition tools ([bdd5240](https://github.com/pluginsglpi/formcreator/commit/bdd524090e944c3bbe61de738792275b0718222f))
+* **section:** handle long label in design mode ([b86de8d](https://github.com/pluginsglpi/formcreator/commit/b86de8deab8f525c55f7ec2b8c1ca3ba1cb68778))
+* **section:** improve again UI ([bd2dc96](https://github.com/pluginsglpi/formcreator/commit/bd2dc9672ccb8a71035a29937bb898811f734257))
+* **section:** third iteration of improvements ([8716108](https://github.com/pluginsglpi/formcreator/commit/8716108157ed618251b379bc1cb7dbf2db547a03))
+* path detection to load JS ([c2fa979](https://github.com/pluginsglpi/formcreator/commit/c2fa979ea110f4b1e931eb97d45de33cedc458e9))
+* several field have useless slash escaping ([e61d6ff](https://github.com/pluginsglpi/formcreator/commit/e61d6fffd683205db9a517927ec8927c209c99dc))
+* **section:** various visual fixes ([c9f9e3b](https://github.com/pluginsglpi/formcreator/commit/c9f9e3b64b17b5f144115b7d76848c32b428fa0e))
+* **wizard:** use constant ([bb326eb](https://github.com/pluginsglpi/formcreator/commit/bb326ebcad59793ef53f978a9735b865226d2003))
+* **wizard:** var declaration mandatory ([7645f63](https://github.com/pluginsglpi/formcreator/commit/7645f6338de184d4814b784dd628b799a15a2b9e))
+
+
+### Features
+
+* **condition:** add condition to show or hide the item ([2681b9c](https://github.com/pluginsglpi/formcreator/commit/2681b9c366e3e50ad7691c7bce0bb08ce329f45f))
+* **dropdownfield:** integrate splitcate (1.3.0) ([784eae0](https://github.com/pluginsglpi/formcreator/commit/784eae02d72e7965a2dc7b064084f7763e1f2bd0))
+
+
+
 <a name="2.11.0-beta.1"></a>
 ## [2.11.0-beta.1](https://github.com/pluginsglpi/formcreator/compare/v2.10.4..v2.11.0-beta.1) (2021-01-06)
 

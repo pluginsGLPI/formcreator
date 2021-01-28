@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-21 10:12+0100\n"
+"POT-Creation-Date: 2021-01-26 12:55+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
 "Last-Translator: milotype <mail@milotype.de>, 2021\n"
 "Language-Team: Croatian (Croatia) (https://www.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -757,7 +757,7 @@ msgstr ""
 msgid "Waiting"
 msgstr "Čekanje"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:613
+#: inc/formanswer.class.php:63 inc/issue.class.php:617
 msgid "Refused"
 msgstr "Odbijeno"
 
@@ -765,18 +765,18 @@ msgstr "Odbijeno"
 msgid "Accepted"
 msgstr "Prihvaćeno"
 
-#: inc/formanswer.class.php:162 inc/issue.class.php:607
+#: inc/formanswer.class.php:162 inc/issue.class.php:611
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Odgovor za obrazac"
 msgstr[1] "Odgovori za obrazac"
 msgstr[2] "Odgovori za obrazac"
 
-#: inc/formanswer.class.php:205 inc/issue.class.php:498
+#: inc/formanswer.class.php:205 inc/issue.class.php:502
 msgid "Form approver"
 msgstr "Odobravatelj obrazaca"
 
-#: inc/formanswer.class.php:224 inc/issue.class.php:590
+#: inc/formanswer.class.php:224 inc/issue.class.php:594
 msgid "Form approver group"
 msgstr "Grupa odobravatelja obrazaca"
 
@@ -845,7 +845,7 @@ msgstr ""
 msgid "You must select validator!"
 msgstr "Moraš odabrati potvrditelja!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:401
+#: inc/issue.class.php:40 inc/issue.class.php:405
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Problem"
@@ -856,11 +856,11 @@ msgstr[2] "Problemi"
 msgid "Update issue data from tickets and form answers"
 msgstr "Aktualiziraj podatke problema iz naloga i odgovora na obrascu"
 
-#: inc/issue.class.php:517
+#: inc/issue.class.php:521
 msgid "Ticket approver"
 msgstr "Odobravatelj naloga"
 
-#: inc/issue.class.php:612
+#: inc/issue.class.php:616
 msgid "Not validated"
 msgstr "Nije potvrđeno"
 

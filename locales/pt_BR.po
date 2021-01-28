@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-21 10:12+0100\n"
+"POT-Creation-Date: 2021-01-26 12:55+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
 "Last-Translator: Jean Vergaças <jvergacas@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
@@ -757,7 +757,7 @@ msgstr ""
 msgid "Waiting"
 msgstr "Aguardando"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:613
+#: inc/formanswer.class.php:63 inc/issue.class.php:617
 msgid "Refused"
 msgstr "Rejeitado"
 
@@ -765,17 +765,17 @@ msgstr "Rejeitado"
 msgid "Accepted"
 msgstr "Aceito"
 
-#: inc/formanswer.class.php:162 inc/issue.class.php:607
+#: inc/formanswer.class.php:162 inc/issue.class.php:611
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Resposta do formulário"
 msgstr[1] "Respostas do formulário"
 
-#: inc/formanswer.class.php:205 inc/issue.class.php:498
+#: inc/formanswer.class.php:205 inc/issue.class.php:502
 msgid "Form approver"
 msgstr "Aprovador do requisição"
 
-#: inc/formanswer.class.php:224 inc/issue.class.php:590
+#: inc/formanswer.class.php:224 inc/issue.class.php:594
 msgid "Form approver group"
 msgstr "Grupo aprovador da requisição"
 
@@ -844,7 +844,7 @@ msgstr ""
 msgid "You must select validator!"
 msgstr "Você precisa selecionar um validador!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:401
+#: inc/issue.class.php:40 inc/issue.class.php:405
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Questão"
@@ -854,11 +854,11 @@ msgstr[1] "Questões"
 msgid "Update issue data from tickets and form answers"
 msgstr "Atualizar dados de emissão de chamados e respostas de formulário"
 
-#: inc/issue.class.php:517
+#: inc/issue.class.php:521
 msgid "Ticket approver"
 msgstr "Aprovador do Chamado"
 
-#: inc/issue.class.php:612
+#: inc/issue.class.php:616
 msgid "Not validated"
 msgstr "Não validado"
 
