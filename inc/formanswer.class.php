@@ -1147,7 +1147,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->isAnswersValid = !in_array(false, $fieldValidities, true);
 
       // check captcha if any
-      if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+      if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC && $form->fields['is_captcha_enabled'] != '0') {
          if (!isset($_SESSION['plugin_formcreator']['captcha'])) {
             Session::addMessageAfterRedirect(__('No turing test set', 'formcreator'));
             $this->isAnswersValid = false;
