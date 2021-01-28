@@ -942,9 +942,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             'fieldtype' => ['requesttype'],
          ],
          '_type_question',
-         [
-            'value' => $this->fields['type_question']
-         ]
+         $this->fields['type_question']
       );
       echo '</div>';
       echo '</td>';
