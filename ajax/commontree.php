@@ -31,7 +31,7 @@
 include ('../../../inc/includes.php');
 
 // Check required parameters
-if (!isset($_GET['itemtype']) || !isset($_GET['root']) || !isset($_GET['maxDepth'])) {
+if (ctype_digit($_GET['itemtype']) || !isset($_GET['itemtype']) || !isset($_GET['root']) || !isset($_GET['maxDepth'])) {
    http_response_code(400);
    die;
 }
@@ -42,7 +42,7 @@ $root     = $_GET['root'];
 $depth    = $_GET['maxDepth'];
 
 // This should only be used for dropdowns
-if ((int) $itemtype == $itemtype || !is_a($itemtype, CommonTreeDropdown::class, true)) {
+if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
    http_response_code(400);
    die;
 }
