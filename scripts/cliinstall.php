@@ -123,15 +123,31 @@ if ($args['--force-install']) {
 if ($args['--force-upgrade']) {
    $_SESSION["plugin_$pluginName"]['cli'] = 'force-upgrade';
 }
-ob_start(function($in) { return ''; });
+ob_start(function($in) { return $in; });
 $plugin->install($plugin->fields['id']);
-ob_end_clean();
+$log = ob_get_clean();
+if ($log != '')  {
+   print("Messages while installing\n$log");
+}
 print("Done" . PHP_EOL);
 
 // Enable the plugin
 print("Activating Plugin..." . PHP_EOL);
 if (!$plugin->activate($plugin->fields['id'])) {
    print("Activation failed" . PHP_EOL);
+   foreach ($_SESSION['MESSAGE_AFTER_REDIRECT'] as $level => $messages) {
+      switch ($level) {
+         case INFO:
+            print("INFO: " . implode('\n', $messages));
+            break;
+         case WARNING:
+            print("WARNING: " . implode('\n', $messages));
+            break;
+         case ERROR:
+            print("ERROR: " . implode('\n', $messages));
+            break;
+         }
+   }
    exit(1);
 }
 print("Activation Done" . PHP_EOL);

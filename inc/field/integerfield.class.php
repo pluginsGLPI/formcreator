@@ -149,6 +149,10 @@ class IntegerField extends FloatField
       return ((int) $this->value) > ((int) $value);
    }
 
+   public function regex($value): bool {
+      return (preg_grep($value, (int) $this->value)) ? true : false;
+   }
+
    public function getHtmlIcon() {
       return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
    }

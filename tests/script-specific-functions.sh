@@ -6,6 +6,6 @@ install_plugin() {
 }
 
 init_plugin() {
-    vendor/bin/robo build:fa-data
+    : # nothing to do
 }
 

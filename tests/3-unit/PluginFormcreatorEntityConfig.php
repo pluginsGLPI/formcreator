@@ -160,13 +160,31 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY);
    }
 
-   public function testgetEnumHelpdeskMode() {
+   public function testGetEnumHelpdeskMode() {
       $output = \PluginFormcreatorEntityconfig::getEnumHelpdeskMode();
       $this->array($output)->isEqualTo([
          \PluginFormcreatorEntityconfig::CONFIG_PARENT                     => __('Inheritance of the parent entity'),
          \PluginFormcreatorEntityconfig::CONFIG_GLPI_HELPDSK               => __('GLPi\'s helpdesk', 'formcreator'),
          \PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG => __('Service catalog simplified', 'formcreator'),
          \PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG   => __('Service catalog extended', 'formcreator'),
+      ]);
+   }
+
+   public function testGetEnumSort() {
+      $output = \PluginFormcreatorEntityconfig::getEnumSort();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY   => __('Popularity sort', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL => __('Alphabetic sort', 'formcreator'),
+      ]);
+   }
+
+   public function testGetEnumKbMode() {
+      $output = \PluginFormcreatorEntityconfig::getEnumKbMode();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT      => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_KB_MERGED   => __('Merged with Forms', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT => __('Distinct menu entry', 'formcreator'),
       ]);
    }
 }

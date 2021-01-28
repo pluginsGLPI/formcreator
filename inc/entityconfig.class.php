@@ -49,7 +49,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SORT_ALPHABETICAL = 1;
 
    const CONFIG_KB_MERGED = 1;
-   const CONFIG_KB_DISTINCT = 1;
+   const CONFIG_KB_DISTINCT = 2;
 
    /**
     * @var bool $dohistory maintain history

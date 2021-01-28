@@ -57,6 +57,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    const SHOW_CONDITION_GE = 6;
    const SHOW_CONDITION_QUESTION_VISIBLE = 7;
    const SHOW_CONDITION_QUESTION_INVISIBLE = 8;
+   const SHOW_CONDITION_REGEX = 9;
 
    public static function getTypeName($nb = 0) {
       return _n('Condition', 'Conditions', $nb, 'formcreator');
@@ -100,6 +101,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
         self::SHOW_CONDITION_GE => '≥',
         self::SHOW_CONDITION_QUESTION_VISIBLE => __('is visible', 'formcreator'),
         self::SHOW_CONDITION_QUESTION_INVISIBLE => __('is not visible', 'formcreator'),
+        self::SHOW_CONDITION_REGEX => __('regular expression matches', 'formcreator'),
       ];
    }
 
@@ -374,14 +376,13 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
       ];
       $html.= '<div class="div_show_condition_field">';
-      $html.= PluginFormcreatorQuestion::dropdown(
+      $html .= PluginFormcreatorQuestion::dropdownForForm(
+         $form->getID(),
+         $questionListExclusion,
+         '_conditions[plugin_formcreator_questions_id][]',
+         $questionId,
          [
-            'name' => '_conditions[plugin_formcreator_questions_id][]',
-            'value'     => $questionId,
-            'comments'  => false,
-            'condition' => $questionListExclusion,
-            'rand'      => $rand,
-            'display'   => false,
+            'display' => false,
          ]
       );
       $html.= '</div>';

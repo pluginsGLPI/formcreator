@@ -304,6 +304,18 @@ class PluginFormcreatorFields
                         $value = false;
                      }
                      break;
+
+                  case PluginFormcreatorCondition::SHOW_CONDITION_REGEX:
+                     if (!$conditionField->isPrerequisites()) {
+                        self::$visibility[$itemtype][$itemId] = false;
+                        return self::$visibility[$itemtype][$itemId];
+                     }
+                     try {
+                        $value = $conditionField->regex($condition->fields['show_value']);
+                     } catch (ComparisonException $e) {
+                        $value = false;
+                     }
+                     break;
                }
             }
          }

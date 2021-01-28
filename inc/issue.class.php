@@ -140,11 +140,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("'" . Ticket::getType() . "' as `sub_itemtype`"),
             new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,
                `$ticketTable`.`status`,
-               IF(`$ticketValidationTable`.`status` IN ('1', '3'),
+               IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
                   `$ticketTable`.`status`,
-                  IF(`$ticketTable`.`status` IN ('5', '6') AND `$ticketValidationTable`.`status` = '4',
+                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "') AND `$ticketTable`.`global_validation` = '" . CommonITILValidation::REFUSED . "',
                      `$ticketTable`.`status`,
-                     IF(`$ticketValidationTable`.`status` = '" . CommonITILValidation::WAITING . "',
+                     IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
                      )
@@ -176,13 +176,17 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ],
             [
                'TABLE' => new QuerySubquery([
-                  'SELECT' => ['users_id', $ticketFk],
-                  'DISTINCT' => true,
-                  'FROM'  => $ticketUserTable,
-                  'WHERE' => [
-                     'type' => CommonITILActor::REQUESTER,
-                  ],
-                  'ORDER' => ['id ASC'],
+                  'SELECT' => '*',
+                  'FROM' => new QuerySubquery([
+                     'SELECT' => ['users_id', $ticketFk],
+                     'DISTINCT' => true,
+                     'FROM'  => $ticketUserTable,
+                     'WHERE' => [
+                        'type' => CommonITILActor::REQUESTER,
+                     ],
+                     'ORDER' => ['id ASC'],
+                  ], 'inner_glpi_tickets_users'),
+                  'GROUPBY' => 'tickets_id'
                ], 'glpi_tickets_users'),
                'FKEY' => [
                   $ticketTable => 'id',

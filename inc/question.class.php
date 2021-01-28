@@ -154,6 +154,24 @@ PluginFormcreatorConditionnableInterface
 
       echo '</ol>';
       echo '</div>';
+
+      echo '<form name="form" method="post" action="'.PluginFormcreatorForm::getFormURL().'" data-itemtype="' . PluginFormcreatorForm::class . '">';
+      echo '<table>';
+
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo __('Show submit button', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($item);
+
+      echo '</table>';
+
+      $item->showFormButtons([
+         'candel' => false
+      ]);
+      Html::closeForm();
    }
 
    /**
@@ -1096,10 +1114,26 @@ PluginFormcreatorConditionnableInterface
       return $items;
    }
 
-   public static function dropdownForForm($formId, $crit, $name, $value) {
+   /**
+    * Show or return a dropdown to select a question among those of the given form
+    *
+    * @param int $formId
+    * @param array $crit
+    * @param string $name
+    * @param string $value
+    * @param array $options
+    * @return string|int HTML output or random id
+    */
+   public static function dropdownForForm($formId, $crit, $name, $value, $options = []) {
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
-      Dropdown::showFromArray($name, $items, $value);
+      $options = [
+         'display' => $options['display'] ?? true,
+         'value'   => $value,
+      ];
+      $output = Dropdown::showFromArray($name, $items, $options);
+
+      return $output;
    }
 
    /**

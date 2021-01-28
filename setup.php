@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.11.0-beta.1');
+define('PLUGIN_FORMCREATOR_VERSION', '2.11.0');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
 // is or is not an official release of the plugin
@@ -96,14 +96,6 @@ function plugin_formcreator_check_prerequisites() {
       $prerequisitesSuccess = false;
    }
 
-   $fi = new FilesystemIterator(__DIR__ . '/data/', FilesystemIterator::SKIP_DOTS);
-   if (iterator_count($fi) < 2) {
-      // There is index.html at least in  the directory, then 2 files must estxist
-      // to validate the existence of data files
-      echo "You must run vendor/bin/robo build:fa-data in the directory of the plugin";
-      $prerequisitesSuccess = false;
-   }
-
    return $prerequisitesSuccess;
 }
 
@@ -146,6 +138,7 @@ function plugin_init_formcreator() {
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
+      Plugin::class => 'plugin_formcreator_hook_update_plugin'
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
@@ -300,7 +293,7 @@ function plugin_init_formcreator() {
       }
 
       // Load JS and CSS files if we are on a page which need them
-      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+      if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
          || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
          || isset($_SESSION['glpiactiveprofile']) &&
             Session::getCurrentInterface() == 'helpdesk') {

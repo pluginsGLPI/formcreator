@@ -245,6 +245,10 @@ class DependentField extends PluginFormcreatorAbstractField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
+   public function regex($value): bool {
+      return preg_match($value, $this->value) ? true : false;
+   }
+
    public function isAnonymousFormCompatible(): bool {
       return true;
    }

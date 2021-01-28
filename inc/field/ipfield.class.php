@@ -96,7 +96,7 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($richText): string {
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function moveUploads() {
@@ -150,6 +150,10 @@ class IpField extends PluginFormcreatorAbstractField
 
    public function lessThan($value): bool {
       throw new ComparisonException('Meaningless comparison');
+   }
+
+   public function regex($value): bool {
+      return (preg_grep($value, $this->value)) ? true : false;
    }
 
    public function isAnonymousFormCompatible(): bool {

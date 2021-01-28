@@ -37,6 +37,7 @@ use Html;
 use Session;
 use Toolbox;
 use DateTime;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DatetimeField extends PluginFormcreatorAbstractField
 {
@@ -122,7 +123,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($richText): string {
-      return Toolbox::addslashes_deep(Html::convDateTime($this->value));
+      return Html::convDateTime($this->value);
    }
 
    public function moveUploads() {
@@ -192,6 +193,10 @@ class DatetimeField extends PluginFormcreatorAbstractField
 
    public function lessThan($value): bool {
       return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function regex($value): bool {
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function parseAnswerValues($input, $nonDestructive = false): bool {

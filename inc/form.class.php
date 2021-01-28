@@ -462,7 +462,6 @@ PluginFormcreatorConditionnableInterface
       ]);
       echo '</td>';
       echo '<td colspan="2">';
-
       // Select all users with ticket validation right and the groups
       $userTable = User::getTable();
       $userFk = User::getForeignKeyField();
@@ -519,6 +518,7 @@ PluginFormcreatorConditionnableInterface
          $validatorUsers[$user['id']] = $user['name'];
       }
       echo '<div id="validators_users">';
+      echo User::getTypeName() . '&nbsp';
       Dropdown::showFromArray(
          '_validator_users',
          $validatorUsers, [
@@ -588,6 +588,7 @@ PluginFormcreatorConditionnableInterface
          $validatorGroups[$group['id']] = $group['name'];
       }
       echo '<div id="validators_groups" style="width: 100%">';
+      echo Group::getTypeName() . '&nbsp';
       Dropdown::showFromArray(
          '_validator_groups',
          $validatorGroups,
@@ -941,7 +942,7 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != '1') {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT) {
          // Find FAQ entries
          $query_faqs = KnowbaseItem::getListRequest([
             'faq'      => '1',
@@ -2346,18 +2347,6 @@ PluginFormcreatorConditionnableInterface
       if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
          Session::addMessageAfterRedirect(
             __('Unsupported target type.', 'formcreator'),
-            false,
-            ERROR
-         );
-         return false;
-      }
-
-      // Check the form exists
-      $form = new self();
-      if (!$form->getFromDB($input[self::getForeignKeyField()])) {
-         // The linked form does not exists
-         Session::addMessageAfterRedirect(
-            __('The form does not exists.', 'formcreator'),
             false,
             ERROR
          );

@@ -1533,12 +1533,17 @@ SCRIPT;
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
-         Session::addMEssageAfterRedirect(__('A target must be associated to a form.', 'formcreator'));
+         Session::addMessageAfterRedirect(__('A target must be associated to a form.', 'formcreator'));
          return false;
       }
       $form = new PluginFormcreatorForm();
       if (!$form->getFromDB((int) $input[$formFk])) {
-         Session::addMEssageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'));
+         Session::addMessageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'), false, ERROR);
+         return false;
+      }
+
+      if (!isset($input['name']) || strlen($input['name']) < 1) {
+         Session::addMessageAfterRedirect(__('Name is required.', 'formcreator'), false, ERROR);
          return false;
       }
 
