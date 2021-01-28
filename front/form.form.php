@@ -145,7 +145,7 @@ if (isset($_POST['add'])) {
    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
       // Form was saved by an annymous user
       unset($_SESSION['glpiname']);
-      Html::redirect('formdisplay.php?answer_saved');
+      Html::redirect('formdisplay.php?answer_saved&id=' . $form->getID());
    }
 
    // redirect to created item

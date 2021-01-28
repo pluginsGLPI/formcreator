@@ -99,9 +99,6 @@ trait PluginFormcreatorTranslatable
          if ($options['id'] != '' && $id != $options['id']) {
             continue;
          }
-         if (isset($options['is_untranslated']) && $options['is_untranslated']) {
-
-         }
          $strings[$searchOption['datatype']][$id] = $this->fields[$searchOption['field']];
          $strings['id'][$id] = $searchOption['datatype'];
       }

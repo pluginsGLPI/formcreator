@@ -1476,6 +1476,7 @@ PluginFormcreatorTranslatableInterface
          PluginFormcreatorSection::class,
          PluginFormcreatorForm_Validator::class,
          PluginFormcreatorForm_Profile::class,
+         pluginFormcreatorForm_Language::class,
       ];
       foreach ($associated as $itemtype) {
          $item = new $itemtype();
@@ -2569,8 +2570,7 @@ PluginFormcreatorTranslatableInterface
             }
             foreach ($strings[$type] as $id => $original) {
                if ($options['is_translated'] === true && !isset($translations[$original])
-                  || $options['is_translated'] === false && isset($translations[$original]))
-               {
+                  || $options['is_translated'] === false && isset($translations[$original])) {
                   unset($strings[$type][$id]);
                   unset($strings['id'][$id]);
                }
@@ -2656,7 +2656,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return string the best language for this form and session context
     */
-    public function getBestLanguage() {
+   public function getBestLanguage() {
        global $DB;
 
       if ($this->isNewItem()) {
