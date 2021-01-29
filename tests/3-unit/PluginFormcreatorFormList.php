@@ -64,14 +64,15 @@ class PluginFormcreatorFormList extends CommonTestCase {
 
    public function testGetMenuContent() {
       $output = \PluginFormcreatorFormList::getMenuContent();
-      $this->string($output['links']['search'])->isEqualTo('/plugins/formcreator/front/formlist.php');
+      $plugindir = '/' . basename(dirname(dirname(dirname(__DIR__))));
+      $this->string($output['links']['search'])->isEqualTo($plugindir . '/formcreator/front/formlist.php');
       $this->array($output['links'])->notHasKey('add');
-      $this->string($output['links']['config'])->isEqualTo('/plugins/formcreator/front/form.php');
+      $this->string($output['links']['config'])->isEqualTo($plugindir . '/formcreator/front/form.php');
 
       $this->login('glpi', 'glpi');
       $output = \PluginFormcreatorFormList::getMenuContent();
-      $this->string($output['links']['search'])->isEqualTo('/plugins/formcreator/front/formlist.php');
-      $this->string($output['links']['add'])->isEqualTo('/plugins/formcreator/front/form.form.php');
-      $this->string($output['links']['config'])->isEqualTo('/plugins/formcreator/front/form.php');
+      $this->string($output['links']['search'])->isEqualTo($plugindir . '/formcreator/front/formlist.php');
+      $this->string($output['links']['add'])->isEqualTo($plugindir . '/formcreator/front/form.form.php');
+      $this->string($output['links']['config'])->isEqualTo($plugindir . '/formcreator/front/form.php');
    }
 }
