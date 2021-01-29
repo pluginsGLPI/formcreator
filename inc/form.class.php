@@ -223,7 +223,7 @@ PluginFormcreatorTranslatableInterface
          'table'              => $this::getTable(),
          'field'              => 'content',
          'name'               => _n('Header', 'Headers', 1, 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'massiveaction'      => true
       ];
 

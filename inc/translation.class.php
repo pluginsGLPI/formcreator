@@ -164,13 +164,13 @@ class PluginFormcreatorTranslation
       $translatedString = $translations[$original] ?? '';
 
       switch ($type) {
-         case 'text':
          case 'itemlink':
+         case 'string':
             echo '<td>' . $original . Html::hidden("id", ['value' => $id]) . '</td>';
             echo '<td>' . Html::input("value", ['value' => $translatedString]) . '</td>';
             break;
 
-         case 'string':
+         case 'text':
             echo '<td>' . Html::entity_decode_deep($original) . Html::hidden("id", ['value' => $id]) . '</td>';
             echo '<td>' . Html::textarea([
                'name'  => "value",

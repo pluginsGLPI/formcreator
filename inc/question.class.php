@@ -154,7 +154,7 @@ PluginFormcreatorTranslatableInterface
          'table'              => $this::getTable(),
          'field'              => 'description',
          'name'               => __('Description'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'massiveaction'      => false
       ];
 

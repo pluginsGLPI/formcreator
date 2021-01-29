@@ -313,8 +313,8 @@ class RadiosField extends PluginFormcreatorAbstractField
          if ($options['id'] != '' && $id != $options['id']) {
             continue;
          }
-         $strings['text'][$id] = $value;
-         $strings['id'][$id] = 'text';
+         $strings['string'][$id] = $value;
+         $strings['id'][$id] = 'string';
       }
 
       return $strings;
