@@ -1038,8 +1038,8 @@ PluginFormcreatorConditionnableInterface
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => SLA::getType() . "_TTO",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . SLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"1\"%'"),
          ],
          "_sla_questions_tto",
          $this->fields["sla_question_tto"]
@@ -1047,8 +1047,8 @@ PluginFormcreatorConditionnableInterface
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => SLA::getType() . "_TTR",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . SLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"0\"%'"),
          ],
          "_sla_questions_ttr",
          $this->fields["sla_question_ttr"]
@@ -1109,8 +1109,8 @@ PluginFormcreatorConditionnableInterface
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => OLA::getType() . "_TTO",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . OLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"1\"%'"),
          ],
          "_ola_questions_tto",
          $this->fields["ola_question_tto"]
@@ -1118,8 +1118,8 @@ PluginFormcreatorConditionnableInterface
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => OLA::getType() . "_TTR",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . OLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"0\"%'"),
          ],
          "_ola_questions_ttr",
          $this->fields["ola_question_ttr"]
