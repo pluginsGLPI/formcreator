@@ -254,8 +254,6 @@ function plugin_init_formcreator() {
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
-               Html::requireJs('photoswipe');
-               echo Html::css('public/lib/photoswipe.css');
                Html::requireJs('tinymce');
                break;
             }
@@ -305,6 +303,7 @@ function plugin_init_formcreator() {
       //Html::requireJs('gridstack');
       $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
       $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
+      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorIssue::class] = 'photoswipe';
    }
 }
 
