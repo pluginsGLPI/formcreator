@@ -188,7 +188,15 @@ function plugin_init_formcreator() {
                   if (isset($decodedUrl['forcetab'])) {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
-                  Html::redirect(FORMCREATOR_ROOTDOC . '/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket' . $openItilFollowup);
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByCrit([
+                     'sub_itemtype' => Ticket::class,
+                     'original_id'  => (int) $_GET['id']
+                  ]);
+                  if ($issue->isNewItem()) {
+                     Html::displayNotFoundError();
+                  }
+                  Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
                }
             }
 
