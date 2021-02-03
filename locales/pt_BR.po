@@ -16,6 +16,7 @@
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2020
 # Eduardo Spinola <eduardo.spinola@gmail.com>, 2020
 # Jean Vergaças <jvergacas@gmail.com>, 2021
+# Pablo Pierre Ferreira <pablo.terdulino@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-26 12:55+0100\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
-"Last-Translator: Jean Vergaças <jvergacas@gmail.com>, 2021\n"
+"Last-Translator: Pablo Pierre Ferreira <pablo.terdulino@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr[1] "Categorias dos Formulários"
 
 #: hook.php:527
 msgid "Cancel my ticket"
-msgstr ""
+msgstr "Cancelar meu chamado"
 
 #: setup.php:233 inc/form.class.php:108 inc/formlist.class.php:55
 #: inc/formlist.class.php:56
@@ -207,7 +208,7 @@ msgstr ""
 
 #: inc/abstracttarget.class.php:219
 msgid "Specific SLA"
-msgstr ""
+msgstr "SLA Específico"
 
 #: inc/abstracttarget.class.php:220 inc/abstracttarget.class.php:228
 #: inc/abstracttarget.class.php:236 inc/abstracttarget.class.php:244
@@ -223,7 +224,7 @@ msgstr ""
 
 #: inc/abstracttarget.class.php:227
 msgid "Specific OLA"
-msgstr ""
+msgstr "OLA Específico"
 
 #: inc/abstracttarget.class.php:234
 msgid "Urgency from template or Medium"
@@ -319,7 +320,7 @@ msgstr "Um alvo deve ser associado a um formulário existente."
 
 #: inc/abstracttarget.class.php:1546
 msgid "Name is required."
-msgstr ""
+msgstr "Um nome é necessário"
 
 #: inc/abstracttarget.class.php:1573 inc/form.class.php:1348
 msgid "The name cannot be empty!"
@@ -356,7 +357,7 @@ msgstr "Cancelar"
 
 #: inc/abstracttarget.class.php:2029 inc/target_actor.class.php:64
 msgid "Form author"
-msgstr ""
+msgstr "Por autor"
 
 #: inc/abstracttarget.class.php:2032 inc/target_actor.class.php:65
 msgid "Form validator"
@@ -401,8 +402,8 @@ msgstr ""
 #: inc/condition.class.php:63
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Confições"
+msgstr[1] "Condições"
 
 #: inc/condition.class.php:102
 msgid "is visible"
@@ -481,7 +482,7 @@ msgstr ""
 
 #: inc/entityconfig.class.php:163
 msgid "Knowledge base"
-msgstr ""
+msgstr "Base de conhecimento"
 
 #: inc/form.class.php:60 inc/form.class.php:348
 msgid "Public access"
@@ -601,7 +602,7 @@ msgstr "Todos os formulários (validador)"
 
 #: inc/form.class.php:1264 inc/form.class.php:1265
 msgid "Are you a robot ?"
-msgstr ""
+msgstr "Você é um robô ?"
 
 #: inc/form.class.php:1306
 msgid "Validation"
@@ -747,11 +748,11 @@ msgstr "Link para o formulário"
 
 #: inc/form_profile.class.php:113
 msgid "Please activate the form to view the link"
-msgstr ""
+msgstr "Por favor, ative o formulário para visualizar o link"
 
 #: inc/form_profile.class.php:121
 msgid "Enable captcha"
-msgstr ""
+msgstr "Habilitar captcha"
 
 #: inc/formanswer.class.php:62
 msgid "Waiting"
@@ -870,7 +871,7 @@ msgstr[1] ""
 
 #: inc/linker.class.php:78
 msgid "Importing"
-msgstr ""
+msgstr "Importando"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -1085,7 +1086,7 @@ msgstr "Mudar título"
 
 #: inc/targetchange.class.php:408 inc/targetticket.class.php:222
 msgid "Condition to create the target"
-msgstr ""
+msgstr "Condições de exibição do destino"
 
 #: inc/targetticket.class.php:51 inc/targetticket.class.php:138
 msgid "Target ticket"
@@ -1164,7 +1165,7 @@ msgstr "Minhas requisições de suporte"
 
 #: inc/wizard.class.php:113 inc/wizard.class.php:114
 msgid "Knowledge Base"
-msgstr ""
+msgstr "Base de conhecimento"
 
 #: inc/wizard.class.php:121 inc/wizard.class.php:122
 msgid "Book an asset"
@@ -1245,11 +1246,11 @@ msgstr "Um campo de descrição necessita de uma descrição:"
 
 #: inc/field/dropdownfield.class.php:90
 msgid "SLA"
-msgstr ""
+msgstr "SLA"
 
 #: inc/field/dropdownfield.class.php:91
 msgid "OLA"
-msgstr ""
+msgstr "OLA"
 
 #: inc/field/dropdownfield.class.php:124
 msgid "Show ticket categories"
@@ -1269,15 +1270,15 @@ msgstr "Mudar categorias"
 
 #: inc/field/dropdownfield.class.php:159
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: inc/field/dropdownfield.class.php:164
 msgid "Time to own"
-msgstr ""
+msgstr "Tempo para atribuição"
 
 #: inc/field/dropdownfield.class.php:165
 msgid "Time to resolve"
-msgstr ""
+msgstr "Tempo para solução"
 
 #: inc/field/dropdownfield.class.php:445
 #: inc/field/ldapselectfield.class.php:197
@@ -1289,7 +1290,7 @@ msgstr "Um campo obrigatório está vazio:"
 
 #: inc/field/dropdownfield.class.php:472
 msgid "Invalid value for "
-msgstr ""
+msgstr "Valor inválido para"
 
 #: inc/field/dropdownfield.class.php:484
 #, php-format
