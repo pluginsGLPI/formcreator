@@ -83,8 +83,7 @@ trait PluginFormcreatorTranslatable
       $params = [
          'searchText'      => '',
          'id'              => '',
-         'is_translated'   => true,
-         'is_untranslated' => true,
+         'is_translated'   => null,
          'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
       ];
       $options = array_merge($params, $options);
@@ -99,8 +98,22 @@ trait PluginFormcreatorTranslatable
          if ($options['id'] != '' && $id != $options['id']) {
             continue;
          }
-         $strings[$searchOption['datatype']][$id] = $this->fields[$searchOption['field']];
-         $strings['id'][$id] = $searchOption['datatype'];
+         if ($this->fields[$searchOption['field']] != '') {
+            $strings[$searchOption['datatype']][$id] = $this->fields[$searchOption['field']];
+            $strings['id'][$id] = $searchOption['datatype'];
+         }
+      }
+
+      return $strings;
+   }
+
+   protected function deduplicateTranslatable(array $strings) : array {
+      foreach (array_keys($strings) as $type) {
+         if ($type == 'id') {
+            continue;
+         }
+         $strings[$type] = array_unique($strings[$type]);
+         $strings[$type] = array_filter($strings[$type]);
       }
 
       return $strings;

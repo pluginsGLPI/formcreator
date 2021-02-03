@@ -43,8 +43,8 @@ class PluginFormcreatorTranslation
     */
    public static function dropdown(array $options) {
       $params = [
-         'is_translated'   => true,
-         'is_untranslated' => true,
+         'id'              => '',
+         'is_translated'   => null,
          'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
       ];
       $options = array_merge($params, $options);

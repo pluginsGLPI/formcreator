@@ -2578,11 +2578,7 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      // deduplicate strings, remove empty strings and filter if only_translated is set
-      foreach (array_keys($strings) as $type) {
-         $strings[$type] = array_unique($strings[$type]);
-         $strings[$type] = array_filter($strings[$type]);
-      }
+      $strings = $this->deduplicateTranslatable($strings);
 
       return $strings;
    }

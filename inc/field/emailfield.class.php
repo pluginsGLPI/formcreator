@@ -35,6 +35,7 @@ namespace GlpiPlugin\Formcreator\Field;
 use Html;
 use Session;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use PluginFormcreatorAbstractField;
 
 class EmailField extends TextField
 {
@@ -187,5 +188,9 @@ class EmailField extends TextField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      return PluginFormcreatorAbstractField::getTranslatableStrings($options);
    }
 }

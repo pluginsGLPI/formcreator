@@ -386,8 +386,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       $params = [
          'searchText'      => '',
          'id'              => '',
-         'is_translated'   => true,
-         'is_untranslated' => true,
+         'is_translated'   => null,
          'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
       ];
       $options = array_merge($params, $options);

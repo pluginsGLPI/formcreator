@@ -124,18 +124,14 @@ PluginFormcreatorTranslatableInterface
       $params = [
          'searchText'      => '',
          'id'              => '',
-         'is_translated'   => true,
-         'is_untranslated' => true,
+         'is_translated'   => null,
          'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
       ];
       $options = array_merge($params, $options);
 
       $strings = $this->getMyTranslatableStrings($options);
 
-      foreach (array_keys($strings) as $type) {
-         $strings[$type] = array_unique($strings[$type]);
-         $strings[$type] = array_filter($strings[$type]);
-      }
+      $strings = $this->deduplicateTranslatable($strings);
 
       return $strings;
    }

@@ -60,7 +60,7 @@ extends PluginFormcreatorAbstractQuestionParameter
          'table'              => $this::getTable(),
          'field'              => 'regex',
          'name'               => __('Regular expression', 'formcreator'),
-         'datatype'           => 'text',
+         'datatype'           => 'string',
          'massiveaction'      => false,
       ];
 
