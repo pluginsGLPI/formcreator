@@ -1088,7 +1088,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param  boolean $richText                          Disable rich text mode for field rendering
     * @return string                                     Parsed string with tags replaced by form values
     */
-   public function parseTags($content, PluginFormcreatorTargetInterface $target, $richText = false) {
+   public function parseTags($content, PluginFormcreatorTargetInterface $target = null, $richText = false) {
       // Prepare all fields of the form
       $form = $this->getForm();
       $this->getQuestionFields($form->getID());
@@ -1105,8 +1105,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
          $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
-         foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
-            $target->addAttachedDocument($documentId);
+         if ($target !== null) {
+            foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
+               $target->addAttachedDocument($documentId);
+            }
          }
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
@@ -1147,7 +1149,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->isAnswersValid = !in_array(false, $fieldValidities, true);
 
       // check captcha if any
-      if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) {
+      if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC && $form->fields['is_captcha_enabled'] != '0') {
          if (!isset($_SESSION['plugin_formcreator']['captcha'])) {
             Session::addMessageAfterRedirect(__('No turing test set', 'formcreator'));
             $this->isAnswersValid = false;

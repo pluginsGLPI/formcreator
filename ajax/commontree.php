@@ -31,7 +31,7 @@
 include ('../../../inc/includes.php');
 
 // Check required parameters
-if (!isset($_GET['itemtype']) || !isset($_GET['root']) || !isset($_GET['maxDepth'])) {
+if (ctype_digit($_GET['itemtype']) || !isset($_GET['itemtype']) || !isset($_GET['root']) || !isset($_GET['maxDepth'])) {
    http_response_code(400);
    die;
 }

@@ -155,6 +155,19 @@ class PluginFormcreatorUpgradeTo2_11 {
       $migration->dropField($table, 'requesttype');
 
       // Merge targettickets_actors and targetchanges_actors
+      // Need a new table now
+      $DB->query("CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
+         `id` int(11) NOT NULL AUTO_INCREMENT,
+         `itemtype` varchar(255) DEFAULT NULL,
+         `items_id` int(11) NOT NULL,
+         `actor_role` int(11) NOT NULL DEFAULT '1',
+         `actor_type` int(11) NOT NULL DEFAULT '1',
+         `actor_value` int(11) DEFAULT NULL,
+         `use_notification` tinyint(1) NOT NULL DEFAULT '1',
+         `uuid` varchar(255) DEFAULT NULL,
+         PRIMARY KEY (`id`),
+         INDEX `item` (`itemtype`, `items_id`)
+       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
       $this->migrateTargetTicket_Actor();
       $this->migrateTargetChange_Actor();
       $this->addCaptchaOption();
@@ -252,20 +265,12 @@ class PluginFormcreatorUpgradeTo2_11 {
       if (!$DB->tableExists($table)) {
          return;
       }
-
-      $result = $DB->request([
-         'FROM' => $table
-      ]);
-      $table = 'glpi_plugin_formcreator_targets_actors';
-      foreach ($result as $row) {
-         $row['itemtype'] = PluginFormcreatorTargetTicket::class;
-         $row['items_id'] = $row['plugin_formcreator_targettickets_id'];
-         unset($row['plugin_formcreator_targettickets_id']);
-         unset($row['id']);
-         $DB->insert($table, $row);
-      }
-
-      $table = 'glpi_plugin_formcreator_targettickets_actors';
+      $DB->query(
+      "INSERT INTO `glpi_plugin_formcreator_targets_actors`
+         (`itemtype`, `items_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`)
+         SELECT 'PluginFormcreatorTargetTicket', `plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`
+         FROM `$table`"
+      );
       $this->migration->backupTables([$table]);
    }
 
@@ -277,19 +282,12 @@ class PluginFormcreatorUpgradeTo2_11 {
          return;
       }
 
-      $result = $DB->request([
-         'FROM' => $table
-      ]);
-      $table = 'glpi_plugin_formcreator_targets_actors';
-      foreach ($result as $row) {
-         $row['itemtype'] = PluginFormcreatorTargetChange::class;
-         $row['items_id'] = $row['plugin_formcreator_targettickets_id'];
-         unset($row['plugin_formcreator_targettickets_id']);
-         unset($row['id']);
-         $DB->insert($table, $row);
-      }
-
-      $table = 'glpi_plugin_formcreator_targetchanges_actors';
+      $DB->query(
+         "INSERT INTO `glpi_plugin_formcreator_targets_actors`
+            (`itemtype`, `items_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`)
+            SELECT 'PluginFormcreatorTargetChange', `plugin_formcreator_targetchanges_id`, `actor_role`, `actor_type`, `actor_value`, `use_notification`, `uuid`
+            FROM `$table`"
+      );
       $this->migration->backupTables([$table]);
    }
 

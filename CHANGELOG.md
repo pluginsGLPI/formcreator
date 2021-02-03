@@ -1,3 +1,21 @@
+## [2.11.1](https://github.com/pluginsglpi/formcreator/compare/v2.11.0...v2.11.1) (2021-02-03)
+
+
+### Bug Fixes
+
+* **dropdownfield:** add security token for GLPI 9.5.3 ([44b5244](https://github.com/pluginsglpi/formcreator/commit/44b5244d39bca5f0aafbaff409c6d98af6f6974d))
+* inappropriate css loading ([bbde619](https://github.com/pluginsglpi/formcreator/commit/bbde619559c94cf3147ef4b1dd9b16768c6b4e34))
+* **dropdownfield:** fix SQL error when translations are enabled ([0272721](https://github.com/pluginsglpi/formcreator/commit/0272721d5a0e8e38f45a6c842a2b79c707bd18b0))
+* **dropdownfield:** wrong IDOR token construct ([1689ecb](https://github.com/pluginsglpi/formcreator/commit/1689ecb4b73afe8c3dfea02b6641e5ab49c51ad3))
+* **filefield:** mandatory fails when file is uploaded ([58c2dd1](https://github.com/pluginsglpi/formcreator/commit/58c2dd19fe8f1f0b3f619cb88774e5b4d382ae2e))
+* **form:** error message when anonymous form submitted ([a9dd24b](https://github.com/pluginsglpi/formcreator/commit/a9dd24bbeddf712978be0cfa3b63efc93f29d3e1))
+* **install:** broken upgrade of target_actors ([40db225](https://github.com/pluginsglpi/formcreator/commit/40db225929f9763cdd2cf8bb2399972d49418fc2))
+* **notificationtargetformanswer:** tags not fully rendered ([9c2620f](https://github.com/pluginsglpi/formcreator/commit/9c2620fc555859268be55e8c05c23aed091829ca))
+* **question:** prevent bad request ([ac9f693](https://github.com/pluginsglpi/formcreator/commit/ac9f693a14add919412cc7a76c11c25348fa788d))
+* **targetticket:** dropdowns for SLA/OLA ([9e5bd85](https://github.com/pluginsglpi/formcreator/commit/9e5bd8563381334edfad02fd265cab1b24ac2a88))
+
+
+
 # [2.11.0](https://github.com/pluginsglpi/formcreator/compare/v2.11.0-beta.1...v2.11.0) (2021-01-26)
 
 

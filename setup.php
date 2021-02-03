@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.11.0');
+define('PLUGIN_FORMCREATOR_VERSION', '2.11.1');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
 // is or is not an official release of the plugin
@@ -254,8 +254,6 @@ function plugin_init_formcreator() {
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
-               Html::requireJs('photoswipe');
-               echo Html::css('public/lib/photoswipe.css');
                Html::requireJs('tinymce');
                break;
             }
@@ -305,6 +303,7 @@ function plugin_init_formcreator() {
       //Html::requireJs('gridstack');
       $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
       $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
+      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorIssue::class] = 'photoswipe';
    }
 }
 

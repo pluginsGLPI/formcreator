@@ -66,7 +66,7 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
       $this->data['##formcreator.form_requester##']     = $requester->getName();
       $this->data['##formcreator.form_validator##']     = $validator->getName();
       $this->data['##formcreator.form_creation_date##'] = Html::convDateTime($this->obj->fields['request_date']);
-      $this->data['##formcreator.form_full_answers##']  = $this->obj->getFullForm();
+      $this->data['##formcreator.form_full_answers##']  = $this->obj->parseTags($this->obj->getFullForm());
       $this->data['##formcreator.validation_comment##'] = $this->obj->fields['comment'];
       $this->data['##formcreator.validation_link##']    = $link;
       $this->data['##formcreator.request_id##']         = $this->obj->fields['id'];

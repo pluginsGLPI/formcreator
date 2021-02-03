@@ -315,7 +315,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             $itemtype::getTable(),
             $decodedValues['show_ticket_categories_root']
          );
-         $dparams_cond_crit['id'] = $sons;
+         $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
          $rootItem = new $itemtype();
          if ($rootItem->getFromDB($decodedValues['show_ticket_categories_root'])) {
             $baseLevel = $rootItem->fields['level'];
@@ -377,6 +377,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       if (!empty($this->question->fields['values'])) {
          $dparams = $this->buildParams($rand);
          $dparams['display'] = false;
+         if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
+            $params['_idor_token'] = Session::getNewIDORToken($itemtype);
+         }
          $html .= $itemtype::dropdown($dparams);
       }
       $html .= PHP_EOL;

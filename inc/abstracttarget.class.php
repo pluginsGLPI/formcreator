@@ -896,9 +896,7 @@ PluginFormcreatorConditionnableInterface
             'values' => User::class,
          ],
          '_destination_entity_value_user',
-         [
-            'value' => $this->fields['destination_entity_value']
-         ]
+         $this->fields['destination_entity_value']
       );
       echo '</div>';
 
@@ -910,9 +908,7 @@ PluginFormcreatorConditionnableInterface
             'values' => Entity::class,
          ],
          '_destination_entity_value_entity',
-         [
-            'value' => $this->fields['destination_entity_value']
-         ]
+         $this->fields['destination_entity_value']
       );
       echo '</div>';
       echo '</td>';
@@ -966,9 +962,7 @@ PluginFormcreatorConditionnableInterface
             'fieldtype' => ['date', 'datetime'],
          ],
          'due_date_question',
-         [
-            'value' => $this->fields['due_date_question']
-         ]
+         $this->fields['due_date_question']
       );
       echo '</div>';
 
@@ -1044,24 +1038,20 @@ PluginFormcreatorConditionnableInterface
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => SLA::getType() . "_TTO",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . SLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"1\"%'"),
          ],
          "_sla_questions_tto",
-         [
-            'value' => $this->fields["sla_question_tto"]
-         ]
+         $this->fields["sla_question_tto"]
       );
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => SLA::getType() . "_TTR",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . SLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"0\"%'"),
          ],
          "_sla_questions_ttr",
-         [
-            'value' => $this->fields["sla_question_ttr"]
-         ]
+         $this->fields["sla_question_ttr"]
       );
 
       echo '</div>';
@@ -1119,24 +1109,20 @@ PluginFormcreatorConditionnableInterface
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => OLA::getType() . "_TTO",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . OLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"1\"%'"),
          ],
          "_ola_questions_tto",
-         [
-            'value' => $this->fields["ola_question_tto"]
-         ]
+         $this->fields["ola_question_tto"]
       );
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => 'glpiselect',
-            'values' => OLA::getType() . "_TTR",
+            'fieldtype' => 'dropdown',
+            new QueryExpression("`values` LIKE '%\"itemtype\":\"" . OLA::getType() . "\"%' AND `values` LIKE '%\"show_service_level_types\":\"0\"%'"),
          ],
          "_ola_questions_ttr",
-         [
-            'value' => $this->fields["ola_question_ttr"]
-         ]
+         $this->fields["ola_question_ttr"]
       );
 
       echo '</div>';
@@ -1172,9 +1158,7 @@ PluginFormcreatorConditionnableInterface
             'fieldtype' => ['dropdown'],
          ],
          '_category_question',
-         [
-            $this->fields['category_question']
-         ]
+         $this->fields['category_question']
       );
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
@@ -1218,9 +1202,7 @@ PluginFormcreatorConditionnableInterface
             'fieldtype' => ['urgency'],
          ],
          '_urgency_question',
-         [
-            'value' => $this->fields['urgency_question']
-         ]
+         $this->fields['urgency_question']
       );
       echo '</div>';
       echo '</td>';
@@ -1291,8 +1273,8 @@ SCRIPT;
                'fieldtype' => ['tag'],
             ],
             '_tag_questions',
+            explode(',', $this->fields['tag_questions']),
             [
-               'values' => explode(',', $this->fields['tag_questions']),
                'multiple' => true,
             ]
          );
@@ -1920,9 +1902,7 @@ SCRIPT;
             ],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
-         [
-            'value' => 0
-         ]
+         0
       );
       echo '</div>';
 
@@ -1934,9 +1914,7 @@ SCRIPT;
             'values' => Group::class,
          ],
          'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
-         [
-            'value' => 0
-         ]
+         0
       );
       echo '</div>';
 
@@ -1947,9 +1925,7 @@ SCRIPT;
             'fieldtype' => ['glpiselect'],
          ],
          'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
-         [
-            'value' => 0
-         ]
+         0
       );
       echo '</div>';
 
@@ -1960,9 +1936,7 @@ SCRIPT;
             'fieldtype' => ['glpiselect'],
          ],
          'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT,
-         [
-            'value' => 0
-         ]
+         0
       );
       echo '</div>';
 
@@ -1973,9 +1947,7 @@ SCRIPT;
             'fieldtype' => ['actor'],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
-         [
-            'value' => 0
-         ]
+         0
       );
       echo '</div>';
 
@@ -1994,9 +1966,7 @@ SCRIPT;
                'values' => Supplier::class,
             ],
             'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
-            [
-               'value' => 0
-            ]
+            0
          );
          echo '</div>';
       }

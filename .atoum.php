@@ -29,16 +29,27 @@
  * ---------------------------------------------------------------------
  */
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+$tests_dir = __DIR__ . '/tests/';
+$coverage_dir = $tests_dir . 'code-coverage/';
 
-use mageekguy\atoum\reports\coverage;
-use mageekguy\atoum\writers\std;
-
-$branch = getenv('TRAVIS_BRANCH');
-if ($branch === false || $branch !== false && preg_match('%^(master|develop|support/|release/)%', $branch)) {
-   $script->addDefaultReport();
-   $coverage = new coverage\html();
-   $coverage->addWriter(new std\out());
-   $coverage->setOutPutDirectory(__DIR__ . '/development/coverage/'.$branch);
-   $runner->addReport($coverage);
+if (!file_exists($coverage_dir)) {
+    mkdir($coverage_dir);
 }
+
+$coverageField = new atoum\atoum\report\fields\runner\coverage\html(
+    'Formcreator',
+    $coverage_dir
+);
+$coverageField->setRootUrl('file://' . realpath($coverage_dir));
+
+$script
+    ->addDefaultReport()
+    ->addField($coverageField);
+
+$script->addDefaultReport();
+
+$cloverWriter = new atoum\atoum\writers\file($coverage_dir . 'clover.xml');
+$cloverReport = new atoum\atoum\reports\asynchronous\clover();
+$cloverReport->addWriter($cloverWriter);
+
+$runner->addReport($cloverReport);
