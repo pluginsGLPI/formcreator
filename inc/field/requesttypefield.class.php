@@ -37,7 +37,7 @@ use Session;
 use Ticket;
 use Dropdown;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
-
+use PluginFormcreatorAbstractField;
 class RequestTypeField extends SelectField
 {
    public function getDesignSpecializationField(): array {
@@ -237,5 +237,9 @@ class RequestTypeField extends SelectField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      return PluginFormcreatorAbstractField::getTranslatableStrings($options);
    }
 }
