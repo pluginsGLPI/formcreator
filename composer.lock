@@ -176,16 +176,16 @@
         },
         {
             "name": "xylemical/php-expressions",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/xylemical/php-expressions.git",
-                "reference": "4dc7c3a4bb3f335a04cb05b0d41871529cfc9b73"
+                "reference": "a97f86aa25926901031c053c8d3fa49410339024"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/xylemical/php-expressions/zipball/4dc7c3a4bb3f335a04cb05b0d41871529cfc9b73",
-                "reference": "4dc7c3a4bb3f335a04cb05b0d41871529cfc9b73",
+                "url": "https://api.github.com/repos/xylemical/php-expressions/zipball/a97f86aa25926901031c053c8d3fa49410339024",
+                "reference": "a97f86aa25926901031c053c8d3fa49410339024",
                 "shasum": ""
             },
             "require": {
@@ -214,9 +214,9 @@
             ],
             "support": {
                 "issues": "https://github.com/xylemical/php-expressions/issues",
-                "source": "https://github.com/xylemical/php-expressions/tree/master"
+                "source": "https://github.com/xylemical/php-expressions/tree/v1.0.3"
             },
-            "time": "2018-03-24T15:01:26+00:00"
+            "time": "2021-02-01T09:53:42+00:00"
         }
     ],
     "packages-dev": [
