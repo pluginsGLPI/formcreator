@@ -2600,6 +2600,10 @@ PluginFormcreatorTranslatableInterface
          self::getTranslationDomain($id, $language)
       ]) . '.php';
 
+      if (!is_dir(dirname($file))) {
+         mkdir(dirname($file), 0750, true);
+      }
+
       return $file;
    }
 
