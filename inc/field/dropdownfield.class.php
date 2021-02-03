@@ -378,7 +378,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          $dparams = $this->buildParams($rand);
          $dparams['display'] = false;
          if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-            $params['_idor_token'] = Session::getNewIDORToken(User::getType());
+            $params['_idor_token'] = Session::getNewIDORToken($itemtype);
          }
          $html .= $itemtype::dropdown($dparams);
       }
