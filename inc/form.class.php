@@ -1476,7 +1476,7 @@ PluginFormcreatorTranslatableInterface
          PluginFormcreatorSection::class,
          PluginFormcreatorForm_Validator::class,
          PluginFormcreatorForm_Profile::class,
-         pluginFormcreatorForm_Language::class,
+         PluginFormcreatorForm_Language::class,
       ];
       foreach ($associated as $itemtype) {
          $item = new $itemtype();
