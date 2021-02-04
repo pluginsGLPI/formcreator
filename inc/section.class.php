@@ -429,8 +429,6 @@ PluginFormcreatorConditionnableInterface
       echo '</label>';
       echo '</th>';
       echo '</tr>';
-      $form = new PluginFormcreatorForm();
-      $form->getFromDBBySection($this);
       $condition = new PluginFormcreatorCondition();
       $condition->showConditionsForItem($this);
 
