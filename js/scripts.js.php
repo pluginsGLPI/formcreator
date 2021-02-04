@@ -620,7 +620,7 @@ var plugin_formcreator = new function() {
          column:         this.questionsColumns,
          cellHeight:     '32px',
          verticalMargin: '5px',
-         float:          false,
+         float:          true,
          acceptWidgets:  true,
          resizeable:     {
             handles: 'e, w'
@@ -651,7 +651,10 @@ var plugin_formcreator = new function() {
             );
          });
          that.dirty = false;
-      }).complete(this.setupGridStack(group));
+      }).complete(function () {
+         that.setupGridStack(group);
+         group.data('gridstack').float(false);
+      });
    };
 
    /**
