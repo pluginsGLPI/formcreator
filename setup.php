@@ -96,6 +96,11 @@ function plugin_formcreator_check_prerequisites() {
       $prerequisitesSuccess = false;
    }
 
+   if (!is_readable(__DIR__ . '/lib/.yarn-integrity') || !is_file(__DIR__ . '/lib/.yarn-integrity')) {
+      echo "Run yarn install --prod in the plugin directory<br>";
+      $prerequisitesSuccess = false;
+   }
+
    return $prerequisitesSuccess;
 }
 
@@ -272,8 +277,8 @@ function plugin_init_formcreator() {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
          }
 
          Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);

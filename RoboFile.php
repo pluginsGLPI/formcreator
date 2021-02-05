@@ -205,6 +205,9 @@ class RoboFile extends RoboFilePlugin
       // Add composer dependencies
       $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
 
+      // Add JS dependencies
+      $this->_exec("yarn --cwd '$archiveWorkdir/$pluginName' install --prod");
+
       // Create the final archive
       $this->taskPack($archiveFile)
          ->addDir("$pluginName", "$archiveWorkdir/$pluginName")
