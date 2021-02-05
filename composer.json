@@ -16,7 +16,7 @@
       "ext-xml": "*",
       "docopt/docopt": "^1.0",
       "gregwar/captcha": "^1.1",
-      "xylemical/php-expressions": "^1.0"
+      "xylemical/php-expressions": "^1.0.3"
     },
     "require-dev": {
       "ext-bz2": "*",
