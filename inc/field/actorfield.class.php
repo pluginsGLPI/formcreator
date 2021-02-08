@@ -360,6 +360,10 @@ class ActorField extends PluginFormcreatorAbstractField
          return true;
       }
 
+      if (is_string($input[$key])) {
+         // value from a saved answer
+         $input[$key] = json_decode($input[$key], JSON_OBJECT_AS_ARRAY);
+      }
       if (!is_array($input[$key])) {
          return false;
       }
