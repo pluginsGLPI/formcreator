@@ -186,7 +186,7 @@ class PluginFormcreatorCommon {
          'noselect2'           => true, // we will instanciate it later
          'display_emptychoice' => true,
          'rand'                => mt_rand(),
-      ];
+      ] + $options;
       if (!isset($options['value'])) {
          $options['value'] = '';
       }
