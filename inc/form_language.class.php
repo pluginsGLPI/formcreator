@@ -30,8 +30,13 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorForm_Language extends CommonDBTM
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
+class PluginFormcreatorForm_Language extends CommonDBChild
+implements PluginFormcreatorExportableInterface
 {
+   static public $itemtype = PluginFormcreatorForm::class;
+   static public $items_id = 'plugin_formcreator_forms_id';
 
    static $rightname = 'entity';
 
@@ -101,6 +106,12 @@ class PluginFormcreatorForm_Language extends CommonDBTM
          return false;
       }
 
+      // generate a unique id
+      if (!isset($input['uuid'])
+            || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
       return $input;
    }
 
@@ -108,6 +119,12 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       unset($input[$formFk]);
       unset($input['name']);
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+            || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
 
       return $input;
    }
@@ -447,7 +464,96 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       ];
    }
 
-   public function updateTranslation($input) {
-      $a = null;
+   public static function countItemsToImport(array $input) : int {
+      return 1;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
+      $keepCriteria = [
+         self::$items_id => $container->getID(),
+      ];
+      if (count($exclude) > 0) {
+         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+      }
+      return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+      global $DB;
+
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+      }
+
+      // restore key and FK
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk]        = $containerId;
+
+      $item = new self();
+      // Find an existing section to update, only if an UUID is available
+      $itemId = false;
+       /** @var string $idKey key to use as ID (id or uuid) */
+       $idKey = 'id';
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+           $item,
+           'uuid',
+           $input['uuid']
+         );
+      }
+
+      // Escape text fields
+      foreach (['name'] as $key) {
+         $input[$key] = $DB->escape($input[$key]);
+      }
+
+      // Add or update form language
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
+      } else {
+         unset($input['id']);
+         $item->useAutomaticOrdering = false;
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         $typeName = strtolower(self::getTypeName());
+         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+      }
+
+      // add the form language to the linker
+      $linker->addObject($originalId, $item);
+
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($input[$formFk]);
+      $translations = $input['_strings'] ?? [];
+      $form->setTranslations($input['name'], $translations);
+
+      return $itemId;
+   }
+
+   public function export(bool $remove_uuid = false) : array {
+      if ($this->isNewItem()) {
+         return false;
+      }
+
+      $export = $this->fields;
+
+      // remove ID or UUID
+      $idToRemove = 'id';
+      if ($remove_uuid) {
+         $idToRemove = 'uuid';
+      }
+      unset($export[$idToRemove]);
+
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields[$formFk]);
+      $export['_strings'] = $form->getTranslations($this->fields['name']);
+
+      return $export;
    }
 }

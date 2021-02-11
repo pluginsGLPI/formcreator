@@ -973,7 +973,7 @@ PluginFormcreatorTranslatableInterface
       return 1 + self::countChildren($input, $subItems);
    }
 
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
          return false;
       }

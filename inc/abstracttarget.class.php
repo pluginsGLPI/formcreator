@@ -76,8 +76,6 @@ PluginFormcreatorTranslatableInterface
    /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
    protected $skipCreateActors = false;
 
-   abstract public function export(bool $remove_uuid = false);
-
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
 
    /**

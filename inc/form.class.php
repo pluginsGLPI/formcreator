@@ -1747,7 +1747,7 @@ PluginFormcreatorTranslatableInterface
       return $nb;
    }
 
-   function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
          return false;
       }
@@ -1773,11 +1773,12 @@ PluginFormcreatorTranslatableInterface
             $export['usage_count']);
 
       $subItems = [
-         '_profiles'   => PluginFormcreatorForm_Profile::class,
-         '_sections'   => PluginFormcreatorSection::class,
-         '_conditions' => PluginFormcreatorCondition::class,
-         '_targets'    => (new self())->getTargetTypes(),
-         '_validators' => PluginFormcreatorForm_Validator::class,
+         '_profiles'     => PluginFormcreatorForm_Profile::class,
+         '_sections'     => PluginFormcreatorSection::class,
+         '_conditions'   => PluginFormcreatorCondition::class,
+         '_targets'      => (new self())->getTargetTypes(),
+         '_validators'   => PluginFormcreatorForm_Validator::class,
+         '_translations' => PluginFormcreatorForm_Language::class,
       ];
       $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
@@ -2035,11 +2036,12 @@ PluginFormcreatorTranslatableInterface
       $linker->addObject($originalId, $item);
 
       $subItems = [
-         '_profiles'   => PluginFormcreatorForm_Profile::class,
-         '_sections'   => PluginFormcreatorSection::class,
-         '_conditions' => PluginFormcreatorCondition::class,
-         '_targets'    => (new self())->getTargetTypes(),
-         '_validators' => PluginFormcreatorForm_Validator::class,
+         '_profiles'     => PluginFormcreatorForm_Profile::class,
+         '_sections'     => PluginFormcreatorSection::class,
+         '_conditions'   => PluginFormcreatorCondition::class,
+         '_targets'      => (new self())->getTargetTypes(),
+         '_validators'   => PluginFormcreatorForm_Validator::class,
+         '_translations' => PluginFormcreatorForm_Language::class,
       ];
       $item->importChildrenObjects($item, $linker, $subItems, $input);
 
