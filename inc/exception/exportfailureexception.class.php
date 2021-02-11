@@ -29,36 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+namespace GlpiPlugin\Formcreator\Exception;
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
 }
 
-$form = new PluginFormcreatorForm;
-$export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION, 'forms' => []];
-foreach ($_GET['plugin_formcreator_forms_id'] as $id) {
-   $form->getFromDB($id);
-   try {
-      $export_array['forms'][] = $form->export();
-   } catch (\RuntimeException $e) {
-      Session::addMessageAfterRedirect($e->getMessage(), false, ERROR, true);
-      Html::back();
-   }
-}
-
-$export_json = json_encode($export_array, JSON_UNESCAPED_UNICODE
-                                        | JSON_UNESCAPED_SLASHES
-                                        | JSON_NUMERIC_CHECK
-                                        | ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE
-                                             ? JSON_PRETTY_PRINT
-                                             : 0));
-
-header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
-header('Pragma: private');
-header('Cache-control: private, must-revalidate');
-header("Content-disposition: attachment; filename=\"export_formcreator_".date("Ymd_Hi").".json\"");
-header("Content-type: application/json");
-
-echo $export_json;
+class ExportFailureException extends \RuntimeException {}

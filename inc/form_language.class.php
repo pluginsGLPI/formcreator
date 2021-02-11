@@ -31,6 +31,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 class PluginFormcreatorForm_Language extends CommonDBChild
 implements PluginFormcreatorExportableInterface
@@ -537,7 +538,7 @@ implements PluginFormcreatorExportableInterface
 
    public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         return false;
+         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $export = $this->fields;
