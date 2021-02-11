@@ -30,26 +30,27 @@
  */
 
 include ('../../../inc/includes.php');
-
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (!isset($_POST['plugin_formcreator_form_languages_id'])) {
+Session::checkRight('entity', UPDATE);
+
+if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
+   http_response_code(400);
+   die();
+}
+if (!isset($_POST['id'])) {
+   http_response_code(400);
+   die();
+}
+if (!isset($_POST['value'])) {
    http_response_code(400);
    die();
 }
 
-// if (!isset($_POST['plugin_formcreator_translations_id'])) {
-//    http_response_code(400);
-//    die();
-// }
-
-$formLanguage = new PluginFormcreatorForm_Language();
-if (!$formLanguage->getFromDB((int) $_POST['plugin_formcreator_form_languages_id'])) {
+if (!(new PluginFormcreatorTranslation())->add($_POST)) {
    http_response_code(400);
    die();
 }
-
-echo PluginFormcreatorTranslation::getEditorFieldsHtml($formLanguage, $_POST['plugin_formcreator_translations_id']);

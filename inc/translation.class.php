@@ -143,42 +143,57 @@ class PluginFormcreatorTranslation
     * @param string $id
     * @return void
     */
-   public static function getEditor(PluginFormcreatorForm_Language $formLanguage, string $id) {
+   public static function getEditorFieldsHtml(PluginFormcreatorForm_Language $formLanguage, string $id = '') {
+      $out = '';
       $form = new PluginFormcreatorForm();
       $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
 
-      // Find the string from its ID
+      // Find the strings to translate
       $translatableString = $form->getTranslatableStrings([
-         'id' => $id,
-         'language' => $formLanguage->fields['name'],
+         'language'      => $formLanguage->fields['name'],
+         'is_translated' => ($id != ''),
       ]);
-
+      if (count($translatableString['id']) < 1) {
+         $out .= '<td colspan="2">' . __('No more string to translate', 'formcreator') . '</td>';
+         return $out;
+      }
+      if ($id == '') {
+         // find the first string to translate
+         reset($translatableString['id']);
+         $id = key($translatableString['id']);
+      }
       if (!isset($translatableString['id'][$id])) {
+         // Show nothing if string definitively not found
+         // Should not happen
          return '';
       }
 
-      $type = $translatableString['id'][$id] ?? 'text';
+      $type = $translatableString['id'][$id] ?? 'string';
       $original = $translatableString[$type][$id];
 
+      // Find the translation if any
       $translations = $form->getTranslations($formLanguage->fields['name']);
       $translatedString = $translations[$original] ?? '';
 
       switch ($type) {
          case 'itemlink':
          case 'string':
-            echo '<td>' . $original . Html::hidden("id", ['value' => $id]) . '</td>';
-            echo '<td>' . Html::input("value", ['value' => $translatedString]) . '</td>';
+            $out .= '<td>' . $original . Html::hidden("id", ['value' => $id]) . '</td>';
+            $out .= '<td>' . Html::input("value", ['value' => $translatedString]) . '</td>';
             break;
 
          case 'text':
-            echo '<td>' . Html::entity_decode_deep($original) . Html::hidden("id", ['value' => $id]) . '</td>';
-            echo '<td>' . Html::textarea([
+            $out .= '<td>' . Html::entity_decode_deep($original) . Html::hidden("id", ['value' => $id]) . '</td>';
+            $out .= '<td>' . Html::textarea([
                'name'  => "value",
                'value' => $translatedString,
                'enable_richtext' => true,
                'display' => false,
             ]) . '</td>';
       }
+      $out .= Html::scriptBlock('$(\'input[name="value"]\').focus(); $(\'textarea[name="value"]\').focus();');
+
+      return $out;
    }
 
    /**

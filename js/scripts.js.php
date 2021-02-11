@@ -1138,15 +1138,19 @@ var plugin_formcreator = new function() {
 
    this.showTranslationEditor = function (object) {
       var formlanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      var plugin_formcreator_translations_id = $(object).find('input[name="id"]').val();
       $('#plugin_formcreator_editTranslation').load(formcreatorRootDoc + '/ajax/edit_translation.php', {
          plugin_formcreator_form_languages_id: formlanguageId,
-         plugin_formcreator_translations_id: $(object).val()
+         plugin_formcreator_translations_id: ''
       });
    }
 
    this.newTranslation = function (formLanguageId) {
       var modal = $(this.spinner)
-         .dialog(this.modalSetings);
+         .dialog(this.modalSetings)
+         .on('dialogclose', function (e, ui) {
+            reloadTab();
+         });
       modal.load(
          '../ajax/form_language.php', {
             action: 'newTranslation',
@@ -1162,6 +1166,22 @@ var plugin_formcreator = new function() {
             }
          }
       )
+   }
+
+   this.saveNewTranslation = function () {
+      var that = this;
+      var form = document.querySelector('form[name="plugin_formcreator_translation"]');
+      $.ajax({
+         url: '../ajax/translation.php',
+         type: 'POST',
+         data: $(form).serialize()
+      }).fail(function () {
+         // fix for GLPI <= 9.5.2
+         $('[id^="message_after_redirect_"]').remove();
+         displayAjaxMessageAfterRedirect();
+      }).success(function () {
+         that.showTranslationEditor(form);
+      });
    }
 
    this.showUpdateTranslationForm = function (object) {
