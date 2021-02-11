@@ -75,7 +75,6 @@ link += '</a>';
 link += '</li>';
 
 $(function() {
-   var target = $('body');
    modalWindow = $("<div></div>").dialog({
       width: 980,
       autoOpen: false,
