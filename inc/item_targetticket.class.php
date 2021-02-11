@@ -58,7 +58,7 @@ implements PluginFormcreatorExportableInterface
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
          return false;
       }

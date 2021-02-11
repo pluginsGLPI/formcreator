@@ -1289,7 +1289,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
          return false;
       }

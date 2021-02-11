@@ -211,7 +211,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return 1;
    }
 
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
          return false;
       }
