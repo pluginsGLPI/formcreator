@@ -60,8 +60,9 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $instance = $this->newTestedInstance();
 
       // Try to export an empty item
-      $output = $instance->export();
-      $this->boolean($output)->isFalse();
+      $this->exception(function () use ($instance) {
+         $instance->export();
+      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
       $instance->getFromDBByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),

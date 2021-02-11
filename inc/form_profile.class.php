@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -241,7 +242,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
     */
    public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         return false;
+         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $form_profile = $this->fields;

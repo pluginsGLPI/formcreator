@@ -82,8 +82,9 @@ class PluginFormcreatorQuestionRange extends CommonTestCase {
       );
 
       // Try to export an empty item
-      $output = $instance->export();
-      $this->boolean($output)->isFalse();
+      $this->exception(function () use ($instance) {
+         $instance->export();
+      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
       // Prepare an item to export
       $question->updateParameters([
