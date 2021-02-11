@@ -45,24 +45,6 @@ if (isset($_POST['add'])) {
 } else if (isset($_POST['update'])) {
    $formLanguage->update($_POST);
    Html::back();
-} else if (isset($_POST['save_translation'])) {
-   if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
-      http_response_code(400);
-      die();
-   }
-   if (!isset($_POST['id'])) {
-      http_response_code(400);
-      die();
-   }
-   if (!isset($_POST['value'])) {
-      http_response_code(400);
-      die();
-   }
-   if (!(new PluginFormcreatorTranslation())->add($_POST)) {
-      http_response_code(400);
-      die();
-   }
-   Html::back();
 } else if (isset($_POST['delete'])) {
    if ($formLanguage->getFromDB((int) $_POST['id'])) {
       $formLanguage->massDeleteTranslations($_POST);

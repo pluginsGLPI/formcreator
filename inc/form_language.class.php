@@ -133,16 +133,27 @@ class PluginFormcreatorForm_Language extends CommonDBTM
       return true;
    }
 
-   public function massDeleteTRanslations($post) {
+   public function massDeleteTranslations($post) {
+      global $TRANSLATE;
+
+      $form = new PluginFormcreatorForm();
+      if (!$form->getFromDB($this->fields['plugin_formcreator_forms_id'])) {
+         return;
+      }
+      $translations = $form->getTranslations($this->fields['name']);
       foreach ($post['plugin_formcreator_translation'] as $translationId => $checked) {
          if ($checked != '1') {
             continue;
          }
-         $translation = new PluginFormcreatorTranslation();
-         $translation->delete($this, [
-            'id'   => $translationId,
+         $translated = $form->getTranslatableStrings([
+            'id'       => $translationId,
+            'language' => $this->fields['name'],
          ]);
+         $original = $translated[$translated['id'][$translationId]][$translationId];
+         unset($translations[$original]);
       }
+      $form->setTranslations($this->fields['name'], $translations);
+      $TRANSLATE->clearCache('formcreator', $this->fields['name']);
    }
 
    public function showForm($ID, $options = []) {
@@ -202,29 +213,25 @@ class PluginFormcreatorForm_Language extends CommonDBTM
 
       echo '<div data-itemtype="PluginFormcreatorForm_Language" data-id="' . $this->getID() . '">';
       $options['formtitle'] = __('Add a translation', 'formcreator');
+      $options['target'] = 'javascript:plugin_formcreator.saveNewTranslation(this);';
+
       $this->initForm($this->getID(), $options);
-      $this->showFormHeader($options);
-      echo "<tr class='tab_bg_1'>";
+      //$this->showFormHeader($options);
+      echo '<form name="plugin_formcreator_translation" onsubmit="plugin_formcreator.saveNewTranslation(this); return false;" >';
+      echo "<div class='spaced' id='tabsbody'>";
+      echo "<table class='tab_cadre_fixe' id='mainformtable'>";
+
+      echo "<tr class='tab_bg_1'><td>";
       echo Html::hidden('name', ['value' => $this->fields['name']]);
       echo "</td><td width='50%'>&nbsp;</td></tr>";
 
-      echo '<tr>';
-      echo '<td>' . __('String to translate', 'formcreator') . '</td>';
-      echo '<td>';
-      echo PluginFormcreatorTranslation::dropdown([
-         'condition' => [
-            self::getForeignKeyField() => $this->getID(),
-            'is_translated'            => false,
-         ],
-         'on_change' => "plugin_formcreator.showTranslationEditor(this)",
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
       echo '<tr id="plugin_formcreator_editTranslation">';
-      echo '<td>';
-      echo '</td>';
+      // echo '<td>';
+      // echo '</td>';
+      echo PluginFormcreatorTranslation::getEditorFieldsHtml($this);
       echo '</tr>';
+      echo "<tr class='tab_bg_1'><td>";
+      echo "</td><td width='50%'>&nbsp;</td></tr>";
 
       echo '<tr class="tab_bg_2">'
       . '<td class="center" colspan="4">'
@@ -242,9 +249,11 @@ class PluginFormcreatorForm_Language extends CommonDBTM
    public function showTranslationEntry($input) : void {
       $options['formtitle'] = __('Add a translation', 'formcreator');
       $this->initForm($this->getID(), $options);
-      $this->showFormHeader($options);
+      echo '<form name="plugin_formcreator_translation" onsubmit="plugin_formcreator.saveNewTranslation(this); return false;" >';
+      echo "<div class='spaced' id='tabsbody'>";
+      echo "<table class='tab_cadre_fixe' id='mainformtable'>";
 
-      PluginFormcreatorTranslation::getEditor($this, $input['plugin_formcreator_translations_id']);
+      echo PluginFormcreatorTranslation::getEditorFieldsHtml($this, $input['plugin_formcreator_translations_id']);
 
       echo '<tr class="tab_bg_2">'
       . '<td class="center" colspan="4">'

@@ -1237,7 +1237,6 @@ PluginFormcreatorTranslatableInterface
       if (file_exists($phpfile)) {
          $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
       }
-
       // form title
       echo "<h1 class='form-title'>";
       echo __($this->fields['name'], $domain) . "&nbsp;";
@@ -2621,7 +2620,17 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      $translations = include_once($file);
+      // $lockHandle = fopen($file, 'r');
+      // $isLocked = flock($lockHandle, LOCK_SH);
+      // $lockTries = 1;
+      // while (!$isLocked && $lockTries < 20) {
+      //    $isLocked = flock($lockHandle, LOCK_SH);
+      //    $lockTries++;
+      //    usleep(50000);
+      // }
+      opcache_invalidate($file, true);
+      $translations = include($file);
+      // fclose($lockHandle);
       if (!is_array($translations)) {
          return [];
       }
