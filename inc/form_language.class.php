@@ -103,8 +103,21 @@ implements PluginFormcreatorExportableInterface
 
    public function prepareInputForAdd($input) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      if (!isset($input[$formFk]) || !isset($input['name'])) {
-         return false;
+      if (!isset($input['name'])) {
+         Session::addMessageAfterRedirect(
+            __('The name cannot be empty!', 'formcreator'),
+            false,
+            ERROR
+         );
+         return [];
+      }
+      if (!isset($input[$formFk])) {
+         Session::addMessageAfterRedirect(
+            __('The language must be associated to a form!', 'formcreator'),
+            false,
+            ERROR
+         );
+         return [];
       }
 
       // generate a unique id
