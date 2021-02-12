@@ -5,8 +5,9 @@ use Session;
 use Html;
 use DB;
 use Auth;
+use atoum;
 
-abstract class CommonTestCase extends CommonDBTestCase
+abstract class CommonTestCase extends atoum
 {
    protected $str = null;
 
@@ -14,26 +15,7 @@ abstract class CommonTestCase extends CommonDBTestCase
    private $debugMode = null;
 
    public function beforeTestMethod($method) {
-      self::resetGLPILogs();
-   }
-
-   protected function resetState() {
-      self::resetGLPILogs();
-
-      // $DBvars = get_class_vars('DB');
-      // $result = $this->drop_database(
-      //    $DBvars['dbuser'],
-      //    $DBvars['dbhost'],
-      //    $DBvars['dbdefault'],
-      //    $DBvars['dbpassword']
-      // );
-
-      // $result = $this->load_mysql_file($DBvars['dbuser'],
-      //    $DBvars['dbhost'],
-      //    $DBvars['dbdefault'],
-      //    $DBvars['dbpassword'],
-      //    './save.sql'
-      // );
+      $this->resetGLPILogs();
    }
 
    protected function resetGLPILogs() {
@@ -115,7 +97,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       }
 
       // Reset log files
-      self::resetGLPILogs();
+      $this->resetGLPILogs();
 
       // Test content
       $this->variable($fileSqlContent)->isEqualTo('', 'sql-errors.log not empty');
@@ -126,7 +108,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       // Login as guest user
       $_REQUEST['user_token'] = $userToken;
       Session::destroy();
-      self::login('', '', false);
+      $this->login('', '', false);
       unset($_REQUEST['user_token']);
    }
 

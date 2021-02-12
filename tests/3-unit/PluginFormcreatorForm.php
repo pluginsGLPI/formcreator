@@ -249,18 +249,21 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testDefineTabs() {
-      $form = $this->getForm();
-      $output = $form->defineTabs();
-      $this->array($output)->isEqualTo([
-         'PluginFormcreatorForm_Language$1' => 'Form languages',
+      $instance = $this->newTestedInstance();
+      $output = $instance->defineTabs();
+      $expected = [
          'PluginFormcreatorForm$main' => "Form",
          'PluginFormcreatorQuestion$1' => "Questions",
          'PluginFormcreatorForm_Profile$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
          'PluginFormcreatorForm$2' => "Preview",
          'PluginFormcreatorFormAnswer$1' => "Form answers",
-         'Log$1' => "Historical <sup class='tab_nb'>1</sup>",
-      ]);
+         'PluginFormcreatorForm_Language$1' => 'Form languages',
+         'Log$1' => "Historical",
+      ];
+      $this->array($output)
+         ->isEqualTo($expected)
+         ->hasSize(count($expected));
    }
 
    public function testGetTabNameForItem() {

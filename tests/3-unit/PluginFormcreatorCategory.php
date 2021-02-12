@@ -62,6 +62,19 @@ class PluginFormcreatorCategory extends CommonTestCase {
       $this->string($output)->isEqualTo($expected);
    }
 
+   public function testDefineTabs() {
+      $instance = $this->newTestedInstance();
+      $output = $instance->defineTabs();
+      $expected = [
+         'PluginFormcreatorCategory$main' => "Form category",
+         'PluginFormcreatorCategory$1' => 'Form categories',
+         'Log$1' => "Historical",
+      ];
+      $this->array($output)
+         ->isEqualTo($expected)
+         ->hasSize(count($expected));
+   }
+
    public function testGetCategoryTree() {
       $this->login('glpi', 'glpi');
 
