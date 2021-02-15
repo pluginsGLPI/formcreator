@@ -1208,13 +1208,13 @@ PluginFormcreatorConditionnableInterface
 
       if (isset($data['_questions'])) {
          foreach ($data['_questions'] as $key => $question) {
-            if ($question['fieldtype'] == "dropdown") {
+            if (in_array($question['fieldtype'], ['dropdown', 'glpiselect'])) {
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($key);
 
                /** @var PluginFormcreatorDropdownField */
                $field = PluginFormcreatorFields::getFieldInstance(
-                  "dropdown",
+                  $question['fieldtype'],
                   $question
                );
 
@@ -1268,5 +1268,24 @@ PluginFormcreatorConditionnableInterface
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   /**
+    * Get the field object representing the question
+    * @return PluginFormcreatorFieldInterface|null
+    */
+   public function getSubField(): PluginFormcreatorFieldInterface {
+      if ($this->isNewItem()) {
+         return null;
+      }
+
+      if ($this->field === null) {
+         $this->field = PluginFormcreatorFields::getFieldInstance(
+            $this->fields['fieldtype'],
+            $this
+         );
+      }
+
+      return $this->field;
    }
 }

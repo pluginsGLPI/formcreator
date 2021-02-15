@@ -1353,6 +1353,22 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    }).done(function(response) {
       $('#dropdown_default_value_field').html(response);
    });
+
+   $.ajax({
+      url: formcreatorRootDoc + '/ajax/commontree.php',
+      type: 'GET',
+      data: {
+         itemtype: glpi_object,
+         root: $("#commonTreeDropdownRoot").val(),
+         maxDepth: $("#commonTreeDropdownMaxDepth").val(),
+      },
+   }).done(function(response) {
+      $('.plugin_formcreator_dropdown').html(response);
+      $('.plugin_formcreator_dropdown').toggle(true);
+   }).fail(function() {
+      $('.plugin_formcreator_dropdown').html("");
+      $('.plugin_formcreator_dropdown').toggle(false);
+   });
 }
 
 // === CONDITIONS ===

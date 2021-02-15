@@ -54,15 +54,15 @@ class DropdownField extends CommonTestCase {
             'input' => [
                'name' => $name,
                'dropdown_values' => \Location::class,
-               'show_ticket_categories_depth' => '5',
-               'show_ticket_categories_root' => '0',
+               'show_tree_depth' => '5',
+               'show_tree_root' => '0',
             ],
             'expected' => [
                'name' => $name,
                'values' => json_encode([
                   'itemtype' => \Location::class,
-                  'show_ticket_categories_depth' => '5',
-                  'show_ticket_categories_root' => '0',
+                  'show_tree_depth' => '5',
+                  'show_tree_root' => '0',
                ]),
                'default_values'  => '',
             ]
@@ -72,7 +72,7 @@ class DropdownField extends CommonTestCase {
                'name' => $name,
                'dropdown_values' => \ITILCategory::class,
                'show_ticket_categories' => '2',
-               'show_ticket_categories_depth' => '3',
+               'show_tree_depth' => '3',
                'default_values'  => '',
             ],
             'expected' => [
@@ -80,8 +80,8 @@ class DropdownField extends CommonTestCase {
                'values' => json_encode([
                   'itemtype' => \ITILCategory::class,
                   'show_ticket_categories' => '2',
-                  'show_ticket_categories_depth' => '3',
-                  'show_ticket_categories_root'  => '',
+                  'show_tree_depth' => '3',
+                  'show_tree_root'  => '',
                ]),
                'default_values'  => '',
             ]

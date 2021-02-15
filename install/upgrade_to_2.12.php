@@ -47,5 +47,41 @@ class PluginFormcreatorUpgradeTo2_12 {
       $table = 'glpi_plugin_formcreator_issues';
       $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp');
       $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp');
+
+      $this->changeDropdownTreeSettings();
+   }
+
+   /**
+    * Convert values field of wuestion from form
+    * {"itemtype":"ITILCategory","show_ticket_categories_depth":"0","show_ticket_categories_root":"6354"}
+    * to form
+    * {"itemtype":"ITILCategory","show_tree_depth":-1,"show_tree_root":false}
+    *
+    * @return void
+    */
+   public function changeDropdownTreeSettings() {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_questions';
+
+      $request = [
+         'SELECT' => ['id', 'values'],
+         'FROM' => $table,
+         'WHERE' => ['fieldtype' => ['dropdown']],
+      ];
+      foreach ($DB->request($request) as $row) {
+         $newValues = $row['values'];
+         $values = json_decode($row['values']);
+         if ($values === null) {
+            continue;
+         }
+         $newValues = $values;
+         unset($newValues['show_ticket_categories_root']);
+         unset($newValues['show_ticket_categories_depth']);
+         $newValues['show_tree_root'] = $values['show_ticket_categories_root'] ?? '';
+         $newValues['show_tree_depth'] = $values['show_ticket_categories_depth'] ?? '-1';
+         $newValues = json_encode($newValues);
+         $DB->update($table, ['values' => $newValues], ['id' => $row['id']]);
+      }
    }
 }
