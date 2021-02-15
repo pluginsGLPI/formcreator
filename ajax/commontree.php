@@ -50,26 +50,26 @@ if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
 // Build the row content
 $rand = mt_rand();
 $additions = '<td>';
-$additions .= '<label for="dropdown_root_ticket_categories'.$rand.'" id="label_root_ticket_categories">';
+$additions .= '<label for="dropdown_show_tree_root'.$rand.'" id="label_show_tree_root">';
 $additions .= __('Subtree root', 'formcreator');
 $additions .= '</label>';
 $additions .= '</td>';
 $additions .= '<td>';
 $additions .= Dropdown::show($itemtype, [
-   'name'  => 'show_ticket_categories_root',
+   'name'  => 'show_tree_root',
    'value' => $root,
    'rand'  => $rand,
    'display' => false,
 ]);
 $additions .= '</td>';
 $additions .= '<td>';
-$additions .= '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
+$additions .= '<label for="dropdown_show_tree_depth'.$rand.'" id="label_show_tree_depth">';
 $additions .= __('Limit subtree depth', 'formcreator');
 $additions .= '</label>';
 $additions .= '</td>';
 $additions .= '<td>';
 $additions .= dropdown::showNumber(
-   'show_ticket_categories_depth', [
+   'show_tree_depth', [
       'rand'  => $rand,
       'value' => $depth,
       'min' => 1,

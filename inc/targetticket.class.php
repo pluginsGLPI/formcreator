@@ -1016,7 +1016,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             $associateQuestion = $this->fields['associate_question'];
             $question = new PluginFormcreatorQuestion();
             $question->getFromDB($associateQuestion);
-            $itemtype = $question->fields['values'];
+            /** @var  GlpiPlugin\Formcreator\Field\DropdownField */
+            $field = $question->getSubField();
+            $itemtype = $field->getSubItemtype();
 
             // find the id of the associated item
             $item = $DB->request([
@@ -1080,7 +1082,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
             foreach ($answers as $answer) {
                // Skip if the object type is not valid asset type
-               if (!in_array($answer['values'], $CFG_GLPI['asset_types'])) {
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($answer[PluginFormcreatorQuestion::getForeignKeyField()]);
+               /** @var  GlpiPlugin\Formcreator\Field\DropdownField */
+               $field = $question->getSubField();
+               $field->deserializeValue($answer['answer']);
+               $itemtype = $field->getSubItemtype();
+               if (!in_array($itemtype, $CFG_GLPI['asset_types'])) {
                   continue;
                }
 
@@ -1095,14 +1103,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                }
 
                // Skip if item doesn't exist in the DB (shouldn't happen)
-               $item = new $answer['values']();
+               $item = new $itemtype();
                if (!$item->getFromDB($answer['answer'])) {
                   continue;
                }
 
                // Found a valid answer, stop here
                $data['items_id'] = [
-                  $answer['values'] => [$answer['answer'] => $answer['answer']]
+                  $itemtype => [$answer['answer'] => $answer['answer']]
                ];
                break;
             }
