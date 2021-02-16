@@ -71,7 +71,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return '';
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($richText): ?string {
       $text = $this->question->fields['description'];
       if (!$richText) {
          $text = nl2br(strip_tags(html_entity_decode($text)));

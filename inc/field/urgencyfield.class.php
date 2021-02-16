@@ -174,7 +174,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($richText): ?string {
       $available = $this->getAvailableValues();
       return $available[$this->value];
    }
