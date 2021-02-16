@@ -145,7 +145,7 @@ class TagField extends DropdownField
       return implode("\r\n", $this->value);
    }
 
-   public function getValueForTargetText($domain, $richText): string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
       return $value;
    }

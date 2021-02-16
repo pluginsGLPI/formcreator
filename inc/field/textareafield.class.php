@@ -214,7 +214,7 @@ class TextareaField extends TextField
       return true;
    }
 
-   public function getValueForTargetText($domain, $richText): string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $value = $this->value;
       if (!$richText) {
          $value = Toolbox::unclean_cross_side_scripting_deep($value);

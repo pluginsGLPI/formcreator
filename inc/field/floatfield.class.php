@@ -125,7 +125,7 @@ class FloatField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($domain, $richText): string {
+   public function getValueForTargetText($domain, $richText): ?string {
       return $this->value;
    }
 
