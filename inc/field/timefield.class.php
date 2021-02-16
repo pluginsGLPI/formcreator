@@ -117,7 +117,7 @@ class TimeField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($richText): ?string {
       $date = DateTime::createFromFormat("H:i:s", $this->value);
       if ($date === false) {
          return ' ';

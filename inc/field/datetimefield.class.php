@@ -122,7 +122,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($richText): ?string {
       return Html::convDateTime($this->value);
    }
 

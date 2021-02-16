@@ -116,7 +116,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public function getValueForTargetText($richText) : string;
+   public function getValueForTargetText($richText): ?string;
 
    /**
     * Move uploaded files and make Document items
