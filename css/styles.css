@@ -266,7 +266,7 @@ input.submit_button:focus {
 
 #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]),
 #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap {
-      vertical-align: top;
+   vertical-align: bottom;
    display: inline-block;
 }
 
