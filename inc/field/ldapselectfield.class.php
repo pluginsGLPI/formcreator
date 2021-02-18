@@ -145,11 +145,43 @@ class LdapselectField extends SelectField
          do {
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
                // phpcs:ignore Generic.PHP.DeprecatedFunctions
-               ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
+               if (version_compare(PHP_VERSION, '7.3') < 0) {
+                  // phpcs:ignore Generic.PHP.DeprecatedFunctions
+                  ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
+                  $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
+               } else {
+                  $controls = [
+                     [
+                        'oid'       =>LDAP_CONTROL_PAGEDRESULTS,
+                        'iscritical' => true,
+                        'value'     => [
+                           'size'   => $config_ldap->fields['pagesize'],
+                           'cookie' => $cookie
+                        ]
+                     ]
+                  ];
+                  $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
+                  ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
+                  $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
+               }
+            } else {
+               $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
             }
 
-            $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
+            if (in_array(ldap_errno($ds), [4, 11])) {
+               // openldap return 4 for Size limit exceeded
+               $limitexceeded = true;
+            }
+
             $entries = ldap_get_entries($ds, $result);
+            if (in_array(ldap_errno($ds), [4, 11])) {
+               // openldap return 4 for Size limit exceeded
+               $limitexceeded = true;
+            }
+
+            if ($limitexceeded) {
+               Session::addMessageAfterRedirect(__('LDAP size limit exceeded', 'formcreator'), true, WARNING);
+            }
             array_shift($entries);
 
             foreach ($entries as $attr) {
@@ -160,7 +192,7 @@ class LdapselectField extends SelectField
                $id++;
             }
 
-            if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
+            if (AuthLDAP::isLdapPageSizeAvailable($config_ldap) && version_compare(PHP_VERSION, '7.3') < 0) {
                // phpcs:ignore Generic.PHP.DeprecatedFunctions
                ldap_control_paged_result_response($ds, $result, $cookie);
             }
