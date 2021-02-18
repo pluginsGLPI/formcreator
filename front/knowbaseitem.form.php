@@ -52,7 +52,6 @@ if (isset($_GET["id"])) {
       }
    }
    $_SESSION['glpilisturl']['KnowbaseItem'] = FORMCREATOR_ROOTDOC."/front/wizard.php";
-   $kb->display($options);
-
+   $kb->showFull($options);
    PluginFormcreatorWizard::footer();
 }
