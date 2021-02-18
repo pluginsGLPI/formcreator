@@ -34,6 +34,8 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Dropdown;
 use Html;
+use Session;
+use Toolbox;
 
 class SelectField extends RadiosField
 {
@@ -86,6 +88,30 @@ class SelectField extends RadiosField
 
    public static function getName(): string {
       return __('Select', 'formcreator');
+   }
+
+   public function isValid(): bool {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $this->value == '0') {
+         Session::addMessageAfterRedirect(
+            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      // All is OK
+      return $this->isValidValue($this->value);
+   }
+
+   public function isValidValue($value): bool {
+      if ($value == '0') {
+         return true;
+      }
+      $value = Toolbox::stripslashes_deep($value);
+      $value = trim($value);
+      return in_array($value, $this->getAvailableValues());
    }
 
    public function equals($value): bool {
