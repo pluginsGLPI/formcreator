@@ -141,6 +141,7 @@ class LdapselectField extends SelectField
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 
          $cookie = '';
+         $id = 0;
          do {
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
                // phpcs:ignore Generic.PHP.DeprecatedFunctions
@@ -151,12 +152,12 @@ class LdapselectField extends SelectField
             $entries = ldap_get_entries($ds, $result);
             array_shift($entries);
 
-            foreach ($entries as $id => $attr) {
-               if (isset($attr[$attribute[0]])
-                  && !in_array($attr[$attribute[0]][0], $tab_values)
-               ) {
-                  $tab_values[$id] = $attr[$attribute[0]][0];
+            foreach ($entries as $attr) {
+               if (!isset($attr[$attribute[0]]) || in_array($attr[$attribute[0]][0], $tab_values)) {
+                  continue;
                }
+               $tab_values[$id] = $attr[$attribute[0]][0];
+               $id++;
             }
 
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
