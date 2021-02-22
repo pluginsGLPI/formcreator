@@ -187,4 +187,13 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT => __('Distinct menu entry', 'formcreator'),
       ]);
    }
+
+   public function testGetEnumSearchVisibility() {
+      $output = \PluginFormcreatorEntityconfig::getEnumSearchVisibility();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT         => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_SEARCH_HIDDEN  => __('Merged with Forms', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_SEARCH_VISIBLE => __('Distinct menu entry', 'formcreator'),
+      ]);
+   }
 }

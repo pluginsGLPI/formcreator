@@ -815,9 +815,11 @@ PluginFormcreatorTranslatableInterface
          echo "</div>";
       }
 
-      echo '<div id="plugin_formcreator_searchBar">';
-      $this->showSearchBar();
-      echo '</div>';
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_visible', $_SESSION['glpiactive_entity']) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_VISIBLE) {
+         echo '<div id="plugin_formcreator_searchBar">';
+         $this->showSearchBar();
+         echo '</div>';
+      }
       $sortSettings = PluginFormcreatorEntityConfig::getEnumSort();
       echo '<div class="plugin_formcreator_sort">';
       echo '<span class="radios">';
