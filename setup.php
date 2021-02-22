@@ -31,9 +31,9 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.11.0-nightly');
+define('PLUGIN_FORMCREATOR_VERSION', '2.12.0-dev');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.12');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
