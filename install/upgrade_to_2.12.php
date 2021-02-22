@@ -71,7 +71,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       ];
       foreach ($DB->request($request) as $row) {
          $newValues = $row['values'];
-         $values = json_decode($row['values']);
+         $values = json_decode($row['values'], JSON_OBJECT_AS_ARRAY);
          if ($values === null) {
             continue;
          }
