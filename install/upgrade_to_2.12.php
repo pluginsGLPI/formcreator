@@ -49,6 +49,9 @@ class PluginFormcreatorUpgradeTo2_12 {
       $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp');
 
       $this->changeDropdownTreeSettings();
+
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+      $this->migration->addField($table, 'is_search_visible', 'integer', ['after' => 'is_kb_separated']);
    }
 
    /**
