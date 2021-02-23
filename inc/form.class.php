@@ -815,7 +815,12 @@ PluginFormcreatorTranslatableInterface
          echo "</div>";
       }
 
-      if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_visible', $_SESSION['glpiactive_entity']) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_VISIBLE) {
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_header_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_HEADER_VISIBLE) {
+         echo '<div id="plugin_formcreator_header">';
+         $this->showHeader();
+         echo '</div>';
+      }
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_VISIBLE) {
          echo '<div id="plugin_formcreator_searchBar">';
          $this->showSearchBar();
          echo '</div>';
@@ -823,7 +828,7 @@ PluginFormcreatorTranslatableInterface
       $sortSettings = PluginFormcreatorEntityConfig::getEnumSort();
       echo '<div class="plugin_formcreator_sort">';
       echo '<span class="radios">';
-      $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', $_SESSION['glpiactive_entity']);
+      $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', Session::getActiveEntity());
       $selected = $sortOrder == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.'/>';
       echo '<label for="plugin_formcreator_mostPopular">'.$sortSettings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] .'</label>';
@@ -1101,6 +1106,11 @@ PluginFormcreatorTranslatableInterface
          $defaultForms = false;
       }
       return ['default' => $defaultForms, 'forms' => $formList];
+   }
+
+   protected function showHeader(): void {
+      $header = PluginFormcreatorEntityconfig::getUsedConfig('is_header_visible', Session::getActiveEntity(), 'header');
+      echo Html::entity_decode_deep($header);
    }
 
    protected function showSearchBar() : void {

@@ -1123,8 +1123,13 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_wizard_forms {
    clear: both;
 }
+
 #plugin_formcreator_wizard_forms > div {
     text-align: center;
+}
+
+#plugin_formcreator_header {
+   margin: 20px 25px 10px 6px;
 }
 
 #plugin_formcreator_searchBar {
