@@ -214,8 +214,13 @@ class PluginFormcreatorInstall {
       $this->migration->displayMessage("Configure existing entities");
 
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
-                  (id, replace_helpdesk)
-                SELECT ent.id, IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
+                  (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_header_visible)
+               SELECT ent.id,
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
                 FROM glpi_entities ent
                 LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
                   ON ent.id = conf.id

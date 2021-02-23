@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `sort_order`        int(11) NOT NULL DEFAULT '0',
   `is_kb_separated`   int(11) NOT NULL DEFAULT '0',
   `is_search_visible` int(11) NOT NULL DEFAULT '0',
+  `is_header_visible` int(11) NOT NULL DEFAULT '0',
+  `header`            text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
