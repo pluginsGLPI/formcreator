@@ -1,3 +1,24 @@
+<a name="v2.11.2"></a>
+## [v2.11.2](https://github.com/pluginsglpi/formcreator/compare/v2.11.1..v2.11.2) (2021-02-18)
+
+
+### Bug Fixes
+
+*  fatal error when not filling a date ([940bfee2](https://github.com/pluginsglpi/formcreator/commit/940bfee2))
+* **actorfield:** answer not displayed when shwoing saved data ([003ddda1](https://github.com/pluginsglpi/formcreator/commit/003ddda1))
+* **form:** loss of icon when editing a form ([d340f79b](https://github.com/pluginsglpi/formcreator/commit/d340f79b))
+* **issue:** update handling of url in emai: notifications ([b99b19b4](https://github.com/pluginsglpi/formcreator/commit/b99b19b4))
+* **ldapfield:** PHP warning when editing the question ([db452c7b](https://github.com/pluginsglpi/formcreator/commit/db452c7b)), closes [#2116](https://github.com/pluginsglpi/formcreator/issues/2116)
+* **question:** better error handling ([051184ae](https://github.com/pluginsglpi/formcreator/commit/051184ae))
+* **section:** fail to import condition settings ([7f712bd9](https://github.com/pluginsglpi/formcreator/commit/7f712bd9))
+* **selectfield:** validity check different from radios field ([46ce9b3c](https://github.com/pluginsglpi/formcreator/commit/46ce9b3c))
+* **wizard:** reduce spacing between search bar and results ([36870e51](https://github.com/pluginsglpi/formcreator/commit/36870e51))
+
+
+### Features
+
+* **dropdownfield:** allow regex comparison ([9fd8c1aa](https://github.com/pluginsglpi/formcreator/commit/9fd8c1aa))
+
 ## [2.11.1](https://github.com/pluginsglpi/formcreator/compare/v2.11.0...v2.11.1) (2021-02-03)
 
 
