@@ -62,6 +62,11 @@ Features
    </authors>
    <versions>
       <version>
+         <num>2.11.2</num>
+         <compatibility>9.5.x</compatibility>
+         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/v2.11.2/glpi-formcreator-2.11.2.tar.bz2</download_url>
+      </version>
+      <version>
          <num>2.11.1</num>
          <compatibility>9.5.x</compatibility>
          <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/v2.11.1/glpi-formcreator-2.11.1.tar.bz2</download_url>
