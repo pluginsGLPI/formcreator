@@ -266,7 +266,7 @@ input.submit_button:focus {
 
 #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]),
 #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap {
-      vertical-align: top;
+   vertical-align: bottom;
    display: inline-block;
 }
 
@@ -1085,7 +1085,7 @@ a.plugin_formcreator_formTile_title {
    min-width: 116px;
    overflow-x: hidden;
    overflow-y: auto;
-   padding: 10px 0 3px 23px;
+   padding: 0 0 3px 23px;
    margin: -10px 0 -3px -23px;
    background-color: #FFFFFF;
    margin-left: 300px;
@@ -1101,7 +1101,7 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_searchBar {
    position: relative;
    margin: 20px 25px 20px 6px;
-   padding: 10px 0 45px 0;
+   padding: 10px 0 10px 0;
    box-sizing: border-box;
 }
 
@@ -1123,7 +1123,7 @@ a.plugin_formcreator_formTile_title {
    position: absolute;
    float: left;
    display: block;
-   top: 23%;
+   top: 34%;
    text-align: center;
    width: 100%;
    font-size: 1.2em;

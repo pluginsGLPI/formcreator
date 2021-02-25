@@ -412,7 +412,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($richText): ?string {
       $DbUtil = new DbUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
@@ -651,7 +651,18 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      $value = html_entity_decode($value);
+      $itemtype = $this->getSubItemtype($this->question->fields['values']);
+      $dropdown = new $itemtype();
+      if (!$dropdown->getFromDB($this->value)) {
+         throw new ComparisonException('Item not found for comparison');
+      }
+      if ($dropdown instanceof CommonTreeDropdown) {
+         $fieldValue = $dropdown->getField($dropdown->getCompleteNameField());
+      } else {
+         $fieldValue = $dropdown->getField($dropdown->getNameField());
+      }
+      return preg_match($value, Toolbox::stripslashes_deep($fieldValue)) ? true : false;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false): bool {

@@ -620,7 +620,7 @@ var plugin_formcreator = new function() {
          column:         this.questionsColumns,
          cellHeight:     '32px',
          verticalMargin: '5px',
-         float:          false,
+         float:          true,
          acceptWidgets:  true,
          resizeable:     {
             handles: 'e, w'
@@ -651,7 +651,10 @@ var plugin_formcreator = new function() {
             );
          });
          that.dirty = false;
-      }).complete(this.setupGridStack(group));
+      }).complete(function () {
+         that.setupGridStack(group);
+         group.data('gridstack').float(false);
+      });
    };
 
    /**
@@ -817,13 +820,9 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'json'
       }).fail(function(data) {
-         // Closing and opening the modal workarounds
-         // the whole modal being disabled when alert is shown
-         // modalWindow.dialog('close');
-         // alert(data.responseText);
-         // modalWindow.dialog('open');
-         $('#plugin_formcreator_error').text(data.responseText);
-         $('#plugin_formcreator_error').show();
+         // fix for GLPI <= 9.5.2
+         $('[id^="message_after_redirect_"]').remove();
+         displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
          var container = $('[data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');

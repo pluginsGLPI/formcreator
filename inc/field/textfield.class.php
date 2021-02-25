@@ -130,7 +130,7 @@ class TextField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): string {
+   public function getValueForTargetText($richText): ?string {
       return $this->value;
    }
 

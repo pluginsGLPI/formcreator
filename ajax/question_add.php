@@ -41,9 +41,7 @@ if (!$question->canCreate()) {
 }
 
 if (!$question->add($_REQUEST)) {
-    http_response_code(500);
-    echo array_shift($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
-    unset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
+    http_response_code(400);
     exit;
 }
 $json = [

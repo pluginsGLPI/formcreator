@@ -312,10 +312,10 @@ PluginFormcreatorConditionnableInterface
    /**
     * Define how to display a specific value in search result table
     *
-    * @param  String $field   Name of the field as define in $this->getSearchOptions()
-    * @param  Mixed  $values  The value as it is stored in DB
-    * @param  Array  $options Options (optional)
-    * @return Mixed           Value to be displayed
+    * @param  string $field   Name of the field as define in $this->getSearchOptions()
+    * @param  mixed  $values  The value as it is stored in DB
+    * @param  array  $options Options (optional)
+    * @return mixed           Value to be displayed
     */
    public static function getSpecificValueToDisplay($field, $values, array $options = []) {
       if (!is_array($values)) {
@@ -366,6 +366,17 @@ PluginFormcreatorConditionnableInterface
                return Dropdown::getLanguageName($values[$field]);
             }
             break;
+
+         case 'icon':
+            if ($values[$field] == '') {
+               return '';
+            }
+            return '<i class="' . $values[$field] . '"></i>';
+            break;
+
+         case 'icon_color':
+         case 'background_color':
+            return '<span style="background: ' . $values[$field] . '">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
       }
 
       return parent::getSpecificValueToDisplay($field, $values, $options);

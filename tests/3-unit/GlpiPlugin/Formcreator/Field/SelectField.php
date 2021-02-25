@@ -141,8 +141,8 @@ class SelectField extends CommonTestCase {
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'value'   => '1',
+            'expected' => true
          ],
          [
             'fields'          => [
@@ -155,8 +155,8 @@ class SelectField extends CommonTestCase {
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true
+            'value'   => '0',
+            'expected' => true
          ],
          [
             'fields'          => [
@@ -169,8 +169,8 @@ class SelectField extends CommonTestCase {
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
-            'expectedValue'   => '3',
-            'expectedIsValid' => true
+            'value'   => '3',
+            'expected' => true
          ],
          [
             'fields'          => [
@@ -183,8 +183,8 @@ class SelectField extends CommonTestCase {
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'value'   => '1',
+            'expected' => true
          ],
          [
             'fields'          => [
@@ -197,8 +197,8 @@ class SelectField extends CommonTestCase {
                   'order'           => '1',
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
-            'expectedValue'   => '',
-            'expectedIsValid' => false
+            'value'   => '0',
+            'expected' => false
          ],
       ];
    }
@@ -206,13 +206,13 @@ class SelectField extends CommonTestCase {
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($fields, $expectedValue, $expected) {
+   public function testIsValid($fields, $value, $expected) {
       $question = $this->getQuestion($fields);
       $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($fields['default_values']);
+      $instance->deserializeValue($value);
 
-      $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expected);
+      $output = $instance->isValid();
+      $this->boolean((boolean) $output)->isEqualTo($expected);
    }
 
    public function testGetName() {
