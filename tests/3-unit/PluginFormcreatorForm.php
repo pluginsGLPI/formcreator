@@ -1190,4 +1190,117 @@ class PluginFormcreatorForm extends CommonTestCase {
          ],
       ]);
    }
+
+   public function providerCheckImportVersion() {
+      $currentMinorVersion = explode('.', PLUGIN_FORMCREATOR_SCHEMA_VERSION);
+
+      $lower = $currentMinorVersion;
+      $lower[1]--;
+
+      $evenLower = $currentMinorVersion;
+      $evenLower[0]--;
+
+      $equal = $currentMinorVersion;
+
+      $higher = $currentMinorVersion;
+      $higher[1]++;
+
+      $evenHigher = $currentMinorVersion;
+      $evenHigher[0]++;
+
+      return [
+         'evenLower_1' => [
+            'version'  => implode('.', $evenLower) . '.0',
+            'expected' => false,
+         ],
+         'evenLower_2' => [
+            'version'  => implode('.', $evenLower) . '.1',
+            'expected' => false,
+         ],
+         'evenLower_3' => [
+            'version'  => implode('.', $evenLower) . '.0-dev',
+            'expected' => false,
+         ],
+         'evenLower_4' => [
+            'version'  => implode('.', $evenLower),
+            'expected' => false,
+         ],
+         'lower_1' => [
+            'version'  => implode('.', $lower) . '.0',
+            'expected' => false,
+         ],
+         'lower_2' => [
+            'version'  => implode('.', $lower) . '.1',
+            'expected' => false,
+         ],
+         'lower_3' => [
+            'version'  => implode('.', $lower) . '.0-dev',
+            'expected' => false,
+         ],
+         'lower_4' => [
+            'version'  => implode('.', $lower),
+            'expected' => false,
+         ],
+         'equal_1' => [
+            'version'  => implode('.', $equal) . '.0',
+            'expected' => true,
+         ],
+         'equal_2' => [
+            'version'  => implode('.', $equal) . '.1',
+            'expected' => true,
+         ],
+         'equal_3' => [
+            'version'  => implode('.', $equal) . '.0-dev',
+            'expected' => true,
+         ],
+         'equal_4' => [
+            'version'  => implode('.', $equal),
+            'expected' => true,
+         ],
+         'higher_1' => [
+            'version'  => implode('.', $higher) . '.0',
+            'expected' => false,
+         ],
+         'higher_2' => [
+            'version'  => implode('.', $higher) . '.1',
+            'expected' => false,
+         ],
+         'higher_3' => [
+            'version'  => implode('.', $higher) . '.0-dev',
+            'expected' => false,
+         ],
+         'higher_4' => [
+            'version'  => implode('.', $higher),
+            'expected' => false,
+         ],
+         'evenHigher_1' => [
+            'version'  => implode('.', $evenHigher) . '.0',
+            'expected' => false,
+         ],
+         'evenHigher_2' => [
+            'version'  => implode('.', $evenHigher) . '.1',
+            'expected' => false,
+         ],
+         'evenHigher_3' => [
+            'version'  => implode('.', $evenHigher) . '.0-dev',
+            'expected' => false,
+         ],
+         'evenHigher_4' => [
+            'version'  => implode('.', $evenHigher),
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /*
+    * @dataProvider providerCheckImportVersion
+    *
+    * @param string $version
+    * @param bool $expected
+    * @return void
+    */
+   public function testCheckImportVersion($version, $expected) {
+      $output = \PluginFormcreatorForm::checkImportVersion($version);
+      $this->boolean($output)->isEqualTo($expected);
+   }
 }
