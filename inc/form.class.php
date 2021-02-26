@@ -1850,7 +1850,7 @@ PluginFormcreatorConditionnableInterface
             continue;
          }
          if (isset($forms_toimport['schema_version'])) {
-            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION . '.0') {
+            if (!self::checkImportVersion($forms_toimport['schema_version'])) {
                Session::addMessageAfterRedirect(
                   __("Forms import impossible, the file was generated with another version", 'formcreator'),
                   false, ERROR
@@ -1894,6 +1894,25 @@ PluginFormcreatorConditionnableInterface
                                                       $filename));
          }
       }
+   }
+
+   /**
+    * Check the version is compatible with the current one
+    * for forms import
+    *
+    * @return boolean
+    */
+   public static function checkImportVersion($version) {
+      // Convert version to X.Y
+      $version = explode('.', $version);
+      if (count($version) < 2) {
+         return false;
+      }
+      $minorVersion = [array_shift($version)];
+      $minorVersion[] = array_shift($version);
+      $minorVersion = implode('.', $minorVersion);
+
+      return version_compare(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $minorVersion) == 0;
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
