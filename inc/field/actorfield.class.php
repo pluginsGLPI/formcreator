@@ -132,38 +132,28 @@ class ActorField extends PluginFormcreatorAbstractField
       $domId        = $fieldName . '_' . $rand;
 
       // Value needs to be non empty to allow execition of select2's initSelection
-      if (version_compare(GLPI_VERSION, '9.5') < 0) {
-         $html .= '<select multiple
-            name="' . $fieldName . '[]"
-            id="' . $domId . '"
-            value=""></select>';
-         $html .= Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
-         });");
-      } else {
-         $params = [
-            'specific_tags' => [
-               'multiple' => 'multiple',
-            ],
-            'entity_restrict' => -1,
-            'itemtype'        => User::getType(),
-            'values'          => array_keys($value),
-            'valuesnames'     => array_values($value),
-         ];
-         if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-            $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-         }
-         $html .= \PluginFormcreatorCommon::jsAjaxDropdown(
-            $fieldName . '[]',
-            $domId,
-            $CFG_GLPI['root_doc']."/ajax/getDropdownUsers.php",
-            $params
-         );
-         $html .= Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeActor2('$fieldName', '$rand');
-         });");
-
+      $params = [
+         'specific_tags' => [
+            'multiple' => 'multiple',
+         ],
+         'entity_restrict' => -1,
+         'itemtype'        => User::getType(),
+         'values'          => array_keys($value),
+         'valuesnames'     => array_values($value),
+      ];
+      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
+         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
       }
+      $html .= \PluginFormcreatorCommon::jsAjaxDropdown(
+         $fieldName . '[]',
+         $domId,
+         $CFG_GLPI['root_doc']."/ajax/getDropdownUsers.php",
+         $params
+      );
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeActor('$fieldName', '$rand');
+      });");
+
       return $html;
    }
 
