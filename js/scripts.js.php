@@ -1577,72 +1577,9 @@ function pluginFormcreatorInitializeField(fieldName, rand) {
 }
 
 /**
- * Initialize an actor field (< GLPI 9.5.3)
+ * Initialize an actor field
  */
-function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
-   var field = $('[name="' + fieldName + '[]"]');
-   var dropdownMax = CFG_GLPI['dropdown_max'];
-   field.select2({
-      width: '80%',
-      minimumInputLength: 0,
-      quietMillis: 100,
-      dropdownAutoWidth: true,
-      minimumResultsForSearch: 0,
-      tokenSeparators: [",", ";"],
-      tags: true,
-      ajax: {
-         url: rootDoc + "/ajax/getDropdownUsers.php",
-         type: "POST",
-         dataType: "json",
-         data: function (params) {
-            return {
-               entity_restrict: -1,
-               searchText: params.term,
-               page_limit: dropdownMax,
-               page: params.page || 1
-            }
-         },
-         processResults: function (data, params) {
-            params.page = params.page || 1;
-
-            var more = (data.count >= dropdownMax);
-            return {results: data.results, pagination: {"more": more}};
-         }
-      },
-      createTag: function(params) {
-         var term = $.trim(params.term);
-
-         if (term == '') {
-            return null;
-         }
-
-         return {
-            id: term,
-            text: term,
-            newTag: true
-         }
-      },
-   });
-   initialValue = JSON.parse(initialValue);
-   for (var i = 0; i < initialValue.length; i++) {
-      var option = new Option(initialValue[i].text, initialValue[i].id, true, true);
-      field.append(option).trigger('change');
-      field.trigger({
-         type: 'select2.select',
-         params: {
-            data: initialValue[i]
-         }
-      });
-   }
-   field.on("change", function(e) {
-      plugin_formcreator.showFields($(field[0].form));
-   });
-}
-
-/**
- * Initialize an actor field (>= GLPI 9.5.3)
- */
-function pluginFormcreatorInitializeActor2(fieldName, rand) {
+function pluginFormcreatorInitializeActor(fieldName, rand) {
    var field = $('select[name="' + fieldName + '[]"]');
    field.on("change", function(e) {
       plugin_formcreator.showFields($(field[0].form));
