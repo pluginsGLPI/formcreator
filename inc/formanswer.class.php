@@ -86,7 +86,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function canViewItem() {
       global $DB;
 
-      if (!isset($_SESSION['glpiID'])) {
+      $userId = Session::getLoginUserID();
+
+      if ($userId === false) {
          return false;
       }
 
@@ -94,16 +96,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return true;
       }
 
-      if ($_SESSION['glpiID'] == $this->fields['requester_id']) {
+      if ($userId == $this->fields['requester_id']) {
          return true;
       }
 
-      if ($_SESSION['glpiID'] == $this->fields['users_id_validator']) {
+      if ($userId == $this->fields['users_id_validator']) {
          return true;
       }
 
       $groupUser = new Group_User();
-      $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+      $groups = $groupUser->getUserGroups($userId);
       if (in_array($this->fields['users_id_validator'], $groups)) {
          return true;
       }
@@ -129,7 +131,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       ];
       foreach ($DB->request($request) as $row) {
          if ($row['itemtype'] == User::class) {
-            if ($_SESSION['glpiID'] == $row['items_id']) {
+            if ($userId == $row['items_id']) {
                return true;
             }
          } else {
@@ -456,7 +458,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if (!isset($ID) || !$this->getFromDB($ID)) {
          Html::displayNotFoundError();
       }
-      $options = ['canedit' => false];
+      $options['canedit'] = false;
 
       // Print css media
       echo Html::css(FORMCREATOR_ROOTDOC . "/css/print_form.css", ['media' => 'print']);
@@ -488,10 +490,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $form = $this->getForm();
 
+      // Edit mode for validator
+      $editMode = !isset($options['edit']) ? false : ($options['edit'] != '0');
+      // Can the current user edit the answers ?
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
                  && Session::getLoginUserID() == $this->fields['requester_id']
                  || $this->fields['status'] == self::STATUS_WAITING
-                 && $this->canValidate();
+                 && $this->canValidate() && $editMode;
 
       // form title
       echo "<h1 class='form-title'>";
@@ -581,7 +586,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</li>';
       }
 
-      if ($canEdit || $editMode) {
+      if ($canEdit) {
          echo Html::scriptBlock('$(function() {
             plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
          })');
@@ -594,7 +599,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       echo '</div>';
 
       // Display submit button
-      if (($this->fields['status'] == self::STATUS_REFUSED) && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+      if (($this->fields['status'] == self::STATUS_REFUSED) && (Session::getLoginUserID() == $this->fields['requester_id'])) {
          echo '<div class="form-group">';
          echo '<div class="center">';
          echo Html::submit(__('Save'), ['name' => 'save_formanswer']);
@@ -613,12 +618,27 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
 
          echo '<div class="form-group line1">';
-         echo '<div class="center" style="float: left; width: 50%;">';
+         echo '<div class="center" style="float: left; width: 30%;">';
          echo Html::submit(
             __('Refuse', 'formcreator'), [
                'name'      => 'refuse_formanswer',
                'onclick'   => 'return plugin_formcreator_checkComment(this)',
             ]);
+         echo '</div>';
+         echo '<div class="center" style="float: left; width: 40%;">';
+         if (!$editMode) {
+            echo Html::submit(
+               __('Edit answers', 'formcreator'), [
+                  'name'      => 'edit_answers',
+                  'onclick'   => 'reloadTab("edit=1"); return false;',
+               ]);
+         } else {
+            echo Html::submit(
+               __('Cancel edition', 'formcreator'), [
+                  'name'      => 'edit_answers',
+                  'onclick'   => 'reloadTab("edit=0"); return false;',
+               ]);
+         }
          echo '</div>';
          echo '<div class="center">';
          echo Html::submit(
@@ -704,9 +724,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['plugin_formcreator_forms_id'] = $form->getID();
       // requester_id is actually the author
       // TODO : rename this column
-      $input['requester_id']                = isset($_SESSION['glpiID'])
-                                            ? $_SESSION['glpiID']
-                                            : 0;
+      $input['requester_id']                = $_SESSION['glpiID'] ?? 0;
       $input['users_id_validator']          = $usersIdValidator;
       $input['groups_id_validator']         = $groupIdValidator;
       $input['status']                      = $status;
