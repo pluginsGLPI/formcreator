@@ -1,5 +1,5 @@
 {
-    "schema_version": 2.11,
+    "schema_version": 2.12,
     "forms": [
         {
             "name": "form with all question types",
@@ -481,7 +481,8 @@
                 "PluginFormcreatorTargetTicket": [],
                 "PluginFormcreatorTargetChange": []
             },
-            "_validators": []
+            "_validators": [],
+            "_translations": []
         }
     ]
 }
