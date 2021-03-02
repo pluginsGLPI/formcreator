@@ -710,6 +710,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          unset($predefined_fields['_groups_id_assign']);
       }
 
+      // Manage special values
+      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
+         $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
+      }
+
       $data = array_merge($data, $predefined_fields);
       return $data;
    }
