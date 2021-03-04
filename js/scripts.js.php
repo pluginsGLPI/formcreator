@@ -995,7 +995,11 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.showQuestionForm = function (sectionId, questionId = 0) {
+   this.showQuestionForm = function (sectionId, questionId) {
+      if (questionId === undefined) {
+         questionId = 0;
+      }
+
       modalWindow.load(formcreatorRootDoc + '/ajax/question.php', {
          question_id: questionId,
          plugin_formcreator_sections_id: sectionId
@@ -1024,7 +1028,11 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.showSectionForm = function (formId, sectionId = 0) {
+   this.showSectionForm = function (formId, sectionId) {
+      if (sectionId === undefined) {
+         sectionId = 0;
+      }
+
       modalWindow.load(
          formcreatorRootDoc + '/ajax/section.php', {
             section_id: sectionId,
