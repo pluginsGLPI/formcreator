@@ -787,163 +787,156 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    transition: all 300ms ease;
    -webkit-transform: translateZ(0);
    -webkit-transition: all 300ms ease;
-}
 
-.slinky-menu > ul {
-   left: 0;
-   position: relative;
-   transform: translateZ(0);
-   transition: all 300ms ease;
-   -webkit-transform: translateZ(0);
-   -webkit-transition: all 300ms ease;
-}
+    > ul {
+      left: 0;
+      position: relative;
+      transform: translateZ(0);
+      transition: all 300ms ease;
+      -webkit-transform: translateZ(0);
+      -webkit-transition: all 300ms ease;
+   }
 
-.slinky-menu ul,
-.slinky-menu li {
-   list-style: none;
-   margin: 0;
-}
+   ul,
+   li {
+      list-style: none;
+      margin: 0;
+   }
 
-.slinky-menu ul {
-   width: 100%;
-}
+   ul {
+      width: 100%;
+   }
 
-.slinky-menu a {
-   display: block;
-}
+   a {
+      display: block;
+   }
 
-.slinky-menu li ul {
-   display: none;
-   left: 100%;
-   position: absolute;
-   top: 0;
-}
+   li ul {
+      display: none;
+      left: 100%;
+      position: absolute;
+      top: 0;
+   }
 
-.slinky-menu .header {
-   position: relative;
-}
+   .header {
+      position: relative;
+   }
 
-.slinky-menu h2 ~ a.back {
-   left: 0;
-   position: absolute;
-   top: 0;
-}
+   h2 ~ a.back {
+      left: 0;
+      position: absolute;
+      top: 0;
+   }
 
-.slinky-menu h2 {
-   font-size: 1em;
-   margin: 0;
-   text-align: center;
-}
-
-
-.slinky-menu .header {
-   background: #AAA;
-}
-
-.slinky-menu h2 {
-   padding: 1em;
-}
-
-.slinky-menu a {
-   border: none;
-   padding: 1em;
-}
-
-.slinky-menu a.next:after {
-   content: '\276f';
-   margin-left: 1em;
-   float: right;
-}
-
-.slinky-menu a.back:before {
-   content: '\276e';
-   margin-right: 1em;
-   float: left;
-}
+   h2 {
+      font-size: 1em;
+      margin: 0;
+      text-align: center;
+   }
 
 
-#plugin_formcreator_wizard_categories a {
-   background-color: inherit;
-   font-size: 1.2em;
+    .header {
+      background: #AAA;
+   }
+
+    h2 {
+      padding: 1em;
+   }
+
+    a {
+      border: none;
+      padding: 1em;
+   }
+
+    a.next:after {
+      content: '\276f';
+      margin-left: 1em;
+      float: right;
+   }
+
+    a.back:before {
+      content: '\276e';
+      margin-right: 1em;
+      float: left;
+   }
 }
 
-#plugin_formcreator_wizard_categories  a[data-category-id]:not([data-parent-category-id="0"])  {
-   margin-left: 20px;
-}
+#plugin_formcreator_wizard_categories {
+   a {
+      background-color: inherit;
+      font-size: 1.2em;
+   }
 
-#plugin_formcreator_wizard_categories .category_active:not(.next),
-#plugin_formcreator_wizard_categories .category_active ~ul .header {
-   /* background-color: rgba(0, 0, 0, 0.05); */
-   border-bottom: 1px dashed #DDD;
-   position: relative;
-}
+   a[data-category-id]:not([data-parent-category-id="0"])  {
+      margin-left: 20px;
+   }
 
-#plugin_formcreator_wizard_categories .category_active:not(.next):after,
-#plugin_formcreator_wizard_categories .category_active ~ul .header:after {
-   position: absolute;
-   left: calc(100% - 45px);
-   top: 50%;
-   border: solid transparent;
-   content: " ";
-   height: 0;
-   width: 0;
-   border-right-color: #FFF;
-   border-width: 23px;
-   margin-top: -23px;
-   z-index: 20;
-}
+   .category_active:not(.next),
+   .category_active ~ul .header {
+      /* background-color: rgba(0, 0, 0, 0.05); */
+      border-bottom: 1px dashed #DDD;
+      position: relative;
+   }
 
-#plugin_formcreator_wizard_categories .category_active:not(.next):before,
-#plugin_formcreator_wizard_categories .category_active ~ul .header:before {
-   position: absolute;
-   left: calc(100% - 46px);
-   top: 50%;
-   border: solid transparent;
-   content: " ";
-   height: 0;
-   width: 0;
-   border-right-color: #DDD;
-   border-width: 23px;
-   margin-top: -23px;
-   z-index: 20;
-}
+   .category_active:not(.next):after,
+   .category_active ~ul .header:after {
+      position: absolute;
+      left: calc(100% - 45px);
+      top: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-right-color: #FFF;
+      border-width: 23px;
+      margin-top: -23px;
+      z-index: 20;
+   }
 
-#plugin_formcreator_wizard_categories h2 {
-   margin: 0;
-   padding: 0.83em 0;
-   border-bottom: 1px solid #DDD;
-}
+   .category_active:not(.next):before,
+   .category_active ~ul .header:before {
+      position: absolute;
+      left: calc(100% - 46px);
+      top: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-right-color: #DDD;
+      border-width: 23px;
+      margin-top: -23px;
+      z-index: 20;
+   }
 
-#plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
-   font-size: 1.2em;
-}
+   h2 {
+      margin: 0;
+      padding: 0.83em 0;
+      border-bottom: 1px solid #DDD;
+   }
 
-#plugin_formcreator_wizard_categories h2 {
-   margin: 0;
-   padding: 14px;
-   color: #000;
-}
-#plugin_formcreator_wizard_categories .header h2 {
-   text-align: left;
-}
-#plugin_formcreator_wizard_categories .header .back {
-   right: 20px;
-   color: #000;
-   left: inherit;
-}
+   a,  h2 {
+      font-size: 1.2em;
+   }
 
-#plugin_formcreator_wizard_categories li {
-   background-color: inherit;
-}
+   h2 {
+      margin: 0;
+      padding: 14px;
+      color: #000;
+   }
+   .header h2 {
+      text-align: left;
+   }
+   .header .back {
+      right: 20px;
+      color: #000;
+      left: inherit;
+   }
 
+   li {
+      background-color: inherit;
+   }
+}
 /* KB page */
-
-#plugin_formcreator_kb_categories div > a {
-   display: inline-block;
-   width: 100%;
-   padding: 14px;
-   box-sizing: border-box;
-}
 
 #plugin_formcreator_kb_categories {
    width: 275px;
@@ -951,92 +944,99 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    bottom: 0;
    left: 0;
    float: left;
-}
-#plugin_formcreator_kb_categories {
    height: calc(100vh - 28px - 65px);
    background-color: #f8f7f3;
    border-right: 1px solid #DDD;
    position: relative;
-}
 
-#plugin_formcreator_kb_categories .slinky-menu {
-   position: absolute;
-   left: 0;
-   right: -1px;
-}
+   div > a {
+      display: inline-block;
+      width: 100%;
+      padding: 14px;
+      box-sizing: border-box;
+   }
 
-#plugin_formcreator_kb_categories a {
-   background-color: inherit;
-   font-size: 1.2em;
-}
 
-#plugin_formcreator_kb_categories  a[data-category-id]:not([data-parent-category-id="0"])  {
-   margin-left: 20px;
-}
+   .slinky-menu {
+      position: absolute;
+      left: 0;
+      right: -1px;
+   }
 
-#plugin_formcreator_kb_categories .category_active:not(.next),
-#plugin_formcreator_kb_categories .category_active ~ul .header {
-   /* background-color: rgba(0, 0, 0, 0.05); */
-   border-bottom: 1px dashed #DDD;
-   position: relative;
-}
+   a {
+      background-color: inherit;
+      font-size: 1.2em;
+   }
 
-#plugin_formcreator_kb_categories .category_active:not(.next):after,
-#plugin_formcreator_kb_categories .category_active ~ul .header:after {
-   position: absolute;
-   left: calc(100% - 45px);
-   top: 50%;
-   border: solid transparent;
-   content: " ";
-   height: 0;
-   width: 0;
-   border-right-color: #FFF;
-   border-width: 23px;
-   margin-top: -23px;
-   z-index: 20;
-}
+   a[data-category-id]:not([data-parent-category-id="0"])  {
+      margin-left: 20px;
+   }
 
-#plugin_formcreator_kb_categories .category_active:not(.next):before,
-#plugin_formcreator_kb_categories .category_active ~ul .header:before {
-   position: absolute;
-   left: calc(100% - 46px);
-   top: 50%;
-   border: solid transparent;
-   content: " ";
-   height: 0;
-   width: 0;
-   border-right-color: #DDD;
-   border-width: 23px;
-   margin-top: -23px;
-   z-index: 20;
-}
+   .category_active:not(.next),
+   .category_active ~ul .header {
+      border-bottom: 1px dashed #DDD;
+      position: relative;
+   }
 
-#plugin_formcreator_kb_categories h2 {
-   margin: 0;
-   padding: 0.83em 0;
-   border-bottom: 1px solid #DDD;
-}
+   .category_active:not(.next):after,
+   .category_active ~ul .header:after {
+      position: absolute;
+      left: calc(100% - 45px);
+      top: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-right-color: #FFF;
+      border-width: 23px;
+      margin-top: -23px;
+      z-index: 20;
+   }
 
-#plugin_formcreator_kb_categories a, #plugin_formcreator_kb_categories h2 {
-   font-size: 1.2em;
-}
+   .category_active:not(.next):before,
+   .category_active ~ul .header:before {
+      position: absolute;
+      left: calc(100% - 46px);
+      top: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-right-color: #DDD;
+      border-width: 23px;
+      margin-top: -23px;
+      z-index: 20;
+   }
 
-#plugin_formcreator_kb_categories h2 {
-   margin: 0;
-   padding: 14px;
-   color: #000;
-}
-#plugin_formcreator_kb_categories .header h2 {
-   text-align: left;
-}
-#plugin_formcreator_kb_categories .header .back {
-   right: 20px;
-   color: #000;
-   left: inherit;
-}
+   h2 {
+      margin: 0;
+      padding: 0.83em 0;
+      border-bottom: 1px solid #DDD;
+   }
 
-#plugin_formcreator_kb_categories li {
-   background-color: inherit;
+   a, h2 {
+      font-size: 1.2em;
+   }
+
+   h2 {
+      margin: 0;
+      padding: 14px;
+      color: #000;
+   }
+
+   .header h2 {
+      text-align: left;
+   }
+
+   .header .back {
+      right: 20px;
+      color: #000;
+      left: inherit;
+   }
+
+   li {
+      background-color: inherit;
+   }
 }
 
 .plugin_formcreator_card {
@@ -1105,11 +1105,13 @@ a.plugin_formcreator_formTile_title {
    cursor: pointer;
 }
 
-.plugin_formcreator_formTile  i.fa, .plugin_formcreator_formTile  i.fab, .plugin_formcreator_formTile  i.fas {
-   font-size: 2.5em;
-   margin-right: 10px;
-   float: left;
-   margin: 10px;
+.plugin_formcreator_formTile {
+    i.fa, i.fab, i.fas {
+      font-size: 2.5em;
+      margin-right: 10px;
+      float: left;
+      margin: 10px;
+   }
 }
 
 .plugin_formcreator_formTile_description {
@@ -1127,10 +1129,11 @@ a.plugin_formcreator_formTile_title {
    position: absolute;
    right: 0;
    top: 0;
-}
 
-#plugin_formcreator_lastForms > div {
-   margin-bottom: 10px;
+
+   > div {
+      margin-bottom: 10px;
+   }
 }
 
 #plugin_formcreator_wizard_right {
@@ -1145,10 +1148,10 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_wizard_forms {
    clear: both;
-}
 
-#plugin_formcreator_wizard_forms > div {
-    text-align: center;
+   > div {
+      text-align: center;
+  }
 }
 
 #plugin_formcreator_header {
@@ -1160,43 +1163,43 @@ a.plugin_formcreator_formTile_title {
    margin: 20px 25px 20px 6px;
    padding: 10px 0 10px 0;
    box-sizing: border-box;
-}
 
-#plugin_formcreator_searchBar input {
-   width: 100%;
-   font-size: 1.4em;
-   padding: 10px 0 10px 10px;
-   box-sizing: border-box;
-   height: 40px;
-   border: 0;
-   border-radius: 0;
-   background-color: inherit;
-   border: 1px solid #C2C2C2;
-   box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-   background-color: #F8F8F8;
-}
+   input {
+      width: 100%;
+      font-size: 1.4em;
+      padding: 10px 0 10px 10px;
+      box-sizing: border-box;
+      height: 40px;
+      border: 0;
+      border-radius: 0;
+      background-color: inherit;
+      border: 1px solid #C2C2C2;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      background-color: #F8F8F8;
+   }
 
-#plugin_formcreator_searchBar input ~ label {
-   position: absolute;
-   float: left;
-   display: block;
-   top: 34%;
-   text-align: center;
-   width: 100%;
-   font-size: 1.2em;
-   transition:
-      background 0.2s,
-      color 0.2s,
-      top 0.2s,
-      bottom 0.2s,
-      right 0.2s;
-   cursor: text;
-}
+   input ~ label {
+      position: absolute;
+      float: left;
+      display: block;
+      top: 34%;
+      text-align: center;
+      width: 100%;
+      font-size: 1.2em;
+      transition:
+         background 0.2s,
+         color 0.2s,
+         top 0.2s,
+         bottom 0.2s,
+         right 0.2s;
+      cursor: text;
+   }
 
-#plugin_formcreator_searchBar input:focus ~ label {
-   color: #3874BC;
-   top: 50%;
-   font-size: 1em;
+   input:focus ~ label {
+      color: #3874BC;
+      top: 50%;
+      font-size: 1em;
+   }
 }
 
 #plugin_formcreator_search_input_bar {
