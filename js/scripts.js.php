@@ -732,7 +732,7 @@ var plugin_formcreator = new function() {
             that.initialPosition[id]['x'],
             that.initialPosition[id]['y'],
             that.initialPosition[id]['width'],
-            that.initialPosition[id]['height'],
+            that.initialPosition[id]['height']
          );
       });
    };
