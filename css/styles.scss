@@ -156,106 +156,111 @@ input.submit_button:focus {
  */
 
 /* Sections */
-#plugin_formcreator_form.plugin_formcreator_form_design > ol {
-   list-style-type: none;
-   text-align: left;
-   padding-left: 0;
-}
+#plugin_formcreator_form.plugin_formcreator_form_design > {
+   ol {
+      list-style-type: none;
+      text-align: left;
+      padding-left: 0;
 
-#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section {
-   line-height: 32px;
-   background: #CCC;
-   padding-bottom: 1px;
-   display: flex;
-   flex-wrap: wrap;
-   align-items: center;
-}
+      > .plugin_formcreator_section {
+         line-height: 32px;
+         background: #CCC;
+         padding-bottom: 1px;
+         display: flex;
+         flex-wrap: wrap;
+         align-items: center;
 
-#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section > a {
-   font-size: larger;
-   overflow: hidden;
-   white-space: nowrap;
-   text-overflow: ellipsis;
-   flex: 1;
-   margin: 5px 0 0 5px;
-}
+         > a {
+            font-size: larger;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            flex: 1;
+            margin: 5px 0 0 5px;
+         }
+      }
+   }
 
-#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section:not(:first-of-type) {
-   margin-top: 20px;
-}
+   ol > .plugin_formcreator_section:not(:first-of-type) {
+      margin-top: 20px;
+   }
 
-#plugin_formcreator_form.plugin_formcreator_form_design > ol > .plugin_formcreator_section.not-sortable > a {
-   padding-left: 15px;
+   ol > .plugin_formcreator_section.not-sortable > a {
+      padding-left: 15px;
+   }
 }
 
 /* questions */
-#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack {
-   list-style-type: none;
-   text-align: left;
-   padding-left: 0;
-   position: relative;
-   min-height: 32px;
-   flex: 1 0 100%;
+#plugin_formcreator_form.plugin_formcreator_form_design {
+   .grid-stack {
+      list-style-type: none;
+      text-align: left;
+      padding-left: 0;
+      position: relative;
+      min-height: 32px;
+      flex: 1 0 100%;
+   }
+
+   .grid-stack-item {
+      line-height: 32px;
+   }
+
+   .grid-stack-item .grid-stack-item-content {
+      text-align: left;
+      padding-left: 16px;
+      padding-right: 10px;
+      margin: 0 2px;
+      background: #F0F0F0;
+      display: flex;
+      align-items: center;
+   }
+
+   .grid-stack-item .grid-stack-item-content a[data-field=name] {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+   }
+
+   .grid-stack-item.ui-draggable-dragging {
+      z-index: 100;
+   }
+
+   .grid-stack > .grid-stack-item > .ui-resizable-se {
+      right: 3px;
+      bottom: 1px;
+      background-image: url("../pics/corner-handle.png");
+      transform: inherit;
+      width: 16px;
+      height: 16px;
+   }
+
+   .plugin_formcreator_question {
+      background: #F0F0F0;
+      margin: 5px 2px;
+      padding-left: 15px;
+      flex: 1;
+   }
+
+   /* actions on sections or questions */
+   .form_control {
+      min-width: 20px;
+      min-height: 1px;
+      font-size: larger;
+   }
+
+   .form_control > i {
+      display: table-cell;
+      vertical-align: middle;
+      height: 32px;
+   }
 }
 
-#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item {
-   line-height: 32px;
-}
-
-#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content {
-   text-align: left;
-   padding-left: 16px;
-   padding-right: 10px;
-   margin: 0 2px;
-   background: #F0F0F0;
-   display: flex;
-   align-items: center;
-}
-
-#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item .grid-stack-item-content a[data-field=name] {
-   flex-grow: 1;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-}
-
-#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack-item.ui-draggable-dragging {
-   z-index: 100;
-}
-
-.form_section .grid-stack .grid-stack-item .grid-stack-item-content,
-.form_section .grid-stack .grid-stack-item .placeholder-content {
-	left: 0;
-	right: 0;
-}
-
-#plugin_formcreator_form.plugin_formcreator_form_design .grid-stack > .grid-stack-item > .ui-resizable-se {
-   right: 3px;
-   bottom: 1px;
-   background-image: url("../pics/corner-handle.png");
-   transform: inherit;
-   width: 16px;
-   height: 16px;
-}
-
-#plugin_formcreator_form.plugin_formcreator_form_design .plugin_formcreator_question {
-   background: #F0F0F0;
-   margin: 5px 2px;
-   padding-left: 15px;
-   flex: 1;
-}
-
-/* actions on sections or questions */
-#plugin_formcreator_form.plugin_formcreator_form_design .form_control {
-   min-width: 20px;
-   min-height: 1px;
-   font-size: larger;
-}
-
-#plugin_formcreator_form.plugin_formcreator_form_design .form_control > i {
-   display: table-cell;
-   vertical-align: middle;
-   height: 32px;
+.form_section .grid-stack .grid-stack-item {
+   .grid-stack-item-content, .placeholder-content {
+      left: 0;
+      right: 0;
+   }
 }
 
 /*
@@ -265,12 +270,12 @@ input.submit_button:focus {
    position: absolute;
    right: 3%;
    top: 10px;
-}
 
-.plugin_formcreator_filter_translations input {
-   padding-left: 20px !important;
-   width: 200px;
-   height: 28px;
+   input {
+      padding-left: 20px !important;
+      width: 200px;
+      height: 28px;
+   }
 }
 
 /*
@@ -282,10 +287,12 @@ input.submit_button:focus {
    padding-left: 0;
 }
 
-#plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]),
-#plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap {
+#plugin_formcreator_form.plugin_formcreator_form {
+
+   [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]), .plugin_formcreator_gap {
       vertical-align: top;
-   display: inline-block;
+      display: inline-block;
+   }
 }
 
 form#plugin_formcreator_form {
@@ -296,68 +303,84 @@ form#plugin_formcreator_form {
    line-height: 1.4em;
 }
 
-.form_answer h1,
-#plugin_formcreator_form > h1 {
+.form_answer h1 {
    text-align: center;
    font-weight: bold;
    font-size: 1.8em;
    margin: 0 0 15px;
+
 }
 
-#plugin_formcreator_form > .form_header {
-   padding: 10px 15px;
+#plugin_formcreator_form > {
+   h1 {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.8em;
+      margin: 0 0 15px;
+   }
+
+   .form_header {
+      padding: 10px 15px;
+   }
 }
 
 /*
  * Validation header
  */
-#plugin_formcreator_form > .refused_header,
-#plugin_formcreator_form > .accepted_header {
-   padding: 10px 15px;
-   background: #EED0D0; /*#EEE;*/
-   border-radius: 4px;
-   box-shadow: 2px 2px 2px #CCC;
-   margin: 0 0 10px;
-}
-#plugin_formcreator_form > .refused_header > div,
-#plugin_formcreator_form > .accepted_header > div {
-   padding: 3px 10px;
-   border-left: 5px solid #A00;
-   color: #C00;
-   font-style: italic;
-   font-weight: bold;
-   margin: 0 4px;
-}
-#plugin_formcreator_form > .accepted_header {
-   background: #C0DDC0; /*#EEE;*/
-}
-#plugin_formcreator_form > .accepted_header > div {
-   border-left: 5px solid #060;
-   color: #060;
-}
+#plugin_formcreator_form {
+   > .refused_header, .accepted_header {
+      padding: 10px 15px;
+      background: #EED0D0; /*#EEE;*/
+      border-radius: 4px;
+      box-shadow: 2px 2px 2px #CCC;
+      margin: 0 0 10px;
 
-#plugin_formcreator_form > .form_header,
-#plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"] {
-   background: #EEE;
-   /*box-shadow: 2px 2px 2px #CCC;*/
-   margin: 0 0 10px;
-}
+      > div {
+         padding: 3px 10px;
+         border-left: 5px solid #A00;
+         color: #C00;
+         font-style: italic;
+         font-weight: bold;
+         margin: 0 4px;
+      }
+   }
 
+   > .accepted_header {
+      background: #C0DDC0; /*#EEE;*/
 
-#plugin_formcreator_form > .form_header > h1 {
-   font-size: 1.2em;
-   margin: 0 0 10px;
-}
+      > div {
+         border-left: 5px solid #060;
+         color: #060;
+      }
+   }
 
-#plugin_formcreator_form [data-itemtype = "PluginFormcreatorSection"] > h2 {
-   background: #1B2F62;
-   color: #FFF;
-   margin:  0 0 10px;
-   padding: 5px 10px;
-   border-bottom: 1px solid #FFF;
-   box-shadow: 2px 2px 2px #CCC;
-   text-align: center;
-   line-height: 24px;
+   > .form_header {
+      background: #EEE;
+      /*box-shadow: 2px 2px 2px #CCC;*/
+      margin: 0 0 10px;
+
+      > h1 {
+         font-size: 1.2em;
+         margin: 0 0 10px;
+      }
+   }
+
+   [data-itemtype = "PluginFormcreatorSection"] {
+      background: #EEE;
+      /*box-shadow: 2px 2px 2px #CCC;*/
+      margin: 0 0 10px;
+
+      > h2 {
+         background: #1B2F62;
+         color: #FFF;
+         margin:  0 0 10px;
+         padding: 5px 10px;
+         border-bottom: 1px solid #FFF;
+         box-shadow: 2px 2px 2px #CCC;
+         text-align: center;
+         line-height: 24px;
+      }
+   }
 }
 
 #plugin_formcreator_form .form-group {
