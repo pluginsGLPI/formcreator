@@ -582,24 +582,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          })');
       }
 
-      if ($this->fields['status'] == self::STATUS_REFUSED) {
-         echo '<div class="refused_header">';
-         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
-         echo '</div>';
-      } else if ($this->fields['status'] == self::STATUS_ACCEPTED) {
-         echo '<div class="accepted_header">';
-         echo '<div>';
-         if (!empty($this->fields['comment'])) {
-            echo nl2br($this->fields['comment']);
-         } else if ($form->fields['validation_required']) {
-            echo __('Form accepted by validator.', 'formcreator');
-         } else {
-            echo __('Form successfully saved.', 'formcreator');
-         }
-         echo '</div>';
-         echo '</div>';
-      }
-
       //add requester info
       echo '<div class="form-group">';
       echo '<label for="requester">' . __('Requester', 'formcreator') . '</label>';
