@@ -147,12 +147,6 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $this->taskGitStack()
-         ->stopOnFail()
-         ->add('data/font-awesome_.php')
-         ->commit('build(form): update font awesome data')
-         ->run();
-
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release == 'release') {
@@ -177,6 +171,11 @@ class RoboFile extends RoboFilePlugin
          ->commit('docs(locales): update translations')
          ->run();
 
+      // Compile SCSS
+      $this->taskExec(__DIR__ . "/../../bin/console")
+      ->arg('glpi:plugin:formcreator:scss')
+      ->run();
+
       $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
@@ -198,10 +197,17 @@ class RoboFile extends RoboFilePlugin
 
       // Add extra files to workdir
       $success = copy(__DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
-
       if (!$success) {
          throw new RuntimeException("failed to generate Font Awesome resources");
       }
+      // Copy SCSS
+      $srcFile = __DIR__ . '/css_compiled/styles.min.css';
+      $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
+      $success = copy($srcFile, $dstFile);
+      if (!$success) {
+         throw new RuntimeException("failed to generate CSS resources");
+      }
+
       // Add composer dependencies
       $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
 
@@ -229,7 +235,7 @@ class RoboFile extends RoboFilePlugin
       // prepare banned items for regex
       $patterns = [];
       foreach ($this->getBannedFiles() as $bannedItem) {
-         $pattern = "#" . preg_quote("$bannedItem", "#") . "#";
+         $pattern = "#" . preg_quote("$bannedItem", "#") . "$#";
          $pattern = str_replace("\\?", ".", $pattern);
          $pattern = str_replace("\\*", ".*", $pattern);
          $patterns[] = $pattern;

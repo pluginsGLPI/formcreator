@@ -121,7 +121,7 @@ function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
-   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::gettCssFilename();
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
 
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
