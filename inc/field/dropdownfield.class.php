@@ -198,7 +198,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          'display'  => false,
          'comments' => false,
          'entity'   => $form->fields['entities_id'],
-         'entity_sons' => (bool) $form->isRecursive(),
+         //'entity_sons' => (bool) $form->isRecursive(),
          'displaywith' => ['id'],
       ];
 
