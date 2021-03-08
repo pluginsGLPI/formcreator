@@ -760,26 +760,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    margin-right: 275px;
 }
 
-#plugin_formcreator_wizard_categories {
-   width: 275px;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   float: left;
-}
-#plugin_formcreator_wizard_categories {
-   height: calc(100vh - 28px - 65px);
-   background-color: #f8f7f3;
-   border-right: 1px solid #DDD;
-   position: relative;
-}
-
-#plugin_formcreator_wizard_categories .slinky-menu {
-   position: absolute;
-   left: 0;
-   right: -1px;
-}
-
 /* SLINKY CSS */
 .slinky-menu {
    overflow: hidden;
@@ -862,6 +842,23 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 }
 
 #plugin_formcreator_wizard_categories {
+   width: 275px;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   float: left;
+   height: calc(100vh - 28px - 65px);
+   background-color: #f8f7f3;
+   border-right: 1px solid #DDD;
+   position: relative;
+
+   div > a {
+      display: inline-block;
+      width: 100%;
+      padding: 14px;
+      box-sizing: border-box;
+   }
+
    a {
       background-color: inherit;
       font-size: 1.2em;
@@ -908,17 +905,13 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       z-index: 20;
    }
 
-   h2 {
-      margin: 0;
-      padding: 0.83em 0;
-      border-bottom: 1px solid #DDD;
-   }
-
    a,  h2 {
       font-size: 1.2em;
    }
 
    h2 {
+      padding: 0.83em 0;
+      border-bottom: 1px solid #DDD;
       margin: 0;
       padding: 14px;
       color: #000;
@@ -934,6 +927,12 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    li {
       background-color: inherit;
+   }
+
+   .slinky-menu {
+      position: absolute;
+      left: 0;
+      right: -1px;
    }
 }
 /* KB page */
@@ -1243,26 +1242,40 @@ a.plugin_formcreator_formTile_title {
    right: 10px;
 }
 
-#plugin_formcreator_wizard_categories div > a {
-   display: inline-block;
-   width: 100%;
-   padding: 14px;
-   box-sizing: border-box;
-}
+#plugin_formcreator_lastForms {
+   .plugin_formcreator_card {
+      .plugin_formcreator_answer {
+         margin: 3px;
+         list-style: none;
+         padding: 0;
+         text-align: left;
+         border-bottom: 1px solid rgba(0,0,0,.1);
+      }
 
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer {
-   margin: 3px;
-   list-style: none;
-   padding: 0;
-   text-align: left;
-   border-bottom: 1px solid rgba(0,0,0,.1);
-}
+      .plugin_formcreator_answer a {
+         margin: 3px;
+         background-repeat: no-repeat;
+         background-position: left center;
+         padding: 11px 11px 11px 20px;
+      }
 
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer a {
-   margin: 3px;
-   background-repeat: no-repeat;
-   background-position: left center;
-   padding: 11px 11px 11px 20px;
+      .plugin_formcreator_waiting {
+         background-image: url("../pics/waiting.png");
+      }
+
+      .plugin_formcreator_refused {
+         background-image: url("../pics/refused.png");
+      }
+
+      .plugin_formcreator_accepted {
+         background-image: url("../pics/accepted.png");
+      }
+
+      > div {
+         border-bottom: 1px solid rgba(0,0,0,.1);
+         padding: 11px;
+      }
+   }
 }
 
 .plugin_formcreator_date {
@@ -1272,54 +1285,35 @@ a.plugin_formcreator_formTile_title {
    font-style: italic;
 }
 
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_waiting {
-   background-image: url("../pics/waiting.png");
-}
-
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_refused {
-   background-image: url("../pics/refused.png");
-}
-
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_accepted {
-   background-image: url("../pics/accepted.png");
-}
 
 .plugin_formcreator_heading {
    font-weight: bold;
 }
 
-#plugin_formcreator_lastForms .plugin_formcreator_card > div {
-   border-bottom: 1px solid rgba(0,0,0,.1);
-   padding: 11px;
+.plugin_formcreator_sort:hover {
+   opacity: 1;
+   color: #3874BC;
+
+   .radios input[type = radio].new_radio + label:before {
+      background-color: #3874BC;
+      border: 2px solid #3874BC;
+   }
 }
 
 .plugin_formcreator_sort {
    float: left;
    opacity: 0.4;
-}
-.plugin_formcreator_sort:hover {
-   opacity: 1;
-   color: #3874BC;
-}
-.plugin_formcreator_sort:hover .radios input[type = radio].new_radio + label:before {
-   background-color: #3874BC;
-   border: 2px solid #3874BC;
-}
 
+   input {
+      display: inline-block;
+      text-align: left;
+      margin: 0 20px;
+   }
 
-.plugin_formcreator_sort input {
-   display: inline-block;
-   text-align: left;
-   margin: 0 20px;
-}
-.plugin_formcreator_sort .radios input[type = radio].new_radio + label {
-   display: inline-block;
-   margin-right: 10px;
-}
-.plugin_formcreator_container .plugin_formcreator_leftHeader#header {
-   float: left;
-   height: 100%;
-   position: relative;
+   .radios input[type = radio].new_radio + label {
+      display: inline-block;
+      margin-right: 10px;
+   }
 }
 
 #plugin_formcreator_serviceCatalog #header_top {
@@ -1603,6 +1597,11 @@ span.fc_list_icon {
    left: 0;
    bottom: 0;
    margin-bottom: 20px;
+   .plugin_formcreator_leftHeader#header {
+      float: left;
+      height: 100%;
+      position: relative;
+   }
 }
 
 .plugin_formcreator_page .navigationheader .tab_cadre_pager {
@@ -1628,21 +1627,28 @@ span.fc_list_icon {
    background-color: #CCC;
 }
 
-.form_header ul {
-   list-style-type: disc;
-   margin: inherit;
-   padding: inherit;
-   padding-left: 40px;
+.form_header {
+   ul {
+      list-style-type: disc;
+      margin: inherit;
+      padding: inherit;
+      padding-left: 40px;
+   }
 }
 
-.form_section ul {
-   list-style-type: disc;
-   margin: inherit;
-   padding: inherit;
-   padding-left: 40px;
+.form_section {
+   ul {
+      list-style-type: disc;
+      margin: inherit;
+      padding: inherit;
+      padding-left: 40px;
+   }
 }
 
-.form_header ul ul, .form_section ul ul, .form_header ol ul, .form_section ol ul {
+.form_header ul ul,
+.form_header ol ul,
+.form_section ul ul,
+.form_section ol ul {
    list-style-type: circle;
 }
 

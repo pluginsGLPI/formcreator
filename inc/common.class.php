@@ -564,7 +564,7 @@ JAVASCRIPT;
     *
     * @return string
     */
-   public static function gettCssFilename() : string {
+   public static function getCssFilename() : string {
       return 'css_compiled/styles.min.css';
    }
 }
