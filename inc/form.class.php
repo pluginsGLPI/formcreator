@@ -814,7 +814,7 @@ PluginFormcreatorConditionnableInterface
       $sortSettings = PluginFormcreatorEntityConfig::getEnumSort();
       echo '<div class="plugin_formcreator_sort">';
       echo '<span class="radios">';
-      $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', $_SESSION['glpiactive_entity']);
+      $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', Session::getActiveEntity());
       $selected = $sortOrder == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.'/>';
       echo '<label for="plugin_formcreator_mostPopular">'.$sortSettings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] .'</label>';
