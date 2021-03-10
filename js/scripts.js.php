@@ -37,7 +37,6 @@ header('Content-Type: text/javascript');
 var modalWindow;
 var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
-var sortByName = false;
 var tiles = [];
 var serviceCatalogEnabled = false;
 var slinkyCategories;
@@ -118,12 +117,10 @@ $(function() {
 
       // Setup events
       $('.plugin_formcreator_sort [value=mostPopularSort]').click(function () {
-         sortByName = false;
          showTiles(tiles);
       });
 
       $('.plugin_formcreator_sort [value=alphabeticSort]').click(function () {
-         sortByName = true;
          showTiles(tiles);
       });
 
@@ -140,12 +137,10 @@ $(function() {
 
       // Setup events
       $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
-         sortByName = false;
          showTiles(tiles);
       });
 
       $('.plugin_formcreator_sort input[value=alphabeticSort]').click(function () {
-         sortByName = true;
          showTiles(tiles);
       });
 
@@ -359,6 +354,7 @@ function sortFormAndFaqItems(items, byName) {
 }
 
 function showTiles(tiles, defaultForms) {
+   var sortByName = $('#plugin_formcreator_alphabetic').prop('checked')
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
