@@ -66,14 +66,6 @@ function getTimer(object) {
    }
 }
 
-// === MENU ===
-var link = '';
-link += '<li id="menu7">';
-link += '<a href="' + formcreatorRootDoc + '/front/formlist.php" class="itemP">';
-link += "<?php echo Toolbox::addslashes_deep(_n('Form', 'Forms', 2, 'formcreator')); ?>";
-link += '</a>';
-link += '</li>';
-
 $(function() {
    var target = $('body');
    modalWindow = $("<div></div>").dialog({
@@ -107,13 +99,6 @@ $(function() {
          e.stopImmediatePropagation();
       }
    });
-
-   <?php
-   if (Session::getCurrentInterface() == 'helpdesk'
-       && PluginFormcreatorForm::countAvailableForm() > 0) {
-      echo "$('#c_menu #menu1:first-child').after(link);";
-   }
-   ?>
 
    if (location.pathname.indexOf("helpdesk.public.php") != -1) {
 
