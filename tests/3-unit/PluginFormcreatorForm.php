@@ -1292,7 +1292,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ];
    }
 
-   /*
+   /**
     * @dataProvider providerCheckImportVersion
     *
     * @param string $version
