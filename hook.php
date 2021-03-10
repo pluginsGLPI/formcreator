@@ -486,8 +486,30 @@ function plugin_formcreator_dynamicReport($params) {
 
 
 function plugin_formcreator_redefine_menus($menus) {
-   if (isset($menus['tickets'])) {
-      unset($menus['tickets']);
+   if (!Session::getCurrentInterface() == "helpdesk") {
+      return $menus;
+   }
+
+   if (PluginFormcreatorEntityconfig::getUsedConfig(
+         'replace_helpdesk',
+         $_SESSION['glpiactive_entity']
+   )) {
+      if (isset($menus['tickets'])) {
+         unset($menus['tickets']);
+      }
+   } else {
+      $newMenus = [];
+      foreach ($menus as $key => $menu) {
+         $newMenus[$key] = $menu;
+         if ($key == 'create_ticket') {
+            $newMenus['forms'] = [
+               'default' => '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php',
+               'title'   => _n('Form', 'Forms', 2, 'formcreator'),
+               'content' => [0 => true]
+            ];
+         }
+      }
+      $menus = $newMenus;
    }
 
    return $menus;
