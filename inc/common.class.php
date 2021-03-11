@@ -267,6 +267,7 @@ JAVASCRIPT;
          'timeline_position ASC'
       ], 1);
       $user = 0;
+      $validationPercent = $item->fields['validation_percent'];
       $ticketValidationCount = count($ticketValidations);
       if ($ticketValidationCount) {
          $row = array_shift($ticketValidations);
@@ -289,7 +290,7 @@ JAVASCRIPT;
          }
       }
 
-      return ['status' => $status, 'user' => $user];
+      return ['status' => $status, 'user' => $user, 'validation_percent' => $validationPercent];
    }
 
    /**

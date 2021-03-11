@@ -47,6 +47,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       $table = 'glpi_plugin_formcreator_issues';
       $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp'. ' NOT NULL DEFAULT CURRENT_TIMESTAMP');
       $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp'. ' NOT NULL DEFAULT CURRENT_TIMESTAMP');
+      $this->addValidationPercent();
 
       $this->changeDropdownTreeSettings();
 
@@ -88,5 +89,11 @@ class PluginFormcreatorUpgradeTo2_12 {
          $newValues = json_encode($newValues);
          $DB->update($table, ['values' => $newValues], ['id' => $row['id']]);
       }
+   }
+
+   public function addValidationPercent() {
+      $table = 'glpi_plugin_formcreator_issues';
+      $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'groups_id_validator']);
+      $this->migration->addPostQuery("UPDATE `$table` as `i` INNER JOIN `glpi_tickets` as `t` ON (`i`.`original_id` = `t`.`id` AND `i`.`sub_itemtype` = 'Ticket') SET `i`.`validation_percent`=`t`.`validation_percent`");
    }
 }
