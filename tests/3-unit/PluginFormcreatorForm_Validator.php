@@ -32,6 +32,36 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorForm_Validator extends CommonTestCase {
+   public function providerGetTypeName() {
+      return [
+         [
+            0,
+            'Validators'
+         ],
+         [
+            1,
+            'Validator'
+         ],
+         [
+            2,
+            'Validators'
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetTypeName
+    *
+    * @param integer $nb
+    * @param string $expected
+    * @return void
+    */
+   public function testGetTypeName($nb, $expected) {
+      $instance = new $this->newTestedInstance();
+      $output = $instance->getTypeName($nb);
+      $this->string($output)->isEqualTo($expected);
+   }
+
    public function testPrepareInputForAdd() {
       $instance = $this->newTestedInstance();
       $output = $instance->prepareInputForAdd([
