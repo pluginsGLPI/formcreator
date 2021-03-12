@@ -537,7 +537,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '<div>';
          if (!empty($this->fields['comment'])) {
             echo nl2br($this->fields['comment']);
-         } else if ($form->fields['validation_required']) {
+         } else if ($form->validationRequired()) {
             echo __('Form accepted by validator.', 'formcreator');
          } else {
             echo __('Form successfully saved.', 'formcreator');
@@ -716,21 +716,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $status = self::STATUS_ACCEPTED;
       $groupIdValidator = 0;
       $usersIdValidator = 0;
-      if ($form->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
+      if ($form->validationRequired()) {
          $status = self::STATUS_WAITING;
          if (!isset($input['formcreator_validator'])) {
             // Should trigger an error because no valdiator is slected
-         } else {
-            $validatorItem = explode('_', $input['formcreator_validator']);
-            switch ($validatorItem[0]) {
-               case User::class:
-                  $usersIdValidator = (int) $validatorItem[1];
-                  break;
-               case Group::class:
-                  $groupIdValidator = (int) $validatorItem[1];
-                  break;
-            }
+            Session::addMessageAfterRedirect(__('No validator selected.', 'formcreator'));
+            return false;
          }
+         $validatorItem = explode('_', $input['formcreator_validator']);
+         switch ($validatorItem[0]) {
+            case User::class:
+               $usersIdValidator = (int) $validatorItem[1];
+               break;
+            case Group::class:
+               $groupIdValidator = (int) $validatorItem[1];
+               break;
+         }
+         $this->copyValidatorsToValidation();
       }
 
       $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
@@ -1205,7 +1207,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       if ($checkValidator) {
          // Check required_validator
-         if ($form->fields['validation_required'] && empty($input['formcreator_validator'])) {
+         if ($form->validationRequired() && empty($input['formcreator_validator'])) {
             Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
             $this->isAnswersValid = false;
          }
@@ -1235,7 +1237,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          case self::STATUS_ACCEPTED :
             // Notify the requester
             $form = $this->getForm();
-            if ($form->fields['validation_required'] != PluginFormcreatorForm::VALIDATION_NONE) {
+            if ($form->validationRequired()) {
                NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
             } else {
                NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
@@ -1472,9 +1474,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $formAnswerTable = self::getTable();
+      $formAnswerFk = self::getForeignKeyField();
       $formTable = PluginFormcreatorForm::getTable();
-      $validatorTable = PluginFormcreatorForm_Validator::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $validationTable = PluginFormcreatorFormAnswerValidation::getTable();
       $request = [
          'SELECT' => [
             $formTable => ['name'],
@@ -1488,28 +1490,27 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
                ]
             ],
-            $validatorTable => [
+            $validationTable => [
                'FKEY' => [
-                  $validatorTable => $formFk,
-                  $formTable => 'id'
-               ]
-            ]
+                  $validationTable => $formAnswerFk,
+                  $formAnswerTable => 'id',
+                  'AND' => ['level' => 1]
+               ],
+            ],
          ],
          'WHERE' => [
             'OR' => [
                [
                   'AND' => [
-                     "$formTable.validation_required" => 1,
-                     "$validatorTable.itemtype" => User::class,
-                     "$validatorTable.items_id" => $userId,
+                     "$validationTable.itemtype" => User::class,
+                     "$validationTable.items_id" => $userId,
                      "$formAnswerTable.users_id_validator" => $userId
                   ]
                ],
                [
                   'AND' => [
-                     "$formTable.validation_required" => 2,
-                     "$validatorTable.itemtype" => Group::class,
-                     "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
+                     "$validationTable.itemtype" => Group::class,
+                     "$validationTable.items_id" => $groupIdList + ['NULL', '0', ''],
                      "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
                   ]
                ]
@@ -1588,5 +1589,36 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       return PluginFormcreatorFields::isVisible($this->questionFields[$id]->getQuestion(), $this->questionFields);
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @return bool
+    */
+   private function copyValidatorsToValidation(): bool {
+      global $DB;
+
+      $result = $DB->request([
+         'FROM' => PluginFormcreatorForm_Validator::getTable(),
+         'WHERE' => [
+            PluginFormcreatorForm::getTable() . '.id' => $this->fields[PluginFormcreatorForm::getForeignKeyField()]
+         ]
+      ]);
+      foreach ($result as $row) {
+         $validation = new PluginFormcreatorFormAnswerValidation();
+         $newId = $validation->add([
+            self::getForeignKeyField() => $this->getID(),
+            'itemtype' => $row['itemtype'],
+            'items_id' => $row['items_id'],
+            'level'    => $row['level'],
+            'status'   => PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING
+         ]);
+
+         if ($newId === false) {
+            return false;
+         }
+      }
+      return true;
    }
 }

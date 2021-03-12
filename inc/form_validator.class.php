@@ -56,7 +56,7 @@ PluginFormcreatorExportableInterface
    const VALIDATION_USER  = 1;
    const VALIDATION_GROUP = 2;
 
-   // STATUS
+   // status
    const VALIDATION_STATUS_NONE      = 1; // none
    const VALIDATION_STATUS_WAITING   = 2; // waiting
    const VALIDATION_STATUS_ACCEPTED  = 3; // accepted

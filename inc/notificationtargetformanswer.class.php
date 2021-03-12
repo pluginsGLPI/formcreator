@@ -99,6 +99,8 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
    }
 
    public function addSpecificTargets($data, $options) {
+      global $DB;
+
       switch ($data['items_id']) {
          case self::AUTHOR :
             $this->addUserByField('requester_id', true);
@@ -106,9 +108,10 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
          case self::APPROVER :
             $form = new PluginFormcreatorForm();
             $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
-            if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER) {
+            if ($this->obj->fields['users_id_validator'] > 0) {
                $this->addUserByField('users_id_validator', true);
-            } else if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
+            }
+            if ($this->obj->fields['groups_id_validator'] > 0) {
                $this->addForGroup(0, $this->obj->fields['groups_id_validator']);
             }
             break;

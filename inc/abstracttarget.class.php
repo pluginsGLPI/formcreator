@@ -600,11 +600,6 @@ PluginFormcreatorTranslatableInterface
          ]
       ]);
       foreach ($rows as $actor) {
-         // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR && !$form->fields['validation_required']) {
-            continue;
-         }
-
          switch ($actor['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
                $userIds = [$formanswer->fields['requester_id']];
