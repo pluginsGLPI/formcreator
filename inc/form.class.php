@@ -1171,7 +1171,7 @@ PluginFormcreatorTranslatableInterface
       unset($_SESSION['formcreator']['data']);
 
       // Show validator selector
-      if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
+      if ($this->validationRequired()) {
          echo PluginFormcreatorForm_Validator::dropdownValidator($this);
       }
 
@@ -1308,53 +1308,6 @@ PluginFormcreatorTranslatableInterface
       foreach ($associated as $itemtype) {
          $item = new $itemtype();
          $item->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
-      }
-   }
-
-   /**
-    * Save form validators
-    *
-    * @return void
-    */
-   private function updateValidators() : void {
-      if (!isset($this->input['validation_required'])) {
-         return;
-      }
-      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_NONE) {
-         return;
-      }
-      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER
-         && empty($this->input['_validator_users'])) {
-         return;
-      }
-      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP
-         && empty($this->input['_validator_groups'])) {
-         return;
-      }
-
-      $form_validator = new PluginFormcreatorForm_Validator();
-      $form_validator->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
-
-      switch ($this->input['validation_required']) {
-         case PluginFormcreatorForm_Validator::VALIDATION_USER:
-            $validators = $this->input['_validator_users'];
-            $validatorItemtype = User::class;
-            break;
-         case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
-            $validators = $this->input['_validator_groups'];
-            $validatorItemtype = Group::class;
-            break;
-      }
-      if (!is_array($validators)) {
-         $validators = [$validators];
-      }
-      foreach ($validators as $itemId) {
-         $form_validator = new PluginFormcreatorForm_Validator();
-         $form_validator->add([
-            'plugin_formcreator_forms_id' => $this->getID(),
-            'itemtype'                    => $validatorItemtype,
-            'items_id'                    => $itemId
-         ]);
       }
    }
 
@@ -2560,5 +2513,25 @@ PluginFormcreatorTranslatableInterface
          $availableLanguages = [false];
       }
       return \Locale::lookup($availableLanguages, $_SESSION['glpilanguage'], false, $defaultLanguage);
+   }
+
+   /**
+    * Is validation required for the form ?
+    *
+    * @return bool true if valdiation required, false otherwise
+    */
+   public function validationRequired(): bool {
+      global $DB;
+
+      $count = $DB->request([
+         'COUNT' => 'c',
+         'FROM' => PluginFormcreatorForm_Validator::getTable(),
+         'WHERE' => [
+            self::getForeignKeyField() => $this->getID(),
+            'level' => 1,
+         ]
+      ])->next();
+
+      return ($count !== null) ? ($count['c'] > 0) : false;
    }
 }
