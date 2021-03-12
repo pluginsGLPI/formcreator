@@ -422,33 +422,48 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    /**
     * Can the current user validate the form ?
+    * @return bool
     */
-   public function canValidate() {
+   public function canValidate(): bool {
       if (!PluginFormcreatorCommon::canValidate()) {
          return false;
       }
 
-      $form = $this->getForm();
-      switch ($form->fields['validation_required']) {
-         case PluginFormcreatorForm_Validator::VALIDATION_USER:
-            return (Session::getLoginUserID() == $this->fields['users_id_validator']);
-            break;
+      $formAnswerValidation = new PluginFormcreatorFormAnswerValidation();
+      $rows = $formAnswerValidation->find(
+         [
+            self::getForeignKeyField() => $this->getID(),
+            'level' => PluginFormcreatorFormAnswerValidation::getCurrentValidationLevel($this),
+         ],
+         ['itemtype ASC']
+      );
 
-         case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
-            // Check the user is member of at least one validator group for the form answers
-            $condition = [
-               'glpi_groups.id' => new QuerySubQuery([
-                  'SELECT' => ['items_id'],
-                  'FROM'   => PluginFormcreatorForm_Validator::getTable(),
-                  'WHERE'  => [
-                     'itemtype'                    => Group::class,
-                     'plugin_formcreator_forms_id' => $form->getID()
-                  ]
-               ])
-            ];
-            $groupList = Group_User::getUserGroups(Session::getLoginUserID(), $condition);
-            return (count($groupList) > 0);
-            break;
+      if (count($rows) > 0) {
+         $currentUser = Session::getLoginUserID();
+         $validatorGroups = [];
+         foreach ($rows as $row) {
+            switch ($row['itemtype']) {
+               case Group::class:
+                  $validatorGroups[] = $row['items_is'];
+                  break;
+               case User::class:
+               // check if the user is a validator
+               if ($currentUser == $row['items_id']) {
+                     // Current user found in the curent valdiation level
+                     return true;
+                  }
+                  break;
+            }
+         }
+
+         // Check if the user is a member of validator groups for the current validation level
+         $groupList = Group_User::getUserGroups($currentUser);
+         foreach ($groupList as $group) {
+            if (in_array($group, $validatorGroups)) {
+               // one of the groups of the user is a validator group
+               return true;
+            }
+         }
       }
 
       return false;
@@ -514,7 +529,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // Validation status and comment
       if ($this->fields['status'] == self::STATUS_REFUSED) {
          echo '<div class="refused_header">';
-         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
+         echo '<div>' . nl2br($this->fields['comment']);
+         echo '</div>';
          echo '</div>';
       } else if ($this->fields['status'] == self::STATUS_ACCEPTED) {
          echo '<div class="accepted_header">';
@@ -606,8 +622,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
          echo '</div>';
 
-         // Display validation form
       } else if (($this->fields['status'] == self::STATUS_WAITING) && $this->canValidate()) {
+         // Display validation form
          echo '<div class="form-group required line1">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
          Html::textarea([
@@ -700,20 +716,21 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $status = self::STATUS_ACCEPTED;
       $groupIdValidator = 0;
       $usersIdValidator = 0;
-      switch ($form->fields['validation_required']) {
-         case PluginFormcreatorForm::VALIDATION_USER:
-            $status = self::STATUS_WAITING;
-            $usersIdValidator = isset($input['formcreator_validator'])
-                              ? $input['formcreator_validator']
-                              : 0;
-            break;
-
-         case PluginFormcreatorForm::VALIDATION_GROUP:
-            $status = self::STATUS_WAITING;
-            $groupIdValidator = isset($input['formcreator_validator'])
-                              ? $input['formcreator_validator']
-                              : 0;
-            break;
+      if ($form->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
+         $status = self::STATUS_WAITING;
+         if (!isset($input['formcreator_validator'])) {
+            // Should trigger an error because no valdiator is slected
+         } else {
+            $validatorItem = explode('_', $input['formcreator_validator']);
+            switch ($validatorItem[0]) {
+               case User::class:
+                  $usersIdValidator = (int) $validatorItem[1];
+                  break;
+               case Group::class:
+                  $groupIdValidator = (int) $validatorItem[1];
+                  break;
+            }
+         }
       }
 
       $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
@@ -743,20 +760,28 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $skipValidation = false;
       if (isset($input['refuse_formanswer']) || isset($input['accept_formanswer'])) {
          // The formanswer is being acepted or refused
+
+         // Check the user haas right to validate the form answer
          if (!$this->canValidate()) {
             Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
             return false;
          }
-         $input['status'] = self::STATUS_ACCEPTED;
-         if (isset($input['refuse_formanswer'])) {
-            $input['status'] = self::STATUS_REFUSED;
-            // Update is restricted to a subset of fields
-            $input = [
-               'id'      => $input['id'],
-               'status'  => $input['status'],
-               'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
-            ];
-            $skipValidation = true;
+
+         $newStatus = isset($input['refuse_formanswer'])
+            ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED
+            : PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED;
+         PluginFormcreatorFormAnswerValidation::updateValidationStatusForLevel($this, $newStatus, $input['comment']);
+
+         switch (PluginFormcreatorFormAnswerValidation::computeValidationStatus($this)) {
+            case PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED:
+               $input['status'] = self::STATUS_ACCEPTED;
+               break;
+            case PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED:
+               $input['status'] = self::STATUS_REFUSED;
+               break;
+            default:
+               $input['status'] = self::STATUS_WAITING;
+               break;
          }
       } else {
          // The form answer is being updated
