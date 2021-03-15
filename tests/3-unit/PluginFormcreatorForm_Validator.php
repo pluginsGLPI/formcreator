@@ -80,12 +80,18 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
    public function testExport() {
       $user = new \User;
       $user->getFromDBbyName('glpi');
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users' => [
-            $user->getID(),
-         ],
+
+      $form = $this->getForm();
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => $user::getType(),
+         'items_id' => $user->getID(),
+         'level'    => 1,
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $instance = $this->newTestedInstance();
 
@@ -107,6 +113,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       // Test the exported data
       $fieldsWithoutID = [
          'itemtype',
+         'level',
       ];
       $extraFields = [
          '_item',
@@ -117,6 +124,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->array($output)->isEqualTo([
          'itemtype' => \User::class,
          '_item' => $user->fields['name'],
+         'level' => 1,
          'uuid'  => $instance->fields['uuid'],
       ]);
 
@@ -128,6 +136,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->array($output)->isEqualTo([
          'itemtype' => \User::class,
          '_item' => $user->fields['name'],
+         'level' => 1,
          'id'  => $instance->fields['id'],
       ]);
    }
@@ -137,6 +146,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $input = [
          'itemtype' => \User::class,
          '_item' => 'normal',
+         'level' => 1,
          'uuid' => plugin_formcreator_getUuid(),
       ];
       $form = $this->getForm();

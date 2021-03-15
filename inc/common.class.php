@@ -267,7 +267,9 @@ JAVASCRIPT;
          'timeline_position ASC'
       ], 1);
       $user = 0;
-      $validationPercent = $item->fields['validation_percent'];
+      $reloadedItem = new Ticket();
+      $reloadedItem->getFromDB($item->getID());
+      $validationPercent = $reloadedItem->fields['validation_percent'];
       $ticketValidationCount = count($ticketValidations);
       if ($ticketValidationCount) {
          $row = array_shift($ticketValidations);

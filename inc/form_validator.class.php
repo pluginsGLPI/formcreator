@@ -121,14 +121,37 @@ PluginFormcreatorExportableInterface
    }
 
    public function showForForm(PluginFormcreatorForm $item, $options = []) {
-      global $DB;
-
       $formId = $item->getID();
       $rand = mt_rand();
 
       $canEdit = Session::haveRight('entity', UPDATE);
 
       if ($canEdit) {
+         // Global validation settings
+         echo "<form method='post' action='".self::getFormURL()."'>";
+         echo "<div class='spaced'><table class='tab_cadre_fixe'>";
+         echo "<tr class='tab_bg_1'><th colspan='3'>";
+         echo __('General settings', 'formcreator');
+         echo "</th>";
+         echo "<tr><td width='20%'>";
+         echo __('Minimum validation required', 'formcreator');
+         echo "</td><td>";
+         echo Dropdown::showNumber('validation_percent', [
+            'min'     => 0,
+            'max'     => 100,
+            'step'    => 50,
+            'value'   => $item->fields['validation_percent'],
+            'display' => false,
+         ]);
+         echo "</td><td width='20%'>";
+         echo "<input type='hidden' name='plugin_formcreator_forms_id' value='$formId'>";
+         echo "<input type='submit' name='set_validation_percent' value=\""._sx('button', 'Save')."\"
+                class='submit'>";
+         echo "</td>";
+         echo "</tr>";
+         echo "</table></div>";
+         Html::closeForm();
+
          echo "<form method='post' action='".self::getFormURL()."'>";
          echo "<div class='spaced'><table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_1'><td class='center'>";
@@ -142,7 +165,8 @@ PluginFormcreatorExportableInterface
 
          echo "<tr class='tab_bg_1'><td class='center'>";
          echo "<input type='hidden' name='plugin_formcreator_forms_id' value='$formId'>";
-         echo Dropdown::showNumber('level', ['display' => false, 'min' => '1', 'max' => '5']);
+
+         echo self::dropdownLevel($item);
          echo "</td><td width='20%'>";
          echo $this->dropdownValidatorUser($item);
          echo "</td><td width='20%'>";
@@ -152,7 +176,7 @@ PluginFormcreatorExportableInterface
                 class='submit'>";
          echo "</td>";
          echo "</tr>";
-         echo "</table></div>\n";
+         echo "</table></div>";
          Html::closeForm();
       }
 
@@ -425,17 +449,11 @@ PluginFormcreatorExportableInterface
          $validatorUsers[$user['id']] = $user['name'];
       }
 
-      // get curently selected validator users
-      $selectedValidatorUsers = [];
-      foreach ($this->getValidatorsForForm($form, User::class) as $user) {
-         $selectedValidatorUsers[$user->getID()] = $user->getID();
-      }
-
       return Dropdown::showFromArray(
          '_validator_users',
          $validatorUsers, [
             'multiple' => true,
-            'values' => $selectedValidatorUsers,
+            'values' => [],
             'display' => false,
          ]
       );
@@ -524,17 +542,11 @@ PluginFormcreatorExportableInterface
          $validatorGroups[$group['id']] = $group['name'];
       }
 
-      // get curently selected validator groups
-      $selectecValidatorGroups = [];
-      foreach ($this->getValidatorsForForm($form, Group::class) as $group) {
-         $selectecValidatorGroups[$group->getID()] = $group->getID();
-      }
-
       return Dropdown::showFromArray(
          '_validator_groups',
          $validatorGroups, [
             'multiple' => true,
-            'values' => $selectecValidatorGroups,
+            'values' => [],
             'display' => false,
          ]
       );
@@ -586,7 +598,7 @@ PluginFormcreatorExportableInterface
     * @return string
     *
     */
-   public static function dropdownValidator(PluginFormcreatorForm $form) {
+   public static function dropdownValidator(PluginFormcreatorForm $form): string {
       $totalCount = 0;
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $formValidator = new self();
@@ -624,8 +636,7 @@ PluginFormcreatorExportableInterface
 
       $out = '';
       if ($totalCount == 1) {
-         $out .= Html::hidden('validator_itemtype', ['value' => $lastValidatorItemtype]);
-         $out .= Html::hidden('formcreator_validator', ['value' => $lastValidatorId]);
+         $out .= Html::hidden('formcreator_validator', ['value' => "${lastValidatorItemtype}_${lastValidatorId}"]);
          return $out;
       }
 
@@ -634,6 +645,42 @@ PluginFormcreatorExportableInterface
       $out .= '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
       $out .= Dropdown::showFromArray('formcreator_validator', $items, ['display' => false]);
       $out .= '</div>';
+      return $out;
+   }
+
+   /**
+    * Get HTML of dropdown to select a validation level
+    *
+    * @param PluginFormcreatorForm $form
+    * @return string
+    */
+   public static function dropdownLevel(PluginFormcreatorForm $form): string {
+      global $DB;
+      $out = '';
+
+      // Find current maximum valdiation level
+      $formTable = PluginFormcreatorForm::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $formValidatorTable = self::getTable();
+      $maxLevel = $DB->request([
+         'SELECT' => ['MAX' => 'level as m'],
+         'FROM' => $formValidatorTable,
+         'INNER JOIN' => [
+            $formTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formValidatorTable => $formFk,
+               ],
+            ],
+         ],
+         'WHERE' => [
+            $formFk => $form->getID(),
+         ]
+      ])->next();
+      $maxLevel = $maxLevel === null ? 0 : $maxLevel['m'];
+      $maxLevel = $maxLevel > 4 ? 4 : $maxLevel;
+
+      $out .= Dropdown::showNumber('level', ['display' => false, 'min' => '1', 'max' => $maxLevel + 1]);
       return $out;
    }
 }

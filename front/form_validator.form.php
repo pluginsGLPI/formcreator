@@ -49,4 +49,10 @@ if (isset($_POST['add'])) {
    Session::checkRight('entity', UPDATE);
    $formValidator->addMultipleItems($_POST);
    Html::redirect($form->getFormURLWithID($formId));
+} else if (isset($_POST['set_validation_percent'])) {
+   $form->update([
+      'id' => $formId,
+      'validation_percent' => $_POST['validation_percent'],
+   ]);
+   Html::redirect($form->getFormURLWithID($formId));
 }

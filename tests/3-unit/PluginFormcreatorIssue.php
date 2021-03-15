@@ -216,15 +216,20 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetSyncIssuesRequest_formanswerUnderValidation() {
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [4] // tech
+      $form = $this->getForm();
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => \User::getType(),
+         'items_id' => 4, // Tech
+         'level' => 1,
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => 4 // Tech
+         'formcreator_validator'       => \User::getType() . '_' . '4' // Tech
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
