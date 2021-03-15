@@ -493,7 +493,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
                'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
-               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_validator' => \User::getType() . '_' . '2', // Glpi user ID
                'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
             ]),
             'expected'   => \Ticket::INCIDENT_TYPE,
@@ -505,7 +505,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
                'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
-               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_validator' => \User::getType() . '_' . '2', // Glpi user ID
                'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
             ]),
             'expected'   => \Ticket::INCIDENT_TYPE,
@@ -517,7 +517,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
                'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
-               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_validator' => \User::getType() . '_' . '2', // Glpi user ID
                'formcreator_field_' . $question2->getID() => (string) \Ticket::DEMAND_TYPE,
             ]),
             'expected'   => \Ticket::DEMAND_TYPE,
@@ -529,7 +529,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
                'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
-               'formcreator_validator' => 2, // Glpi user ID
+               'formcreator_validator' => \User::getType() . '_' . '2', // Glpi user ID
                'formcreator_field_' . $question2->getID() => (string) \Ticket::INCIDENT_TYPE,
             ]),
             'expected'   => \Ticket::INCIDENT_TYPE,

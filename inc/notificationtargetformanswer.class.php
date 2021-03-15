@@ -99,15 +99,11 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
    }
 
    public function addSpecificTargets($data, $options) {
-      global $DB;
-
       switch ($data['items_id']) {
          case self::AUTHOR :
             $this->addUserByField('requester_id', true);
             break;
          case self::APPROVER :
-            $form = new PluginFormcreatorForm();
-            $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
             if ($this->obj->fields['users_id_validator'] > 0) {
                $this->addUserByField('users_id_validator', true);
             }

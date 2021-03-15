@@ -1226,7 +1226,6 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function post_addItem() {
-      $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
       }
@@ -1239,7 +1238,6 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function post_updateItem($history = 1) {
-      $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
       }
@@ -1286,7 +1284,6 @@ PluginFormcreatorTranslatableInterface
          return $input;
       } else {
          // TODO: this call is done in post_updateItem. Shoud probably be removed here
-         $this->updateValidators();
          return $this->prepareInputForAdd($input);
       }
    }

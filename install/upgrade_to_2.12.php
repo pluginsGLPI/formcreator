@@ -92,14 +92,14 @@ class PluginFormcreatorUpgradeTo2_12 {
    }
 
    public function addValidationPercent() {
-      $table = 'glpi_plugin_formcreator_issues';
-      $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'groups_id_validator']);
-      $this->migration->addPostQuery("UPDATE `$table` as `i` INNER JOIN `glpi_tickets` as `t` ON (`i`.`original_id` = `t`.`id` AND `i`.`sub_itemtype` = 'Ticket') SET `i`.`validation_percent`=`t`.`validation_percent`");
+      $table = 'glpi_plugin_formcreator_forms';
+      $this->migration->dropField($table, 'validation_required');
+      $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'show_rule']);
 
       $table = 'glpi_plugin_formcreator_formanswers';
       $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'status']);
 
       $table = 'glpi_plugin_formcreator_forms_validators';
-      $this->migration->addField($table, 'level', 'integer',  ['after' => 'items_id', 'value' => '2']);
+      $this->migration->addField($table, 'level', 'integer',  ['after' => 'items_id', 'value' => '1']);
    }
 }

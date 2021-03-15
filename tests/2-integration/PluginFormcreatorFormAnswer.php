@@ -158,6 +158,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          '_validator_users'    => '2', // user is glpi
       ]);
 
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => \User::getType(),
+         'items_id' => 2 // user is glpi
+      ]);
+
       $section = $this->getSection([
          'name'                        => 'a section',
          'plugin_formcreator_forms_id' => $form->getID()

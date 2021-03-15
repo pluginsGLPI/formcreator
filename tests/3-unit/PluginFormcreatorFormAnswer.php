@@ -214,19 +214,33 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
    public function providerCanValidate() {
       $validatorUserId = 42;
+      $form1 = $this->getForm();
+      $this->boolean($form1->isNewItem())->isFalse();
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'itemtype' => \User::getType(),
+         'items_id' => $validatorUserId,
+         'level'    => 1,
+      ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
+
       $group = new \Group();
       $group->add([
          'name' => $this->getUniqueString(),
       ]);
-      $form1 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => $validatorUserId
+      $this->boolean($group->isNewItem())->isFalse();
+      $form2 = $this->getForm();
+      $this->boolean($form2->isNewItem())->isFalse();
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form2->getID(),
+         'itemtype' => \Group::getType(),
+         'items_id' => $group->getID(),
+         'level'    => 1,
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
-      $form2 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
-         '_validator_groups' => $group->getID()
-      ]);
       $groupUser = new \Group_User();
       $groupUser->add([
          'users_id' => $validatorUserId,
@@ -269,7 +283,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             'userId'    => $validatorUserId + 1,
             'form'      => $form2,
             'expected'  => false,
-         ],         [
+         ],
+         [
             'right'     => 0,
             'userId'    => $validatorUserId,
             'form'      => $form2,
@@ -286,7 +301,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $instance = $this->newTestedInstance();
       $input = [
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator' => $userId,
+         'formcreator_validator' => \User::getType() . '_' . $userId,
       ];
       $fields = $form->getFields();
       foreach ($fields as $id => $question) {
@@ -348,12 +363,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $formAnswer1 = $this->newTestedInstance();
       $formAnswers[] = $formAnswer1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => $validatorId,
+         'formcreator_validator'       => \User::getType() . '_' . $validatorId,
       ]);
       $formAnswer2 = $this->newTestedInstance();
       $formAnswers[] = $formAnswer2->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => $validatorId,
+         'formcreator_validator'       => \User::getType() . '_' . $validatorId,
       ]);
 
       // Check the requester does not has his forms in list to validate

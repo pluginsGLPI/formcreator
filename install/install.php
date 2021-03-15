@@ -457,6 +457,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorFormAnswer',
          'PluginFormcreatorForm_Profile',
          'PluginFormcreatorForm_Validator',
+         'PluginFormcreatorFormanswerValidation',
          'PluginFormcreatorForm',
          'PluginFormcreatorCondition',
          'PluginFormcreatorQuestion',
