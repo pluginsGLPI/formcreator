@@ -54,6 +54,9 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addField($table, 'is_search_visible', 'integer', ['after' => 'is_kb_separated']);
       $this->migration->addField($table, 'is_header_visible', 'integer', ['after' => 'is_search_visible']);
       $this->migration->addField($table, 'header', 'text', ['after' => 'is_header_visible']);
+
+      $table = 'glpi_plugin_formcreator_forms';
+      $this->migration->addField($table, 'plugin_formcreator_forms_id', 'integer', ['after' => 'uuid']);
    }
 
    /**

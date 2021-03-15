@@ -638,6 +638,15 @@ PluginFormcreatorTranslatableInterface
       echo '<td></td>';
       echo '</tr>';
 
+      echo '<tr>';
+      echo '<td>'.__('Next form', 'formcreator').'</td>';
+      echo '<td>';
+      PluginFormcreatorForm::dropdown(['name'=>'plugin_formcreator_forms_id', 'value'=>$this->fields['plugin_formcreator_forms_id']]);
+      echo '</td>';
+      echo '<td></td>';
+      echo '<td></td>';
+      echo '</tr>';
+
       if (!$this->canPurgeItem()) {
          echo '<tr>';
          echo '<td colspan="4">'
