@@ -181,6 +181,20 @@ PluginFormcreatorExportableInterface
       }
 
       // Show current validators
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $rows = $this->find([$formFk => $formId], ['level ASC']);
+
+      $rand = mt_rand();
+      Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
+      $massiveactionparams
+         = ['num_displayed'
+                   => min($_SESSION['glpilist_limit'], count($rows)),
+                 'container'
+                   => 'mass'.__CLASS__.$rand,
+                 'specific_actions'
+                   => ['purge' => _x('button', 'Delete permanently')]];
+
+      Html::showMassiveActions($massiveactionparams);
       echo '<table class="tab_cadre_fixehov">';
       $header_begin  = '<tr>';
       $header_top    = '';
@@ -197,9 +211,6 @@ PluginFormcreatorExportableInterface
       $header_end .= '</tr>';
       echo $header_begin.$header_top.$header_end;
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-
-      $rows = $this->find([$formFk => $formId], ['level ASC']);
       foreach ($rows as $row) {
          $itemtype = $row['itemtype'];
          $validator = new $itemtype();
@@ -217,7 +228,9 @@ PluginFormcreatorExportableInterface
          }
          $typeName = $validator::getTypeName();
          echo '<tr>';
-         echo '<td>' . '' . '</td>';
+         echo '<td>';
+         Html::showMassiveActionCheckBox(__CLASS__, $row['id']);
+         echo '</td>';
          echo '<td>' . $typeName . '</td>';
          echo '<td>' . $name . '</td>';
          echo '<td>' . $row['level'] . '</td>';
@@ -226,6 +239,9 @@ PluginFormcreatorExportableInterface
 
       echo $header_begin.$header_bottom.$header_end;
       echo "</table>";
+      $massiveactionparams['ontop'] = false;
+      Html::showMassiveActions($massiveactionparams);
+      Html::closeForm();
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
