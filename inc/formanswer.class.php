@@ -451,8 +451,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                $validatorGroups[] = $row['items_id'];
                break;
             case User::class:
-            // check if the user is a validator
-            if ($currentUser == $row['items_id']) {
+               // check if the user is a validator
+               if ($currentUser == $row['items_id']) {
                   // Current user found in the curent valdiation level
                   return true;
                }
