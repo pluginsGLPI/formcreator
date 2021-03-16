@@ -56,7 +56,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addField($table, 'header', 'text', ['after' => 'is_header_visible']);
 
       $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->addField($table, 'plugin_formcreator_forms_id', 'integer', ['after' => 'uuid']);
+      $this->migration->addField($table, 'plugin_formcreator_forms_id', 'integer', ['after' => 'show_rule']);
    }
 
    /**
