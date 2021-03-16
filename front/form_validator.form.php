@@ -40,6 +40,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 if (!isset($_POST['plugin_formcreator_forms_id'])) {
    // should not happen
+   Html::back();
 }
 $formId = (int) $_POST['plugin_formcreator_forms_id'];
 $formValidator = new PluginFormcreatorForm_Validator();
@@ -56,3 +57,4 @@ if (isset($_POST['add'])) {
    ]);
    Html::redirect($form->getFormURLWithID($formId));
 }
+Html::back();
