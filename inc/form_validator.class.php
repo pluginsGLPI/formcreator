@@ -224,10 +224,9 @@ PluginFormcreatorExportableInterface
          echo '<tr>';
       }
 
-
       echo $header_begin.$header_bottom.$header_end;
       echo "</table>";
-}
+   }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -464,7 +463,7 @@ PluginFormcreatorExportableInterface
     *
     * @return DBmysqlIterator
     */
-    public function getAvailableValidatorGroups() {
+   public function getAvailableValidatorGroups() {
       global $DB;
 
       $userTable = User::getTable();
@@ -534,7 +533,7 @@ PluginFormcreatorExportableInterface
     * @param PluginFormcreatorForm $form
     * @return void
     */
-    public function dropdownValidatorGroup(PluginFormcreatorForm $form) {
+   public function dropdownValidatorGroup(PluginFormcreatorForm $form) {
       // get all posible validator groups
       $groups = $this->getAvailableValidatorGroups();
       $validatorGroups = [];
@@ -564,7 +563,7 @@ PluginFormcreatorExportableInterface
       if (isset($input['_validator_users']) && is_array($input['_validator_users'])) {
          $newItems = [];
          foreach ($input['_validator_users'] as $userId) {
-             $newId = $this->add([
+            $newId = $this->add([
                $formFk => $input[$formFk],
                'itemtype' => User::getType(),
                'items_id' => $userId,
@@ -584,13 +583,13 @@ PluginFormcreatorExportableInterface
               'itemtype' => Group::getType(),
               'items_id' => $userId,
               'level' => $input['level'],
-           ]);
-           if ($newId === false) {
-              $success = false;
-           }
-        }
-     }
-     return $success;
+            ]);
+            if ($newId === false) {
+               $success = false;
+            }
+         }
+      }
+      return $success;
    }
 
    /**

@@ -100,6 +100,6 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'status']);
 
       $table = 'glpi_plugin_formcreator_forms_validators';
-      $this->migration->addField($table, 'level', 'integer',  ['after' => 'items_id', 'value' => '1']);
+      $this->migration->addField($table, 'level', 'integer', ['after' => 'items_id', 'value' => '1']);
    }
 }
