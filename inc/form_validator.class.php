@@ -141,6 +141,7 @@ PluginFormcreatorExportableInterface
             'max'     => 100,
             'step'    => 50,
             'value'   => $item->fields['validation_percent'],
+            'unit'    => '%',
             'display' => false,
          ]);
          echo "</td><td width='20%'>";
