@@ -1061,6 +1061,19 @@ var plugin_formcreator = new function() {
       sections.find('.moveDown').show();
       sections.last().find('.moveDown').hide();
    }
+
+   this.toggleForm = function (id) {
+      $.ajax({
+         url: formcreatorRootDoc + '/ajax/form_toggle.php',
+         type: 'POST',
+         data: {
+            toggle: 'toggle',
+            id: id
+         }
+      }).success(function () {
+         location.reload();
+      });
+   }
 }
 
 // === TARGETS ===

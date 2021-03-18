@@ -338,7 +338,7 @@ PluginFormcreatorConditionnableInterface
             $output = '<i class="fa fa-circle '
             . $class
             . '" aria-hidden="true" title="' . $title . '"></i>';
-            $output = '<div style="text-align: center">' . $output . '</div>';
+            $output = '<div style="text-align: center" onclick="plugin_formcreator.toggleForm(' . $options['raw_data']['id']. ')">' . $output . '</div>';
             return $output;
             break;
 
@@ -1400,6 +1400,14 @@ PluginFormcreatorConditionnableInterface
     * @return array the modified $input array
     */
    public function prepareInputForUpdate($input) {
+      if (isset($input['toggle'])) {
+         // Enable / disable form
+         return [
+            'id' => $input['id'],
+            'is_active' => $this->fields['is_active'] == '0' ? '1' : '0',
+         ];
+      }
+
       if (isset($input['access_rights'])
             || isset($_POST['massiveaction'])
             || isset($input['usage_count'])) {
