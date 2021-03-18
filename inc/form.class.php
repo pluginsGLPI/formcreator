@@ -1789,10 +1789,19 @@ PluginFormcreatorTranslatableInterface
                                         $export['plugin_formcreator_categories_id']);
       }
 
+      // replace form next id
+      $export['_plugin_formcreator_form'] = '';
+      if ($export['plugin_formcreator_forms_id'] > 0) {
+         $export['_plugin_formcreator_form']
+            = Dropdown::getDropdownName(PluginFormcreatorForm::getTable(),
+                                        $export['plugin_formcreator_forms_id']);
+      }
+
       // remove non needed keys
       unset($export['plugin_formcreator_categories_id'],
             $export['entities_id'],
-            $export['usage_count']);
+            $export['usage_count'],
+            $export['plugin_formcreator_forms_id']);
 
       $subItems = [
          '_profiles'     => PluginFormcreatorForm_Profile::class,
@@ -2053,6 +2062,19 @@ PluginFormcreatorTranslatableInterface
          ]);
       }
       $input[$formCategoryFk] = $formCategoryId;
+
+      // Import form next
+      $formNext = new PluginFormcreatorForm();
+      $formNextFk = PluginFormcreatorForm::getForeignKeyField();
+      $formNextId = 0;
+      if ($input['_plugin_formcreator_form'] != '') {
+         $formNextId = plugin_formcreator_getFromDBByField(
+            $formNext,
+            'name',
+            Toolbox::addslashes_deep($input['_plugin_formcreator_form'])
+         );
+      }
+      $input[$formNextFk] = $formNextId;
 
       // Escape text fields
       foreach (['name', 'description', 'content'] as $key) {
