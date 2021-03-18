@@ -130,7 +130,7 @@ PluginFormcreatorExportableInterface
          // Global validation settings
          echo "<form method='post' action='".self::getFormURL()."'>";
          echo "<div class='spaced'><table class='tab_cadre_fixe'>";
-         echo "<tr class='tab_bg_1'><th colspan='3'>";
+         echo "<tr class='tab_bg_1'><th colspan='3' class='center'>";
          echo __('General settings', 'formcreator');
          echo "</th>";
          echo "<tr><td width='20%'>";
@@ -184,6 +184,16 @@ PluginFormcreatorExportableInterface
       // Show current validators
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $rows = $this->find([$formFk => $formId], ['level ASC']);
+      echo '<table class="tab_cadre_fixe">';
+      echo '<tr class="tab_bg_1"><th class="center">';
+      echo self::getTypeName(Session::getPluralNumber());
+      echo '</th>';
+      echo '</tr>';
+      echo '</table>';
+      if (count($rows) < 1) {
+         // No valdiatorr to show
+         return;
+      }
 
       $rand = mt_rand();
       Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
