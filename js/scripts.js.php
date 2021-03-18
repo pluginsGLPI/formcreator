@@ -1205,6 +1205,19 @@ var plugin_formcreator = new function() {
          tr_inverse.hide();
       }, 200);
    });
+
+   this.toggleForm = function (id) {
+      $.ajax({
+         url: formcreatorRootDoc + '/ajax/form_toggle.php',
+         type: 'POST',
+         data: {
+            toggle: 'toggle',
+            id: id
+         }
+      }).success(function () {
+         location.reload();
+      });
+   }
 }
 
 // === TARGETS ===

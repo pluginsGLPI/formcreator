@@ -1655,10 +1655,12 @@ span.fc_list_icon {
 
 /* Active / inactive light for forms */
 .plugin-forcreator-active {
+   cursor: pointer;
    color: #009933;
 }
 
 .plugin-forcreator-inactive {
+   cursor: pointer;
    color: #a0a0a0;
 }
 
