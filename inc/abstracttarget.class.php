@@ -336,7 +336,7 @@ PluginFormcreatorConditionnableInterface
             }
             if (count($data_entities) < 1) {
                // No entity found
-               return $entityId;
+               break;
             }
             $first_entity = array_shift($data_entities);
             $entityId = $first_entity[$entityFk];
