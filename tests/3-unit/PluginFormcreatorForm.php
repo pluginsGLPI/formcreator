@@ -484,6 +484,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          '_validators',
          '_conditions',
          '_translations',
+         '_plugin_formcreator_form',
       ];
       $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
@@ -649,6 +650,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'usage_count' => '0',
          'is_default' => '0',
          'show_rule'  => '1',
+         '_plugin_formcreator_form'  => '',
          'uuid' => $uuid,
       ];
 
