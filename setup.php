@@ -133,7 +133,8 @@ function plugin_init_formcreator() {
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_add_ticket'
+      Ticket::class => 'plugin_formcreator_hook_add_ticket',
+      ITILFollowup::class => 'plugin_formcreator_hook_update_itilFollowup',
    ];
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',

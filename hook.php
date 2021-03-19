@@ -463,6 +463,37 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
    $issue->update(['status' => $status['status']] + $issue->fields);
 }
 
+function plugin_formcreator_hook_update_itilFollowup($followup) {
+   $itemtype = $followup->fields['itemtype'];
+   if ($itemtype != Ticket::getType()) {
+      return;
+   }
+
+   $item = new Ticket();
+   if (!$item->getFromDB($followup->fields['items_id'])) {
+      return;
+   }
+
+   $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
+   $issue = new PluginFormcreatorIssue();
+   $issue->getFromDBByCrit([
+      'AND' => [
+         'sub_itemtype' => $itemtype,
+         'original_id'  => $item->getID(),
+      ]
+   ]);
+   if ($issue->isNewItem()) {
+      return;
+   }
+   $issue->update([
+      'id'           => $issue->getID(),
+      'sub_itemtype' => $itemtype,
+      'original_id'  => $item->getID(),
+   'status'          => $validationStatus['status'],
+      'date_mod'     => $item->fields['date_mod'],
+   ]);
+}
+
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
       case PluginFormcreatorFormAnswer::class;
