@@ -1359,16 +1359,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'id'                 => $issue->getID(),
          'original_id'        => $ticketId,
          'sub_itemtype'       => Ticket::class,
-         'name'               => addslashes($ticket->getField('name')),
-         'status'             => $ticket->getField('status'),
-         'date_creation'      => $ticket->getField('date'),
-         'date_mod'           => $ticket->getField('date_mod'),
-         'entities_id'        => $ticket->getField('entities_id'),
+         'name'               => addslashes($ticket->fields['name']),
+         'status'             => $ticket->fields['status'],
+         'date_creation'      => $ticket->fields['date'],
+         'date_mod'           => $ticket->fields['date_mod'],
+         'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $ticketUserRow['users_id'],
          'users_id_validator' => '',
          'groups_id_validator'=> '',
-         'comment'            => addslashes($ticket->getField('content')),
+         'comment'            => addslashes($ticket->fields['content']),
       ]);
    }
 
