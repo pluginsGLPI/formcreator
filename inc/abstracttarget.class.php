@@ -1217,7 +1217,9 @@ PluginFormcreatorConditionnableInterface
          echo '<tr>';
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
-         Dropdown::showFromArray('tag_type', self::getEnumTagType(),
+         Dropdown::showFromArray(
+            'tag_type',
+            self::getEnumTagType(),
             [
                'value'     => $this->fields['tag_type'],
                'on_change' => 'change_tag_type()',
@@ -1273,7 +1275,7 @@ SCRIPT;
                'fieldtype' => ['tag'],
             ],
             '_tag_questions',
-            explode(',', $this->fields['tag_questions']),
+            $this->fields['tag_questions'],
             [
                'multiple' => true,
             ]
