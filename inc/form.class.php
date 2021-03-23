@@ -953,7 +953,9 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT) {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT
+         && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+      ) {
          // Find FAQ entries
          $query_faqs = KnowbaseItem::getListRequest([
             'faq'      => '1',
