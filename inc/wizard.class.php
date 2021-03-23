@@ -275,7 +275,7 @@ class PluginFormcreatorWizard {
    }
 
    protected static function findActiveMenuItem() {
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == '1') {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT) {
          if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.php") !== false
             || strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.form.php") !== false) {
             return self::MENU_FAQ;
