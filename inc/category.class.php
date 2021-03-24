@@ -39,7 +39,11 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    var $can_be_translated = true;
 
    static function canView() {
-      return true;
+      if (isAPI()) {
+         return true;
+      }
+
+      return parent::canView();
    }
 
    public static function getTypeName($nb = 1) {
