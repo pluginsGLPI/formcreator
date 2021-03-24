@@ -524,15 +524,25 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
+
+      // Get fields populated with answers
+      $answers = $this->getAnswers(
+         $this->getID()
+      );
+      $answers['plugin_formcreator_forms_id'] = $form->getID();
+      $visibility = PluginFormcreatorFields::updateVisibility($answers);
+
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach ($sections as $section) {
          $sectionId = $section->getID();
 
          // Section header
+         $hiddenAttribute = $visibility[$section->getType()][$sectionId] ? '' : 'hidden=""';
          echo '<li'
          . ' class="plugin_formcreator_section"'
          . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
          . ' data-id="' . $sectionId . '"'
+         . " $hiddenAttribute"
          . '">';
 
          // section name
@@ -542,14 +552,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Section content
          echo '<div>';
-
-         // Get fields populated with answers
-         $answers = $this->getAnswers(
-            $this->getID(),
-            [
-               PluginFormcreatorSection::getForeignKeyField() => $section->getID(),
-            ]
-         );
 
          // Display all fields of the section
          $lastQuestion = null;
@@ -568,7 +570,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($canEdit, $answers);
+            echo $question->getRenderedHtml($canEdit, $answers, $visibility[$question->getType()][$question->getID()]);
             $lastQuestion = $question;
          }
          echo '</div>';
