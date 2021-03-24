@@ -270,8 +270,9 @@ PluginFormcreatorTranslatableInterface
     * @param string  $domain  Translation domain of the form
     * @param boolean $canEdit Can the requester edit the field of the question ?
     * @param array   $value   Values all fields of the form
+    * @param bool $isVisible is the question visible by default ?
     */
-   public function getRenderedHtml($domain, $canEdit = true, $value = []) : string {
+   public function getRenderedHtml($domain, $canEdit = true, $value = [], $isVisible = true) : string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -297,11 +298,13 @@ PluginFormcreatorTranslatableInterface
       $required = ($this->fields['required']) ? ' required' : '';
       $x = $this->fields['col'];
       $width = $this->fields['width'];
+      $hiddenAttribute = $isVisible ? '' : 'hidden=""';
       $html .= '<div'
          . ' data-gs-x="' . $x . '"'
          . ' data-gs-width="' . $width . '"'
          . ' data-itemtype="' . self::class . '"'
          . ' data-id="' . $this->getID() . '"'
+         . " $hiddenAttribute"
          . ' >';
       $html .= '<div class="grid-stack-item-content form-group ' . $required . '" id="form-group-field-' . $this->getID() . '">';
       $html .= $field->show($domain, $canEdit);
