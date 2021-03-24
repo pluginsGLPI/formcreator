@@ -63,6 +63,7 @@ use PassiveDCEquipment;
 use PluginAppliancesAppliance;
 use Plugin;
 use CommonTreeDropdown;
+use PluginGenericobjectType;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
@@ -116,6 +117,15 @@ class GlpiselectField extends DropdownField
       ];
       if ((new Plugin())->isActivated('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+	  
+      if ((new Plugin())->isActivated("genericobject")) {
+         $optgroup[__('Plugin') . " " .__('Objects management','genericobject')] = [];
+         $genericObjectType = new PluginGenericobjectType();
+         $genericObjectTypes = $genericObjectType->find();
+         foreach ($genericObjectTypes as $object){
+            $optgroup[__('Plugin') . " " .__('Objects management','genericobject')][$object["itemtype"]] = $object["itemtype"]::getTypeName();
+         }
       }
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
