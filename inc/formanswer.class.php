@@ -789,8 +789,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    /**
     * Generates all targets for the answers
+    * @return bool true if targets were successfully generated
     */
-   public function generateTarget() {
+   public function generateTarget(): bool {
       global $CFG_GLPI;
 
       $success = true;
