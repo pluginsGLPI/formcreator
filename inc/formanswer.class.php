@@ -840,7 +840,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param int $formAnswerId
     * @return array
     */
-   public function getAnswers($formAnswerId) {
+   public function getAnswers($formAnswerId): array {
       global $DB;
 
       $answers = $DB->request([
