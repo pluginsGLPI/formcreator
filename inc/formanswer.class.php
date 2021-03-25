@@ -876,9 +876,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Get entire form to be inserted into a target content
     *
     * @param bool $richText If true, enable rich text output
-    * @return String Full form questions and answers to be print
+    * @return string Full form questions and answers to be print
     */
-   public function getFullForm($richText = false) {
+   public function getFullForm($richText = false): string {
       global $DB;
 
       $question_no = 0;
