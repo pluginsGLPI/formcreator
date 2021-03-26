@@ -752,6 +752,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
             $formanswer,
             $changeField == 'content' // only content supports rich text
          );
+         $data[$changeField] = $data[$changeField] ?? '';
 
          $data[$changeField] = $formanswer->parseTags($data[$changeField], $this, $changeField == 'content');
       }
