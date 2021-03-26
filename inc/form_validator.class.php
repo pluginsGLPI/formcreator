@@ -255,6 +255,39 @@ PluginFormcreatorExportableInterface
       Html::closeForm();
    }
 
+   public function post_deleteItem() {
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $rows = $this->find(
+         [
+            $formFk => $this->fields[$formFk],
+         ], [
+            'level ASC'
+         ]
+      );
+
+      // count items with the same level as the deleted item
+      $currentLevelCount = 0;
+      foreach ($rows as $row) {
+         if ($row['level'] == $this->fields['level']) {
+            $currentLevelCount++;
+         }
+      }
+
+      if ($currentLevelCount < 1)  {
+         // No more items for this level. Moving decreasing level of above levels
+         foreach ($rows as $row) {
+            if ($row['level'] < $this->fields['level']) {
+               continue;
+            }
+            $toUpdate = new self();
+            $toUpdate->update([
+               'id' => $row['id'],
+               'level' => $row['level'] - 1,
+            ]);
+         }
+      }
+   }
+
    public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $forms_id;
