@@ -1094,7 +1094,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param  boolean $richText                          Disable rich text mode for field rendering
     * @return string                                     Parsed string with tags replaced by form values
     */
-   public function parseTags($content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
+   public function parseTags(string $content, PluginFormcreatorTargetInterface $target = null, $richText = false): string {
       // Prepare all fields of the form
       $form = $this->getForm();
       $this->getQuestionFields($form->getID());
