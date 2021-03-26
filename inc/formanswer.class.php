@@ -780,9 +780,29 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          switch (PluginFormcreatorFormAnswerValidation::computeValidationStatus($this)) {
             case PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED:
                $input['status'] = self::STATUS_ACCEPTED;
+
+               // check if the input contains answers to validate
+               $hasAnswers = false;
+               foreach (array_keys($input) as $key) {
+                  if (strpos($key, 'formcreator_field_') === 0) {
+                     $hasAnswers = true;
+                     break;
+                  }
+               }
+               $skipValidation = !$hasAnswers;
+
                break;
             case PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED:
                $input['status'] = self::STATUS_REFUSED;
+
+               // Update is restricted to a subset of fields
+               $input = [
+                  'id'      => $input['id'],
+                  'status'  => $input['status'],
+                  'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
+               ];
+               $skipValidation = true;
+
                break;
             default:
                $input['status'] = self::STATUS_WAITING;
