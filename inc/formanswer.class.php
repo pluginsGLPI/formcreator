@@ -434,7 +434,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $rows = $formAnswerValidation->find(
          [
             self::getForeignKeyField() => $this->getID(),
-            'level' => ['>=', PluginFormcreatorFormAnswerValidation::getCurrentValidationLevel($this)],
+            'level' => ['<>', PluginFormcreatorFormAnswerValidation::getCurrentValidationLevel($this)],
          ],
          ['itemtype ASC']
       );
@@ -514,7 +514,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
                  && Session::getLoginUserID() == $this->fields['requester_id']
                  || $this->fields['status'] == self::STATUS_WAITING
-                 && $this->canValidate() && $editMode;
+                 && $this->canValidate();
 
       // form title
       echo "<h1 class='form-title'>";
@@ -597,7 +597,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($domain, $canEdit, $answers, $visibility[$question->getType()][$question->getID()]);
+            echo $question->getRenderedHtml($domain, $editMode, $answers, $visibility[$question->getType()][$question->getID()]);
             $lastQuestion = $question;
          }
          echo '</div>';

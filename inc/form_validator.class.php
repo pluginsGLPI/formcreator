@@ -273,7 +273,7 @@ PluginFormcreatorExportableInterface
          }
       }
 
-      if ($currentLevelCount < 1)  {
+      if ($currentLevelCount < 1) {
          // No more items for this level. Moving decreasing level of above levels
          foreach ($rows as $row) {
             if ($row['level'] < $this->fields['level']) {
@@ -569,8 +569,7 @@ PluginFormcreatorExportableInterface
             "$profileRightTable.name" => "ticketvalidation",
             [
                'OR' => [
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST],
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT],
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT | TicketValidation::VALIDATEREQUEST],
                ],
             ],
             "$userTable.is_active" => '1',
