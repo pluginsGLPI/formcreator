@@ -81,7 +81,7 @@ class PluginFormcreatorFormanswerValidation extends CommonDBTM
       $result = $DB->request([
          'FROM' => self::getTable(),
          'WHERE' => [
-            $formAnswerFk => $formAnswer->fields['id'],
+            $formAnswerFk => $formAnswer->getID(),
          ],
          'GROUPBY' => ['level'],
       ]);
@@ -104,10 +104,7 @@ class PluginFormcreatorFormanswerValidation extends CommonDBTM
          'SELECT' => ['MAX' => 'level as level'],
          'FROM' => self::getTable(),
          'WHERE' => [
-            $formAnswerFk => $formAnswer->fields['id'],
-            ['NOT' => [
-               'status' => PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING,
-            ]],
+            $formAnswerFk => $formAnswer->getID(),
          ],
       ];
       $max = $DB->request($request)->next();
