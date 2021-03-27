@@ -144,7 +144,7 @@ class CheckboxesField extends CommonTestCase {
          ],
          [
             'value'     => '',
-            'expected'  => '[\"\"]',
+            'expected'  => '[]',
          ],
          [
             'value'     => ['foo'],
