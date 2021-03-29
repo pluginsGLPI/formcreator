@@ -42,11 +42,11 @@ class PluginFormcreatorUpgradeTo2_12 {
 
       // Convert datetime to timestamp
       $table = 'glpi_plugin_formcreator_formanswers';
-      $migration->changeField($table, 'request_date', 'request_date', 'timestamp');
+      $migration->changeField($table, 'request_date', 'request_date', 'timestamp'. ' NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
       $table = 'glpi_plugin_formcreator_issues';
-      $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp');
-      $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp');
+      $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp'. ' NOT NULL DEFAULT CURRENT_TIMESTAMP');
+      $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp'. ' NOT NULL DEFAULT CURRENT_TIMESTAMP');
 
       $this->changeDropdownTreeSettings();
 
