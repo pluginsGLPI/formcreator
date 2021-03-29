@@ -390,16 +390,10 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
 
       // Equality / inequality operator
       $html.= '<div class="div_show_condition_operator">';
-      $showConditions = array_map(
-         function ($item) {
-            return htmlentities($item);
-         },
-         static::getEnumShowCondition()
-      );
 
       $html.= Dropdown::showFromArray(
          '_conditions[show_condition][]',
-         $showConditions, [
+         self::getEnumShowCondition(), [
             'display'      => false,
             'value'        => $show_condition,
             'rand'         => $rand,
