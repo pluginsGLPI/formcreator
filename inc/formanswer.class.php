@@ -944,15 +944,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       // retrieve answers
-      $form = $this->getForm();
-      $fields = $form->getFields();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $fields = $this->getQuestionFields($this->fields[$formFk]);
+
       $this->deserializeAnswers();
 
       // TODO: code very close to PluginFormcreatorAbstractTarget::parseTags() (factorizable ?)
       // compute all questions
       $questionTable = PluginFormcreatorQuestion::getTable();
       $sectionTable = PluginFormcreatorSection::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questions = $DB->request([
          'SELECT' => [
