@@ -142,7 +142,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                `$ticketTable`.`status`,
                IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
                   `$ticketTable`.`status`,
-                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "') AND `$ticketTable`.`global_validation` = '" . CommonITILValidation::REFUSED . "',
+                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "'),
                      `$ticketTable`.`status`,
                      IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
