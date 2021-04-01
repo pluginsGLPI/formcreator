@@ -434,7 +434,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $rows = $formAnswerValidation->find(
          [
             self::getForeignKeyField() => $this->getID(),
-            'level' => ['<>', PluginFormcreatorFormAnswerValidation::getCurrentValidationLevel($this)],
+            'level' => ['>=', PluginFormcreatorFormAnswerValidation::getCurrentValidationLevel($this)],
          ],
          ['itemtype ASC']
       );

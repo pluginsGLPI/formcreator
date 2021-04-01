@@ -41,7 +41,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       switch ($method) {
          case 'testNotificationFormAnswerCreated':
          case 'testOtherUserValidates':
-            $this->boolean(self::login('glpi', 'glpi', true))->isTrue();
+            $this->boolean($this->login('glpi', 'glpi', true))->isTrue();
             break;
       }
    }
@@ -154,8 +154,6 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'description'         => 'form description',
          'content'             => 'a content',
          'is_active'           => 1,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'    => '2', // user is glpi
       ]);
 
       $formValidator = new \PluginFormcreatorForm_Validator();
@@ -165,17 +163,10 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'items_id' => 2 // user is glpi
       ]);
 
-      $section = $this->getSection([
-         'name'                        => 'a section',
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-      $this->boolean($section->isNewItem())->isFalse();
-
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'status'                      => 'waiting',
-         'formcreator_validator'       => $_SESSION['glpiID'],
+         'formcreator_validator'       => \Session::getLoginUserID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
