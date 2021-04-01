@@ -54,11 +54,11 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `language`                         varchar(5) NOT NULL,
   `helpdesk_home`                    tinyint(1) NOT NULL DEFAULT '0',
   `is_deleted`                       tinyint(1) NOT NULL DEFAULT '0',
-  `validation_required`              tinyint(1) NOT NULL DEFAULT '0',
   `usage_count`                      int(11) NOT NULL DEFAULT '0',
   `is_default`                       tinyint(1) NOT NULL DEFAULT '0',
   `is_captcha_enabled`               tinyint(1) NOT NULL DEFAULT '0',
   `show_rule`                        int(11) NOT NULL DEFAULT '1' COMMENT 'Conditions setting to show the submit button',
+  `validation_percent`               int(11) NOT NULL DEFAULT '0',
   `uuid`                             varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `entities_id` (`entities_id`),
@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `groups_id_validator`         int(11) NOT NULL DEFAULT '0',
   `request_date`                timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status`                      int(11) NOT NULL DEFAULT '101',
+  `validation_percent`          int(11) NOT NULL DEFAULT '0',
   `comment`                     text,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
@@ -100,10 +101,22 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `itemtype`                    varchar(255) NOT NULL DEFAULT '',
   `items_id`                    int(11) NOT NULL,
+  `level`                       int(11) NOT NULL DEFAULT '1',
   `uuid`                        varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`itemtype`,`items_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswervalidations` (
+  `id`                                int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_formanswers_id` int(11) NOT NULL,
+  `itemtype`                          varchar(255) NOT NULL DEFAULT '',
+  `items_id`                          int(11) NOT NULL,
+  `status`                            int(11) NOT NULL DEFAULT '2',
+  `level`                             int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `id`                             int(11) NOT NULL AUTO_INCREMENT,

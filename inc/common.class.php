@@ -267,6 +267,9 @@ JAVASCRIPT;
          'timeline_position ASC'
       ], 1);
       $user = 0;
+      $reloadedItem = new Ticket();
+      $reloadedItem->getFromDB($item->getID());
+      $validationPercent = $reloadedItem->fields['validation_percent'];
       $ticketValidationCount = count($ticketValidations);
       if ($ticketValidationCount) {
          $row = array_shift($ticketValidations);
@@ -289,7 +292,7 @@ JAVASCRIPT;
          }
       }
 
-      return ['status' => $status, 'user' => $user];
+      return ['status' => $status, 'user' => $user, 'validation_percent' => $validationPercent];
    }
 
    /**
