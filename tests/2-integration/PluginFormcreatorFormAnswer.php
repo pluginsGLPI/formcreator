@@ -198,15 +198,15 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             JSON_PRETTY_PRINT));
 
       // Login as other user
-      $this->boolean(self::login($login, 'superadmin', true))->isTrue();
+      $this->boolean($this->login($login, 'superadmin', true))->isTrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
 
       // Login as glpi
-      $this->boolean(self::login('glpi', 'glpi', true))->istrue();
+      $this->boolean($this->login('glpi', 'glpi', true))->istrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
 
       // Login as normal
-      $this->boolean(self::login('normal', 'normal', true))->istrue();
+      $this->boolean($this->login('normal', 'normal', true))->istrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
    }
 }
