@@ -57,6 +57,7 @@ use Contact;
 use Contract;
 use Document;
 use Project;
+use Certificate;
 use Entity;
 use Profile;
 use PassiveDCEquipment;
@@ -102,7 +103,8 @@ class GlpiselectField extends DropdownField
             Contact::class          => Contact::getTypeName(2),
             Contract::class         => Contract::getTypeName(2),
             Document::class         => Document::getTypeName(2),
-            Project::class          => Project::getTypeName(2)
+            Project::class          => Project::getTypeName(2),
+            Certificate::class      => Certificate::getTypeName(2)
          ],
          __("Tools") => [
             Reminder::class         => __("Notes"),
