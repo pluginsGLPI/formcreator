@@ -961,7 +961,17 @@ PluginFormcreatorTranslatableInterface
       if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
+            if (is_array($input['_parameters'][$input['fieldtype']][$fieldName])) {
+               /** @var PluginFormcreatorExportableInterface $parameter */
+               $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
+            } else {
+               // Import data incomplete, parameter not defined
+               // Adding an empty parameter (assuming the question is actually added or updated in DB)
+               $parameterInput = $parameter->fields;
+               $parameterInput['plugin_formcreator_questions_id'] = $itemId;
+               unset($parameterInput['id']);
+               $parameter->add($parameterInput);
+            }
          }
       }
 
