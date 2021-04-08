@@ -184,6 +184,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return [];
    }
 
+   /**
+    * Undocumented function
+    *
+    * @return PluginFormcreatorAbstractQuestionParameter[]
+    */
    public final function getParameters(): array {
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
