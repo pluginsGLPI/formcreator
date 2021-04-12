@@ -573,8 +573,7 @@ PluginFormcreatorConditionnableInterface
             "$profileRightTable.name" => "ticketvalidation",
             [
                'OR' => [
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST],
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT],
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST | TicketValidation::VALIDATEINCIDENT],
                ],
             ],
             "$userTable.is_active" => '1',
