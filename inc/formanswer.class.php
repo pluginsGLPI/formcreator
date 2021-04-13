@@ -577,11 +577,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          echo '</li>';
       }
-      if ($canEdit) {
-         echo Html::scriptBlock('$(function() {
-            plugin_formcreator.showFields($("form[name=\'form\']"));
-         })');
-      }
 
       if ($this->fields['status'] == self::STATUS_REFUSED) {
          echo '<div class="refused_header">';
