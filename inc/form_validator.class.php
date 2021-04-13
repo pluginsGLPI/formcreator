@@ -155,6 +155,9 @@ PluginFormcreatorExportableInterface
 
          echo "<form method='post' action='".self::getFormURL()."'>";
          echo "<div class='spaced'><table class='tab_cadre_fixe'>";
+         echo "<tr class='tab_bg_1'><th colspan='4' class='center'>";
+         echo __('Add a validator', 'formcreator');
+         echo "</th>";
          echo "<tr class='tab_bg_1'><td class='center'>";
          echo __('Validation level', 'formcreator');
          echo "</td><td width='20%'>";
