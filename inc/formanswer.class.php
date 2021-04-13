@@ -605,12 +605,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</li>';
       }
 
-      if ($canEdit) {
-         echo Html::scriptBlock('$(function() {
-            plugin_formcreator.showFields($("form[name=\'' . $formName . '\']"));
-         })');
-      }
-
       //add requester info
       echo '<div class="form-group">';
       echo '<label for="requester">' . __('Requester', 'formcreator') . '</label>';
