@@ -1,3 +1,40 @@
+<a name="v2.11.3"></a>
+## [v2.11.3](https://github.com/pluginsglpi/formcreator/compare/v2.11.2..v2.11.3) (2021-04-14)
+
+
+### Bug Fixes
+
+*  prevent inconsistent timestamps in DB ([4be7f1ed](https://github.com/pluginsglpi/formcreator/commit/4be7f1ed))
+*  show menu when width is low ([9ec53fa1](https://github.com/pluginsglpi/formcreator/commit/9ec53fa1))
+* **condition:** avoid HTML entities in dropdown ([451dfbdb](https://github.com/pluginsglpi/formcreator/commit/451dfbdb))
+* **dropdownfield:** disable recursivity ([daa7fb02](https://github.com/pluginsglpi/formcreator/commit/daa7fb02))
+* **form:** bad SQL to find validator groups ([42d06654](https://github.com/pluginsglpi/formcreator/commit/42d06654))
+* **form:** bad sql expression for right check ([2e9b6931](https://github.com/pluginsglpi/formcreator/commit/2e9b6931))
+* **form:** sort not applied on 1st display ([cfe53474](https://github.com/pluginsglpi/formcreator/commit/cfe53474))
+* **form:** version check on import ([849db8e3](https://github.com/pluginsglpi/formcreator/commit/849db8e3))
+* **formanswer:** load answers when validating a formanswer ([9ea14608](https://github.com/pluginsglpi/formcreator/commit/9ea14608))
+* **formanswer:** no longer need to call showfields on display ([9cea3377](https://github.com/pluginsglpi/formcreator/commit/9cea3377))
+* **formanswers:** execute show conditions when displaying formanswer ([edd1247c](https://github.com/pluginsglpi/formcreator/commit/edd1247c))
+* **issue:** php warning when running mailcollector ([c4bc8657](https://github.com/pluginsglpi/formcreator/commit/c4bc8657))
+* **issue:** update modificaitoin date when a followup is added to ticket ([4d5ed7fd](https://github.com/pluginsglpi/formcreator/commit/4d5ed7fd))
+* **ldapfield:** only last page of LDAP results rendered ([ea4ddfc5](https://github.com/pluginsglpi/formcreator/commit/ea4ddfc5))
+* **question:** make import resilient against missing parameters ([1594e6f2](https://github.com/pluginsglpi/formcreator/commit/1594e6f2))
+* **targetticket:** date 'now' from a template ([f40ec4d0](https://github.com/pluginsglpi/formcreator/commit/f40ec4d0))
+* **targetticket,targetchange:** bad return value in setTargetEntity ([e0ddd2d3](https://github.com/pluginsglpi/formcreator/commit/e0ddd2d3))
+* **targetticket,targetchange:** error when displaying tag from question settings ([3c1ed6ae](https://github.com/pluginsglpi/formcreator/commit/3c1ed6ae))
+* **wizard:** don't show tabs for KB item in service catalog ([ea3afe57](https://github.com/pluginsglpi/formcreator/commit/ea3afe57))
+* **wizard:** show FAQ items only if have right ([8d2cdf19](https://github.com/pluginsglpi/formcreator/commit/8d2cdf19))
+* **wizard:** wrong menu highlighted when browsing FAQ ([cfe2ac05](https://github.com/pluginsglpi/formcreator/commit/cfe2ac05))
+
+
+### Features
+
+* **form:** enable / disable form with single click ([e7bd38ee](https://github.com/pluginsglpi/formcreator/commit/e7bd38ee))
+* **glpiselectfield:** databases plugin support ([e245ba59](https://github.com/pluginsglpi/formcreator/commit/e245ba59))
+* **issue:** change status conversion matrix ([60ba8bf4](https://github.com/pluginsglpi/formcreator/commit/60ba8bf4))
+
+
+
 ## [2.11.2](https://github.com/pluginsglpi/formcreator/compare/v2.11.1...v2.11.2) (2021-02-25)
 
 
