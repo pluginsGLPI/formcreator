@@ -497,7 +497,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '9',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -506,6 +506,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '10',
@@ -516,7 +521,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '11',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -545,8 +550,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '14',
          'table'              => User::getTable(),
          'field'              => 'name',
@@ -567,6 +577,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '15',
