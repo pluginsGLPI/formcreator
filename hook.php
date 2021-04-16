@@ -79,11 +79,12 @@ function plugin_formcreator_addDefaultSelect($itemtype) {
 
 
 function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
-   $join = "";
+   $join = '';
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
          // Get default joins for tickets
-         $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
+         $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
+         $join .= Search::addLeftJoin($itemtype, $ref_table, $already_link_tables, Group::getTable(), 'groups_id_validator');
          // but we want to join in issues
          $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`sub_itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`original_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
@@ -135,15 +136,25 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
    $condition = '';
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
+         $currentUser = Session::getLoginUserID();
+         // Use default where for Tickets
          $condition = Search::addDefaultWhere(Ticket::class);
-         if ($condition == '') {
-            $condition = "(`glpi_plugin_formcreator_issues`.`users_id_validator` = '" . Session::getLoginUserID() . "')";
-         } else {
-            $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
-            $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
-            $condition = "($condition OR `glpi_plugin_formcreator_issues`.`users_id_validator` = '" . Session::getLoginUserID() . "')";
+         // Replace references to ticket tables with issues table
+         $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
+         $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+         // condition where current user is 1st validator of the issue
+         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
+         // condition where current user is a member of 1st validator group of the issue
+         $groupList = [];
+         foreach (Group_User::getUserGroups($currentUser) as $group) {
+            $groupList[] = $group['id'];
          }
-         break;
+         if (count($groupList) > 0) {
+            $groupList = implode("', '", $groupList);
+            $condition .= " OR `glpi_groups_groups_id_validator`.`id` IN ('$groupList')";
+         }
+         $condition = "($condition)";
+      break;
 
       case PluginFormcreatorFormAnswer::class:
          if (isset($_SESSION['formcreator']['form_search_answers'])
