@@ -101,29 +101,36 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
  */
 function plugin_formcreator_getCondition($itemtype) {
    $table = $itemtype::getTable();
-   if ($itemtype == PluginFormcreatorFormAnswer::class) {
-      if (Session::haveRight('config', UPDATE)) {
-         return '';
-      }
-      if (PluginFormcreatorCommon::canValidate()) {
-         $groupUser = new Group_User();
-         $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
-         $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
-         if (count($groups) < 1) {
-            $condition .= ")";
-         } else {
-            $groupIDs = [];
-            foreach ($groups as $group) {
-               $groupIDs[] = $group['id'];
-            }
-            $groupIDs = implode(',', $groupIDs);
-            $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs) )";
-         }
-         return $condition;
-      }
+   $currentUserId = Session::getLoginUserID();
+
+   if ($itemtype != PluginFormcreatorFormAnswer::class) {
+      return '';
+   }
+   if (Session::haveRight('config', UPDATE)) {
+      return '';
    }
 
-   return " `$table`.`requester_id` = " . $_SESSION['glpiID'];
+   if (PluginFormcreatorCommon::canValidate()) {
+      $condition = " (`$table`.`users_id_validator` = $currentUserId";
+      $groups = Group_User::getUserGroups($currentUserId);
+      if (count($groups) < 1) {
+         $condition .= ")";
+         return $condition;
+      }
+
+      // Add current user's groups to the condition
+      $groupIDs = [];
+      foreach ($groups as $group) {
+         $groupIDs[] = $group['id'];
+      }
+      $groupIDs = implode(',', $groupIDs);
+      $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs)";
+      $condition .= ")";
+      return $condition;
+   }
+
+   $condition = " `$table`.`requester_id` = $currentUserId";
+   return $condition;
 }
 
 /**
