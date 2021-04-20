@@ -131,7 +131,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $ticketTable = Ticket::getTable();
       $ticketValidationTable = TicketValidation::getTable();
       $ticketUserTable = Ticket_User::getTable();
-      $query2 = new QuerySubquery([
+      $ticketsQuery = [
          'SELECT' => [
             new QueryExpression('NULL as `id`'),
             "$ticketTable.name as name",
@@ -202,12 +202,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ],
          'WHERE' => [
             "$ticketTable.is_deleted" => 0,
+            "$itemTicketTable.$ticketFk" => null
          ],
-         'GROUPBY' => ['original_id'],
-         'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) <= 1")
-      ]);
+      ];
+      $query2 = new QuerySubquery($ticketsQuery);
 
-      $union = new QueryUnion([$query1, $query2], true);
+      $ticketsQuery['WHERE'] = [
+         "$ticketTable.is_deleted" => 0,
+         ['NOT' => ["$itemTicketTable.$ticketFk" => null]]
+      ];
+      $ticketsQuery['GROUPBY'] = ['original_id'];
+      $ticketsQuery['HAVING'] = new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) <= 1");
+      $query3 = new QuerySubquery($ticketsQuery);
+
+      $union = new QueryUnion([$query1, $query2, $query3], true);
       return $union;
    }
 
