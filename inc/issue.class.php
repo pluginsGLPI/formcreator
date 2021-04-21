@@ -680,13 +680,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $content = $ticket->fields['content'];
                   break;
 
-               // TODO : need some code refactor to properly provide qtip
-               // case PluginFormcreatorFormAnswer::class:
-               //       $formAnswer = new PluginFormcreatorFormAnswer();
-               //       $formAnswer->getFromDB($id);
-               //       $content = $formAnswer->getFullForm();
-               //       // TODO : need to replace tags before creating the qtip
-               //       break;
+               case PluginFormcreatorFormAnswer::class:
+                  $formAnswer = new PluginFormcreatorFormAnswer();
+                  $formAnswer->getFromDB($id);
+                  $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  break;
+
                default:
                   $content = '';
             }
