@@ -994,6 +994,10 @@ PluginFormcreatorConditionnableInterface
          $result_faqs = $DB->request($query_faqs);
          if ($result_faqs->count() > 0) {
             foreach ($result_faqs as $faq) {
+               // Manage translations
+               if (isset($faq['transname']) && !empty($faq['transname'])) {
+                  $faq['name']   = $faq["transname"];
+               }
                $formList[] = [
                   'id'           => $faq['id'],
                   'name'         => $faq['name'],
