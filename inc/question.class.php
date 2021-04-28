@@ -401,12 +401,10 @@ PluginFormcreatorConditionnableInterface
       if (!isset($input['width'])) {
          $input['width'] = PluginFormcreatorSection::COLUMNS - $input['col'];
       }
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       // Get next row
       if ($this->useAutomaticOrdering) {
-         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $maxRow = PluginFormcreatorCommon::getMax($this, [
-            $sectionFk => $input[$sectionFk]
+            self::$items_id => $input[self::$items_id]
          ], 'row');
          if ($maxRow === null) {
             $input['row'] = 0;
