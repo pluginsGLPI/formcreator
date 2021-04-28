@@ -143,7 +143,7 @@ if (isset($_POST['add'])) {
    $form->increaseUsageCount();
 
    if ($form->fields['plugin_formcreator_forms_id'] > 0) {
-      Html::redirect('formdisplay.php?id=' . $form->fields['plugin_formcreator_forms_id']);
+      $form->redirectToNext();
    }
 
    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {

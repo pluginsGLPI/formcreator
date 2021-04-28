@@ -1559,7 +1559,6 @@ PluginFormcreatorTranslatableInterface
       }
 
       // replace form next id
-      $export['_plugin_formcreator_form'] = '';
       if ($export['plugin_formcreator_forms_id'] > 0) {
          $nextForm = new self();
          if (!$nextForm->getFromDB($export['plugin_formcreator_forms_id'])) {
@@ -1573,8 +1572,7 @@ PluginFormcreatorTranslatableInterface
       // remove non needed keys
       unset($export['plugin_formcreator_categories_id'],
             $export['entities_id'],
-            $export['usage_count'],
-            $export['plugin_formcreator_forms_id']);
+            $export['usage_count']);
 
       $subItems = [
          '_profiles'     => PluginFormcreatorForm_Profile::class,
@@ -1724,8 +1722,8 @@ PluginFormcreatorTranslatableInterface
          $linker->initProgressBar();
 
          $success = true;
+         $linker->reset();
          foreach ($forms_toimport['forms'] as $form) {
-            $linker->reset();
             set_time_limit(30);
             try {
                self::import($linker, $form);
@@ -1735,14 +1733,14 @@ PluginFormcreatorTranslatableInterface
                Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
                continue;
             }
-            if (!$linker->linkPostponed()) {
-               Session::addMessageAfterRedirect(sprintf(__("Failed to import %s", "formcreator"),
-                                                           $$form['name']));
-            }
          }
          if ($success) {
             Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
                                                       $filename));
+         }
+         if (!$linker->linkPostponed()) {
+            Session::addMessageAfterRedirect(sprintf(__("Failed to import %s", "formcreator"),
+                                                        $$form['name']));
          }
       }
    }
@@ -1844,13 +1842,14 @@ PluginFormcreatorTranslatableInterface
          if ($formNext === false) {
             $formNext = new PluginFormcreatorForm();
             $formNext->getFromDBByCrit([
-               $formNextFk => $input[$formNextFk],
+               'uuid' => $input[$formNextFk],
             ]);
             if ($formNext->isNewItem()) {
                $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
                return false;
             }
          }
+         $formNextId = $formNext->getID();
          $input[$formNextFk] = $formNextId;
       }
 
@@ -2574,5 +2573,24 @@ PluginFormcreatorTranslatableInterface
       ])->next();
 
       return ($count !== null) ? ($count['c'] > 0) : false;
+   }
+
+   public function redirectToNext() {
+      if ($this->isNewItem()) {
+         return;
+      }
+
+      // check the next form exists
+      $nextForm = new self();
+      if (!$nextForm->getFromDB($this->fields['plugin_formcreator_forms_id'])) {
+         return;
+      }
+
+      // Check the next form is active
+      if ($nextForm->fields['is_active'] == 0) {
+         return;
+      }
+
+      Html::redirect('formdisplay.php?id=' . $this->fields['plugin_formcreator_forms_id']);
    }
 }
