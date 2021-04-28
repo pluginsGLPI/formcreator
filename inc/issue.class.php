@@ -104,6 +104,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'groups_id_validator as groups_id_validator',
                'comment             as comment'
             ],
+            new QueryExpression("IF(`$formAnswerTable`.`status` = '" . PluginFormcreatorFormAnswer::STATUS_ACCEPTED . "', '100', '0') as `validation_percent`"),
          ],
          'DISTINCT' => true,
          'FROM' => $formAnswerTable,
@@ -142,7 +143,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                `$ticketTable`.`status`,
                IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
                   `$ticketTable`.`status`,
-                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "') AND `$ticketTable`.`global_validation` = '" . CommonITILValidation::REFUSED . "',
+                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "'),
                      `$ticketTable`.`status`,
                      IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
@@ -160,6 +161,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             "$ticketUserTable.users_id                   as requester_id",
             new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
             new QueryExpression('0                       as groups_id_validator'),
+            'validation_percent                          as validation_percent',
             "$ticketTable.content                        as comment",
          ],
          'DISTINCT' => true,
@@ -410,7 +412,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '1',
-         'table'              => $this::getTable(),
+         'table'              => self::getTable(),
          'field'              => 'name',
          'name'               => __('Name'),
          'datatype'           => 'itemlink',
@@ -423,7 +425,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '2',
-         'table'              => $this::getTable(),
+         'table'              => self::getTable(),
          'field'              => 'display_id',
          'name'               => __('ID'),
          'datatype'           => 'string',
@@ -432,7 +434,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '3',
-         'table'              => $this::getTable(),
+         'table'              => self::getTable(),
          'field'              => 'sub_itemtype',
          'name'               => __('Type'),
          'searchtype'         => [
@@ -445,7 +447,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '4',
-         'table'              => $this::getTable(),
+         'table'              => self::getTable(),
          'field'              => 'status',
          'name'               => __('Status'),
          'searchtype'         => [
@@ -457,7 +459,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '5',
-         'table'              => $this::getTable(),
+         'table'              => self::getTable(),
          'field'              => 'date_creation',
          'name'               => __('Opening date'),
          'datatype'           => 'datetime',
@@ -466,7 +468,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '6',
-         'table'              => $this::getTable(),
+         'table'              => self::getTable(),
          'field'              => 'date_mod',
          'name'               => __('Last update'),
          'datatype'           => 'datetime',
@@ -497,7 +499,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '9',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -506,6 +508,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '10',
@@ -516,7 +523,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '11',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -545,8 +552,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '14',
          'table'              => User::getTable(),
          'field'              => 'name',
@@ -567,6 +579,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '15',
@@ -663,13 +680,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $content = $ticket->fields['content'];
                   break;
 
-               // TODO : need some code refactor to properly provide qtip
-               // case PluginFormcreatorFormAnswer::class:
-               //       $formAnswer = new PluginFormcreatorFormAnswer();
-               //       $formAnswer->getFromDB($id);
-               //       $content = $formAnswer->getFullForm();
-               //       // TODO : need to replace tags before creating the qtip
-               //       break;
+               case PluginFormcreatorFormAnswer::class:
+                  $formAnswer = new PluginFormcreatorFormAnswer();
+                  $formAnswer->getFromDB($id);
+                  $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  break;
+
                default:
                   $content = '';
             }

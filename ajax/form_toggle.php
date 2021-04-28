@@ -29,29 +29,16 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include ('../../../inc/includes.php');
+Session::checkRight('entity', UPDATE);
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+$form = new PluginFormcreatorForm();
 
-$kb = new KnowbaseItem();
+$success = $form->update([
+   'id' => $_POST['id'],
+   'toggle' => 'toggle',
+]);
 
-if (isset($_GET["id"])) {
-   $kb->check($_GET["id"], READ);
-
-   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-   $available_options = ['item_itemtype', 'item_items_id', 'id'];
-   $options           = [];
-   foreach ($available_options as $key) {
-      if (isset($_GET[$key])) {
-         $options[$key] = $_GET[$key];
-      }
-   }
-   $_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
-   $kb->showFull($options);
-
-   PluginFormcreatorWizard::footer();
+if (!$success) {
+   http_response_code(500);
 }

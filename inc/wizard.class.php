@@ -107,7 +107,9 @@ class PluginFormcreatorWizard {
       echo '<span class="label">'.__('My requests for assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT) {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
+         && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+      ) {
          echo '<li class="' . ($activeMenuItem == self::MENU_FAQ ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
          echo '<a href="' . FORMCREATOR_ROOTDOC.'/front/knowbaseitem.php' . '">';
          echo '<span class="fc_list_icon fas fa-question" title="'.__('Knowledge Base', 'formcreator').'"></span>';
@@ -273,7 +275,7 @@ class PluginFormcreatorWizard {
    }
 
    protected static function findActiveMenuItem() {
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == '1') {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT) {
          if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.php") !== false
             || strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.form.php") !== false) {
             return self::MENU_FAQ;

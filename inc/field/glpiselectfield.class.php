@@ -57,12 +57,15 @@ use Contact;
 use Contract;
 use Document;
 use Project;
+use Certificate;
 use Entity;
 use Profile;
 use PassiveDCEquipment;
 use PluginAppliancesAppliance;
 use Plugin;
 use CommonTreeDropdown;
+use PluginGenericobjectType;
+use PluginDatabasesDatabase;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
@@ -75,48 +78,7 @@ class GlpiselectField extends DropdownField
       $label .= _n('GLPI object', 'GLPI objects', 1, 'formcreator');
       $label .= '</label>';
 
-      $optgroup = [
-         __("Assets") => [
-            Computer::class         => Computer::getTypeName(2),
-            Monitor::class          => Monitor::getTypeName(2),
-            Software::class         => Software::getTypeName(2),
-            NetworkEquipment::class => Networkequipment::getTypeName(2),
-            Peripheral::class       => Peripheral::getTypeName(2),
-            Printer::class          => Printer::getTypeName(2),
-            CartridgeItem::class    => CartridgeItem::getTypeName(2),
-            ConsumableItem::class   => ConsumableItem::getTypeName(2),
-            Phone::class            => Phone::getTypeName(2),
-            Line::class             => Line::getTypeName(2),
-            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
-            Appliance::class          => Appliance::getTypeName(2),
-         ],
-         __("Assistance") => [
-            Ticket::class           => Ticket::getTypeName(2),
-            Problem::class          => Problem::getTypeName(2),
-            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)
-         ],
-         __("Management") => [
-            Budget::class           => Budget::getTypeName(2),
-            Supplier::class         => Supplier::getTypeName(2),
-            Contact::class          => Contact::getTypeName(2),
-            Contract::class         => Contract::getTypeName(2),
-            Document::class         => Document::getTypeName(2),
-            Project::class          => Project::getTypeName(2)
-         ],
-         __("Tools") => [
-            Reminder::class         => __("Notes"),
-            RSSFeed::class          => __("RSS feed")
-         ],
-         __("Administration") => [
-            User::class             => User::getTypeName(2),
-            Group::class            => Group::getTypeName(2),
-            Entity::class           => Entity::getTypeName(2),
-            Profile::class          => Profile::getTypeName(2)
-         ],
-      ];
-      if ((new Plugin())->isActivated('appliances')) {
-         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
-      }
+      $optgroup = $this->getObjects();
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       if ($decodedValues === null) {
@@ -256,5 +218,65 @@ class GlpiselectField extends DropdownField
 
    public function isAnonymousFormCompatible(): bool {
       return false;
+   }
+
+   public function getObjects() {
+      $optgroup = [
+         __("Assets") => [
+            Computer::class           => Computer::getTypeName(2),
+            Monitor::class            => Monitor::getTypeName(2),
+            Software::class           => Software::getTypeName(2),
+            NetworkEquipment::class   => Networkequipment::getTypeName(2),
+            Peripheral::class         => Peripheral::getTypeName(2),
+            Printer::class            => Printer::getTypeName(2),
+            CartridgeItem::class      => CartridgeItem::getTypeName(2),
+            ConsumableItem::class     => ConsumableItem::getTypeName(2),
+            Phone::class              => Phone::getTypeName(2),
+            Line::class               => Line::getTypeName(2),
+            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
+            Appliance::class          => Appliance::getTypeName(2),
+         ],
+         __("Assistance") => [
+            Ticket::class             => Ticket::getTypeName(2),
+            Problem::class            => Problem::getTypeName(2),
+            TicketRecurrent::class    => TicketRecurrent::getTypeName(2)
+         ],
+         __("Management") => [
+            Budget::class             => Budget::getTypeName(2),
+            Supplier::class           => Supplier::getTypeName(2),
+            Contact::class            => Contact::getTypeName(2),
+            Contract::class           => Contract::getTypeName(2),
+            Document::class           => Document::getTypeName(2),
+            Project::class            => Project::getTypeName(2),
+            Certificate::class        => Certificate::getTypeName(2)
+         ],
+         __("Tools") => [
+            Reminder::class           => __("Notes"),
+            RSSFeed::class            => __("RSS feed")
+         ],
+         __("Administration") => [
+            User::class               => User::getTypeName(2),
+            Group::class              => Group::getTypeName(2),
+            Entity::class             => Entity::getTypeName(2),
+            Profile::class            => Profile::getTypeName(2)
+         ],
+      ];
+      if ((new Plugin())->isActivated('appliances')) {
+         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+      if ((new Plugin())->isActivated('databases')) {
+         $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+
+      if ((new Plugin())->isActivated("genericobject")) {
+         $optgroup[__('Plugin') . " " . __('Objects management', 'genericobject')] = [];
+         $genericObjectType = new PluginGenericobjectType();
+         $genericObjectTypes = $genericObjectType->find();
+         foreach ($genericObjectTypes as $object) {
+            $optgroup[__('Plugin') . " " . __('Objects management', 'genericobject')][$object["itemtype"]] = $object["itemtype"]::getTypeName();
+         }
+      }
+
+      return $optgroup;
    }
 }

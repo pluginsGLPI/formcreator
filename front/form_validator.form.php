@@ -29,29 +29,32 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include ('../../../inc/includes.php');
+
+Session::checkRight('entity', UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-$kb = new KnowbaseItem();
-
-if (isset($_GET["id"])) {
-   $kb->check($_GET["id"], READ);
-
-   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-   $available_options = ['item_itemtype', 'item_items_id', 'id'];
-   $options           = [];
-   foreach ($available_options as $key) {
-      if (isset($_GET[$key])) {
-         $options[$key] = $_GET[$key];
-      }
-   }
-   $_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
-   $kb->showFull($options);
-
-   PluginFormcreatorWizard::footer();
+if (!isset($_POST['plugin_formcreator_forms_id'])) {
+   // should not happen
+   Html::back();
 }
+$formId = (int) $_POST['plugin_formcreator_forms_id'];
+$formValidator = new PluginFormcreatorForm_Validator();
+$form = new PluginFormcreatorForm();
+if (isset($_POST['add'])) {
+   // Add a new Form
+   Session::checkRight('entity', UPDATE);
+   $formValidator->addMultipleItems($_POST);
+   Html::redirect($form->getFormURLWithID($formId));
+} else if (isset($_POST['set_validation_percent'])) {
+   $form->update([
+      'id' => $formId,
+      'validation_percent' => $_POST['validation_percent'],
+   ]);
+   Html::redirect($form->getFormURLWithID($formId));
+}
+Html::back();

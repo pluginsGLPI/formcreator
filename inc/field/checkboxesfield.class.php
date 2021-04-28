@@ -186,7 +186,11 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          $input[$key] = [];
       } else {
          if (!is_array($input[$key])) {
-            $input[$key] = [$input[$key]];
+            $input[$key] = json_decode($input[$key], true);
+            if (!is_array($input[$key])) {
+               // Should not happen
+               $input[$key] = [];
+            }
          }
       }
 

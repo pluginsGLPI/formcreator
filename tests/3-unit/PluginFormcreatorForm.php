@@ -253,6 +253,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $instance->defineTabs();
       $expected = [
          'PluginFormcreatorForm$main' => "Form",
+         'PluginFormcreatorForm_Validator$1' => "Validators",
          'PluginFormcreatorQuestion$1' => "Questions",
          'PluginFormcreatorForm_Profile$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
@@ -330,43 +331,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
-   public function testUpdateValidators() {
-      $form = $this->getForm();
-
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $rows = $formValidator->find([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $this->array($rows)->hasSize(0);
-
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users' => ['2'], // glpi account
-      ]);
-
-      $rows = $formValidator->find([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $this->array($rows)->hasSize(1);
-      $formValidator->getFromResultSet(array_pop($rows));
-      $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(2);
-      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\User::class);
-      $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
-
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
-         '_validator_groups' => ['1'], // a group ID (not created in this test)
-      ]);
-      $rows = $formValidator->find([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $this->array($rows)->hasSize(1);
-      $formValidator->getFromResultSet(array_pop($rows));
-      $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(1);
-      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\Group::class);
-      $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
-   }
-
    public function testIncreateUsageCount() {
       $form = $this->getForm();
       $this->integer((int) $form->fields['usage_count'])->isEqualTo(0);
@@ -390,12 +354,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       global $DB, $CFG_GLPI;
 
       // Enable notifications in GLPI
-      \Config::setConfigurationValues(
-         'core',
-         ['use_notifications' => 1, 'notifications_mailing' => 1]
-      );
       $CFG_GLPI['use_notifications'] = 1;
       $CFG_GLPI['notifications_mailing'] = 1;
+
       $user = new \User();
       $user->getFromDBbyName('glpi');
       $_SESSION['glpiID'] = $user->getID();
@@ -404,26 +365,28 @@ class PluginFormcreatorForm extends CommonTestCase {
          'users_id' => $user->getID(),
       ]);
       $user->update([
-         'id' => $_SESSION['glpiID'],
+         'id' => $user->getID(),
          '_useremails' => [
             'glpi@localhost.com',
          ]
       ]);
       $form = $this->getForm([
          'name'                  => 'validation notification',
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'      => [$_SESSION['glpiID']],
       ]);
-      $this->getSection([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-         'name' => 'section',
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => $user::getType(),
+         'items_id' => $user->getID(),
+         'level'    => 1,
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $this->disableDebug();
       $formAnswerId = $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => $_SESSION['glpiID'],
+         'formcreator_validator'       => \User::getType() . '_' . $_SESSION['glpiID'],
       ]);
       $this->restoreDebug();
       $this->boolean($formAnswer->isNewItem())->isFalse();
@@ -470,10 +433,10 @@ class PluginFormcreatorForm extends CommonTestCase {
          'language',
          'helpdesk_home',
          'is_deleted',
-         'validation_required',
          'is_default',
          'is_captcha_enabled',
          'show_rule',
+         'validation_percent',
       ];
       $extraFields = [
          '_entity',
@@ -511,6 +474,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'is_deleted',
          'validation_required',
          'is_default',
+         'validation_percent',
          'uuid',
          '_sections',
          '_validators',

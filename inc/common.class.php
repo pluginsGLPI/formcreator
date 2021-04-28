@@ -247,12 +247,12 @@ JAVASCRIPT;
     *                +-------------+---------+---------+----------+
     *                |NULL or NONE | WAITING | REFUSED | ACCEPTED |
     *     + ---------+-------------+---------+---------+----------+
-    * T S | INCOMING |     T            V          V         T
-    * i t | ASSIGNED |     T            V          V         T
-    * c a | PLANNED  |     T            V          V         T
-    * k t | WAITING  |     T            V          V         T
-    * e u | SOLVED   |     T            V          T         T
-    * t s | CLOSED   |     T            V          T         T
+    * T S | INCOMING |      T           V         V          T
+    * i t | ASSIGNED |      T           V         V          T
+    * c a | PLANNED  |      T           V         V          T
+    * k t | WAITING  |      T           V         V          T
+    * e u | SOLVED   |      T           T         T          T
+    * t s | CLOSED   |      T           T         T          T
     *
     * T = status picked from Ticket
     * V = status picked from Validation
@@ -267,6 +267,9 @@ JAVASCRIPT;
          'timeline_position ASC'
       ], 1);
       $user = 0;
+      $reloadedItem = new Ticket();
+      $reloadedItem->getFromDB($item->getID());
+      $validationPercent = $reloadedItem->fields['validation_percent'];
       $ticketValidationCount = count($ticketValidations);
       if ($ticketValidationCount) {
          $row = array_shift($ticketValidations);
@@ -277,7 +280,9 @@ JAVASCRIPT;
       if ($ticketValidationCount > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
          switch ($item->fields['global_validation']) {
             case CommonITILValidation::WAITING:
-               $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
+               if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
+                  $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
+               }
                break;
             case CommonITILValidation::REFUSED:
                if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
@@ -287,7 +292,7 @@ JAVASCRIPT;
          }
       }
 
-      return ['status' => $status, 'user' => $user];
+      return ['status' => $status, 'user' => $user, 'validation_percent' => $validationPercent];
    }
 
    /**

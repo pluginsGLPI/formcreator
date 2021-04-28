@@ -39,6 +39,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          case 'testGetTicketStatusForIssue':
             $this->login('glpi', 'glpi');
             $_SESSION['glpiset_default_tech'] = false;
+            $this->beforeGetTicketStatusForIssue();
             break;
       }
    }
@@ -164,11 +165,16 @@ class PluginFormcreatorCommon extends CommonTestCase {
    }
 
    public function beforeGetTicketStatusForIssue() {
+      global $CFG_GLPI;
 
+      $CFG_GLPI['use_notifications'] = '0';
    }
 
    public function providerGetTicketStatusForIssue() {
       $data = [];
+
+      // Build test cases for 1st and last columns of tabhe in docblock of
+      // PluginFormcreatorCommon::getTicketStatusForIssue (total 18 test cases)
       $expectedStatus = [
             \Ticket::INCOMING,
             \Ticket::ASSIGNED,
@@ -240,7 +246,49 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'expected' => ['user' => 4, 'status' => $ticketStatus]
          ];
          $data["validation accepted, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+      }
 
+      // Build test cases for 2nd column of tabhe in docblock of
+      // PluginFormcreatorCommon::getTicketStatusForIssue (total 4 test cases)
+      $expectedStatus = [
+         \Ticket::INCOMING,
+         \Ticket::ASSIGNED,
+         \Ticket::PLANNED,
+         \Ticket::WAITING,
+      ];
+      foreach ($expectedStatus as $ticketStatus) {
+         // generate tickets with a validation
+         $ticket = new \Ticket();
+         $ticket->add([
+            'name' => 'a ticket',
+            'content' => "should be " . \CommonITILValidation::getStatus(\CommonITILValidation::WAITING),
+            'status'  =>  \CommonITILObject::INCOMING,
+            '_add_validation' => '0',
+            'validatortype' => User::class,
+            'users_id_validate' => [4], // Tech
+         ]);
+         $this->boolean($ticket->isNewItem())->isFalse();
+         // Creating a ticket directly with status solved or closed
+         // will prevent credation of ticketvalidation item
+         $ticket->update([
+            'id' => $ticket->getID(),
+            'status' => $ticketStatus,
+            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
+         ]);
+         $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
+         $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
+         $dataSet = [
+            'ticket' => $ticket,
+            'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING]
+         ];
+         $data["validation waiting, " . \CommonITILValidation::getStatus(\CommonITILValidation::WAITING)] = $dataSet;
+      }
+
+      $expectedStatus = [
+         \Ticket::SOLVED,
+         \Ticket::CLOSED,
+      ];
+      foreach ($expectedStatus as $ticketStatus) {
          $ticket = new \Ticket();
          $ticket->add([
             'name' => 'a ticket',
@@ -262,11 +310,13 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING]
+            'expected' => ['user' => 4, 'status' => $ticketStatus]
          ];
          $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
       }
 
+      // Build test cases for 3rd column of tabhe in docblock of
+      // PluginFormcreatorCommon::getTicketStatusForIssue (total 4 test cases)
       $expectedStatus = [
          \Ticket::INCOMING,
          \Ticket::ASSIGNED,
@@ -274,10 +324,11 @@ class PluginFormcreatorCommon extends CommonTestCase {
          \Ticket::WAITING,
       ];
       foreach ($expectedStatus as $ticketStatus) {
+         // generate tickets with a validation
          $ticket = new \Ticket();
          $ticket->add([
             'name' => 'a ticket',
-            'content' => "should be " . \Ticket::getStatus($ticketStatus),
+            'content' => "should be " . \CommonITILValidation::getStatus(\CommonITILValidation::REFUSED),
             'status'  =>  \CommonITILObject::INCOMING,
             '_add_validation' => '0',
             'validatortype' => User::class,
@@ -297,7 +348,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_REFUSED]
          ];
-         $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+         $data["validation refused, " . \CommonITILValidation::getStatus(\CommonITILValidation::REFUSED)] = $dataSet;
       }
 
       $expectedStatus = [
@@ -328,7 +379,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => ['user' => 4, 'status' => $ticketStatus]
          ];
-         $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+         $data["validation refused, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
       }
 
       return $data;

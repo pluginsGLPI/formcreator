@@ -234,7 +234,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
       // -------------------------------------------------------------------------------------------
-      if ($form->fields['validation_required']) {
+      if ($form->validationRequired()) {
          echo '<tr>';
          echo '<td colspan="4">';
          echo '<input type="hidden" name="validation_followup" value="0" />';
@@ -864,7 +864,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration
-      if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
+      if ($form->validationRequired() && $this->fields['validation_followup']) {
          $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
          if (!empty($formanswer->fields['comment'])) {
             $message.= "\n".addslashes($formanswer->fields['comment']);

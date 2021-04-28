@@ -336,7 +336,7 @@ PluginFormcreatorTranslatableInterface
             }
             if (count($data_entities) < 1) {
                // No entity found
-               return $entityId;
+               break;
             }
             $first_entity = array_shift($data_entities);
             $entityId = $first_entity[$entityFk];
@@ -600,11 +600,6 @@ PluginFormcreatorTranslatableInterface
          ]
       ]);
       foreach ($rows as $actor) {
-         // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR && !$form->fields['validation_required']) {
-            continue;
-         }
-
          switch ($actor['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
                $userIds = [$formanswer->fields['requester_id']];
@@ -1218,7 +1213,9 @@ PluginFormcreatorTranslatableInterface
          echo '<tr>';
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
-         Dropdown::showFromArray('tag_type', self::getEnumTagType(),
+         Dropdown::showFromArray(
+            'tag_type',
+            self::getEnumTagType(),
             [
                'value'     => $this->fields['tag_type'],
                'on_change' => 'change_tag_type()',
@@ -1274,7 +1271,7 @@ SCRIPT;
                'fieldtype' => ['tag'],
             ],
             '_tag_questions',
-            explode(',', $this->fields['tag_questions']),
+            $this->fields['tag_questions'],
             [
                'multiple' => true,
             ]

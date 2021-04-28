@@ -47,6 +47,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       $table = 'glpi_plugin_formcreator_issues';
       $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp');
       $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp');
+      $this->addValidationPercent();
 
       $this->changeDropdownTreeSettings();
 
@@ -91,5 +92,17 @@ class PluginFormcreatorUpgradeTo2_12 {
          $newValues = json_encode($newValues);
          $DB->update($table, ['values' => $newValues], ['id' => $row['id']]);
       }
+   }
+
+   public function addValidationPercent() {
+      $table = 'glpi_plugin_formcreator_forms';
+      $this->migration->dropField($table, 'validation_required');
+      $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'show_rule']);
+
+      $table = 'glpi_plugin_formcreator_formanswers';
+      $this->migration->addField($table, 'validation_percent', 'integer', ['after' => 'status']);
+
+      $table = 'glpi_plugin_formcreator_forms_validators';
+      $this->migration->addField($table, 'level', 'integer', ['after' => 'items_id', 'value' => '1']);
    }
 }

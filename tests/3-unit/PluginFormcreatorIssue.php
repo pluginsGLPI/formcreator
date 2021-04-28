@@ -37,6 +37,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       global $CFG_GLPI;
       switch ($method) {
          case 'testGetSyncIssuesRequest':
+         case 'testUpdateDateModOnNewFollowup':
             $this->login('glpi', 'glpi');
             $CFG_GLPI['use_notifications'] = 0;
             break;
@@ -215,15 +216,20 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetSyncIssuesRequest_formanswerUnderValidation() {
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [4] // tech
+      $form = $this->getForm();
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => \User::getType(),
+         'items_id' => 4, // Tech
+         'level' => 1,
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => 4 // Tech
+         'formcreator_validator'       => \User::getType() . '_' . '4' // Tech
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
@@ -421,4 +427,45 @@ class PluginFormcreatorIssue extends CommonTestCase {
       }
    }
 
+   public function testUpdateDateModOnNewFollowup() {
+      $ticket = new \Ticket();
+      $ticket->add([
+         'name' => 'ticket',
+         'content' => 'foo',
+      ]);
+      $this->boolean($ticket->isNewItem())->isFalse();
+      $creationDate = $ticket->fields['date_creation'];
+
+      $issue = new \PluginFormcreatorISsue();
+      $issue->getFromDBByCrit([
+         'sub_itemtype' => \Ticket::getType(),
+         'original_id'  => $ticket->getID(),
+      ]);
+      $this->boolean($issue->isNewItem())->isFalse();
+      $this->string($issue->fields['date_creation'])->isEqualTo($creationDate);
+      $this->string($issue->fields['date_mod'])->isEqualTo($creationDate);
+
+      sleep(2); // 2 seconds sleep to change the current datetime
+      $this->login('glpi', 'glpi'); // Needed to update the current datetime in session
+      $followup = new \ITILFollowup();
+      $followup->add([
+         'itemtype' => \Ticket::getType(),
+         'items_id' => $ticket->getID(),
+         'content' => 'bar'
+      ]);
+      $this->boolean($followup->isNewItem())->isFalse();
+      $ticket = new \Ticket();
+      $ticket->getFromDB($issue->fields['original_id']);
+      $this->boolean($ticket->isNewItem())->isFalse();
+      $this->string($ticket->fields['date_mod'])->isNotEqualTo($creationDate);
+      $modDate = $ticket->fields['date_mod'];
+
+      $issue = new \PluginFormcreatorISsue();
+      $issue->getFromDBByCrit([
+         'sub_itemtype' => \Ticket::getType(),
+         'original_id'  => $ticket->getID(),
+      ]);
+      $this->string($issue->fields['date_creation'])->isEqualTo($creationDate);
+      $this->string($issue->fields['date_mod'])->isEqualTo($modDate);
+   }
 }
