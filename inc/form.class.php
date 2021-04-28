@@ -476,7 +476,11 @@ PluginFormcreatorTranslatableInterface
       echo '<tr>';
       echo '<td>'.__('Next form', 'formcreator').'</td>';
       echo '<td>';
-      PluginFormcreatorForm::dropdown(['name'=>'plugin_formcreator_forms_id', 'value'=>$this->fields['plugin_formcreator_forms_id']]);
+      PluginFormcreatorForm::dropdown([
+         'name'  => 'plugin_formcreator_forms_id',
+         'value' => $this->fields['plugin_formcreator_forms_id'],
+         'used'  => [$this->getID()],
+      ]);
       echo '</td>';
       echo '<td></td>';
       echo '<td></td>';
