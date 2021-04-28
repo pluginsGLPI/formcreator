@@ -329,14 +329,16 @@ PluginFormcreatorConditionnableInterface
       switch ($field) {
          case 'is_active':
             if ($values[$field] == 0) {
+               $faIcon = 'far fa-circle';
                $class = "plugin-forcreator-inactive";
                $title =  __('Inactive');
             } else {
+               $faIcon = 'fa fa-circle';
                $class = "plugin-forcreator-active";
                $title =  __('Active');
             }
             $output = '<i class="fa fa-circle '
-            . $class
+            . "$faIcon $class"
             . '" aria-hidden="true" title="' . $title . '"></i>';
             $output = '<div style="text-align: center" onclick="plugin_formcreator.toggleForm(' . $options['raw_data']['id']. ')">' . $output . '</div>';
             return $output;
