@@ -1751,7 +1751,7 @@ span.fc_list_icon {
       left: 100px;
    }
 
-   #plugin_formcreator_wizard_categories {
+   #plugin_formcreator_wizard_categories, #plugin_formcreator_kb_categories {
       height: inherit;
       width: 100%;
       position: initial;
@@ -1759,7 +1759,7 @@ span.fc_list_icon {
       min-height: initial;
    }
 
-   #plugin_formcreator_wizard_categories .slinky-menu {
+   #plugin_formcreator_wizard_categories .slinky-menu,  #plugin_formcreator_kb_categories .slinky-menu {
       position: static;
    }
 
