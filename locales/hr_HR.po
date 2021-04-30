@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-26 12:55+0100\n"
+"POT-Creation-Date: 2021-04-15 10:55+0200\n"
 "PO-Revision-Date: 2020-01-14 14:51+0000\n"
 "Last-Translator: milotype <mail@milotype.de>, 2021\n"
 "Language-Team: Croatian (Croatia) (https://www.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -28,23 +28,24 @@ msgstr[0] "Kategorija obrazaca"
 msgstr[1] "Kategorije obrazaca"
 msgstr[2] "Kategorije obrazaca"
 
-#: hook.php:527
-msgid "Cancel my ticket"
-msgstr ""
-
-#: setup.php:233 inc/form.class.php:108 inc/formlist.class.php:55
-#: inc/formlist.class.php:56
-msgid "Forms waiting for validation"
-msgstr "Obrasci čekaju na potvrdu"
-
-#: setup.php:243 ajax/homepage_link.php:37 inc/entityconfig.class.php:63
-#: inc/form.class.php:101 inc/form.class.php:705 inc/form.class.php:2078
-#: inc/formanswer.class.php:185 inc/formlist.class.php:46 js/scripts.js.php:73
+#: hook.php:538 setup.php:252 ajax/homepage_link.php:37
+#: inc/entityconfig.class.php:63 inc/form.class.php:101 inc/form.class.php:714
+#: inc/form.class.php:2116 inc/formanswer.class.php:185
+#: inc/formlist.class.php:46
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Obrazac"
 msgstr[1] "Obrasci"
 msgstr[2] "Obrasci"
+
+#: hook.php:580
+msgid "Cancel my ticket"
+msgstr ""
+
+#: setup.php:242 inc/form.class.php:108 inc/formlist.class.php:55
+#: inc/formlist.class.php:56
+msgid "Forms waiting for validation"
+msgstr "Obrasci čekaju na potvrdu"
 
 #: ajax/commontree.php:54
 msgid "Subtree root"
@@ -111,8 +112,8 @@ msgstr "Nije bilo moguće aktualizirati odjeljak"
 #: front/form.php:45 front/formanswer.form.php:79 front/formanswer.form.php:84
 #: front/formanswer.php:46 front/formanswer.php:51 front/issue.php:48
 #: front/issue.php:53 front/targetchange.form.php:77
-#: front/targetticket.form.php:77 inc/form.class.php:2144
-#: inc/form.class.php:2151
+#: front/targetticket.form.php:77 inc/form.class.php:2182
+#: inc/form.class.php:2189
 msgid "Form Creator"
 msgstr "Stvaranje obrazaca"
 
@@ -120,11 +121,11 @@ msgstr "Stvaranje obrazaca"
 #: front/issue.form.php:54 front/issue.php:44 front/knowbaseitem.form.php:45
 #: front/knowbaseitem.php:40 front/reservation.form.php:46
 #: front/reservation.php:46 front/reservationitem.php:42 front/wizard.php:45
-#: front/wizardfeeds.php:46 inc/form.class.php:2139
+#: front/wizardfeeds.php:46 inc/form.class.php:2177
 msgid "Service catalog"
 msgstr "Katalog usluga"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2141
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2179
 msgid "Form list"
 msgstr "Popis obrazaca"
 
@@ -252,84 +253,84 @@ msgstr "Korisnička vrsta pitanja"
 msgid "Entity type question"
 msgstr "Entitetska vrsta pitanja"
 
-#: inc/abstracttarget.class.php:1022
+#: inc/abstracttarget.class.php:1016
 msgid "SLA (TTO/TTR)"
 msgstr ""
 
-#: inc/abstracttarget.class.php:1023 inc/abstracttarget.class.php:1098
+#: inc/abstracttarget.class.php:1017 inc/abstracttarget.class.php:1088
 msgid "Question (TTO/TTR)"
 msgstr ""
 
-#: inc/abstracttarget.class.php:1097
+#: inc/abstracttarget.class.php:1087
 msgid "OLA (TTO/TTR)"
 msgstr ""
 
-#: inc/abstracttarget.class.php:1150 inc/abstracttarget.class.php:1164
-#: inc/form.class.php:787 inc/knowbase.class.php:64
+#: inc/abstracttarget.class.php:1136 inc/abstracttarget.class.php:1150
+#: inc/form.class.php:796 inc/knowbase.class.php:64
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Kategorija"
 msgstr[1] "Kategorije"
 msgstr[2] "Kategorije"
 
-#: inc/abstracttarget.class.php:1165 inc/abstracttarget.class.php:1203
-#: inc/abstracttarget.class.php:1281 inc/abstracttarget.class.php:1409
-#: inc/abstracttarget.class.php:1665 inc/question.class.php:59
-#: inc/targetticket.class.php:927 inc/targetticket.class.php:968
+#: inc/abstracttarget.class.php:1151 inc/abstracttarget.class.php:1187
+#: inc/abstracttarget.class.php:1265 inc/abstracttarget.class.php:1393
+#: inc/abstracttarget.class.php:1649 inc/question.class.php:59
+#: inc/targetticket.class.php:932 inc/targetticket.class.php:971
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Pitanje"
 msgstr[1] "Pitanja"
 msgstr[2] "Pitanja"
 
-#: inc/abstracttarget.class.php:1204
+#: inc/abstracttarget.class.php:1188
 msgid "Urgency "
 msgstr "Hitnost "
 
-#: inc/abstracttarget.class.php:1236
+#: inc/abstracttarget.class.php:1218
 msgid "Ticket tags"
 msgstr "Oznake naloga"
 
-#: inc/abstracttarget.class.php:1282
+#: inc/abstracttarget.class.php:1266
 msgid "Tags"
 msgstr "Oznake"
 
-#: inc/abstracttarget.class.php:1367
+#: inc/abstracttarget.class.php:1351
 msgid "Actors"
 msgstr "Učesnici"
 
-#: inc/abstracttarget.class.php:1410
+#: inc/abstracttarget.class.php:1394
 msgid "Location "
 msgstr "Lokacija"
 
-#: inc/abstracttarget.class.php:1536
+#: inc/abstracttarget.class.php:1520
 msgid "A target must be associated to a form."
 msgstr "Cilj mora biti povezan s obrascem."
 
-#: inc/abstracttarget.class.php:1541
+#: inc/abstracttarget.class.php:1525
 msgid "A target must be associated to an existing form."
 msgstr "Cilj mora biti povezan s postojećim obrascem."
 
-#: inc/abstracttarget.class.php:1546
+#: inc/abstracttarget.class.php:1530
 msgid "Name is required."
 msgstr ""
 
-#: inc/abstracttarget.class.php:1573 inc/form.class.php:1348
+#: inc/abstracttarget.class.php:1557 inc/form.class.php:1359
 msgid "The name cannot be empty!"
 msgstr "Ime ne može biti prazno!"
 
-#: inc/abstracttarget.class.php:1579
+#: inc/abstracttarget.class.php:1563
 msgid "The description cannot be empty!"
 msgstr "Opis ne može biti prazan!"
 
-#: inc/abstracttarget.class.php:1667 inc/answer.class.php:66
+#: inc/abstracttarget.class.php:1651 inc/answer.class.php:66
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Odgovor"
 msgstr[1] "Odgovori"
 msgstr[2] "Odgovori"
 
-#: inc/abstracttarget.class.php:1668 inc/question.class.php:707
+#: inc/abstracttarget.class.php:1652 inc/question.class.php:713
 #: inc/section.class.php:61
 msgid "Section"
 msgid_plural "Sections"
@@ -337,47 +338,47 @@ msgstr[0] "Odjeljak"
 msgstr[1] "Odjeljci"
 msgstr[2] "Odjeljci"
 
-#: inc/abstracttarget.class.php:1672
+#: inc/abstracttarget.class.php:1656
 msgid "Full form"
 msgstr "Potpun obrazac"
 
-#: inc/abstracttarget.class.php:1846
+#: inc/abstracttarget.class.php:1830
 msgid "Add"
 msgstr "Dodaj"
 
-#: inc/abstracttarget.class.php:1848
+#: inc/abstracttarget.class.php:1832
 msgid "Cancel"
 msgstr "Odustani"
 
-#: inc/abstracttarget.class.php:2029 inc/target_actor.class.php:64
+#: inc/abstracttarget.class.php:2001 inc/target_actor.class.php:64
 msgid "Form author"
 msgstr ""
 
-#: inc/abstracttarget.class.php:2032 inc/target_actor.class.php:65
+#: inc/abstracttarget.class.php:2004 inc/target_actor.class.php:65
 msgid "Form validator"
 msgstr "Potvrditelj obrasca"
 
-#: inc/abstracttarget.class.php:2042 inc/target_actor.class.php:67
+#: inc/abstracttarget.class.php:2014 inc/target_actor.class.php:67
 msgid "Person from the question"
 msgstr "Osoba iz pitanja"
 
-#: inc/abstracttarget.class.php:2053 inc/target_actor.class.php:69
+#: inc/abstracttarget.class.php:2025 inc/target_actor.class.php:69
 msgid "Group from the question"
 msgstr "Grupa iz pitanja"
 
-#: inc/abstracttarget.class.php:2059
+#: inc/abstracttarget.class.php:2031
 msgid "Group from the object"
 msgstr "Grupa iz objekta"
 
-#: inc/abstracttarget.class.php:2065
+#: inc/abstracttarget.class.php:2037
 msgid "Tech group from the object"
 msgstr "Tehnička grupa iz objekta"
 
-#: inc/abstracttarget.class.php:2071 inc/target_actor.class.php:74
+#: inc/abstracttarget.class.php:2043 inc/target_actor.class.php:74
 msgid "Actors from the question"
 msgstr "Učesnici iz pitanja"
 
-#: inc/abstracttarget.class.php:2082 inc/target_actor.class.php:73
+#: inc/abstracttarget.class.php:2054 inc/target_actor.class.php:73
 msgid "Supplier from the question"
 msgstr "Dobavljač iz pitanja"
 
@@ -424,13 +425,13 @@ msgstr "Skriveno, osim ako"
 msgid "Displayed unless"
 msgstr "Prikazano, osim ako"
 
-#: inc/condition.class.php:176 inc/form.class.php:1974
+#: inc/condition.class.php:176 inc/form.class.php:2012
 #: inc/form_profile.class.php:227 inc/form_validator.class.php:109
-#: inc/item_targetticket.class.php:148 inc/question.class.php:922
+#: inc/item_targetticket.class.php:148 inc/question.class.php:928
 #: inc/questiondependency.class.php:200 inc/questionrange.class.php:178
-#: inc/questionregex.class.php:173 inc/section.class.php:320
+#: inc/questionregex.class.php:173 inc/section.class.php:324
 #: inc/target_actor.class.php:175 inc/targetchange.class.php:247
-#: inc/targetticket.class.php:1214
+#: inc/targetticket.class.php:1217
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr ""
@@ -511,226 +512,226 @@ msgstr "Ikona"
 msgid "Icon color"
 msgstr "Boja ikone"
 
-#: inc/form.class.php:251 inc/form.class.php:419
+#: inc/form.class.php:251 inc/form.class.php:430
 msgid "Background color"
 msgstr "Boja pozadine"
 
-#: inc/form.class.php:303 inc/form.class.php:364 inc/form.class.php:434
+#: inc/form.class.php:303 inc/form.class.php:364 inc/form.class.php:445
 msgid "All langages"
 msgstr "Svi jezici"
 
-#: inc/form.class.php:404
+#: inc/form.class.php:415
 msgid "Direct access on homepage"
 msgstr "Izravni pristup na početnoj stranici"
 
-#: inc/form.class.php:412
+#: inc/form.class.php:423
 msgid "Form icon"
 msgstr "Ikona za obrasce"
 
-#: inc/form.class.php:440
+#: inc/form.class.php:451
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Zaglavlje"
 msgstr[1] "Zaglavlja"
 msgstr[2] "Zaglavlja"
 
-#: inc/form.class.php:452
+#: inc/form.class.php:463
 msgid "Need to be validate?"
 msgstr "Treba li potvrditi?"
 
-#: inc/form.class.php:609
+#: inc/form.class.php:618
 msgid "Default form in service catalog"
 msgstr "Standardni obrazac u katalogu usluga"
 
-#: inc/form.class.php:621
+#: inc/form.class.php:630
 msgid "To delete this form you must delete all its answers first."
 msgstr ""
 "Za brisanje ovog obrasca, potrebno je najprije izbrisati sve njegove "
 "odgovore."
 
-#: inc/form.class.php:633 inc/form.class.php:698
+#: inc/form.class.php:642 inc/form.class.php:707
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Cilj"
 msgstr[1] "Ciljevi"
 msgstr[2] "Ciljevi"
 
-#: inc/form.class.php:659
+#: inc/form.class.php:668
 msgid "Delete"
 msgstr "Izbriši"
 
-#: inc/form.class.php:672 inc/form.class.php:2307
+#: inc/form.class.php:681 inc/form.class.php:2345
 msgid "Add a target"
 msgstr "Dodaj cilj"
 
-#: inc/form.class.php:788 inc/knowbase.class.php:65
+#: inc/form.class.php:797 inc/knowbase.class.php:65
 msgid "see all"
 msgstr "vidi sve"
 
-#: inc/form.class.php:1071 inc/knowbase.class.php:89
+#: inc/form.class.php:1082 inc/knowbase.class.php:89
 msgid "Please, describe your need here"
 msgstr "Ovdje opiši tvoju potrebu"
 
-#: inc/form.class.php:1079
+#: inc/form.class.php:1090
 #, php-format
 msgid "My %1$d last forms (requester)"
 msgstr "Mojih %1$d zadnjih obrazaca (podnositelj)"
 
-#: inc/form.class.php:1082
+#: inc/form.class.php:1093
 msgid "No form posted yet"
 msgstr "Nijedan obrazac još nije objavljen"
 
-#: inc/form.class.php:1105
+#: inc/form.class.php:1116
 msgid "All my forms (requester)"
 msgstr "Svi moji obrasci (podnositelj)"
 
-#: inc/form.class.php:1115
+#: inc/form.class.php:1126
 #, php-format
 msgid "My %1$d last forms (validator)"
 msgstr "Mojih %1$d zadnjih obrazaca (potvrditelj)"
 
-#: inc/form.class.php:1123
+#: inc/form.class.php:1134
 msgid "No form waiting for validation"
 msgstr "Nijedan obrazac ne čeka na potvrdu"
 
-#: inc/form.class.php:1152
+#: inc/form.class.php:1163
 msgid "All my forms (validator)"
 msgstr "Svi moji obrasci (potvrditelj)"
 
-#: inc/form.class.php:1264 inc/form.class.php:1265
+#: inc/form.class.php:1275 inc/form.class.php:1276
 msgid "Are you a robot ?"
 msgstr ""
 
-#: inc/form.class.php:1306
+#: inc/form.class.php:1317
 msgid "Validation"
 msgstr "Potvrđivanje"
 
-#: inc/form.class.php:1308
+#: inc/form.class.php:1319
 msgid "Choose a validator"
 msgstr "Odaberi potvrditelja"
 
-#: inc/form.class.php:1405
+#: inc/form.class.php:1424
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "Pitanje %s nije kompatibilno s javnim obrascima"
 
-#: inc/form.class.php:1539
+#: inc/form.class.php:1558
 msgid "Errored duplicate"
 msgstr ""
 
-#: inc/form.class.php:1550
+#: inc/form.class.php:1569
 msgid "Duplicate"
 msgstr "Dupliciraj"
 
-#: inc/form.class.php:1615
+#: inc/form.class.php:1634
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Obrazac dupliciran: %s"
 
-#: inc/form.class.php:1626
+#: inc/form.class.php:1645
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Obrazac prenesen: %s"
 
-#: inc/form.class.php:1749
+#: inc/form.class.php:1768
 msgid "Upload of JSON files not allowed."
 msgstr "Prijenos JSON datoteka nije dozvoljen."
 
-#: inc/form.class.php:1752
+#: inc/form.class.php:1771
 msgid "You may allow JSON files right now."
 msgstr "Sada smiješ dozvoliti JSON datoteke."
 
-#: inc/form.class.php:1753
+#: inc/form.class.php:1772
 msgctxt "button"
 msgid "Create"
 msgstr "Stvori"
 
-#: inc/form.class.php:1756 inc/form.class.php:1767
+#: inc/form.class.php:1775 inc/form.class.php:1786
 msgid "Please contact your GLPI administrator."
 msgstr "Obrati se GLPI administratoru."
 
-#: inc/form.class.php:1757 inc/form.class.php:1768
+#: inc/form.class.php:1776 inc/form.class.php:1787
 msgctxt "button"
 msgid "Back"
 msgstr "Natrag"
 
-#: inc/form.class.php:1760
+#: inc/form.class.php:1779
 msgid "Upload of JSON files not enabled."
 msgstr "Prijenos JSON datoteka nije aktiviran."
 
-#: inc/form.class.php:1763 inc/form.class.php:1766
+#: inc/form.class.php:1782 inc/form.class.php:1785
 msgid "You may enable JSON files right now."
 msgstr "Sada smiješ aktivirati JSON datoteke."
 
-#: inc/form.class.php:1764
+#: inc/form.class.php:1783
 msgctxt "button"
 msgid "Enable"
 msgstr "Aktiviraj"
 
-#: inc/form.class.php:1830
+#: inc/form.class.php:1849
 msgid "Forms import impossible, the file is empty"
 msgstr "Uvoz obrazaca nije moguć, datoteka je prazna"
 
-#: inc/form.class.php:1834 inc/form.class.php:1838
+#: inc/form.class.php:1853 inc/form.class.php:1857
 msgid "Forms import impossible, the file seems corrupt"
 msgstr "Uvoz obrazaca nije moguć, datoteka je pokvarena"
 
-#: inc/form.class.php:1844
+#: inc/form.class.php:1863
 msgid "Forms import impossible, the file was generated with another version"
 msgstr ""
 "Uvoz obrazaca nije moguć, datoteka je stvorena s jednom drugom verzijom"
 
-#: inc/form.class.php:1851
+#: inc/form.class.php:1870
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
 msgstr ""
 
-#: inc/form.class.php:1877
+#: inc/form.class.php:1896
 #, php-format
 msgid "Failed to import %s"
 msgstr "Neuspio uvoz za %s"
 
-#: inc/form.class.php:1882
+#: inc/form.class.php:1901
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Obrasci uspješno uvezeni iz %s"
 
-#: inc/form.class.php:1929
+#: inc/form.class.php:1967
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "Obrazac %1$s već postoji i nije promjenjiv entitet."
 
-#: inc/form.class.php:1937
+#: inc/form.class.php:1975
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "Obrazac %1$s je potreban za obrazac %2$s."
 
-#: inc/form.class.php:2013
+#: inc/form.class.php:2051
 msgid "Failed to create JSON document type"
 msgstr "Neuspjelo stvaranje JSON vrste dokumenta"
 
-#: inc/form.class.php:2020
+#: inc/form.class.php:2058
 msgid "JSON document type not found"
 msgstr "JSON vrsta dokumenta nije pronađena"
 
-#: inc/form.class.php:2027
+#: inc/form.class.php:2065
 msgid "Failed to update JSON document type"
 msgstr "Neuspjelo aktualiziranje JSON vrste dokumenta"
 
-#: inc/form.class.php:2047
+#: inc/form.class.php:2085
 msgid "Forms without category"
 msgstr "Obrasci bez kategorije"
 
-#: inc/form.class.php:2070
+#: inc/form.class.php:2108
 msgid "No form available"
 msgstr "Nema obrasca"
 
-#: inc/form.class.php:2349
+#: inc/form.class.php:2387
 msgid "Unsupported target type."
 msgstr "Nepodržana vrsta cilja."
 
-#: inc/form.class.php:2372
+#: inc/form.class.php:2410
 msgid "Unsuported target type."
 msgstr "Nepodržana vrsta cilja."
 
@@ -757,7 +758,7 @@ msgstr ""
 msgid "Waiting"
 msgstr "Čekanje"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:617
+#: inc/formanswer.class.php:63 inc/issue.class.php:620
 msgid "Refused"
 msgstr "Odbijeno"
 
@@ -765,18 +766,18 @@ msgstr "Odbijeno"
 msgid "Accepted"
 msgstr "Prihvaćeno"
 
-#: inc/formanswer.class.php:162 inc/issue.class.php:611
+#: inc/formanswer.class.php:162 inc/issue.class.php:614
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Odgovor za obrazac"
 msgstr[1] "Odgovori za obrazac"
 msgstr[2] "Odgovori za obrazac"
 
-#: inc/formanswer.class.php:205 inc/issue.class.php:502
+#: inc/formanswer.class.php:205 inc/issue.class.php:505
 msgid "Form approver"
 msgstr "Odobravatelj obrazaca"
 
-#: inc/formanswer.class.php:224 inc/issue.class.php:594
+#: inc/formanswer.class.php:224 inc/issue.class.php:597
 msgid "Form approver group"
 msgstr "Grupa odobravatelja obrazaca"
 
@@ -784,68 +785,68 @@ msgstr "Grupa odobravatelja obrazaca"
 msgid "Print this form"
 msgstr "Ispiši ovaj obrazac"
 
-#: inc/formanswer.class.php:518 inc/formanswer.class.php:594
+#: inc/formanswer.class.php:518 inc/formanswer.class.php:591
 msgid "Form accepted by validator."
 msgstr "Obrazac prihvaćen od potvrditelja."
 
-#: inc/formanswer.class.php:520 inc/formanswer.class.php:596
+#: inc/formanswer.class.php:520 inc/formanswer.class.php:593
 msgid "Form successfully saved."
 msgstr "Obrazac uspješno spremljen."
 
-#: inc/formanswer.class.php:604 inc/notificationtargetformanswer.class.php:79
+#: inc/formanswer.class.php:601 inc/notificationtargetformanswer.class.php:79
 msgid "Requester"
 msgstr "Podnositelj"
 
-#: inc/formanswer.class.php:619
+#: inc/formanswer.class.php:616
 msgid "Comment"
 msgstr "Komentar"
 
-#: inc/formanswer.class.php:624
+#: inc/formanswer.class.php:621
 msgid "Required if refused"
 msgstr "Obavezno, ako je odbijeno"
 
-#: inc/formanswer.class.php:630
+#: inc/formanswer.class.php:627
 msgid "Refuse"
 msgstr "Odbij"
 
-#: inc/formanswer.class.php:637
+#: inc/formanswer.class.php:634
 msgid "Accept"
 msgstr "Prihvati"
 
-#: inc/formanswer.class.php:654
+#: inc/formanswer.class.php:651
 msgid "Refused comment is required!"
 msgstr "Potreban je komentar za odbijanje!"
 
-#: inc/formanswer.class.php:741
+#: inc/formanswer.class.php:738
 msgid "You are not the validator of these answers"
 msgstr "Nisi potvrditelj ovih odgovora"
 
-#: inc/formanswer.class.php:826 inc/formanswer.class.php:1014
-#: inc/formanswer.class.php:1057
+#: inc/formanswer.class.php:823 inc/formanswer.class.php:1011
+#: inc/formanswer.class.php:1054
 msgid "The form has been successfully saved!"
 msgstr "Obrazac je uspješno spremljen!"
 
-#: inc/formanswer.class.php:883 inc/formanswer.class.php:885
+#: inc/formanswer.class.php:880 inc/formanswer.class.php:882
 msgid "Form data"
 msgstr "Podaci obrasca"
 
-#: inc/formanswer.class.php:1001 inc/formanswer.class.php:1044
+#: inc/formanswer.class.php:998 inc/formanswer.class.php:1041
 msgid "Cannot generate targets!"
 msgstr "Nije moguće generirati ciljeve!"
 
-#: inc/formanswer.class.php:1152
+#: inc/formanswer.class.php:1151
 msgid "No turing test set"
 msgstr ""
 
-#: inc/formanswer.class.php:1157
+#: inc/formanswer.class.php:1156
 msgid "You failed the Turing test"
 msgstr ""
 
-#: inc/formanswer.class.php:1175
+#: inc/formanswer.class.php:1174
 msgid "You must select validator!"
 msgstr "Moraš odabrati potvrditelja!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:405
+#: inc/issue.class.php:40 inc/issue.class.php:408
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Problem"
@@ -856,11 +857,11 @@ msgstr[2] "Problemi"
 msgid "Update issue data from tickets and form answers"
 msgstr "Aktualiziraj podatke problema iz naloga i odgovora na obrascu"
 
-#: inc/issue.class.php:521
+#: inc/issue.class.php:524
 msgid "Ticket approver"
 msgstr "Odobravatelj naloga"
 
-#: inc/issue.class.php:616
+#: inc/issue.class.php:619
 msgid "Not validated"
 msgstr "Nije potvrđeno"
 
@@ -879,19 +880,19 @@ msgstr ""
 msgid "The form as been saved"
 msgstr "Obrazac kao što je spremljen"
 
-#: inc/notificationtargetformanswer.class.php:44 install/install.php:273
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:274
 msgid "A form need to be validate"
 msgstr "Potrebno je potvrditi jedan obrazac"
 
-#: inc/notificationtargetformanswer.class.php:45 install/install.php:279
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:280
 msgid "The form is refused"
 msgstr "Obrazac je odbijen"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:285
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:286
 msgid "The form is accepted"
 msgstr "Obrazac je prihvaćen"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:291
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:292
 msgid "The form is deleted"
 msgstr "Obrazac je izbrisan"
 
@@ -923,7 +924,7 @@ msgstr "Poveznica potvrđivanja"
 msgid "Request #"
 msgstr "Broj zahtjeva"
 
-#: inc/question.class.php:151 inc/section.class.php:398
+#: inc/question.class.php:151 inc/section.class.php:402
 msgid "Add a section"
 msgstr "Dodaj odjeljak"
 
@@ -931,57 +932,57 @@ msgstr "Dodaj odjeljak"
 msgid "Show submit button"
 msgstr "Prikaži gumb za slanje"
 
-#: inc/question.class.php:210 inc/section.class.php:532
+#: inc/question.class.php:210 inc/section.class.php:536
 msgid "Count of conditions"
 msgstr ""
 
-#: inc/question.class.php:297 inc/section.class.php:77
+#: inc/question.class.php:303 inc/section.class.php:77
 #: inc/section.class.php:115
 msgid "The title is required"
 msgstr "Naslov se mora zadati"
 
-#: inc/question.class.php:305
+#: inc/question.class.php:311
 msgid "The field type is required"
 msgstr "Vrsta polja se mora zadati"
 
-#: inc/question.class.php:312
+#: inc/question.class.php:318
 msgid "The section is required"
 msgstr "Odjeljak se mora zadati"
 
-#: inc/question.class.php:327
+#: inc/question.class.php:333
 #, php-format
 msgid "Field type %1$s is not available for question %2$s."
 msgstr "Vrsta polja %1$s nije dostupna za pitanje %2$s."
 
-#: inc/question.class.php:340
+#: inc/question.class.php:346
 msgid "This type of question is not compatible with public forms."
 msgstr "Ova vrsta pitanja nije kompatibilna s javnim obrascima."
 
-#: inc/question.class.php:349
+#: inc/question.class.php:355
 msgid "This type of question requires parameters"
 msgstr "Ova vrsta pitanja treba parametre"
 
-#: inc/question.class.php:355
+#: inc/question.class.php:361
 msgid "A parameter is missing for this question type"
 msgstr "Jedan parametar nedostaje za ovu vrstu pitanja"
 
-#: inc/question.class.php:664 inc/section.class.php:571
+#: inc/question.class.php:670 inc/section.class.php:575
 msgid "Add a question"
 msgstr "Dodaj pitanje"
 
-#: inc/question.class.php:667
+#: inc/question.class.php:673
 msgid "Edit a question"
 msgstr "Uredi pitanje"
 
-#: inc/question.class.php:760
+#: inc/question.class.php:766
 msgid "Required"
 msgstr "Obavezno"
 
-#: inc/question.class.php:777
+#: inc/question.class.php:783
 msgid "Show empty"
 msgstr "Prikaži prazne"
 
-#: inc/question.class.php:820
+#: inc/question.class.php:826
 msgid "Condition to show the question"
 msgstr "Uvjet za prikaz pitanja"
 
@@ -1021,11 +1022,11 @@ msgid ""
 msgstr ""
 "Odredi uvjete za dodatne potvrde u opisu pitanja, kao pomoć korisnicima."
 
-#: inc/section.class.php:401
+#: inc/section.class.php:405
 msgid "Edit a section"
 msgstr "Uredi odjeljak"
 
-#: inc/section.class.php:428
+#: inc/section.class.php:432
 msgid "Condition to show the section"
 msgstr "Uvjet za prikaz odjeljka"
 
@@ -1071,7 +1072,7 @@ msgstr "Srednje"
 msgid "None"
 msgstr "Bez"
 
-#: inc/targetchange.class.php:231 inc/targetticket.class.php:1198
+#: inc/targetchange.class.php:231 inc/targetticket.class.php:1201
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1149,15 +1150,15 @@ msgstr "Povezani predmet ne postoji"
 msgid "Failed to link the item"
 msgstr "Neuspjelo povezivanje predmeta"
 
-#: inc/targetticket.class.php:827 install/install.php:286
+#: inc/targetticket.class.php:832 install/install.php:287
 msgid "Your form has been accepted by the validator"
 msgstr "Potvrditelj je prihvatio tvoj obrazac"
 
-#: inc/targetticket.class.php:928
+#: inc/targetticket.class.php:933
 msgid "Type "
 msgstr "Vrsta"
 
-#: inc/targetticket.class.php:969
+#: inc/targetticket.class.php:972
 msgid "Item "
 msgstr "Predmet "
 
@@ -1169,23 +1170,23 @@ msgstr "Zatraži pomoć"
 msgid "My requests for assistance"
 msgstr "Moji zahtjevi za pomoć"
 
-#: inc/wizard.class.php:113 inc/wizard.class.php:114
+#: inc/wizard.class.php:115 inc/wizard.class.php:116
 msgid "Knowledge Base"
 msgstr ""
 
-#: inc/wizard.class.php:121 inc/wizard.class.php:122
+#: inc/wizard.class.php:123 inc/wizard.class.php:124
 msgid "Book an asset"
 msgstr "Rezerviraj inventar"
 
-#: inc/wizard.class.php:129 inc/wizard.class.php:130
+#: inc/wizard.class.php:131 inc/wizard.class.php:132
 msgid "Consult feeds"
 msgstr "Pregledaj feedove"
 
-#: inc/wizard.class.php:258
+#: inc/wizard.class.php:260
 msgid "To validate"
 msgstr "Za potvrdu"
 
-#: inc/wizard.class.php:268
+#: inc/wizard.class.php:270
 msgid "Closed"
 msgstr "Zatvoreno"
 
@@ -1202,9 +1203,10 @@ msgstr[0] "Učesnik"
 msgstr[1] "Učesnici"
 msgstr[2] "Učesnici"
 
-#: inc/field/actorfield.class.php:277 inc/field/checkboxesfield.class.php:198
+#: inc/field/actorfield.class.php:277 inc/field/checkboxesfield.class.php:202
 #: inc/field/datefield.class.php:138 inc/field/datetimefield.class.php:140
 #: inc/field/floatfield.class.php:142 inc/field/radiosfield.class.php:234
+#: inc/field/selectfield.class.php:97
 #, php-format
 msgid "A required field is empty: %s"
 msgstr "Jedno obavezno polje je prazno: %s"
@@ -1219,26 +1221,26 @@ msgstr ""
 msgid "User not found or invalid email address: %s"
 msgstr "Korisnik nije pronađen ili je e-adresa nevaljana: %s"
 
-#: inc/field/checkboxesfield.class.php:235
+#: inc/field/checkboxesfield.class.php:239
 #, php-format
 msgid "The following question needs at least %d answers"
 msgstr "Sljedeće pitanje treba barem%d odgovora"
 
-#: inc/field/checkboxesfield.class.php:241
+#: inc/field/checkboxesfield.class.php:245
 #, php-format
 msgid "The following question does not accept more than %d answers"
 msgstr "Sljedeće pitanje ne prihvaća više od %d odgovora"
 
-#: inc/field/checkboxesfield.class.php:251
+#: inc/field/checkboxesfield.class.php:255
 msgid "Checkboxes"
 msgstr "Potvrdni okviri"
 
-#: inc/field/checkboxesfield.class.php:257
-#: inc/field/glpiselectfield.class.php:164 inc/field/radiosfield.class.php:156
+#: inc/field/checkboxesfield.class.php:261
+#: inc/field/glpiselectfield.class.php:168 inc/field/radiosfield.class.php:156
 msgid "The field value is required:"
 msgstr "Vrijednost polja je obavezna:"
 
-#: inc/field/checkboxesfield.class.php:318 inc/field/floatfield.class.php:267
+#: inc/field/checkboxesfield.class.php:322 inc/field/floatfield.class.php:267
 #: inc/field/textfield.class.php:250
 msgid "Range"
 msgstr "Raspon"
@@ -1287,24 +1289,24 @@ msgstr ""
 msgid "Time to resolve"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:445
-#: inc/field/ldapselectfield.class.php:197
+#: inc/field/dropdownfield.class.php:448
+#: inc/field/ldapselectfield.class.php:198
 #: inc/field/requesttypefield.class.php:189 inc/field/tagfield.class.php:157
 #: inc/field/textareafield.class.php:163 inc/field/textfield.class.php:148
 #: inc/field/timefield.class.php:139 inc/field/urgencyfield.class.php:193
 msgid "A required field is empty:"
 msgstr "Jedno obavezno polje je prazno:"
 
-#: inc/field/dropdownfield.class.php:472
+#: inc/field/dropdownfield.class.php:475
 msgid "Invalid value for "
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:484
+#: inc/field/dropdownfield.class.php:487
 #, php-format
 msgid "The field value is required: %s"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:500
+#: inc/field/dropdownfield.class.php:503
 #, php-format
 msgid "Invalid dropdown type: %s"
 msgstr ""
@@ -1318,11 +1320,12 @@ msgstr ""
 msgid "No attached document"
 msgstr "Nema priloženog dokumenta"
 
-#: inc/field/filefield.class.php:96 inc/field/filefield.class.php:253
+#: inc/field/filefield.class.php:96 inc/field/filefield.class.php:258
+#: inc/field/filefield.class.php:265
 msgid "Attached document"
 msgstr "Priloženi dokument"
 
-#: inc/field/filefield.class.php:138
+#: inc/field/filefield.class.php:139
 #, php-format
 msgid "A required file is missing: %s"
 msgstr ""
@@ -1365,8 +1368,8 @@ msgstr "Regularan izraz"
 msgid "Additional validation"
 msgstr "Dodatna potvrda"
 
-#: inc/field/glpiselectfield.class.php:74
-#: inc/field/glpiselectfield.class.php:149
+#: inc/field/glpiselectfield.class.php:75
+#: inc/field/glpiselectfield.class.php:153
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "GLPI objekt"
@@ -1390,19 +1393,19 @@ msgstr "Filtar"
 msgid "Attribute"
 msgstr "Svojstvo"
 
-#: inc/field/ldapselectfield.class.php:178
+#: inc/field/ldapselectfield.class.php:179
 msgid "LDAP Select"
 msgstr "LDAP odabir"
 
-#: inc/field/ldapselectfield.class.php:215
+#: inc/field/ldapselectfield.class.php:216
 msgid "LDAP directory not defined!"
 msgstr "LDAP direktorij nije definiran!"
 
-#: inc/field/ldapselectfield.class.php:222
+#: inc/field/ldapselectfield.class.php:223
 msgid "LDAP directory not found!"
 msgstr "LDAP direktorij nije pronađen!"
 
-#: inc/field/ldapselectfield.class.php:244
+#: inc/field/ldapselectfield.class.php:245
 msgid "Cannot recover LDAP informations!"
 msgstr "Nije moguće vratiti LDAP informacije!"
 
@@ -1418,7 +1421,7 @@ msgstr "Izborni gumbovi"
 msgid "Request type"
 msgstr "Vrsta zahtjeva"
 
-#: inc/field/selectfield.class.php:88
+#: inc/field/selectfield.class.php:90
 msgid "Select"
 msgstr "Odabir"
 
@@ -1451,15 +1454,15 @@ msgstr "Tekst"
 msgid "Time"
 msgstr "Vrijeme"
 
-#: install/install.php:267
+#: install/install.php:268
 msgid "A form has been created"
 msgstr "Stvoren je jedan obrazac"
 
-#: install/install.php:268
+#: install/install.php:269
 msgid "Your request has been saved"
 msgstr "Tvoj zahtjev je spremljen"
 
-#: install/install.php:269
+#: install/install.php:270
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -1469,11 +1472,11 @@ msgstr ""
 "##formcreator.request_id## i proslijeđen podršci.\\nTvoje odgovore možeš "
 "vidjeti na:\\n##formcreator.validation_link##"
 
-#: install/install.php:274
+#: install/install.php:275
 msgid "A form from GLPI need to be validate"
 msgstr "Potrebno je potvrditi obrazac iz GLPI-a"
 
-#: install/install.php:275
+#: install/install.php:276
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
@@ -1483,11 +1486,11 @@ msgstr ""
 "potvrditelja.\\nPristupi obrascu putem "
 "poveznice:\\n##formcreator.validation_link##"
 
-#: install/install.php:280
+#: install/install.php:281
 msgid "Your form has been refused by the validator"
 msgstr "Potvrditelj je odbio tvoj obrazac"
 
-#: install/install.php:281
+#: install/install.php:282
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1499,7 +1502,7 @@ msgstr ""
 "možeš izmijeniti i ponovo poslati na odobrenje putem "
 "poveznice:\\n##formcreator.validation_link##"
 
-#: install/install.php:287
+#: install/install.php:288
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
@@ -1507,11 +1510,11 @@ msgstr ""
 "Pozdrav,\\nobavještavamo te, da je potvrditelj prihvatio tvoj "
 "obrazac.\\nZahtjev će uskoro biti razmotren."
 
-#: install/install.php:292
+#: install/install.php:293
 msgid "Your form has been deleted by an administrator"
 msgstr "Administrator je izbrisao obrazac"
 
-#: install/install.php:293
+#: install/install.php:294
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
@@ -1519,30 +1522,30 @@ msgstr ""
 "Pozdrav,\\nobavještavamo te, da tvoj zahtjev nažalost ne možemo uzeti u "
 "obzir i da ga je administrator izbrisao."
 
-#: install/install.php:514 install/upgrade_to_2.5.php:409
+#: install/install.php:515 install/upgrade_to_2.5.php:409
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator – Sinkroniziraj izdanja kataloga usluge"
 
-#: js/scripts.js.php:381
+#: js/scripts.js.php:362
 msgid "No form found. Please choose a form below instead"
 msgstr "Obrazac nije pronađen. Odaberi dolje jedan drugi"
 
-#: js/scripts.js.php:404 js/scripts.js.php:425
+#: js/scripts.js.php:385 js/scripts.js.php:406
 msgid "An error occured while querying forms"
 msgstr "Dogodila se greška prilikom traženja obrazaca"
 
-#: js/scripts.js.php:487
+#: js/scripts.js.php:468
 msgid "No form yet in this category"
 msgstr "Još nema obrasca u ovoj kategoriji"
 
-#: js/scripts.js.php:745
+#: js/scripts.js.php:729
 msgid "Are you sure you want to delete this question?"
 msgstr "Zaista želiš izbrisati ovo pitanje?"
 
-#: js/scripts.js.php:947
+#: js/scripts.js.php:927
 msgid "Are you sure you want to delete this section?"
 msgstr "Zaista želiš izbrisati ovaj odjeljak?"
 
-#: js/scripts.js.php:1102
+#: js/scripts.js.php:1095
 msgid "Are you sure you want to delete this destination:"
 msgstr "Zaista želiš izbrisati ovo odredište:"
