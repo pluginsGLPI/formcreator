@@ -242,9 +242,10 @@ PluginFormcreatorConditionnableInterface
     *
     * @param bool $canEdit Can the user edit the question ?
     * @param array $value values of the answers to all questions of the form
+    * @param bool $isVisible is the question visible by default ?
     * @return string
     */
-   public function getRenderedHtml($canEdit = true, $value = []) : string {
+   public function getRenderedHtml($canEdit = true, $value = [], $isVisible = true) : string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -270,13 +271,18 @@ PluginFormcreatorConditionnableInterface
       $required = ($this->fields['required']) ? ' required' : '';
       $x = $this->fields['col'];
       $width = $this->fields['width'];
+      $hiddenAttribute = $isVisible ? '' : 'hidden=""';
       $html .= '<div'
          . ' data-gs-x="' . $x . '"'
          . ' data-gs-width="' . $width . '"'
          . ' data-itemtype="' . self::class . '"'
          . ' data-id="' . $this->getID() . '"'
+         . " $hiddenAttribute"
          . ' >';
-      $html .= '<div class="grid-stack-item-content form-group ' . $required . '" id="form-group-field-' . $this->getID() . '">';
+      $html .= '<div'
+      . ' class="grid-stack-item-content form-group ' . $required . '" '
+      . 'id="form-group-field-' . $this->getID() . '" '
+      . '>';
       $html .= $field->show($canEdit);
       $html .= '</div>';
       $html .= '</div>';
@@ -395,12 +401,10 @@ PluginFormcreatorConditionnableInterface
       if (!isset($input['width'])) {
          $input['width'] = PluginFormcreatorSection::COLUMNS - $input['col'];
       }
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       // Get next row
       if ($this->useAutomaticOrdering) {
-         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $maxRow = PluginFormcreatorCommon::getMax($this, [
-            $sectionFk => $input[$sectionFk]
+            self::$items_id => $input[self::$items_id]
          ], 'row');
          if ($maxRow === null) {
             $input['row'] = 0;
@@ -940,7 +944,17 @@ PluginFormcreatorConditionnableInterface
       if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
+            if (is_array($input['_parameters'][$input['fieldtype']][$fieldName])) {
+               /** @var PluginFormcreatorExportableInterface $parameter */
+               $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
+            } else {
+               // Import data incomplete, parameter not defined
+               // Adding an empty parameter (assuming the question is actually added or updated in DB)
+               $parameterInput = $parameter->fields;
+               $parameterInput['plugin_formcreator_questions_id'] = $itemId;
+               unset($parameterInput['id']);
+               $parameter->add($parameterInput);
+            }
          }
       }
 

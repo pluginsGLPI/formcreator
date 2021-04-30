@@ -62,6 +62,7 @@ use Profile;
 use PassiveDCEquipment;
 use PluginAppliancesAppliance;
 use Plugin;
+use PluginDatabasesDatabase;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
@@ -115,6 +116,9 @@ class GlpiselectField extends DropdownField
       ];
       if ((new Plugin())->isActivated('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+      if ((new Plugin())->isActivated('databases')) {
+         $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [

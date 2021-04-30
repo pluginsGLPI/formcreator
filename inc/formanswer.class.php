@@ -524,15 +524,25 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       echo '<ol>';
+
+      // Get fields populated with answers
+      $answers = $this->getAnswers(
+         $this->getID()
+      );
+      $answers['plugin_formcreator_forms_id'] = $form->getID();
+      $visibility = PluginFormcreatorFields::updateVisibility($answers);
+
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach ($sections as $section) {
          $sectionId = $section->getID();
 
          // Section header
+         $hiddenAttribute = $visibility[$section->getType()][$sectionId] ? '' : 'hidden=""';
          echo '<li'
          . ' class="plugin_formcreator_section"'
          . ' data-itemtype="' . PluginFormcreatorSection::class . '"'
          . ' data-id="' . $sectionId . '"'
+         . " $hiddenAttribute"
          . '">';
 
          // section name
@@ -542,14 +552,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Section content
          echo '<div>';
-
-         // Get fields populated with answers
-         $answers = $this->getAnswers(
-            $this->getID(),
-            [
-               PluginFormcreatorSection::getForeignKeyField() => $section->getID(),
-            ]
-         );
 
          // Display all fields of the section
          $lastQuestion = null;
@@ -568,17 +570,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($canEdit, $answers);
+            echo $question->getRenderedHtml($canEdit, $answers, $visibility[$question->getType()][$question->getID()]);
             $lastQuestion = $question;
          }
          echo '</div>';
 
          echo '</li>';
-      }
-      if ($canEdit) {
-         echo Html::scriptBlock('$(function() {
-            plugin_formcreator.showFields($("form[name=\'form\']"));
-         })');
       }
 
       if ($this->fields['status'] == self::STATUS_REFUSED) {
@@ -888,15 +885,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       // retrieve answers
-      $form = $this->getForm();
-      $fields = $form->getFields();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $fields = $this->getQuestionFields($this->fields[$formFk]);
+
       $this->deserializeAnswers();
 
       // TODO: code very close to PluginFormcreatorAbstractTarget::parseTags() (factorizable ?)
       // compute all questions
       $questionTable = PluginFormcreatorQuestion::getTable();
       $sectionTable = PluginFormcreatorSection::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questions = $DB->request([
          'SELECT' => [
@@ -1277,16 +1274,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $issue->add([
          'original_id'        => $ticketId,
          'sub_itemtype'       => Ticket::class,
-         'name'               => addslashes($ticket->getField('name')),
-         'status'             => $ticket->getField('status'),
-         'date_creation'      => $ticket->getField('date'),
-         'date_mod'           => $ticket->getField('date_mod'),
-         'entities_id'        => $ticket->getField('entities_id'),
+         'name'               => addslashes($ticket->fields['name']),
+         'status'             => $ticket->fields['status'],
+         'date_creation'      => $ticket->fields['date'],
+         'date_mod'           => $ticket->fields['date_mod'],
+         'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $ticketUserRow['users_id'],
          'users_id_validator' => '',
          'groups_id_validator'=> '',
-         'comment'            => addslashes($ticket->getField('content')),
+         'comment'            => addslashes($ticket->fields['content']),
       ]);
    }
 
@@ -1375,16 +1372,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'id'                 => $issue->getID(),
          'original_id'        => $ticketId,
          'sub_itemtype'       => Ticket::class,
-         'name'               => addslashes($ticket->getField('name')),
-         'status'             => $ticket->getField('status'),
-         'date_creation'      => $ticket->getField('date'),
-         'date_mod'           => $ticket->getField('date_mod'),
-         'entities_id'        => $ticket->getField('entities_id'),
+         'name'               => addslashes($ticket->fields['name']),
+         'status'             => $ticket->fields['status'],
+         'date_creation'      => $ticket->fields['date'],
+         'date_mod'           => $ticket->fields['date_mod'],
+         'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $ticketUserRow['users_id'],
          'users_id_validator' => '',
          'groups_id_validator'=> '',
-         'comment'            => addslashes($ticket->getField('content')),
+         'comment'            => addslashes($ticket->fields['content']),
       ]);
    }
 

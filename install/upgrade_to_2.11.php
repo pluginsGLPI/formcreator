@@ -302,7 +302,7 @@ class PluginFormcreatorUpgradeTo2_11 {
    }
 
    /**
-    * SDeprecate SyncIssues automatic action
+    * Deprecate SyncIssues automatic action
     * SyncIssues should be now used only for fresh instals or rebuild of corrupted issues table
     *
     * @return void

@@ -1589,10 +1589,12 @@ span.fc_list_icon {
 
 /* Active / inactive light for forms */
 .plugin-forcreator-active {
+   cursor: pointer;
    color: #009933;
 }
 
 .plugin-forcreator-inactive {
+   cursor: pointer;
    color: #a0a0a0;
 }
 
@@ -1749,7 +1751,7 @@ span.fc_list_icon {
       left: 100px;
    }
 
-   .plugin_formcreator_page #plugin_formcreator_wizard_categories {
+   #plugin_formcreator_wizard_categories, #plugin_formcreator_kb_categories {
       height: inherit;
       width: 100%;
       position: initial;
@@ -1757,7 +1759,7 @@ span.fc_list_icon {
       min-height: initial;
    }
 
-   .plugin_formcreator_page #plugin_formcreator_wizard_categories .slinky-menu {
+   #plugin_formcreator_wizard_categories .slinky-menu,  #plugin_formcreator_kb_categories .slinky-menu {
       position: static;
    }
 
@@ -1766,7 +1768,7 @@ span.fc_list_icon {
       height: inherit;
    }
 
-   .plugin_formcreator_page #plugin_formcreator_wizard_right {
+   #plugin_formcreator_wizard_right {
       width: 94%;
       height: inherit;
       overflow: inherit;

@@ -28,31 +28,24 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_11_3 {
+   /** @var Migration */
+   protected $migration;
 
-include ("../../../inc/includes.php");
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      global $DB;
 
-// Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+      $this->migration = $migration;
 
-$kb = new KnowbaseItem();
+      // Convert datetime to timestamp
+      $table = 'glpi_plugin_formcreator_formanswers';
+      $migration->changeField($table, 'request_date', 'request_date', 'datetime'. ' NOT NULL');
 
-if (isset($_GET["id"])) {
-   $kb->check($_GET["id"], READ);
-
-   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-   $available_options = ['item_itemtype', 'item_items_id', 'id'];
-   $options           = [];
-   foreach ($available_options as $key) {
-      if (isset($_GET[$key])) {
-         $options[$key] = $_GET[$key];
-      }
+      $table = 'glpi_plugin_formcreator_issues';
+      $migration->changeField($table, 'date_creation', 'date_creation', 'datetime'. ' NOT NULL');
+      $migration->changeField($table, 'date_mod', 'date_mod', 'datetime'. ' NOT NULL');
    }
-   $_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
-   $kb->showFull($options);
-
-   PluginFormcreatorWizard::footer();
 }

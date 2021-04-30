@@ -329,16 +329,18 @@ PluginFormcreatorConditionnableInterface
       switch ($field) {
          case 'is_active':
             if ($values[$field] == 0) {
+               $faIcon = 'far fa-circle';
                $class = "plugin-forcreator-inactive";
                $title =  __('Inactive');
             } else {
+               $faIcon = 'fa fa-circle';
                $class = "plugin-forcreator-active";
                $title =  __('Active');
             }
             $output = '<i class="fa fa-circle '
-            . $class
+            . "$faIcon $class"
             . '" aria-hidden="true" title="' . $title . '"></i>';
-            $output = '<div style="text-align: center">' . $output . '</div>';
+            $output = '<div style="text-align: center" onclick="plugin_formcreator.toggleForm(' . $options['raw_data']['id']. ')">' . $output . '</div>';
             return $output;
             break;
 
@@ -504,8 +506,7 @@ PluginFormcreatorConditionnableInterface
             "$profileRightTable.name" => "ticketvalidation",
             [
                'OR' => [
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST],
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT],
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST | TicketValidation::VALIDATEINCIDENT],
                ],
             ],
             "$userTable.is_active" => '1',
@@ -574,8 +575,7 @@ PluginFormcreatorConditionnableInterface
             "$profileRightTable.name" => "ticketvalidation",
             [
                'OR' => [
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST],
-                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT],
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST | TicketValidation::VALIDATEINCIDENT],
                ],
             ],
             "$userTable.is_active" => '1',
@@ -814,7 +814,7 @@ PluginFormcreatorConditionnableInterface
       $sortSettings = PluginFormcreatorEntityConfig::getEnumSort();
       echo '<div class="plugin_formcreator_sort">';
       echo '<span class="radios">';
-      $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', $_SESSION['glpiactive_entity']);
+      $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', Session::getActiveEntity());
       $selected = $sortOrder == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.'/>';
       echo '<label for="plugin_formcreator_mostPopular">'.$sortSettings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] .'</label>';
@@ -953,7 +953,9 @@ PluginFormcreatorConditionnableInterface
          }
       }
 
-      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT) {
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT
+         && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+      ) {
          // Find FAQ entries
          $query_faqs = KnowbaseItem::getListRequest([
             'faq'      => '1',
@@ -994,6 +996,10 @@ PluginFormcreatorConditionnableInterface
          $result_faqs = $DB->request($query_faqs);
          if ($result_faqs->count() > 0) {
             foreach ($result_faqs as $faq) {
+               // Manage translations
+               if (isset($faq['transname']) && !empty($faq['transname'])) {
+                  $faq['name']   = $faq["transname"];
+               }
                $formList[] = [
                   'id'           => $faq['id'],
                   'name'         => $faq['name'],
@@ -1400,6 +1406,14 @@ PluginFormcreatorConditionnableInterface
     * @return array the modified $input array
     */
    public function prepareInputForUpdate($input) {
+      if (isset($input['toggle'])) {
+         // Enable / disable form
+         return [
+            'id' => $input['id'],
+            'is_active' => $this->fields['is_active'] == '0' ? '1' : '0',
+         ];
+      }
+
       if (isset($input['access_rights'])
             || isset($_POST['massiveaction'])
             || isset($input['usage_count'])) {
@@ -1850,7 +1864,7 @@ PluginFormcreatorConditionnableInterface
             continue;
          }
          if (isset($forms_toimport['schema_version'])) {
-            if (($forms_toimport['schema_version']) != PLUGIN_FORMCREATOR_SCHEMA_VERSION . '.0') {
+            if (!self::checkImportVersion($forms_toimport['schema_version'])) {
                Session::addMessageAfterRedirect(
                   __("Forms import impossible, the file was generated with another version", 'formcreator'),
                   false, ERROR
@@ -1894,6 +1908,25 @@ PluginFormcreatorConditionnableInterface
                                                       $filename));
          }
       }
+   }
+
+   /**
+    * Check the version is compatible with the current one
+    * for forms import
+    *
+    * @return boolean
+    */
+   public static function checkImportVersion($version) {
+      // Convert version to X.Y
+      $version = explode('.', $version);
+      if (count($version) < 2) {
+         return false;
+      }
+      $minorVersion = [array_shift($version)];
+      $minorVersion[] = array_shift($version);
+      $minorVersion = implode('.', $minorVersion);
+
+      return version_compare(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $minorVersion) == 0;
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {

@@ -142,7 +142,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                `$ticketTable`.`status`,
                IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
                   `$ticketTable`.`status`,
-                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "') AND `$ticketTable`.`global_validation` = '" . CommonITILValidation::REFUSED . "',
+                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "'),
                      `$ticketTable`.`status`,
                      IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
                         '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
@@ -395,10 +395,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    public function rawSearchOptions() {
       $tab = [];
-      $hide_technician = \Entity::getUsedConfig(
-         'anonymize_support_agents',
-         $_SESSION['glpiactive_entity']
-      );
+      $hide_technician = false;
+      if (!Session::isCron()) {
+         $hide_technician = \Entity::getUsedConfig(
+            'anonymize_support_agents',
+            $_SESSION['glpiactive_entity']
+         );
+      }
 
       $tab[] = [
          'id'                 => 'common',
@@ -494,7 +497,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '9',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -503,6 +506,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '10',
@@ -513,7 +521,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '11',
          'table'              => 'glpi_users',
          'field'              => 'name',
@@ -542,8 +550,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
-      $tab[] = [
+      $newtab = [
          'id'                 => '14',
          'table'              => User::getTable(),
          'field'              => 'name',
@@ -564,6 +577,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
+      }
+      $tab[] = $newtab;
 
       $tab[] = [
          'id'                 => '15',
@@ -660,13 +678,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $content = $ticket->fields['content'];
                   break;
 
-               // TODO : need some code refactor to properly provide qtip
-               // case PluginFormcreatorFormAnswer::class:
-               //       $formAnswer = new PluginFormcreatorFormAnswer();
-               //       $formAnswer->getFromDB($id);
-               //       $content = $formAnswer->getFullForm();
-               //       // TODO : need to replace tags before creating the qtip
-               //       break;
+               case PluginFormcreatorFormAnswer::class:
+                  $formAnswer = new PluginFormcreatorFormAnswer();
+                  $formAnswer->getFromDB($id);
+                  $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  break;
+
                default:
                   $content = '';
             }

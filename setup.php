@@ -31,14 +31,14 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.11.2');
+define('PLUGIN_FORMCREATOR_VERSION', '2.11.3');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5.5');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
 
@@ -133,7 +133,8 @@ function plugin_init_formcreator() {
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_add_ticket'
+      Ticket::class => 'plugin_formcreator_hook_add_ticket',
+      ITILFollowup::class => 'plugin_formcreator_hook_update_itilFollowup',
    ];
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
@@ -288,14 +289,7 @@ function plugin_init_formcreator() {
 
          Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
 
-         if (Session::getCurrentInterface() == "helpdesk"
-            && PluginFormcreatorEntityconfig::getUsedConfig(
-               'replace_helpdesk',
-               $_SESSION['glpiactive_entity']
-            )
-         ) {
-            $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
-         }
+         $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
       }
 
       // Load JS and CSS files if we are on a page which need them

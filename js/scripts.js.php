@@ -37,7 +37,6 @@ header('Content-Type: text/javascript');
 var modalWindow;
 var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
-var sortByName = false;
 var tiles = [];
 var serviceCatalogEnabled = false;
 var slinkyCategories;
@@ -65,14 +64,6 @@ function getTimer(object) {
       );
    }
 }
-
-// === MENU ===
-var link = '';
-link += '<li id="menu7">';
-link += '<a href="' + formcreatorRootDoc + '/front/formlist.php" class="itemP">';
-link += "<?php echo Toolbox::addslashes_deep(_n('Form', 'Forms', 2, 'formcreator')); ?>";
-link += '</a>';
-link += '</li>';
 
 $(function() {
    var target = $('body');
@@ -108,13 +99,6 @@ $(function() {
       }
    });
 
-   <?php
-   if (Session::getCurrentInterface() == 'helpdesk'
-       && PluginFormcreatorForm::countAvailableForm() > 0) {
-      echo "$('#c_menu #menu1:first-child').after(link);";
-   }
-   ?>
-
    if (location.pathname.indexOf("helpdesk.public.php") != -1) {
 
       $('.ui-tabs-panel:visible').ready(function() {
@@ -134,12 +118,10 @@ $(function() {
 
       // Setup events
       $('.plugin_formcreator_sort [value=mostPopularSort]').click(function () {
-         sortByName = false;
          showTiles(tiles);
       });
 
       $('.plugin_formcreator_sort [value=alphabeticSort]').click(function () {
-         sortByName = true;
          showTiles(tiles);
       });
 
@@ -156,12 +138,10 @@ $(function() {
 
       // Setup events
       $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
-         sortByName = false;
          showTiles(tiles);
       });
 
       $('.plugin_formcreator_sort input[value=alphabeticSort]').click(function () {
-         sortByName = true;
          showTiles(tiles);
       });
 
@@ -375,6 +355,7 @@ function sortFormAndFaqItems(items, byName) {
 }
 
 function showTiles(tiles, defaultForms) {
+   var sortByName = $('#plugin_formcreator_alphabetic').prop('checked')
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
@@ -1079,6 +1060,19 @@ var plugin_formcreator = new function() {
       sections.first().find('.moveUp').hide();
       sections.find('.moveDown').show();
       sections.last().find('.moveDown').hide();
+   }
+
+   this.toggleForm = function (id) {
+      $.ajax({
+         url: formcreatorRootDoc + '/ajax/form_toggle.php',
+         type: 'POST',
+         data: {
+            toggle: 'toggle',
+            id: id
+         }
+      }).success(function () {
+         location.reload();
+      });
    }
 }
 
