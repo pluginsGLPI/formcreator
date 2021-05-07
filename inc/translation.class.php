@@ -39,7 +39,7 @@ class PluginFormcreatorTranslation
     * get a HTML dropdown of translatable strings
     *
     * @param array $options
-    * @return string
+    * @return string|void
     */
    public static function dropdown(array $options) {
       $params = [

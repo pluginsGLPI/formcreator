@@ -551,7 +551,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       // Params for entity restrictables itemtypes
       $itemtype = $input['dropdown_values'];
       if ((new $itemtype)->isEntityAssign()) {
-         $input['values']['entity_restrict'] = $input['entity_restrict'];
+         $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       }
       unset($input['entity_restrict']);
 

@@ -555,6 +555,10 @@ implements PluginFormcreatorExportableInterface
 
       $export = $this->fields;
 
+      // remove key and fk
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      unset($export[$formFk]);
+
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
@@ -562,7 +566,6 @@ implements PluginFormcreatorExportableInterface
       }
       unset($export[$idToRemove]);
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields[$formFk]);
       $export['_strings'] = $form->getTranslations($this->fields['name']);

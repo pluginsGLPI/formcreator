@@ -2570,6 +2570,17 @@ PluginFormcreatorTranslatableInterface
       return true;
    }
 
+   /**
+    * Get all translatable strings for a form, with optional search criterias
+    *
+    * @param array $options
+    *              - language:      translation language when searching with is_translated criteria
+    *              - id:
+    *              - is_translated:
+    *              - searchText:
+    *
+    * @return array
+    */
    public function getTranslatableStrings(array $options = []) : array {
       $strings = [
          'itemlink' => [],
