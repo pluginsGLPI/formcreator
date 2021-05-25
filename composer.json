@@ -14,7 +14,6 @@
   "require": {
       "php": ">= 7.2",
       "ext-xml": "*",
-      "docopt/docopt": "^1.0",
       "gregwar/captcha": "^1.1",
       "xylemical/php-expressions": "^1.0.3"
     },
