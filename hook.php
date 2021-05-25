@@ -31,9 +31,10 @@
 
 /**
  * Install all necessary elements for the plugin
+ * @param array $args ARguments passed from CLI
  * @return boolean True if success
  */
-function plugin_formcreator_install() {
+function plugin_formcreator_install(array $args = []): bool {
    spl_autoload_register('plugin_formcreator_autoload');
 
    $version   = plugin_version_formcreator();
@@ -41,11 +42,11 @@ function plugin_formcreator_install() {
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
    if (!$install->isPluginInstalled()
-      || isset($_SESSION['plugin_formcreator']['cli'])
-      && $_SESSION['plugin_formcreator']['cli'] == 'force-install') {
-      return $install->install($migration);
+      || isset($args['force-install'])
+      && $args['force-install'] === true) {
+      return $install->install($migration, $args);
    }
-   return $install->upgrade($migration);
+   return $install->upgrade($migration, $args);
 }
 
 /**
