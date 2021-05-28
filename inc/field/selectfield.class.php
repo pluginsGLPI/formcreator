@@ -109,7 +109,6 @@ class SelectField extends RadiosField
       if ($value == '0') {
          return true;
       }
-      $value = Toolbox::stripslashes_deep($value);
       $value = trim($value);
       return in_array($value, $this->getAvailableValues());
    }
@@ -122,6 +121,9 @@ class SelectField extends RadiosField
       return $this->value == $value;
    }
 
+   public function regex($value): bool {
+      return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
+   }
 
    public function getHtmlIcon(): string {
       return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';

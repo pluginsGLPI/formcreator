@@ -120,6 +120,29 @@ class GlpiselectField extends DropdownField
       if ((new Plugin())->isActivated('databases')) {
          $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
+
+      // Get additional itemtypes from plugins
+      $additionalTypes = Plugin::doHookFunction('formcreator_get_glpi_object_types', []);
+      // Cleanup data from plugins
+      $cleanedAditionalTypes = [];
+      foreach ($additionalTypes as $groupName => $itemtypes) {
+         if (!is_string($groupName)) {
+            continue;
+         }
+         $cleanedAditionalTypes[$groupName] = [];
+         foreach ($itemtypes as $itemtype => $typeName) {
+            if (!class_exists($itemtype)) {
+               continue;
+            }
+            if (array_search($itemtype, $cleanedAditionalTypes[$groupName])) {
+               continue;
+            }
+            $cleanedAditionalTypes[$groupName][$itemtype] = $typeName;
+         }
+      }
+      // Merge new itemtypes to predefined ones
+      $optgroup = array_merge_recursive($optgroup, $cleanedAditionalTypes);
+
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
          'value'     => $this->question->fields['values'],
