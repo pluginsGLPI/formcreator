@@ -166,7 +166,7 @@ class PluginFormcreatorUpgradeTo2_5 {
 
       if ($DB->tableExists("glpi_plugin_formcreator_formanswers")) {
          $migration->renameTable('glpi_plugin_formcreator_formanswers', 'glpi_plugin_formcreator_forms_answers');
-         $itemTicket_table = Item_Ticket::getTable();
+         $itemTicket_table = 'glpi_items_tickets';
          $query = "UPDATE `$itemTicket_table` SET `itemtype` = 'PluginFormcreatorForm_Answer' WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
@@ -236,7 +236,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->migrationOneTable('glpi_plugin_formcreator_forms_profiles');
 
       // fill missing uuid
-      $DB->update(PluginFormcreatorForm_Profile::getTable(), [
+      $DB->update('glpi_plugin_formcreator_forms_profiles', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -251,7 +251,7 @@ class PluginFormcreatorUpgradeTo2_5 {
 
       // Convert the old relation in glpi_plugin_formcreator_formvalidators table
       if ($DB->tableExists('glpi_plugin_formcreator_formvalidators')) {
-         $table_form = PluginFormcreatorForm::getTable();
+         $table_form = 'glpi_plugin_formcreator_forms';
          $old_table = 'glpi_plugin_formcreator_formvalidators';
          $query = "INSERT INTO `glpi_plugin_formcreator_forms_validators` (`plugin_formcreator_forms_id`, `itemtype`, `items_id`)
                   SELECT
@@ -273,7 +273,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid
-      $DB->update(PluginFormcreatorForm_Validator::getTable(), [
+      $DB->update('glpi_plugin_formcreator_forms_validators', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -360,7 +360,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->migrationOneTable('glpi_plugin_formcreator_forms');
 
       // fill missing uuid (force update of forms, see PluginFormcreatorForm::prepareInputForUpdate)
-      $DB->update(PluginFormcreatorForm::getTable(), [
+      $DB->update('glpi_plugin_formcreator_forms', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -461,7 +461,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       $result = $DB->query($countQuery);
       if ($result !== false) {
          $count = $DB->fetch_assoc($result);
-         $table = PluginFormcreatorIssue::getTable();
+         $table = 'glpi_plugin_formcreator_issues';
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
                $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
@@ -562,7 +562,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->addKey('glpi_plugin_formcreator_questions_conditions', 'plugin_formcreator_questions_id');
 
       // fill missing uuid (force update of questions, see PluginFormcreatorQuestoin_Condition::prepareInputForUpdate)
-      $DB->update(PluginFormcreatorQuestion_Condition::getTable(), [
+      $DB->update('glpi_plugin_formcreator_questions_conditions', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -768,7 +768,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->addKey('glpi_plugin_formcreator_questions', 'plugin_formcreator_sections_id');
 
       // fill missing uuid (force update of questions, see PluginFormcreatorQuestion::prepareInputForUpdate)
-      $DB->update(PluginFormcreatorQuestion::getTable(), [
+      $DB->update('glpi_plugin_formcreator_questions', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -850,7 +850,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->addKey('glpi_plugin_formcreator_sections', 'plugin_formcreator_forms_id');
 
       // fill missing uuid (force update of sections, see PluginFormcreatorSection::prepareInputForUpdate)
-      $DB->update(PluginFormcreatorSection::getTable(), [
+      $DB->update('glpi_plugin_formcreator_sections', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
@@ -1009,7 +1009,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid (force update of targets, see PluginFormcreatorTarget::prepareInputForUpdate)
-      $DB->update(PluginFormcreatorTarget::getTable(), [
+      $DB->update('glpi_plugin_formcreator_targets', [
          'uuid' => plugin_formcreator_getUuid()
       ], [
          'uuid' => null
