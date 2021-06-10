@@ -1,0 +1,140 @@
+--- locales/ko_KR.po
++++ locales/ko_KR.po
+@@ -11,7 +11,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2021-01-26 12:55+0100\n"
++"POT-Creation-Date: 2021-04-15 10:55+0200\n"
+ "PO-Revision-Date: 2020-01-14 14:51+0000\n"
+ "Last-Translator: SeongHyeon Cho <jaymz9634@gmail.com>, 2021\n"
+ "Language-Team: Korean (Korea) (https://www.transifex.com/teclib/teams/28042/ko_KR/)\n"
+@@ -735,7 +736,7 @@ msgstr ""
+ msgid "Waiting"
+ msgstr "대기 중"
+ 
+-#: inc/formanswer.class.php:63 inc/issue.class.php:617
++#: inc/formanswer.class.php:63 inc/issue.class.php:620
+ msgid "Refused"
+ msgstr "거부됨"
+ 
+@@ -743,16 +744,16 @@ msgstr "거부됨"
+ msgid "Accepted"
+ msgstr "승인됨"
+ 
+-#: inc/formanswer.class.php:162 inc/issue.class.php:611
++#: inc/formanswer.class.php:162 inc/issue.class.php:614
+ msgid "Form answer"
+ msgid_plural "Form answers"
+ msgstr[0] "양식 답변"
+ 
+-#: inc/formanswer.class.php:205 inc/issue.class.php:502
++#: inc/formanswer.class.php:205 inc/issue.class.php:505
+ msgid "Form approver"
+ msgstr "양식 승인자"
+ 
+-#: inc/formanswer.class.php:224 inc/issue.class.php:594
++#: inc/formanswer.class.php:224 inc/issue.class.php:597
+ msgid "Form approver group"
+ msgstr "양식 승인자 그룹"
+ 
+@@ -760,68 +761,68 @@ msgstr "양식 승인자 그룹"
+ msgid "Print this form"
+ msgstr "이 양식 인쇄"
+ 
+-#: inc/formanswer.class.php:518 inc/formanswer.class.php:594
++#: inc/formanswer.class.php:518 inc/formanswer.class.php:591
+ msgid "Form accepted by validator."
+ msgstr "확인자에 의해 양식이 승인되었습니다."
+ 
+-#: inc/formanswer.class.php:520 inc/formanswer.class.php:596
++#: inc/formanswer.class.php:520 inc/formanswer.class.php:593
+ msgid "Form successfully saved."
+ msgstr "양식이 저장되었습니다."
+ 
+-#: inc/formanswer.class.php:604 inc/notificationtargetformanswer.class.php:79
++#: inc/formanswer.class.php:601 inc/notificationtargetformanswer.class.php:79
+ msgid "Requester"
+ msgstr "요청자"
+ 
+-#: inc/formanswer.class.php:619
++#: inc/formanswer.class.php:616
+ msgid "Comment"
+ msgstr "의견"
+ 
+-#: inc/formanswer.class.php:624
++#: inc/formanswer.class.php:621
+ msgid "Required if refused"
+ msgstr "거부된 경우 필수"
+ 
+-#: inc/formanswer.class.php:630
++#: inc/formanswer.class.php:627
+ msgid "Refuse"
+ msgstr "거부"
+ 
+-#: inc/formanswer.class.php:637
++#: inc/formanswer.class.php:634
+ msgid "Accept"
+ msgstr "승인"
+ 
+-#: inc/formanswer.class.php:654
++#: inc/formanswer.class.php:651
+ msgid "Refused comment is required!"
+ msgstr "거부 의견은 필수입니다!"
+ 
+-#: inc/formanswer.class.php:741
++#: inc/formanswer.class.php:738
+ msgid "You are not the validator of these answers"
+ msgstr "당신은 이 질문들의 확인자가 아닙니다"
+ 
+-#: inc/formanswer.class.php:826 inc/formanswer.class.php:1014
+-#: inc/formanswer.class.php:1057
++#: inc/formanswer.class.php:823 inc/formanswer.class.php:1011
++#: inc/formanswer.class.php:1054
+ msgid "The form has been successfully saved!"
+ msgstr "양식이 저장되었습니다!"
+ 
+-#: inc/formanswer.class.php:883 inc/formanswer.class.php:885
++#: inc/formanswer.class.php:880 inc/formanswer.class.php:882
+ msgid "Form data"
+ msgstr "양식 데이터"
+ 
+-#: inc/formanswer.class.php:1001 inc/formanswer.class.php:1044
++#: inc/formanswer.class.php:998 inc/formanswer.class.php:1041
+ msgid "Cannot generate targets!"
+ msgstr "대상을 생성할 수 없습니다!"
+ 
+-#: inc/formanswer.class.php:1152
++#: inc/formanswer.class.php:1151
+ msgid "No turing test set"
+ msgstr ""
+ 
+-#: inc/formanswer.class.php:1157
++#: inc/formanswer.class.php:1156
+ msgid "You failed the Turing test"
+ msgstr ""
+ 
+-#: inc/formanswer.class.php:1175
++#: inc/formanswer.class.php:1174
+ msgid "You must select validator!"
+ msgstr "확인자를 선택해야 합니다!"
+ 
+-#: inc/issue.class.php:40 inc/issue.class.php:405
++#: inc/issue.class.php:40 inc/issue.class.php:408
+ msgid "Issue"
+ msgid_plural "Issues"
+ msgstr[0] "문제사항"
+@@ -830,11 +831,11 @@ msgstr[0] "문제사항"
+ msgid "Update issue data from tickets and form answers"
+ msgstr "티켓과 양식 답변에서 문제사항 데이터를 갱신"
+ 
+-#: inc/issue.class.php:521
++#: inc/issue.class.php:524
+ msgid "Ticket approver"
+ msgstr "티켓 승인자"
+ 
+-#: inc/issue.class.php:616
++#: inc/issue.class.php:619
+ msgid "Not validated"
+ msgstr "확인 안됨"
+ 

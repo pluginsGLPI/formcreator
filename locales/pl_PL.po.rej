@@ -1,0 +1,143 @@
+--- locales/pl_PL.po
++++ locales/pl_PL.po
+@@ -15,7 +15,7 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: PACKAGE VERSION\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2021-01-26 12:55+0100\n"
++"POT-Creation-Date: 2021-04-15 10:55+0200\n"
+ "PO-Revision-Date: 2020-01-14 14:51+0000\n"
+ "Last-Translator: Ryszard Jeziorski <ryszard.jeziorski@gmail.com>, 2020\n"
+ "Language-Team: Polish (Poland) (https://www.transifex.com/teclib/teams/28042/pl_PL/)\n"
+@@ -771,7 +772,7 @@ msgstr ""
+ msgid "Waiting"
+ msgstr "Oczekiwanie"
+ 
+-#: inc/formanswer.class.php:63 inc/issue.class.php:617
++#: inc/formanswer.class.php:63 inc/issue.class.php:620
+ msgid "Refused"
+ msgstr "Odrzucono"
+ 
+@@ -779,7 +780,7 @@ msgstr "Odrzucono"
+ msgid "Accepted"
+ msgstr "Zaakceptowano"
+ 
+-#: inc/formanswer.class.php:162 inc/issue.class.php:611
++#: inc/formanswer.class.php:162 inc/issue.class.php:614
+ msgid "Form answer"
+ msgid_plural "Form answers"
+ msgstr[0] ""
+@@ -787,11 +788,11 @@ msgstr[1] ""
+ msgstr[2] ""
+ msgstr[3] ""
+ 
+-#: inc/formanswer.class.php:205 inc/issue.class.php:502
++#: inc/formanswer.class.php:205 inc/issue.class.php:505
+ msgid "Form approver"
+ msgstr "Zatwierdzający formularze"
+ 
+-#: inc/formanswer.class.php:224 inc/issue.class.php:594
++#: inc/formanswer.class.php:224 inc/issue.class.php:597
+ msgid "Form approver group"
+ msgstr "Grupa zatwierdzających formularze"
+ 
+@@ -799,68 +800,68 @@ msgstr "Grupa zatwierdzających formularze"
+ msgid "Print this form"
+ msgstr "Wydrukuj formularz"
+ 
+-#: inc/formanswer.class.php:518 inc/formanswer.class.php:594
++#: inc/formanswer.class.php:518 inc/formanswer.class.php:591
+ msgid "Form accepted by validator."
+ msgstr "Formularz zaakceptowane przez osobę zatwierdzającą"
+ 
+-#: inc/formanswer.class.php:520 inc/formanswer.class.php:596
++#: inc/formanswer.class.php:520 inc/formanswer.class.php:593
+ msgid "Form successfully saved."
+ msgstr "Formularz został zapisany."
+ 
+-#: inc/formanswer.class.php:604 inc/notificationtargetformanswer.class.php:79
++#: inc/formanswer.class.php:601 inc/notificationtargetformanswer.class.php:79
+ msgid "Requester"
+ msgstr "Wnioskodawca"
+ 
+-#: inc/formanswer.class.php:619
++#: inc/formanswer.class.php:616
+ msgid "Comment"
+ msgstr "Komentarz"
+ 
+-#: inc/formanswer.class.php:624
++#: inc/formanswer.class.php:621
+ msgid "Required if refused"
+ msgstr "Wymagane w przypadku odrzucenia"
+ 
+-#: inc/formanswer.class.php:630
++#: inc/formanswer.class.php:627
+ msgid "Refuse"
+ msgstr "Odrzucenie"
+ 
+-#: inc/formanswer.class.php:637
++#: inc/formanswer.class.php:634
+ msgid "Accept"
+ msgstr "Akceptacja"
+ 
+-#: inc/formanswer.class.php:654
++#: inc/formanswer.class.php:651
+ msgid "Refused comment is required!"
+ msgstr "Wymagane jest skomentowanie odrzucenia "
+ 
+-#: inc/formanswer.class.php:741
++#: inc/formanswer.class.php:738
+ msgid "You are not the validator of these answers"
+ msgstr "Nie jesteś weryfikatorem tych odpowiedzi"
+ 
+-#: inc/formanswer.class.php:826 inc/formanswer.class.php:1014
+-#: inc/formanswer.class.php:1057
++#: inc/formanswer.class.php:823 inc/formanswer.class.php:1011
++#: inc/formanswer.class.php:1054
+ msgid "The form has been successfully saved!"
+ msgstr "Formularz został zapisany"
+ 
+-#: inc/formanswer.class.php:883 inc/formanswer.class.php:885
++#: inc/formanswer.class.php:880 inc/formanswer.class.php:882
+ msgid "Form data"
+ msgstr "Dane formularza"
+ 
+-#: inc/formanswer.class.php:1001 inc/formanswer.class.php:1044
++#: inc/formanswer.class.php:998 inc/formanswer.class.php:1041
+ msgid "Cannot generate targets!"
+ msgstr "Nie można wygenerowć obiektów docelowych!"
+ 
+-#: inc/formanswer.class.php:1152
++#: inc/formanswer.class.php:1151
+ msgid "No turing test set"
+ msgstr ""
+ 
+-#: inc/formanswer.class.php:1157
++#: inc/formanswer.class.php:1156
+ msgid "You failed the Turing test"
+ msgstr ""
+ 
+-#: inc/formanswer.class.php:1175
++#: inc/formanswer.class.php:1174
+ msgid "You must select validator!"
+ msgstr "Musisz wybrać osobę zatwierdzającą"
+ 
+-#: inc/issue.class.php:40 inc/issue.class.php:405
++#: inc/issue.class.php:40 inc/issue.class.php:408
+ msgid "Issue"
+ msgid_plural "Issues"
+ msgstr[0] ""
+@@ -872,11 +873,11 @@ msgstr[3] ""
+ msgid "Update issue data from tickets and form answers"
+ msgstr "Zaktualizuj informacje o żądaniach zgłoszeń i formularzy odpowiedzi"
+ 
+-#: inc/issue.class.php:521
++#: inc/issue.class.php:524
+ msgid "Ticket approver"
+ msgstr "Zatwierdzający zgłoszenie"
+ 
+-#: inc/issue.class.php:616
++#: inc/issue.class.php:619
+ msgid "Not validated"
+ msgstr "Nie zweryfikowano"
+ 
