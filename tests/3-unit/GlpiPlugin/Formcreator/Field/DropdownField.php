@@ -56,6 +56,7 @@ class DropdownField extends CommonTestCase {
                'dropdown_values' => \Location::class,
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
+               'selectable_tree_root' => '0',
             ],
             'expected' => [
                'name' => $name,
@@ -63,6 +64,7 @@ class DropdownField extends CommonTestCase {
                   'itemtype' => \Location::class,
                   'show_tree_depth' => '5',
                   'show_tree_root' => '0',
+                  'selectable_tree_root' => '0',
                ]),
                'default_values'  => '',
             ]
@@ -82,6 +84,7 @@ class DropdownField extends CommonTestCase {
                   'show_ticket_categories' => '2',
                   'show_tree_depth' => '3',
                   'show_tree_root'  => '',
+                  'selectable_tree_root' => '0',
                ]),
                'default_values'  => '',
             ]
