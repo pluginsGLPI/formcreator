@@ -139,11 +139,14 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $currentUser = Session::getLoginUserID();
          // Use default where for Tickets
          $condition = Search::addDefaultWhere(Ticket::class);
-         // Replace references to ticket tables with issues table
-         $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
-         $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+         if ($condition != '') {
+            // Replace references to ticket tables with issues table
+            $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
+            $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+            $condition .= ' OR ';
+         }
          // condition where current user is 1st validator of the issue
-         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
+         $condition .= " `glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
          // condition where current user is a member of 1st validator group of the issue
          $groupList = [];
          foreach (Group_User::getUserGroups($currentUser) as $group) {
