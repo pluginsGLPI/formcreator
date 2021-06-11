@@ -97,6 +97,7 @@ class GlpiselectField extends DropdownField
 
       $root = $decodedValues['show_tree_root'] ?? '0';
       $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
@@ -109,6 +110,7 @@ class GlpiselectField extends DropdownField
       $additions .= '<td>';
       $additions .= "<input id='commonTreeDropdownRoot' type='hidden' value='$root'>";
       $additions .= "<input id='commonTreeDropdownMaxDepth' type='hidden' value='$maxDepth'>";
+      $additions .= "<input id='commonTreeDropdownSelectableRoot' type='hidden' value='$selectableRoot'>";
       $additions .= '</td>';
       $additions .= '<td>';
       $additions .= '</td>';
@@ -162,6 +164,7 @@ class GlpiselectField extends DropdownField
          // Set default for depth setting
          $input['values']['show_tree_depth'] = (int) ($input['show_tree_depth'] ?? '-1');
          $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
+         $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
       }
 
       $input['values'] = json_encode($input['values']);
@@ -169,6 +172,7 @@ class GlpiselectField extends DropdownField
       unset($input['dropdown_default_value']);
       unset($input['show_tree_root']);
       unset($input['show_tree_depth']);
+      unset($input['selectable_tree_root']);
 
       return $input;
    }
