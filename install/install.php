@@ -67,16 +67,16 @@ class PluginFormcreatorInstall {
       '2.10'   => '2.10.2',
       '2.10.2' => '2.11',
       '2.11'   => '2.11.3',
-      '2.11'   => '2.12',
+      '2.11.3' => '2.12',
    ];
 
    /**
     * Install the plugin
     * @param Migration $migration
-    *
-    * @return void
+    * @param array $args arguments passed to CLI
+    * @return bool
     */
-   public function install(Migration $migration) {
+   public function install(Migration $migration, $args = []): bool {
       $this->migration = $migration;
       $this->installSchema();
 
@@ -95,10 +95,13 @@ class PluginFormcreatorInstall {
 
    /**
     * Upgrade the plugin
+    * @param Migration $migration
+    * @param array $args arguments passed to CLI
+    * @return bool
     */
-   public function upgrade(Migration $migration) {
+   public function upgrade(Migration $migration, $args = []): bool {
       $this->migration = $migration;
-      if (isset($_SESSION['plugin_formcreator']['cli']) && $_SESSION['plugin_formcreator']['cli'] == 'force-upgrade') {
+      if (isset($args['force-upgrade']) && $args['force-upgrade'] === true) {
          // Might return false
          $fromSchemaVersion = array_search(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $this->upgradeSteps);
       } else {
