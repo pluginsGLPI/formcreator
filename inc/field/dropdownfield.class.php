@@ -76,6 +76,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       $root = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
 
       $optgroup = Dropdown::getStandardDropdownItemTypes();
 
@@ -136,6 +137,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $additions .= '<td>';
       $additions .= "<input id='commonTreeDropdownRoot' type='hidden' value='$root'>";
       $additions .= "<input id='commonTreeDropdownMaxDepth' type='hidden' value='$maxDepth'>";
+      $additions .= "<input id='commonTreeDropdownSelectableRoot' type='hidden' value='$selectableRoot'>";
       $additions .= '</td>';
       $additions .= '<td>';
       $additions .= '</td>';
@@ -308,11 +310,16 @@ class DropdownField extends PluginFormcreatorAbstractField
             $itemtype::getTable(),
             $decodedValues['show_ticket_categories_root']
          );
+         if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
+            unset($sons[$decodedValues['show_tree_root']]);
+         }
+
          $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
          $rootItem = new $itemtype();
          if ($rootItem->getFromDB($decodedValues['show_ticket_categories_root'])) {
             $baseLevel = $rootItem->fields['level'];
          }
+
       }
 
       // Apply max depth if defined (CommonTreeDropdown)
@@ -518,6 +525,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          // Set default for depth setting
          $input['values']['show_tree_depth'] = (string) (int) ($input['show_tree_depth'] ?? '-1');
          $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
+         $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
       } else if ($input['dropdown_values'] == SLA::getType()
          || $input['dropdown_values'] == OLA::getType()
       ) {
@@ -532,6 +540,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       unset($input['show_ticket_categories']);
       unset($input['show_tree_depth']);
       unset($input['show_tree_root']);
+      unset($input['selectable_tree_root']);
       unset($input['dropdown_values']);
 
       return $input;
