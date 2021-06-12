@@ -42,8 +42,6 @@ define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
 
-define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
-
 define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
 
 /**
