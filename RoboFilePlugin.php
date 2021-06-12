@@ -54,17 +54,18 @@ class RoboFilePlugin extends \Robo\Tasks
    /**
     * Minify CSS stylesheets
     *
-    * @return void
+    * @return RoboFilePlugin
     */
-   public function minifyCSS() {
+   public function minifyCSS(): RoboFilePlugin {
       $css_dir = __DIR__ . '/css';
       if (is_dir($css_dir)) {
-         foreach (glob("$css_dir/*.css") as $css_file) {
+         foreach (glob("$css_dir/*.scss") as $css_file) {
+            $outfile = dirname(dirname($css_file)) . '/css_compiled/' . basename($css_file, '.scss').'.css';
             if (!$this->endsWith($css_file, 'min.css')) {
-               $this->taskMinify($css_file)
-                  ->to(str_replace('.css', '.min.css', $css_file))
-                  ->type('css')
-                  ->run();
+               $this->taskScss([
+                  $css_file => $outfile,
+               ])->run();
+               $this->taskMinify($outfile)->run();
             }
          }
       }
