@@ -172,9 +172,7 @@ class RoboFile extends RoboFilePlugin
          ->run();
 
       // Compile SCSS
-      $this->taskExec(__DIR__ . "/../../bin/console")
-      ->arg('glpi:plugin:formcreator:scss')
-      ->run();
+      $this->minifyCSS();
 
       $rev = 'HEAD';
       $pluginName = $this->getPluginName();
