@@ -1158,7 +1158,7 @@ PluginFormcreatorTranslatableInterface
    public static function dropdownForForm($formId, $crit, $name, $value, $options = []) {
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
-      $options = [
+      $options = $options + [
          'display' => $options['display'] ?? true,
          'value'   => $value,
       ];
