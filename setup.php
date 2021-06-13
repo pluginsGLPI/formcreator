@@ -189,15 +189,27 @@ function plugin_init_formcreator() {
                   if (isset($decodedUrl['forcetab'])) {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
+
+                  // When an issue has a single target ticket
                   $issue = new PluginFormcreatorIssue();
                   $issue->getFromDBByCrit([
                      'sub_itemtype' => Ticket::class,
                      'original_id'  => (int) $_GET['id']
                   ]);
-                  if ($issue->isNewItem()) {
+                  if (!$issue->isNewItem()) {
+                     Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
+                  }
+
+                  // When a target has several target tickets
+                  $itemTicket = new Item_Ticket();
+                  $itemTicket->getFromDBByCrit([
+                     'itemtype' => PluginFormcreatorFormAnswer::class,
+                     'tickets_id'  => (int) $_GET['id']
+                  ]);
+                  if ($itemTicket->isNewItem()) {
+                     // No formanswer found
                      Html::displayNotFoundError();
                   }
-                  Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
                }
             }
 
