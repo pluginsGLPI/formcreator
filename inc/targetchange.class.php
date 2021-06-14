@@ -325,7 +325,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'id'                 => '8',
          'table'              => $this::getTable(),
          'field'              => 'rolloutplancontent',
-         'name'               => __('Rollout plan', 'formcreator'),
+         'name'               => __('Deployment plan', 'formcreator'),
          'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
