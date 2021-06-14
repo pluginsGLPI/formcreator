@@ -36,8 +36,6 @@ class PluginFormcreatorUpgradeTo2_12 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $this->migration = $migration;
 
       // Convert datetime to timestamp
@@ -54,6 +52,8 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addField($table, 'is_search_visible', 'integer', ['after' => 'is_kb_separated']);
       $this->migration->addField($table, 'is_header_visible', 'integer', ['after' => 'is_search_visible']);
       $this->migration->addField($table, 'header', 'text', ['after' => 'is_header_visible']);
+
+      $this->migrateReferenceEntity();
    }
 
    /**
@@ -87,6 +87,42 @@ class PluginFormcreatorUpgradeTo2_12 {
          $newValues['show_tree_depth'] = $values['show_ticket_categories_depth'] ?? '-1';
          $newValues = json_encode($newValues);
          $DB->update($table, ['values' => $newValues], ['id' => $row['id']]);
+      }
+   }
+
+   public function migrateReferenceEntity() {
+      global $DB;
+
+      $questionTable = 'glpi_plugin_formcreator_questions';
+      $request = [
+         'SELECT' => ['id', 'default_values', 'values'],
+         'FROM' => $questionTable,
+         'WHERE' => ['fieldtype' => ['droprown']],
+      ];
+      foreach ($DB->request($request) as $row) {
+         $newAnswer = json_decode($row['values']);
+         if ($newAnswer === null) {
+            $newAnswer = ['itemtype' => $row['answer']];
+            $newAnswer['entity_restrict'] = 2;
+         } else {
+            if (!isset($newAnswer['entity_restrict'])) {
+               $newAnswer['entity_restrict'] = 'form';
+            }
+            switch ($newAnswer['entity_restrict']) {
+               case 'user':
+                  $newAnswer['entity_restrict'] = 1;
+                  break;
+               case 'both':
+                  $newAnswer['entity_restrict'] = 3;
+                  break;
+               default:
+                  $newAnswer['entity_restrict'] = 2;
+                  break;
+            }
+         }
+         $newAnswer = json_encode($newAnswer, JSON_OBJECT_AS_ARRAY);
+         $newAnswer = Toolbox::addslashes_deep($newAnswer);
+         $DB->update($questionTable, ['values' => $newAnswer], ['id' => $row['id']]);
       }
    }
 }

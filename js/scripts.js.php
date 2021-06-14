@@ -1474,6 +1474,38 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
          $('.plugin_formcreator_dropdown').html("");
          $('.plugin_formcreator_dropdown').toggle(false);
       });
+
+      var entityAssignable = [
+         'Location',
+         'TaskCategory',
+         'TaskTemplate',
+         'SolutionType',
+         'SolutionTemplate',
+         'ProjectTaskTemplate',
+         'SoftwareLicenseType',
+         'CertificateType',
+         'RackType',
+         'PDUType',
+         'ClusterType',
+         'BusinessCriticity',
+         'KnowbaseItemCategory',
+         'Calendar',
+         'Holiday',
+         'Netpoint',
+         'Vlan',
+         'LineOperator',
+         'DomainType',
+         'DomainRecordType',
+         'DomainRelation',
+         'IPNetwork',
+         'FQDN',
+         'WifiNetwork',
+         'NetworkName',
+         'Fieldblacklist',
+         'ApplianceType'
+      ];
+      var showEntityAssignable = (entityAssignable.indexOf(dropdown_type) >= 0);
+      $('.plugin_formcreator_entity_assignable').toggle(showEntityAssignable);
    });
 }
 
