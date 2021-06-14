@@ -816,8 +816,6 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'json'
       }).fail(function(data) {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
@@ -1138,8 +1136,6 @@ var plugin_formcreator = new function() {
             id: formLanguageId,
          }, function (response, status) {
             if (status == 'error') {
-               // fix for GLPI <= 9.5.2
-               $('[id^="message_after_redirect_"]').remove();
                displayAjaxMessageAfterRedirect();
                modal.html('');
             } else {
@@ -1157,8 +1153,6 @@ var plugin_formcreator = new function() {
          type: 'POST',
          data: $(form).serialize()
       }).fail(function () {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
       }).success(function () {
          that.showTranslationEditor(form);
