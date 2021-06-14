@@ -1148,6 +1148,7 @@ var plugin_formcreator = new function() {
    this.saveNewTranslation = function () {
       var that = this;
       var form = document.querySelector('form[name="plugin_formcreator_translation"]');
+      tinyMCE.triggerSave();
       $.ajax({
          url: '../ajax/translation.php',
          type: 'POST',
