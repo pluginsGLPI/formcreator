@@ -1171,7 +1171,10 @@ var plugin_formcreator = new function() {
             id: formLanguageId,
             plugin_formcreator_translations_id: translationId
          }
-      ).dialog('open');
+      ).dialog('open')
+      .on('dialogclose', function (e, ui) {
+         reloadTab();
+      });
    }
 
    // make a new selector equivalent to :contains(...) but case insensitive
