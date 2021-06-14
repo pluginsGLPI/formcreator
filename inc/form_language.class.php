@@ -257,8 +257,7 @@ implements PluginFormcreatorExportableInterface
       echo "</td><td width='50%'>&nbsp;</td></tr>";
 
       echo '<tr id="plugin_formcreator_editTranslation">';
-      // echo '<td>';
-      // echo '</td>';
+
       echo PluginFormcreatorTranslation::getEditorFieldsHtml($this);
       echo '</tr>';
       echo "<tr class='tab_bg_1'><td>";
