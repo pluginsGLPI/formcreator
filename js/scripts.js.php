@@ -816,8 +816,6 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'json'
       }).fail(function(data) {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
@@ -1138,8 +1136,6 @@ var plugin_formcreator = new function() {
             id: formLanguageId,
          }, function (response, status) {
             if (status == 'error') {
-               // fix for GLPI <= 9.5.2
-               $('[id^="message_after_redirect_"]').remove();
                displayAjaxMessageAfterRedirect();
                modal.html('');
             } else {
@@ -1152,13 +1148,12 @@ var plugin_formcreator = new function() {
    this.saveNewTranslation = function () {
       var that = this;
       var form = document.querySelector('form[name="plugin_formcreator_translation"]');
+      tinyMCE.triggerSave();
       $.ajax({
          url: '../ajax/translation.php',
          type: 'POST',
          data: $(form).serialize()
       }).fail(function () {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
       }).success(function () {
          that.showTranslationEditor(form);
@@ -1176,7 +1171,10 @@ var plugin_formcreator = new function() {
             id: formLanguageId,
             plugin_formcreator_translations_id: translationId
          }
-      ).dialog('open');
+      ).dialog('open')
+      .on('dialogclose', function (e, ui) {
+         reloadTab();
+      });
    }
 
    // make a new selector equivalent to :contains(...) but case insensitive
