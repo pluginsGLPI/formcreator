@@ -199,7 +199,7 @@ implements PluginFormcreatorExportableInterface
          if (!isset($options['parent']) || empty($options['parent'])) {
             return false;
          }
-         $this->fields[PluginFormcreatorForm::getForeignKeyField()] = $options['parent'];
+         $this->fields[PluginFormcreatorForm::getForeignKeyField()] = $options['parent']->getID();
          $item = $options['parent'];
       }
 
