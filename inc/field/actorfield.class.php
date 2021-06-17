@@ -205,13 +205,15 @@ class ActorField extends PluginFormcreatorAbstractField
 
    public function getValueForTargetText($domain, $richText): ?string {
       $value = [];
-      foreach ($this->value as $item) {
-         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-            $value[] = $item;
-         } else {
-            $user = new User();
-            $user->getFromDB($item);
-            $value[] = $user->getFriendlyName();
+      if (is_array($this->value)) {
+         foreach ($this->value as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $value[] = $item;
+            } else {
+               $user = new User();
+               $user->getFromDB($item);
+               $value[] = $user->getFriendlyName();
+            }
          }
       }
 
