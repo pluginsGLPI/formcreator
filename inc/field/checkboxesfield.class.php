@@ -283,7 +283,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       $value = [];
       $values = $this->getAvailableValues();
 
-      if ($values === null || count($this->value) === 0) {
+      if ($values === null || $this->value === null || count($this->value) === 0) {
          return '';
       }
 

@@ -1531,6 +1531,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $answers_values = $this->getAnswers($this->getID());
       foreach (array_keys($this->questionFields) as $id) {
+         if (!$this->questionFields[$id]->hasInput($answers_values)) {
+            continue;
+         }
          $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
       }
 
