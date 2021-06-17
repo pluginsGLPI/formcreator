@@ -24,8 +24,8 @@ msgstr ""
 #: hook.php:68 inc/category.class.php:50 inc/form.class.php:217
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form kategorisi"
+msgstr[1] "Form kategorileri"
 
 #: hook.php:560 setup.php:267 ajax/homepage_link.php:36
 #: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:721
@@ -33,8 +33,8 @@ msgstr[1] ""
 #: inc/formlist.class.php:46
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form"
+msgstr[1] "Formlar"
 
 #: hook.php:602
 msgid "Cancel my ticket"
@@ -51,7 +51,7 @@ msgstr "Alt ağacın kökü"
 
 #: ajax/commontree.php:59
 msgid "Selectable"
-msgstr ""
+msgstr "Seçilebilir"
 
 #: ajax/commontree.php:74
 msgid "Limit subtree depth"
@@ -133,11 +133,11 @@ msgstr "Form listesi"
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
-msgstr ""
+msgstr "Parametre"
 
 #: inc/abstractquestionparameter.class.php:99
 msgid "Field name"
-msgstr ""
+msgstr "Alan adı"
 
 #: inc/abstracttarget.class.php:186
 msgid "Current active entity"
@@ -279,8 +279,8 @@ msgstr "ODA (EAZ/ÇÖZ)"
 #: inc/form.class.php:805 inc/knowbase.class.php:64
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Kategori"
+msgstr[1] "Kategoriler"
 
 #: inc/abstracttarget.class.php:1152 inc/abstracttarget.class.php:1188
 #: inc/abstracttarget.class.php:1266 inc/abstracttarget.class.php:1394
@@ -288,8 +288,8 @@ msgstr[1] ""
 #: inc/targetticket.class.php:968 inc/targetticket.class.php:1007
 msgid "Question"
 msgid_plural "Questions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru"
+msgstr[1] "Sorular"
 
 #: inc/abstracttarget.class.php:1189
 msgid "Urgency "
@@ -335,15 +335,15 @@ msgstr "Açıklama boş olamaz!"
 #: inc/abstracttarget.class.php:1652 inc/answer.class.php:66
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Yanıt"
+msgstr[1] "Yanıtlar"
 
 #: inc/abstracttarget.class.php:1653 inc/question.class.php:728
 #: inc/section.class.php:64
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bölüm"
+msgstr[1] "Bölümler"
 
 #: inc/abstracttarget.class.php:1657
 msgid "Full form"
@@ -404,8 +404,8 @@ msgstr "Bu sorun silinemedi. Bir iç sorun çıktı."
 #: inc/condition.class.php:64
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Koşul"
+msgstr[1] "Koşullar"
 
 #: inc/condition.class.php:103
 msgid "is visible"
@@ -451,7 +451,7 @@ msgstr "%1$s%2$s eklenemedi ya da güncellenemedi"
 #: inc/targetchange.class.php:103 inc/targetticket.class.php:1300
 #, php-format
 msgid "Cannot export an empty object: %s"
-msgstr ""
+msgstr "Boş bir nesne dışa aktarılamaz: %s"
 
 #: inc/entityconfig.class.php:78
 msgid "GLPi's helpdesk"
@@ -483,11 +483,11 @@ msgstr "Farklı menü kaydı"
 
 #: inc/entityconfig.class.php:103 inc/entityconfig.class.php:111
 msgid "Visible"
-msgstr ""
+msgstr "Görünür"
 
 #: inc/entityconfig.class.php:104 inc/entityconfig.class.php:112
 msgid "Hidden"
-msgstr ""
+msgstr "Gizli"
 
 #: inc/entityconfig.class.php:161
 msgid "Helpdesk"
@@ -507,26 +507,26 @@ msgstr "Bilgi bankası"
 
 #: inc/entityconfig.class.php:219
 msgid "Search"
-msgstr ""
+msgstr "Arama"
 
 #: inc/entityconfig.class.php:236
 msgid "Header message"
-msgstr ""
+msgstr "Başlık iletisi"
 
 #: inc/entityconfig.class.php:249 inc/entityconfig.class.php:327
 #: inc/form.class.php:226 inc/form.class.php:464
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Başlık"
+msgstr[1] "Başlıklar"
 
 #: inc/entityconfig.class.php:307
 msgid "Display search field"
-msgstr ""
+msgstr "Arama alanı görüntülensin"
 
 #: inc/entityconfig.class.php:317
 msgid "Display header"
-msgstr ""
+msgstr "Başlık görüntülensin"
 
 #: inc/form.class.php:63 inc/form.class.php:361
 msgid "Public access"
@@ -591,8 +591,8 @@ msgstr "Bu formu silmek için önce tüm yanıtlarını silmelisiniz."
 #: inc/form.class.php:657 inc/form.class.php:714
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef"
+msgstr[1] "Hedefler"
 
 #: inc/form.class.php:683 inc/form_language.class.php:335
 #: inc/form_language.class.php:374
@@ -609,7 +609,7 @@ msgstr "tümünü görüntüle"
 
 #: inc/form.class.php:1122
 msgid "What are you looking for?"
-msgstr ""
+msgstr "Ne arıyorsunuz?"
 
 #: inc/form.class.php:1130
 #, php-format
@@ -777,53 +777,53 @@ msgstr "Hedef türü desteklenmiyor."
 
 #: inc/form.class.php:2512
 msgid "plugin_formcreator_load_check"
-msgstr ""
+msgstr "plugin_formcreator_load_check"
 
 #: inc/form_language.class.php:51
 msgid "Form language"
 msgid_plural "Form languages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form dili"
+msgstr[1] "Form dilleri"
 
 #: inc/form_language.class.php:69 inc/form_language.class.php:346
 msgid "Translation"
 msgid_plural "Translations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Çeviri"
+msgstr[1] "Çeviriler"
 
 #: inc/form_language.class.php:116
 msgid "The language must be associated to a form!"
-msgstr ""
+msgstr "Forma bir dil atanmalıdır."
 
 #: inc/form_language.class.php:246 inc/form_language.class.php:281
 msgid "Add a translation"
-msgstr ""
+msgstr "Bir çeviri ekle"
 
 #: inc/form_language.class.php:309 inc/form_language.class.php:311
 msgid "New translation"
-msgstr ""
+msgstr "Yeni çeviri"
 
 #: inc/form_language.class.php:314
 msgid "Filter list"
-msgstr ""
+msgstr "Listeyi süz"
 
 #: inc/form_language.class.php:319 inc/form_language.class.php:411
 msgid "No translation found"
-msgstr ""
+msgstr "Herhangi bir çeviri bulunamadı"
 
 #: inc/form_language.class.php:324
 msgid "Do you want to delete the selected items?"
-msgstr ""
+msgstr "Seçilmiş ögeleri silmek ister misiniz?"
 
 #: inc/form_language.class.php:345
 msgid "Original string"
-msgstr ""
+msgstr "Özgün dizge"
 
 #: inc/form_profile.class.php:48 inc/form_profile.class.php:87
 msgid "Access type"
 msgid_plural "Access types"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Erişim türü"
+msgstr[1] "Erişim türleri"
 
 #: inc/form_profile.class.php:101
 msgid "Link to the form"
@@ -852,8 +852,8 @@ msgstr "Onaylanmış"
 #: inc/formanswer.class.php:164 inc/issue.class.php:629
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form yanıtı"
+msgstr[1] "Form yanıtları"
 
 #: inc/formanswer.class.php:207 inc/issue.class.php:505
 msgid "Form approver"
@@ -893,11 +893,11 @@ msgstr "Reddet"
 
 #: inc/formanswer.class.php:625
 msgid "Edit answers"
-msgstr ""
+msgstr "Yanıtları düzenle"
 
 #: inc/formanswer.class.php:631
 msgid "Cancel edition"
-msgstr ""
+msgstr "Düzenlemeyi iptal et"
 
 #: inc/formanswer.class.php:639
 msgid "Accept"
@@ -939,8 +939,8 @@ msgstr "Bir değerlendiren seçmelisiniz!"
 #: inc/issue.class.php:40 inc/issue.class.php:408
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sorun"
+msgstr[1] "Sorunlar"
 
 #: inc/issue.class.php:53
 msgid "Update issue data from tickets and form answers"
@@ -957,8 +957,8 @@ msgstr "Değerlendirilmemiş"
 #: inc/item_targetticket.class.php:52
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Birleşik destek kaydı ilişkileri"
+msgstr[1] "Birleşik destek kaydı ilişkileri"
 
 #: inc/knowbase.class.php:89
 msgid "Please, describe your need here"
@@ -1081,22 +1081,22 @@ msgstr "Sorunun görüntülenme koşulu"
 #: inc/questiondependency.class.php:68
 msgid "Question dependency"
 msgid_plural "Question dependencies"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru bağımlılığı"
+msgstr[1] "Soru bağımlılıkları"
 
 #: inc/questionrange.class.php:53
 msgid "Question range"
 msgid_plural "Question ranges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru aralığı"
+msgstr[1] "Soru aralıkları"
 
 #: inc/questionrange.class.php:63
 msgid "Minimum range"
-msgstr ""
+msgstr "En küçük aralık"
 
 #: inc/questionrange.class.php:72
 msgid "maximum range"
-msgstr ""
+msgstr "En büyük aralık"
 
 #: inc/questionrange.class.php:105
 msgid "Min"
@@ -1109,8 +1109,8 @@ msgstr "En büyük"
 #: inc/questionregex.class.php:53
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru kuralları ifadesi"
+msgstr[1] "Soru kuralları ifadeleri"
 
 #: inc/questionregex.class.php:63 inc/field/floatfield.class.php:252
 #: inc/field/textfield.class.php:235
@@ -1156,14 +1156,14 @@ msgstr "Belirli sağlayıcı"
 #: inc/target_actor.class.php:89
 msgid "Target actor"
 msgid_plural "Target actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef ilgili"
+msgstr[1] "Hedef ilgililer"
 
 #: inc/targetchange.class.php:42 inc/targetchange.class.php:389
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef değişikliği"
+msgstr[1] "Hedef değişiklikleri"
 
 #: inc/targetchange.class.php:47
 msgid "Medium"
@@ -1188,27 +1188,27 @@ msgstr "Başlığı değiştir"
 
 #: inc/targetchange.class.php:298 inc/targetticket.class.php:127
 msgid "Content"
-msgstr ""
+msgstr "İçerik"
 
 #: inc/targetchange.class.php:308
 msgid "Impact"
-msgstr ""
+msgstr "Etki"
 
 #: inc/targetchange.class.php:318
 msgid "Control list"
-msgstr ""
+msgstr "Kontrol listesi"
 
 #: inc/targetchange.class.php:328
 msgid "Deployment plan"
-msgstr ""
+msgstr "Dağıtım planı"
 
 #: inc/targetchange.class.php:338
 msgid "Backup plan"
-msgstr ""
+msgstr "Yedekleme planı"
 
 #: inc/targetchange.class.php:348
 msgid "Check list"
-msgstr ""
+msgstr "Denetim listesi"
 
 #: inc/targetchange.class.php:360 inc/targetticket.class.php:145
 msgid "Add a target "
@@ -1225,8 +1225,8 @@ msgstr "Hedefin oluşturulacağı koşul"
 #: inc/targetticket.class.php:52 inc/targetticket.class.php:174
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef çağrı"
+msgstr[1] "Hedef çağrılar"
 
 #: inc/targetticket.class.php:87
 msgid "Specific asset"
@@ -1290,19 +1290,19 @@ msgstr "Öge"
 
 #: inc/translation.class.php:157
 msgid "No more string to translate"
-msgstr ""
+msgstr "Çevrilecek bir dizge yok"
 
 #: inc/translation.class.php:218
 msgid "Language not found."
-msgstr ""
+msgstr "Dil bulunamadı"
 
 #: inc/translation.class.php:223
 msgid "Form not found."
-msgstr ""
+msgstr "Form bulunamadı."
 
 #: inc/translation.class.php:236
 msgid "Failed to add the translation."
-msgstr ""
+msgstr "Çeviri eklenemedi."
 
 #: inc/wizard.class.php:100 inc/wizard.class.php:101
 msgid "Seek assistance"
@@ -1341,8 +1341,8 @@ msgstr "Her satıra bir tane"
 #: inc/field/actorfield.class.php:94
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "İlgili"
+msgstr[1] "İlgililer"
 
 #: inc/field/actorfield.class.php:267 inc/field/checkboxesfield.class.php:210
 #: inc/field/datefield.class.php:138 inc/field/datetimefield.class.php:140
@@ -1509,13 +1509,13 @@ msgstr "Ek değerlendirme"
 #: inc/field/glpiselectfield.class.php:134
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "GLPI nesnesi"
+msgstr[1] "GLPI nesneleri"
 
 #: inc/field/glpiselectfield.class.php:276
 #: inc/field/glpiselectfield.class.php:280
 msgid "Objects management"
-msgstr ""
+msgstr "Nesne yönetimi"
 
 #: inc/field/integerfield.class.php:57
 #, php-format
@@ -1536,7 +1536,7 @@ msgstr "Öznitelik"
 
 #: inc/field/ldapselectfield.class.php:183
 msgid "LDAP size limit exceeded"
-msgstr ""
+msgstr "LDAP boyutu sınırı aşıldı"
 
 #: inc/field/ldapselectfield.class.php:211
 msgid "LDAP Select"
@@ -1573,8 +1573,8 @@ msgstr "Seçin"
 #: inc/field/tagfield.class.php:191
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Etiket"
+msgstr[1] "Etiketler"
 
 #: inc/field/textareafield.class.php:124
 msgid "Textarea"
