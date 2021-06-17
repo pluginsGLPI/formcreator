@@ -1023,7 +1023,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          ],
       ]);
       foreach ($rows as $row) {
-         $options['items_id'][$row['itemtype']][$row['id']] = $row['id'];
+         $options['items_id'][$row['itemtype']][$row['id']] = $row['items_id'];
       }
       Item_Ticket::itemAddForm(new Ticket(), $options);
       echo '</div>';
@@ -1090,8 +1090,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                   'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, Ticket::class]],
                ],
             ]);
+            $data['items_id'] = [];
             foreach ($rows as $row) {
-               $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
+               $data['items_id'][$row['itemtype']] [$row['items_id']] = $row['items_id'];
             }
             break;
 
