@@ -774,8 +774,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function pre_deleteItem() {
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
-         'original_id'     => $this->getID(),
-         'sub_itemtype'    => self::getType(),
+         'items_id' => $this->getID(),
+         'itemtype' => self::getType(),
       ]);
 
       return true;
@@ -1238,8 +1238,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // There are several tickets for this form answer
          // The issue must be created from this form answer
          $issue->add([
-            'original_id'        => $this->getID(),
-            'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
+            'items_id'           => $this->getID(),
+            'itemtype'           => PluginFormcreatorFormAnswer::class,
             'name'               => addslashes($this->fields['name']),
             'status'             => $this->fields['status'],
             'date_creation'      => $this->fields['request_date'],
@@ -1276,8 +1276,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       );
       $ticketUserRow = array_pop($ticketUserRow);
       $issue->add([
-         'original_id'        => $ticketId,
-         'sub_itemtype'       => Ticket::class,
+         'items_id'           => $ticketId,
+         'itemtype'           => Ticket::class,
          'name'               => addslashes($ticket->fields['name']),
          'status'             => $ticket->fields['status'],
          'date_creation'      => $ticket->fields['date'],
@@ -1298,14 +1298,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if ($this->input['status'] == self::STATUS_REFUSED) {
          $issue->getFromDBByCrit([
             'AND' => [
-              'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-              'original_id'  => $this->getID()
+              'itemtype'  => PluginFormcreatorFormAnswer::class,
+              'items_id'  => $this->getID()
             ]
          ]);
          $issue->update([
             'id'              => $issue->getID(),
-            'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-            'original_id'     => $this->getID(),
+            'itemtype'        => PluginFormcreatorFormAnswer::class,
+            'items_id'        => $this->getID(),
             'status'          => $this->fields['status'],
          ]);
          return;
@@ -1324,14 +1324,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // The issue must be updated from this form answer
          $issue->getFromDBByCrit([
             'AND' => [
-            'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-            'original_id'  => $this->getID()
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id' => $this->getID()
             ]
          ]);
          $issue->update([
             'id'                 => $issue->getID(),
-            'original_id'        => $this->getID(),
-            'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
+            'items_id'           => $this->getID(),
+            'itemtype'           => PluginFormcreatorFormAnswer::class,
             'name'               => addslashes($this->fields['name']),
             'status'             => $this->fields['status'],
             'date_creation'      => $this->fields['request_date'],
@@ -1368,14 +1368,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $ticketUserRow = array_pop($ticketUserRow);
       $issue->getFromDBByCrit([
          'AND' => [
-            'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-            'original_id'  => $this->getID()
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id' => $this->getID()
          ]
       ]);
       $issue->update([
          'id'                 => $issue->getID(),
-         'original_id'        => $ticketId,
-         'sub_itemtype'       => Ticket::class,
+         'items_id'           => $ticketId,
+         'itemtype'           => Ticket::class,
          'name'               => addslashes($ticket->fields['name']),
          'status'             => $ticket->fields['status'],
          'date_creation'      => $ticket->fields['date'],
