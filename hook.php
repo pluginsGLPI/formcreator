@@ -73,7 +73,7 @@ function plugin_formcreator_getDropdown() {
 function plugin_formcreator_addDefaultSelect($itemtype) {
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
-         return "`glpi_plugin_formcreator_issues`.`sub_itemtype`, ";
+         return "`glpi_plugin_formcreator_issues`.`itemtype`, ";
    }
    return "";
 }
@@ -87,7 +87,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
          $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
          $join .= Search::addLeftJoin($itemtype, $ref_table, $already_link_tables, Group::getTable(), 'groups_id_validator');
          // but we want to join in issues
-         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`sub_itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`original_id`', $join);
+         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`items_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
    }
@@ -359,8 +359,8 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
 
    $issue = new PluginFormcreatorIssue();
    $issue->add([
-      'original_id'        => $item->getID(),
-      'sub_itemtype'       => 'Ticket',
+      'items_id'        => $item->getID(),
+      'itemtype'           => 'Ticket',
       'name'               => addslashes($item->fields['name']),
       'status'             => $validationStatus['status'],
       'date_creation'      => $item->fields['date'],
@@ -385,15 +385,15 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
-         'sub_itemtype' => Ticket::class,
-         'original_id'  => $id
+         'itemtype'     => Ticket::class,
+         'items_id'     => $id
       ]
    ]);
    $issue->update([
       'id'                 => $issue->getID(),
-      'original_id'        => $id,
+      'items_id'           => $id,
       'display_id'         => "t_$id",
-      'sub_itemtype'       => 'Ticket',
+      'itemtype'           => 'Ticket',
       'name'               => addslashes($item->fields['name']),
       'status'             => $validationStatus['status'],
       'date_creation'      => $item->fields['date'],
@@ -436,7 +436,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
       'display_id'   => "t_$id",
-      'sub_itemtype' => 'Ticket'
+      'itemtype'     => 'Ticket'
    ], 1);
 }
 
@@ -451,7 +451,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
          'display_id'   => "t_$id",
-         'sub_itemtype' => 'Ticket'
+         'itemtype'     => 'Ticket'
       ], 1);
    }
 }
@@ -476,8 +476,8 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
 
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
-      'sub_itemtype' => Ticket::getType(),
-      'original_id'  => $item->fields['tickets_id']
+      'itemtype'     => Ticket::getType(),
+      'items_id'     => $item->fields['tickets_id']
    ]);
    if ($issue->isNewItem()) {
       return;
@@ -500,8 +500,8 @@ function plugin_formcreator_hook_update_itilFollowup($followup) {
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
-         'sub_itemtype' => $itemtype,
-         'original_id'  => $item->getID(),
+         'itemtype'     => $itemtype,
+         'items_id'     => $item->getID(),
       ]
    ]);
    if ($issue->isNewItem()) {
@@ -509,8 +509,8 @@ function plugin_formcreator_hook_update_itilFollowup($followup) {
    }
    $issue->update([
       'id'           => $issue->getID(),
-      'sub_itemtype' => $itemtype,
-      'original_id'  => $item->getID(),
+      'itemtype'     => $itemtype,
+      'items_id'     => $item->getID(),
    'status'          => $validationStatus['status'],
       'date_mod'     => $item->fields['date_mod'],
    ]);

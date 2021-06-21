@@ -205,8 +205,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       // - issue
       $issue = new \PluginFormcreatorIssue;
       $this->boolean($issue->getFromDBByCrit([
-        'sub_itemtype' => \Ticket::class,
-        'original_id'  => $ticket->getID()
+        'itemtype' => \Ticket::class,
+        'items_id'  => $ticket->getID()
       ]))->isTrue();
 
       $CFG_GLPI['use_notifications'] = $use_notifications;

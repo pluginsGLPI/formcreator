@@ -57,6 +57,8 @@ class PluginFormcreatorUpgradeTo2_12 {
 
       $table = 'glpi_plugin_formcreator_forms';
       $this->migration->changeField($table, 'language', 'language', 'string', ['value' => '', 'after' => 'is_active']);
+
+      $this->normalizeIssues();
    }
 
    /**
@@ -127,5 +129,13 @@ class PluginFormcreatorUpgradeTo2_12 {
          $newAnswer = Toolbox::addslashes_deep($newAnswer);
          $DB->update($questionTable, ['values' => $newAnswer], ['id' => $row['id']]);
       }
+   }
+
+   public function normalizeIssues() {
+      $table = 'glpi_plugin_formcreator_issues';
+      $this->migration->changeField($table, 'original_id', 'items_id', 'integer');
+      $this->migration->changeField($table, 'sub_itemtype', 'itemtype', 'string', ['value' => '']);
+      $this->migration->dropKey($table, 'original_id_sub_itemtype');
+      $this->migration->addKey($table, ['itemtype', 'items_id'], 'item');
    }
 }
