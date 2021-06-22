@@ -196,30 +196,6 @@ function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $link
             }
             $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
          }
-
-         if ($new_table == 'glpi_groups') {
-            foreach ($already_link_tables as $table) {
-               if (strpos($table, $new_table) === 0) {
-                  $ref = explode('.', $table);
-                  $AS = $ref[0];
-                  $fk = getForeignKeyFieldForTable($ref[0]);
-                  if (count($ref) > 1) {
-                     $AS = $ref[0];
-                     $fk = $ref[1];
-                  }
-               }
-            }
-            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`$fk` = `$AS`.`id`) ";
-         }
-
-         if ($new_table == 'glpi_users' &&  $linkfield == 'users_id') {
-            foreach ($already_link_tables as $table) {
-               if (strpos($table, $new_table) === 0) {
-                  $AS = $table;
-               }
-            }
-            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`users_id` = `$AS`.`id`) ";
-         }
       break;
    }
 
