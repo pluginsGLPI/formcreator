@@ -124,7 +124,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                ]
             ]
          ],
-         'GROUPBY' => ['items_id'],
+         'GROUPBY' => ["$formAnswerTable.id"],
          'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`$ticketFk`) != 1"),
       ]);
 
@@ -560,19 +560,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '14',
          'table'              => User::getTable(),
          'field'              => 'name',
-         'linkfield'          => 'users_id',
          'name'               => __('Technician'),
          'datatype'           => 'dropdown',
-         'forcegroupby'       => false,
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Ticket_User::getTable(),
-               'linkfield'          => 'original_id',
                'joinparams'         => [
-                  'jointype'           => 'empty',
+                  'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
+                  'jointype'           => 'child',
+                  'beforejoin'         => [
+                     'table'              => Ticket::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => Ticket::class,
+                     ],
+                  ]
                ]
             ]
          ]
@@ -587,19 +593,26 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '15',
          'table'              => Group::getTable(),
          'field'              => 'name',
-         'linkfield'          => 'groups_id',
          'name'               => __('Technician group'),
          'datatype'           => 'dropdown',
-         'forcegroupby'       => false,
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
          'joinparams'         => [
+            'temoin' => true,
             'beforejoin'         => [
                'table'              => Group_Ticket::getTable(),
-               'linkfield'          => 'original_id',
                'joinparams'         => [
-                  'jointype'           => 'empty',
+                  'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
+                  'jointype'           => 'child',
+                  'beforejoin'         => [
+                     'table'              => Ticket::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => Ticket::class,
+                     ],
+                  ]
                ]
             ]
          ]
