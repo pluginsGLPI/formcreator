@@ -85,7 +85,6 @@ To build the plugin you need [Composer](http://getcomposer.org) and an internet 
 
 After dowloading the source of Formcreator, go in its folder and run the following
 * composer install
-* php vendor/bin/robo build:fa-data
 
 ## Contribute
 
