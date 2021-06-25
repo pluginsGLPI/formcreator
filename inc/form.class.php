@@ -1732,39 +1732,39 @@ PluginFormcreatorTranslatableInterface
       if ($DB->tableExists($formTable)
           && $DB->tableExists($formProfileTable)
           && isset($_SESSION['glpiactiveprofile']['id'])) {
-         $nb = (new DBUtils())->countElementsInTableForMyEntities(
-            $formTable,
-            [
-               'LEFT JOIN' => [
-                  $formLanguage => [
-                     'FKEY' => [
-                        $formLanguage => $formFk,
-                        $formTable    => 'id',
-                     ],
+         $nb = $DB->request([
+            'COUNT' => 'c',
+            'FROM' => $formTable,
+            'LEFT JOIN' => [
+               $formLanguage => [
+                  'FKEY' => [
+                     $formLanguage => $formFk,
+                     $formTable    => 'id',
                   ],
                ],
-               'WHERE' => [
-                  "$formTable.is_active" => '1',
-                  "$formTable.is_deleted" => '0',
+            ],
+            'WHERE' => [
+               "$formTable.is_active" => '1',
+               "$formTable.is_deleted" => '0',
+               'OR' => [
+                  "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                  "$formLanguage.name"  => $_SESSION['glpilanguage'],
+               ],
+               [
                   'OR' => [
-                     "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
-                     "$formLanguage.name"  => $_SESSION['glpilanguage'],
-                  ],
-                  [
-                     'OR' => [
-                        "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                        "$formTable.id" => new QuerySubQuery([
-                           'SELECT' => $formFk,
-                           'FROM' => $formProfileTable,
-                           'WHERE' => [
-                              'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                           ]
-                        ]),
-                     ],
+                     "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                     "$formTable.id" => new QuerySubQuery([
+                        'SELECT' => $formFk,
+                        'FROM' => $formProfileTable,
+                        'WHERE' => [
+                           'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                        ]
+                     ]),
                   ],
                ],
-            ]
-         );
+            ] + (new DbUtils())->getEntitiesRestrictCriteria($formTable, '', '', (new self())->maybeRecursive()),
+
+         ])->next()['c'];
       }
 
       return $nb;
