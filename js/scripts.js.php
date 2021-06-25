@@ -1,4 +1,5 @@
-<?php
+"use strict";
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,11 +29,6 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-
-include ('../../../inc/includes.php');
-header('Content-Type: text/javascript');
-?>
-"use strict";
 
 var modalWindow;
 var rootDoc          = CFG_GLPI['root_doc'];
@@ -358,7 +354,7 @@ function showTiles(tiles, defaultForms) {
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
-      html += '<p><?php echo Toolbox::addslashes_deep(__('No form found. Please choose a form below instead', 'formcreator'))?></p>'
+      html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead', 'formcreator') + '</p>'
    }
    html += buildTiles(tiles);
 
@@ -381,7 +377,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         var html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -402,7 +398,7 @@ function updateKbitemsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -464,7 +460,7 @@ function buildTiles(list) {
    var html = '';
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + "<?php echo Toolbox::addslashes_deep(__('No form yet in this category', 'formcreator')) ?>"
+      + i18n.textdomain('formcreator').__('No form yet in this category')
       + '</p>'
       +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
@@ -562,7 +558,7 @@ var plugin_formcreator = new function() {
    // Properties of the item when the user begins to change it
    this.initialPosition = {};
    this.changingItemId = 0;
-   this.questionsColumns = <?php echo PluginFormcreatorSection::COLUMNS; ?>;
+   this.questionsColumns = 4; // @see PluginFormcreatorSection::COLUMNS
    this.dirty = false;
 
    this.setupGridStack = function (group) {
@@ -740,7 +736,7 @@ var plugin_formcreator = new function() {
       if (typeof(id) === 'undefined') {
          return;
       }
-      if (confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
+      if (confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this question?'))) {
          jQuery.ajax({
          url: formcreatorRootDoc + '/ajax/question_delete.php',
          type: "POST",
@@ -942,7 +938,7 @@ var plugin_formcreator = new function() {
    // === SECTIONS ===
 
    this.deleteSection = function (item) {
-      if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
+      if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this section?'))) {
          var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
          var sectionId = section.attr('data-id');
          var that = this;
@@ -1234,7 +1230,7 @@ function plugin_formcreator_editTarget(itemtype, items_id) {
 }
 
 function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
-   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:'))) {
       jQuery.ajax({
         url: formcreatorRootDoc + '/front/form.form.php',
         type: "POST",
