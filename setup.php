@@ -315,7 +315,7 @@ function plugin_init_formcreator() {
             Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
       }
 
       //Html::requireJs('gridstack');
