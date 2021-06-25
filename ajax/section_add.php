@@ -44,4 +44,5 @@ if (!$section->add($_REQUEST)) {
     echo __('Could not add the section', 'formcreator');
     exit;
 }
+$section->getFromDB($section->getID()); // To remove if GLPI #9210 merged
 echo $section->getDesignHtml();
