@@ -83,7 +83,7 @@ class PluginFormcreatorComposite
          ]);
          foreach ($rows as $row) {
             switch ($row['itemtype']) {
-               case 'Ticket':
+               case Ticket::class:
                   $this->ticket_ticket->add([
                      'link' => $row['link'],
                      'tickets_id_1' => $generatedObject->getID(),
@@ -91,7 +91,7 @@ class PluginFormcreatorComposite
                   ]);
                   break;
 
-               case 'PluginFormcreatorTargetTicket':
+               case PluginFormcreatorTargetTicket::class:
                   $ticket = $this->targets['PluginFormcreatorTargetTicket'][$row['items_id']];
                   $this->ticket_ticket->add([
                      'link' => $row['link'],
