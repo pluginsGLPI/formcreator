@@ -892,7 +892,36 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          PluginFormcreatorCommon::setNotification($use_mailing);
       }
 
-      return $ticket;
+      return $this->fixLinksForEmbedImages($ticket, $ticketID);
+   }
+
+   private function fixLinksForEmbedImages($ticket, $ticketID) {
+      global $DB;
+
+      $content = $ticket->fields['content'];
+      $res = preg_match_all('/document.send.php\?docid=(\d+)"/', $content, $m);
+      if ($res) {
+         $fixed_content = preg_replace('/(document.send.php\?docid=\d+)(")/', '$1&amp;tickets_id='.$ticketID.'$2', $content);
+         $fixed_content = $DB->escape($fixed_content);
+         $DB->update(
+            'glpi_tickets',
+            ['content' => $fixed_content],
+            ['id' => $ticketID]);
+         foreach ($m[1] as $documentId) {
+            $docItem = new Document_Item();
+            $docItem->add([
+               'documents_id'      => $documentId,
+               'itemtype'          => Ticket::class,
+               'items_id'          => $ticketID,
+               'timeline_position' => CommonITILObject::NO_TIMELINE,
+            ]);
+         }
+         $result = new Ticket();
+         $result->getFromDB($ticketID);
+         return $result;
+      } else {
+         return $ticket;
+      }
    }
 
    protected function setTargetLocation($data, $formanswer) {
