@@ -93,6 +93,9 @@ class PluginFormcreatorComposite
 
                case PluginFormcreatorTargetTicket::class:
                   $ticket = $this->targets['PluginFormcreatorTargetTicket'][$row['items_id']];
+                  if ($ticket === null) {
+                     continue;
+                  }
                   $this->ticket_ticket->add([
                      'link' => $row['link'],
                      'tickets_id_1' => $generatedObject->getID(),
