@@ -340,6 +340,10 @@ function plugin_init_formcreator() {
       $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
       $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
       $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorIssue::class] = 'photoswipe';
+
+      if (strpos($_SERVER['REQUEST_URI'], 'issue.form.php') !== false) {
+         $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/print_form.css";
+      }
    }
 }
 

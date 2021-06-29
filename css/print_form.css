@@ -27,109 +27,120 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-.print_button {
-   display: none;
-}
 
-#page {
-   text-align: left;
-   margin: 10px;
-}
+@media print {
+   .print_button {
+      display: none;
+   }
 
-.form_section {
-   margin-left: 10px;
-}
+   #header_top.formcreator_header_top {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+   }
 
-.form-group {
-   margin:  20px 10px;
-   break-inside: avoid-page;
-}
+   #page.plugin_formcreator_page {
+      text-align: left;
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+   }
 
-.form_field {
-   margin-top: 5px;
-}
+   .form_section {
+      margin-left: 10px;
+   }
 
-.select2-container,
-input,
-textarea,
-.mce-edit-area {
-   border: 1px solid #AAA;
-   padding: 5px;
-   min-height: 15px;
-   width: 80%;
-}
+   .form-group {
+      margin:  20px 10px;
+      break-inside: avoid-page;
+   }
 
-.select2-container a {
-   display: none;
-}
+   .form_field {
+      margin-top: 5px;
+   }
 
-.mce-toolbar {
-   display: none;
-}
+   .select2-container,
+   input,
+   textarea,
+   .mce-edit-area {
+      border: 1px solid #AAA;
+      padding: 5px;
+      min-height: 15px;
+      width: 80%;
+   }
 
-input[type=submit] {
-   display: none;
-}
+   .select2-container a {
+      display: none;
+   }
 
-label[for] {
-   font-weight: bold;
-}
+   .mce-toolbar {
+      display: none;
+   }
 
-/** FORM ANSWER */
-.form_answer .headerRow,
-.form_answer .help-block,
-.form_answer .accepted_header {
-   display: none;
-}
+   input[type=submit] {
+      display: none;
+   }
+
+   label[for] {
+      font-weight: bold;
+   }
+
+   /** FORM ANSWER */
+   .form_answer .headerRow,
+   .form_answer .help-block,
+   .form_answer .accepted_header {
+      display: none;
+   }
 
 
-/** GLPI COMPONENTS */
-.tab_cadre_fixe,
-.tab_cadre_fixe th {
-   border: 0;
-   margin: 0;
-   font-size: 13px;
-}
+   /** GLPI COMPONENTS */
+   .tab_cadre_fixe,
+   .tab_cadre_fixe th {
+      border: 0;
+      margin: 0;
+      font-size: 13px;
+   }
 
-.form_content {
-   display: none;
-}
+   .form_content {
+      display: none;
+   }
 
-.ui-front-message-after-redirect {
-   display: none;
-}
+   .ui-front-message-after-redirect {
+      display: none;
+   }
 
-.pq-select-popup-cont {
-   display: none;
-}
+   .pq-select-popup-cont {
+      display: none;
+   }
 
-/** CHECKBOXES */
-.form-group-checkbox {
-   position:relative;
-   width: 16px;
-   height: 16px;
-   margin: 0 auto;
-   display: inline-block;
-   margin: 5px;
-}
+   /** CHECKBOXES */
+   .form-group-checkbox {
+      position:relative;
+      width: 16px;
+      height: 16px;
+      margin: 0 auto;
+      display: inline-block;
+      margin: 5px;
+   }
 
-.label-checkbox {
-   cursor:pointer;
-   width: 16px;
-   height: 16px;
-   display: block;
-}
+   .label-checkbox {
+      cursor:pointer;
+      width: 16px;
+      height: 16px;
+      display: block;
+   }
 
-.label-checkbox span {
-   display:block;
-   position:absolute;
-   left:0;
-}
+   .label-checkbox span {
+      display:block;
+      position:absolute;
+      left:0;
+   }
 
-.label-checkbox .box {
-   top: -2px;
-   border: 1px solid #222;
-   border-radius: 3px;
-   height:16px;
-   width:16px;
+   .label-checkbox .box {
+      top: -2px;
+      border: 1px solid #222;
+      border-radius: 3px;
+      height:16px;
+      width:16px;
+   }
 }
