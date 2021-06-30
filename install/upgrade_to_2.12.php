@@ -54,6 +54,9 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addField($table, 'header', 'text', ['after' => 'is_header_visible']);
 
       $this->migrateReferenceEntity();
+
+      $table = 'glpi_plugin_formcreator_forms';
+      $this->migration->changeField($table, 'language', 'language', 'string', ['after' => 'is_active']);
    }
 
    /**
