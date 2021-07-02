@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `name`                        varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_forms_id` int(11) NOT NULL DEFAULT '0',
   `target_name`                 varchar(255) NOT NULL DEFAULT '',
+  `changetemplates_id`          int(11) DEFAULT NULL,
   `content`                     longtext,
   `impactcontent`               longtext,
   `controlistcontent`           longtext,

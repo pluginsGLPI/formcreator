@@ -59,6 +59,9 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->changeField($table, 'language', 'language', 'string', ['value' => '', 'after' => 'is_active']);
 
       $this->normalizeIssues();
+
+      $table = 'glpi_plugin_formcreator_targetchanges';
+      $this->migration->addField($table, 'changetemplates_id', 'integer', ['after' => 'target_name']);
    }
 
    /**

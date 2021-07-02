@@ -72,6 +72,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return Ticket::class;
    }
 
+   protected function getTemplateItemtypeName() {
+      return TicketTemplate::class;
+   }
+
    protected function getCategoryFilter() {
       return [
          'OR' => [
@@ -195,7 +199,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       echo '<tr>';
       $this->showTemplateSettings($rand);
-      $this->showDueDateSettings($form, $rand);
+      $this->showDueDateSettings($rand);
       echo '</tr>';
 
       $this->showSLASettings();
@@ -210,21 +214,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($form, $rand);
+      $this->showCategorySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($form, $rand);
+      $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Location selection
       // -------------------------------------------------------------------------------------------
-      $this->showLocationSettings($form, $rand);
+      $this->showLocationSettings($rand);
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($form, $rand);
+      $this->showPluginTagsSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Composite tickets
@@ -700,7 +704,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $data = $this->setTargetCategory($data, $formanswer);
       $data = $this->setTargetType($data, $formanswer);
 
-      // Set template ticket from itilcategorie when template ticket is not set in the target (=0)
+      // Set template ticket from itilcategory when template ticket is not set in the target (=0)
       $itilCategory = new ITILCategory();
       $ticket = new Ticket();
       if ($ticket->isNewID($this->fields['tickettemplates_id']) && !$itilCategory->isNewID($data['itilcategories_id'])) {

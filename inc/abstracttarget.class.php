@@ -111,6 +111,13 @@ PluginFormcreatorTranslatableInterface
    abstract protected function getItem_Item();
 
    /**
+    * Get the class name of the target itemtype's template
+    *
+    * @return string
+    */
+   abstract protected function getTemplateItemtypeName();
+
+   /**
     * Get the class name of the target itemtype
     *
     * @return string
@@ -928,16 +935,19 @@ PluginFormcreatorTranslatableInterface
    }
 
    protected function showTemplateSettings($rand) {
-      echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
+      $templateType = $this->getTemplateItemtypeName();
+      $templateFk = $templateType::getForeignKeyField();
+
+      echo '<td width="15%">' . $templateType::getTypeName(1) . '</td>';
       echo '<td width="25%">';
-      Dropdown::show('TicketTemplate', [
-         'name'  => 'tickettemplates_id',
-         'value' => $this->fields['tickettemplates_id']
+      Dropdown::show($templateType, [
+         'name'  => $templateFk,
+         'value' => $this->fields[$templateFk]
       ]);
       echo '</td>';
    }
 
-   protected  function showDueDateSettings(PluginFormcreatorForm $form, $rand) {
+   protected  function showDueDateSettings($rand) {
       echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
@@ -1143,7 +1153,7 @@ PluginFormcreatorTranslatableInterface
       echo '</tr>';
    }
 
-   protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
+   protected function showCategorySettings($rand) {
       echo '<tr>';
       echo '<td width="15%">' . __('Category', 'formcreator') . '</td>';
       echo '<td width="25%">';
@@ -1184,7 +1194,7 @@ PluginFormcreatorTranslatableInterface
       echo '</tr>';
    }
 
-   protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
+   protected function showUrgencySettings($rand) {
       echo '<tr>';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
@@ -1221,7 +1231,7 @@ PluginFormcreatorTranslatableInterface
       echo '</tr>';
    }
 
-   protected function showPluginTagsSettings(PluginFormcreatorForm $form, $rand) {
+   protected function showPluginTagsSettings($rand) {
       global $DB;
 
       $plugin = new Plugin();
@@ -1387,7 +1397,7 @@ SCRIPT;
       echo '</table>';
    }
 
-   protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
+   protected function showLocationSettings($rand) {
       global $DB;
 
       echo '<tr>';
