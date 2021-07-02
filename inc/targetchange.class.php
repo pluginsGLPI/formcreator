@@ -50,14 +50,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       ];
    }
 
-   static function getEnumCategoryRule() {
-      return [
-         PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => __('None', 'formcreator'),
-         PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
-         PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
    protected function getItem_User() {
       return new Change_User();
    }
@@ -76,6 +68,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
    protected function getTargetItemtypeName() {
       return Change::class;
+   }
+
+   protected function getTemplateItemtypeName() {
+      return ChangeTemplate::class;
    }
 
    protected function getCategoryFilter() {
@@ -463,8 +459,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $this->showDestinationEntitySetings($rand);
 
       echo '<tr>';
-      $this->showDueDateSettings($form, $rand);
-      echo '<td colspan="2"></td>';
+      $this->showTemplateSettings($rand);
+      $this->showDueDateSettings($rand);
       echo '</tr>';
 
       $this->showSLASettings();
@@ -473,17 +469,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($form, $rand);
+      $this->showCategorySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($form, $rand);
+      $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($form, $rand);
+      $this->showPluginTagsSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Conditions to generate the target
@@ -673,14 +669,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
    }
 
    /**
-    * Save form data to the target
+    * Set default values for the ticket to create
     *
-    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
-    *
-    * @return Change|null generated change
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
     */
-   public function save(PluginFormcreatorFormAnswer $formanswer) {
-      // Prepare actors structures for creation of the ticket
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer) : array {
+      global $DB;
+
+      // Prepare actors structures for creation of the change
       $this->requesters = [
          '_users_id_requester'         => [],
          '_users_id_requester_notif'   => [
@@ -723,11 +720,84 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          '_groups_id_assign'           => [],
       ];
 
+      $data = Change::getDefaultValues();
+
+      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+
+      $data = $this->setTargetCategory($data, $formanswer);
+
+      // Set template change from itilcategory when template change is not set in the target (=0)
+      $itilCategory = new ITILCategory();
+      $targetItemtype = $this->getTemplateItemtypeName();
+      /** @var ITILTemplate $targetItem */
+      $targetItem = new $targetItemtype();
+      $targetTemplateFk = $targetItemtype::getForeignKeyField();
+      if ($targetItem->isNewID($this->fields[$targetTemplateFk]) && !$itilCategory->isNewID($data['itilcategories_id'])) {
+         $rows = $DB->request([
+            'SELECT' => [$targetTemplateFk],
+            'FROM'   => ITILCategory::getTable(),
+            'WHERE'  => ['id' => $data['itilcategories_id']]
+         ]);
+         if ($row = $rows->next()) { // assign change template according to resulting change category
+            $this->fields[$targetTemplateFk] = $row[$targetTemplateFk];
+         }
+
+      }
+
+      // Get predefined Fields
+      $ttp                  = new ChangeTemplatePredefinedField();
+      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
+
+      if (isset($predefined_fields['_users_id_requester'])) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_users_id_requester'], true);
+         unset($predefined_fields['_users_id_requester']);
+      }
+      if (isset($predefined_fields['_users_id_observer'])) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_users_id_observer'], true);
+         unset($predefined_fields['_users_id_observer']);
+      }
+      if (isset($predefined_fields['_users_id_assign'])) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_users_id_assign'], true);
+         unset($predefined_fields['_users_id_assign']);
+      }
+
+      if (isset($predefined_fields['_groups_id_requester'])) {
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_groups_id_requester']);
+         unset($predefined_fields['_groups_id_requester']);
+      }
+      if (isset($predefined_fields['_groups_id_observer'])) {
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_groups_id_observer']);
+         unset($predefined_fields['_groups_id_observer']);
+      }
+      if (isset($predefined_fields['_groups_id_assign'])) {
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_groups_id_assign']);
+         unset($predefined_fields['_groups_id_assign']);
+      }
+
+      // Manage special values
+      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
+         $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
+      }
+
+      $data = array_merge($data, $predefined_fields);
+      return $data;
+
+   }
+
+   /**
+    * Save form data to the target
+    *
+    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
+    *
+    * @return Change|null generated change
+    */
+   public function save(PluginFormcreatorFormAnswer $formanswer) {
+
       $data   = [];
       $change  = new Change();
       $form    = $formanswer->getForm();
+      $data = $this->getDefaultData($formanswer);
 
-      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       // Parse data
       $data['name'] = $this->prepareTemplate(
@@ -778,7 +848,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
-      $data = $this->setTargetCategory($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
