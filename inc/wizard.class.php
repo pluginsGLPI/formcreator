@@ -52,7 +52,7 @@ class PluginFormcreatorWizard {
       }
       $HEADER_LOADED = true;
 
-      Html::includeHeader($title);
+      Html::includeHeader($title, 'helpdesk', PluginFormcreatorIssue::class);
 
       $body_class = "layout_".$_SESSION['glpilayout'];
       if ((strpos($_SERVER['REQUEST_URI'], "form.php") !== false)

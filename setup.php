@@ -317,7 +317,7 @@ function plugin_init_formcreator() {
       //Html::requireJs('gridstack');
       $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
       $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
-      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorIssue::class] = 'photoswipe';
+      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorIssue::class] = ['photoswipe'];
    }
 }
 
