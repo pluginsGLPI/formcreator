@@ -42,14 +42,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return _n('Target change', 'Target changes', $nb, 'formcreator');
    }
 
-   static function getEnumUrgencyRule() {
-      return [
-         PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE      => __('Medium', 'formcreator'),
-         PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
-         PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
    protected function getItem_User() {
       return new Change_User();
    }
@@ -66,12 +58,16 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return new Change_Item();
    }
 
-   protected function getTargetItemtypeName() {
+   protected function getTargetItemtypeName(): string {
       return Change::class;
    }
 
-   protected function getTemplateItemtypeName() {
+   protected function getTemplateItemtypeName(): string {
       return ChangeTemplate::class;
+   }
+
+   protected function getTemplatePredefinedFieldItemtype(): string {
+      return ChangeTemplatePredefinedField::class;
    }
 
    protected function getCategoryFilter() {
@@ -91,7 +87,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
    }
 
    /**
-    * Export in an array all the data of the current instanciated target ticket
+    * Export in an array all the data of the current instanciated target change
     * @return array the array with all data (with sub tables)
     */
    public function export(bool $remove_uuid = false) : array {
@@ -104,6 +100,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       unset($export[$formFk]);
+
+      // replace dropdown ids
+      $export['_changetemplate'] = '';
+      if ($export['changetemplates_id'] > 0) {
+         $export['_changetemplate']
+            = Dropdown::getDropdownName('glpi_changetemplates',
+                                        $export['changetemplates_id']);
+      }
+      unset($export['changetemplates_id']);
 
       $subItems = [
          '_actors'     => PluginFormcreatorTarget_Actor::class,
@@ -530,7 +535,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
    }
 
    /**
-    * Prepare input data for updating the target ticket
+    * Prepare input data for updating the target change
     *
     * @param array $input data used to add the item
     *
@@ -668,120 +673,29 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       }
    }
 
-   /**
-    * Set default values for the ticket to create
-    *
-    * @param PluginFormcreatorFormAnswer $formanswer
-    * @return array
-    */
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer) : array {
+   protected function getTargetTemplate(array $data): int {
       global $DB;
 
-      // Prepare actors structures for creation of the change
-      $this->requesters = [
-         '_users_id_requester'         => [],
-         '_users_id_requester_notif'   => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-      $this->observers = [
-         '_users_id_observer'          => [],
-         '_users_id_observer_notif'    => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-      $this->assigned = [
-         '_users_id_assign'       => [],
-         '_users_id_assign_notif' => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-
-      $this->assignedSuppliers = [
-         '_suppliers_id_assign'        => [],
-         '_suppliers_id_assign_notif'  => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ]
-      ];
-
-      $this->requesterGroups = [
-         '_groups_id_requester'        => [],
-      ];
-
-      $this->observerGroups = [
-         '_groups_id_observer'         => [],
-      ];
-
-      $this->assignedGroups = [
-         '_groups_id_assign'           => [],
-      ];
-
-      $data = Change::getDefaultValues();
-
-      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
-
-      $data = $this->setTargetCategory($data, $formanswer);
-
-      // Set template change from itilcategory when template change is not set in the target (=0)
-      $itilCategory = new ITILCategory();
       $targetItemtype = $this->getTemplateItemtypeName();
-      /** @var ITILTemplate $targetItem */
-      $targetItem = new $targetItemtype();
       $targetTemplateFk = $targetItemtype::getForeignKeyField();
-      if ($targetItem->isNewID($this->fields[$targetTemplateFk]) && !$itilCategory->isNewID($data['itilcategories_id'])) {
+      if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([
             'SELECT' => [$targetTemplateFk],
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
          if ($row = $rows->next()) { // assign change template according to resulting change category
-            $this->fields[$targetTemplateFk] = $row[$targetTemplateFk];
+            return $row[$targetTemplateFk];
          }
-
       }
 
-      // Get predefined Fields
-      $ttp                  = new ChangeTemplatePredefinedField();
-      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
+      return $this->fields[$targetTemplateFk] ?? 0;
+   }
 
-      if (isset($predefined_fields['_users_id_requester'])) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_users_id_requester'], true);
-         unset($predefined_fields['_users_id_requester']);
-      }
-      if (isset($predefined_fields['_users_id_observer'])) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_users_id_observer'], true);
-         unset($predefined_fields['_users_id_observer']);
-      }
-      if (isset($predefined_fields['_users_id_assign'])) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_users_id_assign'], true);
-         unset($predefined_fields['_users_id_assign']);
-      }
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
+      $data = parent::getDefaultData($formanswer);
 
-      if (isset($predefined_fields['_groups_id_requester'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_groups_id_requester']);
-         unset($predefined_fields['_groups_id_requester']);
-      }
-      if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_groups_id_observer']);
-         unset($predefined_fields['_groups_id_observer']);
-      }
-      if (isset($predefined_fields['_groups_id_assign'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_groups_id_assign']);
-         unset($predefined_fields['_groups_id_assign']);
-      }
-
-      // Manage special values
-      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
-         $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
-      }
-
-      $data = array_merge($data, $predefined_fields);
       return $data;
-
    }
 
    /**
@@ -792,12 +706,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     * @return Change|null generated change
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
-
       $data   = [];
       $change  = new Change();
       $form    = $formanswer->getForm();
       $data = $this->getDefaultData($formanswer);
-
 
       // Parse data
       $data['name'] = $this->prepareTemplate(

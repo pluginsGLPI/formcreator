@@ -150,7 +150,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function testGetEnumUrgencyRule() {
       $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetChange::URGENCY_RULE_NONE      => 'Medium',
+         \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
          \PluginFormcreatorTargetChange::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
          \PluginFormcreatorTargetChange::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
@@ -159,9 +159,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function testGetEnumCategoryRule() {
       $output = \PluginFormcreatorTargetChange::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => 'None',
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => 'Specific category',
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE          => 'Category from template or none',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC      => 'Specific category',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
       ]);
    }
 
@@ -454,6 +455,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'ola_question_ttr',
       ];
       $extraFields = [
+         '_changetemplate',
          '_actors',
          'conditions',
       ];
