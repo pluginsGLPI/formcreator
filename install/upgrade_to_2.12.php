@@ -61,7 +61,10 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->normalizeIssues();
 
       $table = 'glpi_plugin_formcreator_targetchanges';
-      $this->migration->addField($table, 'changetemplates_id', 'integer', ['after' => 'target_name']);
+      $this->migration->addField($table, 'changetemplates_id', 'integer', ['value' => '0', 'after' => 'target_name']);
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $this->migration->changeField($table, 'tickettemplates_id', 'tickettemplates_id', 'integer', ['value' => '0', 'after' => 'type_question']);
    }
 
    /**
