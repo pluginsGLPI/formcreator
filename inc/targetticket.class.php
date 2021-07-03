@@ -1111,6 +1111,18 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          );
       }
 
+      // set template
+      $ticketTemplateId = 0;
+      plugin_formcreator_getFromDBByField(
+         $ticketTemplate = new TicketTemplate(),
+         'name',
+         $input['_tickettemplate']
+      );
+      if (!$ticketTemplate->isNewItem() && $ticketTemplate->canViewItem()) {
+         $ticketTemplateId = $ticketTemplate->getID();
+      }
+      $input['tickettemplates_id'] = $ticketTemplateId;
+
       // Escape text fields
       foreach (['name'] as $key) {
          $input[$key] = $DB->escape($input[$key]);

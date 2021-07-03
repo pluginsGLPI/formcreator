@@ -39,6 +39,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       parent::beforeTestMethod($method);
       switch ($method) {
          case 'testSetTargetEntity':
+         case 'testImport':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -477,6 +478,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $input = [
          'name' => $this->getUniqueString(),
          'target_name' => $this->getUniqueString(),
+         '_changetemplate' => '',
          'content' => $this->getUniqueString(),
          'impactcontent' => $this->getUniqueString(),
          'controlistcontent' => $this->getUniqueString(),
@@ -516,6 +518,29 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $input['id'] = $targetChangeId;
       $targetChangeId2 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
       $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId2);
+
+      $this->newTestedInstance()->delete([
+         'id' => $targetChangeId2,
+      ]);
+
+      // Check successful link with template
+      $templateName = 'change template ' . $this->getUniqueString();
+      $changeTemplate = new \ChangeTemplate();
+      $changeTemplate->add([
+         'name' => $templateName,
+         'entities_id' => 0,
+         'is_recursive' => 1,
+      ]);
+      $this->boolean($changeTemplate->isNewItem())->isFalse();
+      $input['_changetemplate'] = $templateName;
+
+      $linker = new \PluginFormcreatorLinker();
+      $targetChangeId3 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
+      $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId3);
+      $targetChange = $this->newTestedInstance();
+      $targetChange->getFromDB($targetChangeId3);
+      $this->integer((int) $targetChange->fields['changetemplates_id'])
+         ->isEqualTo($changeTemplate->getID());
    }
 
    public function testIsEntityAssign() {

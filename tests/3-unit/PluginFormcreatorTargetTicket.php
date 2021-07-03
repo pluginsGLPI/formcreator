@@ -44,6 +44,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          case 'testPrepareTemplate':
          case 'testDeleteLinkedTickets':
          case 'testSetTargetAssociatedItem':
+         case 'testImport':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -698,6 +699,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $input = [
          'name' => $this->getUniqueString(),
          'target_name' => $this->getUniqueString(),
+         '_tickettemplate' => '',
          'content' => $this->getUniqueString(),
          'due_date_rule' => \PluginFormcreatorTargetTicket::DUE_DATE_RULE_NONE,
          'due_date_question' => '0',
@@ -722,12 +724,14 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'uuid' => $uuid,
       ];
 
+      // Check successful import with UUID
       $linker = new \PluginFormcreatorLinker();
       $targetTicketId = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
       $this->integer($targetTicketId)->isGreaterThan(0);
 
       unset($input['uuid']);
 
+      // Check error if UUID and ID are mising
       $this->exception(
          function() use($linker, $input, $form) {
             \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
@@ -735,9 +739,33 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
          ->hasMessage('UUID or ID is mandatory for Target ticket'); // passes
 
+      // Check sucessful import with ID
       $input['id'] = $targetTicketId;
       $targetTicketId2 = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
       $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
+
+      $this->newTestedInstance()->delete([
+         'id' => $targetTicketId2,
+      ]);
+
+      // Check successful link with template
+      $templateName = 'ticket template ' . $this->getUniqueString();
+      $ticketTemplate = new \TicketTemplate();
+      $ticketTemplate->add([
+         'name' => $templateName,
+         'entities_id' => 0,
+         'is_recursive' => 1,
+      ]);
+      $this->boolean($ticketTemplate->isNewItem())->isFalse();
+      $input['_tickettemplate'] = $templateName;
+
+      $linker = new \PluginFormcreatorLinker();
+      $targetTicketId3 = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
+      $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId3);
+      $targetTicket = $this->newTestedInstance();
+      $targetTicket->getFromDB($targetTicketId3);
+      $this->integer((int) $targetTicket->fields['tickettemplates_id'])
+         ->isEqualTo($ticketTemplate->getID());
    }
 
    public function providerSetTargetCategory_nothing() {

@@ -179,6 +179,18 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          );
       }
 
+      // set template
+      $changeTemplateId = 0;
+      plugin_formcreator_getFromDBByField(
+         $changeTemplate = new ChangeTemplate(),
+         'name',
+         $input['_changetemplate']
+      );
+      if (!$changeTemplate->isNewItem() && $changeTemplate->canViewItem()) {
+         $changeTemplateId = $changeTemplate->getID();
+      }
+      $input['changetemplates_id'] = $changeTemplateId;
+
       // Escape text fields
       foreach (['name'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
