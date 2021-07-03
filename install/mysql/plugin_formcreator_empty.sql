@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `content`                          longtext,
   `plugin_formcreator_categories_id` int(11) unsigned NOT NULL DEFAULT '0',
   `is_active`                        tinyint(1) NOT NULL DEFAULT '0',
-  `language`                         varchar(255) NOT NULL,
+  `language`                         varchar(255) NOT NULL DEFAULT '',
   `helpdesk_home`                    tinyint(1) NOT NULL DEFAULT '0',
   `is_deleted`                       tinyint(1) NOT NULL DEFAULT '0',
   `validation_required`              tinyint(1) NOT NULL DEFAULT '0',

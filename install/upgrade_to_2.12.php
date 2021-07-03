@@ -56,7 +56,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migrateReferenceEntity();
 
       $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->changeField($table, 'language', 'language', 'string', ['after' => 'is_active']);
+      $this->migration->changeField($table, 'language', 'language', 'string', ['value' => '', 'after' => 'is_active']);
    }
 
    /**
