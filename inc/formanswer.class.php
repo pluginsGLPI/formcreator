@@ -1274,12 +1274,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ],
          1
       );
+
+      $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+
       $ticketUserRow = array_pop($ticketUserRow);
       $issue->add([
          'items_id'           => $ticketId,
          'itemtype'           => Ticket::class,
          'name'               => addslashes($ticket->fields['name']),
-         'status'             => $ticket->fields['status'],
+         'status'             => $validationStatus['status'],
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
