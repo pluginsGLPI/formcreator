@@ -852,7 +852,7 @@ PluginFormcreatorTranslatableInterface
     * @return array
     */
    public function showFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false) : array {
-      global $DB;
+      global $DB, $TRANSLATE;
 
       $table_cat          = getTableForItemType('PluginFormcreatorCategory');
       $table_form         = getTableForItemType('PluginFormcreatorForm');
@@ -963,9 +963,15 @@ PluginFormcreatorTranslatableInterface
       $formList = [];
       if ($result_forms->count() > 0) {
          foreach ($result_forms as $form) {
+            // load thanguage for the form, if any
+            $domain = self::getTranslationDomain($form['id']);
+            $phpfile = self::getTranslationFile($form['id'], $_SESSION['glpilanguage']);
+            if (file_exists($phpfile)) {
+               $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
+            }
             $formList[] = [
                'id'           => $form['id'],
-               'name'         => $form['name'],
+               'name'         => __($form['name'], $domain),
                'icon'         => $form['icon'],
                'icon_color'   => $form['icon_color'],
                'background_color'   => $form['background_color'],
