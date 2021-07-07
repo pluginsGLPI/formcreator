@@ -54,7 +54,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
    const ACTOR_TYPE_QUESTION_ACTORS = 9;
    const ACTOR_TYPE_GROUP_FROM_OBJECT = 10;
    const ACTOR_TYPE_TECH_GROUP_FROM_OBJECT = 11;
-   CONST ACTOR_TYPE_AUTHORS_SUPERVISOR = 12;
+   const ACTOR_TYPE_AUTHORS_SUPERVISOR = 12;
 
    const ACTOR_ROLE_REQUESTER = 1;
    const ACTOR_ROLE_OBSERVER = 2;
