@@ -2064,7 +2064,7 @@ SCRIPT;
                . '</b> "' . $question->getName() . '"';
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR :
-               echo $img_user . ' <b>' . __('From author\'s supervisor', 'formcreator') . '</b>';
+               echo $img_user . ' <b>' . __('Form author\'s supervisor', 'formcreator') . '</b>';
                break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
