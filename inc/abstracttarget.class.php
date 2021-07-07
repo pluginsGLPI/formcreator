@@ -696,6 +696,17 @@ PluginFormcreatorTranslatableInterface
 
                $userIds = [$object->fields[$groupFk]];
                break;
+
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+               $requester_id = $formanswer->fields['requester_id'];
+
+               $user = new User;
+               $users = $user->find(['id' => $requester_id]);
+               if (!empty($users)) {
+                  $userIds = [$users[$requester_id]['users_id_supervisor']];
+               }
+               // $userIds = [$formanswer->fields['requester_id']];
+               break;
          }
          $notify = $actor['use_notification'];
 
@@ -705,6 +716,7 @@ PluginFormcreatorTranslatableInterface
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR:
                foreach ($userIds as $userIdOrEmail) {
                   $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
                }
@@ -1856,6 +1868,7 @@ SCRIPT;
             break;
          case CommonITILActor::ASSIGN:
             $type = 'assigned';
+            unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR]);
             $changeActorJSFunction = 'plugin_formcreator_ChangeActorAssigned(this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED;
             break;
@@ -2049,6 +2062,9 @@ SCRIPT;
                $question->getFromDB($values['actor_value']);
                echo $img_supplier . ' <b>' . __('Supplier from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
+               break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR :
+               echo $img_user . ' <b>' . __('From author\'s supervisor', 'formcreator') . '</b>';
                break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
