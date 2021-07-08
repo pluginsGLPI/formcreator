@@ -1105,19 +1105,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
-         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
-         if ($target !== null) {
-            foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
-               $target->addAttachedDocument($documentId);
-            }
-         }
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
-               if (!is_array($value)) {
-                  $value = [$value];
+               if ($target !== null) {
+                  foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
+                     $target->addAttachedDocument($documentId);
+                  }
                }
             }
          }
+         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
