@@ -263,7 +263,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    public function displayExtended($options = []) {
       $itemtype = $this->fields['itemtype'];
       $item = new $itemtype();
-      if (!$item->getFromDB($this->fields[''])) {
+      if (!$item->getFromDB($this->fields['items_id'])) {
          Html::displayNotFoundError();
       }
 
