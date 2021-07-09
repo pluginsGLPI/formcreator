@@ -377,7 +377,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms') + '</p>'
+         var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -398,7 +398,7 @@ function updateKbitemsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms') + '</p>'
+         html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -460,7 +460,7 @@ function buildTiles(list) {
    var html = '';
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + i18n.textdomain('formcreator').__('No form yet in this category')
+      + i18n.textdomain('formcreator').__('No form yet in this category', 'formcreator')
       + '</p>'
       +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
@@ -736,7 +736,7 @@ var plugin_formcreator = new function() {
       if (typeof(id) === 'undefined') {
          return;
       }
-      if (confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this question?'))) {
+      if (confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this question?', 'formcreator'))) {
          jQuery.ajax({
          url: formcreatorRootDoc + '/ajax/question_delete.php',
          type: "POST",
@@ -938,7 +938,7 @@ var plugin_formcreator = new function() {
    // === SECTIONS ===
 
    this.deleteSection = function (item) {
-      if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this section?'))) {
+      if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this section?', 'formcreator'))) {
          var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
          var sectionId = section.attr('data-id');
          var that = this;
@@ -1230,7 +1230,7 @@ function plugin_formcreator_editTarget(itemtype, items_id) {
 }
 
 function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:'))) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:', 'formcreator'))) {
       jQuery.ajax({
         url: formcreatorRootDoc + '/front/form.form.php',
         type: "POST",
