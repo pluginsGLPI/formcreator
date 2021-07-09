@@ -1165,9 +1165,7 @@ PluginFormcreatorTranslatableInterface
       }
       echo '</div>';
 
-      if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-
+      if (PluginFormcreatorCommon::canValidate()) {
          echo '<div class="plugin_formcreator_card">';
          echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
          $groupList = Group_User::getUserGroups($userId);
