@@ -2681,17 +2681,8 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      // $lockHandle = fopen($file, 'r');
-      // $isLocked = flock($lockHandle, LOCK_SH);
-      // $lockTries = 1;
-      // while (!$isLocked && $lockTries < 20) {
-      //    $isLocked = flock($lockHandle, LOCK_SH);
-      //    $lockTries++;
-      //    usleep(50000);
-      // }
       opcache_invalidate($file, true);
       $translations = include($file);
-      // fclose($lockHandle);
       if (!is_array($translations)) {
          return [];
       }
