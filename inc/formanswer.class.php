@@ -435,18 +435,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             break;
 
          case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
-            // Check the user is member of at least one validator group for the form answers
-            $condition = [
-               'glpi_groups.id' => new QuerySubQuery([
-                  'SELECT' => ['items_id'],
-                  'FROM'   => PluginFormcreatorForm_Validator::getTable(),
-                  'WHERE'  => [
-                     'itemtype'                    => Group::class,
-                     'plugin_formcreator_forms_id' => $form->getID()
-                  ]
-               ])
-            ];
-            $groupList = Group_User::getUserGroups(Session::getLoginUserID(), $condition);
+            $groupList = Group_User::getUserGroups(
+               Session::getLoginUserID(),
+               ['glpi_groups.id' => $this->fields['groups_id_validator']]
+            );
             return (count($groupList) > 0);
             break;
       }
