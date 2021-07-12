@@ -18,10 +18,6 @@ init_databases() {
 
 # GLPI install
 install_glpi() {
-   if [ "$GLPI_BRANCH" = '9.4/bugfixes' ]; then
-      echo "Downgrading to composer 1"
-      sudo wget https://getcomposer.org/composer-1.phar -O "$COMPOSER"
-   fi
    echo Installing GLPI
    sudo rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
@@ -40,7 +36,6 @@ install_glpi() {
 # $3 : database password
 init_glpi() {
    echo Initializing GLPI
-   pwd
    echo Dropping the database $1
    mysql -u$2 -p$3 -h$DB_HOST --execute "DROP DATABASE IF EXISTS \`$1\`;"
    echo Cleaning up cache directory
