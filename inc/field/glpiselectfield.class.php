@@ -80,13 +80,6 @@ class GlpiselectField extends DropdownField
 
       $optgroup = $this->getObjects();
 
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues === null) {
-         $itemtype = $this->question->fields['values'];
-      } else {
-         $itemtype = $decodedValues['itemtype'];
-      }
-
       // Get additional itemtypes from plugins
       $additionalTypes = Plugin::doHookFunction('formcreator_get_glpi_object_types', []);
       // Cleanup data from plugins
@@ -108,6 +101,13 @@ class GlpiselectField extends DropdownField
       }
       // Merge new itemtypes to predefined ones
       $optgroup = array_merge_recursive($optgroup, $cleanedAditionalTypes);
+
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         $itemtype = $this->question->fields['values'];
+      } else {
+         $itemtype = $decodedValues['itemtype'];
+      }
 
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
