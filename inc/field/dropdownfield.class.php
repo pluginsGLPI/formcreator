@@ -296,7 +296,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                if ($DB->fieldExists($itemtype::getTable(), $userFk)
                   && !$canViewAllHardware && $canViewMyHardware
                ) {
-                  $userId = $_SESSION['glpiID'];
+                  $userId = Session::getLoginUserID();
                   $dparams_cond_crit[$userFk] = $userId;
                }
                if ($DB->fieldExists($itemtype::getTable(), $groupFk)
