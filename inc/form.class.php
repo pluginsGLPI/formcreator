@@ -403,7 +403,7 @@ PluginFormcreatorTranslatableInterface
     * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options = []) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -530,25 +530,37 @@ PluginFormcreatorTranslatableInterface
       $formValidator = new PluginFormcreatorForm_Validator();
       $selectedValidatorUsers = [];
       foreach ($formValidator->getValidatorsForForm($this, User::class) as $user) {
-         $selectedValidatorUsers[$user->getID()] = $user->getID();
+         $selectedValidatorUsers[$user->getID()] = $user->computeFriendlyName();
       }
       $users = $DB->request([
-         'SELECT' => ['id', 'name'],
+         'SELECT' => ['id', 'name', User::getFriendlyNameFields('friendly_name')],
          'FROM' => User::getTable(),
          'WHERE' => $usersCondition,
       ]);
       $validatorUsers = [];
       foreach ($users as $user) {
-         $validatorUsers[$user['id']] = $user['name'];
+         $validatorUsers[$user['id']] = $user['friendly_name'];
       }
       echo '<div id="validators_users">';
       echo User::getTypeName() . '&nbsp';
-      Dropdown::showFromArray(
-         '_validator_users',
-         $validatorUsers, [
-            'multiple' => true,
-            'values' => $selectedValidatorUsers
-         ]
+      $params = [
+         'specific_tags' => [
+            'multiple' => 'multiple',
+         ],
+         'entity_restrict' => -1,
+         'itemtype'        => User::getType(),
+         'values'          => array_keys($selectedValidatorUsers),
+         'valuesnames'     => array_values($selectedValidatorUsers),
+         'condition'       => Dropdown::addNewCondition($usersCondition),
+      ];
+      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
+         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
+      }
+      echo Html::jsAjaxDropdown(
+         '_validator_users[]',
+         '_validator_users' . mt_rand(),
+         $CFG_GLPI['root_doc']."/ajax/getDropdownValue.php",
+         $params
       );
       echo '</div>';
 
@@ -605,7 +617,7 @@ PluginFormcreatorTranslatableInterface
       $formValidator = new PluginFormcreatorForm_Validator();
       $selectecValidatorGroups = [];
       foreach ($formValidator->getValidatorsForForm($this, Group::class) as $group) {
-         $selectecValidatorGroups[$group->getID()] = $group->getID();
+         $selectecValidatorGroups[$group->getID()] = $group->fields['name'];
       }
       $validatorGroups = [];
       foreach ($groups as $group) {
@@ -613,13 +625,25 @@ PluginFormcreatorTranslatableInterface
       }
       echo '<div id="validators_groups" style="width: 100%">';
       echo Group::getTypeName() . '&nbsp';
-      Dropdown::showFromArray(
-         '_validator_groups',
-         $validatorGroups,
-         [
-            'multiple' => true,
-            'values'   => $selectecValidatorGroups
-         ]
+      $params = [
+         'specific_tags' => [
+            'multiple' => 'multiple',
+         ],
+         'entity_restrict' => -1,
+         'itemtype'        => Group::getType(),
+         'values'          => array_keys($selectecValidatorGroups),
+         'valuesnames'     => array_values($selectecValidatorGroups),
+         'condition'       => Dropdown::addNewCondition($groupsCondition),
+         'display_emptychoice' => false,
+      ];
+      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
+         $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
+      }
+      echo Html::jsAjaxDropdown(
+         '_validator_groups[]',
+         '_validator_groups' . mt_rand(),
+         $CFG_GLPI['root_doc']."/ajax/getDropdownValue.php",
+         $params
       );
       echo '</div>';
 
