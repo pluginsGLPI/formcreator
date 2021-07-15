@@ -241,7 +241,6 @@ class DropdownField extends PluginFormcreatorAbstractField
          case Entity::class:
          case Document::class:
             unset($dparams['entity']);
-            break;
 
          case User::class:
             $dparams['right'] = 'all';
