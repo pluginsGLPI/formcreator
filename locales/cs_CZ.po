@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-19 16:02+0200\n"
+"POT-Creation-Date: 2021-07-20 09:56+0200\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2021\n"
 "Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
@@ -1720,24 +1720,24 @@ msgstr "Vytváření formulářů – problémy katalogu synchronizační služb
 
 #: js/scripts.js:357
 msgid "No form found. Please choose a form below instead"
-msgstr ""
+msgstr "Nebyl nalezen žádný formulář. Prosím vyberte níže nějaký"
 
 #: js/scripts.js:380 js/scripts.js:401
 msgid "An error occured while querying forms"
-msgstr ""
+msgstr "Došlo k chybě při dotazování formuláře"
 
 #: js/scripts.js:463
 msgid "No form yet in this category"
-msgstr ""
+msgstr "Žádný formulář v této kategorii"
 
 #: js/scripts.js:739
 msgid "Are you sure you want to delete this question?"
-msgstr ""
+msgstr "Opravdu chcete smazat tuto otázku?"
 
 #: js/scripts.js:941
 msgid "Are you sure you want to delete this section?"
-msgstr ""
+msgstr "Opravdu chcete smazat tuto sekci?"
 
 #: js/scripts.js:1233
 msgid "Are you sure you want to delete this destination:"
-msgstr ""
+msgstr "Opravdu chcete smazat tento cíl?"
