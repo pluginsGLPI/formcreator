@@ -85,6 +85,7 @@ if (isset($_REQUEST['id'])
          $_SESSION['glpiactiveentities_string'] = (!empty($subentities))
                                                 ? "'" . implode("', '", $subentities) . "'"
                                                 : "'" . $form->fields['entities_id'] . "'";
+         $_SESSION['glpilanguage'] = $form->getBestLanguage();
       }
    }
 
