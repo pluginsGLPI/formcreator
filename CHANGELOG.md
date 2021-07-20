@@ -1,3 +1,40 @@
+<a name="v2.12.0"></a>
+## [v2.12.0](https://github.com/pluginsglpi/formcreator/compare/v2.12.0-beta.1..v2.12.0) (2021-07-09)
+
+
+### Bug Fixes
+
+*  compatibility with next version of GLPI ([08f07cf9](https://github.com/pluginsglpi/formcreator/commit/08f07cf9))
+*  rename scripts file ([5899fd35](https://github.com/pluginsglpi/formcreator/commit/5899fd35))
+* **actorsfield:** prevent error when computing tooltip ([2d1b85d9](https://github.com/pluginsglpi/formcreator/commit/2d1b85d9))
+* **checkboxes:** avoid error when computing tooltip ([f054bbcd](https://github.com/pluginsglpi/formcreator/commit/f054bbcd))
+* **composite:** avoid error if ticket does not exists ([67a4092f](https://github.com/pluginsglpi/formcreator/commit/67a4092f))
+* **composite:** fix PHP warning ([6cc01b9b](https://github.com/pluginsglpi/formcreator/commit/6cc01b9b))
+* **docs:** bug report template must specify GLPI and plugins versions ([2bdb173a](https://github.com/pluginsglpi/formcreator/commit/2bdb173a))
+* **dropdownfield:** fix parameters build for dropdowns ([75c09678](https://github.com/pluginsglpi/formcreator/commit/75c09678))
+* **dropdownfield:** handling tree restriction params ([ca23e501](https://github.com/pluginsglpi/formcreator/commit/ca23e501))
+* **form:** default value for language ([5005a279](https://github.com/pluginsglpi/formcreator/commit/5005a279))
+* **form:** form title not translated in service catalog ([a61cbf65](https://github.com/pluginsglpi/formcreator/commit/a61cbf65))
+* **form:** language column too short ([3f56044b](https://github.com/pluginsglpi/formcreator/commit/3f56044b)), closes [#2285](https://github.com/pluginsglpi/formcreator/issues/2285)
+* **form:** performance fix ([81cf0065](https://github.com/pluginsglpi/formcreator/commit/81cf0065))
+* **formanswer:** bad validator right check for groups ([91561830](https://github.com/pluginsglpi/formcreator/commit/91561830))
+* **glpiselectfield:** rendering the itemtype ([6d244c6c](https://github.com/pluginsglpi/formcreator/commit/6d244c6c))
+* **issue:** bad key when finding sub item of an assistance request ([6392cdf3](https://github.com/pluginsglpi/formcreator/commit/6392cdf3))
+* **issue:** normalize columns ([f7931150](https://github.com/pluginsglpi/formcreator/commit/f7931150))
+* **issue:** search options 14 ant 15 ([dd9d2608](https://github.com/pluginsglpi/formcreator/commit/dd9d2608))
+* **issue:** update status when adding a validation ([2e1ae1a9](https://github.com/pluginsglpi/formcreator/commit/2e1ae1a9))
+* **section,question:** workaround GLPI bug ([8d837f34](https://github.com/pluginsglpi/formcreator/commit/8d837f34))
+* **targetchange,targetticket:** DB schema ([29a7c1df](https://github.com/pluginsglpi/formcreator/commit/29a7c1df))
+* **targetticket:** associate items to tickets ([14a991b9](https://github.com/pluginsglpi/formcreator/commit/14a991b9))
+* **targetticket,targetchange:** file dispatch accross several targets broken ([753b423d](https://github.com/pluginsglpi/formcreator/commit/753b423d))
+* **targetticket,targetchange:** missing import of template settings ([791b1a20](https://github.com/pluginsglpi/formcreator/commit/791b1a20))
+
+
+### Features
+
+* **targetchange:** change template support ([0ea4079e](https://github.com/pluginsglpi/formcreator/commit/0ea4079e))
+* **targetticket:** actor type: "Form author's manager" ([acefca84](https://github.com/pluginsglpi/formcreator/commit/acefca84))
+
 <a name="v2.12.0-beta.1"></a>
 ## [v2.12.0-beta.1](https://github.com/pluginsglpi/formcreator/compare/v2.11.4..v2.12.0-beta.1) (2021-06-14)
 
