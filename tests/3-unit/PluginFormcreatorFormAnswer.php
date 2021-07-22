@@ -205,8 +205,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       // - issue
       $issue = new \PluginFormcreatorIssue;
       $this->boolean($issue->getFromDBByCrit([
-        'sub_itemtype' => \Ticket::class,
-        'original_id'  => $ticket->getID()
+        'itemtype' => \Ticket::class,
+        'items_id'  => $ticket->getID()
       ]))->isTrue();
 
       $CFG_GLPI['use_notifications'] = $use_notifications;
@@ -235,45 +235,52 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       return [
          [
-            'right'     => \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId,
-            'form'      => $form1,
-            'expected'  => true,
+            'right'          => \TicketValidation::VALIDATEINCIDENT,
+            'loginUserId'    => $validatorUserId,
+            'validatorId'    => $validatorUserId,
+            'form'           => $form1,
+            'expected'       => true,
          ],
          [
-            'right'     => \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId,
-            'form'      => $form2,
-            'expected'  => true,
+            'right'          => \TicketValidation::VALIDATEINCIDENT,
+            'loginUserId'    => $validatorUserId,
+            'validatorId'    => $group->getID(),
+            'form'           => $form2,
+            'expected'       => true,
          ],
          [
-            'right'     => \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId + 1,
-            'form'      => $form2,
-            'expected'  => false,
+            'right'          => \TicketValidation::VALIDATEINCIDENT,
+            'loginUserId'    => $validatorUserId + 1,
+            'validatorId'    => $group->getID(),
+            'form'           => $form2,
+            'expected'       => false,
          ],
          [
-            'right'     => \TicketValidation::VALIDATEREQUEST,
-            'userId'    => $validatorUserId,
-            'form'      => $form2,
-            'expected'  => true,
+            'right'          => \TicketValidation::VALIDATEREQUEST,
+            'loginUserId'    => $validatorUserId,
+            'validatorId'    => $group->getID(),
+            'form'           => $form2,
+            'expected'       => true,
          ],
          [
-            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId,
-            'form'      => $form2,
-            'expected'  => true,
+            'right'          => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'loginUserId'    => $validatorUserId,
+            'validatorId'    => $group->getID(),
+            'form'           => $form2,
+            'expected'       => true,
          ],
          [
-            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId + 1,
-            'form'      => $form2,
-            'expected'  => false,
+            'right'          => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'loginUserId'    => $validatorUserId + 1,
+            'validatorId'    => $group->getID(),
+            'form'           => $form2,
+            'expected'       => false,
          ],         [
-            'right'     => 0,
-            'userId'    => $validatorUserId,
-            'form'      => $form2,
-            'expected'  => false,
+            'right'          => 0,
+            'loginUserId'    => $validatorUserId,
+            'validatorId'    => $group->getID(),
+            'form'           => $form2,
+            'expected'       => false,
          ],
       ];
    }
@@ -281,12 +288,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    /**
     * @dataProvider providerCanValidate
     */
-   public function testCanValidate($right, $userId, $form, $expected) {
+   public function testCanValidate($right, $loginUserId, $validatorId, $form, $expected) {
       // Save answers for a form
       $instance = $this->newTestedInstance();
       $input = [
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator' => $userId,
+         'formcreator_validator' => $validatorId,
       ];
       $fields = $form->getFields();
       foreach ($fields as $id => $question) {
@@ -294,8 +301,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       }
       $formAnswerId = $instance->add($input);
 
-      // test canValidate
-      $_SESSION['glpiID'] = $userId;
+      // test canValidate against user
+      $_SESSION['glpiID'] = $loginUserId;
       $_SESSION['glpiactiveprofile']['ticketvalidation'] = $right;
       $instance = $this->newTestedInstance();
       $instance->getFromDB($formAnswerId);

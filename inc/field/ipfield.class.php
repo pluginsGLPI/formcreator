@@ -60,7 +60,7 @@ class IpField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function show($canEdit = true) {
+   public function show($domain, $canEdit = true) {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -95,7 +95,7 @@ class IpField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       return $this->value;
    }
 

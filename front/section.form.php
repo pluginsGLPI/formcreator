@@ -29,34 +29,29 @@
  * ---------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
 include ("../../../inc/includes.php");
 
 Session::checkRight('entity', UPDATE);
 
 // Check if plugin is activated...
-$plugin = new Plugin();
-if ($plugin->isActivated('formcreator')) {
-   $section = new PluginFormcreatorSection();
-
-   if (isset($_POST['add'])) {
-      // Add a new Section
-      Session::checkRight('entity', UPDATE);
-      $section->add($_POST);
-      Html::back();
-
-   } else if (isset($_POST['update'])) {
-      // Edit an existing section
-      Session::checkRight('entity', UPDATE);
-      $section->update($_POST);
-      Html::back();
-
-   } else {
-      // Return to form list
-      Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
-   }
-
-   // Or display a "Not found" error
-} else {
+if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
+}
+$section = new PluginFormcreatorSection();
+
+if (isset($_POST['add'])) {
+   // Add a new Section
+   Session::checkRight('entity', UPDATE);
+   $section->add($_POST);
+   Html::back();
+
+} else if (isset($_POST['update'])) {
+   // Edit an existing section
+   Session::checkRight('entity', UPDATE);
+   $section->update($_POST);
+   Html::back();
+
+} else {
+   // Return to form list
+   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
 }

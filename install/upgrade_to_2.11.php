@@ -193,13 +193,11 @@ class PluginFormcreatorUpgradeTo2_11 {
       foreach ($DB->request($request) as $row) {
          $newValues = $row['values'];
          if (json_decode($row['values']) === null) {
-            // Seems already migrated, skipping
             $newValues = json_encode(explode("\r\n", $row['values']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
          }
          $newValues = Toolbox::addslashes_deep($newValues);
          $newDefault = $row['default_values'];
          if (json_decode($row['default_values']) === null) {
-            // Seems already migrated, skipping
             $newDefault = json_encode(explode("\r\n", $row['default_values']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
          }
          $newDefault = Toolbox::addslashes_deep($newDefault);
@@ -224,7 +222,6 @@ class PluginFormcreatorUpgradeTo2_11 {
       foreach ($DB->request($request) as $row) {
          $newAnswer = $row['answer'];
          if (json_decode($row['answer']) === null) {
-            // Seems already migrated, skipping
             $newAnswer = json_encode(explode("\r\n", $row['answer']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
             $newAnswer = Toolbox::addslashes_deep($newAnswer);
             $DB->update($answerTable, ['answer' => $newAnswer], ['id' => $row['id']]);
@@ -250,7 +247,6 @@ class PluginFormcreatorUpgradeTo2_11 {
       foreach ($DB->request($request) as $row) {
          $newValues = $row['values'];
          if (json_decode($row['values']) === null) {
-            // Seems already migrated, skipping
             $newValues = json_encode(explode("\r\n", $row['values']), JSON_OBJECT_AS_ARRAY+JSON_UNESCAPED_UNICODE);
             $newValues = Toolbox::addslashes_deep($newValues);
             $DB->update($questionTable, ['values' => $newValues], ['id' => $row['id']]);

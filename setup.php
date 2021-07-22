@@ -31,18 +31,16 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.11.4');
+define('PLUGIN_FORMCREATOR_VERSION', '2.12.0');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.11');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.12');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5.5');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
-
-define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
 
 define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
 
@@ -96,6 +94,11 @@ function plugin_formcreator_check_prerequisites() {
       $prerequisitesSuccess = false;
    }
 
+   if (!is_readable(__DIR__ . '/lib/.yarn-integrity') || !is_file(__DIR__ . '/lib/.yarn-integrity')) {
+      echo "Run yarn install --prod in the plugin directory<br>";
+      $prerequisitesSuccess = false;
+   }
+
    return $prerequisitesSuccess;
 }
 
@@ -116,7 +119,7 @@ function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
-   $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
 
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
@@ -189,15 +192,27 @@ function plugin_init_formcreator() {
                   if (isset($decodedUrl['forcetab'])) {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
+
+                  // When an issue has a single target ticket
                   $issue = new PluginFormcreatorIssue();
                   $issue->getFromDBByCrit([
                      'sub_itemtype' => Ticket::class,
                      'original_id'  => (int) $_GET['id']
                   ]);
-                  if ($issue->isNewItem()) {
+                  if (!$issue->isNewItem()) {
+                     Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
+                  }
+
+                  // When a target has several target tickets
+                  $itemTicket = new Item_Ticket();
+                  $itemTicket->getFromDBByCrit([
+                     'itemtype' => PluginFormcreatorFormAnswer::class,
+                     'tickets_id'  => (int) $_GET['id']
+                  ]);
+                  if ($itemTicket->isNewItem()) {
+                     // No formanswer found
                      Html::displayNotFoundError();
                   }
-                  Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
                }
             }
 
@@ -260,6 +275,7 @@ function plugin_init_formcreator() {
             FORMCREATOR_ROOTDOC . '/front/form.form.php',
             FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
             FORMCREATOR_ROOTDOC . '/front/issue.form.php',
+            FORMCREATOR_ROOTDOC . '/front/form_language.form.php',
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
@@ -273,8 +289,8 @@ function plugin_init_formcreator() {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
          }
 
          Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
@@ -299,7 +315,7 @@ function plugin_init_formcreator() {
             Session::getCurrentInterface() == 'helpdesk') {
 
          // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
       }
 
       //Html::requireJs('gridstack');

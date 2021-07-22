@@ -84,7 +84,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return Ticket::getPriorityName($this->value);
       }
@@ -174,7 +174,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $available = $this->getAvailableValues();
       return $available[$this->value];
    }
@@ -186,7 +186,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       return [];
    }
 
-   public function isValid() : bool {
+   public function isValid(): bool {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '0') {
          Session::addMessageAfterRedirect(

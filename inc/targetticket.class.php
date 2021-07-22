@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -67,8 +68,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return new Item_Ticket();
    }
 
-   protected function getTargetItemtypeName() {
+   protected function getTargetItemtypeName(): string {
       return Ticket::class;
+   }
+
+   protected function getTemplateItemtypeName(): string {
+      return TicketTemplate::class;
+   }
+
+   protected function getTemplatePredefinedFieldItemtype(): string {
+      return TicketTemplatePredefinedField::class;
    }
 
    protected function getCategoryFilter() {
@@ -95,6 +104,41 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          self::REQUESTTYPE_SPECIFIC  => __('Specific type', 'formcreator'),
          self::REQUESTTYPE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'target_name',
+         'name'               => __('Ticket title', 'formcreator'),
+         'datatype'           => 'text',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this::getTable(),
+         'field'              => 'content',
+         'name'               => __('Content', 'formcreator'),
+         'datatype'           => 'string',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
    }
 
    /**
@@ -159,7 +203,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       echo '<tr>';
       $this->showTemplateSettings($rand);
-      $this->showDueDateSettings($form, $rand);
+      $this->showDueDateSettings($rand);
       echo '</tr>';
 
       $this->showSLASettings();
@@ -174,21 +218,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($form, $rand);
+      $this->showCategorySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($form, $rand);
+      $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Location selection
       // -------------------------------------------------------------------------------------------
-      $this->showLocationSettings($form, $rand);
+      $this->showLocationSettings($rand);
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($form, $rand);
+      $this->showPluginTagsSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Composite tickets
@@ -605,117 +649,31 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $input;
    }
 
-   /**
-    * Set default values for the ticket to create
-    *
-    * @param PluginFormcreatorFormAnswer $formanswer
-    * @return array
-    */
-   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer) : array {
-      Global $DB;
+   protected function getTargetTemplate(array $data): int {
+      global $DB;
 
-      // Prepare actors structures for creation of the ticket
-      $this->requesters = [
-         '_users_id_requester'         => [],
-         '_users_id_requester_notif'   => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-      $this->observers = [
-         '_users_id_observer'          => [],
-         '_users_id_observer_notif'    => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-      $this->assigned = [
-         '_users_id_assign'            => [],
-         '_users_id_assign_notif'      => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-
-      $this->assignedSuppliers = [
-         '_suppliers_id_assign'        => [],
-         '_suppliers_id_assign_notif'  => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ]
-      ];
-
-      $this->requesterGroups = [
-         '_groups_id_requester'        => [],
-      ];
-
-      $this->observerGroups = [
-         '_groups_id_observer'         => [],
-      ];
-
-      $this->assignedGroups = [
-         '_groups_id_assign'           => [],
-      ];
-
-      $data = Ticket::getDefaultValues();
-
-      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
-
-      $data = $this->setTargetCategory($data, $formanswer);
-      $data = $this->setTargetType($data, $formanswer);
-
-      // Set template ticket from itilcategorie when template ticket is not set in the target (=0)
-      $itilCategory = new ITILCategory();
-      $ticket = new Ticket();
-      if ($ticket->isNewID($this->fields['tickettemplates_id']) && !$itilCategory->isNewID($data['itilcategories_id'])) {
+      $targetItemtype = $this->getTemplateItemtypeName();
+      $targetTemplateFk = $targetItemtype::getForeignKeyField();
+      if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([
-            'SELECT' => ['tickettemplates_id_incident', 'tickettemplates_id_demand'],
+            'SELECT' => ["${targetTemplateFk}_incident", "${targetTemplateFk}_demand"],
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
          if ($row = $rows->next()) { // assign ticket template according to resulting ticket category and ticket type
-            $this->fields['tickettemplates_id'] = ($data['type'] == Ticket::INCIDENT_TYPE
-                                                  ? $row['tickettemplates_id_incident']
-                                                  : $row['tickettemplates_id_demand']);
+            return ($data['type'] == Ticket::INCIDENT_TYPE
+                    ? $row["${targetTemplateFk}_incident"]
+                    : $row["${targetTemplateFk}_demand"]);
          }
       }
 
-      // Get predefined Fields
-      $ttp                  = new TicketTemplatePredefinedField();
-      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
+      return $this->fields['tickettemplates_id'] ?? 0;
+   }
 
-      if (isset($predefined_fields['_users_id_requester'])) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_users_id_requester'], true);
-         unset($predefined_fields['_users_id_requester']);
-      }
-      if (isset($predefined_fields['_users_id_observer'])) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_users_id_observer'], true);
-         unset($predefined_fields['_users_id_observer']);
-      }
-      if (isset($predefined_fields['_users_id_assign'])) {
-         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_users_id_assign'], true);
-         unset($predefined_fields['_users_id_assign']);
-      }
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
+      $data = parent::getDefaultData($formanswer);
+      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
-      if (isset($predefined_fields['_groups_id_requester'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_groups_id_requester']);
-         unset($predefined_fields['_groups_id_requester']);
-      }
-      if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_groups_id_observer']);
-         unset($predefined_fields['_groups_id_observer']);
-      }
-      if (isset($predefined_fields['_groups_id_assign'])) {
-         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_groups_id_assign']);
-         unset($predefined_fields['_groups_id_assign']);
-      }
-
-      // Manage special values
-      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
-         $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
-      }
-
-      $data = array_merge($data, $predefined_fields);
       return $data;
    }
 
@@ -987,7 +945,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          ],
       ]);
       foreach ($rows as $row) {
-         $options['items_id'][$row['itemtype']][$row['id']] = $row['id'];
+         $options['items_id'][$row['itemtype']][$row['id']] = $row['items_id'];
       }
       Item_Ticket::itemAddForm(new Ticket(), $options);
       echo '</div>';
@@ -1021,7 +979,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             $associateQuestion = $this->fields['associate_question'];
             $question = new PluginFormcreatorQuestion();
             $question->getFromDB($associateQuestion);
-            $itemtype = $question->fields['values'];
+            /** @var  GlpiPlugin\Formcreator\Field\DropdownField */
+            $field = $question->getSubField();
+            $itemtype = $field->getSubItemtype();
 
             // find the id of the associated item
             $item = $DB->request([
@@ -1052,8 +1012,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                   'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, Ticket::class]],
                ],
             ]);
+            $data['items_id'] = [];
             foreach ($rows as $row) {
-               $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
+               $data['items_id'][$row['itemtype']] [$row['items_id']] = $row['items_id'];
             }
             break;
 
@@ -1085,7 +1046,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
             foreach ($answers as $answer) {
                // Skip if the object type is not valid asset type
-               if (!in_array($answer['values'], $CFG_GLPI['asset_types'])) {
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($answer[PluginFormcreatorQuestion::getForeignKeyField()]);
+               /** @var  GlpiPlugin\Formcreator\Field\DropdownField */
+               $field = $question->getSubField();
+               $field->deserializeValue($answer['answer']);
+               $itemtype = $field->getSubItemtype();
+               if (!in_array($itemtype, $CFG_GLPI['asset_types'])) {
                   continue;
                }
 
@@ -1100,14 +1067,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                }
 
                // Skip if item doesn't exist in the DB (shouldn't happen)
-               $item = new $answer['values']();
+               $item = new $itemtype();
                if (!$item->getFromDB($answer['answer'])) {
                   continue;
                }
 
                // Found a valid answer, stop here
                $data['items_id'] = [
-                  $answer['values'] => [$answer['answer'] => $answer['answer']]
+                  $itemtype => [$answer['answer'] => $answer['answer']]
                ];
                break;
             }
@@ -1143,6 +1110,18 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             $input['uuid']
          );
       }
+
+      // set template
+      $ticketTemplateId = 0;
+      plugin_formcreator_getFromDBByField(
+         $ticketTemplate = new TicketTemplate(),
+         'name',
+         $input['_tickettemplate']
+      );
+      if (!$ticketTemplate->isNewItem() && $ticketTemplate->canViewItem()) {
+         $ticketTemplateId = $ticketTemplate->getID();
+      }
+      $input['tickettemplates_id'] = $ticketTemplateId;
 
       // Escape text fields
       foreach (['name'] as $key) {
@@ -1251,9 +1230,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         return false;
+         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $export = $this->fields;
@@ -1356,7 +1335,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     * @param int $formId
     * @return array
     */
-   public function getTargetTicketsForForm($formId) {
+   public function getTargetsForForm($formId) {
       global $DB;
 
       $targets = [];

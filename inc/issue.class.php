@@ -75,10 +75,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
     */
    public static function getSyncIssuesRequest() : AbstractQuery {
       // Request which merges tickets and formanswers
-      // 1 ticket not linked to a formanswer => 1 issue which is the ticket sub_itemtype
-      // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
-      // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
-      // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
+      // 1 ticket not linked to a formanswer => 1 issue which is the ticket itemtype
+      // 1 form_answer not linked to a ticket => 1 issue which is the formanswer itemtype
+      // 1 ticket linked to 1 form_answer => 1 issue which is the ticket itemtype
+      // several tickets linked to the same form_answer => 1 issue which is the form_answer itemtype
       $formTable = PluginFormcreatorForm::getTable();
       $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
       $itemTicketTable = Item_Ticket::getTable();
@@ -91,8 +91,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression('NULL as `id`'),
             $formTable => ['name as name'],
             new QueryExpression("CONCAT('f_', `$formAnswerTable`.`id`) as `display_id`"),
-            "$formAnswerTable.id as original_id",
-            new QueryExpression("'" . PluginFormcreatorFormAnswer::getType() . "' as `sub_itemtype`"),
+            "$formAnswerTable.id as items_id",
+            new QueryExpression("'" . PluginFormcreatorFormAnswer::getType() . "' as `itemtype`"),
             $formAnswerTable => [
                'status              as status',
                'request_date        as date_creation',
@@ -124,7 +124,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                ]
             ]
          ],
-         'GROUPBY' => ['original_id'],
+         'GROUPBY' => ["$formAnswerTable.id"],
          'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`$ticketFk`) != 1"),
       ]);
 
@@ -136,8 +136,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression('NULL as `id`'),
             "$ticketTable.name as name",
             new QueryExpression("CONCAT('t_', `$ticketTable`.`id`) as `display_id`"),
-            "$ticketTable.id as original_id",
-            new QueryExpression("'" . Ticket::getType() . "' as `sub_itemtype`"),
+            "$ticketTable.id as items_id",
+            new QueryExpression("'" . Ticket::getType() . "' as `itemtype`"),
             new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,
                `$ticketTable`.`status`,
                IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
@@ -203,7 +203,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'WHERE' => [
             "$ticketTable.is_deleted" => 0,
          ],
-         'GROUPBY' => ['original_id'],
+         'GROUPBY' => ["$ticketTable.id"],
          'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) <= 1")
       ]);
 
@@ -261,9 +261,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public function displayExtended($options = []) {
-      $itemtype = $this->fields['sub_itemtype'];
+      $itemtype = $this->fields['itemtype'];
       $item = new $itemtype();
-      if (!$item->getFromDB($this->fields['original_id'])) {
+      if (!$item->getFromDB($this->fields['items_id'])) {
          Html::displayNotFoundError();
       }
 
@@ -286,17 +286,17 @@ class PluginFormcreatorIssue extends CommonDBTM {
    public function displaySimplified($options = []) {
       global $CFG_GLPI;
 
-      $itemtype = $this->fields['sub_itemtype'];
+      $itemtype = $this->fields['itemtype'];
       $item = new $itemtype();
-      if (!$item->getFromDB($this->fields['original_id'])) {
+      if (!$item->getFromDB($this->fields['items_id'])) {
          Html::displayNotFoundError();
       }
 
       // in case of left tab layout, we couldn't see "right error" message
       if ($item->get_item_to_display_tab) {
-         if (isset($this->fields['original_id'])
-             && $this->fields['original_id']
-             && !$item->can($this->fields['original_id'], READ)) {
+         if (isset($this->fields['items_id'])
+             && $this->fields['items_id']
+             && !$item->can($this->fields['items_id'], READ)) {
             // This triggers from a profile switch.
             // If we don't have right, redirect instead to central page
             if (isset($_SESSION['_redirected_from_profile_selector'])
@@ -309,7 +309,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
-      if (!isset($this->fields['original_id'])) {
+      if (!isset($this->fields['items_id'])) {
          $options['id'] = 0;
       } else {
          $options['id'] = $item->getID();
@@ -433,7 +433,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $tab[] = [
          'id'                 => '3',
          'table'              => $this::getTable(),
-         'field'              => 'sub_itemtype',
+         'field'              => 'itemtype',
          'name'               => __('Type'),
          'searchtype'         => [
             '0'                  => 'equals',
@@ -541,7 +541,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   'joinparams'         => [
                      'jointype'           => 'itemtypeonly',
                      'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
-                     'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
+                     'condition'          => 'AND `REFTABLE`.`items_id` = `NEWTABLE`.`items_id`'
                   ]
                ],
                '1'                  => [
@@ -560,19 +560,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '14',
          'table'              => User::getTable(),
          'field'              => 'name',
-         'linkfield'          => 'users_id',
          'name'               => __('Technician'),
          'datatype'           => 'dropdown',
-         'forcegroupby'       => false,
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Ticket_User::getTable(),
-               'linkfield'          => 'original_id',
                'joinparams'         => [
-                  'jointype'           => 'empty',
+                  'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
+                  'jointype'           => 'child',
+                  'beforejoin'         => [
+                     'table'              => Ticket::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => Ticket::class,
+                     ],
+                  ]
                ]
             ]
          ]
@@ -587,19 +593,26 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '15',
          'table'              => Group::getTable(),
          'field'              => 'name',
-         'linkfield'          => 'groups_id',
          'name'               => __('Technician group'),
          'datatype'           => 'dropdown',
-         'forcegroupby'       => false,
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
          'joinparams'         => [
+            'temoin' => true,
             'beforejoin'         => [
                'table'              => Group_Ticket::getTable(),
-               'linkfield'          => 'original_id',
                'joinparams'         => [
-                  'jointype'           => 'empty',
+                  'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
+                  'jointype'           => 'child',
+                  'beforejoin'         => [
+                     'table'              => Ticket::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => Ticket::class,
+                     ],
+                  ]
                ]
             ]
          ]
@@ -623,7 +636,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $values = [$field => $values];
       }
       switch ($field) {
-         case 'sub_itemtype':
+         case 'itemtype':
             return Dropdown::showFromArray($name,
                                            [Ticket::class                      => __('Ticket'),
                                             PluginFormcreatorFormAnswer::class => __('Form answer', 'formcreator')],
@@ -670,7 +683,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       switch ("$table.$field") {
          case "glpi_plugin_formcreator_issues.name":
             $name = $data[$num][0]['name'];
-            $subItemtype = $data['raw']['sub_itemtype'];
+            $subItemtype = $data['raw']['itemtype'];
             switch ($subItemtype) {
                case Ticket::class:
                   $ticket = new Ticket();
@@ -687,7 +700,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                default:
                   $content = '';
             }
-            $link = self::getFormURLWithID($id) . "&sub_itemtype=".$data['raw']['sub_itemtype'];
+            $link = self::getFormURLWithID($id) . "&itemtype=".$data['raw']['itemtype'];
             $link =  self::getFormURLWithID($data['id']);
             $key = 'id';
             $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
@@ -884,14 +897,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
     *
     */
    public function prepareInputForAdd($input) {
-      if (!isset($input['original_id']) || !isset($input['sub_itemtype'])) {
+      if (!isset($input['items_id']) || !isset($input['itemtype'])) {
          return false;
       }
 
-      if ($input['sub_itemtype'] == PluginFormcreatorFormAnswer::class) {
-         $input['display_id'] = 'f_' . $input['original_id'];
-      } else if ($input['sub_itemtype'] == 'Ticket') {
-         $input['display_id'] = 't_' . $input['original_id'];
+      if ($input['itemtype'] == PluginFormcreatorFormAnswer::class) {
+         $input['display_id'] = 'f_' . $input['items_id'];
+      } else if ($input['itemtype'] == 'Ticket') {
+         $input['display_id'] = 't_' . $input['items_id'];
       } else {
          return false;
       }
@@ -900,14 +913,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public function prepareInputForUpdate($input) {
-      if (!isset($input['original_id']) || !isset($input['sub_itemtype'])) {
+      if (!isset($input['items_id']) || !isset($input['itemtype'])) {
          return false;
       }
 
-      if ($input['sub_itemtype'] == PluginFormcreatorFormAnswer::class) {
-         $input['display_id'] = 'f_' . $input['original_id'];
-      } else if ($input['sub_itemtype'] == 'Ticket') {
-         $input['display_id'] = 't_' . $input['original_id'];
+      if ($input['itemtype'] == PluginFormcreatorFormAnswer::class) {
+         $input['display_id'] = 'f_' . $input['items_id'];
+      } else if ($input['itemtype'] == 'Ticket') {
+         $input['display_id'] = 't_' . $input['items_id'];
       } else {
          return false;
       }

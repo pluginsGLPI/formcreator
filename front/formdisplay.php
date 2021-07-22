@@ -34,6 +34,7 @@ include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
+   PluginFormcreatorForm::header();
    Html::displayNotFoundError();
 }
 
@@ -84,6 +85,7 @@ if (isset($_REQUEST['id'])
          $_SESSION['glpiactiveentities_string'] = (!empty($subentities))
                                                 ? "'" . implode("', '", $subentities) . "'"
                                                 : "'" . $form->fields['entities_id'] . "'";
+         $_SESSION['glpilanguage'] = $form->getBestLanguage();
       }
    }
 

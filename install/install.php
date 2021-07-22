@@ -67,15 +67,16 @@ class PluginFormcreatorInstall {
       '2.10'   => '2.10.2',
       '2.10.2' => '2.11',
       '2.11'   => '2.11.3',
+      '2.11.3' => '2.12',
    ];
 
    /**
     * Install the plugin
     * @param Migration $migration
-    *
-    * @return void
+    * @param array $args arguments passed to CLI
+    * @return bool
     */
-   public function install(Migration $migration) {
+   public function install(Migration $migration, $args = []): bool {
       $this->migration = $migration;
       $this->installSchema();
 
@@ -94,10 +95,13 @@ class PluginFormcreatorInstall {
 
    /**
     * Upgrade the plugin
+    * @param Migration $migration
+    * @param array $args arguments passed to CLI
+    * @return bool
     */
-   public function upgrade(Migration $migration) {
+   public function upgrade(Migration $migration, $args = []): bool {
       $this->migration = $migration;
-      if (isset($_SESSION['plugin_formcreator']['cli']) && $_SESSION['plugin_formcreator']['cli'] == 'force-upgrade') {
+      if (isset($args['force-upgrade']) && $args['force-upgrade'] === true) {
          // Might return false
          $fromSchemaVersion = array_search(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $this->upgradeSteps);
       } else {
@@ -214,8 +218,13 @@ class PluginFormcreatorInstall {
       $this->migration->displayMessage("Configure existing entities");
 
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
-                  (id, replace_helpdesk)
-                SELECT ent.id, IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
+                  (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_header_visible)
+               SELECT ent.id,
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
+                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
                 FROM glpi_entities ent
                 LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
                   ON ent.id = conf.id
@@ -464,6 +473,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorQuestionDependency',
          'PluginFormcreatorQuestionRange',
          'PluginFormcreatorQuestionRegex',
+         'PluginFormcreatorForm_Language',
       ];
 
       foreach ($itemtypes as $itemtype) {

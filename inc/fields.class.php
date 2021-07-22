@@ -333,13 +333,8 @@ class PluginFormcreatorFields
       $evaluator = new Evaluator();
       $context = new Context();
 
-      $expression = trim($expression, ' ');
-      if (strlen($expression) < 1) {
-         self::$visibility[$itemtype][$itemId] = true;
-      } else {
-         $tokens = $parser->parse($expression);
-         self::$visibility[$itemtype][$itemId] = $evaluator->evaluate($tokens, $context) ? true : false;
-      }
+      $tokens = $parser->parse($expression);
+      self::$visibility[$itemtype][$itemId] = $evaluator->evaluate($tokens, $context) ? true : false;
 
       if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
          // Reverse condition

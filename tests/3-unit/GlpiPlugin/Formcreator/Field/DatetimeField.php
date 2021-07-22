@@ -144,7 +144,7 @@ class DatetimeField extends CommonTestCase {
       ]);
       $this->boolean($output)->isEqualTo($expected);
 
-      $outputValue = $instance->getValueForTargetText(false);
+      $outputValue = $instance->getValueForTargetText('', false);
       if ($expected === false) {
          $this->variable($outputValue)->isNull();
       } else {

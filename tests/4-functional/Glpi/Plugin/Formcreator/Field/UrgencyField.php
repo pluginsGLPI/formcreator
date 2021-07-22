@@ -40,6 +40,9 @@ class UrgencyField extends CommonFunctionalTestCase
    use CommonQuestionTest;
 
    public function testCreateForm() {
+      // Use a clean entity for the tests
+      $this->login('glpi', 'glpi');
+
       $form = $this->showCreateQuestionForm();
 
       // set question type

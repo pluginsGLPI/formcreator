@@ -57,11 +57,14 @@ use Contact;
 use Contract;
 use Document;
 use Project;
+use Certificate;
 use Entity;
 use Profile;
 use PassiveDCEquipment;
 use PluginAppliancesAppliance;
 use Plugin;
+use CommonTreeDropdown;
+use PluginGenericobjectType;
 use PluginDatabasesDatabase;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
@@ -75,51 +78,7 @@ class GlpiselectField extends DropdownField
       $label .= _n('GLPI object', 'GLPI objects', 1, 'formcreator');
       $label .= '</label>';
 
-      $optgroup = [
-         __("Assets") => [
-            Computer::class         => Computer::getTypeName(2),
-            Monitor::class          => Monitor::getTypeName(2),
-            Software::class         => Software::getTypeName(2),
-            NetworkEquipment::class => Networkequipment::getTypeName(2),
-            Peripheral::class       => Peripheral::getTypeName(2),
-            Printer::class          => Printer::getTypeName(2),
-            CartridgeItem::class    => CartridgeItem::getTypeName(2),
-            ConsumableItem::class   => ConsumableItem::getTypeName(2),
-            Phone::class            => Phone::getTypeName(2),
-            Line::class             => Line::getTypeName(2),
-            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
-            Appliance::class          => Appliance::getTypeName(2),
-         ],
-         __("Assistance") => [
-            Ticket::class           => Ticket::getTypeName(2),
-            Problem::class          => Problem::getTypeName(2),
-            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)
-         ],
-         __("Management") => [
-            Budget::class           => Budget::getTypeName(2),
-            Supplier::class         => Supplier::getTypeName(2),
-            Contact::class          => Contact::getTypeName(2),
-            Contract::class         => Contract::getTypeName(2),
-            Document::class         => Document::getTypeName(2),
-            Project::class          => Project::getTypeName(2)
-         ],
-         __("Tools") => [
-            Reminder::class         => __("Notes"),
-            RSSFeed::class          => __("RSS feed")
-         ],
-         __("Administration") => [
-            User::class             => User::getTypeName(2),
-            Group::class            => Group::getTypeName(2),
-            Entity::class           => Entity::getTypeName(2),
-            Profile::class          => Profile::getTypeName(2)
-         ],
-      ];
-      if ((new Plugin())->isActivated('appliances')) {
-         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
-      }
-      if ((new Plugin())->isActivated('databases')) {
-         $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
-      }
+      $optgroup = $this->getObjects();
 
       // Get additional itemtypes from plugins
       $additionalTypes = Plugin::doHookFunction('formcreator_get_glpi_object_types', []);
@@ -143,13 +102,24 @@ class GlpiselectField extends DropdownField
       // Merge new itemtypes to predefined ones
       $optgroup = array_merge_recursive($optgroup, $cleanedAditionalTypes);
 
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         $itemtype = $this->question->fields['values'];
+      } else {
+         $itemtype = $decodedValues['itemtype'];
+      }
+
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
-         'value'     => $this->question->fields['values'],
+         'value'     => $itemtype,
          'rand'      => $rand,
          'on_change' => 'plugin_formcreator_changeGlpiObjectItemType();',
          'display'   => false,
       ]);
+
+      $root = $decodedValues['show_tree_root'] ?? '0';
+      $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
 
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
@@ -159,10 +129,20 @@ class GlpiselectField extends DropdownField
       $additions .= '</td>';
       $additions .= '<td id="dropdown_default_value_field">';
       $additions .= '</td>';
-      $additions .= '<td></td>';
-      $additions .= '<td></td>';
+      $additions .= '<td>';
+      $additions .= "<input id='commonTreeDropdownRoot' type='hidden' value='$root'>";
+      $additions .= "<input id='commonTreeDropdownMaxDepth' type='hidden' value='$maxDepth'>";
+      $additions .= "<input id='commonTreeDropdownSelectableRoot' type='hidden' value='$selectableRoot'>";
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
       $additions .= '</tr>';
       $additions .= Html::scriptBlock("plugin_formcreator_changeGlpiObjectItemType($rand);");
+
+      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown">';
+      // This row will be generated by an AJAX request
+      $additions .= '</tr>';
+
       return [
          'label' => $label,
          'field' => $field,
@@ -195,9 +175,26 @@ class GlpiselectField extends DropdownField
          return [];
       }
 
-      $input['values']         = $input['glpi_objects'];
+      $itemtype = $input['glpi_objects'];
+      $input['values'] = [
+         'itemtype' => $itemtype
+      ];
       $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+
+      // Params for CommonTreeDropdown fields
+      if (is_a($itemtype, CommonTreeDropdown::class, true)) {
+         // Set default for depth setting
+         $input['values']['show_tree_depth'] = (int) ($input['show_tree_depth'] ?? '-1');
+         $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
+         $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
+      }
+
+      $input['values'] = json_encode($input['values']);
+
       unset($input['dropdown_default_value']);
+      unset($input['show_tree_root']);
+      unset($input['show_tree_depth']);
+      unset($input['selectable_tree_root']);
 
       return $input;
    }
@@ -206,9 +203,13 @@ class GlpiselectField extends DropdownField
       return true;
    }
 
+   public function getAvailableValues(): array {
+      return [];
+   }
+
    public function equals($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->question->fields['values'];
+      $itemtype = $this->getSubItemtypeForValues($this->question->fields['values']);
       $item = new $itemtype();
       if ($item->isNewId($this->value)) {
          return ($value === '');
@@ -225,7 +226,7 @@ class GlpiselectField extends DropdownField
 
    public function greaterThan($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->question->fields['values'];
+      $itemtype = $this->getSubItemtypeForValues($this->question->fields['values']);
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
          throw new ComparisonException('Item not found for comparison');
@@ -243,5 +244,56 @@ class GlpiselectField extends DropdownField
 
    public function isAnonymousFormCompatible(): bool {
       return false;
+   }
+
+   public function getObjects() {
+      $optgroup = [
+         __("Assets") => [
+            Computer::class           => Computer::getTypeName(2),
+            Monitor::class            => Monitor::getTypeName(2),
+            Software::class           => Software::getTypeName(2),
+            NetworkEquipment::class   => Networkequipment::getTypeName(2),
+            Peripheral::class         => Peripheral::getTypeName(2),
+            Printer::class            => Printer::getTypeName(2),
+            CartridgeItem::class      => CartridgeItem::getTypeName(2),
+            ConsumableItem::class     => ConsumableItem::getTypeName(2),
+            Phone::class              => Phone::getTypeName(2),
+            Line::class               => Line::getTypeName(2),
+            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
+            Appliance::class          => Appliance::getTypeName(2),
+         ],
+         __("Assistance") => [
+            Ticket::class             => Ticket::getTypeName(2),
+            Problem::class            => Problem::getTypeName(2),
+            TicketRecurrent::class    => TicketRecurrent::getTypeName(2)
+         ],
+         __("Management") => [
+            Budget::class             => Budget::getTypeName(2),
+            Supplier::class           => Supplier::getTypeName(2),
+            Contact::class            => Contact::getTypeName(2),
+            Contract::class           => Contract::getTypeName(2),
+            Document::class           => Document::getTypeName(2),
+            Project::class            => Project::getTypeName(2),
+            Certificate::class        => Certificate::getTypeName(2)
+         ],
+         __("Tools") => [
+            Reminder::class           => __("Notes"),
+            RSSFeed::class            => __("RSS feed")
+         ],
+         __("Administration") => [
+            User::class               => User::getTypeName(2),
+            Group::class              => Group::getTypeName(2),
+            Entity::class             => Entity::getTypeName(2),
+            Profile::class            => Profile::getTypeName(2)
+         ],
+      ];
+      if ((new Plugin())->isActivated('appliances')) {
+         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+      if ((new Plugin())->isActivated('databases')) {
+         $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+
+      return $optgroup;
    }
 }

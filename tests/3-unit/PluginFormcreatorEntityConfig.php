@@ -187,4 +187,22 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT => __('Distinct menu entry', 'formcreator'),
       ]);
    }
+
+   public function testGetEnumSearchVisibility() {
+      $output = \PluginFormcreatorEntityconfig::getEnumSearchVisibility();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT         => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_SEARCH_VISIBLE => __('Visible', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_SEARCH_HIDDEN  => __('Hidden', 'formcreator'),
+      ]);
+   }
+
+   public function testGetEnumHeaderVisibility() {
+      $output = \PluginFormcreatorEntityconfig::getEnumheaderVisibility();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT         => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_HEADER_VISIBLE => __('Visible', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_HEADER_HIDDEN  => __('Hidden', 'formcreator'),
+      ]);
+   }
 }

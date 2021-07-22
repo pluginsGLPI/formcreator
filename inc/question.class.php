@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -38,10 +39,12 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorQuestion extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
-PluginFormcreatorConditionnableInterface
+PluginFormcreatorConditionnableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
@@ -132,6 +135,31 @@ PluginFormcreatorConditionnableInterface
     */
    function isEntityAssign() {
       return false;
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'integer',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this::getTable(),
+         'field'              => 'description',
+         'name'               => __('Description'),
+         'datatype'           => 'text',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
@@ -238,14 +266,13 @@ PluginFormcreatorConditionnableInterface
    }
 
    /**
-    * Get HTML to show a question
-    *
-    * @param bool $canEdit Can the user edit the question ?
-    * @param array $value values of the answers to all questions of the form
+    * Get the HTML to display the question for a requester
+    * @param string  $domain  Translation domain of the form
+    * @param boolean $canEdit Can the requester edit the field of the question ?
+    * @param array   $value   Values all fields of the form
     * @param bool $isVisible is the question visible by default ?
-    * @return string
     */
-   public function getRenderedHtml($canEdit = true, $value = [], $isVisible = true) : string {
+   public function getRenderedHtml($domain, $canEdit = true, $value = [], $isVisible = true) : string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -279,11 +306,8 @@ PluginFormcreatorConditionnableInterface
          . ' data-id="' . $this->getID() . '"'
          . " $hiddenAttribute"
          . ' >';
-      $html .= '<div'
-      . ' class="grid-stack-item-content form-group ' . $required . '" '
-      . 'id="form-group-field-' . $this->getID() . '" '
-      . '>';
-      $html .= $field->show($canEdit);
+      $html .= '<div class="grid-stack-item-content form-group ' . $required . '" id="form-group-field-' . $this->getID() . '">';
+      $html .= $field->show($domain, $canEdit);
       $html .= '</div>';
       $html .= '</div>';
 
@@ -322,10 +346,7 @@ PluginFormcreatorConditionnableInterface
       if (!isset($input['fieldtype'])) {
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $this
-      );
+      $this->loadField($input['fieldtype']);
       if ($this->field === null) {
          Session::addMessageAfterRedirect(
             // TRANS: $%1$s is a type of field, %2$s is the label of a question
@@ -401,10 +422,12 @@ PluginFormcreatorConditionnableInterface
       if (!isset($input['width'])) {
          $input['width'] = PluginFormcreatorSection::COLUMNS - $input['col'];
       }
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       // Get next row
       if ($this->useAutomaticOrdering) {
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $maxRow = PluginFormcreatorCommon::getMax($this, [
-            self::$items_id => $input[self::$items_id]
+            $sectionFk => $input[$sectionFk]
          ], 'row');
          if ($maxRow === null) {
             $input['row'] = 0;
@@ -563,10 +586,7 @@ PluginFormcreatorConditionnableInterface
          $fieldType = $input['fieldtype'];
       }
 
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $fieldType,
-         $this
-      );
+      $this->loadField($fieldType);
       $this->field->updateParameters($this, $input);
    }
 
@@ -579,10 +599,7 @@ PluginFormcreatorConditionnableInterface
          return false;
       }
 
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $this->fields['fieldtype'],
-         $this
-      );
+      $this->loadField($this->fields['fieldtype']);
       return $this->field->deleteParameters($this);
    }
 
@@ -970,9 +987,9 @@ PluginFormcreatorConditionnableInterface
       return 1 + self::countChildren($input, $subItems);
    }
 
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         return false;
+         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $question = $this->fields;
@@ -991,7 +1008,7 @@ PluginFormcreatorConditionnableInterface
 
       // get question parameters
       $question['_parameters'] = [];
-      $this->field = PluginFormcreatorFields::getFieldInstance($this->fields['fieldtype'], $this);
+      $this->loadField($this->fields['fieldtype']);
       $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
@@ -1141,7 +1158,7 @@ PluginFormcreatorConditionnableInterface
    public static function dropdownForForm($formId, $crit, $name, $value, $options = []) {
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
-      $options = [
+      $options = $options + [
          'display' => $options['display'] ?? true,
          'value'   => $value,
       ];
@@ -1222,13 +1239,13 @@ PluginFormcreatorConditionnableInterface
 
       if (isset($data['_questions'])) {
          foreach ($data['_questions'] as $key => $question) {
-            if ($question['fieldtype'] == "dropdown") {
+            if (in_array($question['fieldtype'], ['dropdown', 'glpiselect'])) {
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($key);
 
                /** @var PluginFormcreatorDropdownField */
                $field = PluginFormcreatorFields::getFieldInstance(
-                  "dropdown",
+                  $question['fieldtype'],
                   $question
                );
 
@@ -1274,6 +1291,18 @@ PluginFormcreatorConditionnableInterface
       }
    }
 
+   /**
+    * load instance if field associated to the question
+    *
+    * @return void
+    */
+   private function loadField($fieldType) {
+      if (!$this->field === null) {
+         return;
+      }
+      $this->field = PluginFormcreatorFields::getFieldInstance($fieldType, $this);
+   }
+
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
       $keepCriteria = [
          self::$items_id => $container->getID(),
@@ -1282,5 +1311,53 @@ PluginFormcreatorConditionnableInterface
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   /**
+    * Get the field object representing the question
+    * @return PluginFormcreatorFieldInterface|null
+    */
+   public function getSubField(): PluginFormcreatorFieldInterface {
+      if ($this->isNewItem()) {
+         return null;
+      }
+
+      if ($this->field === null) {
+         $this->field = PluginFormcreatorFields::getFieldInstance(
+            $this->fields['fieldtype'],
+            $this
+         );
+      }
+
+      return $this->field;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $strings = $this->getMyTranslatableStrings($options);
+
+      // get translatable strings from field
+      $this->loadField($this->fields['fieldtype']);
+
+      foreach ($this->field->getTranslatableStrings($options) as $type => $subStrings) {
+         $strings[$type] = array_merge($strings[$type], $subStrings);
+      }
+
+      $strings = $this->deduplicateTranslatable($strings);
+
+      return $strings;
    }
 }

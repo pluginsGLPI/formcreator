@@ -74,7 +74,7 @@ class HiddenField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function show($canEdit = true) {
+   public function show($domain, $canEdit = true) {
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
@@ -110,7 +110,7 @@ class HiddenField extends PluginFormcreatorAbstractField
       return _n('Hidden field', 'Hidden fields', 1);
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       return str_replace("\n", '\r\n', $this->value);
    }
 
@@ -173,5 +173,35 @@ class HiddenField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return false;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = [
+         'text' => [],
+         'id'   => [],
+      ];
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+      if ($searchString != '' && stripos($this->question->fields['default_values'], $searchString) === false) {
+         return $strings;
+      }
+      $id = \PluginFormcreatorTranslation::getTranslatableStringId($this->question->fields['default_values']);
+      if ($options['id'] != '' && $id != $options['id']) {
+         return $strings;
+      }
+
+      if ($this->question->fields['default_values'] != '') {
+         $strings['string'][$id] = $this->question->fields['default_values'];
+         $strings['id'][$id] = 'string';
+      }
+      return $strings;
    }
 }

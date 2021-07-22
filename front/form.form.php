@@ -29,12 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-global $CFG_GLPI, $DB;
 include ("../../../inc/includes.php");
 
 // Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated("formcreator")) {
+if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
@@ -147,7 +145,7 @@ if (isset($_POST['add'])) {
    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
       // Form was saved by an annymous user
       unset($_SESSION['glpiname']);
-      Html::redirect('formdisplay.php?answer_saved');
+      Html::redirect('formdisplay.php?answer_saved&id=' . $form->getID());
    }
 
    // redirect to created item

@@ -42,6 +42,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testCanPurgeItem':
          case 'testDuplicate':
          case 'testCreateValidationNotification':
+         case 'testGetTranslatableStrings':
             $this->login('glpi', 'glpi');
       }
    }
@@ -248,17 +249,21 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testDefineTabs() {
-      $form = $this->getForm();
-      $output = $form->defineTabs();
-      $this->array($output)->isEqualTo([
+      $instance = $this->newTestedInstance();
+      $output = $instance->defineTabs();
+      $expected = [
          'PluginFormcreatorForm$main' => "Form",
          'PluginFormcreatorQuestion$1' => "Questions",
          'PluginFormcreatorForm_Profile$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
          'PluginFormcreatorForm$2' => "Preview",
          'PluginFormcreatorFormAnswer$1' => "Form answers",
-         'Log$1' => "Historical <sup class='tab_nb'>1</sup>",
-      ]);
+         'PluginFormcreatorForm_Language$1' => 'Form languages',
+         'Log$1' => "Historical",
+      ];
+      $this->array($output)
+         ->isEqualTo($expected)
+         ->hasSize(count($expected));
    }
 
    public function testGetTabNameForItem() {
@@ -440,8 +445,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $instance = $this->newTestedInstance();
 
       // Try to export an empty item
-      $output = $instance->export();
-      $this->boolean($output)->isFalse();
+      $this->exception(function () use ($instance) {
+         $instance->export();
+      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
       // Prepare an item to export
       $instance = $this->getForm();
@@ -477,6 +483,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          '_targets',
          '_validators',
          '_conditions',
+         '_translations',
       ];
       $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
@@ -870,9 +877,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target tickets
-      $all_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetTicketsForForm($form->getID());
+      $all_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetTicketsForForm($new_form->getID());
+      $all_new_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($new_form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
       // check that all sections uuid are new
@@ -885,9 +892,9 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target changes
-      $all_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetChangesForForm($form->getID());
+      $all_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetsForForm($form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetChangesForForm($new_form->getID());
+      $all_new_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetsForForm($new_form->getID());
       $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
       // check that all sections uuid are new
@@ -898,6 +905,290 @@ class PluginFormcreatorForm extends CommonTestCase {
          $new_uuids[] = $targetChange->fields['uuid'];
       }
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+   }
+
+   public function providerGetBestLanguage() {
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form0 = $this->newTestedInstance();
+      $form1 = $this->getForm([
+         'language' => '',
+      ]);
+      $form2 = $this->getForm([
+         'language' => 'fr_FR',
+      ]);
+      $form3 = $this->getForm([
+         'language' => '',
+      ]);
+
+      $form4 = $this->getForm([
+         'language' => 'fr_FR',
+      ]);
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form3->getID(),
+         'name'  => 'en_GB',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form3->getID(),
+         'name'  => 'it_IT',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form4->getID(),
+         'name'  => 'en_GB',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      $formLanguage = new \PluginFormcreatorForm_Language();
+      $formLanguage->add([
+         $formFk => $form4->getID(),
+         'name'  => 'it_IT',
+      ]);
+      $this->boolean($formLanguage->isNewItem())->isFalse();
+
+      return [
+         'not instanciated, no session language' => [
+            'form' => $form0,
+            'sessionLanguage' => '',
+            'expected' => '',
+         ],
+         'not instanciated' => [
+            'form' => $form0,
+            'sessionLanguage' => 'fr_CA',
+            'expected' => 'fr_CA',
+         ],
+         'no language set, no session langnage' => [
+            'form' => $form1,
+            'sessionLanguage' => '',
+            'expected' => '',
+         ],
+         'no language set' => [
+            'form' => $form1,
+            'sessionLanguage' => 'pt_PT',
+            'expected' => 'pt_PT',
+         ],
+         'only a language set' => [
+            'form' => $form2,
+            'sessionLanguage' => '',
+            'expected' => 'fr_FR',
+         ],
+         'only translations set 1' => [
+            'form' => $form3,
+            'sessionLanguage' => 'it_IT',
+            'expected' => 'it_IT',
+         ],
+         'only translations set 2' => [
+            'form' => $form3,
+            'sessionLanguage' => 'en_GB',
+            'expected' => 'en_GB',
+         ],
+         'language and translations set 1' => [
+            'form' => $form4,
+            'sessionLanguage' => 'fr_FR',
+            'expected' => 'fr_FR',
+         ],
+         'language and translations set 2' => [
+            'form' => $form4,
+            'sessionLanguage' => 'it_IT',
+            'expected' => 'it_IT',
+         ],
+         'language and translations set 2' => [
+            'form' => $form4,
+            'sessionLanguage' => 'fr_CA',
+            'expected' => 'fr_FR',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetBestLanguage
+    *
+    * @return void
+    */
+   public function testGetBestLanguage(\PluginFormcreatorForm $form, string $sessionLanguage, string $expected) {
+      $backupLanguage = $_SESSION['glpilanguage'];
+      $_SESSION['glpilanguage'] = $sessionLanguage;
+      $output = $form->getBestLanguage();
+      $_SESSION['glpilanguage'] = $backupLanguage;
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetTranslationDomain() {
+      $instance = $this->getForm();
+
+      $output = \PluginFormcreatorForm::getTranslationDomain($instance->getID(), 'en_US');
+      $this->string($output)->isEqualTo('form_' . $instance->getID() . '_en_US' );
+
+      $output = \PluginFormcreatorForm::getTranslationDomain($instance->getID(), 'it_IT');
+      $this->string($output)->isEqualTo('form_' . $instance->getID() . '_it_IT' );
+   }
+
+   public function testGetTranslationFile() {
+      $instance = $this->getForm();
+
+      $output = \PluginFormcreatorForm::getTranslationFile($instance->getID(), 'en_US');
+      $this->string($output)->isEqualTo(GLPI_LOCAL_I18N_DIR . '/formcreator/form_' . $instance->getID() . '_en_US.php' );
+
+      $output = \PluginFormcreatorForm::getTranslationFile($instance->getID(), 'fr_CA');
+      $this->string($output)->isEqualTo(GLPI_LOCAL_I18N_DIR . '/formcreator/form_' . $instance->getID() . '_fr_CA.php' );
+   }
+
+   public function testGetTranslatableStrings() {
+      $data = file_get_contents(dirname(__DIR__) . '/fixture/all_question_types_form.json');
+      $data = json_decode($data, true);
+      foreach ($data['forms'] as $formData) {
+         $form = $this->newTestedInstance();
+         $formId = $form->import(new \PluginFormcreatorLinker(), $formData);
+         $this->boolean($form->isNewID($formId))->isFalse();
+      }
+
+      $form->getFromDB($formId);
+      $this->boolean($form->isNewItem())->isFalse();
+      $output = $form->getTranslatableStrings();
+      $this->array($output)->isIdenticalTo([
+         'itemlink' =>
+         [
+           '4cd9f030d78c8eda21a284aa32fae318' => 'form with all question types',
+           '73d5342eba070f636ac3246f319bf77f' => 'section',
+           '8c647f55ac463429f736aea1ad64d318' => 'actors question',
+           'de1ece2a98dacb86a2b65334373ccb99' => 'checkboxes question',
+           'e121a8d9e19bf923a648d6bfb33094d8' => 'date question',
+           '7d3246feb9616461eee152642ad9f1fb' => 'datetime question',
+           '824d1cc309c56586a33b52858cbc146b' => 'description question',
+           '8347ce048fc3fe8b954dbc6cd9c4b716' => 'dropdown question',
+           '895472a7be51fe6b1b9591a150fb55d8' => 'email question',
+           '75c4f52e98ebd4a57410d882780353db' => 'file question',
+           '037cad549bb834c2fab44fe14480f9a9' => 'float question',
+           '97ee07194ba5af1c81eb5a9b22141241' => 'GLPI object question',
+           '74b8be9aff59bf5ddd149248d6156baa' => 'hidden question',
+           '0550a71495224d60dfcd00826345f0fa' => 'hostname question',
+           'd767bdc805e010bfd2302c2516501ffb' => 'IP address question',
+           'b5c09bbe5587577a8c86ada678664877' => 'integer question',
+           '5b3ebb576a3977eaa267f0769bdd8e98' => 'LDAP question',
+           '35226e073fabdcce01c547c5bce62d14' => 'multiselect question',
+           '58e2a2355ba7ac135d42f558591d6a6a' => 'radio question',
+           '2637b4d11281dffbaa2e340561347ebc' => 'request type question',
+           '212afc3240debecf859880ea9ab4fc2e' => 'select question',
+           '6fd6eacf3005974a7489a199ed7b45ee' => 'text question',
+           'b99b0833f1dab41a14eb421fa2ce690d' => 'textarea question',
+           'e3a0dfbc9d24603beddcbd1388808a7a' => 'time question',
+           '49dce550d75300e99052ed4e8006b65a' => 'urgency question',
+         ],
+         'string' =>
+         [
+           'bc41fd6c06a851dc3e5f52ef82c46357' => 'a (checkbox)',
+           '2e2682dc7fe28972eede52a085f9b8da' => 'b (checkbox)',
+           'a212352098d74d20ad0869e8b11870dd' => 'c (checkbox)',
+           '2ee11338e1d5571cdcdc959e05d13fdd' => 'hidden value',
+           '26b6a3b22c4a9eacd9bcca663c6bfb98' => 'a (multiselect)',
+           'fe3ba23b6c304bcfccab1c4037170043' => 'b (multiselect)',
+           '76abd40f08cc003cfb75e02d8603a618' => 'c (multiselect)',
+           'aa08e69f50f9d7e4a280b5e395a926f3' => 'a (radio)',
+           '3d8f74862a3f325c160d5b4090cc1344' => 'b (radio)',
+           '60459f8c72beb121493ec56bd0b41473' => 'c (radio)',
+           '3e6b3c27f45682bbe11ed102ff9cbd31' => 'a (select)',
+           '12f59df90d7b53129d8e6da91f60cf86' => 'b (select)',
+           '1dd65ffc0516477159ec9ba8c170ef94' => 'c (select)',
+           '4f87be8f6e593d167f5fd1ab238cfc2d' => '/foo/',
+         ],
+         'text' =>
+         [
+           '06ff4080ef6f9ee755cc45cba5f80360' => 'actors description',
+           '874e42442b551ef2769cc498157f542d' => 'checkboxes description',
+           '42be0556a01c9e0a28da37d2e3c5153d' => 'date description',
+           'b698fbcd4b9acf232b8b88755a1728f0' => 'datetime description',
+           'ab87cc96356a7d5c1d37c877fd56c6b0' => 'description text',
+           '59ef614a194389f0b54e46b728fe22a2' => 'dropdown description',
+           'b70e872f17f616049c642f2db8f35c8a' => 'email description',
+           '2b4f8f08c4162a2dac4a9b82e97605c0' => 'file description',
+           'b1a3d83a831e20619e1f14f6dbc64105' => 'float description',
+           '54ee213f0c0aae084d5712dc96bac833' => 'GLPI object description',
+           '91ca037d3ec611f6c684114abce7296f' => 'hidden description',
+           '98443bed844ba97392d8a8fb364b5d66' => 'hostname description',
+           '4b2e461a0b3c307923176188fb6273c6' => 'IP address description',
+           '51d8d951cf91a008f5b87c7d36ee6789' => 'integer description',
+           'c0117d3ded05c5c672425a48a63c83d7' => 'LDAP description',
+           '2d0b83793d10440b70c33a2229c88a09' => 'multiselect description',
+           '06cdb33e33e576a973d7bf54fcded96e' => 'radios description',
+           '471217363e6922ff6b1c9fd9cd57cd2a' => 'request type description',
+           '64dfbbc489b074af269e0b0fbf0d901b' => 'select description',
+           'b371eae37f18f0b6125002999b2404ba' => 'text description',
+           'f81bad6b9c8f01a40099a140881313a8' => 'textarea description',
+           '8d544ed7c846a47654b2f55db879d7b2' => 'time description',
+           'e634ce2f4abe0deaa3f7cd44e13f4af6' => 'urgency description',
+         ],
+         'id' =>
+         [
+           '4cd9f030d78c8eda21a284aa32fae318' => 'itemlink',
+           '73d5342eba070f636ac3246f319bf77f' => 'itemlink',
+           '8c647f55ac463429f736aea1ad64d318' => 'itemlink',
+           '06ff4080ef6f9ee755cc45cba5f80360' => 'text',
+           'de1ece2a98dacb86a2b65334373ccb99' => 'itemlink',
+           '874e42442b551ef2769cc498157f542d' => 'text',
+           'bc41fd6c06a851dc3e5f52ef82c46357' => 'string',
+           '2e2682dc7fe28972eede52a085f9b8da' => 'string',
+           'a212352098d74d20ad0869e8b11870dd' => 'string',
+           'e121a8d9e19bf923a648d6bfb33094d8' => 'itemlink',
+           '42be0556a01c9e0a28da37d2e3c5153d' => 'text',
+           '7d3246feb9616461eee152642ad9f1fb' => 'itemlink',
+           'b698fbcd4b9acf232b8b88755a1728f0' => 'text',
+           '824d1cc309c56586a33b52858cbc146b' => 'itemlink',
+           'ab87cc96356a7d5c1d37c877fd56c6b0' => 'text',
+           '8347ce048fc3fe8b954dbc6cd9c4b716' => 'itemlink',
+           '59ef614a194389f0b54e46b728fe22a2' => 'text',
+           '895472a7be51fe6b1b9591a150fb55d8' => 'itemlink',
+           'b70e872f17f616049c642f2db8f35c8a' => 'text',
+           '75c4f52e98ebd4a57410d882780353db' => 'itemlink',
+           '2b4f8f08c4162a2dac4a9b82e97605c0' => 'text',
+           '037cad549bb834c2fab44fe14480f9a9' => 'itemlink',
+           'b1a3d83a831e20619e1f14f6dbc64105' => 'text',
+           '97ee07194ba5af1c81eb5a9b22141241' => 'itemlink',
+           '54ee213f0c0aae084d5712dc96bac833' => 'text',
+           '74b8be9aff59bf5ddd149248d6156baa' => 'itemlink',
+           '91ca037d3ec611f6c684114abce7296f' => 'text',
+           '2ee11338e1d5571cdcdc959e05d13fdd' => 'string',
+           '0550a71495224d60dfcd00826345f0fa' => 'itemlink',
+           '98443bed844ba97392d8a8fb364b5d66' => 'text',
+           'd767bdc805e010bfd2302c2516501ffb' => 'itemlink',
+           '4b2e461a0b3c307923176188fb6273c6' => 'text',
+           'b5c09bbe5587577a8c86ada678664877' => 'itemlink',
+           '51d8d951cf91a008f5b87c7d36ee6789' => 'text',
+           '5b3ebb576a3977eaa267f0769bdd8e98' => 'itemlink',
+           'c0117d3ded05c5c672425a48a63c83d7' => 'text',
+           '35226e073fabdcce01c547c5bce62d14' => 'itemlink',
+           '2d0b83793d10440b70c33a2229c88a09' => 'text',
+           '26b6a3b22c4a9eacd9bcca663c6bfb98' => 'string',
+           'fe3ba23b6c304bcfccab1c4037170043' => 'string',
+           '76abd40f08cc003cfb75e02d8603a618' => 'string',
+           '58e2a2355ba7ac135d42f558591d6a6a' => 'itemlink',
+           '06cdb33e33e576a973d7bf54fcded96e' => 'text',
+           'aa08e69f50f9d7e4a280b5e395a926f3' => 'string',
+           '3d8f74862a3f325c160d5b4090cc1344' => 'string',
+           '60459f8c72beb121493ec56bd0b41473' => 'string',
+           '2637b4d11281dffbaa2e340561347ebc' => 'itemlink',
+           '471217363e6922ff6b1c9fd9cd57cd2a' => 'text',
+           '212afc3240debecf859880ea9ab4fc2e' => 'itemlink',
+           '64dfbbc489b074af269e0b0fbf0d901b' => 'text',
+           '3e6b3c27f45682bbe11ed102ff9cbd31' => 'string',
+           '12f59df90d7b53129d8e6da91f60cf86' => 'string',
+           '1dd65ffc0516477159ec9ba8c170ef94' => 'string',
+           '6fd6eacf3005974a7489a199ed7b45ee' => 'itemlink',
+           'b371eae37f18f0b6125002999b2404ba' => 'text',
+           'b99b0833f1dab41a14eb421fa2ce690d' => 'itemlink',
+           'f81bad6b9c8f01a40099a140881313a8' => 'text',
+           '4f87be8f6e593d167f5fd1ab238cfc2d' => 'string',
+           'e3a0dfbc9d24603beddcbd1388808a7a' => 'itemlink',
+           '8d544ed7c846a47654b2f55db879d7b2' => 'text',
+           '49dce550d75300e99052ed4e8006b65a' => 'itemlink',
+           'e634ce2f4abe0deaa3f7cd44e13f4af6' => 'text',
+         ],
+      ]);
    }
 
    public function providerCheckImportVersion() {

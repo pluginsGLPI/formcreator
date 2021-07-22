@@ -1,4 +1,5 @@
-<?php
+"use strict";
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,11 +29,6 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-
-include ('../../../inc/includes.php');
-header('Content-Type: text/javascript');
-?>
-"use strict";
 
 var modalWindow;
 var rootDoc          = CFG_GLPI['root_doc'];
@@ -66,7 +62,6 @@ function getTimer(object) {
 }
 
 $(function() {
-   var target = $('body');
    modalWindow = $("<div></div>").dialog({
       width: 980,
       autoOpen: false,
@@ -359,7 +354,7 @@ function showTiles(tiles, defaultForms) {
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
-      html += '<p><?php echo Toolbox::addslashes_deep(__('No form found. Please choose a form below instead', 'formcreator'))?></p>'
+      html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead', 'formcreator') + '</p>'
    }
    html += buildTiles(tiles);
 
@@ -382,7 +377,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         var html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -403,7 +398,7 @@ function updateKbitemsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -465,7 +460,7 @@ function buildTiles(list) {
    var html = '';
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + "<?php echo Toolbox::addslashes_deep(__('No form yet in this category', 'formcreator')) ?>"
+      + i18n.textdomain('formcreator').__('No form yet in this category', 'formcreator')
       + '</p>'
       +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
@@ -545,10 +540,25 @@ function buildTiles(list) {
 }
 
 var plugin_formcreator = new function() {
+   this.spinner = '<div"><img src="../../../pics/spinner.48.gif" style="margin-left: auto; margin-right: auto; display: block;" width="48px"></div>'
+
+   this.modalSetings = {
+      autoOpen: false,
+      height: 'auto',
+      width: '600px',
+      minWidth: '600px',
+      modal: true,
+      position: {my: 'center'},
+      close: function() {
+         $(this).dialog('close');
+         $(this).remove();
+      }
+   }
+
    // Properties of the item when the user begins to change it
    this.initialPosition = {};
    this.changingItemId = 0;
-   this.questionsColumns = <?php echo PluginFormcreatorSection::COLUMNS; ?>;
+   this.questionsColumns = 4; // @see PluginFormcreatorSection::COLUMNS
    this.dirty = false;
 
    this.setupGridStack = function (group) {
@@ -726,7 +736,7 @@ var plugin_formcreator = new function() {
       if (typeof(id) === 'undefined') {
          return;
       }
-      if (confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
+      if (confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this question?', 'formcreator'))) {
          jQuery.ajax({
          url: formcreatorRootDoc + '/ajax/question_delete.php',
          type: "POST",
@@ -795,14 +805,13 @@ var plugin_formcreator = new function() {
 
    this.addQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/question_add.php',
          type: "POST",
          data: form.serializeArray(),
          dataType: 'json'
       }).fail(function(data) {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
@@ -821,12 +830,14 @@ var plugin_formcreator = new function() {
             1
          );
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
    this.editQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = form.find('[name="id"]').val();
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/question_update.php',
          type: "POST",
@@ -839,12 +850,14 @@ var plugin_formcreator = new function() {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
    this.duplicateQuestion = function (target) {
       var item = $(target).closest('.grid-stack-item');
       var id = item.attr('data-id');
+      var that = this;
       if (typeof(id) === 'undefined') {
          return;
       }
@@ -873,6 +886,7 @@ var plugin_formcreator = new function() {
             1,
             1
          );
+         that.resetTabs();
       });
    };
 
@@ -924,9 +938,10 @@ var plugin_formcreator = new function() {
    // === SECTIONS ===
 
    this.deleteSection = function (item) {
-      if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
+      if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this section?', 'formcreator'))) {
          var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
          var sectionId = section.attr('data-id');
+         var that = this;
          $.ajax({
          url: formcreatorRootDoc + '/ajax/section_delete.php',
          type: "POST",
@@ -936,6 +951,7 @@ var plugin_formcreator = new function() {
          }).done(function() {
             section.remove();
             plugin_formcreator.updateSectionControls();
+            that.resetTabs();
          }).fail(function(data) {
             alert(data.responseText);
          });
@@ -987,6 +1003,7 @@ var plugin_formcreator = new function() {
    this.duplicateSection = function (item) {
       var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
       var sectionId = section.attr('data-id');
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/section_duplicate.php',
       type: "POST",
@@ -1000,6 +1017,7 @@ var plugin_formcreator = new function() {
          sectionId = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last().attr('data-id');
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
+         that.resetTabs();
       }).fail(function(data) {
          alert(data.responseText);
       });
@@ -1017,6 +1035,7 @@ var plugin_formcreator = new function() {
 
    this.addSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/section_add.php',
          type: "POST",
@@ -1031,12 +1050,14 @@ var plugin_formcreator = new function() {
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
    this.editSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
       var sectionId = form.find('[name="id"]').val();
+      var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/section_update.php',
          type: "POST",
@@ -1048,6 +1069,7 @@ var plugin_formcreator = new function() {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
          section.find('> [data-field="name"]').text(data);
          modalWindow.dialog('close');
+         that.resetTabs();
       });
    }
 
@@ -1061,6 +1083,122 @@ var plugin_formcreator = new function() {
       sections.find('.moveDown').show();
       sections.last().find('.moveDown').hide();
    }
+
+   this.createLanguage = function (formId, id = -1) {
+      var placeholder = $('#plugin_formcreator_formLanguage');
+      this.showSpinner(placeholder);
+      $(placeholder).load(
+         rootDoc + '/ajax/viewsubitem.php', {
+            type: "PluginFormcreatorForm_Language",
+            parenttype: "PluginFormcreatorForm",
+            plugin_formcreator_forms_id: formId,
+            id: id
+         }
+      );
+   }
+
+   /**
+    * Put a spinner inside the given selector
+    */
+   this.showSpinner = function (selector) {
+      return $(selector).html('<img class="plugin_formcreator_spinner" src="../../../pics/spinner.48.gif">');
+   }
+
+   /**
+    * destroy hidden tabs. Useful when their content is obsoleted
+    */
+   this.resetTabs = function () {
+      $('.glpi_tabs [role="tabpanel"][aria-hidden="true"] ').empty();
+   }
+
+   this.showTranslationEditor = function (object) {
+      var formlanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      var plugin_formcreator_translations_id = $(object).find('input[name="id"]').val();
+      $('#plugin_formcreator_editTranslation').load(formcreatorRootDoc + '/ajax/edit_translation.php', {
+         plugin_formcreator_form_languages_id: formlanguageId,
+         plugin_formcreator_translations_id: ''
+      });
+   }
+
+   this.newTranslation = function (formLanguageId) {
+      var modal = $(this.spinner)
+         .dialog(this.modalSetings)
+         .on('dialogclose', function (e, ui) {
+            reloadTab();
+         });
+      modal.load(
+         '../ajax/form_language.php', {
+            action: 'newTranslation',
+            id: formLanguageId,
+         }, function (response, status) {
+            if (status == 'error') {
+               displayAjaxMessageAfterRedirect();
+               modal.html('');
+            } else {
+               modal.dialog('open');
+            }
+         }
+      )
+   }
+
+   this.saveNewTranslation = function () {
+      var that = this;
+      var form = document.querySelector('form[name="plugin_formcreator_translation"]');
+      tinyMCE.triggerSave();
+      $.ajax({
+         url: '../ajax/translation.php',
+         type: 'POST',
+         data: $(form).serialize()
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      }).success(function () {
+         that.showTranslationEditor(form);
+      });
+   }
+
+   this.showUpdateTranslationForm = function (object) {
+      var formLanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      var translationId = $(object.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
+      var modal = $(this.spinner);
+      modal.dialog(this.modalSetings);
+      modal.load(
+         '../ajax/form_language.php', {
+            action: 'translation',
+            id: formLanguageId,
+            plugin_formcreator_translations_id: translationId
+         }
+      ).dialog('open')
+      .on('dialogclose', function (e, ui) {
+         reloadTab();
+      });
+   }
+
+   // make a new selector equivalent to :contains(...) but case insensitive
+   jQuery.expr[":"].icontains = jQuery.expr.createPseudo(function (arg) {
+      return function (elem) {
+         return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+      };
+   });
+
+   // filter override results
+   var debounce;
+   $(document).on('change paste keyup', '.plugin_formcreator_filter_translations > input', function() {
+      var text = $(this).val();
+
+      // delay event by a little time to avoid trigger on each key press
+      window.clearTimeout(debounce);
+      debounce = window.setTimeout(function() {
+         // reshow all tr
+         $(".translation_list tbody tr").show();
+
+         // find tr with searched text inside
+         var tr_with_text = $(".translation_list tbody tr:has(td:icontains("+text+"))");
+
+         // hide other tr
+         var tr_inverse = $(".translation_list tbody tr").not(tr_with_text);
+         tr_inverse.hide();
+      }, 200);
+   });
 
    this.toggleForm = function (id) {
       $.ajax({
@@ -1092,7 +1230,7 @@ function plugin_formcreator_editTarget(itemtype, items_id) {
 }
 
 function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
-   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:', 'formcreator'))) {
       jQuery.ajax({
         url: formcreatorRootDoc + '/front/form.form.php',
         type: "POST",
@@ -1323,6 +1461,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
             itemtype: dropdown_type,
             root: $("#commonTreeDropdownRoot").val(),
             maxDepth: $("#commonTreeDropdownMaxDepth").val(),
+            selectableRoot: $("#commonTreeDropdownSelectableRoot").val(),
          },
       }).done(function(response) {
          $('.plugin_formcreator_dropdown').html(response);
@@ -1331,6 +1470,38 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
          $('.plugin_formcreator_dropdown').html("");
          $('.plugin_formcreator_dropdown').toggle(false);
       });
+
+      var entityAssignable = [
+         'Location',
+         'TaskCategory',
+         'TaskTemplate',
+         'SolutionType',
+         'SolutionTemplate',
+         'ProjectTaskTemplate',
+         'SoftwareLicenseType',
+         'CertificateType',
+         'RackType',
+         'PDUType',
+         'ClusterType',
+         'BusinessCriticity',
+         'KnowbaseItemCategory',
+         'Calendar',
+         'Holiday',
+         'Netpoint',
+         'Vlan',
+         'LineOperator',
+         'DomainType',
+         'DomainRecordType',
+         'DomainRelation',
+         'IPNetwork',
+         'FQDN',
+         'WifiNetwork',
+         'NetworkName',
+         'Fieldblacklist',
+         'ApplianceType'
+      ];
+      var showEntityAssignable = (entityAssignable.indexOf(dropdown_type) >= 0);
+      $('.plugin_formcreator_entity_assignable').toggle(showEntityAssignable);
    });
 }
 
@@ -1347,6 +1518,23 @@ function plugin_formcreator_changeGlpiObjectItemType() {
       },
    }).done(function(response) {
       $('#dropdown_default_value_field').html(response);
+   });
+
+   $.ajax({
+      url: formcreatorRootDoc + '/ajax/commontree.php',
+      type: 'GET',
+      data: {
+         itemtype: glpi_object,
+         root: $("#commonTreeDropdownRoot").val(),
+         maxDepth: $("#commonTreeDropdownMaxDepth").val(),
+         selectableRoot: $("#commonTreeDropdownSelectableRoot").val(),
+      },
+   }).done(function(response) {
+      $('.plugin_formcreator_dropdown').html(response);
+      $('.plugin_formcreator_dropdown').toggle(true);
+   }).fail(function() {
+      $('.plugin_formcreator_dropdown').html("");
+      $('.plugin_formcreator_dropdown').toggle(false);
    });
 }
 
@@ -1411,72 +1599,9 @@ function pluginFormcreatorInitializeField(fieldName, rand) {
 }
 
 /**
- * Initialize an actor field (< GLPI 9.5.3)
+ * Initialize an actor field
  */
-function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
-   var field = $('[name="' + fieldName + '[]"]');
-   var dropdownMax = CFG_GLPI['dropdown_max'];
-   field.select2({
-      width: '80%',
-      minimumInputLength: 0,
-      quietMillis: 100,
-      dropdownAutoWidth: true,
-      minimumResultsForSearch: 0,
-      tokenSeparators: [",", ";"],
-      tags: true,
-      ajax: {
-         url: rootDoc + "/ajax/getDropdownUsers.php",
-         type: "POST",
-         dataType: "json",
-         data: function (params) {
-            return {
-               entity_restrict: -1,
-               searchText: params.term,
-               page_limit: dropdownMax,
-               page: params.page || 1
-            }
-         },
-         processResults: function (data, params) {
-            params.page = params.page || 1;
-
-            var more = (data.count >= dropdownMax);
-            return {results: data.results, pagination: {"more": more}};
-         }
-      },
-      createTag: function(params) {
-         var term = $.trim(params.term);
-
-         if (term == '') {
-            return null;
-         }
-
-         return {
-            id: term,
-            text: term,
-            newTag: true
-         }
-      },
-   });
-   initialValue = JSON.parse(initialValue);
-   for (var i = 0; i < initialValue.length; i++) {
-      var option = new Option(initialValue[i].text, initialValue[i].id, true, true);
-      field.append(option).trigger('change');
-      field.trigger({
-         type: 'select2.select',
-         params: {
-            data: initialValue[i]
-         }
-      });
-   }
-   field.on("change", function(e) {
-      plugin_formcreator.showFields($(field[0].form));
-   });
-}
-
-/**
- * Initialize an actor field (>= GLPI 9.5.3)
- */
-function pluginFormcreatorInitializeActor2(fieldName, rand) {
+function pluginFormcreatorInitializeActor(fieldName, rand) {
    var field = $('select[name="' + fieldName + '[]"]');
    field.on("change", function(e) {
       plugin_formcreator.showFields($(field[0].form));

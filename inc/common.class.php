@@ -560,4 +560,13 @@ JAVASCRIPT;
 
       return true;
    }
+
+   /**
+    * get path to CSS file
+    *
+    * @return string
+    */
+   public static function getCssFilename() : string {
+      return 'css_compiled/styles.min.css';
+   }
 }

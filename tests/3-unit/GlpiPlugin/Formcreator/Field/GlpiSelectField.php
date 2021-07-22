@@ -260,7 +260,7 @@ class GlpiselectField extends CommonTestCase {
       $instance->deserializeValue($computer->getID());
 
       // test for the target text
-      $output = $instance->getValueForTargetText(true);
+      $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo('computer foo');
 
       // Create a user with first and last name
@@ -281,7 +281,7 @@ class GlpiselectField extends CommonTestCase {
       $instance->deserializeValue($user->getID());
 
       // test the text for target
-      $output = $instance->getValueForTargetText(true);
+      $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo('bar foo');
    }
 

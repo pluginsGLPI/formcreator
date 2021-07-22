@@ -58,8 +58,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'simpleTicket' => [
             'item' => $ticket,
             'expected' => [
-               'sub_itemtype'  => \Ticket::getType(),
-               'original_id'   => $ticket->getID(),
+               'itemtype'  => \Ticket::getType(),
+               'items_id'   => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
                'status'        => $ticket->fields['status'],
@@ -85,8 +85,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'simpleFormanswers' => [
             'item' => $formAnswer,
             'expected' => [
-               'sub_itemtype'  => \PluginFormcreatorFormAnswer::getType(),
-               'original_id'   => $formAnswer->getID(),
+               'itemtype'  => \PluginFormcreatorFormAnswer::getType(),
+               'items_id'   => $formAnswer->getID(),
                'display_id'    => 'f_' . $formAnswer->getID(),
                'name'          => $formAnswer->fields['name'],
                'status'        => $formAnswer->fields['status'],
@@ -122,8 +122,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formAnswerWithOneTicket' => [
             'item' => $ticket,
             'expected' => [
-               'sub_itemtype'  => \Ticket::getType(),
-               'original_id'   => $ticket->getID(),
+               'itemtype'  => \Ticket::getType(),
+               'items_id'   => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
                'status'        => $ticket->fields['status'],
@@ -162,8 +162,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formAnswerWithSeveralTickets' => [
             'item' => $formAnswer,
             'expected' => [
-               'sub_itemtype'  => \PluginFormcreatorFormAnswer::getType(),
-               'original_id'   => $formAnswer->getID(),
+               'itemtype'  => \PluginFormcreatorFormAnswer::getType(),
+               'items_id'   => $formAnswer->getID(),
                'display_id'    => 'f_' . $formAnswer->getID(),
                'name'          => $formAnswer->fields['name'],
                'status'        => $formAnswer->fields['status'],
@@ -200,8 +200,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formAnswerWithOneTickets' => [
             'item' => $formAnswer,
             'expected' => [
-               'sub_itemtype'  => \PluginFormcreatorFormAnswer::getType(),
-               'original_id'   => $ticket->getID(),
+               'itemtype'  => \PluginFormcreatorFormAnswer::getType(),
+               'items_id'   => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $formAnswer->fields['name'],
                'status'        => $formAnswer->fields['status'],
@@ -233,8 +233,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formanswerUnderValidation' => [
             'item' => $formAnswer,
             'expected' => [
-               'sub_itemtype'        => \PluginFormcreatorFormAnswer::getType(),
-               'original_id'         => $formAnswer->getID(),
+               'itemtype'        => \PluginFormcreatorFormAnswer::getType(),
+               'items_id'         => $formAnswer->getID(),
                'display_id'          => 'f_' . $formAnswer->getID(),
                'name'                => $formAnswer->fields['name'],
                'status'              => $formAnswer->fields['status'],
@@ -265,8 +265,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'ticketUnderValidation' => [
             'item' => $ticket,
             'expected' => [
-               'sub_itemtype'  => \Ticket::getType(),
-               'original_id'   => $ticket->getID(),
+               'itemtype'  => \Ticket::getType(),
+               'items_id'   => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
                'status'        => \PluginFormcreatorFormAnswer::STATUS_WAITING,
@@ -308,8 +308,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'validatedTicket' => [
             'item' => $ticket,
             'expected' => [
-               'sub_itemtype'  => \Ticket::getType(),
-               'original_id'   => $ticket->getID(),
+               'itemtype'  => \Ticket::getType(),
+               'items_id'   => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
                'status'        => '2',
@@ -366,8 +366,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'formAnswerWithSeveralRequesters' => [
             'item' => $ticket,
             'expected' => [
-               'sub_itemtype'  => \Ticket::getType(),
-               'original_id'   => $ticket->getID(),
+               'itemtype'  => \Ticket::getType(),
+               'items_id'   => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
                'status'        => $ticket->fields['status'],
@@ -403,13 +403,13 @@ class PluginFormcreatorIssue extends CommonTestCase {
       global $DB;
 
       // Find the row matching the issue in re-populate query
-      // Implicitly tests sub_itemtype and original_id columns
+      // Implicitly tests itemtype and items_id columns
       $request = $this->getTestedClassName()::getSyncIssuesRequest();
       $result = $DB->request([
          'FROM'  => $request,
          'WHERE' => [
-            'sub_itemtype' => $item->getType(),
-            'original_id'  => $item->getID(),
+            'itemtype' => $item->getType(),
+            'items_id'  => $item->getID(),
          ]
       ]);
       $this->object($result)->isInstanceOf(\DBmysqlIterator::class);
@@ -433,8 +433,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       $issue = new \PluginFormcreatorISsue();
       $issue->getFromDBByCrit([
-         'sub_itemtype' => \Ticket::getType(),
-         'original_id'  => $ticket->getID(),
+         'itemtype' => \Ticket::getType(),
+         'items_id'  => $ticket->getID(),
       ]);
       $this->boolean($issue->isNewItem())->isFalse();
       $this->string($issue->fields['date_creation'])->isEqualTo($creationDate);
@@ -450,15 +450,15 @@ class PluginFormcreatorIssue extends CommonTestCase {
       ]);
       $this->boolean($followup->isNewItem())->isFalse();
       $ticket = new \Ticket();
-      $ticket->getFromDB($issue->fields['original_id']);
+      $ticket->getFromDB($issue->fields['items_id']);
       $this->boolean($ticket->isNewItem())->isFalse();
       $this->string($ticket->fields['date_mod'])->isNotEqualTo($creationDate);
       $modDate = $ticket->fields['date_mod'];
 
       $issue = new \PluginFormcreatorISsue();
       $issue->getFromDBByCrit([
-         'sub_itemtype' => \Ticket::getType(),
-         'original_id'  => $ticket->getID(),
+         'itemtype' => \Ticket::getType(),
+         'items_id'  => $ticket->getID(),
       ]);
       $this->string($issue->fields['date_creation'])->isEqualTo($creationDate);
       $this->string($issue->fields['date_mod'])->isEqualTo($modDate);

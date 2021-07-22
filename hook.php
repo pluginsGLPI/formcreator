@@ -31,9 +31,10 @@
 
 /**
  * Install all necessary elements for the plugin
+ * @param array $args ARguments passed from CLI
  * @return boolean True if success
  */
-function plugin_formcreator_install() {
+function plugin_formcreator_install(array $args = []): bool {
    spl_autoload_register('plugin_formcreator_autoload');
 
    $version   = plugin_version_formcreator();
@@ -41,11 +42,11 @@ function plugin_formcreator_install() {
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
    if (!$install->isPluginInstalled()
-      || isset($_SESSION['plugin_formcreator']['cli'])
-      && $_SESSION['plugin_formcreator']['cli'] == 'force-install') {
-      return $install->install($migration);
+      || isset($args['force-install'])
+      && $args['force-install'] === true) {
+      return $install->install($migration, $args);
    }
-   return $install->upgrade($migration);
+   return $install->upgrade($migration, $args);
 }
 
 /**
@@ -72,7 +73,7 @@ function plugin_formcreator_getDropdown() {
 function plugin_formcreator_addDefaultSelect($itemtype) {
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
-         return "`glpi_plugin_formcreator_issues`.`sub_itemtype`, ";
+         return "`glpi_plugin_formcreator_issues`.`itemtype`, ";
    }
    return "";
 }
@@ -86,7 +87,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
          $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
          $join .= Search::addLeftJoin($itemtype, $ref_table, $already_link_tables, Group::getTable(), 'groups_id_validator');
          // but we want to join in issues
-         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`sub_itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`original_id`', $join);
+         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`items_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
    }
@@ -101,29 +102,36 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
  */
 function plugin_formcreator_getCondition($itemtype) {
    $table = $itemtype::getTable();
-   if ($itemtype == PluginFormcreatorFormAnswer::class) {
-      if (Session::haveRight('config', UPDATE)) {
-         return '';
-      }
-      if (PluginFormcreatorCommon::canValidate()) {
-         $groupUser = new Group_User();
-         $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
-         $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
-         if (count($groups) < 1) {
-            $condition .= ")";
-         } else {
-            $groupIDs = [];
-            foreach ($groups as $group) {
-               $groupIDs[] = $group['id'];
-            }
-            $groupIDs = implode(',', $groupIDs);
-            $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs) )";
-         }
-         return $condition;
-      }
+   $currentUserId = Session::getLoginUserID();
+
+   if ($itemtype != PluginFormcreatorFormAnswer::class) {
+      return '';
+   }
+   if (Session::haveRight('config', UPDATE)) {
+      return '';
    }
 
-   return " `$table`.`requester_id` = " . $_SESSION['glpiID'];
+   if (PluginFormcreatorCommon::canValidate()) {
+      $condition = " (`$table`.`users_id_validator` = $currentUserId";
+      $groups = Group_User::getUserGroups($currentUserId);
+      if (count($groups) < 1) {
+         $condition .= ")";
+         return $condition;
+      }
+
+      // Add current user's groups to the condition
+      $groupIDs = [];
+      foreach ($groups as $group) {
+         $groupIDs[] = $group['id'];
+      }
+      $groupIDs = implode(',', $groupIDs);
+      $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs)";
+      $condition .= ")";
+      return $condition;
+   }
+
+   $condition = " `$table`.`requester_id` = $currentUserId";
+   return $condition;
 }
 
 /**
@@ -139,11 +147,14 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $currentUser = Session::getLoginUserID();
          // Use default where for Tickets
          $condition = Search::addDefaultWhere(Ticket::class);
-         // Replace references to ticket tables with issues table
-         $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
-         $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+         if ($condition != '') {
+            // Replace references to ticket tables with issues table
+            $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
+            $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
+            $condition .= ' OR ';
+         }
          // condition where current user is 1st validator of the issue
-         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
+         $condition .= " `glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
          // condition where current user is a member of 1st validator group of the issue
          $groupList = [];
          foreach (Group_User::getUserGroups($currentUser) as $group) {
@@ -184,30 +195,6 @@ function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $link
                }
             }
             $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
-         }
-
-         if ($new_table == 'glpi_groups') {
-            foreach ($already_link_tables as $table) {
-               if (strpos($table, $new_table) === 0) {
-                  $ref = explode('.', $table);
-                  $AS = $ref[0];
-                  $fk = getForeignKeyFieldForTable($ref[0]);
-                  if (count($ref) > 1) {
-                     $AS = $ref[0];
-                     $fk = $ref[1];
-                  }
-               }
-            }
-            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`$fk` = `$AS`.`id`) ";
-         }
-
-         if ($new_table == 'glpi_users' &&  $linkfield == 'users_id') {
-            foreach ($already_link_tables as $table) {
-               if (strpos($table, $new_table) === 0) {
-                  $AS = $table;
-               }
-            }
-            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`users_id` = `$AS`.`id`) ";
          }
       break;
    }
@@ -348,8 +335,8 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
 
    $issue = new PluginFormcreatorIssue();
    $issue->add([
-      'original_id'        => $item->getID(),
-      'sub_itemtype'       => 'Ticket',
+      'items_id'        => $item->getID(),
+      'itemtype'           => 'Ticket',
       'name'               => addslashes($item->fields['name']),
       'status'             => $validationStatus['status'],
       'date_creation'      => $item->fields['date'],
@@ -374,15 +361,15 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
-         'sub_itemtype' => Ticket::class,
-         'original_id'  => $id
+         'itemtype'     => Ticket::class,
+         'items_id'     => $id
       ]
    ]);
    $issue->update([
       'id'                 => $issue->getID(),
-      'original_id'        => $id,
+      'items_id'           => $id,
       'display_id'         => "t_$id",
-      'sub_itemtype'       => 'Ticket',
+      'itemtype'           => 'Ticket',
       'name'               => addslashes($item->fields['name']),
       'status'             => $validationStatus['status'],
       'date_creation'      => $item->fields['date'],
@@ -425,7 +412,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
       'display_id'   => "t_$id",
-      'sub_itemtype' => 'Ticket'
+      'itemtype'     => 'Ticket'
    ], 1);
 }
 
@@ -440,7 +427,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
          'display_id'   => "t_$id",
-         'sub_itemtype' => 'Ticket'
+         'itemtype'     => 'Ticket'
       ], 1);
    }
 }
@@ -465,8 +452,8 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
 
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
-      'sub_itemtype' => Ticket::getType(),
-      'original_id'  => $item->fields['tickets_id']
+      'itemtype'     => Ticket::getType(),
+      'items_id'     => $item->fields['tickets_id']
    ]);
    if ($issue->isNewItem()) {
       return;
@@ -489,8 +476,8 @@ function plugin_formcreator_hook_update_itilFollowup($followup) {
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
-         'sub_itemtype' => $itemtype,
-         'original_id'  => $item->getID(),
+         'itemtype'     => $itemtype,
+         'items_id'     => $item->getID(),
       ]
    ]);
    if ($issue->isNewItem()) {
@@ -498,8 +485,8 @@ function plugin_formcreator_hook_update_itilFollowup($followup) {
    }
    $issue->update([
       'id'           => $issue->getID(),
-      'sub_itemtype' => $itemtype,
-      'original_id'  => $item->getID(),
+      'itemtype'     => $itemtype,
+      'items_id'     => $item->getID(),
    'status'          => $validationStatus['status'],
       'date_mod'     => $item->fields['date_mod'],
    ]);

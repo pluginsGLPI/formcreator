@@ -1,0 +1,488 @@
+{
+    "schema_version": 2.12,
+    "forms": [
+        {
+            "name": "form with all question types",
+            "users_id": 0,
+            "is_recursive": 0,
+            "icon": 0,
+            "icon_color": "#999999",
+            "background_color": "#e7e7e7",
+            "access_rights": 1,
+            "description": "",
+            "content": "",
+            "is_active": 0,
+            "language": "",
+            "helpdesk_home": 0,
+            "is_deleted": 0,
+            "validation_required": 0,
+            "is_default": 0,
+            "is_captcha_enabled": 0,
+            "show_rule": 1,
+            "uuid": "3a905a97-4e912b5c-601ab759aae279.33523157",
+            "_entity": "Root entity",
+            "_plugin_formcreator_category": "",
+            "_profiles": [],
+            "_sections": [
+                {
+                    "name": "section",
+                    "order": 1,
+                    "show_rule": 1,
+                    "uuid": "3a905a97-4e912b5c-601ab76c6aeda4.47162617",
+                    "_questions": [
+                        {
+                            "name": "actors question",
+                            "fieldtype": "actor",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "[]",
+                            "values": null,
+                            "description": "actors description",
+                            "row": 0,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601ab77b79a509.18118712",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "checkboxes question",
+                            "fieldtype": "checkboxes",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "[]",
+                            "values": "[\"a (checkbox)\",\"b (checkbox)\",\"c (checkbox)\"]",
+                            "description": "checkboxes description",
+                            "row": 1,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601ab79bbba0a0.19857797",
+                            "_conditions": [],
+                            "_parameters": {
+                                "checkboxes": {
+                                    "range": {
+                                        "range_min": "",
+                                        "range_max": "",
+                                        "fieldname": "range",
+                                        "uuid": "3a905a97-4e912b5c-601ab79bbfacc0.95888793"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "date question",
+                            "fieldtype": "date",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": null,
+                            "description": "date description",
+                            "row": 2,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601ab7a834e3f5.07106804",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "datetime question",
+                            "fieldtype": "datetime",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": null,
+                            "description": "datetime description",
+                            "row": 3,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601ab7b1c8d7c1.11667479",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "description question",
+                            "fieldtype": "description",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": null,
+                            "values": null,
+                            "description": "description text",
+                            "row": 4,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abdb2063f79.46605588",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "dropdown question",
+                            "fieldtype": "dropdown",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": 0,
+                            "values": "{\"itemtype\":\"Location\",\"show_ticket_categories_depth\":\"0\",\"show_ticket_categories_root\":\"0\"}",
+                            "description": "dropdown description",
+                            "row": 5,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abdfdcc8fd1.84035821",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "email question",
+                            "fieldtype": "email",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": "",
+                            "description": "email description",
+                            "row": 6,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe0815b000.17364810",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "file question",
+                            "fieldtype": "file",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": null,
+                            "values": null,
+                            "description": "file description",
+                            "row": 7,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe14968c26.35804626",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "float question",
+                            "fieldtype": "float",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": "",
+                            "description": "float description",
+                            "row": 8,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe1cc21963.97578386",
+                            "_conditions": [],
+                            "_parameters": {
+                                "float": {
+                                    "regex": {
+                                        "regex": "",
+                                        "fieldname": "regex",
+                                        "uuid": "3a905a97-4e912b5c-601abe1cc768c8.77907193"
+                                    },
+                                    "range": {
+                                        "range_min": "",
+                                        "range_max": "",
+                                        "fieldname": "range",
+                                        "uuid": "3a905a97-4e912b5c-601abe1cca1fc0.55003222"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "GLPI object question",
+                            "fieldtype": "glpiselect",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": 0,
+                            "values": "Computer",
+                            "description": "GLPI object description",
+                            "row": 9,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe330f0302.22202879",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "hidden question",
+                            "fieldtype": "hidden",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "hidden value",
+                            "values": null,
+                            "description": "hidden description",
+                            "row": 10,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe457b0777.64285141",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "hostname question",
+                            "fieldtype": "hostname",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": null,
+                            "values": null,
+                            "description": "hostname description",
+                            "row": 11,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe4fdd6ad8.76787569",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "IP address question",
+                            "fieldtype": "ip",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": null,
+                            "values": null,
+                            "description": "IP address description",
+                            "row": 12,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe59431976.94731515",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "integer question",
+                            "fieldtype": "integer",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": "",
+                            "description": "integer description",
+                            "row": 13,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe61c401a3.03952564",
+                            "_conditions": [],
+                            "_parameters": {
+                                "integer": {
+                                    "regex": {
+                                        "regex": "",
+                                        "fieldname": "regex",
+                                        "uuid": "3a905a97-4e912b5c-601abe61c9c9d0.35842281"
+                                    },
+                                    "range": {
+                                        "range_min": "",
+                                        "range_max": "",
+                                        "fieldname": "range",
+                                        "uuid": "3a905a97-4e912b5c-601abe61cd1f07.77636456"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "LDAP question",
+                            "fieldtype": "ldapselect",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": "{\"ldap_auth\":\"1\",\"ldap_filter\":\"(& (uid=*) )\",\"ldap_attribute\":\"12\"}",
+                            "description": "LDAP description",
+                            "row": 14,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abe7b71f9e5.56305216",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "multiselect question",
+                            "fieldtype": "multiselect",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "[]",
+                            "values": "[\"a (multiselect)\",\"b (multiselect)\",\"c (multiselect)\"]",
+                            "description": "multiselect description",
+                            "row": 15,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf00962273.46958603",
+                            "_conditions": [],
+                            "_parameters": {
+                                "multiselect": {
+                                    "range": {
+                                        "range_min": "",
+                                        "range_max": "",
+                                        "fieldname": "range",
+                                        "uuid": "3a905a97-4e912b5c-601abf009affa2.98017629"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "radio question",
+                            "fieldtype": "radios",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": "[\"a (radio)\",\"b (radio)\",\"c (radio)\"]",
+                            "description": "radios description",
+                            "row": 16,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf0fde29b8.16357890",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "request type question",
+                            "fieldtype": "requesttype",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": 2,
+                            "values": null,
+                            "description": "request type description",
+                            "row": 17,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf1c415458.16937803",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "select question",
+                            "fieldtype": "select",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": "[\"a (select)\",\"b (select)\",\"c (select)\"]",
+                            "description": "select description",
+                            "row": 18,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf36511874.97759648",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "text question",
+                            "fieldtype": "text",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": null,
+                            "description": "text description",
+                            "row": 19,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf5c404b15.55917287",
+                            "_conditions": [],
+                            "_parameters": {
+                                "text": {
+                                    "regex": {
+                                        "regex": "",
+                                        "fieldname": "regex",
+                                        "uuid": "3a905a97-4e912b5c-601abf5c447689.27869074"
+                                    },
+                                    "range": {
+                                        "range_min": "",
+                                        "range_max": "",
+                                        "fieldname": "range",
+                                        "uuid": "3a905a97-4e912b5c-601abf5c4720d4.71174661"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "textarea question",
+                            "fieldtype": "textarea",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": null,
+                            "description": "textarea description",
+                            "row": 20,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf68a16b61.05105004",
+                            "_conditions": [],
+                            "_parameters": {
+                                "textarea": {
+                                    "regex": {
+                                        "regex": "/foo/",
+                                        "fieldname": "regex",
+                                        "uuid": "3a905a97-4e912b5c-601abf68a59bb8.18262365"
+                                    },
+                                    "range": {
+                                        "range_min": "",
+                                        "range_max": "",
+                                        "fieldname": "range",
+                                        "uuid": "3a905a97-4e912b5c-601abf68a98429.67265138"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "time question",
+                            "fieldtype": "time",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": "",
+                            "values": null,
+                            "description": "time description",
+                            "row": 21,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf775fbe74.36590864",
+                            "_conditions": [],
+                            "_parameters": []
+                        },
+                        {
+                            "name": "urgency question",
+                            "fieldtype": "urgency",
+                            "required": 0,
+                            "show_empty": 0,
+                            "default_values": 0,
+                            "values": null,
+                            "description": "urgency description",
+                            "row": 22,
+                            "col": 0,
+                            "width": 4,
+                            "show_rule": 1,
+                            "uuid": "3a905a97-4e912b5c-601abf85964995.42495152",
+                            "_conditions": [],
+                            "_parameters": []
+                        }
+                    ],
+                    "_conditions": []
+                }
+            ],
+            "_conditions": [],
+            "_targets": {
+                "PluginFormcreatorTargetTicket": [],
+                "PluginFormcreatorTargetChange": []
+            },
+            "_validators": [],
+            "_translations": []
+        }
+    ]
+}

@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -38,10 +39,12 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorSection extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorDuplicatableInterface,
-PluginFormcreatorConditionnableInterface
+PluginFormcreatorConditionnableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
@@ -59,6 +62,22 @@ PluginFormcreatorConditionnableInterface
     */
    public static function getTypeName($nb = 0) {
       return _n('Section', 'Sections', $nb, 'formcreator');
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'integer',
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      return $tab;
    }
 
    /**
@@ -86,8 +105,9 @@ PluginFormcreatorConditionnableInterface
 
       // Get next order
       if ($this->useAutomaticOrdering) {
+         $formId = $input['plugin_formcreator_forms_id'];
          $maxOrder = PluginFormcreatorCommon::getMax($this, [
-            self::$items_id => $input[self::$items_id]
+            "plugin_formcreator_forms_id" => $formId
          ], 'order');
          if ($maxOrder === null) {
             $input['order'] = 1;
@@ -179,11 +199,6 @@ PluginFormcreatorConditionnableInterface
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $export = $this->export(true);
-      $export['order'] = PluginFormcreatorCommon::getMax(
-         $this,
-         [$formFk => $this->fields[$formFk]],
-         'order'
-      ) + 1;
       $newSectionId = static::import($linker, $export, $this->fields[$formFk]);
 
       if ($newSectionId === false) {
@@ -348,9 +363,9 @@ PluginFormcreatorConditionnableInterface
       return 1 + self::countChildren($input, $subItems);
    }
 
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         return false;
+         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $export = $this->fields;
@@ -437,8 +452,6 @@ PluginFormcreatorConditionnableInterface
       echo '</label>';
       echo '</th>';
       echo '</tr>';
-      $form = new PluginFormcreatorForm();
-      $form->getFromDBBySection($this);
       $condition = new PluginFormcreatorCondition();
       $condition->showConditionsForItem($this);
 
@@ -628,5 +641,32 @@ PluginFormcreatorConditionnableInterface
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $strings = $this->getMyTranslatableStrings($options);
+
+      foreach ((new PluginFormcreatorQuestion())->getQuestionsFromSection($this->getID()) as $question) {
+         foreach ($question->getTranslatableStrings($options) as $type => $subStrings) {
+            $strings[$type] = array_merge($strings[$type], $subStrings);
+         }
+      }
+
+      $strings = $this->deduplicateTranslatable($strings);
+
+      return $strings;
    }
 }

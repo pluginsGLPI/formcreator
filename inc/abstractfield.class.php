@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-require_once(realpath(dirname(__FILE__ ) . '/../../../inc/includes.php'));
+require_once(realpath(dirname(__FILE__) . '/../../../inc/includes.php'));
 
 abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldInterface
 {
@@ -51,7 +52,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $this->question  = $question;
    }
 
-   public function getDesignSpecializationField() : array {
+   public function getDesignSpecializationField(): array {
       return [
          'label' => '',
          'field' => '',
@@ -72,34 +73,31 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
    /**
     * Output HTML to display the field
-    * @param bool $canEdit is the field editable ?
+    * @param string  $domain  Translation domain of the form
+    * @param boolean $canEdit is the field editable ?
     */
-   public function show($canEdit = true) {
+   public function show($domain, $canEdit = true) {
       $html = '';
 
       if ($this->isVisibleField()) {
          $html .= '<label for="formcreator_field_' . $this->question->getID() . '">';
-         $html .= $this->getLabel();
+         $html .= __($this->getLabel(), $domain);
          if ($canEdit && $this->question->fields['required']) {
             $html .= ' <span class="red">*</span>';
          }
          $html .= '</label>';
       }
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
-         $html .= '<div class="help-block">' . html_entity_decode($this->question->fields['description']) . '</div>';
+         $html .= '<div class="help-block">' . html_entity_decode(__($this->question->fields['description'], $domain)) . '</div>';
       }
       $html .= '<div class="form_field">';
-      $html .= $this->getRenderedHtml($canEdit);
+      $html .= $this->getRenderedHtml($domain, $canEdit);
       $html .= '</div>';
 
       return $html;
    }
 
-   /**
-    * Outputs the HTML representing the field
-    * @param string $canEdit
-    */
-   public function getRenderedHtml($canEdit = true) : string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -145,7 +143,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $tab_values;
    }
 
-   public function isRequired() : bool {
+   public function isRequired(): bool {
       return ($this->question->fields['required'] != '0');
    }
 
@@ -160,19 +158,20 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $value = explode('\r\n', $value);
       // input has escpaed single quotes
       $value = Toolbox::stripslashes_deep($value);
-      $value = array_filter($value, function($value) {
+      $value = array_filter($value, function ($value) {
          return ($value !== '');
       });
       $value = array_map(
          function ($value) {
             return trim($value);
-         }, $value
+         },
+         $value
       );
 
       return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
    }
 
-   public function getFieldTypeName() : string {
+   public function getFieldTypeName(): string {
       $classname = explode('\\', get_called_class());
       $classname = array_pop($classname);
       $matches = null;
@@ -181,7 +180,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return strtolower($matches[1]);
    }
 
-   public function getEmptyParameters() : array {
+   public function getEmptyParameters(): array {
       return [];
    }
 
@@ -190,7 +189,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public final function getParameters() : array {
+   public final function getParameters(): array {
       $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
@@ -240,7 +239,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       }
    }
 
-   public final function deleteParameters(PluginFormcreatorQuestion $question) : bool {
+   public final function deleteParameters(PluginFormcreatorQuestion $question): bool {
       foreach ($this->getEmptyParameters() as $parameter) {
          if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
             // Don't make  this error fatal, but log it anyway
@@ -302,6 +301,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return $additions;
    }
 
+   /**
+    * get the question matching the  field
+    *
+    * @return PluginFormcreatorQuestion
+    */
    public function getQuestion() {
       return $this->question;
    }
@@ -314,10 +318,36 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     */
    protected function checkRegex($regex) {
       // Avoid php notice when validating the regular expression
-      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
+      set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
+      });
       $isValid = !(preg_match($regex, null) === false);
       restore_error_handler();
 
       return $isValid;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+         'id'       => [],
+      ];
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      foreach ($this->getParameters() as $parameter) {
+         foreach ($parameter->getTranslatableStrings($options) as $type => $subStrings) {
+            $strings[$type] = array_merge($strings[$type], $subStrings);
+         }
+      }
+
+      return $strings;
    }
 }

@@ -38,10 +38,12 @@ if (!defined('GLPI_ROOT')) {
 abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorTargetInterface,
-PluginFormcreatorConditionnableInterface
+PluginFormcreatorConditionnableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorConditionnableTrait;
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
@@ -73,8 +75,6 @@ PluginFormcreatorConditionnableInterface
 
    /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
    protected $skipCreateActors = false;
-
-   abstract public function export(bool $remove_uuid = false);
 
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
 
@@ -111,11 +111,25 @@ PluginFormcreatorConditionnableInterface
    abstract protected function getItem_Item();
 
    /**
+    * Get the class name of the target itemtype's template class
+    *
+    * @return string
+    */
+   abstract protected function getTemplateItemtypeName(): string;
+
+   /**
+    * Get the class name of the target itemtype's template predefined field class
+    *
+    * @return string
+    */
+   abstract protected function getTemplatePredefinedFieldItemtype(): string;
+
+   /**
     * Get the class name of the target itemtype
     *
     * @return string
     */
-   abstract protected function getTargetItemtypeName();
+   abstract protected function getTargetItemtypeName(): string;
 
    /**
     * Get the query criterias to query the ITIL categories
@@ -133,6 +147,14 @@ PluginFormcreatorConditionnableInterface
     * @return array field names used as templates
     */
    abstract protected function getTaggableFields();
+
+   /**
+    * Determine the template ID to use as basis for target generation
+    *
+    * @param array $data Data of the target being crezated
+    * @return int
+    */
+   abstract protected function getTargetTemplate(array $data): int;
 
    const DUE_DATE_RULE_NONE = 1;
    const DUE_DATE_RULE_ANSWER = 2;
@@ -701,6 +723,16 @@ PluginFormcreatorConditionnableInterface
 
                $userIds = [$object->fields[$groupFk]];
                break;
+
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+               $requester_id = $formanswer->fields['requester_id'];
+
+               $user = new User;
+               $user = User::getById($requester_id);
+               if (is_object($user)) {
+                  $userIds = [$user->fields['users_id_supervisor']];
+               }
+               break;
          }
          $notify = $actor['use_notification'];
 
@@ -710,6 +742,7 @@ PluginFormcreatorConditionnableInterface
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR:
                foreach ($userIds as $userIdOrEmail) {
                   $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
                }
@@ -800,6 +833,7 @@ PluginFormcreatorConditionnableInterface
     * @return boolean true on sucess, false on error
     */
    protected function addGroupActor($role, $group) {
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       $actorType = null;
       switch ($role) {
          case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
@@ -916,16 +950,19 @@ PluginFormcreatorConditionnableInterface
    }
 
    protected function showTemplateSettings($rand) {
-      echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
+      $templateType = $this->getTemplateItemtypeName();
+      $templateFk = $templateType::getForeignKeyField();
+
+      echo '<td width="15%">' . $templateType::getTypeName(1) . '</td>';
       echo '<td width="25%">';
-      Dropdown::show('TicketTemplate', [
-         'name'  => 'tickettemplates_id',
-         'value' => $this->fields['tickettemplates_id']
+      Dropdown::show($templateType, [
+         'name'  => $templateFk,
+         'value' => $this->fields[$templateFk]
       ]);
       echo '</td>';
    }
 
-   protected  function showDueDateSettings(PluginFormcreatorForm $form, $rand) {
+   protected  function showDueDateSettings($rand) {
       echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
@@ -1131,7 +1168,7 @@ PluginFormcreatorConditionnableInterface
       echo '</tr>';
    }
 
-   protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
+   protected function showCategorySettings($rand) {
       echo '<tr>';
       echo '<td width="15%">' . __('Category', 'formcreator') . '</td>';
       echo '<td width="25%">';
@@ -1172,7 +1209,7 @@ PluginFormcreatorConditionnableInterface
       echo '</tr>';
    }
 
-   protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
+   protected function showUrgencySettings($rand) {
       echo '<tr>';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
@@ -1209,7 +1246,7 @@ PluginFormcreatorConditionnableInterface
       echo '</tr>';
    }
 
-   protected function showPluginTagsSettings(PluginFormcreatorForm $form, $rand) {
+   protected function showPluginTagsSettings($rand) {
       global $DB;
 
       $plugin = new Plugin();
@@ -1375,7 +1412,7 @@ SCRIPT;
       echo '</table>';
    }
 
-   protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
+   protected function showLocationSettings($rand) {
       global $DB;
 
       echo '<tr>';
@@ -1860,6 +1897,7 @@ SCRIPT;
             break;
          case CommonITILActor::ASSIGN:
             $type = 'assigned';
+            unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR]);
             $changeActorJSFunction = 'plugin_formcreator_ChangeActorAssigned(this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED;
             break;
@@ -2054,6 +2092,9 @@ SCRIPT;
                echo $img_supplier . ' <b>' . __('Supplier from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR :
+               echo $img_user . ' <b>' . __('Form author\'s supervisor', 'formcreator') . '</b>';
+               break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
@@ -2071,5 +2112,112 @@ SCRIPT;
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      return $this->getMyTranslatableStrings($options);
+   }
+
+   protected function initializeActors() {
+      // Prepare actors structures for creation of the ticket
+      $this->requesters = [
+         '_users_id_requester'         => [],
+         '_users_id_requester_notif'   => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ],
+      ];
+      $this->observers = [
+         '_users_id_observer'          => [],
+         '_users_id_observer_notif'    => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ],
+      ];
+      $this->assigned = [
+         '_users_id_assign'            => [],
+         '_users_id_assign_notif'      => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ],
+      ];
+
+      $this->assignedSuppliers = [
+         '_suppliers_id_assign'        => [],
+         '_suppliers_id_assign_notif'  => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ]
+      ];
+
+      $this->requesterGroups = [
+         '_groups_id_requester'        => [],
+      ];
+
+      $this->observerGroups = [
+         '_groups_id_observer'         => [],
+      ];
+
+      $this->assignedGroups = [
+         '_groups_id_assign'           => [],
+      ];
+   }
+
+   /**
+    * Set default values for the change to create
+    *
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @return array
+    */
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
+      $this->initializeActors();
+
+      $targetItemtype = $this->getTargetItemtypeName();
+      $targetTemplateFk = $targetItemtype::getForeignKeyField();
+
+      $data = $targetItemtype::getDefaultValues();
+      // Determine category early, because it is used to determine the template
+      $data = $this->setTargetCategory($data, $formanswer);
+
+      $this->fields[$targetTemplateFk] = $this->getTargetTemplate($data);
+
+      // Get predefined Fields
+      $predefinedFieldItemtype = $this->getTemplatePredefinedFieldItemtype();
+      $templatePredeinedField  = new $predefinedFieldItemtype();
+      $predefined_fields       = $templatePredeinedField->getPredefinedFields($this->fields[$targetTemplateFk], true);
+
+      if (isset($predefined_fields['_users_id_requester'])) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_users_id_requester'], true);
+         unset($predefined_fields['_users_id_requester']);
+      }
+      if (isset($predefined_fields['_users_id_observer'])) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_users_id_observer'], true);
+         unset($predefined_fields['_users_id_observer']);
+      }
+      if (isset($predefined_fields['_users_id_assign'])) {
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_users_id_assign'], true);
+         unset($predefined_fields['_users_id_assign']);
+      }
+
+      if (isset($predefined_fields['_groups_id_requester'])) {
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_groups_id_requester']);
+         unset($predefined_fields['_groups_id_requester']);
+      }
+      if (isset($predefined_fields['_groups_id_observer'])) {
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_groups_id_observer']);
+         unset($predefined_fields['_groups_id_observer']);
+      }
+      if (isset($predefined_fields['_groups_id_assign'])) {
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_groups_id_assign']);
+         unset($predefined_fields['_groups_id_assign']);
+      }
+
+      // Manage special values
+      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
+         $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
+      }
+
+      $data = array_merge($data, $predefined_fields);
+      return $data;
    }
 }

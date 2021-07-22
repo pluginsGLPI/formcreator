@@ -51,6 +51,12 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_KB_MERGED = 1;
    const CONFIG_KB_DISTINCT = 2;
 
+   const CONFIG_SEARCH_HIDDEN = 0;
+   const CONFIG_SEARCH_VISIBLE = 1;
+
+   const CONFIG_HEADER_HIDDEN = 0;
+   const CONFIG_HEADER_VISIBLE = 1;
+
    /**
     * @var bool $dohistory maintain history
     */
@@ -91,11 +97,41 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       ];
    }
 
+   public static function getEnumSearchVisibility() : array {
+      return [
+         self::CONFIG_PARENT         => __('Inheritance of the parent entity'),
+         self::CONFIG_SEARCH_VISIBLE => __('Visible', 'formcreator'),
+         self::CONFIG_SEARCH_HIDDEN  => __('Hidden', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumheaderVisibility() : array {
+      return [
+         self::CONFIG_PARENT         => __('Inheritance of the parent entity'),
+         self::CONFIG_HEADER_VISIBLE => __('Visible', 'formcreator'),
+         self::CONFIG_HEADER_HIDDEN  => __('Hidden', 'formcreator'),
+      ];
+   }
+
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       if ($item->getType() == 'Entity') {
          $config = new self();
          $config->showFormForEntity($item);
       }
+   }
+
+   public function prepareInputForAdd($input) {
+      $input['header'] = $input['header'] ?? '';
+      $input['header'] = Html::clean($input['header']);
+
+      return $input;
+   }
+
+   public function prepareInputForUpdate($input) {
+      $input['header'] = $input['header'] ?? '';
+      $input['header'] = Html::clean($input['header']);
+
+      return $input;
    }
 
    public function showFormForEntity(Entity $entity) {
@@ -107,8 +143,11 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
       if (!$this->getFromDB($ID)) {
          $this->add([
-               'id'                 => $ID,
-               'replace_helpdesk'   => self::CONFIG_PARENT
+            'id'                 => $ID,
+            'replace_helpdesk'   => self::CONFIG_PARENT,
+            'is_kb_separated'    => self::CONFIG_PARENT,
+            'is_search_visible'  => self::CONFIG_PARENT,
+            'is_header_visible'  => self::CONFIG_PARENT,
          ]);
       }
 
@@ -154,6 +193,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          echo '</div>';
       }
       echo '</td></tr>';
+
       // Knowledge base settiing : merged with forms (legacy) separated menu on the left
       $elements = self::getEnumKbMode();
       if ($ID == 0) {
@@ -171,22 +211,63 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
       echo '</td></tr>';
 
+      $elements = self::getEnumSearchVisibility();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Search', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_search_visible', $elements, ['value' => $this->fields['is_search_visible']]);
+      if ($this->fields['is_search_visible'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_search_visible', $ID);
+         echo '<div class="green">';
+         echo $elements[$tid];
+         echo '</div>';
+      }
+      echo '</td></tr>';
+
+      // header visibility
+      $elements = self::getEnumHeaderVisibility();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Header message', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_header_visible', $elements, ['value' => $this->fields['is_header_visible']]);
+      if ($this->fields['is_header_visible'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_header_visible', $ID);
+         echo '<div class="green">';
+         echo $elements[$tid];
+         echo '</div>';
+      }
+      echo '</td></tr>';
+
+      // header
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Header', 'formcreator')."</td>";
+      echo "<td>";
+      echo Html::textarea([
+         'name'            => 'header',
+         'value'           => $this->fields['header'],
+         'enable_richtext' => true,
+         'display'         => false
+      ]);
+      echo '</td></tr>';
+
       if ($canedit) {
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
          echo "<input type='hidden' name='id' value='".$entity->fields["id"]."'>";
          echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
          echo "</td></tr>";
-         echo "</table>";
          Html::closeForm();
-
-      } else {
-         echo "</table>";
       }
-
+      echo "</table>";
       echo "</div>";
-
    }
+
    public function rawSearchOptions() {
       $tab = [];
 
@@ -208,6 +289,46 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          'datatype'        => 'integer',
          'nosearch'        => true,
          'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '5',
+         'table'           => self::getTable(),
+         'name'            => __('Knowledge base', 'formcreator'),
+         'field'           => 'is_kb_separated',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '6',
+         'table'           => self::getTable(),
+         'name'            => __('Display search field', 'formcreator'),
+         'field'           => 'is_search_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '7',
+         'table'           => self::getTable(),
+         'name'            => __('Display header', 'formcreator'),
+         'field'           => 'is_header_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '8',
+         'table'           => self::getTable(),
+         'name'            => __('Header', 'formcreator'),
+         'field'           => 'header',
+         'datatype'        => 'text',
+         'nosearch'        => true,
+         'massiveaction'   => true,
       ];
 
       return $tab;

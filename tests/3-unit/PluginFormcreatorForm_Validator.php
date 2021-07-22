@@ -60,8 +60,9 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $instance = $this->newTestedInstance();
 
       // Try to export an empty item
-      $output = $instance->export();
-      $this->boolean($output)->isFalse();
+      $this->exception(function () use ($instance) {
+         $instance->export();
+      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
       $instance->getFromDBByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
@@ -113,6 +114,80 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $formValidatorId = \PluginFormcreatorForm_Validator::import($linker, $input, $formId);
       $validId = \PluginFormcreatorForm_Validator::isNewId($formValidatorId);
       $this->boolean($validId)->isFalse();
+   }
 
+   public function testGetValidatorsForForm() {
+      $form = $this->getForm();
+
+      $formValidator = $this->newTestedInstance();
+      $output = $formValidator->getValidatorsForForm($form, UnknownItemtype::class);
+      $this->array($output)->hasSize(0);
+
+      $groupA = $this->getGlpiCoreItem(\group::class, [
+         'name' => 'group A' . $this->getUniqueString()
+      ]);
+      $groupB = $this->getGlpiCoreItem(\group::class, [
+         'name' => 'group B' . $this->getUniqueString()
+      ]);
+
+      $userA = $this->getGlpiCoreItem(\User::class, [
+         'name' => 'user A' . $this->getUniqueString(),
+      ]);
+      $userB = $this->getGlpiCoreItem(\User::class, [
+         'name' => 'user B' . $this->getUniqueString(),
+      ]);
+      $userC = $this->getGlpiCoreItem(\User::class, [
+         'name' => 'user C' . $this->getUniqueString(),
+      ]);
+      $userD = $this->getGlpiCoreItem(\User::class, [
+         'name' => 'user D' . $this->getUniqueString(),
+      ]);
+
+      $this->getGlpiCoreItem(\Group_User::class, [
+         'users_id' => $userA->getID(),
+         'groups_id' => $groupA->getID(),
+      ]);
+
+      $this->getGlpiCoreItem(\Group_User::class, [
+         'users_id' => $userB->getID(),
+         'groups_id' => $groupB->getID(),
+      ]);
+
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => $groupA->gettype(),
+         'items_id' => $groupA->getID(),
+      ]);
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => $groupB->gettype(),
+         'items_id' => $groupB->getID(),
+      ]);
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => $userC->gettype(),
+         'items_id' => $userC->getID(),
+      ]);
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => $userD->gettype(),
+         'items_id' => $userD->getID(),
+      ]);
+
+      $output = $formValidator->getValidatorsForForm($form, \User::class);
+
+      $this->array($output)
+         ->hasKeys([
+            $userC->getID(),
+            $userD->getID(),
+         ]);
+
+      $output = $formValidator->getValidatorsForForm($form, \Group::class);
+
+      $this->array($output)
+         ->hasKeys([
+            $groupA->getID(),
+            $groupB->getID(),
+         ]);
    }
 }

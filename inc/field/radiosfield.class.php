@@ -100,9 +100,9 @@ class RadiosField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
-         return $this->value;
+         return __($this->value, $domain);
       }
       $html         = '';
       $id           = $this->question->getID();
@@ -132,7 +132,7 @@ class RadiosField extends PluginFormcreatorAbstractField
                $html .= '</label>';
                $html .= '</span>';
                $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= $value;
+               $html .= __($value, $domain);
                $html .= '</label>';
                $html .= '</div>';
             }
@@ -167,11 +167,11 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $input;
    }
 
-   public function hasInput($input) : bool {
+   public function hasInput($input): bool {
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function parseAnswerValues($input, $nonDestructive = false) : bool {
+   public function parseAnswerValues($input, $nonDestructive = false): bool {
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input[$key])) {
          if (!is_string($input[$key])) {
@@ -194,7 +194,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->value = array_shift($this->value);
    }
 
-   public function serializeValue():string {
+   public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -216,8 +216,8 @@ class RadiosField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): ?string {
-      return $this->value;
+   public function getValueForTargetText($domain, $richText): ?string {
+      return __($this->value, $domain);
    }
 
    public function moveUploads() {
@@ -289,5 +289,33 @@ class RadiosField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = parent::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      foreach ($this->getAvailableValues() as $value) {
+         if ($searchString != '' && stripos($value, $searchString) === false) {
+            continue;
+         }
+         $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
+         if ($options['id'] != '' && $id != $options['id']) {
+            continue;
+         }
+         $strings['string'][$id] = $value;
+         $strings['id'][$id] = 'string';
+      }
+
+      return $strings;
    }
 }

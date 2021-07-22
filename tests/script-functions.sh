@@ -36,7 +36,6 @@ install_glpi() {
 # $3 : database password
 init_glpi() {
    echo Initializing GLPI
-   pwd
    echo Dropping the database $1
    mysql -u$2 -p$3 -h$DB_HOST --execute "DROP DATABASE IF EXISTS \`$1\`;"
    echo Cleaning up cache directory
@@ -51,7 +50,7 @@ init_glpi() {
 plugin_test_upgrade() {
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_config_2.5.0.sql
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_empty_2.5.0.sql
-   php scripts/cliinstall.php --tests $TEST_GLPI_CONFIG_DIR
+   php ../../bin/console glpi:plugin:install formcreator --username=glpi --config-dir=../../$TEST_GLPI_CONFIG_DIR
 }
 
 # Plugin test

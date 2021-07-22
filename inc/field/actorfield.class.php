@@ -50,7 +50,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField() : array {
+   public function getDesignSpecializationField(): array {
       $rand = mt_rand();
 
       $label = '';
@@ -94,7 +94,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function getRenderedHtml($canEdit = true) : string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       global $CFG_GLPI;
 
       $html = '';
@@ -132,38 +132,28 @@ class ActorField extends PluginFormcreatorAbstractField
       $domId        = $fieldName . '_' . $rand;
 
       // Value needs to be non empty to allow execition of select2's initSelection
-      if (version_compare(GLPI_VERSION, '9.5') < 0) {
-         $html .= '<select multiple
-            name="' . $fieldName . '[]"
-            id="' . $domId . '"
-            value=""></select>';
-         $html .= Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
-         });");
-      } else {
-         $params = [
-            'specific_tags' => [
-               'multiple' => 'multiple',
-            ],
-            'entity_restrict' => -1,
-            'itemtype'        => User::getType(),
-            'values'          => array_keys($value),
-            'valuesnames'     => array_values($value),
-         ];
-         if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-            $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-         }
-         $html .= \PluginFormcreatorCommon::jsAjaxDropdown(
-            $fieldName . '[]',
-            $domId,
-            $CFG_GLPI['root_doc']."/ajax/getDropdownUsers.php",
-            $params
-         );
-         $html .= Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeActor2('$fieldName', '$rand');
-         });");
-
+      $params = [
+         'specific_tags' => [
+            'multiple' => 'multiple',
+         ],
+         'entity_restrict' => -1,
+         'itemtype'        => User::getType(),
+         'values'          => array_keys($value),
+         'valuesnames'     => array_values($value),
+      ];
+      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
+         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
       }
+      $html .= \PluginFormcreatorCommon::jsAjaxDropdown(
+         $fieldName . '[]',
+         $domId,
+         $CFG_GLPI['root_doc']."/ajax/getDropdownUsers.php",
+         $params
+      );
+      $html .= Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeActor('$fieldName', '$rand');
+      });");
+
       return $html;
    }
 
@@ -213,15 +203,17 @@ class ActorField extends PluginFormcreatorAbstractField
       return implode("\r\n", $value);
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $value = [];
-      foreach ($this->value as $item) {
-         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-            $value[] = $item;
-         } else {
-            $user = new User();
-            $user->getFromDB($item);
-            $value[] = $user->getFriendlyName();
+      if (is_array($this->value)) {
+         foreach ($this->value as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $value[] = $item;
+            } else {
+               $user = new User();
+               $user->getFromDB($item);
+               $value[] = $user->getFriendlyName();
+            }
          }
       }
 

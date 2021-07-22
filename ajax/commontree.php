@@ -37,9 +37,10 @@ if (ctype_digit($_GET['itemtype']) || !isset($_GET['itemtype']) || !isset($_GET[
 }
 
 // Load parameters
-$itemtype = $_GET['itemtype'];
-$root     = $_GET['root'];
-$depth    = $_GET['maxDepth'];
+$itemtype       = $_GET['itemtype'];
+$root           = $_GET['root'];
+$depth          = $_GET['maxDepth'];
+$selectableRoot = $_GET['selectableRoot'];
 
 // This should only be used for dropdowns
 if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
@@ -50,26 +51,32 @@ if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
 // Build the row content
 $rand = mt_rand();
 $additions = '<td>';
-$additions .= '<label for="dropdown_root_ticket_categories'.$rand.'" id="label_root_ticket_categories">';
+$additions .= '<label for="dropdown_show_tree_root'.$rand.'" id="label_show_tree_root">';
 $additions .= __('Subtree root', 'formcreator');
+$additions .= '</label>';
+$additions .= '<br>';
+$additions .= '<label for="dropdown_selectable_tree_root'.$rand.'" id="label_selectable_tree_root">';
+$additions .= __('Selectable', 'formcreator');
 $additions .= '</label>';
 $additions .= '</td>';
 $additions .= '<td>';
 $additions .= Dropdown::show($itemtype, [
-   'name'  => 'show_ticket_categories_root',
+   'name'  => 'show_tree_root',
    'value' => $root,
    'rand'  => $rand,
    'display' => false,
 ]);
+$additions .= '<br>';
+$additions .= Dropdown::showYesNo('selectable_tree_root', $selectableRoot, -1, ['display' => false]);
 $additions .= '</td>';
 $additions .= '<td>';
-$additions .= '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
+$additions .= '<label for="dropdown_show_tree_depth'.$rand.'" id="label_show_tree_depth">';
 $additions .= __('Limit subtree depth', 'formcreator');
 $additions .= '</label>';
 $additions .= '</td>';
 $additions .= '<td>';
 $additions .= dropdown::showNumber(
-   'show_ticket_categories_depth', [
+   'show_tree_depth', [
       'rand'  => $rand,
       'value' => $depth,
       'min' => 1,

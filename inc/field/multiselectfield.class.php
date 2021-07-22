@@ -37,11 +37,15 @@ use Html;
 
 class MultiSelectField extends CheckboxesField
 {
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html         = '';
+      $translatedValues = [];
       if (!$canEdit) {
          if (count($this->value)) {
-            $html .= implode('<br />', $this->value);
+            foreach ($this->value as $value) {
+               $translatedValues[] = __($value, $domain);
+            }
+            $html .= implode('<br />', $translatedValues);
          }
          return $html;
       }
@@ -50,9 +54,12 @@ class MultiSelectField extends CheckboxesField
       $rand      = mt_rand();
       $fieldName = 'formcreator_field_' . $id;
       $values    = $this->getAvailableValues();
-
+      $translatedValues = [];
+      foreach ($values as $key => $value) {
+         $translatedValues[$key] = __($value, $domain);
+      }
       if (!empty($values)) {
-         $html .= Dropdown::showFromArray($fieldName, $values, [
+         $html .= Dropdown::showFromArray($fieldName, $translatedValues, [
             'display_emptychoice' => $this->question->fields['show_empty'] == 1,
             'values'    => $this->value,
             'rand'      => $rand,

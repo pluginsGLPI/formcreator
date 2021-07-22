@@ -144,6 +144,7 @@ class LdapselectField extends SelectField
          $id = 0;
          do {
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
+               // phpcs:ignore Generic.PHP.DeprecatedFunctions
                if (version_compare(PHP_VERSION, '7.3') < 0) {
                   // phpcs:ignore Generic.PHP.DeprecatedFunctions
                   ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
@@ -163,10 +164,24 @@ class LdapselectField extends SelectField
                   ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
                   $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
                }
+            } else {
+               $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
             }
 
-            $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
+            if (in_array(ldap_errno($ds), [4, 11])) {
+               // openldap return 4 for Size limit exceeded
+               $limitexceeded = true;
+            }
+
             $entries = ldap_get_entries($ds, $result);
+            if (in_array(ldap_errno($ds), [4, 11])) {
+               // openldap return 4 for Size limit exceeded
+               $limitexceeded = true;
+            }
+
+            if ($limitexceeded) {
+               Session::addMessageAfterRedirect(__('LDAP size limit exceeded', 'formcreator'), true, WARNING);
+            }
             array_shift($entries);
 
             foreach ($entries as $attr) {
@@ -252,29 +267,11 @@ class LdapselectField extends SelectField
       set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
 
       try {
-         $cookie = '';
-         $ds     = $config_ldap->connect();
+         $ds            = $config_ldap->connect();
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-         if (version_compare(PHP_VERSION, '7.3') < 0) {
-            // phpcs:ignore Generic.PHP.DeprecatedFunctions
-            ldap_control_paged_result($ds, 1);
-            $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-         } else {
-            //since PHP 7.3, send serverctrls to ldap_search
-            $controls = [
-               [
-                  'oid'       =>LDAP_CONTROL_PAGEDRESULTS,
-                  'iscritical' => true,
-                  'value'     => [
-                     'size'   => $config_ldap->fields['pagesize'],
-                     'cookie' => $cookie
-                  ]
-               ]
-            ];
-            $sn = @ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-            ldap_parse_result($ds, $sn, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-            $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
-         }
+         // phpcs:ignore Generic.PHP.DeprecatedFunctions
+         ldap_control_paged_result($ds, 1);
+         $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
          ldap_get_entries($ds, $sn);
       } catch (Exception $e) {
          Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);

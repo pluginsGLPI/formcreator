@@ -83,7 +83,7 @@ class TextareaField extends TextField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return Toolbox::getHtmlToDisplay($this->value);
       }
@@ -214,7 +214,7 @@ class TextareaField extends TextField
       return true;
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $value = $this->value;
       if (!$richText) {
          $value = Toolbox::unclean_cross_side_scripting_deep($value);
@@ -249,5 +249,33 @@ class TextareaField extends TextField
 
    public function getHtmlIcon(): string {
       return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = parent::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      if ($searchString != '' && stripos($this->question->fields['default_values'], $searchString) === false) {
+         return $strings;
+      }
+      $id = \PluginFormcreatorTranslation::getTranslatableStringId($this->question->fields['default_values']);
+      if ($options['id'] != '' && $id != $options['id']) {
+         return $strings;
+      }
+      if ($this->question->fields['default_values'] != '') {
+         $strings['text'][$id] = $this->question->fields['default_values'];
+         $strings['id'][$id] = 'text';
+      }
+
+      return $strings;
    }
 }

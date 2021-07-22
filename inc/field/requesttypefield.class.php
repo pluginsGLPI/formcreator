@@ -37,7 +37,7 @@ use Session;
 use Ticket;
 use Dropdown;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
-
+use PluginFormcreatorAbstractField;
 class RequestTypeField extends SelectField
 {
    public function getDesignSpecializationField(): array {
@@ -82,7 +82,7 @@ class RequestTypeField extends SelectField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html = "";
       if (!$canEdit) {
          return Ticket::getTicketTypeName($this->value);
@@ -170,7 +170,7 @@ class RequestTypeField extends SelectField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $available = $this->getAvailableValues();
       return $available[$this->value];
    }
@@ -237,5 +237,9 @@ class RequestTypeField extends SelectField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      return PluginFormcreatorAbstractField::getTranslatableStrings($options);
    }
 }

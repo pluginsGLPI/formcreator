@@ -133,8 +133,9 @@ class PluginFormcreatorCondition extends CommonTestCase {
       $instance = $this->newTestedInstance();
 
       // Try to export an empty item
-      $output = $instance->export();
-      $this->boolean($output)->isFalse();
+      $this->exception(function () use ($instance) {
+         $instance->export();
+      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
       // Prepare an item to export
       $form = $this->getForm();
@@ -160,7 +161,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
             'show_logic' => [
                \PluginFormcreatorCondition::SHOW_LOGIC_AND,
             ]
-            ],
+         ],
       ]);
       $instance = $this->getTargetTicket();
       $instance->getFromDB($instance->getID());

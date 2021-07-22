@@ -35,9 +35,13 @@ if (!defined('GLPI_ROOT')) {
 
 abstract class PluginFormcreatorAbstractQuestionParameter
 extends CommonDBChild
-implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExportableInterface
+implements
+PluginFormcreatorQuestionParameterInterface,
+PluginFormcreatorExportableInterface,
+PluginFormcreatorTranslatableInterface
 {
    use PluginFormcreatorExportableTrait;
+   use PluginFormcreatorTranslatable;
 
    // From CommonDBRelation
    static public $itemtype       = PluginFormcreatorQuestion::class;
@@ -81,7 +85,26 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       return $input;
    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
+   public function rawSearchOptions() {
+      $tab = [];
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => __('Parameter', 'formcreator')
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this::getTable(),
+         'field'              => 'fieldname',
+         'name'               => __('Field name', 'formcreator'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+      ];
+
+      return $tab;
+   }
+
+   public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool {
       $keepCriteria = [
          static::$items_id => $container->getID(),
       ];
@@ -89,5 +112,27 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
          $keepCriteria[] = ['NOT' => ['id' => $exclude]];
       }
       return $this->deleteByCriteria($keepCriteria);
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = [
+         'itemlink' => [],
+         'string'   => [],
+         'text'     => [],
+      ];
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $strings = $this->getMyTranslatableStrings($options);
+
+      $strings = $this->deduplicateTranslatable($strings);
+
+      return $strings;
    }
 }

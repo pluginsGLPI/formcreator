@@ -99,11 +99,15 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       $html = '';
       if (!$canEdit) {
          if (count($this->value)) {
-            $html .= implode('<br />', $this->value);
+            $translatedValue = [];
+            foreach ($this->value as $value) {
+               $translatedValue[] = __($value, $domain);
+            }
+            $html .= implode('<br />', $translatedValue);
          }
          return $html;
       }
@@ -130,7 +134,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
                   'checked'       => in_array($value, $this->value)
                ]);
                $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= '&nbsp;' . $value;
+               $html .= '&nbsp;' . __($value, $domain);
                $html .= '</label>';
                $html .= "</div>";
             }
@@ -142,6 +146,10 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       });");
 
       return $html;
+   }
+
+   public static function getName(): string {
+      return __('Checkboxes', 'formcreator');
    }
 
    public function serializeValue(): string {
@@ -214,6 +222,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          return true;
       }
 
+      $value = Toolbox::stripslashes_deep($value);
       foreach ($value as $item) {
          if (trim($item) == '') {
             return false;
@@ -250,10 +259,6 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public static function getName(): string {
-      return __('Checkboxes', 'formcreator');
-   }
-
    public function prepareQuestionInputForSave($input) {
       if (!isset($input['values']) || empty($input['values'])) {
          Session::addMessageAfterRedirect(
@@ -279,17 +284,17 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       $value = [];
       $values = $this->getAvailableValues();
 
-      if ($values === null || count($this->value) === 0) {
+      if ($values === null || $this->value === null || count($this->value) === 0) {
          return '';
       }
 
       foreach ($this->value as $input) {
          if (in_array($input, $values)) {
-            $value[] = $input;
+            $value[] = __($input, $domain);
          }
       }
 
@@ -379,5 +384,32 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+
+      $strings = parent::getTranslatableStrings($options);
+      foreach (array_values($this->getAvailableValues()) as $value) {
+         if ($searchString != '' && stripos($value, $searchString) === false) {
+            continue;
+         }
+         $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
+         if ($options['id'] != '' && $id != $options['id']) {
+            continue;
+         }
+         $strings['string'][$id] = $value;
+         $strings['id'][$id] = 'string';
+
+      }
+      return $strings;
    }
 }

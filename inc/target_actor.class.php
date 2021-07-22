@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -53,6 +54,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
    const ACTOR_TYPE_QUESTION_ACTORS = 9;
    const ACTOR_TYPE_GROUP_FROM_OBJECT = 10;
    const ACTOR_TYPE_TECH_GROUP_FROM_OBJECT = 11;
+   CONST ACTOR_TYPE_AUTHORS_SUPERVISOR = 12;
 
    const ACTOR_ROLE_REQUESTER = 1;
    const ACTOR_ROLE_OBSERVER = 2;
@@ -72,6 +74,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          self::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
+         self::ACTOR_TYPE_AUTHORS_SUPERVISOR        => __('Form author\'s supervisor', 'formcreator'),
       ];
    }
 
@@ -125,6 +128,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             case self::ACTOR_TYPE_QUESTION_SUPPLIER :
             case self::ACTOR_TYPE_GROUP_FROM_OBJECT :
             case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
+               /** @var PluginFormcreatorQuestion $question */
                $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
                if ($question === false) {
                   $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
@@ -134,6 +138,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                break;
 
             case self::ACTOR_TYPE_PERSON:
+            case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
                $user = new User;
                $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
                if ($users_id === false) {
@@ -191,9 +196,9 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) {
+   public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         return false;
+         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $target_actor = $this->fields;
@@ -220,6 +225,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                }
                break;
             case self::ACTOR_TYPE_PERSON:
+            case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
                $user = new User;
                if ($user->getFromDB($target_actor['actor_value'])) {
                   $target_actor['actor_value'] = $user->fields['name'];

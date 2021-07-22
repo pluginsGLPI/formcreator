@@ -81,7 +81,7 @@ class FloatField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function getRenderedHtml($canEdit = true): string {
+   public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return $this->value;
       }
@@ -125,7 +125,7 @@ class FloatField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getValueForTargetText($richText): ?string {
+   public function getValueForTargetText($domain, $richText): ?string {
       return $this->value;
    }
 

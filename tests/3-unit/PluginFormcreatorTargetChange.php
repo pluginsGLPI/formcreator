@@ -39,6 +39,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       parent::beforeTestMethod($method);
       switch ($method) {
          case 'testSetTargetEntity':
+         case 'testImport':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -150,7 +151,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function testGetEnumUrgencyRule() {
       $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetChange::URGENCY_RULE_NONE      => 'Medium',
+         \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
          \PluginFormcreatorTargetChange::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
          \PluginFormcreatorTargetChange::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
@@ -159,9 +160,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function testGetEnumCategoryRule() {
       $output = \PluginFormcreatorTargetChange::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => 'None',
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => 'Specific category',
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE          => 'Category from template or none',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC      => 'Specific category',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
       ]);
    }
 
@@ -410,8 +412,9 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $instance = $this->newTestedInstance();
 
       // Try to export an empty item
-      $output = $instance->export();
-      $this->boolean($output)->isFalse();
+      $this->exception(function () use ($instance) {
+         $instance->export();
+      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
       // Prepare an item to export
       $instance = $this->getTargetChange();
@@ -453,6 +456,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'ola_question_ttr',
       ];
       $extraFields = [
+         '_changetemplate',
          '_actors',
          'conditions',
       ];
@@ -474,6 +478,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $input = [
          'name' => $this->getUniqueString(),
          'target_name' => $this->getUniqueString(),
+         '_changetemplate' => '',
          'content' => $this->getUniqueString(),
          'impactcontent' => $this->getUniqueString(),
          'controlistcontent' => $this->getUniqueString(),
@@ -513,6 +518,29 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $input['id'] = $targetChangeId;
       $targetChangeId2 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
       $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId2);
+
+      $this->newTestedInstance()->delete([
+         'id' => $targetChangeId2,
+      ]);
+
+      // Check successful link with template
+      $templateName = 'change template ' . $this->getUniqueString();
+      $changeTemplate = new \ChangeTemplate();
+      $changeTemplate->add([
+         'name' => $templateName,
+         'entities_id' => 0,
+         'is_recursive' => 1,
+      ]);
+      $this->boolean($changeTemplate->isNewItem())->isFalse();
+      $input['_changetemplate'] = $templateName;
+
+      $linker = new \PluginFormcreatorLinker();
+      $targetChangeId3 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
+      $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId3);
+      $targetChange = $this->newTestedInstance();
+      $targetChange->getFromDB($targetChangeId3);
+      $this->integer((int) $targetChange->fields['changetemplates_id'])
+         ->isEqualTo($changeTemplate->getID());
    }
 
    public function testIsEntityAssign() {

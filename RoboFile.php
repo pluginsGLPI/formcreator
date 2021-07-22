@@ -147,12 +147,6 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $this->taskGitStack()
-         ->stopOnFail()
-         ->add('data/font-awesome_.php')
-         ->commit('build(form): update font awesome data')
-         ->run();
-
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release == 'release') {
@@ -177,6 +171,9 @@ class RoboFile extends RoboFilePlugin
          ->commit('docs(locales): update translations')
          ->run();
 
+      // Compile SCSS
+      $this->minifyCSS();
+
       $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
@@ -198,12 +195,22 @@ class RoboFile extends RoboFilePlugin
 
       // Add extra files to workdir
       $success = copy(__DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
-
       if (!$success) {
          throw new RuntimeException("failed to generate Font Awesome resources");
       }
+      // Copy SCSS
+      $srcFile = __DIR__ . '/css_compiled/styles.min.css';
+      $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
+      $success = copy($srcFile, $dstFile);
+      if (!$success) {
+         throw new RuntimeException("failed to generate CSS resources");
+      }
+
       // Add composer dependencies
       $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
+
+      // Add JS dependencies
+      $this->_exec("yarn --cwd '$archiveWorkdir/$pluginName' install --prod");
 
       // Create the final archive
       $this->taskPack($archiveFile)
@@ -226,7 +233,7 @@ class RoboFile extends RoboFilePlugin
       // prepare banned items for regex
       $patterns = [];
       foreach ($this->getBannedFiles() as $bannedItem) {
-         $pattern = "#" . preg_quote("$bannedItem", "#") . "#";
+         $pattern = "#" . preg_quote("$bannedItem", "#") . "$#";
          $pattern = str_replace("\\?", ".", $pattern);
          $pattern = str_replace("\\*", ".*", $pattern);
          $patterns[] = $pattern;
@@ -299,9 +306,14 @@ class RoboFile extends RoboFilePlugin
 
    public function localesExtract() {
       $potfile = strtolower("glpi.pot");
-      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/field/*.php install/*.php js/*.php";
+      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/field/*.php install/*.php";
       // extract locales from source code
       $command = "xgettext $phpSources -o locales/$potfile -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po";
+      $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
+      $command.= " --keyword=_sx:1c,2,3t --keyword=_nx:1c,2,3,5t";
+      $this->_exec($command);
+      $jsSources = "js/*.js";
+      $command = "xgettext $jsSources -o locales/$potfile -j -L javascript --add-comments=TRANS --from-code=UTF-8 --force-po";
       $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
       $command.= " --keyword=_sx:1c,2,3t --keyword=_nx:1c,2,3,5t";
       $this->_exec($command);
