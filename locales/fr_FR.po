@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-19 16:02+0200\n"
+"POT-Creation-Date: 2021-07-20 09:56+0200\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2021\n"
 "Language-Team: French (France) (https://www.transifex.com/teclib/teams/28042/fr_FR/)\n"
@@ -396,7 +396,7 @@ msgstr "Fournisseur depuis la question"
 
 #: inc/abstracttarget.class.php:2096 inc/target_actor.class.php:77
 msgid "Form author's supervisor"
-msgstr ""
+msgstr "Superviseur de l'auteur du formulaire"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -1410,11 +1410,11 @@ msgstr "Un champ de type description doit avoir une description :"
 
 #: inc/field/dropdownfield.class.php:65
 msgid "User"
-msgstr ""
+msgstr "Utilisateur"
 
 #: inc/field/dropdownfield.class.php:67
 msgid "User and form"
-msgstr ""
+msgstr "Utilisateur et formulaire"
 
 #: inc/field/dropdownfield.class.php:98
 msgid "SLA"
@@ -1476,7 +1476,7 @@ msgstr "Type d'intitulé invalide : %s"
 
 #: inc/field/dropdownfield.class.php:875
 msgid "Entity restriction"
-msgstr ""
+msgstr "Restriction par entité"
 
 #: inc/field/emailfield.class.php:108
 #, php-format
