@@ -140,10 +140,8 @@ class ActorField extends PluginFormcreatorAbstractField
          'itemtype'        => User::getType(),
          'values'          => array_keys($value),
          'valuesnames'     => array_values($value),
+         '_idor_token'     => Session::getNewIDORToken(User::getType()),
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-      }
       $html .= \PluginFormcreatorCommon::jsAjaxDropdown(
          $fieldName . '[]',
          $domId,

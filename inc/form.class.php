@@ -552,10 +552,8 @@ PluginFormcreatorTranslatableInterface
          'values'          => array_keys($selectedValidatorUsers),
          'valuesnames'     => array_values($selectedValidatorUsers),
          'condition'       => Dropdown::addNewCondition($usersCondition),
+         '_idor_token'     => Session::getNewIDORToken(User::getType()),
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-      }
       echo Html::jsAjaxDropdown(
          '_validator_users[]',
          '_validator_users' . mt_rand(),
@@ -635,10 +633,8 @@ PluginFormcreatorTranslatableInterface
          'valuesnames'     => array_values($selectecValidatorGroups),
          'condition'       => Dropdown::addNewCondition($groupsCondition),
          'display_emptychoice' => false,
+         '_idor_token'    => Session::getNewIDORToken(Group::getType()),
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
-      }
       echo Html::jsAjaxDropdown(
          '_validator_groups[]',
          '_validator_groups' . mt_rand(),
