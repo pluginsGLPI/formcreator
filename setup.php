@@ -196,8 +196,8 @@ function plugin_init_formcreator() {
                   // When an issue has a single target ticket
                   $issue = new PluginFormcreatorIssue();
                   $issue->getFromDBByCrit([
-                     'sub_itemtype' => Ticket::class,
-                     'original_id'  => (int) $_GET['id']
+                     'itemtype' => Ticket::class,
+                     'items_id'  => (int) $_GET['id']
                   ]);
                   if (!$issue->isNewItem()) {
                      Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
