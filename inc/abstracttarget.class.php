@@ -927,7 +927,7 @@ PluginFormcreatorTranslatableInterface
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
-            'values' => User::class,
+            'values'    => ['LIKE', '%"itemtype":"' . User::class . '"%'],
          ],
          '_destination_entity_value_user',
          $this->fields['destination_entity_value']
@@ -939,7 +939,7 @@ PluginFormcreatorTranslatableInterface
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
-            'values' => Entity::class,
+            'values'    => ['LIKE', '%"itemtype":"' . Entity::class . '"%'],
          ],
          '_destination_entity_value_entity',
          $this->fields['destination_entity_value']
@@ -1193,6 +1193,7 @@ PluginFormcreatorTranslatableInterface
          $this->getForm()->getID(),
          [
             'fieldtype' => ['dropdown'],
+            'values'    => ['LIKE', '%"itemtype":"' . ITILCategory::class . '"%'],
          ],
          '_category_question',
          $this->fields['category_question']
@@ -1934,7 +1935,7 @@ SCRIPT;
             'OR' => [
                'AND' => [
                   'fieldtype' => ['glpiselect'],
-                  'values' => User::class,
+                  'values'    => ['LIKE', '%"itemtype":"' . User::class . '"%'],
                ],
                [
                   'fieldtype' => ['email'],
@@ -1951,7 +1952,7 @@ SCRIPT;
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
-            'values' => Group::class,
+            'values'    => ['LIKE', '%"itemtype":"' . Group::class . '"%'],
          ],
          'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
          0
@@ -2003,7 +2004,7 @@ SCRIPT;
             $this->getForm()->getID(),
             [
                'fieldtype' => ['glpiselect'],
-               'values' => Supplier::class,
+               'values'    => ['LIKE', '%"itemtype":"' . Supplier::class . '"%'],
             ],
             'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
             0
