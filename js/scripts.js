@@ -179,20 +179,7 @@ $(function() {
          }
       });
    }
-
-   // === Add better multi-select on form configuration validators ===
-   fcInitMultiSelect();
-
-   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-      fcInitMultiSelect();
-   });
-
 });
-
-function fcInitMultiSelect() {
-   $("#validator_users").select2();
-   $("#validator_groups").select2();
-}
 
 function showHomepageFormList() {
    if ($('#plugin_formcreatorHomepageForms').length) {
