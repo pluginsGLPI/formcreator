@@ -585,4 +585,12 @@ JAVASCRIPT;
 
       return $isValid;
    }
+
+   public static function saveLayout() {
+      $_SESSION['plugin_formcreator']['layout_backup'] =  $_SESSION['glpilayout'];
+   }
+
+   public static function restoreLayout() {
+      $_SESSION['glpilayout'] = $_SESSION['plugin_formcreator']['layout_backup'] ?? $_SESSION['glpilayout'];
+   }
 }

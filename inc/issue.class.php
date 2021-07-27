@@ -262,8 +262,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    public function displayExtended($options = []) {
       $itemtype = $this->fields['itemtype'];
+      if (!class_exists($itemtype)) {
+         PluginFormcreatorCommon::restoreLayout();
+         Html::displayNotFoundError();
+      }
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
+         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -275,7 +280,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
       unset($options['_item']);
 
       // Header if the item + link to the list of items
+      switch ($item::getType()) {
+         case self::getType():
+            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            break;
+
+         case PluginFormcreatorFormAnswer::getType():
+            Session::initNavigateListItems(self::getType());
+            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            break;
+
+         case Ticket::getType():
+            $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
+      }
       $this->showNavigationHeader($options);
+
+      if (!$item->canViewItem()) {
+         PluginFormcreatorCommon::restoreLayout();
+         Html::displayNotFoundError();
+      }
 
       $item->showTabsContent($options);
    }
@@ -287,8 +310,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
       global $CFG_GLPI;
 
       $itemtype = $this->fields['itemtype'];
+      if (!class_exists($itemtype)) {
+         PluginFormcreatorCommon::restoreLayout();
+         Html::displayNotFoundError();
+      }
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
+         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -315,7 +343,26 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $options['id'] = $item->getID();
       }
 
+      $options['_item'] = $item;
+      if ($item Instanceof PluginFormcreatorFormAnswer) {
+         $item = $this->getTicketsForDisplay($options);
+      }
+      unset($options['_item']);
+
       // Header if the item + link to the list of items
+      switch ($item::getType()) {
+         case self::getType():
+            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            break;
+
+         case PluginFormcreatorFormAnswer::getType():
+            Session::initNavigateListItems(self::getType());
+            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            break;
+
+         case Ticket::getType():
+            $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
+      }
       $this->showNavigationHeader($options);
 
       // retrieve associated tickets
@@ -326,7 +373,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       unset($options['_item']);
 
       // force recall of ticket in layout
-      $old_layout = $_SESSION['glpilayout'];
+      PluginFormcreatorCommon::saveLayout();
       $_SESSION['glpilayout'] = "lefttab";
 
       if ($item instanceof Ticket) {
@@ -359,7 +406,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       // restore layout
-      $_SESSION['glpilayout'] = $old_layout;
+      PluginFormcreatorCommon::restoreLayout();
    }
 
    /**
@@ -371,12 +418,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
       global $DB;
 
       $item = $options['_item'];
-      $formanswerId = $options['id'];
       $rows = $DB->request([
          'FROM'  => Item_Ticket::getTable(),
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
-            'items_id' => $formanswerId
+            'items_id' => $item->getID() // $item is a PluginFormcreatorFormAnswer
          ],
          'ORDER' => 'tickets_id ASC'
       ]);
@@ -386,8 +432,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item = new Ticket;
          $item->getFromDB($ticket['tickets_id']);
       } else if (count($rows) > 1) {
-         // multiple tickets, force ticket tab in form anser
-         Session::setActiveTab(PluginFormcreatorFormAnswer::class, 'Ticket$1');
+         if (isset($options['tickets_id'])) {
+            $ticket = Ticket::getById((int) $options['tickets_id']);
+            if ($ticket) {
+               $item = $ticket;
+            }
+         } else {
+            // multiple tickets, no specified ticket then force ticket tab in form anser
+            Session::setActiveTab(PluginFormcreatorFormAnswer::class, 'Ticket$1');
+         }
       }
 
       return $item;
