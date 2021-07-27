@@ -34,7 +34,6 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorCommon;
-use Document;
 use Html;
 use Session;
 use Toolbox;
@@ -133,30 +132,33 @@ class TextareaField extends TextField
       }
 
       $key = 'formcreator_field_' . $this->question->getID();
-      foreach ($this->uploads['_' . $key] as $id => $filename) {
-         $document  = new Document();
-         if ($document->getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
-            $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
-            $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
+      if (isset($this->uploads['_' . $key])) {
+         foreach ($this->uploads['_' . $key] as $id => $filename) {
+            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
+            // when is merged https://github.com/glpi-project/glpi/pull/9335
+            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
+               $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
+               $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
+            }
          }
+         $input = [$key => $this->value] + $this->uploads;
+         $input = $this->question->addFiles(
+            $input,
+            [
+               'force_update'  => true,
+               // 'content_field' => $key,
+               'content_field' => null,
+               'name'          => $key,
+            ]
+         );
+         $this->value = $input[$key];
+         $this->value = Html::entity_decode_deep($this->value);
+         foreach ($input['_tag'] as $tag) {
+            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
+            $this->value = preg_replace($regex, "#$tag#", $this->value);
+         }
+         $this->value = Html::entities_deep($this->value);
       }
-      $input = [$key => $this->value] + $this->uploads;
-      $input = $this->question->addFiles(
-         $input,
-         [
-            'force_update'  => true,
-            // 'content_field' => $key,
-            'content_field' => null,
-            'name'          => $key,
-         ]
-      );
-      $this->value = $input[$key];
-      $this->value = Html::entity_decode_deep($this->value);
-      foreach ($input['_tag'] as $tag) {
-         $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
-         $this->value = preg_replace($regex, "#$tag#", $this->value);
-      }
-      $this->value = Html::entities_deep($this->value);
 
       return Toolbox::addslashes_deep($this->value);
    }
