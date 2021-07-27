@@ -143,11 +143,12 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
       if (!$this->getFromDB($ID)) {
          $this->add([
-            'id'                 => $ID,
-            'replace_helpdesk'   => self::CONFIG_PARENT,
-            'is_kb_separated'    => self::CONFIG_PARENT,
-            'is_search_visible'  => self::CONFIG_PARENT,
-            'is_header_visible'  => self::CONFIG_PARENT,
+            'id'                => $ID,
+            'replace_helpdesk'  => self::CONFIG_PARENT,
+            'is_kb_separated'   => self::CONFIG_PARENT,
+            'is_search_visible' => self::CONFIG_PARENT,
+            'is_header_visible' => self::CONFIG_PARENT,
+            'sort_order'        => self::CONFIG_PARENT,
          ]);
       }
 
