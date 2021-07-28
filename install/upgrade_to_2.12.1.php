@@ -38,8 +38,20 @@ class PluginFormcreatorUpgradeTo2_12_1 {
    public function upgrade(Migration $migration) {
       global $DB;
 
+      $this->migration = $migration;
+
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+
+      // Change default value in DB
+      $this->migration->changeField($table, 'replace_helpdesk', 'replace_helpdesk', 'integer', ['value' => '-2']);
+      $this->migration->changeField($table, 'sort_order', 'sort_order', 'integer', ['value' => '-2']);
+      $this->migration->changeField($table, 'is_kb_separated', 'is_kb_separated', 'integer', ['value' => '-2']);
+      $this->migration->changeField($table, 'is_search_visible', 'is_search_visible', 'integer', ['value' => '-2']);
+      $this->migration->changeField($table, 'is_header_visible', 'is_header_visible', 'integer', ['value' => '-2']);
+
+      // Change all 0 to -2 (aka inherit from parent)
       $DB->update(
-         PluginFormcreatorEntityconfig::getTable(),
+         $table,
          [
             'is_kb_separated' => -2,
          ],
@@ -48,6 +60,16 @@ class PluginFormcreatorUpgradeTo2_12_1 {
             'id' => ['<>', 0],
          ]
       );
-   }
 
+      // Decrement values from 1 to 0 and from 2 to 1
+      $DB->update(
+         $table,
+         [
+            'is_kb_separated' => new QueryExpression('`is_kb_separated` - 1'),
+         ],
+         [
+            'is_kb_separated' => ['>', 0],
+         ]
+      );
+   }
 }

@@ -48,8 +48,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SORT_POPULARITY   = 0;
    const CONFIG_SORT_ALPHABETICAL = 1;
 
-   const CONFIG_KB_MERGED = 1;
-   const CONFIG_KB_DISTINCT = 2;
+   const CONFIG_KB_MERGED = 0;
+   const CONFIG_KB_DISTINCT = 1;
 
    const CONFIG_SEARCH_HIDDEN = 0;
    const CONFIG_SEARCH_VISIBLE = 1;
@@ -379,13 +379,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
          }
       }
-      /*
-       switch ($fieldval) {
-       case "tickettype" :
-       // Default is Incident if not set
-       return Ticket::INCIDENT_TYPE;
-       }
-       */
+
       return $default_value;
    }
 }
