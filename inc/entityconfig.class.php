@@ -136,8 +136,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public function showFormForEntity(Entity $entity) {
       $ID = $entity->getField('id');
-      if (!$entity->can($ID, READ)
-            || !Notification::canView()) {
+      if (!$entity->can($ID, READ)) {
          return false;
       }
 
@@ -152,7 +151,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          ]);
       }
 
-      $canedit = $entity->canUpdateItem();
+      $canedit = Entity::canUpdate() && $entity->canUpdateItem();
       echo "<div class='spaced'>";
       if ($canedit) {
          echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
