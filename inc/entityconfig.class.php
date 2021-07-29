@@ -65,7 +65,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $tabNames = [];
       if (!$withtemplate) {
-         if ($item->getType() == 'Entity') {
+         if (Session::haveRight(Entity::$rightname, UPDATE) && $item->getType() == Entity::getType()) {
             $tabNames[1] = _n('Form', 'Forms', 2, 'formcreator');
          }
       }

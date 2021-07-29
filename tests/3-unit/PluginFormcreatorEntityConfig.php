@@ -32,6 +32,13 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorEntityconfig extends CommonTestCase {
+   public function beforeTestMethod($method) {
+      switch ($method) {
+         case 'testGetTabNameForItem':
+            $this->login('glpi', 'glpi');
+      }
+   }
+
    public function providerGetTabNameForItem() {
       return [
          [
