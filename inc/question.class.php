@@ -391,6 +391,10 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
+      if (isset($input['_conditions']) && !$this->checkConditions($input['_conditions'])) {
+         return [];
+      }
+
       // Might need to merge $this->fields and $input, $input having precedence
       // over $this->fields
       //$input['default_values'] = $this->field->serializeValue();
