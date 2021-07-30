@@ -33,6 +33,7 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
+use PluginFormcreatorCommon;
 use Html;
 use Toolbox;
 use Session;
@@ -206,7 +207,7 @@ class FloatField extends PluginFormcreatorAbstractField
       // Add leading and trailing regex marker automaticaly
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
          $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
-         $success = $this->checkRegex($regex);
+         $success = PluginFormcreatorCommon::checkRegex($regex);
          if (!$success) {
             Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
          }
