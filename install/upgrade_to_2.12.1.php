@@ -71,5 +71,9 @@ class PluginFormcreatorUpgradeTo2_12_1 {
             'is_kb_separated' => ['>', 0],
          ]
       );
+
+      // Inscrease description size
+      $table = 'glpi_plugin_formcreator_questions';
+      $this->migration->changeField($table, 'description', 'description', 'MEDIUMTEXT');
    }
 }

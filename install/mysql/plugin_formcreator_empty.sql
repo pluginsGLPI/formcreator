@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `show_empty`                     tinyint(1) NOT NULL DEFAULT '0',
   `default_values`                 mediumtext,
   `values`                         mediumtext,
-  `description`                    text NOT NULL,
+  `description`                    mediumtext,
   `row`                            int(11) NOT NULL DEFAULT '0',
   `col`                            int(11) NOT NULL DEFAULT '0',
   `width`                          int(11) NOT NULL DEFAULT '0',
