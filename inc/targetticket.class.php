@@ -133,7 +133,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'content',
          'name'               => __('Content', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];

@@ -309,7 +309,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'content',
          'name'               => __('Content', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -319,7 +319,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'impactcontent',
          'name'               => __('Impact', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -329,7 +329,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'controlistcontent',
          'name'               => __('Control list', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -339,7 +339,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'rolloutplancontent',
          'name'               => __('Deployment plan', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -349,7 +349,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'backoutplancontent',
          'name'               => __('Backup plan', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -359,7 +359,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'checklistcontent',
          'name'               => __('Check list', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
