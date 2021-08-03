@@ -995,7 +995,7 @@ PluginFormcreatorTranslatableInterface
                'icon'         => $form['icon'],
                'icon_color'   => $form['icon_color'],
                'background_color'   => $form['background_color'],
-               'description'  => $form['description'],
+               'description'  => __($form['description'], $domain),
                'type'         => 'form',
                'usage_count'  => $form['usage_count'],
                'is_default'   => $form['is_default'] ? "true" : "false"
