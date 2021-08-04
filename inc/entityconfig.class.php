@@ -122,14 +122,18 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public function prepareInputForAdd($input) {
       $input['header'] = $input['header'] ?? '';
-      $input['header'] = Html::clean($input['header']);
+
+      $config = Toolbox::getHtmLawedSafeConfig();
+      $input['header'] = htmLawed($input['header'], $config);
 
       return $input;
    }
 
    public function prepareInputForUpdate($input) {
       $input['header'] = $input['header'] ?? '';
-      $input['header'] = Html::clean($input['header']);
+
+      $config = Toolbox::getHtmLawedSafeConfig();
+      $input['header'] = htmLawed($input['header'], $config);
 
       return $input;
    }
