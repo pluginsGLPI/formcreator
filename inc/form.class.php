@@ -990,15 +990,15 @@ PluginFormcreatorTranslatableInterface
                $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
             }
             $formList[] = [
-               'id'           => $form['id'],
-               'name'         => __($form['name'], $domain),
-               'icon'         => $form['icon'],
-               'icon_color'   => $form['icon_color'],
-               'background_color'   => $form['background_color'],
-               'description'  => $form['description'],
-               'type'         => 'form',
-               'usage_count'  => $form['usage_count'],
-               'is_default'   => $form['is_default'] ? "true" : "false"
+               'id'               => $form['id'],
+               'name'             => __($form['name'], $domain),
+               'icon'             => $form['icon'],
+               'icon_color'       => $form['icon_color'],
+               'background_color' => $form['background_color'],
+               'description'      => __($form['description'], $domain),
+               'type'             => 'form',
+               'usage_count'      => $form['usage_count'],
+               'is_default'       => $form['is_default'] ? "true" : "false"
             ];
          }
       }
@@ -1047,15 +1047,15 @@ PluginFormcreatorTranslatableInterface
          if ($result_faqs->count() > 0) {
             foreach ($result_faqs as $faq) {
                $formList[] = [
-                  'id'           => $faq['id'],
-                  'name'         => $faq['name'],
-                  'icon'         => '',
-                  'icon_color'   => '',
-                  'background_color'   => '',
-                  'description'  => '',
-                  'type'         => 'faq',
-                  'usage_count'  => $faq['view'],
-                  'is_default'   => false
+                  'id'               => $faq['id'],
+                  'name'             => $faq['name'],
+                  'icon'             => '',
+                  'icon_color'       => '',
+                  'background_color' => '',
+                  'description'      => '',
+                  'type'             => 'faq',
+                  'usage_count'      => $faq['view'],
+                  'is_default'       => false
                ];
             }
          }
