@@ -88,7 +88,15 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          $html .= '</label>';
       }
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
-         $html .= '<div class="help-block">' . html_entity_decode(__($this->question->fields['description'], $domain)) . '</div>';
+         $description = $this->question->fields['description'];
+         foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
+            $prefix = uniqid('', true);
+            $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
+            if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+               continue;
+            }
+         }
+         $html .= '<div class="help-block">' . html_entity_decode(__($description, $domain)) . '</div>';
       }
       $html .= '<div class="form_field">';
       $html .= $this->getRenderedHtml($domain, $canEdit);
