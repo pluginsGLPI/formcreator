@@ -193,17 +193,19 @@ function plugin_init_formcreator() {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
 
-                  // When an issue has a single target ticket
+                  // When an ticket has a matching issue (it means that the ticket is the only generated ticket)
                   $issue = new PluginFormcreatorIssue();
-                  $issue->getFromDBByCrit([
+                  $issues = $issue->find([
                      'itemtype' => Ticket::class,
                      'items_id'  => (int) $_GET['id']
                   ]);
-                  if (!$issue->isNewItem()) {
+                  if (count($issues) == 1) {
+                     $issueId = $array_pop($issues)['id'];
+                     $issue->getById($issueId);
                      Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
                   }
 
-                  // When a target has several target tickets
+                  // When no or several tickets matches an issue, rely use the Form Answer
                   $itemTicket = new Item_Ticket();
                   $itemTicket->getFromDBByCrit([
                      'itemtype' => PluginFormcreatorFormAnswer::class,
@@ -213,6 +215,21 @@ function plugin_init_formcreator() {
                      // No formanswer found
                      Html::displayNotFoundError();
                   }
+
+                  $issue->getFromDBByCrit([
+                     'itemtype' => PluginFormcreatorFormAnswer::class,
+                     'items_id'  => $itemTicket->fields['items_id']
+                  ]);
+                  if ($issue->isNewItem()) {
+                     // No formanswer found
+                     Html::displayNotFoundError();
+                  }
+                  $ticket = Ticket::getById($itemTicket->fields['items_id']);
+                  if ($ticket === false) {
+                     Html::redirect($issue->getFormURLWithID($itemTicket->fields['items_id']) . $openItilFollowup);
+                  }
+
+                  Html::redirect($issue->getFormURLWithID($issue->getID()) . '&tickets_id=' . $itemTicket->fields['tickets_id']);
                }
             }
 
