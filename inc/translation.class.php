@@ -230,7 +230,7 @@ class PluginFormcreatorTranslation
       $type = $translatableStrings['id'][$input['id']];
       $original = $translatableStrings[$type][$input['id']];
 
-      $translations[$original] = $input['value'];
+      $translations[$original] = Toolbox::stripslashes_deep($input['value']);
 
       if (!$form->setTranslations($formLanguage->fields['name'], $translations)) {
          Session::addMessageAfterRedirect(__('Failed to add the translation.', 'formcreator'), false, ERROR);
