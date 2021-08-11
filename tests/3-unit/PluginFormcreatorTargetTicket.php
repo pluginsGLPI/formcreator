@@ -1055,6 +1055,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       // Prepare form
       $validItemtype = $CFG_GLPI["asset_types"][0];
+      if (array_search(\Computer::getType(), $CFG_GLPI['asset_types']) === false) {
+         $CFG_GLPI['asset_types'][] = \Computer::getType();
+      }
+      $invalidItemtype = \Monitor::getType();
+
+      // Ensure an itemtype is not in the asset types
+      $CFG_GLPI['asset_types'] = array_filter($CFG_GLPI['asset_types'], function ($itemtype) use ($invalidItemtype) {
+         return ($itemtype != $invalidItemtype);
+      });
 
       $item1 = new $validItemtype();
       $item1->add([
@@ -1109,7 +1118,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $question4 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
-         'glpi_objects'                   => 'foo'
+         'glpi_objects'                   => $invalidItemtype
       ]);
 
       $instance2 = new PluginFormcreatorTargetTicketDummy();
@@ -1122,17 +1131,19 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'associate_question' => $question3->getID(),
       ]);
       $this->boolean($instance2->isNewItem())->isFalse();
+      $monitor = $this->getGlpiCoreItem(\Monitor::getType(), ['name' => $this->getUniqueString()]);
+      $this->boolean($monitor->isNewItem())->isFalse();
       $formAnswer2 = new \PluginFormcreatorFormAnswer();
       $formAnswer2->add([
          'plugin_formcreator_forms_id' => $form2->getID(),
          'formcreator_field_' . $question3->getID() => (string) $item1->getID(),
-         'formcreator_field_' . $question4->getID() => (string) -42,
+         'formcreator_field_' . $question4->getID() => (string) $monitor->getID(),
       ]);
       $this->boolean($formAnswer2->isNewItem())->isFalse();
 
       $question5 = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'glpi_objects' => 'foo',
+         'glpi_objects' => $invalidItemtype,
       ]);
       $form3 = new \PluginFormcreatorForm();
       $form3->getByQuestionId($question5->getID());
@@ -1140,7 +1151,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $question6 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
-         'glpi_objects'                   => 'foo'
+         'glpi_objects'                   => $invalidItemtype
       ]);
       $instance3 = new PluginFormcreatorTargetTicketDummy();
       $instance3->add([
@@ -1152,11 +1163,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'associate_question' => $question5->getID(),
       ]);
       $this->boolean($instance3->isNewItem())->isFalse();
+      $monitor = $this->getGlpiCoreItem(\Monitor::getType(), ['name' => $this->getUniqueString()]);
+      $this->boolean($monitor->isNewItem())->isFalse();
+      $monitor2 = $this->getGlpiCoreItem(\Monitor::getType(), ['name' => $this->getUniqueString()]);
+      $this->boolean($monitor->isNewItem())->isFalse();
       $formAnswer3 = new \PluginFormcreatorFormAnswer();
       $formAnswer3->add([
          'plugin_formcreator_forms_id' => $form3->getID(),
-         'formcreator_field_' . $question5->getID() => (string) -43,
-         'formcreator_field_' . $question6->getID() => (string) -42,
+         'formcreator_field_' . $question5->getID() => (string) $monitor->getID(),
+         'formcreator_field_' . $question6->getID() => (string) $monitor2->getID(),
       ]);
       $this->boolean($formAnswer3->isNewItem())->isFalse();
 

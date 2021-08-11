@@ -181,7 +181,14 @@ class GlpiselectField extends DropdownField
       $input['values'] = [
          'itemtype' => $itemtype
       ];
+      // Params for entity restrictables itemtypes
+      if ((new $itemtype)->isEntityAssign()) {
+         $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
+      }
+      unset($input['entity_restrict']);
+
       $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      unset($input['dropdown_default_value']);
 
       // Params for CommonTreeDropdown fields
       if (is_a($itemtype, CommonTreeDropdown::class, true)) {
@@ -190,13 +197,11 @@ class GlpiselectField extends DropdownField
          $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
          $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
       }
-
-      $input['values'] = json_encode($input['values']);
-
-      unset($input['dropdown_default_value']);
       unset($input['show_tree_root']);
       unset($input['show_tree_depth']);
       unset($input['selectable_tree_root']);
+
+      $input['values'] = json_encode($input['values']);
 
       return $input;
    }
