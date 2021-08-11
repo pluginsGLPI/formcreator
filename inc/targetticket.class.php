@@ -693,8 +693,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
       $richText = true;
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         $this->fields['target_name'],
+         __($this->fields['target_name'], $domain),
          $formanswer,
          false
       );

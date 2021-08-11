@@ -724,8 +724,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $data = $this->getDefaultData($formanswer);
 
       // Parse data
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         $this->fields['target_name'],
+         __($this->fields['target_name'], $domain),
          $formanswer,
          true
       );
