@@ -798,8 +798,8 @@ msgstr "plugin_formcreator_load_check"
 #: inc/form_language.class.php:51
 msgid "Form language"
 msgid_plural "Form languages"
-msgstr[0] "Langague de formulaire"
-msgstr[1] "Langagues de formulaire"
+msgstr[0] "Langage de formulaire"
+msgstr[1] "Langages de formulaire"
 
 #: inc/form_language.class.php:69 inc/form_language.class.php:345
 msgid "Translation"
