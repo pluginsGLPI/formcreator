@@ -299,7 +299,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'target_name',
          'name'               => __('Change title', 'formcreator'),
-         'datatype'           => 'text',
+         'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];

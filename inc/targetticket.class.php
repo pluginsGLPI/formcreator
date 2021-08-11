@@ -123,7 +123,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'target_name',
          'name'               => __('Ticket title', 'formcreator'),
-         'datatype'           => 'text',
+         'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
