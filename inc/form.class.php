@@ -2431,7 +2431,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr><th colspan="4">'.__('Add a target', 'formcreator').'</th></tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
       echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" required="required"/></td>';
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
@@ -2450,7 +2450,7 @@ PluginFormcreatorTranslatableInterface
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td colspan="4" class="center">';
       echo Html::hidden('plugin_formcreator_forms_id', ['value' => $this->getID()]);
       echo Html::submit(__('Add'), ['name' => 'add_target']);
