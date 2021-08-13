@@ -238,7 +238,8 @@ class PluginFormcreatorTranslation
          Session::addMessageAfterRedirect(__('Failed to add the translation.', 'formcreator'), false, ERROR);
          return false;
       }
-      $TRANSLATE->clearCache(PluginFormcreatorForm::getTranslationDomain(($form->getID())), $formLanguage->fields['name']);
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $formLanguage->fields['name']);
+      $TRANSLATE->clearCache($domain, $formLanguage->fields['name']);
 
       return true;
    }

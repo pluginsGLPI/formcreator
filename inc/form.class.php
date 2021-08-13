@@ -2213,19 +2213,22 @@ PluginFormcreatorTranslatableInterface
          }
 
          // Show a row for the form
-         echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
+         $language = $_SESSION['glpilanguage'];
+         $domain = PluginFormcreatorForm::getTranslationDomain($language, $row['id']);
+
+         echo '<tr class="tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
          echo '&nbsp;';
          echo '<a href="' . FORMCREATOR_ROOTDOC
             . '/front/formdisplay.php?id=' . $row['id'] . '"
-               title="' . $row['description'] . '">'
-            . $row['name']
+               title="' . __($row['description'], $domain) . '">'
+            . __($row['name'], $domain)
             . '</a></td>';
          echo '</tr>';
-         echo '<tr id="desc' . $row['id'] . '" class="line' . ($i % 2) . ' form_description">';
-         echo '<td><div>' . $row['description'] . '&nbsp;</div></td>';
+         echo '<tr id="desc' . $row['id'] . '" class="tab_bg_' . ($i % 2) . ' form_description">';
+         echo '<td><div>' . __($row['description'], $domain) . '&nbsp;</div></td>';
          echo '</tr>';
       }
 
