@@ -2158,7 +2158,7 @@ PluginFormcreatorTranslatableInterface
     * show list of available forms
     */
    public function showForCentral() {
-      global $DB, $CFG_GLPI;
+      global $DB, $CFG_GLPI, $TRANSLATE;
 
       // Define tables
       $form_table = PluginFormcreatorForm::getTable();
@@ -2214,7 +2214,11 @@ PluginFormcreatorTranslatableInterface
 
          // Show a row for the form
          $language = $_SESSION['glpilanguage'];
-         $domain = PluginFormcreatorForm::getTranslationDomain($language, $row['id']);
+         $domain = PluginFormcreatorForm::getTranslationDomain($row['id'], $language);
+         $phpfile = self::getTranslationFile($row['id'], $_SESSION['glpilanguage']);
+         if (file_exists($phpfile)) {
+            $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
+         }
 
          echo '<tr class="tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
