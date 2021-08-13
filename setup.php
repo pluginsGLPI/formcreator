@@ -201,7 +201,7 @@ function plugin_init_formcreator() {
                   ]);
                   if (count($issues) == 1) {
                      $issueId = array_pop($issues)['id'];
-                     $issue->getById($issueId);
+                     $issue->getFromDB($issueId);
                      Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
                   }
 
