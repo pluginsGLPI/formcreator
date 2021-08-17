@@ -166,6 +166,7 @@ class LdapselectField extends SelectField
                $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
             }
 
+            $limitexceeded = false;
             if (in_array(ldap_errno($ds), [4, 11])) {
                // openldap return 4 for Size limit exceeded
                $limitexceeded = true;
