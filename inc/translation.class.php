@@ -213,6 +213,8 @@ class PluginFormcreatorTranslation
     * @return bool
     */
    public function add(array $input) : bool {
+      global $TRANSLATE;
+
       $formLanguage = new PluginFormcreatorForm_Language();
       if (!$formLanguage->getFromDB($input['plugin_formcreator_forms_languages_id'])) {
          Session::addMessageAfterRedirect(__('Language not found.', 'formcreator'), false, ERROR);
@@ -230,12 +232,14 @@ class PluginFormcreatorTranslation
       $type = $translatableStrings['id'][$input['id']];
       $original = $translatableStrings[$type][$input['id']];
 
-      $translations[$original] = $input['value'];
+      $translations[$original] = Toolbox::stripslashes_deep($input['value']);
 
       if (!$form->setTranslations($formLanguage->fields['name'], $translations)) {
          Session::addMessageAfterRedirect(__('Failed to add the translation.', 'formcreator'), false, ERROR);
          return false;
       }
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $formLanguage->fields['name']);
+      $TRANSLATE->clearCache($domain, $formLanguage->fields['name']);
 
       return true;
    }

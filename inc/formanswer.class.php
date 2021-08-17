@@ -743,6 +743,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
             ];
             $skipValidation = true;
+         } else {
+            // Check if a field is being edited
+            $fieldPresence = [];
+            $this->getQuestionFields($input['plugin_formcreator_forms_id']);
+            foreach ($this->questionFields as $id => $field) {
+               $fieldPresence[$id] = $field->hasInput($input);
+            }
+            $skipValidation = !in_array(true, $fieldPresence, true);
+            if ($skipValidation) {
+               $this->questionFields = null;
+            }
          }
       } else {
          // The form answer is being updated

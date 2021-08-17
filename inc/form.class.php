@@ -552,10 +552,8 @@ PluginFormcreatorTranslatableInterface
          'values'          => array_keys($selectedValidatorUsers),
          'valuesnames'     => array_values($selectedValidatorUsers),
          'condition'       => Dropdown::addNewCondition($usersCondition),
+         '_idor_token'     => Session::getNewIDORToken(User::getType()),
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-      }
       echo Html::jsAjaxDropdown(
          '_validator_users[]',
          '_validator_users' . mt_rand(),
@@ -635,10 +633,8 @@ PluginFormcreatorTranslatableInterface
          'valuesnames'     => array_values($selectecValidatorGroups),
          'condition'       => Dropdown::addNewCondition($groupsCondition),
          'display_emptychoice' => false,
+         '_idor_token'    => Session::getNewIDORToken(Group::getType()),
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
-      }
       echo Html::jsAjaxDropdown(
          '_validator_groups[]',
          '_validator_groups' . mt_rand(),
@@ -675,7 +671,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showTargets($ID, $options = []) {
-      echo '<table class="tab_cadre_fixe">';
+      echo '<table class="tab_cadrehov">';
 
       echo '<tr>';
       echo '<th colspan="3">'._n('Target', 'Targets', 2, 'formcreator').'</th>';
@@ -687,7 +683,7 @@ PluginFormcreatorTranslatableInterface
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
             $i++;
-            echo '<tr class="line'.($i % 2).'">';
+            echo '<tr class="tab_bg_'.($i % 2).'">';
             $targetItemUrl = Toolbox::getItemTypeFormURL($targetType) . '?id=' . $targetId;
             // echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
             $onclick = "plugin_formcreator_editTarget('$targetType', $targetId)";
@@ -713,7 +709,7 @@ PluginFormcreatorTranslatableInterface
       }
 
       // Display add target link...
-      echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_row">';
+      echo '<tr class="tab_bg_'.(($i + 1) % 2).'" id="add_target_row">';
       echo '<td colspan="3">';
       echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
                 <i class="fa fa-plus"></i>
@@ -994,15 +990,15 @@ PluginFormcreatorTranslatableInterface
                $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
             }
             $formList[] = [
-               'id'           => $form['id'],
-               'name'         => __($form['name'], $domain),
-               'icon'         => $form['icon'],
-               'icon_color'   => $form['icon_color'],
-               'background_color'   => $form['background_color'],
-               'description'  => $form['description'],
-               'type'         => 'form',
-               'usage_count'  => $form['usage_count'],
-               'is_default'   => $form['is_default'] ? "true" : "false"
+               'id'               => $form['id'],
+               'name'             => __($form['name'], $domain),
+               'icon'             => $form['icon'],
+               'icon_color'       => $form['icon_color'],
+               'background_color' => $form['background_color'],
+               'description'      => __($form['description'], $domain),
+               'type'             => 'form',
+               'usage_count'      => $form['usage_count'],
+               'is_default'       => $form['is_default'] ? "true" : "false"
             ];
          }
       }
@@ -1051,15 +1047,15 @@ PluginFormcreatorTranslatableInterface
          if ($result_faqs->count() > 0) {
             foreach ($result_faqs as $faq) {
                $formList[] = [
-                  'id'           => $faq['id'],
-                  'name'         => $faq['name'],
-                  'icon'         => '',
-                  'icon_color'   => '',
-                  'background_color'   => '',
-                  'description'  => '',
-                  'type'         => 'faq',
-                  'usage_count'  => $faq['view'],
-                  'is_default'   => false
+                  'id'               => $faq['id'],
+                  'name'             => $faq['name'],
+                  'icon'             => '',
+                  'icon_color'       => '',
+                  'background_color' => '',
+                  'description'      => '',
+                  'type'             => 'faq',
+                  'usage_count'      => $faq['view'],
+                  'is_default'       => false
                ];
             }
          }
@@ -2162,7 +2158,7 @@ PluginFormcreatorTranslatableInterface
     * show list of available forms
     */
    public function showForCentral() {
-      global $DB, $CFG_GLPI;
+      global $DB, $CFG_GLPI, $TRANSLATE;
 
       // Define tables
       $form_table = PluginFormcreatorForm::getTable();
@@ -2217,19 +2213,26 @@ PluginFormcreatorTranslatableInterface
          }
 
          // Show a row for the form
-         echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
+         $language = $_SESSION['glpilanguage'];
+         $domain = PluginFormcreatorForm::getTranslationDomain($row['id'], $language);
+         $phpfile = self::getTranslationFile($row['id'], $_SESSION['glpilanguage']);
+         if (file_exists($phpfile)) {
+            $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
+         }
+
+         echo '<tr class="tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
          echo '&nbsp;';
          echo '<a href="' . FORMCREATOR_ROOTDOC
             . '/front/formdisplay.php?id=' . $row['id'] . '"
-               title="' . $row['description'] . '">'
-            . $row['name']
+               title="' . __($row['description'], $domain) . '">'
+            . __($row['name'], $domain)
             . '</a></td>';
          echo '</tr>';
-         echo '<tr id="desc' . $row['id'] . '" class="line' . ($i % 2) . ' form_description">';
-         echo '<td><div>' . $row['description'] . '&nbsp;</div></td>';
+         echo '<tr id="desc' . $row['id'] . '" class="tab_bg_' . ($i % 2) . ' form_description">';
+         echo '<td><div>' . __($row['description'], $domain) . '&nbsp;</div></td>';
          echo '</tr>';
       }
 
@@ -2435,7 +2438,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr><th colspan="4">'.__('Add a target', 'formcreator').'</th></tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
       echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" required="required"/></td>';
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
@@ -2454,7 +2457,7 @@ PluginFormcreatorTranslatableInterface
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td colspan="4" class="center">';
       echo Html::hidden('plugin_formcreator_forms_id', ['value' => $this->getID()]);
       echo Html::submit(__('Add'), ['name' => 'add_target']);

@@ -37,33 +37,29 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-// force layout of glpi
-$layout = $_SESSION['glpilayout'];
-$_SESSION['glpilayout'] = "lefttab";
-
-$issue = new PluginFormcreatorIssue();
-if (isset($_POST['save_formanswer'])) {
-   $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-   $_POST['status']                      = PluginFormcreatorFormAnswer::STATUS_WAITING;
-   $issue->saveAnswers($_POST);
-   Html::back();
-} else {
-
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-   } else {
-      Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
-   }
-
-   $issue->getFromDB((int) $_REQUEST['id']);
-   $issue->display($_REQUEST);
-
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::footer();
-   } else {
-      Html::footer();
-   }
+// Show issue only if service catalog is enabled
+if (!plugin_formcreator_replaceHelpdesk()) {
+   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
 }
 
-// restore layout
-$_SESSION['glpilayout'] = $layout;
+// force layout of glpi
+PluginFormcreatorCommon::saveLayout();
+$_SESSION['glpilayout'] = "lefttab";
+
+PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+
+/** @var PluginFormcreatorIssue $issue */
+$issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
+if ($issue === false) {
+   PluginFormcreatorCommon::restoreLayout();
+   Html::displayNotFoundError();
+}
+$issue->display($_REQUEST);
+
+if (plugin_formcreator_replaceHelpdesk()) {
+   PluginFormcreatorWizard::footer();
+} else {
+   Html::footer();
+}
+
+PluginFormcreatorCommon::restoreLayout();

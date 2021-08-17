@@ -299,7 +299,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'target_name',
          'name'               => __('Change title', 'formcreator'),
-         'datatype'           => 'text',
+         'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -309,7 +309,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'content',
          'name'               => __('Content', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -319,7 +319,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'impactcontent',
          'name'               => __('Impact', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -329,7 +329,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'controlistcontent',
          'name'               => __('Control list', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -339,7 +339,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'rolloutplancontent',
          'name'               => __('Deployment plan', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -349,7 +349,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'backoutplancontent',
          'name'               => __('Backup plan', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -359,7 +359,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'checklistcontent',
          'name'               => __('Check list', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -724,8 +724,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $data = $this->getDefaultData($formanswer);
 
       // Parse data
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         $this->fields['target_name'],
+         __($this->fields['target_name'], $domain),
          $formanswer,
          true
       );
@@ -758,12 +759,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       if (count($this->requesters['_users_id_requester']) == 0) {
          $this->addActor('requester', $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
-      } else if (count($this->requesters['_users_id_requester']) >= 1) {
-         if ($this->requesters['_users_id_requester'][0] == 0) {
-            $this->addActor('requester', $formanswer->fields['requester_id'], true);
+      } else {
+         $requesterAccounts = array_filter($this->requesters['_users_id_requester'], function($v) {
+            return ($v != 0);
+         });
+         $requesters_id = array_shift($requesterAccounts);
+         if ($requesters_id === null) {
+            // No account for requesters, then fallback on the account used to fill the answers
             $requesters_id = $formanswer->fields['requester_id'];
-         } else {
-            $requesters_id = $this->requesters['_users_id_requester'][0];
          }
       }
 

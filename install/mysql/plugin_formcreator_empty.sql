@@ -29,11 +29,11 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `id`                int(11) NOT NULL,
-  `replace_helpdesk`  int(11) NOT NULL DEFAULT '0',
-  `sort_order`        int(11) NOT NULL DEFAULT '0',
-  `is_kb_separated`   int(11) NOT NULL DEFAULT '0',
-  `is_search_visible` int(11) NOT NULL DEFAULT '0',
-  `is_header_visible` int(11) NOT NULL DEFAULT '0',
+  `replace_helpdesk`  int(11) NOT NULL DEFAULT '-2',
+  `sort_order`        int(11) NOT NULL DEFAULT '-2',
+  `is_kb_separated`   int(11) NOT NULL DEFAULT '-2',
+  `is_search_visible` int(11) NOT NULL DEFAULT '-2',
+  `is_header_visible` int(11) NOT NULL DEFAULT '-2',
   `header`            text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `show_empty`                     tinyint(1) NOT NULL DEFAULT '0',
   `default_values`                 mediumtext,
   `values`                         mediumtext,
-  `description`                    text NOT NULL,
+  `description`                    mediumtext,
   `row`                            int(11) NOT NULL DEFAULT '0',
   `col`                            int(11) NOT NULL DEFAULT '0',
   `width`                          int(11) NOT NULL DEFAULT '0',

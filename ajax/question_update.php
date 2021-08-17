@@ -59,4 +59,5 @@ if (!$success) {
     http_response_code(500);
     exit();
 }
+$question->getFromDB($question->getID()); // To remove if GLPI #9210 merged
 echo $question->fields['name'];

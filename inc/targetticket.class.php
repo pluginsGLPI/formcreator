@@ -123,7 +123,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'target_name',
          'name'               => __('Ticket title', 'formcreator'),
-         'datatype'           => 'text',
+         'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -133,7 +133,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'content',
          'name'               => __('Content', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -693,8 +693,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
       $richText = true;
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         $this->fields['target_name'],
+         __($this->fields['target_name'], $domain),
          $formanswer,
          false
       );
@@ -717,12 +718,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       if (count($this->requesters['_users_id_requester']) == 0) {
          $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
-      } else if (count($this->requesters['_users_id_requester']) >= 1) {
-         if ($this->requesters['_users_id_requester'][0] == 0) {
-            $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
+      } else {
+         $requesterAccounts = array_filter($this->requesters['_users_id_requester'], function($v) {
+            return ($v != 0);
+         });
+         $requesters_id = array_shift($requesterAccounts);
+         if ($requesters_id === null) {
+            // No account for requesters, then fallback on the account used to fill the answers
             $requesters_id = $formanswer->fields['requester_id'];
-         } else {
-            $requesters_id = $this->requesters['_users_id_requester'][0];
          }
 
          // If only one requester, revert array of requesters into a scalar

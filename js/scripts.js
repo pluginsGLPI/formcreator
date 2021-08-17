@@ -179,20 +179,7 @@ $(function() {
          }
       });
    }
-
-   // === Add better multi-select on form configuration validators ===
-   fcInitMultiSelect();
-
-   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-      fcInitMultiSelect();
-   });
-
 });
-
-function fcInitMultiSelect() {
-   $("#validator_users").select2();
-   $("#validator_groups").select2();
-}
 
 function showHomepageFormList() {
    if ($('#plugin_formcreatorHomepageForms').length) {
@@ -240,7 +227,6 @@ function updateCategoriesView() {
          function (event) {
             $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
             $(this).addClass('category_active');
-            updateWizardFormsView(event.target.getAttribute('data-category-id'));
          }
       );
    });

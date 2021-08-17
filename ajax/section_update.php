@@ -49,4 +49,5 @@ if (!$section->update($_REQUEST)) {
     echo __('Could not update the section', 'formcreator');
     exit;
 }
+$section->getFromDB($section->getID()); // To remove if GLPI #9210 merged
 echo $section->fields['name'];

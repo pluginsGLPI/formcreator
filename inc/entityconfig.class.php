@@ -48,8 +48,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SORT_POPULARITY   = 0;
    const CONFIG_SORT_ALPHABETICAL = 1;
 
-   const CONFIG_KB_MERGED = 1;
-   const CONFIG_KB_DISTINCT = 2;
+   const CONFIG_KB_MERGED = 0;
+   const CONFIG_KB_DISTINCT = 1;
 
    const CONFIG_SEARCH_HIDDEN = 0;
    const CONFIG_SEARCH_VISIBLE = 1;
@@ -65,7 +65,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $tabNames = [];
       if (!$withtemplate) {
-         if ($item->getType() == 'Entity') {
+         if (Session::haveRight(Entity::$rightname, UPDATE) && $item->getType() == Entity::getType()) {
             $tabNames[1] = _n('Form', 'Forms', 2, 'formcreator');
          }
       }
@@ -122,36 +122,40 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public function prepareInputForAdd($input) {
       $input['header'] = $input['header'] ?? '';
-      $input['header'] = Html::clean($input['header']);
+
+      $config = Toolbox::getHtmLawedSafeConfig();
+      $input['header'] = htmLawed($input['header'], $config);
 
       return $input;
    }
 
    public function prepareInputForUpdate($input) {
       $input['header'] = $input['header'] ?? '';
-      $input['header'] = Html::clean($input['header']);
+
+      $config = Toolbox::getHtmLawedSafeConfig();
+      $input['header'] = htmLawed($input['header'], $config);
 
       return $input;
    }
 
    public function showFormForEntity(Entity $entity) {
       $ID = $entity->getField('id');
-      if (!$entity->can($ID, READ)
-            || !Notification::canView()) {
+      if (!$entity->can($ID, READ)) {
          return false;
       }
 
       if (!$this->getFromDB($ID)) {
          $this->add([
-            'id'                 => $ID,
-            'replace_helpdesk'   => self::CONFIG_PARENT,
-            'is_kb_separated'    => self::CONFIG_PARENT,
-            'is_search_visible'  => self::CONFIG_PARENT,
-            'is_header_visible'  => self::CONFIG_PARENT,
+            'id'                => $ID,
+            'replace_helpdesk'  => self::CONFIG_PARENT,
+            'is_kb_separated'   => self::CONFIG_PARENT,
+            'is_search_visible' => self::CONFIG_PARENT,
+            'is_header_visible' => self::CONFIG_PARENT,
+            'sort_order'        => self::CONFIG_PARENT,
          ]);
       }
 
-      $canedit = $entity->canUpdateItem();
+      $canedit = Entity::canUpdate() && $entity->canUpdateItem();
       echo "<div class='spaced'>";
       if ($canedit) {
          echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
@@ -378,13 +382,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
          }
       }
-      /*
-       switch ($fieldval) {
-       case "tickettype" :
-       // Default is Incident if not set
-       return Ticket::INCIDENT_TYPE;
-       }
-       */
+
       return $default_value;
    }
 }

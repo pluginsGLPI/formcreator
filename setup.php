@@ -30,9 +30,9 @@
  */
 
 global $CFG_GLPI;
-// Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.12.0');
-// Schema version of this version
+// Version of the plugin (major.minor.bugfix)
+define('PLUGIN_FORMCREATOR_VERSION', '2.12.1');
+// Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.12');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
@@ -193,17 +193,19 @@ function plugin_init_formcreator() {
                      Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
                   }
 
-                  // When an issue has a single target ticket
+                  // When an ticket has a matching issue (it means that the ticket is the only generated ticket)
                   $issue = new PluginFormcreatorIssue();
-                  $issue->getFromDBByCrit([
-                     'sub_itemtype' => Ticket::class,
-                     'original_id'  => (int) $_GET['id']
+                  $issues = $issue->find([
+                     'itemtype' => Ticket::class,
+                     'items_id'  => (int) $_GET['id']
                   ]);
-                  if (!$issue->isNewItem()) {
+                  if (count($issues) == 1) {
+                     $issueId = array_pop($issues)['id'];
+                     $issue->getFromDB($issueId);
                      Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
                   }
 
-                  // When a target has several target tickets
+                  // When no or several tickets matches an issue, rely use the Form Answer
                   $itemTicket = new Item_Ticket();
                   $itemTicket->getFromDBByCrit([
                      'itemtype' => PluginFormcreatorFormAnswer::class,
@@ -213,6 +215,21 @@ function plugin_init_formcreator() {
                      // No formanswer found
                      Html::displayNotFoundError();
                   }
+
+                  $issue->getFromDBByCrit([
+                     'itemtype' => PluginFormcreatorFormAnswer::class,
+                     'items_id'  => $itemTicket->fields['items_id']
+                  ]);
+                  if ($issue->isNewItem()) {
+                     // No formanswer found
+                     Html::displayNotFoundError();
+                  }
+                  $ticket = Ticket::getById($itemTicket->fields['items_id']);
+                  if ($ticket === false) {
+                     Html::redirect($issue->getFormURLWithID($itemTicket->fields['items_id']) . $openItilFollowup);
+                  }
+
+                  Html::redirect($issue->getFormURLWithID($issue->getID()) . '&tickets_id=' . $itemTicket->fields['tickets_id']);
                }
             }
 
@@ -276,6 +293,7 @@ function plugin_init_formcreator() {
             FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
             FORMCREATOR_ROOTDOC . '/front/issue.form.php',
             FORMCREATOR_ROOTDOC . '/front/form_language.form.php',
+            '/front/entity.form.php',
          ];
          foreach ($pages as $page) {
             if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {

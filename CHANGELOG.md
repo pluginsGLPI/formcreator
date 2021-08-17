@@ -1,3 +1,40 @@
+<a name="v2.12.1"></a>
+## [v2.12.1](https://github.com/pluginsglpi/formcreator/compare/v2.12.0...v2.12.1) (2021-08-16)
+
+
+### Bug Fixes
+
+* **category:** bad load event ([b573f74](https://github.com/pluginsglpi/formcreator/commit/b573f74b9eaeb27b4b53030a8a35fb946db955af))
+* **descriptionfield:** increase tex limit ([c57cb14](https://github.com/pluginsglpi/formcreator/commit/c57cb148a2d31be30ab15cdc82be145b292a1a56))
+* **entityconfig:** default values and constant values of KB separation ([31ccd9b](https://github.com/pluginsglpi/formcreator/commit/31ccd9b0f60d5fc0e4d7d93b75ba181ffcba1259))
+* **entityconfig:** do not allow edition of config if not enough right ([067600a](https://github.com/pluginsglpi/formcreator/commit/067600a0ef45f7703daa6b90c60ddb7de69533bc))
+* **entityconfig:** do not show Formcreator tab if no right ([452f682](https://github.com/pluginsglpi/formcreator/commit/452f6825d431acf148583cbc7987a48b286f0903))
+* **entityconfig:** HTML should be clenaed for safety, not dropped ([39b569f](https://github.com/pluginsglpi/formcreator/commit/39b569f8babb544eed935b154329e3ed2d2201b1))
+* **entityconfig:** tinymce not always loaded ([f2cd143](https://github.com/pluginsglpi/formcreator/commit/f2cd1439b55699eb265da0b72d1451d24fc843a7))
+* **form:** add target form shall use the theme's color palette ([4774f1d](https://github.com/pluginsglpi/formcreator/commit/4774f1ddd37cefe8e694c215eb8749173ee69acf))
+* **form:** forms not translated on central tab ([f7a6ec8](https://github.com/pluginsglpi/formcreator/commit/f7a6ec85fdaea9717317450c7cc1fb0fa6a4d30a))
+* **form:** untranslated description ([e97d3fb](https://github.com/pluginsglpi/formcreator/commit/e97d3fb11655a1bb37987013b92b4da3d5c6249d))
+* **form:** use GLPI's color theme when showing list of targets ([ee8a6e2](https://github.com/pluginsglpi/formcreator/commit/ee8a6e239d00cead87e1589d7394afdb51f4ce3c))
+* **formanswer:** deletion of answers when accepting answers without editing them ([317c4da](https://github.com/pluginsglpi/formcreator/commit/317c4dac91a4581d7f6a655403039042bc69ef45))
+* **glpiselectfield:** entity restriction not saved ([6869eed](https://github.com/pluginsglpi/formcreator/commit/6869eed831610092c6f7d8d65b3c9b9004a83765))
+* **glpiselectfield,dropdownfield:** entity restriction show / hide issues ([72972f9](https://github.com/pluginsglpi/formcreator/commit/72972f961783476fdbc5e80bf639f26fa9aa0c0e))
+* **issue:** missed column rename in redirection handling ([01d0816](https://github.com/pluginsglpi/formcreator/commit/01d0816b9e44ead7891cb815ea765ac087db0ed5))
+* **issue:** redirection error ([aeb297b](https://github.com/pluginsglpi/formcreator/commit/aeb297bd8c2a33cca6fa3288d9859dff18921dd0))
+* **question:** check regex condition before save or update ([57914ac](https://github.com/pluginsglpi/formcreator/commit/57914ac4ff3971cab16f4130eaca4988302b4bb7))
+* **question,section:** backslash in the name appears after editing an existing item ([1db01f5](https://github.com/pluginsglpi/formcreator/commit/1db01f52a4bca09c40e0ae38bcaff320f4afc54c))
+* **targetticket,targetchange:** cannot use dropdown type questions to set entity, category ([de0a303](https://github.com/pluginsglpi/formcreator/commit/de0a303c92febdcb7f56a660d24b81a75afad973))
+* **targetticket,targetchange:** current user may be automatically added to requesters ([8fa2a3f](https://github.com/pluginsglpi/formcreator/commit/8fa2a3f6bcf075113d376ecb0734b855c83601c0))
+* **translation:** backslashes in translated text ([cf7589f](https://github.com/pluginsglpi/formcreator/commit/cf7589ffad273cb917e130bf724f743fc33b6c81))
+* **translation:** bad arguments when clearing cache ([623728a](https://github.com/pluginsglpi/formcreator/commit/623728a3c2976ddb8f425e6e025033243681da11))
+* typo causing a fatal error ([fa8dc9b](https://github.com/pluginsglpi/formcreator/commit/fa8dc9bf96bdebbea618eb7098e62083aab2b7c2))
+* **radiosfield:** bad regex condition check ([221ae34](https://github.com/pluginsglpi/formcreator/commit/221ae34156fc345785587d92e5f4c0825299dab8))
+* **targetticket,targetchange:** long text truncated by GLPI ([9143172](https://github.com/pluginsglpi/formcreator/commit/9143172f8f64f9f58099cfb3aabcb9ad383e414f))
+* **targetticket,targetchange:** target title not translated ([fee9f4f](https://github.com/pluginsglpi/formcreator/commit/fee9f4f17f85aac94be2f94b50076cdc1f236387))
+* **targetticket,targetchange:** title is a string, not a rich text ([3b6171a](https://github.com/pluginsglpi/formcreator/commit/3b6171ae52dc0c8433c3bac52dcf78a8333769ef))
+* redirect from  ticket to formanswer if several target tickets ([dbfbb10](https://github.com/pluginsglpi/formcreator/commit/dbfbb10d8acdfc9949ed47731a4eb61bf7e1e86c))
+
+
+
 <a name="v2.12.0"></a>
 ## [v2.12.0](https://github.com/pluginsglpi/formcreator/compare/v2.12.0-beta.1..v2.12.0) (2021-07-09)
 
