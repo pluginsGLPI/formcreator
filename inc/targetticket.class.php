@@ -738,6 +738,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $data['users_id_recipient'] = $formanswer->fields['requester_id'];
       $data['users_id_lastupdater'] = Session::getLoginUserID();
 
+      $data = $this->setTargetType($data, $formanswer);
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
       $data = $this->setSLA($data, $formanswer);
