@@ -186,12 +186,23 @@ class PluginFormcreatorFields
          return self::$visibility[$itemtype][$itemId];
       }
       if (count($conditions) < 1) {
-         if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
-            self::$visibility[$itemtype][$itemId] = false;
-            return self::$visibility[$itemtype][$itemId];
-         } else if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_SHOWN) {
-            self::$visibility[$itemtype][$itemId] = true;
-            return self::$visibility[$itemtype][$itemId];
+         switch ($item->fields['show_rule']) {
+            case PluginFormcreatorCondition::SHOW_RULE_HIDDEN:
+               self::$visibility[$itemtype][$itemId] = false;
+               return self::$visibility[$itemtype][$itemId];
+               break;
+
+            case PluginFormcreatorCondition::SHOW_RULE_SHOWN:
+               self::$visibility[$itemtype][$itemId] = true;
+               return self::$visibility[$itemtype][$itemId];
+               break;
+
+            default:
+               // This should not happen : inconsistency in the database
+               Toolbox::logError("Inconsistency detected in conditions: show rule set but no condition found, $itemtype ID=$itemId");
+               self::$visibility[$itemtype][$itemId] = $getParentVisibility();
+               return self::$visibility[$itemtype][$itemId];
+               break;
          }
       }
 
