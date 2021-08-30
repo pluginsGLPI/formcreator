@@ -93,7 +93,7 @@ class TextareaField extends TextField
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $value        = nl2br($this->value);
+      $value        = nl2br(__($this->value, $domain));
       $html = '';
       $html .= Html::textarea([
          'name'              => $fieldName,
