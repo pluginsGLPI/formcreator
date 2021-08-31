@@ -2057,7 +2057,7 @@ SCRIPT;
 
       echo '<div id="block_' . $type . '_question_actors" style="display:none">';
        // find already used items
-       $request = $DB->request([
+      $request = $DB->request([
          'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
          'WHERE' => [
             'itemtype'   => $this->getType(),
