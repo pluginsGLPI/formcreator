@@ -175,9 +175,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -192,9 +191,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('sort_order', $elements, ['value' => $this->fields['sort_order']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('sort_order', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -209,9 +207,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_kb_separated', $elements, ['value' => $this->fields['is_kb_separated']]);
       if ($this->fields['is_kb_separated'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_kb_separated', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -225,9 +222,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_search_visible', $elements, ['value' => $this->fields['is_search_visible']]);
       if ($this->fields['is_search_visible'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_search_visible', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -242,9 +238,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_header_visible', $elements, ['value' => $this->fields['is_header_visible']]);
       if ($this->fields['is_header_visible'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_header_visible', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
