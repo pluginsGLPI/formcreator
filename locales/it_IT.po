@@ -7,8 +7,8 @@
 # Alessandro Carloni <kaya84@gmail.com>, 2021
 # Pierfrancesco Passerini <p.passerini@gmail.com>, 2021
 # Thierry Bugier <tbugier@teclib.com>, 2021
-# Davide <spam@habilitas.it>, 2021
 # Roberto <rizrob@gmail.com>, 2021
+# Davide <spam@habilitas.it>, 2021
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-20 09:56+0200\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Roberto <rizrob@gmail.com>, 2021\n"
+"Last-Translator: Davide <spam@habilitas.it>, 2021\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/teclib/teams/28042/it_IT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +28,8 @@ msgstr ""
 #: hook.php:68 inc/category.class.php:50 inc/form.class.php:217
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] "Categoria dei moduli"
-msgstr[1] "Categorie dei moduli"
+msgstr[0] "Categoria del modulo"
+msgstr[1] "Categorie del modulo"
 
 #: hook.php:536 setup.php:267 ajax/homepage_link.php:36
 #: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:745
@@ -51,7 +51,7 @@ msgstr "Moduli in attesa di validazione"
 
 #: ajax/commontree.php:55
 msgid "Subtree root"
-msgstr ""
+msgstr "radice del sottoalbero"
 
 #: ajax/commontree.php:59
 msgid "Selectable"
@@ -59,7 +59,7 @@ msgstr "Selezionabile"
 
 #: ajax/commontree.php:74
 msgid "Limit subtree depth"
-msgstr ""
+msgstr "limita profondità del sottoalbero"
 
 #: ajax/commontree.php:84
 msgid "No limit"
@@ -209,7 +209,7 @@ msgstr "calcolato dalla risposta alla domanda"
 
 #: inc/abstracttarget.class.php:240
 msgid "SLA from template or none"
-msgstr ""
+msgstr "SLA del template o nessuna"
 
 #: inc/abstracttarget.class.php:241
 msgid "Specific SLA"
@@ -224,7 +224,7 @@ msgstr "Uguale alla risposta alla domanda"
 
 #: inc/abstracttarget.class.php:248
 msgid "OLA from template or none"
-msgstr ""
+msgstr "OLA del  template o nessuna"
 
 #: inc/abstracttarget.class.php:249
 msgid "Specific OLA"
@@ -272,11 +272,11 @@ msgstr "SLA (TTO/TTR)"
 
 #: inc/abstracttarget.class.php:1054 inc/abstracttarget.class.php:1125
 msgid "Question (TTO/TTR)"
-msgstr ""
+msgstr "Domanda (TTO/TTR)"
 
 #: inc/abstracttarget.class.php:1124
 msgid "OLA (TTO/TTR)"
-msgstr ""
+msgstr "OLA (TTO/TTR)"
 
 #: inc/abstracttarget.class.php:1173 inc/abstracttarget.class.php:1187
 #: inc/form.class.php:829 inc/knowbase.class.php:64
@@ -316,11 +316,11 @@ msgstr "Luogo "
 
 #: inc/abstracttarget.class.php:1557
 msgid "A target must be associated to a form."
-msgstr ""
+msgstr "Un obiettivo deve essere associato al form"
 
 #: inc/abstracttarget.class.php:1562
 msgid "A target must be associated to an existing form."
-msgstr ""
+msgstr "Uno obiettivo deve essere associato al form esistente."
 
 #: inc/abstracttarget.class.php:1567
 msgid "Name is required."
@@ -345,8 +345,8 @@ msgstr[1] "Risposte"
 #: inc/section.class.php:64
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sezioni"
+msgstr[1] "Sezioni"
 
 #: inc/abstracttarget.class.php:1693
 msgid "Full form"
@@ -378,11 +378,11 @@ msgstr "Gruppo della domanda"
 
 #: inc/abstracttarget.class.php:2069
 msgid "Group from the object"
-msgstr ""
+msgstr "Gruppo dall'oggetto"
 
 #: inc/abstracttarget.class.php:2075
 msgid "Tech group from the object"
-msgstr ""
+msgstr "Gruppo tecnico dall'oggetto"
 
 #: inc/abstracttarget.class.php:2081 inc/target_actor.class.php:76
 msgid "Actors from the question"
@@ -394,7 +394,7 @@ msgstr "Fornitore della domanda"
 
 #: inc/abstracttarget.class.php:2096 inc/target_actor.class.php:77
 msgid "Form author's supervisor"
-msgstr ""
+msgstr "Supervisore dell'autore del modulo"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -402,11 +402,12 @@ msgstr "Categoria della base di conoscenza"
 
 #: inc/common.class.php:228
 msgid "You cannot delete this issue. Maybe it is taken into account."
-msgstr ""
+msgstr "Non puoi eliminare questo problema. Forse è preso in considerazione."
 
 #: inc/common.class.php:233
 msgid "Failed to delete this issue. An internal error occured."
 msgstr ""
+"Impossibile eliminare questo problema. Si è verificato un errore interno."
 
 #: inc/condition.class.php:64
 msgid "Condition"
@@ -424,7 +425,7 @@ msgstr "non è visibile"
 
 #: inc/condition.class.php:105
 msgid "regular expression matches"
-msgstr ""
+msgstr "corrispondenze di espressioni regolari"
 
 #: inc/condition.class.php:116
 msgid "Always displayed"
@@ -436,7 +437,7 @@ msgstr "Nascosto a meno che"
 
 #: inc/condition.class.php:118
 msgid "Displayed unless"
-msgstr "Nascosto a meno che"
+msgstr "Mostrato a meno che"
 
 #: inc/condition.class.php:177 inc/form.class.php:2102
 #: inc/form_language.class.php:537 inc/form_profile.class.php:228

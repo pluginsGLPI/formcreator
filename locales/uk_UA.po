@@ -2,28 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Andriy Smilyanets <smile.andriy@gmail.com>, 2021
-#
+# Thierry Bugier <tbugier@teclib.com>, 2021
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-14 09:05+0200\n"
-"PO-Revision-Date: 2021-08-26 17:34+0300\n"
-"Last-Translator: Andriy Smilyanets <smile.andriy@gmail.com>, 2021\n"
-"Language-Team: Ukrainian (Ukraine) (https://www.transifex.com/teclib/"
-"teams/28042/uk_UA/)\n"
+"POT-Creation-Date: 2021-07-20 09:56+0200\n"
+"PO-Revision-Date: 2021-06-14 06:58+0000\n"
+"Last-Translator: Thierry Bugier <tbugier@teclib.com>, 2021\n"
+"Language-Team: Ukrainian (Ukraine) (https://www.transifex.com/teclib/teams/28042/uk_UA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk_UA\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: hook.php:68 inc/category.class.php:50 inc/form.class.php:217
 msgid "Form category"
@@ -33,10 +30,10 @@ msgstr[1] "Категоріі форм"
 msgstr[2] "Категоріі форм"
 msgstr[3] "Категоріі форм"
 
-#: hook.php:560 setup.php:267 ajax/homepage_link.php:36
-#: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:721
-#: inc/form.class.php:2179 inc/formanswer.class.php:187
-#: inc/formlist.class.php:46
+#: hook.php:536 setup.php:267 ajax/homepage_link.php:36
+#: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:745
+#: inc/form.class.php:2207 inc/formanswer.class.php:187
+#: inc/formlist.class.php:46 inc/field/dropdownfield.class.php:66
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Форма"
@@ -44,7 +41,7 @@ msgstr[1] "Форми"
 msgstr[2] "Форми"
 msgstr[3] "Форми"
 
-#: hook.php:602
+#: hook.php:578
 msgid "Cancel my ticket"
 msgstr "Скасувати мій тікет"
 
@@ -122,8 +119,8 @@ msgstr "Не вдалось оновити розділ"
 #: front/form.php:44 front/formanswer.form.php:78 front/formanswer.form.php:83
 #: front/formanswer.php:45 front/formanswer.php:50 front/issue.php:47
 #: front/issue.php:52 front/targetchange.form.php:76
-#: front/targetticket.form.php:76 inc/form.class.php:2245
-#: inc/form.class.php:2252
+#: front/targetticket.form.php:76 inc/form.class.php:2273
+#: inc/form.class.php:2280
 msgid "Form Creator"
 msgstr "Редактор Замовлень"
 
@@ -131,11 +128,11 @@ msgstr "Редактор Замовлень"
 #: front/issue.form.php:53 front/issue.php:43 front/knowbaseitem.form.php:44
 #: front/knowbaseitem.php:40 front/reservation.form.php:45
 #: front/reservation.php:45 front/reservationitem.php:41 front/wizard.php:43
-#: front/wizardfeeds.php:45 inc/form.class.php:2240
+#: front/wizardfeeds.php:45 inc/form.class.php:2268
 msgid "Service catalog"
 msgstr "Каталог сервісів"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2242
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2270
 msgid "Form list"
 msgstr "Список Замовлення"
 
@@ -147,144 +144,143 @@ msgstr "Параметр"
 msgid "Field name"
 msgstr "Назва поля"
 
-#: inc/abstracttarget.class.php:186
+#: inc/abstracttarget.class.php:208
 msgid "Current active entity"
 msgstr "Поточний активний підрозділ"
 
-#: inc/abstracttarget.class.php:187
+#: inc/abstracttarget.class.php:209
 msgid "Default requester user's entity"
 msgstr "Типовий підрозділ замовника"
 
-#: inc/abstracttarget.class.php:188
+#: inc/abstracttarget.class.php:210
 msgid "First dynamic requester user's entity (alphabetical)"
 msgstr "Перший динамічний підрозділ замовника (за абеткою)"
 
-#: inc/abstracttarget.class.php:189
+#: inc/abstracttarget.class.php:211
 msgid "Last dynamic requester user's entity (alphabetical)"
 msgstr "Останній динамічний підрозділ замовника (за абеткою)"
 
-#: inc/abstracttarget.class.php:190
+#: inc/abstracttarget.class.php:212
 msgid "The form entity"
 msgstr "Підрозділ Замовлення"
 
-#: inc/abstracttarget.class.php:191
+#: inc/abstracttarget.class.php:213
 msgid "Default entity of the validator"
 msgstr "Типовий підрозділ контролера"
 
-#: inc/abstracttarget.class.php:192
+#: inc/abstracttarget.class.php:214
 msgid "Specific entity"
 msgstr "Вказаний підрозділ"
 
-#: inc/abstracttarget.class.php:193
+#: inc/abstracttarget.class.php:215
 msgid "Default entity of a user type question answer"
 msgstr "Відповідь для питання типу Типовий підрозділ користувача"
 
-#: inc/abstracttarget.class.php:194
+#: inc/abstracttarget.class.php:216
 msgid "From a GLPI object > Entity type question answer"
 msgstr "З об'єкту GLPI > Відповідь для питання типу Підрозділ"
 
-#: inc/abstracttarget.class.php:201
+#: inc/abstracttarget.class.php:223
 msgid "Tags from questions"
 msgstr "Тег з запитань"
 
-#: inc/abstracttarget.class.php:202
+#: inc/abstracttarget.class.php:224
 msgid "Specific tags"
 msgstr "Визначені теги"
 
-#: inc/abstracttarget.class.php:203
+#: inc/abstracttarget.class.php:225
 msgid "Tags from questions and specific tags"
 msgstr "Теги з запитань та визначених тегів"
 
-#: inc/abstracttarget.class.php:204
+#: inc/abstracttarget.class.php:226
 msgid "Tags from questions or specific tags"
 msgstr "Теги з запитань або визначених тегів"
 
-#: inc/abstracttarget.class.php:210
+#: inc/abstracttarget.class.php:232
 msgid "equals to the answer to the question"
 msgstr "дорівнює відповіді на запитання"
 
-#: inc/abstracttarget.class.php:211
+#: inc/abstracttarget.class.php:233
 msgid "calculated from the ticket creation date"
 msgstr "обраховується з дати створення заявки"
 
-#: inc/abstracttarget.class.php:212
+#: inc/abstracttarget.class.php:234
 msgid "calculated from the answer to the question"
 msgstr "обраховується з відповіді на запитання"
 
-#: inc/abstracttarget.class.php:218
+#: inc/abstracttarget.class.php:240
 msgid "SLA from template or none"
 msgstr "SLA із шаблону або жодного"
 
-#: inc/abstracttarget.class.php:219
+#: inc/abstracttarget.class.php:241
 msgid "Specific SLA"
 msgstr "Конкретна SLA"
 
-#: inc/abstracttarget.class.php:220 inc/abstracttarget.class.php:228
-#: inc/abstracttarget.class.php:236 inc/abstracttarget.class.php:244
-#: inc/abstracttarget.class.php:253 inc/targetchange.class.php:49
-#: inc/targetchange.class.php:57 inc/targetticket.class.php:88
-#: inc/targetticket.class.php:97
+#: inc/abstracttarget.class.php:242 inc/abstracttarget.class.php:250
+#: inc/abstracttarget.class.php:258 inc/abstracttarget.class.php:266
+#: inc/abstracttarget.class.php:275 inc/targetticket.class.php:96
+#: inc/targetticket.class.php:105
 msgid "Equals to the answer to the question"
 msgstr "Дорівнює відповіді на запитання"
 
-#: inc/abstracttarget.class.php:226
+#: inc/abstracttarget.class.php:248
 msgid "OLA from template or none"
 msgstr "OLA із шаблону або жодного"
 
-#: inc/abstracttarget.class.php:227
+#: inc/abstracttarget.class.php:249
 msgid "Specific OLA"
 msgstr "Специфічна OLA"
 
-#: inc/abstracttarget.class.php:234
+#: inc/abstracttarget.class.php:256
 msgid "Urgency from template or Medium"
 msgstr "Терміновість з шаблону або Medium"
 
-#: inc/abstracttarget.class.php:235 inc/targetchange.class.php:48
+#: inc/abstracttarget.class.php:257
 msgid "Specific urgency"
 msgstr "Конкретна терміновість"
 
-#: inc/abstracttarget.class.php:242
+#: inc/abstracttarget.class.php:264
 msgid "Category from template or none"
 msgstr "Категорія за шаблоном або жодна"
 
-#: inc/abstracttarget.class.php:243 inc/targetchange.class.php:56
+#: inc/abstracttarget.class.php:265
 msgid "Specific category"
 msgstr "Конкретна категорія"
 
-#: inc/abstracttarget.class.php:245 inc/targetticket.class.php:89
+#: inc/abstracttarget.class.php:267 inc/targetticket.class.php:97
 msgid "Last valid answer"
 msgstr "Остання дійсна відповідь"
 
-#: inc/abstracttarget.class.php:251
+#: inc/abstracttarget.class.php:273
 msgid "Location from template or none"
 msgstr "Розташування за шаблоном або жодне"
 
-#: inc/abstracttarget.class.php:252
+#: inc/abstracttarget.class.php:274
 msgid "Specific location"
 msgstr "Конкретне розташування"
 
-#: inc/abstracttarget.class.php:880
+#: inc/abstracttarget.class.php:913
 msgid "User type question"
 msgstr "Запитання типу користувача"
 
-#: inc/abstracttarget.class.php:881
+#: inc/abstracttarget.class.php:914
 msgid "Entity type question"
 msgstr "Запитання типу підрозділу"
 
-#: inc/abstracttarget.class.php:1017
+#: inc/abstracttarget.class.php:1053
 msgid "SLA (TTO/TTR)"
 msgstr "SLA (TTO/TTR)"
 
-#: inc/abstracttarget.class.php:1018 inc/abstracttarget.class.php:1089
+#: inc/abstracttarget.class.php:1054 inc/abstracttarget.class.php:1125
 msgid "Question (TTO/TTR)"
 msgstr "Запитання (TTO / TTR)"
 
-#: inc/abstracttarget.class.php:1088
+#: inc/abstracttarget.class.php:1124
 msgid "OLA (TTO/TTR)"
 msgstr "OLA (TTO/TTR)"
 
-#: inc/abstracttarget.class.php:1137 inc/abstracttarget.class.php:1151
-#: inc/form.class.php:805 inc/knowbase.class.php:64
+#: inc/abstracttarget.class.php:1173 inc/abstracttarget.class.php:1187
+#: inc/form.class.php:829 inc/knowbase.class.php:64
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Категорія"
@@ -292,10 +288,10 @@ msgstr[1] "Категоріі"
 msgstr[2] "Категоріі"
 msgstr[3] "Категоріі"
 
-#: inc/abstracttarget.class.php:1152 inc/abstracttarget.class.php:1188
-#: inc/abstracttarget.class.php:1266 inc/abstracttarget.class.php:1394
-#: inc/abstracttarget.class.php:1650 inc/question.class.php:62
-#: inc/targetticket.class.php:968 inc/targetticket.class.php:1007
+#: inc/abstracttarget.class.php:1188 inc/abstracttarget.class.php:1224
+#: inc/abstracttarget.class.php:1302 inc/abstracttarget.class.php:1430
+#: inc/abstracttarget.class.php:1686 inc/question.class.php:62
+#: inc/targetticket.class.php:890 inc/targetticket.class.php:929
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Питання"
@@ -303,48 +299,48 @@ msgstr[1] "Запитання"
 msgstr[2] "Запитання"
 msgstr[3] "Запитання"
 
-#: inc/abstracttarget.class.php:1189
+#: inc/abstracttarget.class.php:1225
 msgid "Urgency "
 msgstr "Терміновість "
 
-#: inc/abstracttarget.class.php:1219
+#: inc/abstracttarget.class.php:1255
 msgid "Ticket tags"
 msgstr "Теги заявки"
 
-#: inc/abstracttarget.class.php:1267
+#: inc/abstracttarget.class.php:1303
 msgid "Tags"
 msgstr "Теги"
 
-#: inc/abstracttarget.class.php:1352
+#: inc/abstracttarget.class.php:1388
 msgid "Actors"
 msgstr "Учасники"
 
-#: inc/abstracttarget.class.php:1395
+#: inc/abstracttarget.class.php:1431
 msgid "Location "
 msgstr "Місцезнаходження "
 
-#: inc/abstracttarget.class.php:1521
+#: inc/abstracttarget.class.php:1557
 msgid "A target must be associated to a form."
 msgstr "Ціль має бути пов'язана з формою."
 
-#: inc/abstracttarget.class.php:1526
+#: inc/abstracttarget.class.php:1562
 msgid "A target must be associated to an existing form."
 msgstr "Ціль має бути пов'язана з існуючою формою."
 
-#: inc/abstracttarget.class.php:1531
+#: inc/abstracttarget.class.php:1567
 msgid "Name is required."
 msgstr "Потрібно вказати ім’я."
 
-#: inc/abstracttarget.class.php:1558 inc/form.class.php:1407
+#: inc/abstracttarget.class.php:1594 inc/form.class.php:1435
 #: inc/form_language.class.php:108
 msgid "The name cannot be empty!"
 msgstr "Ім'я не може бути порожнім!"
 
-#: inc/abstracttarget.class.php:1564
+#: inc/abstracttarget.class.php:1600
 msgid "The description cannot be empty!"
 msgstr "Опис не може бути порожнім!"
 
-#: inc/abstracttarget.class.php:1652 inc/answer.class.php:66
+#: inc/abstracttarget.class.php:1688 inc/answer.class.php:66
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Відповідь"
@@ -352,7 +348,7 @@ msgstr[1] "Відповіді"
 msgstr[2] "Відповіді"
 msgstr[3] "Відповіді"
 
-#: inc/abstracttarget.class.php:1653 inc/question.class.php:728
+#: inc/abstracttarget.class.php:1689 inc/question.class.php:728
 #: inc/section.class.php:64
 msgid "Section"
 msgid_plural "Sections"
@@ -361,49 +357,53 @@ msgstr[1] "Розділи"
 msgstr[2] "Розділи"
 msgstr[3] "Розділи"
 
-#: inc/abstracttarget.class.php:1657
+#: inc/abstracttarget.class.php:1693
 msgid "Full form"
 msgstr "Повне Замовлення"
 
-#: inc/abstracttarget.class.php:1831
+#: inc/abstracttarget.class.php:1867
 msgid "Add"
 msgstr "Додати"
 
-#: inc/abstracttarget.class.php:1833
+#: inc/abstracttarget.class.php:1869
 msgid "Cancel"
 msgstr "Відміна"
 
-#: inc/abstracttarget.class.php:2002 inc/target_actor.class.php:65
+#: inc/abstracttarget.class.php:2039 inc/target_actor.class.php:66
 msgid "Form author"
 msgstr "Учасник форми"
 
-#: inc/abstracttarget.class.php:2005 inc/target_actor.class.php:66
+#: inc/abstracttarget.class.php:2042 inc/target_actor.class.php:67
 msgid "Form validator"
 msgstr "Контролер Замовлення"
 
-#: inc/abstracttarget.class.php:2015 inc/target_actor.class.php:68
+#: inc/abstracttarget.class.php:2052 inc/target_actor.class.php:69
 msgid "Person from the question"
 msgstr "Персона з запитання"
 
-#: inc/abstracttarget.class.php:2026 inc/target_actor.class.php:70
+#: inc/abstracttarget.class.php:2063 inc/target_actor.class.php:71
 msgid "Group from the question"
 msgstr "Група з запитання"
 
-#: inc/abstracttarget.class.php:2032
+#: inc/abstracttarget.class.php:2069
 msgid "Group from the object"
 msgstr "Група з об'єкта"
 
-#: inc/abstracttarget.class.php:2038
+#: inc/abstracttarget.class.php:2075
 msgid "Tech group from the object"
 msgstr "Технічна група з об'єкта"
 
-#: inc/abstracttarget.class.php:2044 inc/target_actor.class.php:75
+#: inc/abstracttarget.class.php:2081 inc/target_actor.class.php:76
 msgid "Actors from the question"
 msgstr "Учасники з питання"
 
-#: inc/abstracttarget.class.php:2055 inc/target_actor.class.php:74
+#: inc/abstracttarget.class.php:2092 inc/target_actor.class.php:75
 msgid "Supplier from the question"
 msgstr "Постачальник з запитання"
+
+#: inc/abstracttarget.class.php:2096 inc/target_actor.class.php:77
+msgid "Form author's supervisor"
+msgstr ""
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -449,24 +449,24 @@ msgstr "Приховане доки"
 msgid "Displayed unless"
 msgstr "Видимі доки"
 
-#: inc/condition.class.php:177 inc/form.class.php:2074
-#: inc/form_language.class.php:538 inc/form_profile.class.php:228
+#: inc/condition.class.php:177 inc/form.class.php:2102
+#: inc/form_language.class.php:537 inc/form_profile.class.php:228
 #: inc/form_validator.class.php:110 inc/item_targetticket.class.php:149
 #: inc/question.class.php:943 inc/questiondependency.class.php:202
 #: inc/questionrange.class.php:204 inc/questionregex.class.php:191
-#: inc/section.class.php:343 inc/target_actor.class.php:176
-#: inc/targetchange.class.php:248 inc/targetticket.class.php:1261
+#: inc/section.class.php:343 inc/target_actor.class.php:180
+#: inc/targetchange.class.php:261 inc/targetticket.class.php:1196
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "Не вдалося додати або оновити %1$s %2$s"
 
-#: inc/condition.class.php:199 inc/form.class.php:1775
-#: inc/form_language.class.php:554 inc/form_profile.class.php:245
+#: inc/condition.class.php:199 inc/form.class.php:1803
+#: inc/form_language.class.php:553 inc/form_profile.class.php:245
 #: inc/form_validator.class.php:134 inc/item_targetticket.class.php:64
 #: inc/question.class.php:992 inc/questiondependency.class.php:217
 #: inc/questionrange.class.php:136 inc/questionregex.class.php:123
-#: inc/section.class.php:368 inc/target_actor.class.php:197
-#: inc/targetchange.class.php:103 inc/targetticket.class.php:1300
+#: inc/section.class.php:368 inc/target_actor.class.php:201
+#: inc/targetchange.class.php:95 inc/targetticket.class.php:1235
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "Неможливо експортувати порожній об'єкт: %s"
@@ -600,15 +600,15 @@ msgstr "Значок форми"
 msgid "Need to be validate?"
 msgstr "Схвалення необхідне?"
 
-#: inc/form.class.php:633
+#: inc/form.class.php:657
 msgid "Default form in service catalog"
 msgstr "Типове Замовлення каталогу сервісів"
 
-#: inc/form.class.php:645
+#: inc/form.class.php:669
 msgid "To delete this form you must delete all its answers first."
 msgstr "Щоб видалити цю форму, спочатку потрібно видалити всі її відповіді."
 
-#: inc/form.class.php:657 inc/form.class.php:714
+#: inc/form.class.php:681 inc/form.class.php:738
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Ціль"
@@ -616,132 +616,132 @@ msgstr[1] "Цілі"
 msgstr[2] "Цілі"
 msgstr[3] "Цілі"
 
-#: inc/form.class.php:683 inc/form_language.class.php:335
-#: inc/form_language.class.php:374
+#: inc/form.class.php:707 inc/form_language.class.php:334
+#: inc/form_language.class.php:373
 msgid "Delete"
 msgstr "Видалити"
 
-#: inc/form.class.php:696 inc/form.class.php:2408
+#: inc/form.class.php:720 inc/form.class.php:2436
 msgid "Add a target"
 msgstr "Додати ціль"
 
-#: inc/form.class.php:806 inc/knowbase.class.php:65
+#: inc/form.class.php:830 inc/knowbase.class.php:65
 msgid "see all"
 msgstr "дивитись все"
 
-#: inc/form.class.php:1122
+#: inc/form.class.php:1152
 msgid "What are you looking for?"
 msgstr "Що Ви шукаєте?"
 
-#: inc/form.class.php:1130
+#: inc/form.class.php:1160
 #, php-format
 msgid "My %1$d last forms (requester)"
 msgstr "Мої %1$d останні Форми (замовник)"
 
-#: inc/form.class.php:1133
+#: inc/form.class.php:1163
 msgid "No form posted yet"
 msgstr "Заповнених Замовлень ще немає"
 
-#: inc/form.class.php:1156
+#: inc/form.class.php:1186
 msgid "All my forms (requester)"
 msgstr "Всі мої Замовлення (замовник)"
 
-#: inc/form.class.php:1166
+#: inc/form.class.php:1194
 #, php-format
 msgid "My %1$d last forms (validator)"
 msgstr "Мої %1$d останні форми (валідатор)"
 
-#: inc/form.class.php:1174
+#: inc/form.class.php:1202
 msgid "No form waiting for validation"
 msgstr "Немає Замовлень, що очікують контролю"
 
-#: inc/form.class.php:1203
+#: inc/form.class.php:1231
 msgid "All my forms (validator)"
 msgstr "Всі мої Замовлення (контролер)"
 
-#: inc/form.class.php:1323 inc/form.class.php:1324
+#: inc/form.class.php:1351 inc/form.class.php:1352
 msgid "Are you a robot ?"
 msgstr "Ви робот?"
 
-#: inc/form.class.php:1365
+#: inc/form.class.php:1393
 msgid "Validation"
 msgstr "Перевірка"
 
-#: inc/form.class.php:1367
+#: inc/form.class.php:1395
 msgid "Choose a validator"
 msgstr "Обрати контролера"
 
-#: inc/form.class.php:1472
+#: inc/form.class.php:1500
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "Питання %s не сумісне з публічними формами"
 
-#: inc/form.class.php:1607
+#: inc/form.class.php:1635
 msgid "Errored duplicate"
 msgstr "Помилковий дублікат"
 
-#: inc/form.class.php:1618
+#: inc/form.class.php:1646
 msgid "Duplicate"
 msgstr "Дублювати"
 
-#: inc/form.class.php:1683
+#: inc/form.class.php:1711
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Замовлення продубльовано: %s"
 
-#: inc/form.class.php:1694
+#: inc/form.class.php:1722
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Замовлення перенесено: %s"
 
-#: inc/form.class.php:1830
+#: inc/form.class.php:1858
 msgid "Upload of JSON files not allowed."
 msgstr "Завантаження файлів JSON заборонено."
 
-#: inc/form.class.php:1833
+#: inc/form.class.php:1861
 msgid "You may allow JSON files right now."
 msgstr "Ви можете дозволити JSON файли прямо зараз."
 
-#: inc/form.class.php:1834
+#: inc/form.class.php:1862
 msgctxt "button"
 msgid "Create"
 msgstr "Створити"
 
-#: inc/form.class.php:1837 inc/form.class.php:1848
+#: inc/form.class.php:1865 inc/form.class.php:1876
 msgid "Please contact your GLPI administrator."
 msgstr "Зверніться до адміністратора GLPI."
 
-#: inc/form.class.php:1838 inc/form.class.php:1849
+#: inc/form.class.php:1866 inc/form.class.php:1877
 msgctxt "button"
 msgid "Back"
 msgstr "Назад"
 
-#: inc/form.class.php:1841
+#: inc/form.class.php:1869
 msgid "Upload of JSON files not enabled."
 msgstr "Завантаження файлів JSON не ввімкнуто."
 
-#: inc/form.class.php:1844 inc/form.class.php:1847
+#: inc/form.class.php:1872 inc/form.class.php:1875
 msgid "You may enable JSON files right now."
 msgstr "Ви можете ввімкнути файли JSON прямо зараз."
 
-#: inc/form.class.php:1845
+#: inc/form.class.php:1873
 msgctxt "button"
 msgid "Enable"
 msgstr "Активувати"
 
-#: inc/form.class.php:1911
+#: inc/form.class.php:1939
 msgid "Forms import impossible, the file is empty"
 msgstr "Імпорт форм неможливий, файл порожній"
 
-#: inc/form.class.php:1915 inc/form.class.php:1919
+#: inc/form.class.php:1943 inc/form.class.php:1947
 msgid "Forms import impossible, the file seems corrupt"
 msgstr "Імпорт форм неможливий, файл здається пошкодженим"
 
-#: inc/form.class.php:1925
+#: inc/form.class.php:1953
 msgid "Forms import impossible, the file was generated with another version"
 msgstr "Імпорт форм неможливий, файл створено з іншою версією"
 
-#: inc/form.class.php:1932
+#: inc/form.class.php:1960
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
@@ -749,55 +749,55 @@ msgstr ""
 "У файлі не вказана версія схеми. Ймовірно, його було створено з версією, "
 "старшою за 2.10. Покинути."
 
-#: inc/form.class.php:1958
+#: inc/form.class.php:1986
 #, php-format
 msgid "Failed to import %s"
 msgstr "Не вдалося імпортувати %s"
 
-#: inc/form.class.php:1963
+#: inc/form.class.php:1991
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Замовлення з %s успішно імпортовані"
 
-#: inc/form.class.php:2029
+#: inc/form.class.php:2057
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "Форма %1$s існує та має немодифіфікувану сутність."
 
-#: inc/form.class.php:2037
+#: inc/form.class.php:2065
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "Сутність %1$s потрібна для форми %2$s."
 
-#: inc/form.class.php:2114
+#: inc/form.class.php:2142
 msgid "Failed to create JSON document type"
 msgstr "Не вдалося створити тип документа JSON"
 
-#: inc/form.class.php:2121
+#: inc/form.class.php:2149
 msgid "JSON document type not found"
 msgstr "Тип документа JSON не знайдено"
 
-#: inc/form.class.php:2128
+#: inc/form.class.php:2156
 msgid "Failed to update JSON document type"
 msgstr "Не вдалося оновити тип документа JSON"
 
-#: inc/form.class.php:2148
+#: inc/form.class.php:2176
 msgid "Forms without category"
 msgstr "Замовлення без категорії"
 
-#: inc/form.class.php:2171
+#: inc/form.class.php:2199
 msgid "No form available"
 msgstr "Немає доступних форм"
 
-#: inc/form.class.php:2450
+#: inc/form.class.php:2478
 msgid "Unsupported target type."
 msgstr "Непідтримуваний тип цілі."
 
-#: inc/form.class.php:2473
+#: inc/form.class.php:2501
 msgid "Unsuported target type."
 msgstr "Непідтримуваний тип цілі."
 
-#: inc/form.class.php:2512
+#: inc/form.class.php:2540
 msgid "plugin_formcreator_load_check"
 msgstr "plugin_formcreator_load_check"
 
@@ -809,7 +809,7 @@ msgstr[1] "Мови форми"
 msgstr[2] "Мови форми"
 msgstr[3] "Мови форми"
 
-#: inc/form_language.class.php:69 inc/form_language.class.php:346
+#: inc/form_language.class.php:69 inc/form_language.class.php:345
 msgid "Translation"
 msgid_plural "Translations"
 msgstr[0] "Переклад"
@@ -821,27 +821,27 @@ msgstr[3] "Переклади"
 msgid "The language must be associated to a form!"
 msgstr "Мова повинна бути пов'язана з формою!"
 
-#: inc/form_language.class.php:246 inc/form_language.class.php:281
+#: inc/form_language.class.php:246 inc/form_language.class.php:280
 msgid "Add a translation"
 msgstr "Додайте переклад"
 
-#: inc/form_language.class.php:309 inc/form_language.class.php:311
+#: inc/form_language.class.php:308 inc/form_language.class.php:310
 msgid "New translation"
 msgstr "Новий переклад"
 
-#: inc/form_language.class.php:314
+#: inc/form_language.class.php:313
 msgid "Filter list"
 msgstr "Список фільтрів"
 
-#: inc/form_language.class.php:319 inc/form_language.class.php:411
+#: inc/form_language.class.php:318 inc/form_language.class.php:410
 msgid "No translation found"
 msgstr "Немає перекладів"
 
-#: inc/form_language.class.php:324
+#: inc/form_language.class.php:323
 msgid "Do you want to delete the selected items?"
 msgstr "Видалити вибрані елементи?"
 
-#: inc/form_language.class.php:345
+#: inc/form_language.class.php:344
 msgid "Original string"
 msgstr "Оригінальний рядок"
 
@@ -869,7 +869,7 @@ msgstr "Увімкнути капчу"
 msgid "Waiting"
 msgstr "Очікування"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:635
+#: inc/formanswer.class.php:63 inc/issue.class.php:648
 msgid "Refused"
 msgstr "Відхилено"
 
@@ -877,7 +877,7 @@ msgstr "Відхилено"
 msgid "Accepted"
 msgstr "Ухвалено"
 
-#: inc/formanswer.class.php:164 inc/issue.class.php:629
+#: inc/formanswer.class.php:164 inc/issue.class.php:642
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Відповідь на форму"
@@ -889,80 +889,80 @@ msgstr[3] "Відповіді на форму"
 msgid "Form approver"
 msgstr "Затверджувач форми"
 
-#: inc/formanswer.class.php:226 inc/issue.class.php:612
+#: inc/formanswer.class.php:226 inc/issue.class.php:625
 msgid "Form approver group"
 msgstr "Група затверджувачів форм"
 
-#: inc/formanswer.class.php:504
+#: inc/formanswer.class.php:496
 msgid "Print this form"
 msgstr "Надрукувати цю форму"
 
-#: inc/formanswer.class.php:525
+#: inc/formanswer.class.php:517
 msgid "Form accepted by validator."
 msgstr "Замовлення ухвалене контролером."
 
-#: inc/formanswer.class.php:527
+#: inc/formanswer.class.php:519
 msgid "Form successfully saved."
 msgstr "Замовлення успішно збережено."
 
-#: inc/formanswer.class.php:591 inc/notificationtargetformanswer.class.php:79
+#: inc/formanswer.class.php:583 inc/notificationtargetformanswer.class.php:79
 msgid "Requester"
 msgstr "Замовник"
 
-#: inc/formanswer.class.php:606
+#: inc/formanswer.class.php:598
 msgid "Comment"
 msgstr "Пояснення"
 
-#: inc/formanswer.class.php:611
+#: inc/formanswer.class.php:603
 msgid "Required if refused"
 msgstr "Обов'язково для відхилення"
 
-#: inc/formanswer.class.php:617
+#: inc/formanswer.class.php:609
 msgid "Refuse"
 msgstr "Відхилити"
 
-#: inc/formanswer.class.php:625
+#: inc/formanswer.class.php:617
 msgid "Edit answers"
 msgstr "Редагувати відповіді"
 
-#: inc/formanswer.class.php:631
+#: inc/formanswer.class.php:623
 msgid "Cancel edition"
 msgstr "Скасувати редагування"
 
-#: inc/formanswer.class.php:639
+#: inc/formanswer.class.php:631
 msgid "Accept"
 msgstr "Ухвалити"
 
-#: inc/formanswer.class.php:656
+#: inc/formanswer.class.php:648
 msgid "Refused comment is required!"
 msgstr "Пояснення відхилення обов'язкове!"
 
-#: inc/formanswer.class.php:741
+#: inc/formanswer.class.php:733
 msgid "You are not the validator of these answers"
 msgstr "Ви не є контролером цих відповідей."
 
-#: inc/formanswer.class.php:826 inc/formanswer.class.php:1014
-#: inc/formanswer.class.php:1057
+#: inc/formanswer.class.php:818 inc/formanswer.class.php:1006
+#: inc/formanswer.class.php:1049
 msgid "The form has been successfully saved!"
 msgstr "Замовлення збережено успішно!"
 
-#: inc/formanswer.class.php:883 inc/formanswer.class.php:885
+#: inc/formanswer.class.php:875 inc/formanswer.class.php:877
 msgid "Form data"
 msgstr "Інформація Замовлення"
 
-#: inc/formanswer.class.php:1001 inc/formanswer.class.php:1044
+#: inc/formanswer.class.php:993 inc/formanswer.class.php:1036
 msgid "Cannot generate targets!"
 msgstr "Неможливо згенерувати призначення!"
 
-#: inc/formanswer.class.php:1155
+#: inc/formanswer.class.php:1144
 msgid "No turing test set"
 msgstr "Не встановлено тест Тьюрінга"
 
-#: inc/formanswer.class.php:1160
+#: inc/formanswer.class.php:1149
 msgid "You failed the Turing test"
 msgstr "Ви не пройшли тест Тьюринга"
 
-#: inc/formanswer.class.php:1178
+#: inc/formanswer.class.php:1167
 msgid "You must select validator!"
 msgstr "Слід вибрати узгоджувача!"
 
@@ -982,7 +982,7 @@ msgstr "Оновіть дані про випуск із тікетів та ф�
 msgid "Ticket approver"
 msgstr "Затверджувач тікетів"
 
-#: inc/issue.class.php:634
+#: inc/issue.class.php:647
 msgid "Not validated"
 msgstr "Не перевірено"
 
@@ -1171,27 +1171,27 @@ msgstr "Редагувати розділ"
 msgid "Condition to show the section"
 msgstr "Умова для показу розділу"
 
-#: inc/target_actor.class.php:67
+#: inc/target_actor.class.php:68
 msgid "Specific person"
 msgstr "Вказана персона"
 
-#: inc/target_actor.class.php:69
+#: inc/target_actor.class.php:70
 msgid "Specific group"
 msgstr "Вказана група"
 
-#: inc/target_actor.class.php:71
+#: inc/target_actor.class.php:72
 msgid "Group from an object"
 msgstr "Вказана група"
 
-#: inc/target_actor.class.php:72
+#: inc/target_actor.class.php:73
 msgid "Tech group from an object"
 msgstr "Технічна група з об'єкта"
 
-#: inc/target_actor.class.php:73
+#: inc/target_actor.class.php:74
 msgid "Specific supplier"
 msgstr "Вказаний постачальник"
 
-#: inc/target_actor.class.php:89
+#: inc/target_actor.class.php:91
 msgid "Target actor"
 msgid_plural "Target actors"
 msgstr[0] "Цільовий учасник"
@@ -1199,7 +1199,7 @@ msgstr[1] "Цільові учасники"
 msgstr[2] "Цільові учасники"
 msgstr[3] "Цільові учасники"
 
-#: inc/targetchange.class.php:42 inc/targetchange.class.php:389
+#: inc/targetchange.class.php:42 inc/targetchange.class.php:402
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] "Зміна цілі"
@@ -1207,64 +1207,56 @@ msgstr[1] "Зміни цілєй"
 msgstr[2] "Зміни цілєй"
 msgstr[3] "Зміни цілєй"
 
-#: inc/targetchange.class.php:47
-msgid "Medium"
-msgstr "Середній"
-
-#: inc/targetchange.class.php:55 inc/targetticket.class.php:86
-msgid "None"
-msgstr "Жоден"
-
-#: inc/targetchange.class.php:232 inc/targetticket.class.php:1245
+#: inc/targetchange.class.php:245 inc/targetticket.class.php:1180
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
 "a parameter of the target"
 msgstr ""
-"Не вдалося додати або оновити %1$s %2$s: питання відсутнє і "
-"використовується в параметрі цілі"
+"Не вдалося додати або оновити %1$s %2$s: питання відсутнє і використовується"
+" в параметрі цілі"
 
-#: inc/targetchange.class.php:288 inc/targetchange.class.php:392
+#: inc/targetchange.class.php:301 inc/targetchange.class.php:405
 msgid "Change title"
 msgstr "Змінити заголовок"
 
-#: inc/targetchange.class.php:298 inc/targetticket.class.php:127
+#: inc/targetchange.class.php:311 inc/targetticket.class.php:135
 msgid "Content"
 msgstr "Зміст"
 
-#: inc/targetchange.class.php:308
+#: inc/targetchange.class.php:321
 msgid "Impact"
 msgstr "Вплив"
 
-#: inc/targetchange.class.php:318
+#: inc/targetchange.class.php:331
 msgid "Control list"
 msgstr "Контрольний список"
 
-#: inc/targetchange.class.php:328
-msgid "Rollout plan"
-msgstr "План розгортання"
+#: inc/targetchange.class.php:341
+msgid "Deployment plan"
+msgstr ""
 
-#: inc/targetchange.class.php:338
+#: inc/targetchange.class.php:351
 msgid "Backup plan"
 msgstr "План резервування"
 
-#: inc/targetchange.class.php:348
+#: inc/targetchange.class.php:361
 msgid "Check list"
 msgstr "Контрольний список"
 
-#: inc/targetchange.class.php:360 inc/targetticket.class.php:145
+#: inc/targetchange.class.php:373 inc/targetticket.class.php:153
 msgid "Add a target "
 msgstr "Додати ціль "
 
-#: inc/targetchange.class.php:362 inc/targetticket.class.php:147
+#: inc/targetchange.class.php:375 inc/targetticket.class.php:155
 msgid "Edit a target"
 msgstr "Відредагуйте ціль"
 
-#: inc/targetchange.class.php:493 inc/targetticket.class.php:258
+#: inc/targetchange.class.php:506 inc/targetticket.class.php:266
 msgid "Condition to create the target"
 msgstr "Умова для створення цілі"
 
-#: inc/targetticket.class.php:52 inc/targetticket.class.php:174
+#: inc/targetticket.class.php:52 inc/targetticket.class.php:182
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Цільова заявка"
@@ -1272,63 +1264,67 @@ msgstr[1] "Цільові заявки"
 msgstr[2] "Цільові заявки"
 msgstr[3] "Цільові заявки"
 
-#: inc/targetticket.class.php:87
+#: inc/targetticket.class.php:94
+msgid "None"
+msgstr "Жоден"
+
+#: inc/targetticket.class.php:95
 msgid "Specific asset"
 msgstr "Конкретний актив"
 
-#: inc/targetticket.class.php:95
+#: inc/targetticket.class.php:103
 msgid "Default or from a template"
 msgstr "За замовчуванням або з шаблону"
 
-#: inc/targetticket.class.php:96
+#: inc/targetticket.class.php:104
 msgid "Specific type"
 msgstr "Конкретний тип"
 
-#: inc/targetticket.class.php:117 inc/targetticket.class.php:177
+#: inc/targetticket.class.php:125 inc/targetticket.class.php:185
 msgid "Ticket title"
 msgstr "Назва заявки"
 
-#: inc/targetticket.class.php:247
+#: inc/targetticket.class.php:255
 msgid "Add validation message as first ticket followup"
 msgstr "Додати повідомлення перевірки як першу відповідь заявки"
 
-#: inc/targetticket.class.php:301
+#: inc/targetticket.class.php:309
 msgid "Link to an other ticket"
 msgstr "Посилання на інший тікет"
 
-#: inc/targetticket.class.php:310
+#: inc/targetticket.class.php:318
 msgid "An other destination of this form"
 msgstr "Інший пункт призначення цієї форми"
 
-#: inc/targetticket.class.php:311
+#: inc/targetticket.class.php:319
 msgid "An existing ticket"
 msgstr "Існуючий тікет"
 
-#: inc/targetticket.class.php:596
+#: inc/targetticket.class.php:604
 msgid "Invalid link type"
 msgstr "Недійсний тип посилання"
 
-#: inc/targetticket.class.php:612
+#: inc/targetticket.class.php:620
 msgid "Invalid linked item type"
 msgstr "Недійсний тип зв’язаного елемента"
 
-#: inc/targetticket.class.php:625
+#: inc/targetticket.class.php:633
 msgid "Linked item does not exists"
 msgstr "Пов’язаний елемент не існує"
 
-#: inc/targetticket.class.php:638
+#: inc/targetticket.class.php:646
 msgid "Failed to link the item"
 msgstr "Не вдалося зв’язати елемент"
 
-#: inc/targetticket.class.php:868 install/install.php:296
+#: inc/targetticket.class.php:790 install/install.php:296
 msgid "Your form has been accepted by the validator"
 msgstr "Ваше Замовлення схвалене контролером"
 
-#: inc/targetticket.class.php:969
+#: inc/targetticket.class.php:891
 msgid "Type "
 msgstr "Тип "
 
-#: inc/targetticket.class.php:1008
+#: inc/targetticket.class.php:930
 msgid "Item "
 msgstr "Елемент "
 
@@ -1390,7 +1386,7 @@ msgstr[1] "Учасники"
 msgstr[2] "Учасники"
 msgstr[3] "Учасники"
 
-#: inc/field/actorfield.class.php:267 inc/field/checkboxesfield.class.php:210
+#: inc/field/actorfield.class.php:269 inc/field/checkboxesfield.class.php:210
 #: inc/field/datefield.class.php:138 inc/field/datetimefield.class.php:140
 #: inc/field/floatfield.class.php:142 inc/field/radiosfield.class.php:234
 #: inc/field/selectfield.class.php:97
@@ -1398,12 +1394,12 @@ msgstr[3] "Учасники"
 msgid "A required field is empty: %s"
 msgstr "Обов’язкове поле порожнє: %s"
 
-#: inc/field/actorfield.class.php:277
+#: inc/field/actorfield.class.php:279
 #, php-format
 msgid "Invalid value: %s"
 msgstr "Недійсне значення: %s"
 
-#: inc/field/actorfield.class.php:300
+#: inc/field/actorfield.class.php:302
 #, php-format
 msgid "User not found or invalid email address: %s"
 msgstr "Користувача не знайдено або недійсна електронна адреса: %s"
@@ -1423,7 +1419,7 @@ msgid "The following question does not accept more than %d answers"
 msgstr "Наступне питання не приймає більше %d відповідей"
 
 #: inc/field/checkboxesfield.class.php:265
-#: inc/field/glpiselectfield.class.php:149 inc/field/radiosfield.class.php:156
+#: inc/field/glpiselectfield.class.php:171 inc/field/radiosfield.class.php:156
 msgid "The field value is required:"
 msgstr "Значення поля є обов'язковим:"
 
@@ -1440,43 +1436,51 @@ msgstr "Дата & час"
 msgid "A description field should have a description:"
 msgstr "Поле опису повинне містити опис:"
 
-#: inc/field/dropdownfield.class.php:84
+#: inc/field/dropdownfield.class.php:65
+msgid "User"
+msgstr ""
+
+#: inc/field/dropdownfield.class.php:67
+msgid "User and form"
+msgstr ""
+
+#: inc/field/dropdownfield.class.php:98
 msgid "SLA"
 msgstr "SLA"
 
-#: inc/field/dropdownfield.class.php:85
+#: inc/field/dropdownfield.class.php:99
 msgid "OLA"
 msgstr "OLA"
 
-#: inc/field/dropdownfield.class.php:118
+#: inc/field/dropdownfield.class.php:132
 msgid "Show ticket categories"
 msgstr "Показати категорії тикетів"
 
-#: inc/field/dropdownfield.class.php:123 inc/field/dropdownfield.class.php:125
+#: inc/field/dropdownfield.class.php:137 inc/field/dropdownfield.class.php:139
 msgid "Request categories"
 msgstr "Категорії запитів"
 
-#: inc/field/dropdownfield.class.php:124 inc/field/dropdownfield.class.php:125
+#: inc/field/dropdownfield.class.php:138 inc/field/dropdownfield.class.php:139
 msgid "Incident categories"
 msgstr "Категорії інцидентів"
 
-#: inc/field/dropdownfield.class.php:126
+#: inc/field/dropdownfield.class.php:140
 msgid "Change categories"
 msgstr "Змінити категорії"
 
-#: inc/field/dropdownfield.class.php:154
+#: inc/field/dropdownfield.class.php:169
 msgid "Type"
 msgstr "Тип"
 
-#: inc/field/dropdownfield.class.php:159
+#: inc/field/dropdownfield.class.php:174
 msgid "Time to own"
 msgstr "Час для володіння"
 
-#: inc/field/dropdownfield.class.php:160
+#: inc/field/dropdownfield.class.php:175
 msgid "Time to resolve"
 msgstr "Час для вирішення"
 
-#: inc/field/dropdownfield.class.php:448
+#: inc/field/dropdownfield.class.php:463
 #: inc/field/ldapselectfield.class.php:230
 #: inc/field/requesttypefield.class.php:189 inc/field/tagfield.class.php:157
 #: inc/field/textareafield.class.php:163 inc/field/textfield.class.php:148
@@ -1484,19 +1488,23 @@ msgstr "Час для вирішення"
 msgid "A required field is empty:"
 msgstr "Обов'язкове поле порожнє:"
 
-#: inc/field/dropdownfield.class.php:475
+#: inc/field/dropdownfield.class.php:490
 msgid "Invalid value for "
 msgstr "Недійсне значення для "
 
-#: inc/field/dropdownfield.class.php:487
+#: inc/field/dropdownfield.class.php:502
 #, php-format
 msgid "The field value is required: %s"
 msgstr "Необхідне значення поля: %s"
 
-#: inc/field/dropdownfield.class.php:503
+#: inc/field/dropdownfield.class.php:518
 #, php-format
 msgid "Invalid dropdown type: %s"
 msgstr "Недійсний тип випадаючого списку: %s"
+
+#: inc/field/dropdownfield.class.php:875
+msgid "Entity restriction"
+msgstr ""
 
 #: inc/field/emailfield.class.php:108
 #, php-format
@@ -1552,18 +1560,13 @@ msgid "Additional validation"
 msgstr "Додаткова перевірка"
 
 #: inc/field/glpiselectfield.class.php:78
-#: inc/field/glpiselectfield.class.php:134
+#: inc/field/glpiselectfield.class.php:156
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "Об'єкт GLPI"
 msgstr[1] "Об'єкти GLPI"
 msgstr[2] "Об'єкти GLPI"
 msgstr[3] "Об'єкти GLPI"
-
-#: inc/field/glpiselectfield.class.php:276
-#: inc/field/glpiselectfield.class.php:280
-msgid "Objects management"
-msgstr "Управління об'єктами"
 
 #: inc/field/integerfield.class.php:57
 #, php-format
@@ -1662,9 +1665,10 @@ msgid ""
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr ""
-"Вітаємо!\\nВаше Замовлення успішно збережено з номером ##formcreator."
-"request_id## і передано команді Сервіс-деску.\\nВи можете спостерігати "
-"Замовлення за наступним посиланням:\\n##formcreator.validation_link##"
+"Вітаємо!\\nВаше Замовлення успішно збережено з номером "
+"##formcreator.request_id## і передано команді Сервіс-деску.\\nВи можете "
+"спостерігати Замовлення за наступним "
+"посиланням:\\n##formcreator.validation_link##"
 
 #: install/install.php:284
 msgid "A form from GLPI need to be validate"
@@ -1673,12 +1677,12 @@ msgstr "Замовлення має бути перевірене контрол
 #: install/install.php:285
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
-"validator.\\nYou can access it by clicking onto this link:\\n##formcreator."
-"validation_link##"
+"validator.\\nYou can access it by clicking onto this "
+"link:\\n##formcreator.validation_link##"
 msgstr ""
 "Вітаємо!,\\nЗамовлення з Сервіс-Деску потребує перевірки і Вас обрали у "
-"якості контролера.\\nВи можете переглянути його за наступним посиланням:"
-"\\n##formcreator.validation_link##"
+"якості контролера.\\nВи можете переглянути його за наступним "
+"посиланням:\\n##formcreator.validation_link##"
 
 #: install/install.php:290
 msgid "Your form has been refused by the validator"
@@ -1687,13 +1691,13 @@ msgstr "Ваша Замовлення було відхилено контрол
 #: install/install.php:291
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
-"validator for the reason below:\\n##formcreator.validation_comment##\\n"
-"\\nYou can still modify and resubmit it by clicking onto this link:"
-"\\n##formcreator.validation_link##"
+"validator for the reason "
+"below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
+"resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr ""
 "Привіт!\\nНа жаль, Ваше Замовлення відхилене контролером з наступним "
-"поясненням:\\n##formcreator.validation_comment##\\n\\nВи можете внести "
-"зміни за  посиланням:\\n##formcreator.validation_link##"
+"поясненням:\\n##formcreator.validation_comment##\\n\\nВи можете внести зміни"
+" за  посиланням:\\n##formcreator.validation_link##"
 
 #: install/install.php:297
 msgid ""
@@ -1719,26 +1723,26 @@ msgstr ""
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Проблеми з каталогом служби синхронізації"
 
-#: js/scripts.js.php:361
+#: js/scripts.js:357
 msgid "No form found. Please choose a form below instead"
 msgstr "Замовлення не знайдене. Будь ласка, оберіть нижче інше Замовлення"
 
-#: js/scripts.js.php:384 js/scripts.js.php:405
+#: js/scripts.js:380 js/scripts.js:401
 msgid "An error occured while querying forms"
 msgstr "Під час роботи з Замовленнями виникла помилка"
 
-#: js/scripts.js.php:467
+#: js/scripts.js:463
 msgid "No form yet in this category"
 msgstr "В цій категорії ще немає Замовлень"
 
-#: js/scripts.js.php:743
+#: js/scripts.js:739
 msgid "Are you sure you want to delete this question?"
 msgstr "Ви впевнені, що необхідно видалити це запитання?"
 
-#: js/scripts.js.php:947
+#: js/scripts.js:941
 msgid "Are you sure you want to delete this section?"
 msgstr "Ви впевнені, що необхідно видалити цей розділ?"
 
-#: js/scripts.js.php:1239
+#: js/scripts.js:1233
 msgid "Are you sure you want to delete this destination:"
 msgstr "Ви впевнені, що необхідно видалити це призначення?"
