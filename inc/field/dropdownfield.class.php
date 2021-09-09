@@ -39,18 +39,23 @@ use Toolbox;
 use Session;
 use DBUtils;
 use Dropdown;
+use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
 use ITILCategory;
 use Entity;
 use User;
 use Group;
+use Group_Ticket;
 use Group_User;
 use Ticket;
+use Ticket_User;
 use Search;
 use SLA;
 use SLM;
 use OLA;
+use QuerySubQuery;
+use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DropdownField extends PluginFormcreatorAbstractField
@@ -275,6 +280,47 @@ class DropdownField extends PluginFormcreatorAbstractField
                      'is_request'  => 1,
                   ];
                   break;
+            }
+            break;
+
+         case Ticket::class:
+            // Shall match logic in \Search::getDefaultWhere()
+            if (!Session::haveRight("ticket", Ticket::READALL)) {
+               $currentUser = Session::getLoginUserID();
+               if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
+                  $requestersObserversQuery = new QuerySubQuery([
+                     'SELECT' => 'tickets_id',
+                     'FROM' => Ticket_User::getTable(),
+                     'WHERE' => [
+                        'users_id' => $currentUser,
+                        'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                     ],
+                  ]);
+                  $dparams_cond_crit['OR'] = [
+                     'id' => $requestersObserversQuery,
+                     'users_id_recipient' => $currentUser,
+                  ];
+               }
+               if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
+                  $requestersObserversGroupsQuery = new QuerySubQuery([
+                     'SELECT' => 'tickets_id',
+                     'FROM' => Group_Ticket::getTable(),
+                     'WHERE' => [
+                        'groups_id' => $_SESSION['glpigroups'],
+                        'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                     ],
+                  ]);
+                  if (!isset($dparams_cond_crit['OR']['id'])) {
+                     $dparams_cond_crit['OR'] = [
+                        'id' => $requestersObserversGroupsQuery,
+                     ];
+                  } else {
+                     $dparams_cond_crit['OR']['id'] = new QueryUnion([
+                        $dparams_cond_crit['OR']['id'],
+                        $requestersObserversGroupsQuery,
+                     ]);
+                  }
+               }
             }
             break;
 
