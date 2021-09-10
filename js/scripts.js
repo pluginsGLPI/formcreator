@@ -1788,13 +1788,21 @@ function plugin_formceator_showPictogram(id, preview) {
 /**
  * update composite ticket (links between tickets) in target ticket (design mode)
  */
-function plugin_formcreator_updateCompositePeerType(rand) {
-   if ($('#dropdown__link_itemtype' + rand).val() == 'Ticket') {
-      $('#plugin_formcreator_link_ticket').show();
-      $('#plugin_formcreator_link_target').hide();
-   } else {
-      $('#plugin_formcreator_link_ticket').hide();
-      $('#plugin_formcreator_link_target').show();
+function plugin_formcreator_updateCompositePeerType(type) {
+   $('#plugin_formcreator_link_ticket').hide();
+   $('#plugin_formcreator_link_target').hide();
+   $('#plugin_formcreator_link_question').hide();
+
+   switch ($(type).val()) {
+      case 'Ticket':
+         $('#plugin_formcreator_link_ticket').show();
+         break;
+      case 'PluginFormcreatorTargetTicket':
+         $('#plugin_formcreator_link_target').show();
+         break;
+      case 'PluginFormcreatorQuestion':
+         $('#plugin_formcreator_link_question').show();
+         break;
    }
 }
 
