@@ -35,15 +35,38 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorComposite
 {
+   /**
+    * Undocumented variable
+    *
+    * @var PluginFormcreatorItem_TargetTicket
+    */
    private $item_targetTicket;
 
+   /**
+    * Undocumented variable
+    *
+    * @var PluginFormcreatorFormAnswer
+    */
    private $targets = [];
 
+   /**
+    * Undocumented variable
+    *
+    * @var Ticket_Ticket
+    */
    private $ticket_ticket;
 
-   public function __construct(PluginFormcreatorItem_TargetTicket $item_targetTicket, Ticket_Ticket $ticket_ticket) {
+   /**
+    * Undocumented variable
+    *
+    * @var PluginFormcreatorFormAnswer
+    */
+   private $formAnswer;
+
+   public function __construct(PluginFormcreatorItem_TargetTicket $item_targetTicket, Ticket_Ticket $ticket_ticket, PluginFormcreatorFormAnswer $formAnswer) {
       $this->item_targetTicket = $item_targetTicket;
       $this->ticket_ticket = $ticket_ticket;
+      $this->formAnswer = $formAnswer;
    }
 
    /**
@@ -100,6 +123,31 @@ class PluginFormcreatorComposite
                         'tickets_id_2' => $ticket->getID(),
                      ]);
                   }
+                  break;
+
+               case PluginFormcreatorQuestion::class:
+                  // Check the answer matches a question of type GLPI Object / Ticket
+                  $question = PluginFormcreatorQuestion::getById($row['items_id']);
+                  if (!($question instanceof PluginFormcreatorQuestion)) {
+                     break;
+                  }
+                  /** @var PluginFormcreatorQuestion $question */
+                  if (strpos($question->fields['values'], '"itemtype":"Ticket"') === false) {
+                     break;
+                  }
+                  $answer = new PluginFormcreatorAnswer();
+                  $answer->getFromDBByCrit([
+                     PluginFormcreatorQuestion::getForeignKeyField() => $row['items_id'],
+                     PluginFormcreatorFormAnswer::getForeignKeyField() => $this->formAnswer->getID(),
+                  ]);
+                  if ($answer->isNewItem()) {
+                     break;
+                  }
+                  $this->ticket_ticket->add([
+                     'link' => $row['link'],
+                     'tickets_id_1' => $generatedObject->getID(),
+                     'tickets_id_2' => $answer->fields['answer'],
+                  ]);
                   break;
             }
          }

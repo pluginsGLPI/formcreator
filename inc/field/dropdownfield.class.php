@@ -285,41 +285,49 @@ class DropdownField extends PluginFormcreatorAbstractField
 
          case Ticket::class:
             // Shall match logic in \Search::getDefaultWhere()
-            if (!Session::haveRight("ticket", Ticket::READALL)) {
-               $currentUser = Session::getLoginUserID();
-               if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
-                  $requestersObserversQuery = new QuerySubQuery([
-                     'SELECT' => 'tickets_id',
-                     'FROM' => Ticket_User::getTable(),
-                     'WHERE' => [
-                        'users_id' => $currentUser,
-                        'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
-                     ],
-                  ]);
-                  $dparams_cond_crit['OR'] = [
+            if (Session::haveRight("ticket", Ticket::READALL)) {
+               break;
+            }
+            $currentUser = Session::getLoginUserID();
+            if (!Session::haveRight(Ticket::$rightname, Ticket::READMY) && !Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
+               // No right to view any ticket, then force the dropdown to be empty
+               $dparams_cond_crit['OR'] = new \QueryExpression('0=1');
+               break;
+            }
+            if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
+               $requestersObserversQuery = new QuerySubQuery([
+                  'SELECT' => 'tickets_id',
+                  'FROM' => Ticket_User::getTable(),
+                  'WHERE' => [
+                     'users_id' => $currentUser,
+                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                  ],
+               ]);
+               $dparams_cond_crit['OR'] = [
+                  [
                      'id' => $requestersObserversQuery,
                      'users_id_recipient' => $currentUser,
+                  ],
+               ];
+            }
+            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
+               $requestersObserversGroupsQuery = new QuerySubQuery([
+                  'SELECT' => 'tickets_id',
+                  'FROM' => Group_Ticket::getTable(),
+                  'WHERE' => [
+                     'groups_id' => $_SESSION['glpigroups'],
+                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                  ],
+               ]);
+               if (!isset($dparams_cond_crit['OR'])) {
+                  $dparams_cond_crit['OR'] = [
+                     'id' => $requestersObserversGroupsQuery,
                   ];
-               }
-               if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
-                  $requestersObserversGroupsQuery = new QuerySubQuery([
-                     'SELECT' => 'tickets_id',
-                     'FROM' => Group_Ticket::getTable(),
-                     'WHERE' => [
-                        'groups_id' => $_SESSION['glpigroups'],
-                        'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
-                     ],
-                  ]);
-                  if (!isset($dparams_cond_crit['OR']['id'])) {
-                     $dparams_cond_crit['OR'] = [
-                        'id' => $requestersObserversGroupsQuery,
-                     ];
-                  } else {
-                     $dparams_cond_crit['OR']['id'] = new QueryUnion([
-                        $dparams_cond_crit['OR']['id'],
-                        $requestersObserversGroupsQuery,
-                     ]);
-                  }
+               } else {
+                  $dparams_cond_crit['OR'][] = [
+                     'id' => $requestersObserversGroupsQuery,
+                     'users_id_recipient' => $currentUser,
+                  ];
                }
             }
             break;

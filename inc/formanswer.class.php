@@ -804,7 +804,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->deserializeAnswers();
 
       // Generate targets
-      $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
+      $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket(), $this);
       foreach ($all_targets as $targets) {
          foreach ($targets as $targetObject) {
             // Check the condition of the target
