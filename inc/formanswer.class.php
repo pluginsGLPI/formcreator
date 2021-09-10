@@ -744,6 +744,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ];
             $skipValidation = true;
          } else {
+            //If you are accepting an answer, also limit it to just these 3 fields.
+            $input = [
+               'id'      => $input['id'],
+               'status'  => $input['status'],
+               'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
+            ];
             // Check if a field is being edited
             $fieldPresence = [];
             $this->getQuestionFields($input['plugin_formcreator_forms_id']);
