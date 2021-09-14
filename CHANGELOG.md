@@ -1,3 +1,29 @@
+## [2.12.2](https://github.com/pluginsglpi/formcreator/compare/v2.12.1...v2.12.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* **entityconfig:** hamonize wtUI with GLPI ([99ef6e6](https://github.com/pluginsglpi/formcreator/commit/99ef6e6d339c9714aa40c7fb2428a70214424c3a))
+* **field:** check access rights before updating fields visibility ([ef3fc66](https://github.com/pluginsglpi/formcreator/commit/ef3fc6623cfb2b9a1ebc7d6889179d895f2a0852))
+* **form_validator:** php errors in import process ([7ae01dc](https://github.com/pluginsglpi/formcreator/commit/7ae01dc90d414bfc5af44fa77dd2b5c56fc15210))
+* **ipfield, hiddenfield:** do not generate HTML input if edition disabled ([0776ef2](https://github.com/pluginsglpi/formcreator/commit/0776ef2c3342fb5881790c48239904017559788c))
+* **targetticket:** associated items from question ([2cd2bd6](https://github.com/pluginsglpi/formcreator/commit/2cd2bd62e8767b8eba63f0a617053a0fed6ea44d))
+* check right before export ([af04e78](https://github.com/pluginsglpi/formcreator/commit/af04e78ccbb0de4471a567b2f4ca9b419ac3ef31))
+* duplicate JS function ([5386f65](https://github.com/pluginsglpi/formcreator/commit/5386f650e6bf5cd178908f56ca4b1414315ed9ea))
+* **fields:** preveint fatal error when inconsistency found in DB ([65c461a](https://github.com/pluginsglpi/formcreator/commit/65c461a10316cc02d46f1ec95e2c10ea78bb07e1))
+* **ldapfield:** organize code and prevent obsolete function call ([514e751](https://github.com/pluginsglpi/formcreator/commit/514e751c92ce3b7e9c73642e74eb3e3ad7ecde99))
+* **ldapfield:** undefined var makes LDAP querying fail ([2dddc30](https://github.com/pluginsglpi/formcreator/commit/2dddc301f7a137ceb03c4602b89f8b5236ea6a55))
+* **question:** save images in description as inline base64 ([21b94f5](https://github.com/pluginsglpi/formcreator/commit/21b94f5b762633c4e3288667fdcbe10ab3453e1b))
+* **targetticket:** remove useless use statement ([906ebeb](https://github.com/pluginsglpi/formcreator/commit/906ebeb41059456a838a77f93e514169ad257468))
+* **targetticket:** type not set ([6d4c3af](https://github.com/pluginsglpi/formcreator/commit/6d4c3af65e1c1ed336e1d35befff5ae9b321eea0))
+* **targetticket, targetchange:** embedded image handling ([44a65a0](https://github.com/pluginsglpi/formcreator/commit/44a65a0218d9ac472b3a77f3a4de69b0609e9c1b))
+* **targetticket,targetchange:** avoid adding same actor several times ([1f82f3b](https://github.com/pluginsglpi/formcreator/commit/1f82f3b191e52f4bb3000c1c16b93806e83dcd68))
+* **textfield,txtareafield:** defaultr value not translated ([15bb281](https://github.com/pluginsglpi/formcreator/commit/15bb281e611ffc5f202ee5d45b06510ae83c8dd4))
+* **urgencyfield:** obey empty_value_setting ([91f14eb](https://github.com/pluginsglpi/formcreator/commit/91f14ebcb01b3da4519e5e8c55e42a371cc21df3))
+* LDAP error handler ([6130581](https://github.com/pluginsglpi/formcreator/commit/6130581309c080d9c8e9f3b99ad8761e770fc6df))
+
+
+
 <a name="v2.12.1"></a>
 ## [v2.12.1](https://github.com/pluginsglpi/formcreator/compare/v2.12.0...v2.12.1) (2021-08-16)
 
