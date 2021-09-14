@@ -977,7 +977,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          $this->getForm()->getID(),
          [
             'fieldtype' => 'glpiselect',
-            'values' => $CFG_GLPI['ticket_types']
+            //'values' => $CFG_GLPI['ticket_types']
          ],
          '_associate_question',
          $this->fields['associate_question']
