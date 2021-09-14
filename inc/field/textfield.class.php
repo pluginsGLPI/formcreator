@@ -95,7 +95,7 @@ class TextField extends PluginFormcreatorAbstractField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->value);
+      $defaultValue = Html::cleanInputText(__($this->value, $domain));
 
       $html .= Html::input($fieldName, [
          'type'  => 'text',

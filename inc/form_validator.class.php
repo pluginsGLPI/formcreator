@@ -71,6 +71,8 @@ PluginFormcreatorExportableInterface
       $input[$formFk] = $forms_id;
 
       $item = new self();
+      // Find an existing form to update, only if an UUID is available
+      $itemId = false;
        /** @var string $idKey key to use as ID (id or uuid) */
        $idKey = 'id';
       if (isset($input['uuid'])) {

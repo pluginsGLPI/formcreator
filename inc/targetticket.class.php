@@ -738,6 +738,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $data['users_id_recipient'] = $formanswer->fields['requester_id'];
       $data['users_id_lastupdater'] = Session::getLoginUserID();
 
+      $data = $this->setTargetType($data, $formanswer);
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
       $data = $this->setSLA($data, $formanswer);
@@ -767,6 +768,24 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
       if (count($this->assignedGroups['_groups_id_assign']) > 0) {
          $data = $this->assignedGroups + $data;
+      }
+
+      // emulate file uploads of inline images
+      $data['_content'] = [];
+      $data['_prefix_content'] = [];
+      $data['_tag_content'] = [];
+      // TODO: replace PluginFormcreatorCommon::getDocumentsFromTag by Toolbox::getDocumentsFromTag
+      // when is merged https://github.com/glpi-project/glpi/pull/9335
+      foreach (PluginFormcreatorCommon::getDocumentsFromTag($data['content']) as $document) {
+         $prefix = uniqid('', true);
+         $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
+         if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+            continue;
+         }
+
+         $data['_content'][] = $filename;
+         $data['_prefix_content'][] = $prefix;
+         $data['_tag_content'][] = $document['tag'];
       }
 
       // Create the target ticket
@@ -958,7 +977,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          $this->getForm()->getID(),
          [
             'fieldtype' => 'glpiselect',
-            'values' => $CFG_GLPI['ticket_types']
+            //'values' => $CFG_GLPI['ticket_types']
          ],
          '_associate_question',
          $this->fields['associate_question']

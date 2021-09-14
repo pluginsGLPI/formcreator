@@ -31,6 +31,39 @@
 
 include ('../../../inc/includes.php');
 
+$criteria = [
+   'id'        => (int) $_POST['plugin_formcreator_forms_id'],
+   'is_active' => '1',
+   'is_deleted'=> '0',
+];
+$form = new PluginFormcreatorForm();
+if (!$form->getFromDBByCrit($criteria)) {
+   http_response_code(403);
+   exit();
+}
+
+if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
+   // form is not public : login required and form must be accessible from the entityes of the user
+   if (Session::getLoginUserID() === false || !$form->checkEntity(true)) {
+      http_response_code(403);
+      exit();
+   }
+}
+
+if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
+   $iterator = $DB->request(PluginFormcreatorForm_Profile::getTable(), [
+      'WHERE' => [
+         'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
+         'plugin_formcreator_forms_id' => $form->getID()
+      ],
+      'LIMIT' => 1
+   ]);
+   if (count($iterator) == 0) {
+      http_response_code(403);
+      exit();
+   }
+}
+
 try {
     $visibility = PluginFormcreatorFields::updateVisibility($_POST);
 } catch (Exception $e) {

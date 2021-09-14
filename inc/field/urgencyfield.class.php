@@ -99,7 +99,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
          'comments'            => false,
          'rand'                => $rand,
          'display'             => false,
-         'display_emptychoice' => true,
+         'display_emptychoice' => $this->question->fields['show_empty'] == 1,
       ]);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {

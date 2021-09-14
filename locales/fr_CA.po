@@ -6,6 +6,7 @@
 # Translators:
 # Thierry Bugier <tbugier@teclib.com>, 2021
 # Tiago Graça, 2021
+# Christian Bernard <cbernard99@hotmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-20 09:56+0200\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Tiago Graça, 2021\n"
+"Last-Translator: Christian Bernard <cbernard99@hotmail.com>, 2021\n"
 "Language-Team: French (Canada) (https://www.transifex.com/teclib/teams/28042/fr_CA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgstr "Racine du sous arbre"
 
 #: ajax/commontree.php:59
 msgid "Selectable"
-msgstr ""
+msgstr "Sélection"
 
 #: ajax/commontree.php:74
 msgid "Limit subtree depth"
@@ -134,11 +135,11 @@ msgstr "Liste des formulaires"
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
-msgstr ""
+msgstr "Paramètre"
 
 #: inc/abstractquestionparameter.class.php:99
 msgid "Field name"
-msgstr ""
+msgstr "Nom de champs"
 
 #: inc/abstracttarget.class.php:208
 msgid "Current active entity"
@@ -321,7 +322,7 @@ msgstr "Une cible doit être associée à un formulaire existant."
 
 #: inc/abstracttarget.class.php:1567
 msgid "Name is required."
-msgstr ""
+msgstr "Le nom est requis."
 
 #: inc/abstracttarget.class.php:1594 inc/form.class.php:1435
 #: inc/form_language.class.php:108
@@ -424,7 +425,7 @@ msgstr "n'est pas visible"
 
 #: inc/condition.class.php:105
 msgid "regular expression matches"
-msgstr ""
+msgstr "expression régulière correspond à"
 
 #: inc/condition.class.php:116
 msgid "Always displayed"
@@ -458,7 +459,7 @@ msgstr "Échec de l'ajout ou de la modification de %1$s %2$s"
 #: inc/targetchange.class.php:95 inc/targetticket.class.php:1235
 #, php-format
 msgid "Cannot export an empty object: %s"
-msgstr ""
+msgstr "Impossible d'exporter un objet vide: %s"
 
 #: inc/entityconfig.class.php:78
 msgid "GLPi's helpdesk"
@@ -482,19 +483,19 @@ msgstr "Tri alphabétique"
 
 #: inc/entityconfig.class.php:95
 msgid "Merged with Forms"
-msgstr ""
+msgstr "Fusionné avec les Formulaires"
 
 #: inc/entityconfig.class.php:96
 msgid "Distinct menu entry"
-msgstr ""
+msgstr "Entrée de menu distincte"
 
 #: inc/entityconfig.class.php:103 inc/entityconfig.class.php:111
 msgid "Visible"
-msgstr ""
+msgstr "Visible"
 
 #: inc/entityconfig.class.php:104 inc/entityconfig.class.php:112
 msgid "Hidden"
-msgstr ""
+msgstr "Caché"
 
 #: inc/entityconfig.class.php:161
 msgid "Helpdesk"
@@ -510,15 +511,15 @@ msgstr "Ordre de tri"
 
 #: inc/entityconfig.class.php:203 inc/entityconfig.class.php:297
 msgid "Knowledge base"
-msgstr ""
+msgstr "Base de connaissance"
 
 #: inc/entityconfig.class.php:219
 msgid "Search"
-msgstr ""
+msgstr "Recherche"
 
 #: inc/entityconfig.class.php:236
 msgid "Header message"
-msgstr ""
+msgstr "Message d'entête"
 
 #: inc/entityconfig.class.php:249 inc/entityconfig.class.php:327
 #: inc/form.class.php:226 inc/form.class.php:464
@@ -529,11 +530,11 @@ msgstr[1] ""
 
 #: inc/entityconfig.class.php:307
 msgid "Display search field"
-msgstr ""
+msgstr "Afficher le champ de recherche"
 
 #: inc/entityconfig.class.php:317
 msgid "Display header"
-msgstr ""
+msgstr "Afficher l'entête"
 
 #: inc/form.class.php:63 inc/form.class.php:361
 msgid "Public access"
@@ -618,7 +619,7 @@ msgstr "tout voir"
 
 #: inc/form.class.php:1152
 msgid "What are you looking for?"
-msgstr ""
+msgstr "Que recherchez-vous ?"
 
 #: inc/form.class.php:1160
 #, php-format
@@ -648,7 +649,7 @@ msgstr "Tous mes formulaires (Valideur)"
 
 #: inc/form.class.php:1351 inc/form.class.php:1352
 msgid "Are you a robot ?"
-msgstr ""
+msgstr "Êtes-vous un robot ?"
 
 #: inc/form.class.php:1393
 msgid "Validation"
@@ -789,7 +790,7 @@ msgstr "Type de cible non supporté."
 
 #: inc/form.class.php:2540
 msgid "plugin_formcreator_load_check"
-msgstr ""
+msgstr "plugin_formcreator_load_check"
 
 #: inc/form_language.class.php:51
 msgid "Form language"
@@ -1410,7 +1411,7 @@ msgstr ""
 
 #: inc/field/dropdownfield.class.php:67
 msgid "User and form"
-msgstr ""
+msgstr "Utilisateur et formulaire"
 
 #: inc/field/dropdownfield.class.php:98
 msgid "SLA"
@@ -1472,7 +1473,7 @@ msgstr "Type d'intitulé invalide : %s"
 
 #: inc/field/dropdownfield.class.php:875
 msgid "Entity restriction"
-msgstr ""
+msgstr "Restriction par entité"
 
 #: inc/field/emailfield.class.php:108
 #, php-format
@@ -1553,7 +1554,7 @@ msgstr "Attribut"
 
 #: inc/field/ldapselectfield.class.php:183
 msgid "LDAP size limit exceeded"
-msgstr ""
+msgstr "Taille limite LDAP dépassée"
 
 #: inc/field/ldapselectfield.class.php:211
 msgid "LDAP Select"

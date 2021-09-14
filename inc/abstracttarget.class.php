@@ -1880,6 +1880,8 @@ SCRIPT;
     * @return void
     */
    protected function showActorSettingsForType($actorType, array $actors) {
+      global $DB;
+
       $itemActor = new PluginFormcreatorTarget_Actor();
       $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
 
@@ -1929,6 +1931,21 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_' . $type . '_question_user" style="display:none">';
+      // find already used items
+      $request = $DB->request([
+         'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+         'WHERE' => [
+            'itemtype'   => $this->getType(),
+            'items_id'   => $this->getID(),
+            'actor_role' => $actorRole,
+            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
+         ]
+      ]);
+      $used = [];
+      foreach ($request as $row) {
+         $used[$row['actor_value']] = $row['actor_value'];
+      }
+
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
@@ -1943,11 +1960,29 @@ SCRIPT;
             ],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
-         0
+         0,
+         [
+            'used' => $used,
+         ]
       );
       echo '</div>';
 
       echo '<div id="block_' . $type . '_question_group" style="display:none">';
+      // find already used items
+      $request = $DB->request([
+         'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+         'WHERE' => [
+            'itemtype'   => $this->getType(),
+            'items_id'   => $this->getID(),
+            'actor_role' => $actorRole,
+            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
+         ]
+      ]);
+      $used = [];
+      foreach ($request as $row) {
+         $used[$row['actor_value']] = $row['actor_value'];
+      }
+
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
@@ -1955,51 +1990,139 @@ SCRIPT;
             'values'    => ['LIKE', '%"itemtype":"' . Group::class . '"%'],
          ],
          'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
-         0
+         0,
+         [
+            'used' => $used,
+         ]
       );
       echo '</div>';
 
       echo '<div id="block_' . $type . '_group_from_object" style="display:none">';
+      // find already used items
+      $request = $DB->request([
+         'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+         'WHERE' => [
+            'itemtype'   => $this->getType(),
+            'items_id'   => $this->getID(),
+            'actor_role' => $actorRole,
+            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
+         ]
+      ]);
+      $used = [];
+      foreach ($request as $row) {
+         $used[$row['actor_value']] = $row['actor_value'];
+      }
+
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
          ],
-         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
-         0
+         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
+         0,
+         [
+            'used' => $used,
+         ]
       );
       echo '</div>';
 
       echo '<div id="block_' . $type . '_tech_group_from_object" style="display:none">';
+      // find already used items
+      $request = $DB->request([
+         'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+         'WHERE' => [
+            'itemtype'   => $this->getType(),
+            'items_id'   => $this->getID(),
+            'actor_role' => $actorRole,
+            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT,
+         ]
+      ]);
+      $used = [];
+      foreach ($request as $row) {
+         $used[$row['actor_value']] = $row['actor_value'];
+      }
+
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
          ],
          'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT,
-         0
+         0,
+         [
+            'used' => $used,
+         ]
       );
       echo '</div>';
 
       echo '<div id="block_' . $type . '_question_actors" style="display:none">';
+       // find already used items
+      $request = $DB->request([
+         'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+         'WHERE' => [
+            'itemtype'   => $this->getType(),
+            'items_id'   => $this->getID(),
+            'actor_role' => $actorRole,
+            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
+         ]
+      ]);
+      $used = [];
+      foreach ($request as $row) {
+         $used[$row['actor_value']] = $row['actor_value'];
+      }
+
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['actor'],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
-         0
+         0,
+         [
+            'used' => $used,
+         ]
       );
       echo '</div>';
 
       if ($actorType == CommonITILActor::ASSIGN) {
          echo '<div id="block_' . $type . '_supplier" style="display:none">';
+         // find already used items
+         $request = $DB->request([
+            'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+            'WHERE' => [
+               'itemtype'   => $this->getType(),
+               'items_id'   => $this->getID(),
+               'actor_role' => $actorRole,
+               'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER,
+            ]
+         ]);
+         $used = [];
+         foreach ($request as $row) {
+            $used[$row['actor_value']] = $row['actor_value'];
+         }
+
          Supplier::dropdown([
             'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER,
+            'used' => $used,
          ]);
          echo '</div>';
 
          echo '<div id="block_' . $type . '_question_supplier" style="display:none">';
+         // find already used items
+         $request = $DB->request([
+            'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
+            'WHERE' => [
+               'itemtype'   => $this->getType(),
+               'items_id'   => $this->getID(),
+               'actor_role' => $actorRole,
+               'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
+            ]
+         ]);
+         $used = [];
+         foreach ($request as $row) {
+            $used[$row['actor_value']] = $row['actor_value'];
+         }
+
          PluginFormcreatorQuestion::dropdownForForm(
             $this->getForm()->getID(),
             [
@@ -2007,7 +2130,10 @@ SCRIPT;
                'values'    => ['LIKE', '%"itemtype":"' . Supplier::class . '"%'],
             ],
             'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
-            0
+            0,
+            [
+               'used' => $used,
+            ]
          );
          echo '</div>';
       }

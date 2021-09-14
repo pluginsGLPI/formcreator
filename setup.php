@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.12.1');
+define('PLUGIN_FORMCREATOR_VERSION', '2.12.2');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.12');
 // is or is not an official release of the plugin
@@ -477,7 +477,7 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    die($error . "<br><br> Please, check migration log");
 }
 
-function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline) {
    if (0 === error_reporting()) {
       return false;
    }

@@ -593,4 +593,44 @@ JAVASCRIPT;
    public static function restoreLayout() {
       $_SESSION['glpilayout'] = $_SESSION['plugin_formcreator']['layout_backup'] ?? $_SESSION['glpilayout'];
    }
+
+   /**
+    * Find documents data matching the tags found in the string
+    * Tags are deduplicated
+    *
+    * @param string $content_text String to search tags from
+    *
+    * @return array data from documents having tags found
+    */
+   public static function getDocumentsFromTag(string $content_text): array {
+      preg_match_all('/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/', $content_text,
+                     $matches, PREG_PATTERN_ORDER);
+      if (!isset($matches[1]) || count($matches[1]) == 0) {
+         return [];
+      }
+
+      $document = new Document();
+      return $document->find(['tag' => array_unique($matches[1])]);
+   }
+
+   /**
+    * find a document with a file attached, with respect of blacklisting
+    *
+    * @param integer $entity    entity of the document
+    * @param string  $path      path of the searched file
+    *
+    * @return false|Document
+    */
+   public static function getDuplicateOf(int $entities_id, string $filename) {
+      $document = new Document();
+      if (!$document->getFromDBbyContent($entities_id, $filename)) {
+         return false;
+      }
+
+      if ($document->fields['is_blacklisted']) {
+         return false;
+      }
+
+      return $document;
+   }
 }

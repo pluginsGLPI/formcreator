@@ -384,7 +384,7 @@ msgstr "질문 공급사"
 
 #: inc/abstracttarget.class.php:2096 inc/target_actor.class.php:77
 msgid "Form author's supervisor"
-msgstr ""
+msgstr "양식 작성자의 감독자"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -1367,11 +1367,11 @@ msgstr "상세 항목을 써야 합니다:"
 
 #: inc/field/dropdownfield.class.php:65
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 #: inc/field/dropdownfield.class.php:67
 msgid "User and form"
-msgstr ""
+msgstr "사용자와 양식"
 
 #: inc/field/dropdownfield.class.php:98
 msgid "SLA"
@@ -1433,7 +1433,7 @@ msgstr "잘못된 드롭다운 유형: %s"
 
 #: inc/field/dropdownfield.class.php:875
 msgid "Entity restriction"
-msgstr ""
+msgstr "개체 제한"
 
 #: inc/field/emailfield.class.php:108
 #, php-format

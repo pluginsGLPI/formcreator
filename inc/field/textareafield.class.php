@@ -86,13 +86,14 @@ class TextareaField extends TextField
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
-         return Toolbox::getHtmlToDisplay($this->value);
+         $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
+         return Toolbox::getHtmlToDisplay($value);
       }
 
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $value        = nl2br($this->value);
+      $value        = nl2br(__($this->value, $domain));
       $html = '';
       $html .= Html::textarea([
          'name'              => $fieldName,
@@ -131,14 +132,33 @@ class TextareaField extends TextField
       }
 
       $key = 'formcreator_field_' . $this->question->getID();
-      $this->value = $this->question->addFiles(
-         [$key => $this->value] + $this->uploads,
-         [
-            'force_update'  => true,
-            'content_field' => $key,
-            'name'          => $key,
-         ]
-      )[$key];
+      if (isset($this->uploads['_' . $key])) {
+         foreach ($this->uploads['_' . $key] as $id => $filename) {
+            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
+            // when is merged https://github.com/glpi-project/glpi/pull/9335
+            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
+               $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
+               $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
+            }
+         }
+         $input = [$key => $this->value] + $this->uploads;
+         $input = $this->question->addFiles(
+            $input,
+            [
+               'force_update'  => true,
+               // 'content_field' => $key,
+               'content_field' => null,
+               'name'          => $key,
+            ]
+         );
+         $this->value = $input[$key];
+         $this->value = Html::entity_decode_deep($this->value);
+         foreach ($input['_tag'] as $tag) {
+            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
+            $this->value = preg_replace($regex, "#$tag#", $this->value);
+         }
+         $this->value = Html::entities_deep($this->value);
+      }
 
       return Toolbox::addslashes_deep($this->value);
    }
@@ -221,6 +241,9 @@ class TextareaField extends TextField
          $value = Toolbox::unclean_cross_side_scripting_deep($value);
          $value = strip_tags($value);
       }
+      // $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
+      // $value = Toolbox::getHtmlToDisplay($value);
+
       return $value;
    }
 

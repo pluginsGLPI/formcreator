@@ -75,6 +75,10 @@ class HiddenField extends PluginFormcreatorAbstractField
    }
 
    public function show($domain, $canEdit = true) {
+      if (!$canEdit) {
+         return '';
+      }
+
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
