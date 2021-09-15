@@ -262,7 +262,6 @@ function updateKbCategoriesView() {
          function (event) {
             $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
             $(this).addClass('category_active');
-            updateKbitemsView(event.target.getAttribute('data-category-id'));
          }
       );
    });
