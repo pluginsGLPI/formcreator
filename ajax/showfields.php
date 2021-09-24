@@ -37,7 +37,7 @@ $criteria = [
    'is_deleted'=> '0',
 ];
 $form = new PluginFormcreatorForm();
-if (!Session::haveRight('entity', UPDATE) && !$form->getFromDBByCrit($criteria)) {
+if (!$form->getFromDBByCrit($criteria) && !Session::haveRight('entity', UPDATE)) {
    http_response_code(403);
    exit();
 }
