@@ -1447,6 +1447,24 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $formTable = PluginFormcreatorForm::getTable();
       $validatorTable = PluginFormcreatorForm_Validator::getTable();
       $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $where = [
+         'OR' => [
+            [
+               'AND' => [
+                  "$validatorTable.itemtype" => User::class,
+                  "$validatorTable.items_id" => $userId,
+               ]
+            ],
+         ]
+      ];
+      if (count($groupIdList) > 0) {
+         $where['OR'][] = [
+            'AND' => [
+               "$validatorTable.itemtype" => Group::class,
+               "$validatorTable.items_id" => $groupIdList,
+            ]
+         ];
+      }
       $request = [
          'SELECT' => [
             $formTable => ['name'],
@@ -1467,26 +1485,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                ]
             ]
          ],
-         'WHERE' => [
-            'OR' => [
-               [
-                  'AND' => [
-                     "$formTable.validation_required" => 1,
-                     "$validatorTable.itemtype" => User::class,
-                     "$validatorTable.items_id" => $userId,
-                     "$formAnswerTable.users_id_validator" => $userId
-                  ]
-               ],
-               [
-                  'AND' => [
-                     "$formTable.validation_required" => 2,
-                     "$validatorTable.itemtype" => Group::class,
-                     "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
-                     "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
-                  ]
-               ]
-            ]
-         ],
+         'WHERE' => $where,
          'ORDER' => [
             "$formAnswerTable.status ASC",
             "$formAnswerTable.request_date DESC",
