@@ -31,13 +31,21 @@
 
 include ('../../../inc/includes.php');
 
-$criteria = [
-   'id'        => (int) $_POST['plugin_formcreator_forms_id'],
-   'is_active' => '1',
-   'is_deleted'=> '0',
-];
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+   http_response_code(404);
+   exit();
+}
+
+$formFk = PluginFormcreatorForm::getForeignKeyField();
+if (!isset($_POST[$formFk])) {
+   http_response_code(403);
+   exit();
+}
+
 $form = new PluginFormcreatorForm();
-if (!$form->getFromDBByCrit($criteria) && !Session::haveRight('entity', UPDATE)) {
+$form->getFromDB((int) $_POST['plugin_formcreator_forms_id']);
+if (!Session::haveRight('entity', UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
    http_response_code(403);
    exit();
 }
