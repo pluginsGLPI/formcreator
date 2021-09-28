@@ -980,8 +980,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_addItem() {
       // Save questions answers
       $formAnswerId = $this->getID();
+      $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
       /** @var PluginFormcreatorAbstractField $field */
-      foreach ($this->questionFields as $questionId => $field) {
+      foreach ($this->getQuestionFields($formId) as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
@@ -1020,8 +1021,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_updateItem($history = 1) {
       // Save questions answers
       $formAnswerId = $this->getID();
+      $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
       /** @var PluginFormcreatorAbstractField $field */
-      foreach ($this->questionFields as $questionId => $field) {
+      foreach ($this->getQuestionFields($formId) as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
          $answer->getFromDBByCrit([
