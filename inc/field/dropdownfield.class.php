@@ -318,32 +318,33 @@ class DropdownField extends PluginFormcreatorAbstractField
             }
       }
 
-      // Set specific root if defined (CommonTreeDropdown)
-      $baseLevel = 0;
-      if (isset($decodedValues['show_tree_root'])
-         && (int) $decodedValues['show_tree_root'] > 0
-      ) {
-         $sons = (new DBUtils)->getSonsOf(
-            $itemtype::getTable(),
-            $decodedValues['show_tree_root']
-         );
-         if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
-            unset($sons[$decodedValues['show_tree_root']]);
+      if (is_subclass_of($itemtype, CommonTreeDropdown::class)) {
+         // Set specific root if defined (CommonTreeDropdown)
+         $baseLevel = 0;
+         if (isset($decodedValues['show_tree_root'])
+            && (int) $decodedValues['show_tree_root'] > -1
+         ) {
+            $sons = (new DBUtils)->getSonsOf(
+               $itemtype::getTable(),
+               $decodedValues['show_tree_root']
+            );
+            if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
+               unset($sons[$decodedValues['show_tree_root']]);
+            }
+
+            $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
+            $rootItem = new $itemtype();
+            if ($rootItem->getFromDB($decodedValues['show_tree_root'])) {
+               $baseLevel = $rootItem->fields['level'];
+            }
          }
 
-         $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
-         $rootItem = new $itemtype();
-         if ($rootItem->getFromDB($decodedValues['show_tree_root'])) {
-            $baseLevel = $rootItem->fields['level'];
+         // Apply max depth if defined (CommonTreeDropdown)
+         if (isset($decodedValues['show_tree_depth'])
+            && $decodedValues['show_tree_depth'] > 0
+         ) {
+            $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
          }
-
-      }
-
-      // Apply max depth if defined (CommonTreeDropdown)
-      if (isset($decodedValues['show_tree_depth'])
-         && $decodedValues['show_tree_depth'] > 0
-      ) {
-         $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
       }
 
       $dparams['condition'] = $dparams_cond_crit;
