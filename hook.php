@@ -458,7 +458,10 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
    if ($issue->isNewItem()) {
       return;
    }
-   $issue->update(['status' => $status['status']] + $issue->fields);
+   $issue->update([
+      'id'     => $issue->getID(),
+      'status' => $status['status']
+   ]);
 }
 
 function plugin_formcreator_hook_update_itilFollowup($followup) {
