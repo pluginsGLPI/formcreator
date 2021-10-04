@@ -1239,10 +1239,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if ($rows->count() != 1) {
          // There are several tickets for this form answer
          // The issue must be created from this form answer
+         $issueName = $this->fields['name'] != '' ? addslashes($this->fields['name']) : '(' . $this->getID() . ')';
          $issue->add([
             'items_id'           => $this->getID(),
             'itemtype'           => PluginFormcreatorFormAnswer::class,
-            'name'               => addslashes($this->fields['name']),
+            'name'               => $issueName,
             'status'             => $this->fields['status'],
             'date_creation'      => $this->fields['request_date'],
             'date_mod'           => $this->fields['request_date'],
@@ -1280,10 +1281,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
 
       $ticketUserRow = array_pop($ticketUserRow);
+      $issueName = $ticket->fields['name'] != '' ? addslashes($ticket->fields['name']) : '(' . $ticket->getID() . ')';
       $issue->add([
          'items_id'           => $ticketId,
          'itemtype'           => Ticket::class,
-         'name'               => addslashes($ticket->fields['name']),
+         'name'               => $issueName,
          'status'             => $validationStatus['status'],
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],
@@ -1333,11 +1335,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'items_id' => $this->getID()
             ]
          ]);
+         $issueName = $this->fields['name'] != '' ? addslashes($this->fields['name']) : '(' . $this->getID() . ')';
          $issue->update([
             'id'                 => $issue->getID(),
             'items_id'           => $this->getID(),
             'itemtype'           => PluginFormcreatorFormAnswer::class,
-            'name'               => addslashes($this->fields['name']),
+            'name'               => $issueName,
             'status'             => $this->fields['status'],
             'date_creation'      => $this->fields['request_date'],
             'date_mod'           => $this->fields['request_date'],
@@ -1377,11 +1380,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'items_id' => $this->getID()
          ]
       ]);
+      $issueName = $ticket->fields['name'] != '' ? addslashes($ticket->fields['name']) : '(' . $ticket->getID() . ')';
       $issue->update([
          'id'                 => $issue->getID(),
          'items_id'           => $ticketId,
          'itemtype'           => Ticket::class,
-         'name'               => addslashes($ticket->fields['name']),
+         'name'               => $issueName,
          'status'             => $ticket->fields['status'],
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],

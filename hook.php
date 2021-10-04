@@ -333,11 +333,12 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
 
    $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
 
+   $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
    $issue = new PluginFormcreatorIssue();
    $issue->add([
       'items_id'        => $item->getID(),
       'itemtype'           => 'Ticket',
-      'name'               => addslashes($item->fields['name']),
+      'name'               => $issueName,
       'status'             => $validationStatus['status'],
       'date_creation'      => $item->fields['date'],
       'date_mod'           => $item->fields['date_mod'],
@@ -358,6 +359,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 
    $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
 
+   $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
    $issue = new PluginFormcreatorIssue();
    $issue->getFromDBByCrit([
       'AND' => [
@@ -370,7 +372,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       'items_id'           => $id,
       'display_id'         => "t_$id",
       'itemtype'           => 'Ticket',
-      'name'               => addslashes($item->fields['name']),
+      'name'               => $issueName,
       'status'             => $validationStatus['status'],
       'date_creation'      => $item->fields['date'],
       'date_mod'           => $item->fields['date_mod'],
