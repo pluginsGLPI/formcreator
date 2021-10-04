@@ -47,7 +47,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
    public function providerGetsyncIssuesRequest_simpleTicket() {
       $ticket = new \Ticket();
       $ticket->add([
-         'name'    => 'a ticket',
+         'name'    => 'simple ticket',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING
       ]);
