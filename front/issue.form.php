@@ -32,6 +32,8 @@
 global $CFG_GLPI;
 require_once ('../../../inc/includes.php');
 
+Session::checkValidSessionId();
+
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
