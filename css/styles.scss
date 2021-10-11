@@ -405,6 +405,12 @@ form#plugin_formcreator_form {
    text-align: justify;
    word-wrap: break-word;
 }
+.form_field ul {
+   list-style: initial;
+   margin: initial;
+   padding: initial;
+   padding-left: 40px;
+}
 
 #plugin_formcreator_form .form-group .form_field .select2-container {
    width: 100% !important;
