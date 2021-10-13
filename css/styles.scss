@@ -1452,8 +1452,12 @@ a.plugin_formcreator_formTile_title {
    z-index: 20;
 }
 
+#c_menu.plugin_formcreator_leftMenu li a {
+   color: #FFF;
+}
+
 .plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
-   color: #FFF !important;
+   color: #FFF;
    height: 35px;
    line-height: 35px;
 }
