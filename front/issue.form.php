@@ -32,12 +32,12 @@
 global $CFG_GLPI;
 require_once ('../../../inc/includes.php');
 
-Session::checkValidSessionId();
-
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
+
+Session::checkValidSessionId();
 
 // Accessing an issue from a tech profile, redirect to ticket page
 if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
