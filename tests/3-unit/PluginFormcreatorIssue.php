@@ -47,12 +47,25 @@ class PluginFormcreatorIssue extends CommonTestCase {
    public function providerGetsyncIssuesRequest_simpleTicket() {
       $ticket = new \Ticket();
       $ticket->add([
-         'name'    => 'a ticket',
+         'name'    => 'simple ticket',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING
       ]);
       $this->boolean($ticket->isNewItem())->isFalse();
       $ticket->getFromDB($ticket->getID());
+
+      $ticket2 = new \Ticket();
+      $ticket2->add([
+         'name' => '',
+         'content' => 'foo',
+         'status'  =>  \Ticket::INCOMING
+      ]);
+      $this->boolean($ticket2->isNewItem())->isFalse();
+      $ticket2->getFromDB($ticket2->getID());
+      $ticket2->update([
+         'id' => $ticket2->getID(),
+         'name' => '',
+      ]);
 
       return [
          'simpleTicket' => [
@@ -70,6 +83,21 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'groups_id_validator' => '0',
             ],
          ],
+         'simpleTicket_without_name' => [
+            'item' => $ticket2,
+            'expected' => [
+               'itemtype'  => \Ticket::getType(),
+               'items_id'   => $ticket2->getID(),
+               'display_id'    => 't_' . $ticket2->getID(),
+               'name'          => '(' . $ticket2->getID() . ')',
+               'status'        => $ticket2->fields['status'],
+               'requester_id'  => $ticket2->fields['users_id_recipient'],
+               'date_creation' => $ticket2->fields['date'],
+               'date_mod'      => $ticket2->fields['date_mod'],
+               'users_id_validator'  => '0',
+               'groups_id_validator' => '0',
+            ]
+         ]
       ];
    }
 
@@ -81,6 +109,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
+
       return [
          'simpleFormanswers' => [
             'item' => $formAnswer,
@@ -419,6 +448,56 @@ class PluginFormcreatorIssue extends CommonTestCase {
       // Test all fields described in expectations
       foreach ($expected as $key => $field) {
          $this->variable($row[$key])->isEqualTo($field, "mismatch in field '$key'");
+      }
+
+      // Test there are no other rows matching the form answer or ticket
+      if ($item->getType() == \Ticket::class) {
+         $unwantedItems = $DB->request([
+            'SELECT' => ['items_id'],
+            'FROM' => \Item_Ticket::getTable(),
+            'WHERE' => [
+               'itemtype'   => \PluginFormcreatorFormAnswer::getType(),
+               'tickets_id' => $item->getID(),
+            ],
+         ]);
+         if (count($unwantedItems) > 0) {
+            $unwantedWhere = [
+               'itemtype' => \PluginFormcreatorFormAnswer::getType(),
+            ];
+            foreach ($unwantedItems as $row) {
+               $unwantedWhere['items_id'][] = $row['items_id'];
+            }
+            // WHERE itemtype = 'PluginFormcreatorFormAnswer' AND items_id IN ( <list of numbers> )
+            $result = $DB->request([
+               'FROM'  => $request,
+               'WHERE' => $unwantedWhere,
+            ]);
+            $this->integer(count($result))->isEqualTo(0);
+         }
+      }
+      if ($item->getType() == \PluginFormcreatorFormAnswer::class) {
+         $unwantedItems = $DB->request([
+            'SELECT' => ['tickets_id'],
+            'FROM' => \Item_Ticket::getTable(),
+            'WHERE' => [
+               'itemtype'   => \PluginFormcreatorFormAnswer::getType(),
+               'items_id' => $item->getID(),
+            ],
+         ]);
+         if (count($unwantedItems) > 0) {
+            $unwantedWhere = [
+               'itemtype' => \Ticket::getType(),
+            ];
+            foreach ($unwantedItems as $row) {
+               $unwantedWhere['items_id'][] = $row['tickets_id'];
+            }
+            // WHERE  itemtype = 'Ticket' AND items_id IN ( <list of numbers> )
+            $result = $DB->request([
+               'FROM'  => $request,
+               'WHERE' => $unwantedWhere,
+            ]);
+            $this->integer(count($result))->isEqualTo(0);
+         }
       }
    }
 
