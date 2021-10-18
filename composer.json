@@ -27,7 +27,8 @@
       "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
       "phpcsstandards/phpcsutils": "^1.0@alpha",
-      "scssphp/scssphp": "^1.5"
+      "scssphp/scssphp": "^1.5",
+      "symfony/panther": "^1.1"
     },
     "autoload-dev": {
         "psr-4": {

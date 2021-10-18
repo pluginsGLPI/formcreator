@@ -35,7 +35,11 @@ class CommonFunctionalTestCase extends CommonTestCase {
       @mkdir($this->screenshotPath, 0777, true);
 
       // create client
-      $this->client = \Symfony\Component\Panther\Client::createChromeClient(null, null, [], 'http://localhost:8000');
+      $chromeDriver = getenv('CHROME_DRIVER_BINARY');
+      $chromeDriver === false ? null : $chromeDriver;
+      $this->client = \Symfony\Component\Panther\Client::createChromeClient($chromeDriver, null, [], 'http://localhost:8000');
+
+      $firefoxDriver = getenv('FIREFOX_DRIVER_BINARY'); // returns null if not set, which is fine
       //$this->client = \Symfony\Component\Panther\Client::createFirefoxClient(null, null, [], 'http://localhost:8000');
 
       $this->currentTestMethod = $method;
