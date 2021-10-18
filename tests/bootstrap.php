@@ -8,10 +8,6 @@ ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 
 require_once __DIR__ . '/../vendor/autoload.php';
-if (is_readable(getenv('HOME') . '/.composer/vendor/symfony/panther/composer.json')) {
-   // To use globally installed packages
-   require_once getenv('HOME') . '/.composer/vendor/autoload.php';
-}
 
 define('TEST_PLUGIN_NAME', 'formcreator');
 define('TEST_SCREENSHOTS_DIR', __DIR__ . '/logs/screenshots');
