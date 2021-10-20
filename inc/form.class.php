@@ -461,7 +461,6 @@ PluginFormcreatorTranslatableInterface
       echo '</tr>';
 
       $allTargets = $this->getTargetsFromForm();
-      $token = Session::getNewCSRFToken();
       $i = 0;
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
@@ -474,8 +473,15 @@ PluginFormcreatorTranslatableInterface
             echo '</a></td>';
 
             echo '<td align="center" width="32">';
-            echo '<i class="far fa-trash-alt" alt="*" title="'.__('Delete', 'formcreator').'"
-               onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer"></i> ';
+            echo '<i
+               class="far fa-trash-alt formcreator_delete_target"
+               alt="*"
+               title="' . __('Delete', 'formcreator') . '"
+               data-itemtype="' . get_class($target) . '"
+               data-items-id="' . $targetId . '"
+               align="absmiddle"
+               style="cursor: pointer"
+            ></i>';
             echo '</td>';
 
             echo '</tr>';
@@ -485,7 +491,7 @@ PluginFormcreatorTranslatableInterface
       // Display add target link...
       echo '<tr class="tab_bg_'.(($i + 1) % 2).' id="add_target_row">';
       echo '<td colspan="3">';
-      echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
+      echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.');">
                 <i class="fa fa-plus"></i>
                 '.__('Add a target', 'formcreator').'
             </a>';
@@ -1994,11 +2000,19 @@ PluginFormcreatorTranslatableInterface
     * @return array
     */
    public static function getTargetTypes() : array {
-      return [
+      global $PLUGIN_HOOKS;
+
+      $targets = [
          PluginFormcreatorTargetTicket::class,
          PluginFormcreatorTargetChange::class,
          PluginFormcreatorTargetProblem::class,
       ];
+
+      foreach ($PLUGIN_HOOKS['formcreator_add_targets'] ?? [] as $plugin_targets) {
+         array_push($targets, ...$plugin_targets);
+      }
+
+      return $targets;
    }
 
    /**

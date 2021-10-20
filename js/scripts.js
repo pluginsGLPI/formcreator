@@ -1326,14 +1326,14 @@ function plugin_formcreator_addTarget(items_id) {
    });
 }
 
-function plugin_formcreator_deleteTarget(itemtype, target_id) {
-   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:', 'formcreator'))) {
+$(document).on('click', '.formcreator_delete_target', function() {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this target:', 'formcreator'))) {
       $.post({
         url: formcreatorRootDoc + '/ajax/form_delete_target.php',
         data: {
             action: 'delete_target',
-            itemtype: itemtype,
-            items_id: target_id,
+            itemtype: $(this).data('itemtype'),
+            items_id: $(this).data('items-id'),
          }
       }).done(function () {
          reloadTab();
@@ -1341,7 +1341,7 @@ function plugin_formcreator_deleteTarget(itemtype, target_id) {
          displayAjaxMessageAfterRedirect();
       });
    }
-}
+});
 
 // DESTINATION
 function plugin_formcreator_formcreatorChangeDueDate(value) {
