@@ -308,4 +308,8 @@ class FloatField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool {
       return true;
    }
+
+   public function getValueForApi() {
+      return $this->value;
+   }
 }

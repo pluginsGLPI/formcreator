@@ -268,4 +268,8 @@ class DependentField extends PluginFormcreatorAbstractField
    public function isVisibleField(): bool {
       return true;
    }
+
+   public function getValueForApi() {
+      return $this->value;
+   }
 }

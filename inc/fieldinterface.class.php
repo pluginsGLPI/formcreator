@@ -120,6 +120,13 @@ interface PluginFormcreatorFieldInterface
    public function getValueForTargetText($domain, $richText): ?string;
 
    /**
+    * Get the valoe of the field for output via the API
+    *
+    * @return string|array
+    */
+   public function getValueForApi();
+
+   /**
     * Move uploaded files and make Document items
     */
    public function moveUploads();

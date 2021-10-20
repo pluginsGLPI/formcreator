@@ -65,4 +65,17 @@ class PluginFormcreatorAnswer extends CommonDBChild
    public static function getTypeName($nb = 0) {
       return _n('Answer', 'Answers', $nb, 'formcreator');
    }
+
+   public function post_getFromDB() {
+      if (!isAPI()) {
+         return;
+      }
+
+      /** @var PluginFormcreatorQuestion $question */
+      $question = PluginFormcreatorQuestion::getById($this->fields[PluginFormcreatorQuestion::getForeignKeyField()]);
+      $field = $question->getSubField();
+      $field->deserializeValue($this->fields['answer']);
+
+      $this->fields['answer'] = $field->getValueForApi();
+   }
 }

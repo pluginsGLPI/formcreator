@@ -306,4 +306,12 @@ class FileField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool {
       return true;
    }
+
+   public function getValueForApi() {
+      $output = [];
+      foreach ($this->uploadData as $documentId) {
+         $output[] = [Document::class, $documentId];
+      }
+      return $output;
+   }
 }

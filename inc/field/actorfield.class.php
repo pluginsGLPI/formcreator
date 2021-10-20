@@ -209,7 +209,9 @@ class ActorField extends PluginFormcreatorAbstractField
                $value[] = $item;
             } else {
                $user = new User();
-               $user->getFromDB($item);
+               if (!$user->getFromDB($item)) {
+                  continue;
+               }
                $value[] = $user->getFriendlyName();
             }
          }
@@ -418,5 +420,24 @@ class ActorField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getValueForApi() {
+      $value = [];
+      if (is_array($this->value)) {
+         foreach ($this->value as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $value[] = $item;
+            } else {
+               $user = new User();
+               if (!$user->getFromDB($item)) {
+                  continue;
+               }
+               $value[] = [User::class, $item];
+            }
+         }
+      }
+
+      return $value;
    }
 }
