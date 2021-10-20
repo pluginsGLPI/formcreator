@@ -967,4 +967,11 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       return $_SESSION['glpiactiveentities'];
    }
+
+   public function getValueForApi() {
+      return [
+         $this->getSubItemtype(),
+         $this->value,
+      ];
+   }
 }

@@ -412,4 +412,21 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       }
       return $strings;
    }
+
+   public function getValueForApi() {
+      $value = [];
+      $values = $this->getAvailableValues();
+
+      if ($values === null || $this->value === null || count($this->value) === 0) {
+         return '';
+      }
+
+      foreach ($this->value as $input) {
+         if (in_array($input, $values)) {
+            $value[] = $input;
+         }
+      }
+
+      return $value;
+   }
 }

@@ -162,4 +162,8 @@ class DescriptionField extends PluginFormcreatorAbstractField
    public function isEditableField(): bool {
       return false;
    }
+
+   public function getValueForApi() {
+      return $this->question->fields['description'];
+   }
 }

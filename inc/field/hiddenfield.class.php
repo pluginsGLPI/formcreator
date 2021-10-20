@@ -208,4 +208,8 @@ class HiddenField extends PluginFormcreatorAbstractField
       }
       return $strings;
    }
+
+   public function getValueForApi() {
+      return $this->value;
+   }
 }

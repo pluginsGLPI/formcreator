@@ -193,4 +193,8 @@ class EmailField extends TextField
    public function getTranslatableStrings(array $options = []) : array {
       return PluginFormcreatorAbstractField::getTranslatableStrings($options);
    }
+
+   public function getValueForApi() {
+      return $this->value;
+   }
 }
