@@ -2706,7 +2706,9 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      opcache_invalidate($file, true);
+      if (function_exists('opcache_invalidate')) {
+         opcache_invalidate($file, true);
+      }
       $translations = include($file);
       if (!is_array($translations)) {
          return [];
