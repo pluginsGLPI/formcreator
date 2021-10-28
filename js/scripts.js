@@ -1458,6 +1458,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
 
       var entityAssignable = [
          'Location',
+         'ITILCategory',
          'TaskCategory',
          'TaskTemplate',
          'SolutionType',
