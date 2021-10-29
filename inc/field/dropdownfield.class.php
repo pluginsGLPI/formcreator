@@ -614,14 +614,13 @@ class DropdownField extends PluginFormcreatorAbstractField
             $_SESSION['glpiactive_entity_recursive']
          )
       ]);
-      if ($result->count() === 0) {
-         return [];
-      }
+      $groups  = [];
       foreach ($result as $data) {
          $a_groups                     = $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
          $a_groups[$data["groups_id"]] = $data["groups_id"];
+         $groups = array_merge($groups, $a_groups);
       }
-      return $a_groups;
+      return $groups;
    }
 
    public function equals($value): bool {
