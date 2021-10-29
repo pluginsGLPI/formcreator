@@ -1626,6 +1626,9 @@ PluginFormcreatorTranslatableInterface
       } catch (ImportFailureException $e) {
          $forms = $linker->getObjectsByType(PluginFormcreatorForm::class);
          $form = reset($forms);
+         if ($form === null) {
+            return false;
+         }
          $form->update([
             'id' => $form->getID(),
             'name' => $form->fields['name'] . ' [' . __('Errored duplicate', 'formcreator') . ']',
