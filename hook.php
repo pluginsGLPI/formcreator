@@ -236,8 +236,11 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   break;
 
                case 'old' :
-                  $tocheck = array_merge($item->getSolvedStatusArray(),
-                                         $item->getClosedStatusArray());
+                  $tocheck = array_merge(
+                     $item->getSolvedStatusArray(),
+                     $item->getClosedStatusArray(),
+                     [PluginFormcreatorFormAnswer::STATUS_REFUSED]
+                  );
                   break;
 
                case 'notold' :
