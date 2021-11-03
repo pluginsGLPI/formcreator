@@ -829,99 +829,55 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getProcessingCriteria() {
-      $currentUser = Session::getLoginUserID();
-      return ['criteria' => [['field' => 4,
-                              'searchtype' => 'equals',
-                              'value'      => 'process'],
-                           //   ['field'      => 8,
-                           //   'searchtype'  => 'equals',
-                           //   'value'       => $currentUser]
-                           ],
-              'reset'    => 'reset'];
+      return [
+         'criteria' => [
+            [
+               'field'      => 4,
+               'searchtype' => 'equals',
+               'value'      => 'process'
+            ],
+         ],
+         'reset'    => 'reset'
+      ];
    }
 
    static function getWaitingCriteria() {
-      $currentUser = Session::getLoginUserID();
-      return ['criteria' => [['field' => 4,
-                              'searchtype' => 'equals',
-                              'value'      => Ticket::WAITING],
-                              // ['field'      => 8,
-                              // 'searchtype'  => 'equals',
-                              // 'value'       => $currentUser]
-                           ],
-              'reset'    => 'reset'];
+      return [
+         'criteria' => [
+            [
+               'field'      => 4,
+               'searchtype' => 'equals',
+               'value'      => Ticket::WAITING
+            ],
+         ],
+         'reset'    => 'reset'
+      ];
    }
 
    static function getValidateCriteria() {
-      return ['criteria' => [['link'       => 'AND',
-                              'field' => 4,
-                              'searchtype' => 'equals',
-                              'value'      => PluginFormcreatorFormAnswer::STATUS_WAITING,
-                              ],
-                             ['link' => 'AND'] + self::getMeAsValidatorCriteria()
-                            ],
-              'reset'    => 'reset'];
+      return [
+         'criteria' => [
+            [
+               'link'       => 'AND',
+               'field'      => 4,
+               'searchtype' => 'equals',
+               'value'      => PluginFormcreatorFormAnswer::STATUS_WAITING,
+            ],
+         ],
+         'reset'    => 'reset'
+      ];
    }
 
    static function getSolvedCriteria() {
-      $currentUser = Session::getLoginUserID();
-      return ['criteria' => [
-                           //   ['link'       => 'AND',
-                           //    'field'      => 8,
-                           //    'searchtype'  => 'equals',
-                           //    'value'       => $currentUser,
-                           //    ],
-                              ['link'       => 'AND',
-                              'criteria' => [[
-                               'link'       => 'AND',
-                               'field' => 4,
-                               'searchtype' => 'equals',
-                               'value'      => 'old', // see Ticket::getAllStatusArray()
-                              ],
-                              ['field' => 4,
-                               'searchtype' => 'equals',
-                               'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-                               'link'       => 'OR']
-                              ]],
-                              ['link'       => 'OR',
-                              'criteria' => [[
-                                 'link'       => 'AND',
-                                 'field'      => 9,
-                                 'searchtype' => 'equals',
-                                 'value'      => $currentUser,
-                              ],
-                              ['link'       => 'OR',
-                                 'field'      => 16,
-                                 'searchtype' => 'equals',
-                                 'value'      => 'mygroups',
-                              ],
-                              ]],
-                              ['link'       => 'AND',
-                                 'field' => 4,
-                                 'searchtype' => 'equals',
-                                 'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-                              ]],
-              'reset'    => 'reset'];
-   }
-
-   public static function getMeAsValidatorCriteria() {
-      $currentUser = Session::getLoginUserID();
-      return ['criteria'   => [[
-         'link'       => 'AND',
-         'field'      => 9,
-         'searchtype' => 'equals',
-         'value'      => $currentUser,
-        ],
-        ['link'       => 'OR',
-         'field'      => 16,
-         'searchtype' => 'equals',
-         'value'      => 'mygroups',
-        ],
-        ['link'       => 'OR',
-         'field'      => 11,
-         'searchtype' => 'equals',
-         'value'      => $currentUser,
-        ]]
+      return [
+         'criteria' => [
+            [
+               'field'      => 4,
+               'searchtype' => 'equals',
+               'value'      => 'old', // see Ticket::getAllStatusArray()
+            ],
+         ],
+         'reset'    => 'reset'
       ];
    }
 
