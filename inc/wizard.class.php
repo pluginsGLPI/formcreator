@@ -264,9 +264,6 @@ class PluginFormcreatorWizard {
             </span>";
 
       echo '</span>'; // formcreator_servicecatalogue_ticket_summary
-      echo Html::scriptBlock("$(function() {
-         plugin_formcreator.getCounters();
-      })");
    }
 
    protected static function findActiveMenuItem() {
