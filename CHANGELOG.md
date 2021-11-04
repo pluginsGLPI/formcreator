@@ -1,3 +1,41 @@
+<a name="v2.12.3"></a>
+## [v2.12.3](https://github.com/pluginsglpi/formcreator/compare/v2.12.2..v2.12.3) (2021-11-04)
+
+
+### Bug Fixes
+
+*  color of counters lost ([5834f96f](https://github.com/pluginsglpi/formcreator/commit/5834f96f))
+*  css minify via GLPI's CLI tool broken ([43adbfc8](https://github.com/pluginsglpi/formcreator/commit/43adbfc8))
+*  menu unreadable in service catalog ([2790dac8](https://github.com/pluginsglpi/formcreator/commit/2790dac8))
+* **abstracttarget:** conflicting dropdowns ([57b775fb](https://github.com/pluginsglpi/formcreator/commit/57b775fb))
+* **answer:** missing default value in schema ([195ef446](https://github.com/pluginsglpi/formcreator/commit/195ef446))
+* **category:** completename rendered instead of short name ([82f50ccb](https://github.com/pluginsglpi/formcreator/commit/82f50ccb)), closes [#2424](https://github.com/pluginsglpi/formcreator/issues/2424)
+* **condition:** ensure form object is loaded ([d7c3c2c9](https://github.com/pluginsglpi/formcreator/commit/d7c3c2c9))
+* **descriptinfield:** list rendering ([0e4421da](https://github.com/pluginsglpi/formcreator/commit/0e4421da))
+* **dropdownfield:** group restriction inaccurate ([ab83f34d](https://github.com/pluginsglpi/formcreator/commit/ab83f34d))
+* **dropdownfield:** itil category is entity assignable ([26d8352a](https://github.com/pluginsglpi/formcreator/commit/26d8352a))
+* **form:** allow admins to testforms ([e3462d5b](https://github.com/pluginsglpi/formcreator/commit/e3462d5b))
+* **form:** allow condition evaluation on disabled forms for admins ([65c46bd7](https://github.com/pluginsglpi/formcreator/commit/65c46bd7))
+* **form:** export of entity / category name ([18f9611c](https://github.com/pluginsglpi/formcreator/commit/18f9611c))
+* **form:** handling duplication failure when no form to rename ([351a36d3](https://github.com/pluginsglpi/formcreator/commit/351a36d3))
+* **form:** invaldiate opcache ([630e5239](https://github.com/pluginsglpi/formcreator/commit/630e5239))
+* **form_language:** vertical view does not works ([1b180d27](https://github.com/pluginsglpi/formcreator/commit/1b180d27))
+* **formanswer:** unloadded objects when validating ([b4891be4](https://github.com/pluginsglpi/formcreator/commit/b4891be4))
+* **glpiselectfield:** tree settings of entity question ([48053f55](https://github.com/pluginsglpi/formcreator/commit/48053f55))
+* **glpiselectfield, dropdownfield:** filter by helpdesk visibility only in simplified interface ([1cb5f346](https://github.com/pluginsglpi/formcreator/commit/1cb5f346))
+* **install:** populate issues table on upgrade ([76550d21](https://github.com/pluginsglpi/formcreator/commit/76550d21))
+* **issue:** SQL escaping problem with text fields ([d589745e](https://github.com/pluginsglpi/formcreator/commit/d589745e))
+* **issue:** answers with multiple tickets ([c77be76f](https://github.com/pluginsglpi/formcreator/commit/c77be76f))
+* **locales:** wrong language used in service catalog ([0327d520](https://github.com/pluginsglpi/formcreator/commit/0327d520))
+
+
+### Features
+
+* **glpiselectfield:** restrict tickets in simplified interface ([8a901f48](https://github.com/pluginsglpi/formcreator/commit/8a901f48))
+* **targetticket:** link to a ticket from a question ([a563d11e](https://github.com/pluginsglpi/formcreator/commit/a563d11e))
+
+
+
 ## [2.12.2](https://github.com/pluginsglpi/formcreator/compare/v2.12.1...v2.12.2) (2021-09-14)
 
 
