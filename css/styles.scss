@@ -1581,6 +1581,11 @@ span.fc_list_icon {
    margin-right: 5px;
 }
 
+// Spinner in service catalog
+.status .status_number .fas.fa-spinner {
+   color: #fff;
+}
+
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
    form#plugin_formcreator_form {

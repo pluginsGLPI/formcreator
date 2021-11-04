@@ -1197,6 +1197,61 @@ var plugin_formcreator = new function() {
          location.reload();
       });
    }
+
+   this.getCounters = function () {
+      this.getIncomingCounter().done(function (data) {
+         $('.status.status_incoming .status_number').empty().append(data[1]);
+      });
+      this.getWaitingCounter().done(function (data) {
+         $('.status.status_waiting .status_number').empty().append(data[4]);
+      });
+      this.getToValidateCounter().done(function (data) {
+         $('.status.status_validate .status_number').empty().append(data['to_validate']);
+      });
+      this.getSolvedCounter().done(function (data) {
+         $('.status.status_solved .status_number').empty().append(data[5]);
+      });
+   }
+
+   this.getIncomingCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'incoming'
+         }
+      });
+   }
+
+   this.getWaitingCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'waiting'
+         }
+      });
+   }
+
+   this.getToValidateCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'to_validate'
+         }
+      });
+   }
+
+   this.getSolvedCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'solved'
+         }
+      });
+   }
 }
 
 // === TARGETS ===
