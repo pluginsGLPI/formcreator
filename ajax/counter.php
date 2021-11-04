@@ -31,7 +31,7 @@
 
 include ('../../../inc/includes.php');
 // Check a user is logged in
-if (true || Session::getLoginUserID() === false) {
+if (Session::getLoginUserID() === false) {
     http_response_code(403);
     die();
 }
