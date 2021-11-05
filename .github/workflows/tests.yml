@@ -17,7 +17,7 @@ env:
   ATOUM_ARG: --force-terminal
   NOCOVERAGE: -ncc
   COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
-  PANTHER_CHROME_DRIVER_BINARY: chromedriver
+  CHROME_DRIVER_BINARY: chromedriver
 
 jobs:
   tests:
@@ -62,7 +62,7 @@ jobs:
           composer --version
           chromium-browser --version
           ls -l /usr/bin/chromium*
-          $PANTHER_CHROME_DRIVER_BINARY --version
+          $CHROME_DRIVER_BINARY --version
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Run tests"

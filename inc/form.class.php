@@ -1626,6 +1626,9 @@ PluginFormcreatorTranslatableInterface
       } catch (ImportFailureException $e) {
          $forms = $linker->getObjectsByType(PluginFormcreatorForm::class);
          $form = reset($forms);
+         if ($form === null) {
+            return false;
+         }
          $form->update([
             'id' => $form->getID(),
             'name' => $form->fields['name'] . ' [' . __('Errored duplicate', 'formcreator') . ']',
@@ -1802,16 +1805,16 @@ PluginFormcreatorTranslatableInterface
       $export = $this->fields;
 
       // replace entity id
-      $export['_entity']
-         = Dropdown::getDropdownName(Entity::getTable(),
-                                       $export['entities_id']);
+      /** @var Entity */
+      $entity = Entity::getById($export['entities_id']);
+      $export['_entity'] = $entity->fields['completename'];
 
       // replace form category id
       $export['_plugin_formcreator_category'] = '';
-      if ($export['plugin_formcreator_categories_id'] > 0) {
-         $export['_plugin_formcreator_category']
-            = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
-                                        $export['plugin_formcreator_categories_id']);
+      /** @var PluginFormcreatorCategory */
+      $formCategory = PluginFormcreatorCategory::getById($export['plugin_formcreator_categories_id']);
+      if ($formCategory instanceof CommonDBTM) {
+         $export['_plugin_formcreator_category'] = $formCategory->fiels['completename'];
       }
 
       // remove non needed keys
@@ -2706,7 +2709,9 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      opcache_invalidate($file, true);
+      if (function_exists('opcache_invalidate')) {
+         opcache_invalidate($file, true);
+      }
       $translations = include($file);
       if (!is_array($translations)) {
          return [];

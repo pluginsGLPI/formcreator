@@ -392,7 +392,7 @@ msgstr "Proveedor para la pregunta"
 
 #: inc/abstracttarget.class.php:2096 inc/target_actor.class.php:77
 msgid "Form author's supervisor"
-msgstr ""
+msgstr "Supervisor del autor del formulario"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -1398,11 +1398,11 @@ msgstr "un campo de descripción debe tener una descripción"
 
 #: inc/field/dropdownfield.class.php:65
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #: inc/field/dropdownfield.class.php:67
 msgid "User and form"
-msgstr ""
+msgstr "Usuario y forma"
 
 #: inc/field/dropdownfield.class.php:98
 msgid "SLA"
@@ -1464,7 +1464,7 @@ msgstr "Tipo de menú desplegable no válido: %s"
 
 #: inc/field/dropdownfield.class.php:875
 msgid "Entity restriction"
-msgstr ""
+msgstr "Restricción de entidad"
 
 #: inc/field/emailfield.class.php:108
 #, php-format

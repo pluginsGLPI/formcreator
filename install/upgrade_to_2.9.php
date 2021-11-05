@@ -278,6 +278,9 @@ class PluginFormcreatorUpgradeTo2_9 {
 
       $table = 'glpi_plugin_formcreator_answers';
       $migration->changeField($table, 'answer', 'answer', 'longtext');
+      $migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', 'integer', ['value' => '0']);
+      $migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer', ['value' => '0']);
+
       $table = 'glpi_plugin_formcreator_issues';
       $migration->changeField($table, 'comment', 'comment', 'longtext');
 

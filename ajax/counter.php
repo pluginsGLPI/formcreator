@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2020 Teclib'
+ * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -30,45 +30,21 @@
  */
 
 include ('../../../inc/includes.php');
-
-Session::checkRight('entity', UPDATE);
-
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+// Check a user is logged in
+if (Session::getLoginUserID() === false) {
+    http_response_code(403);
+    die();
 }
-$formLanguage = new PluginFormcreatorForm_Language();
+// Immediately close session to allow parallelization
+session_write_close();
 
-if (isset($_POST['add'])) {
-   $formLanguage->add($_POST);
-   Html::back();
-} else if (isset($_POST['update'])) {
-   $formLanguage->update($_POST);
-   Html::back();
-} else if (isset($_POST['delete'])) {
-   if ($formLanguage->getFromDB((int) $_POST['id'])) {
-      $formLanguage->massDeleteTranslations($_POST);
-   }
-   Html::back();
-} else {
-   Html::header(
-      PluginFormcreatorForm_Language::getTypeName(2),
-      $_SERVER['PHP_SELF'],
-      'admin',
-      'PluginFormcreatorForm_Language',
-      'option'
-   );
+$counter = $_GET['counter'] ?? null;
 
-   $_GET['id'] = (int) ($_GET['id'] ?? -1);
-   if (!$formLanguage->getFromDB($_GET['id'])) {
-      $_SESSION['glpilisturl'][$formLanguage::getType()] = Html::getBackUrl();
-   } else {
-      $_SESSION['glpilisturl'][$formLanguage::getType()] = PluginFormcreatorForm::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
-   }
-   $formLanguage->display([
-      'ids' => $_GET['id'],
-      'id'  => $_GET['id'],
-   ]);
+// Validate parameters
+if (!in_array($counter, [null, 'incoming', 'waiting', 'to_validate', 'solved'])) {
+    http_response_code(400);
+    die();
+};
 
-   Html::footer();
-}
+$status = PluginFormcreatorIssue::getTicketSummary($counter);
+echo json_encode($status);

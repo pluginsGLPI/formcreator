@@ -148,6 +148,11 @@ $(function() {
       });
    }
 
+   // load counters
+   if ($('.status.status_incoming .status_number').length > 0) {
+      plugin_formcreator.getCounters();
+   }
+
    // Initialize search bar
    var searchInput = $('#plugin_formcreator_searchBar input:first');
    if (searchInput.length == 1) {
@@ -262,7 +267,6 @@ function updateKbCategoriesView() {
          function (event) {
             $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
             $(this).addClass('category_active');
-            updateKbitemsView(event.target.getAttribute('data-category-id'));
          }
       );
    });
@@ -1198,6 +1202,72 @@ var plugin_formcreator = new function() {
          location.reload();
       });
    }
+
+   this.getCounters = function () {
+      this.getIncomingCounter().done(function (data) {
+         $('.status.status_incoming .status_number').empty().append(data[1]);
+      }).fail(function () {
+         $('.status.status_incoming .status_number').empty().append('N/A');
+      });
+
+      this.getWaitingCounter().done(function (data) {
+         $('.status.status_waiting .status_number').empty().append(data[4]);
+      }).fail(function () {
+         $('.status.status_waiting .status_number').empty().append('N/A');
+      });
+
+      this.getToValidateCounter().done(function (data) {
+         $('.status.status_validate .status_number').empty().append(data['to_validate']);
+      }).fail(function () {
+         $('.status.status_validate .status_number').empty().append('N/A');
+      });
+
+      this.getSolvedCounter().done(function (data) {
+         $('.status.status_solved .status_number').empty().append(data[5]);
+      }).fail(function () {
+         $('.status.status_solved .status_number').empty().append('N/A');
+      });
+   }
+
+   this.getIncomingCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'incoming'
+         }
+      });
+   }
+
+   this.getWaitingCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'waiting'
+         }
+      });
+   }
+
+   this.getToValidateCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'to_validate'
+         }
+      });
+   }
+
+   this.getSolvedCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'solved'
+         }
+      });
+   }
 }
 
 // === TARGETS ===
@@ -1459,6 +1529,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
 
       var entityAssignable = [
          'Location',
+         'ITILCategory',
          'TaskCategory',
          'TaskTemplate',
          'SolutionType',
@@ -1788,13 +1859,21 @@ function plugin_formceator_showPictogram(id, preview) {
 /**
  * update composite ticket (links between tickets) in target ticket (design mode)
  */
-function plugin_formcreator_updateCompositePeerType(rand) {
-   if ($('#dropdown__link_itemtype' + rand).val() == 'Ticket') {
-      $('#plugin_formcreator_link_ticket').show();
-      $('#plugin_formcreator_link_target').hide();
-   } else {
-      $('#plugin_formcreator_link_ticket').hide();
-      $('#plugin_formcreator_link_target').show();
+function plugin_formcreator_updateCompositePeerType(type) {
+   $('#plugin_formcreator_link_ticket').hide();
+   $('#plugin_formcreator_link_target').hide();
+   $('#plugin_formcreator_link_question').hide();
+
+   switch ($(type).val()) {
+      case 'Ticket':
+         $('#plugin_formcreator_link_ticket').show();
+         break;
+      case 'PluginFormcreatorTargetTicket':
+         $('#plugin_formcreator_link_target').show();
+         break;
+      case 'PluginFormcreatorQuestion':
+         $('#plugin_formcreator_link_question').show();
+         break;
    }
 }
 

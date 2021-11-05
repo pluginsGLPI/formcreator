@@ -248,11 +248,7 @@ class PluginFormcreatorInstall {
       if (!$DB->numrows($result) > 0) {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
          $DB->query($query) or die ($DB->error());
-         if (version_compare(GLPI_VERSION, '9.5') < 0) {
-            $DB->insert_id();
-         } else {
-            $DB->insertId();
-         }
+         $DB->insertId();
       }
    }
 

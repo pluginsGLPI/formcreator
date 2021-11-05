@@ -2005,7 +2005,7 @@ SCRIPT;
             'itemtype'   => $this->getType(),
             'items_id'   => $this->getID(),
             'actor_role' => $actorRole,
-            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
+            'actor_type' => PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
          ]
       ]);
       $used = [];
@@ -2018,7 +2018,7 @@ SCRIPT;
          [
             'fieldtype' => ['glpiselect'],
          ],
-         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
+         'actor_value_' .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT,
          0,
          [
             'used' => $used,

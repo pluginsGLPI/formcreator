@@ -39,18 +39,23 @@ use Toolbox;
 use Session;
 use DBUtils;
 use Dropdown;
+use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
 use ITILCategory;
 use Entity;
 use User;
 use Group;
+use Group_Ticket;
 use Group_User;
 use Ticket;
+use Ticket_User;
 use Search;
 use SLA;
 use SLM;
 use OLA;
+use QuerySubQuery;
+use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DropdownField extends PluginFormcreatorAbstractField
@@ -278,6 +283,55 @@ class DropdownField extends PluginFormcreatorAbstractField
             }
             break;
 
+         case Ticket::class:
+            // Shall match logic in \Search::getDefaultWhere()
+            if (Session::haveRight("ticket", Ticket::READALL)) {
+               break;
+            }
+            $currentUser = Session::getLoginUserID();
+            if (!Session::haveRight(Ticket::$rightname, Ticket::READMY) && !Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
+               // No right to view any ticket, then force the dropdown to be empty
+               $dparams_cond_crit['OR'] = new \QueryExpression('0=1');
+               break;
+            }
+            if (Session::haveRight(Ticket::$rightname, Ticket::READMY)) {
+               $requestersObserversQuery = new QuerySubQuery([
+                  'SELECT' => 'tickets_id',
+                  'FROM' => Ticket_User::getTable(),
+                  'WHERE' => [
+                     'users_id' => $currentUser,
+                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                  ],
+               ]);
+               $dparams_cond_crit['OR'] = [
+                  [
+                     'id' => $requestersObserversQuery,
+                     'users_id_recipient' => $currentUser,
+                  ],
+               ];
+            }
+            if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
+               $requestersObserversGroupsQuery = new QuerySubQuery([
+                  'SELECT' => 'tickets_id',
+                  'FROM' => Group_Ticket::getTable(),
+                  'WHERE' => [
+                     'groups_id' => $_SESSION['glpigroups'],
+                     'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
+                  ],
+               ]);
+               if (!isset($dparams_cond_crit['OR'])) {
+                  $dparams_cond_crit['OR'] = [
+                     'id' => $requestersObserversGroupsQuery,
+                  ];
+               } else {
+                  $dparams_cond_crit['OR'][] = [
+                     'id' => $requestersObserversGroupsQuery,
+                     'users_id_recipient' => $currentUser,
+                  ];
+               }
+            }
+            break;
+
          default:
             $assignableToTicket = in_array($itemtype, $CFG_GLPI['ticket_types']);
             if (Session::getLoginUserID()) {
@@ -310,7 +364,7 @@ class DropdownField extends PluginFormcreatorAbstractField
                   ];
                }
                // Check if helpdesk availability is fine tunable on a per item basis
-               if ($DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
+               if (Session::getCurrentInterface() == "helpdesk" && $DB->fieldExists($itemtype::getTable(), 'is_helpdesk_visible')) {
                   $dparams_cond_crit[] = [
                      'is_helpdesk_visible' => '1',
                   ];
@@ -318,32 +372,33 @@ class DropdownField extends PluginFormcreatorAbstractField
             }
       }
 
-      // Set specific root if defined (CommonTreeDropdown)
-      $baseLevel = 0;
-      if (isset($decodedValues['show_tree_root'])
-         && (int) $decodedValues['show_tree_root'] > 0
-      ) {
-         $sons = (new DBUtils)->getSonsOf(
-            $itemtype::getTable(),
-            $decodedValues['show_tree_root']
-         );
-         if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
-            unset($sons[$decodedValues['show_tree_root']]);
+      if (is_subclass_of($itemtype, CommonTreeDropdown::class)) {
+         // Set specific root if defined (CommonTreeDropdown)
+         $baseLevel = 0;
+         if (isset($decodedValues['show_tree_root'])
+            && (int) $decodedValues['show_tree_root'] > -1
+         ) {
+            $sons = (new DBUtils)->getSonsOf(
+               $itemtype::getTable(),
+               $decodedValues['show_tree_root']
+            );
+            if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
+               unset($sons[$decodedValues['show_tree_root']]);
+            }
+
+            $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
+            $rootItem = new $itemtype();
+            if ($rootItem->getFromDB($decodedValues['show_tree_root'])) {
+               $baseLevel = $rootItem->fields['level'];
+            }
          }
 
-         $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
-         $rootItem = new $itemtype();
-         if ($rootItem->getFromDB($decodedValues['show_tree_root'])) {
-            $baseLevel = $rootItem->fields['level'];
+         // Apply max depth if defined (CommonTreeDropdown)
+         if (isset($decodedValues['show_tree_depth'])
+            && $decodedValues['show_tree_depth'] > 0
+         ) {
+            $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
          }
-
-      }
-
-      // Apply max depth if defined (CommonTreeDropdown)
-      if (isset($decodedValues['show_tree_depth'])
-         && $decodedValues['show_tree_depth'] > 0
-      ) {
-         $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
       }
 
       $dparams['condition'] = $dparams_cond_crit;
@@ -613,14 +668,13 @@ class DropdownField extends PluginFormcreatorAbstractField
             $_SESSION['glpiactive_entity_recursive']
          )
       ]);
-      if ($result->count() === 0) {
-         return [];
-      }
+      $groups  = [];
       foreach ($result as $data) {
          $a_groups                     = $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
          $a_groups[$data["groups_id"]] = $data["groups_id"];
+         $groups = array_merge($groups, $a_groups);
       }
-      return $a_groups;
+      return $groups;
    }
 
    public function equals($value): bool {

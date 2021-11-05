@@ -37,6 +37,8 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
+Session::checkValidSessionId();
+
 // Accessing an issue from a tech profile, redirect to ticket page
 if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
    /** @var PluginFormcreatorIssue $issue */

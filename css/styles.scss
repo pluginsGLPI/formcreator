@@ -405,6 +405,12 @@ form#plugin_formcreator_form {
    text-align: justify;
    word-wrap: break-word;
 }
+.form_field ul {
+   list-style: initial;
+   margin: initial;
+   padding: initial;
+   padding-left: 40px;
+}
 
 #plugin_formcreator_form .form-group .form_field .select2-container {
    width: 100% !important;
@@ -789,6 +795,9 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    a {
       display: block;
+      border: none;
+      padding: 1em;
+      height: 16px;
    }
 
    li ul {
@@ -800,6 +809,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    .header {
       position: relative;
+      background: #AAA;
    }
 
    h2 ~ a.back {
@@ -812,19 +822,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       font-size: 1em;
       margin: 0;
       text-align: center;
-   }
-
-
-    .header {
-      background: #AAA;
-   }
-
-    h2 {
-      padding: 1em;
-   }
-
-    a {
-      border: none;
       padding: 1em;
    }
 
@@ -841,7 +838,8 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    }
 }
 
-#plugin_formcreator_wizard_categories {
+/* KB page and forms page*/
+#plugin_formcreator_kb_categories, #plugin_formcreator_wizard_categories {
    width: 275px;
    top: 0;
    bottom: 0;
@@ -858,103 +856,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       padding: 14px;
       box-sizing: border-box;
    }
-
-   a {
-      background-color: inherit;
-      font-size: 1.2em;
-   }
-
-   a[data-category-id]:not([data-parent-category-id="0"])  {
-      margin-left: 20px;
-   }
-
-   .category_active:not(.next),
-   .category_active ~ul .header {
-      /* background-color: rgba(0, 0, 0, 0.05); */
-      border-bottom: 1px dashed #DDD;
-      position: relative;
-   }
-
-   .category_active:not(.next):after,
-   .category_active ~ul .header:after {
-      position: absolute;
-      left: calc(100% - 45px);
-      top: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      border-right-color: #FFF;
-      border-width: 23px;
-      margin-top: -23px;
-      z-index: 20;
-   }
-
-   .category_active:not(.next):before,
-   .category_active ~ul .header:before {
-      position: absolute;
-      left: calc(100% - 46px);
-      top: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      border-right-color: #DDD;
-      border-width: 23px;
-      margin-top: -23px;
-      z-index: 20;
-   }
-
-   a,  h2 {
-      font-size: 1.2em;
-   }
-
-   h2 {
-      padding: 0.83em 0;
-      border-bottom: 1px solid #DDD;
-      margin: 0;
-      padding: 14px;
-      color: #000;
-   }
-   .header h2 {
-      text-align: left;
-   }
-   .header .back {
-      right: 20px;
-      color: #000;
-      left: inherit;
-   }
-
-   li {
-      background-color: inherit;
-   }
-
-   .slinky-menu {
-      position: absolute;
-      left: 0;
-      right: -1px;
-   }
-}
-/* KB page */
-
-#plugin_formcreator_kb_categories {
-   width: 275px;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   float: left;
-   height: calc(100vh - 28px - 65px);
-   background-color: #f8f7f3;
-   border-right: 1px solid #DDD;
-   position: relative;
-
-   div > a {
-      display: inline-block;
-      width: 100%;
-      padding: 14px;
-      box-sizing: border-box;
-   }
-
 
    .slinky-menu {
       position: absolute;
@@ -1005,12 +906,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       border-width: 23px;
       margin-top: -23px;
       z-index: 20;
-   }
-
-   h2 {
-      margin: 0;
-      padding: 0.83em 0;
-      border-bottom: 1px solid #DDD;
    }
 
    a, h2 {
@@ -1018,6 +913,8 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    }
 
    h2 {
+      padding: 0.83em 0;
+      border-bottom: 1px solid #DDD;
       margin: 0;
       padding: 14px;
       color: #000;
@@ -1446,6 +1343,10 @@ a.plugin_formcreator_formTile_title {
    z-index: 20;
 }
 
+#c_menu.plugin_formcreator_leftMenu li a {
+   color: #FFF;
+}
+
 .plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
    color: #FFF;
    height: 35px;
@@ -1678,6 +1579,11 @@ span.fc_list_icon {
    vertical-align: middle;
    padding: 4px;
    margin-right: 5px;
+}
+
+// Spinner in service catalog
+.status .status_number .fas.fa-spinner {
+   color: #fff;
 }
 
 /* ################--------------- Responsive  ---------------#################### */
