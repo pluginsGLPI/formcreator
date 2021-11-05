@@ -983,11 +983,17 @@ var plugin_formcreator = new function() {
    };
 
    this.showQuestionForm = function (sectionId, questionId = 0) {
-      modalWindow.load(formcreatorRootDoc + '/ajax/question.php', {
-         question_id: questionId,
-         plugin_formcreator_sections_id: sectionId
-      }).dialog('open');
-      this.plugin_formcreator_scrollToModal($(modalWindow));
+      var that = this;
+      $.post({
+         url: formcreatorRootDoc + '/ajax/question.php',
+         data: {
+            question_id: questionId,
+            plugin_formcreator_sections_id: sectionId
+         }
+      }).done(function (data) {
+         modalWindow.html(data).dialog('open');
+         that.plugin_formcreator_scrollToModal($(modalWindow));
+      });
    };
 
    this.duplicateSection = function (item) {
@@ -1014,13 +1020,17 @@ var plugin_formcreator = new function() {
    };
 
    this.showSectionForm = function (formId, sectionId = 0) {
-      modalWindow.load(
-         formcreatorRootDoc + '/ajax/section.php', {
+      var that = this;
+      $.post({
+         url: formcreatorRootDoc + '/ajax/section.php',
+         data: {
             section_id: sectionId,
             plugin_formcreator_forms_id: formId
          }
-      ).dialog('open');
-      this.plugin_formcreator_scrollToModal($(modalWindow));
+      }).done(function(data) {
+         modalWindow.html(data).dialog('open');
+         that.plugin_formcreator_scrollToModal($(modalWindow));
+      });
    }
 
    this.addSection = function () {
@@ -1077,14 +1087,17 @@ var plugin_formcreator = new function() {
    this.createLanguage = function (formId, id = -1) {
       var placeholder = $('#plugin_formcreator_formLanguage');
       this.showSpinner(placeholder);
-      $(placeholder).load(
-         rootDoc + '/ajax/viewsubitem.php', {
+      $.post({
+         url: rootDoc + '/ajax/viewsubitem.php',
+         data: {
             type: "PluginFormcreatorForm_Language",
             parenttype: "PluginFormcreatorForm",
             plugin_formcreator_forms_id: formId,
             id: id
          }
-      );
+      }).done(function (data) {
+         $(placeholder).html(data);
+      });
    }
 
    /**
@@ -1104,9 +1117,12 @@ var plugin_formcreator = new function() {
    this.showTranslationEditor = function (object) {
       var formlanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
       var plugin_formcreator_translations_id = $(object).find('input[name="id"]').val();
-      $('#plugin_formcreator_editTranslation').load(formcreatorRootDoc + '/ajax/edit_translation.php', {
-         plugin_formcreator_form_languages_id: formlanguageId,
-         plugin_formcreator_translations_id: ''
+      $.post({
+         url: formcreatorRootDoc + '/ajax/edit_translation.php',
+         data: {
+            plugin_formcreator_form_languages_id: formlanguageId,
+            plugin_formcreator_translations_id: ''
+         }
       });
    }
 
@@ -1116,50 +1132,55 @@ var plugin_formcreator = new function() {
          .on('dialogclose', function (e, ui) {
             reloadTab();
          });
-      modal.load(
-         '../ajax/form_language.php', {
+      $.post({
+         url: '../ajax/form_language.php',
+         data: {
             action: 'newTranslation',
             id: formLanguageId,
-         }, function (response, status) {
-            if (status == 'error') {
-               displayAjaxMessageAfterRedirect();
-               modal.html('');
-            } else {
-               modal.dialog('open');
-            }
          }
-      )
+      }).done(function (data) {
+         modal.html(data).dialog('open');
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+         modal.html('');
+      });
    }
 
-   this.saveNewTranslation = function () {
+   this.saveNewTranslation = function (element) {
       var that = this;
       var form = document.querySelector('form[name="plugin_formcreator_translation"]');
       tinyMCE.triggerSave();
-      $.ajax({
+      $.post({
          url: '../ajax/translation.php',
-         type: 'POST',
-         data: $(form).serialize()
+         data: $(element).closest('form').serializeArray()
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
-      }).success(function () {
+      }).done(function () {
          that.showTranslationEditor(form);
       });
    }
 
-   this.showUpdateTranslationForm = function (object) {
-      var formLanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
-      var translationId = $(object.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
+   this.showUpdateTranslationForm = function (element) {
+      var formLanguageId = $(element).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      var translationId = $(element.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
       var modal = $(this.spinner);
-      modal.dialog(this.modalSetings);
-      modal.load(
-         '../ajax/form_language.php', {
+      modal.dialog(this.modalSetings)
+         .on('dialogclose', function (e, ui) {
+            reloadTab();
+         });
+      $.post({
+         url: '../ajax/form_language.php',
+         data: {
             action: 'translation',
             id: formLanguageId,
             plugin_formcreator_translations_id: translationId
          }
-      ).dialog('open')
-      .on('dialogclose', function (e, ui) {
-         reloadTab();
+      }).done(function(data) {
+         modal.html(data).dialog('open');
+         // we edit a translation, then close the dialog when saving the values
+         modal.find('form').on('submit', function () {
+            modal.dialog('close');
+         })
       });
    }
 
@@ -1272,17 +1293,27 @@ var plugin_formcreator = new function() {
 
 // === TARGETS ===
 
-function plugin_formcreator_addTarget(items_id, token) {
-   modalWindow.load(formcreatorRootDoc + '/ajax/target.php', {
-      plugin_formcreator_forms_id: items_id
-   }).dialog("open");
+function plugin_formcreator_addTarget(items_id) {
+   $.post({
+      url: formcreatorRootDoc + '/ajax/target.php',
+      data: {
+         plugin_formcreator_forms_id: items_id
+      }
+   }).done(function (data) {
+      modalWindow.html(data).dialog('open');
+   });
 }
 
 function plugin_formcreator_editTarget(itemtype, items_id) {
-   modalWindow.load(formcreatorRootDoc + '/ajax/target_edit.php', {
-      itemtype: itemtype,
-      id: items_id
-   }).dialog("open");
+   $.post({
+      url: formcreatorRootDoc + '/ajax/target_edit.php',
+      data: {
+         itemtype: itemtype,
+         id: items_id
+      }
+   }).done(function (data) {
+      modalWindow.html(data).dialog('open');
+   });
 }
 
 function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
