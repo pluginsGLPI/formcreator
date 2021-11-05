@@ -109,7 +109,7 @@ class CompileScssCommand extends Command
          $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($file) . ".min.css";
          $css = Html::compileScss(
             [
-               'file'    => $file,
+               'file'    => substr(Plugin::getPhpDir('formcreator', false) . '/' . $file, 1),
                'nocache' => true,
                'debug'   => true,
             ]

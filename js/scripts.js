@@ -148,6 +148,11 @@ $(function() {
       });
    }
 
+   // load counters
+   if ($('.status.status_incoming .status_number').length > 0) {
+      plugin_formcreator.getCounters();
+   }
+
    // Initialize search bar
    var searchInput = $('#plugin_formcreator_searchBar input:first');
    if (searchInput.length == 1) {

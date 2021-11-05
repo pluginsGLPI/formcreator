@@ -286,6 +286,7 @@ class RoboFile extends RoboFilePlugin
     * Update the changelog
     */
    public function updateChangelog() {
+      return;
        exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
       if ($retCode > 0) {
          throw new Exception("Failed to update the changelog");
