@@ -191,9 +191,8 @@ function showHomepageFormList() {
       return;
    }
 
-   $.ajax({
+   $.get({
       url: formcreatorRootDoc + '/ajax/homepage_forms.php',
-      type: "GET"
    }).done(function(response){
       if (!$('#plugin_formcreatorHomepageForms').length) {
          $('.central > tbody:first').first().prepend(response);
@@ -202,10 +201,9 @@ function showHomepageFormList() {
 }
 
 function updateCategoriesView() {
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'categories'},
-      type: "GET",
       dataType: "json"
    }).done(function(response) {
       var html = '<div class="slinky-menu">';
@@ -238,9 +236,8 @@ function updateCategoriesView() {
 }
 
 function updateKbCategoriesView() {
-   $.ajax({
+   $.get({
       url: formcreatorRootDoc + '/ajax/kb_category.php',
-      type: "GET",
       dataType: "json"
    }).done(function(response) {
       var html = '<div class="slinky-menu">';
@@ -276,13 +273,12 @@ function getFaqItems(categoryId) {
    var currentCategory = categoryId;
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/knowbaseitem.php',
       data: {
          categoriesId: categoryId,
          keywords: keywords,
          helpdeskHome: 0},
-      type: "GET",
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -299,10 +295,9 @@ function getFaqItems(categoryId) {
 function getFormAndFaqItems(categoryId) {
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
-      type: "GET",
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -1517,7 +1512,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
    var dropdown_type = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
    var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/dropdown_values.php',
       type: 'GET',
       data: {
@@ -1541,9 +1536,8 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
          return;
       }
 
-      $.ajax({
+      $.post({
          url: formcreatorRootDoc + '/ajax/commontree.php',
-         type: 'GET',
          data: {
             itemtype: dropdown_type,
             root: $("#commonTreeDropdownRoot").val(),
@@ -1597,9 +1591,8 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    var glpi_object    = $('[data-itemtype="PluginFormcreatorQuestion"] [name="glpi_objects"]').val();
    var glpi_object_id = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/dropdown_values.php',
-      type: 'GET',
       data: {
          dropdown_itemtype: glpi_object,
          id: glpi_object_id
@@ -1608,9 +1601,8 @@ function plugin_formcreator_changeGlpiObjectItemType() {
       $('#dropdown_default_value_field').html(response);
    });
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/commontree.php',
-      type: 'GET',
       data: {
          itemtype: glpi_object,
          root: $("#commonTreeDropdownRoot").val(),
@@ -1830,9 +1822,8 @@ function plugin_formcreator_changeQuestionType(rand) {
    var questionId = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
    var questionType = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/question_design.php',
-      type: 'GET',
       data: {
          questionId: questionId,
          questionType: questionType,

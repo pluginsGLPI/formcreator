@@ -31,16 +31,16 @@
 include ('../../../inc/includes.php');
 
 // Check required parameters
-if (ctype_digit($_GET['itemtype']) || !isset($_GET['itemtype']) || !isset($_GET['root']) || !isset($_GET['maxDepth'])) {
+if (ctype_digit($_REQUEST['itemtype']) || !isset($_REQUEST['itemtype']) || !isset($_REQUEST['root']) || !isset($_REQUEST['maxDepth'])) {
    http_response_code(400);
    die;
 }
 
 // Load parameters
-$itemtype       = $_GET['itemtype'];
-$root           = $_GET['root'];
-$depth          = $_GET['maxDepth'];
-$selectableRoot = $_GET['selectableRoot'];
+$itemtype       = $_REQUEST['itemtype'];
+$root           = $_REQUEST['root'];
+$depth          = $_REQUEST['maxDepth'];
+$selectableRoot = $_REQUEST['selectableRoot'];
 
 // This should only be used for dropdowns
 if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
