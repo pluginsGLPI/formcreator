@@ -66,7 +66,7 @@ if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) 
       ],
       'LIMIT' => 1
    ]);
-   if (count($iterator) == 0) {
+   if (!Session::haveRight('entity', UPDATE) && count($iterator) == 0) {
       http_response_code(403);
       exit();
    }
