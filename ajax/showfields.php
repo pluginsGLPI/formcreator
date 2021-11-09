@@ -51,14 +51,14 @@ if (!Session::haveRight('entity', UPDATE) && ($form->isDeleted() || $form->field
 }
 
 if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
-   // form is not public : login required and form must be accessible from the entityes of the user
+   // form is not public : login required and form must be accessible from the entities of the user
    if (Session::getLoginUserID() === false || !$form->checkEntity(true)) {
       http_response_code(403);
       exit();
    }
 }
 
-if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
+if (!Session::haveRight('entity', UPDATE) && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
    $iterator = $DB->request(PluginFormcreatorForm_Profile::getTable(), [
       'WHERE' => [
          'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
