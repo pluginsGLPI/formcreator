@@ -589,6 +589,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'comment',
          'name'               => __('Comment'),
          'datatype'           => 'text',
+         'htmltext'           => true,
+         'nodisplay'          => true,
          'massiveaction'      => false
       ];
 
