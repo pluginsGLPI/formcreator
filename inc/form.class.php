@@ -1080,6 +1080,7 @@ PluginFormcreatorTranslatableInterface
       . ' class="plugin_formcreator_form"'
       . ' action="' . self::getFormURL() . '"'
       . ' id="plugin_formcreator_form"'
+      . ' data-id="' . $formId . '"'
       . '>';
 
       // load thanguage for the form, if any
