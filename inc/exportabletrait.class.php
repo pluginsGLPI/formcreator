@@ -53,19 +53,19 @@ trait PluginFormcreatorExportableTrait
          if (!is_array($itemtypes)) {
             $itemtypes = [$itemtypes];
          }
-          $export[$key] = [];
+         $export[$key] = [];
          foreach ($itemtypes as $itemtype) {
-             $allSubItems = $DB->request($itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID()));
-             $list = [];
-             $subItem = new $itemtype();
+            $allSubItems = $DB->request($itemtype::getSQLCriteriaToSearchForItem($this->getType(), $this->getID()));
+            $list = [];
+            $subItem = new $itemtype();
             foreach ($allSubItems as $row) {
                $subItem->getFromDB($row['id']);
                $list[] = $subItem->export($remove_uuid);
             }
             if (!is_array($subItems[$key])) {
-                $export[$key] = $list;
+               $export[$key] = $list;
             } else {
-                $export[$key][$itemtype] = $list;
+               $export[$key][$itemtype] = $list;
             }
          }
       }
@@ -128,7 +128,7 @@ trait PluginFormcreatorExportableTrait
           return 1;
       }
 
-       $count = 0;
+      $count = 0;
       foreach ($subItems as $key => $itemtypes) {
          if (isset($input[$key])) {
             // force array of itemtypes

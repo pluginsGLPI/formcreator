@@ -54,7 +54,7 @@ At the same time, the plugin allow the creation of one or more tickets when the 
 
 | **LTS** | **Beta** | **Bleeding Edge** |
 |:---:|:---:|:---:|
-| ![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=support%2F2.10.0) | ![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=support%2F2.11.0) |![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=develop) |
+| ![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=master) | ![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=support%2F2.12.0) |![unit tests](https://github.com/pluginsGLPI/formcreator/workflows/unit%20tests/badge.svg?branch=develop) |
 
 ## Documentation
 
@@ -85,7 +85,6 @@ To build the plugin you need [Composer](http://getcomposer.org) and an internet 
 
 After dowloading the source of Formcreator, go in its folder and run the following
 * composer install
-* php vendor/bin/robo build:fa-data
 
 ## Contribute
 

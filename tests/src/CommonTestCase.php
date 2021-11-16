@@ -288,6 +288,14 @@ abstract class CommonTestCase extends atoum
       return $targetChange;
    }
 
+   protected function getFormAnswer(array $input): ?\PluginFormcreatorFormAnswer {
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->add($input);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+
+      return $formAnswer;
+   }
+
    /**
     * Tests the session has a specific message
     * this may be replaced by a custom asserter for atoum
@@ -338,7 +346,7 @@ abstract class CommonTestCase extends atoum
     * @param array $input
     * @return \CommonDBTM|void
     */
-   protected function getGlpiCoreItem(string $itemtype, array $input) {
+   protected function getGlpiCoreItem(string $itemtype, array $input = []) {
       /** @var \CommonDBTM */
       $item = new $itemtype();
 

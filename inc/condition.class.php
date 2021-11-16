@@ -107,11 +107,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    }
 
    /**
-    * Undocumented function
+    * Get rules for conditions
     *
     * @return array
     */
-   public function getEnumShowRule() : array {
+   public static function getEnumShowRule(): array {
       return [
         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
@@ -252,21 +252,19 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    /**
     * Display HTML for conditions applied on an item
     *
-    * @param CommonDBTM $item item where conditions applies to
+    * @param PluginFormcreatorConditionnableInterface $item item where conditions applies to
     * @return void
     */
-   public function showConditionsForItem(CommonDBTM $item) {
-      $rand = mt_rand();
-
+   public function showConditionsForItem(PluginFormcreatorConditionnableInterface $item) {
       echo '<tr>';
+      echo '<tr><th class="center" colspan="4">' . __('Conditions', 'formcreator') . '</th></tr>';
       echo '<td colspan="4">';
       Dropdown::showFromArray(
          'show_rule',
-         $this->getEnumShowRule(),
+         $item::getEnumShowRule(),
          [
             'value'        => $item->fields['show_rule'],
             'on_change'    => 'plugin_formcreator_toggleCondition(this);',
-            'rand'         => $rand,
          ]
       );
       echo '</td>';
@@ -277,6 +275,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       }
 
       // Get existing conditions for the item
+      /** @var CommonDBTM $item */
       $conditions = $this->getConditionsFromItem($item);
       foreach ($conditions as $condition) {
          echo $condition->getConditionHtml($item->fields);
@@ -310,7 +309,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       $item              = new $itemtype();
 
       // Get list of question in the form of the item
-      if (!is_subclass_of($item, PluginFormcreatorConditionnableInterface::class)) {
+      if (!($item instanceof PluginFormcreatorConditionnableInterface)) {
          throw new Exception("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
 
@@ -336,7 +335,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       $html.= '</div>';
 
       // dropdown of questions
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $questionListExclusion = [];
       switch ($itemtype) {
          case PluginFormcreatorForm::class:

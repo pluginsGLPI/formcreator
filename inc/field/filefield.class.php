@@ -202,7 +202,7 @@ class FileField extends PluginFormcreatorAbstractField
       $questionTable = PluginFormcreatorQuestion::getTable();
       $formTable = PluginFormcreatorForm::getTable();
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDBByRequest([
          'LEFT JOIN' => [
             $sectionTable => [

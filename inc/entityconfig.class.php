@@ -48,8 +48,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SORT_POPULARITY   = 0;
    const CONFIG_SORT_ALPHABETICAL = 1;
 
-   const CONFIG_KB_MERGED = 1;
-   const CONFIG_KB_DISTINCT = 2;
+   const CONFIG_KB_MERGED = 0;
+   const CONFIG_KB_DISTINCT = 1;
 
    const CONFIG_SEARCH_HIDDEN = 0;
    const CONFIG_SEARCH_VISIBLE = 1;
@@ -122,36 +122,40 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public function prepareInputForAdd($input) {
       $input['header'] = $input['header'] ?? '';
-      $input['header'] = Html::clean($input['header']);
+
+      $config = Toolbox::getHtmLawedSafeConfig();
+      $input['header'] = htmLawed($input['header'], $config);
 
       return $input;
    }
 
    public function prepareInputForUpdate($input) {
       $input['header'] = $input['header'] ?? '';
-      $input['header'] = Html::clean($input['header']);
+
+      $config = Toolbox::getHtmLawedSafeConfig();
+      $input['header'] = htmLawed($input['header'], $config);
 
       return $input;
    }
 
    public function showFormForEntity(Entity $entity) {
       $ID = $entity->getField('id');
-      if (!$entity->can($ID, READ)
-            || !Notification::canView()) {
+      if (!$entity->can($ID, READ)) {
          return false;
       }
 
       if (!$this->getFromDB($ID)) {
          $this->add([
-            'id'                 => $ID,
-            'replace_helpdesk'   => self::CONFIG_PARENT,
-            'is_kb_separated'    => self::CONFIG_PARENT,
-            'is_search_visible'  => self::CONFIG_PARENT,
-            'is_header_visible'  => self::CONFIG_PARENT,
+            'id'                => $ID,
+            'replace_helpdesk'  => self::CONFIG_PARENT,
+            'is_kb_separated'   => self::CONFIG_PARENT,
+            'is_search_visible' => self::CONFIG_PARENT,
+            'is_header_visible' => self::CONFIG_PARENT,
+            'sort_order'        => self::CONFIG_PARENT,
          ]);
       }
 
-      $canedit = $entity->canUpdateItem();
+      $canedit = Entity::canUpdate() && $entity->canUpdateItem();
       echo "<div class='spaced'>";
       if ($canedit) {
          echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
@@ -171,9 +175,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -188,9 +191,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('sort_order', $elements, ['value' => $this->fields['sort_order']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('sort_order', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -205,9 +207,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_kb_separated', $elements, ['value' => $this->fields['is_kb_separated']]);
       if ($this->fields['is_kb_separated'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_kb_separated', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -221,9 +222,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_search_visible', $elements, ['value' => $this->fields['is_search_visible']]);
       if ($this->fields['is_search_visible'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_search_visible', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -238,9 +238,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_header_visible', $elements, ['value' => $this->fields['is_header_visible']]);
       if ($this->fields['is_header_visible'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_header_visible', $ID);
-         echo '<div class="green">';
-         echo $elements[$tid];
-         echo '</div>';
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
@@ -260,7 +259,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
          echo "<input type='hidden' name='id' value='".$entity->fields["id"]."'>";
-         echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
+         echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='btn btn-primary'>";
          echo "</td></tr>";
          Html::closeForm();
       }
@@ -378,13 +377,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
          }
       }
-      /*
-       switch ($fieldval) {
-       case "tickettype" :
-       // Default is Incident if not set
-       return Ticket::INCIDENT_TYPE;
-       }
-       */
+
       return $default_value;
    }
 }

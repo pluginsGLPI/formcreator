@@ -32,7 +32,7 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-$form = new PluginFormcreatorForm();
+$form = PluginFormcreatorCommon::getForm();
 
 $success = $form->update([
    'id' => $_POST['id'],

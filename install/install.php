@@ -68,6 +68,8 @@ class PluginFormcreatorInstall {
       '2.10.2' => '2.11',
       '2.11'   => '2.11.3',
       '2.11.3' => '2.12',
+      '2.12'   => '2.12.1',
+      '2.12.1' => '2.13'
    ];
 
    /**
@@ -100,6 +102,28 @@ class PluginFormcreatorInstall {
     * @return bool
     */
    public function upgrade(Migration $migration, $args = []): bool {
+      global $DB;
+
+      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
+         $iterator = $DB->getMyIsamTables();
+         $hasMyisamTables = false;
+         foreach ($iterator as $table) {
+            if (strpos($table['TABLE_NAME'], 'glpi_plugin_formcreator_') === 0) {
+               $hasMyisamTables = true;
+               break;
+            }
+         }
+         if ($hasMyisamTables) {
+            // Need to convert myisam tables into innodb first
+            if (isCommandLine()) {
+               echo "Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb" . PHP_EOL;
+            } else {
+               Session::addMessageAfterRedirect(__('Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb', 'formcreator'), false, ERROR);
+            }
+            return false;
+         }
+      }
+
       $this->migration = $migration;
       if (isset($args['force-upgrade']) && $args['force-upgrade'] === true) {
          // Might return false
@@ -247,11 +271,7 @@ class PluginFormcreatorInstall {
       if (!$DB->numrows($result) > 0) {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
          $DB->query($query) or die ($DB->error());
-         if (version_compare(GLPI_VERSION, '9.5') < 0) {
-            $DB->insert_id();
-         } else {
-            $DB->insertId();
-         }
+         $DB->insertId();
       }
    }
 
@@ -321,7 +341,7 @@ class PluginFormcreatorInstall {
                'itemtype' => 'PluginFormcreatorFormAnswer',
                'event'    => $event,
             ]
-         ])->next();
+         ])->current();
 
          // If it doesn't exists, create it
          if ($exists['cpt'] == 0) {
@@ -461,7 +481,6 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorFormAnswer',
          'PluginFormcreatorForm_Profile',
          'PluginFormcreatorForm_Validator',
-         'PluginFormcreatorFormanswerValidation',
          'PluginFormcreatorForm',
          'PluginFormcreatorCondition',
          'PluginFormcreatorQuestion',

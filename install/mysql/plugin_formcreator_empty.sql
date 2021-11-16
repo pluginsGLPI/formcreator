@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_formanswers_id` (`plugin_formcreator_formanswers_id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   `id`                               int(11) NOT NULL AUTO_INCREMENT,
@@ -25,18 +25,18 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   INDEX `name` (`name`),
   INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
   INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `id`                int(11) NOT NULL,
-  `replace_helpdesk`  int(11) NOT NULL DEFAULT '0',
-  `sort_order`        int(11) NOT NULL DEFAULT '0',
-  `is_kb_separated`   int(11) NOT NULL DEFAULT '0',
-  `is_search_visible` int(11) NOT NULL DEFAULT '0',
-  `is_header_visible` int(11) NOT NULL DEFAULT '0',
+  `replace_helpdesk`  int(11) NOT NULL DEFAULT '-2',
+  `sort_order`        int(11) NOT NULL DEFAULT '-2',
+  `is_kb_separated`   int(11) NOT NULL DEFAULT '-2',
+  `is_search_visible` int(11) NOT NULL DEFAULT '-2',
+  `is_header_visible` int(11) NOT NULL DEFAULT '-2',
   `header`            text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `id`                               int(11) NOT NULL AUTO_INCREMENT,
@@ -51,20 +51,21 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `content`                          longtext,
   `plugin_formcreator_categories_id` int(11) unsigned NOT NULL DEFAULT '0',
   `is_active`                        tinyint(1) NOT NULL DEFAULT '0',
-  `language`                         varchar(5) NOT NULL,
+  `language`                         varchar(255) NOT NULL DEFAULT '',
   `helpdesk_home`                    tinyint(1) NOT NULL DEFAULT '0',
   `is_deleted`                       tinyint(1) NOT NULL DEFAULT '0',
+  `validation_required`              tinyint(1) NOT NULL DEFAULT '0',
   `usage_count`                      int(11) NOT NULL DEFAULT '0',
   `is_default`                       tinyint(1) NOT NULL DEFAULT '0',
   `is_captcha_enabled`               tinyint(1) NOT NULL DEFAULT '0',
   `show_rule`                        int(11) NOT NULL DEFAULT '1' COMMENT 'Conditions setting to show the submit button',
-  `validation_percent`               int(11) NOT NULL DEFAULT '0',
+  `formanswer_name`                  varchar(255) NOT NULL DEFAULT '',
   `uuid`                             varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `entities_id` (`entities_id`),
   INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `id`                          int(11) NOT NULL AUTO_INCREMENT,
@@ -73,11 +74,10 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `is_recursive`                tinyint(1) NOT NULL DEFAULT '0',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `requester_id`                int(11) DEFAULT NULL,
-  `users_id_validator`          int(11) NOT NULL DEFAULT '0',
-  `groups_id_validator`         int(11) NOT NULL DEFAULT '0',
+  `users_id_validator`          int(11) NOT NULL DEFAULT '0' COMMENT 'User in charge of validation',
+  `groups_id_validator`         int(11) NOT NULL DEFAULT '0' COMMENT 'Group in charge of validation',
   `request_date`                timestamp NULL,
   `status`                      int(11) NOT NULL DEFAULT '101',
-  `validation_percent`          int(11) NOT NULL DEFAULT '0',
   `comment`                     text,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   INDEX `requester_id` (`requester_id`),
   INDEX `users_id_validator` (`users_id_validator`),
   INDEX `groups_id_validator` (`groups_id_validator`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   `id`                          int(11) NOT NULL AUTO_INCREMENT,
@@ -94,29 +94,17 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   `uuid`                        varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`profiles_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
   `id`                          int(11) NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `itemtype`                    varchar(255) NOT NULL DEFAULT '',
   `items_id`                    int(11) NOT NULL,
-  `level`                       int(11) NOT NULL DEFAULT '1',
   `uuid`                        varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`itemtype`,`items_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswervalidations` (
-  `id`                                int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_formanswers_id` int(11) NOT NULL,
-  `itemtype`                          varchar(255) NOT NULL DEFAULT '',
-  `items_id`                          int(11) NOT NULL,
-  `status`                            int(11) NOT NULL DEFAULT '2',
-  `level`                             int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `id`                             int(11) NOT NULL AUTO_INCREMENT,
@@ -126,8 +114,9 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `required`                       tinyint(1) NOT NULL DEFAULT '0',
   `show_empty`                     tinyint(1) NOT NULL DEFAULT '0',
   `default_values`                 mediumtext,
+  `itemtype`                       varchar(255) NOT NULL DEFAULT '' COMMENT 'itemtype used for glpi objects and dropdown question types',
   `values`                         mediumtext,
-  `description`                    text NOT NULL,
+  `description`                    mediumtext,
   `row`                            int(11) NOT NULL DEFAULT '0',
   `col`                            int(11) NOT NULL DEFAULT '0',
   `width`                          int(11) NOT NULL DEFAULT '0',
@@ -136,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_sections_id` (`plugin_formcreator_sections_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_conditions` (
 	`id`                              int(11) NOT NULL AUTO_INCREMENT,
@@ -151,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_conditions` (
 	PRIMARY KEY (`id`),
 	INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`),
   INDEX `item` (`itemtype`, `items_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `id`                          int(11) NOT NULL AUTO_INCREMENT,
@@ -162,13 +151,14 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `uuid`                        varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `id`                          int(11) NOT NULL AUTO_INCREMENT,
   `name`                        varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_forms_id` int(11) NOT NULL DEFAULT '0',
   `target_name`                 varchar(255) NOT NULL DEFAULT '',
+  `changetemplates_id`          int(11) NOT NULL DEFAULT '0',
   `content`                     longtext,
   `impactcontent`               longtext,
   `controlistcontent`           longtext,
@@ -185,8 +175,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `destination_entity`         int(11) NOT NULL DEFAULT '1',
   `destination_entity_value`   int(11) DEFAULT NULL,
   `tag_type`                   int(11) NOT NULL DEFAULT '1',
-  `tag_questions`              varchar(255) NOT NULL,
-  `tag_specifics`              varchar(255) NOT NULL,
+  `tag_questions`              varchar(255) NOT NULL DEFAULT '',
+  `tag_specifics`              varchar(255) NOT NULL DEFAULT '',
   `category_rule`              int(11) NOT NULL DEFAULT '1',
   `category_question`          int(11) NOT NULL DEFAULT '0',
   `show_rule`                  int(11) NOT NULL DEFAULT '1',
@@ -198,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `ola_question_ttr`           int(11) NOT NULL DEFAULT '0',
   `uuid`                       varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `id`                          int(11) NOT NULL AUTO_INCREMENT,
@@ -207,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `target_name`                 varchar(255) NOT NULL DEFAULT '',
   `type_rule`                   int(11) NOT NULL DEFAULT '0',
   `type_question`               int(11) NOT NULL DEFAULT '0',
-  `tickettemplates_id`          int(11) DEFAULT NULL,
+  `tickettemplates_id`          int(11) NOT NULL DEFAULT '0',
   `content`                     longtext,
   `due_date_rule`               int(11) NOT NULL DEFAULT '1',
   `due_date_question`           int(11) DEFAULT NULL,
@@ -219,8 +209,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `destination_entity`          int(11) NOT NULL DEFAULT '1',
   `destination_entity_value`    int(11) DEFAULT NULL,
   `tag_type`                    int(11) NOT NULL DEFAULT '1',
-  `tag_questions`               varchar(255) NOT NULL,
-  `tag_specifics`               varchar(255) NOT NULL,
+  `tag_questions`               varchar(255) NOT NULL DEFAULT '',
+  `tag_specifics`               varchar(255) NOT NULL DEFAULT '',
   `category_rule`               int(11) NOT NULL DEFAULT '1',
   `category_question`           int(11) NOT NULL DEFAULT '0',
   `associate_rule`              int(11) NOT NULL DEFAULT '1',
@@ -237,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `uuid`                        varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
   `id`               int(11) NOT NULL AUTO_INCREMENT,
@@ -250,30 +240,30 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
   `uuid`             varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `item` (`itemtype`, `items_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `id`                    int(11)       NOT NULL AUTO_INCREMENT,
   `name`                  varchar(255)  NOT NULL DEFAULT '',
   `display_id`            varchar(255)  NOT NULL,
-  `original_id`           int(11)       NOT NULL DEFAULT '0',
-  `sub_itemtype`          varchar(100)  NOT NULL DEFAULT '',
+  `items_id`              int(11)       NOT NULL DEFAULT '0',
+  `itemtype`              varchar(255)  NOT NULL DEFAULT '',
   `status`                varchar(255)  NOT NULL DEFAULT '',
   `date_creation`         timestamp     NULL,
   `date_mod`              timestamp     NULL,
   `entities_id`           int(11)       NOT NULL DEFAULT '0',
   `is_recursive`          tinyint(1)    NOT NULL DEFAULT '0',
   `requester_id`          int(11)       NOT NULL DEFAULT '0',
-  `users_id_validator`    int(11)       NOT NULL DEFAULT '0',
-  `groups_id_validator`   int(11)       NOT NULL DEFAULT '0',
+  `users_id_validator`    int(11) NOT NULL DEFAULT '0',
+  `groups_id_validator`   int(11) NOT NULL DEFAULT '0',
   `comment`               longtext,
   PRIMARY KEY (`id`),
-  INDEX `original_id_sub_itemtype` (`original_id`, `sub_itemtype`),
+  INDEX `item` (`itemtype`, `items_id`),
   INDEX `entities_id` (`entities_id`),
   INDEX `requester_id` (`requester_id`),
   INDEX `users_id_validator` (`users_id_validator`),
   INDEX `groups_id_validator` (`groups_id_validator`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -285,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
   INDEX `item` (`itemtype`,`items_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -296,7 +286,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`),
   INDEX `plugin_formcreator_questions_id_2` (`plugin_formcreator_questions_id_2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -306,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `uuid`                              varchar(255)  DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -317,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
   `uuid`                              varchar(255)  DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_languages` (
   `id`                                int(11)       NOT NULL AUTO_INCREMENT,
@@ -326,4 +316,4 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_languages` (
   `comment`                           text,
   `uuid`                              varchar(255)  DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

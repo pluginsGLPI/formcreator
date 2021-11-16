@@ -128,7 +128,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $newQuestion_id = $question->duplicate();
       $this->integer($newQuestion_id)->isGreaterThan(0);
 
-      //get cloned section
+      //get cloned question
       $new_question  = new \PluginFormcreatorQuestion;
       $new_question->getFromDB($newQuestion_id);
 
@@ -318,6 +318,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'required' => '0',
          'show_empty' => '1',
          'default_values' => '',
+         'itemtype' => '',
          'values' => '',
          'description' => '',
          'order' => '1',
@@ -407,6 +408,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'required',
          'show_empty',
          'default_values',
+         'itemtype',
          'values',
          'description',
          'row',
@@ -1068,5 +1070,86 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $output = $question->getTranslatableStrings();
       //if ($questionType == 'float') $this->dumpOnFailure($output);
       $this->array($output)->isIdenticalTo($expected);
+   }
+
+   public function testSetRequired() {
+      $instance = $this->getQuestion();
+      $output = $instance->setRequired('1');
+      $this->boolean($output)->isTrue();
+
+      $instance->getFromDB($instance->getID());
+      $this->integer((int) $instance->fields['required'])->isEqualTo(1);
+
+      $output = $instance->setRequired('0');
+      $this->boolean($output)->isTrue();
+
+      $instance->getFromDB($instance->getID());
+      $this->integer((int) $instance->fields['required'])->isEqualTo(0);
+   }
+
+   public function testCountItemsToImport() {
+      $input = [
+         '_conditions' => [['dummy condition input']],
+      ];
+
+      $output = \PluginFormcreatorQuestion::countItemsToImport($input);
+      $this->integer($output)->isEqualTo(2);
+
+      $input['_conditions'][] = [['otherdummy condition input']];
+      $output = \PluginFormcreatorQuestion::countItemsToImport($input);
+      $this->integer($output)->isEqualTo(3);
+   }
+
+   public function testGetQuestionsFromForm() {
+      $question1 = $this->getQuestion();
+
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+
+      $form = new \PluginFormcreatorForm();
+      $form->getFromDBByQuestion($question1);
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $section2 = $this->getSection([
+         $formFk => $form->getID(),
+      ]);
+
+      $question2 = $this->getQuestion([
+         $sectionFk => $section2->getID(),
+      ]);
+
+      $questions = $question1->getQuestionsFromForm($form->getID());
+      $this->array($questions)->hasSize(2);
+
+      $questionIds = [];
+      foreach ($questions as $item) {
+         $questionIds[] = $item->getID();
+      }
+      $expectedQuestionIds = [
+         $question1->getID(),
+         $question2->getID(),
+      ];
+
+      $this->array(array_intersect($questionIds, $expectedQuestionIds))->hasSize(2);
+   }
+
+   public function testGetQuestionsBySection() {
+      $section = $this->getSection();
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $question1 = $this->getQuestion([
+         $sectionFk => $section->getID(),
+      ]);
+      $question2 = $this->getQuestion([
+         $sectionFk => $section->getID(),
+      ]);
+
+      $questions = $question1->getQuestionsFromSection($section->getID());
+      $questionIds = [];
+      foreach ($questions as $item) {
+         $questionIds[] = $item->getID();
+      }
+      $expectedQuestionIds = [
+         $question1->getID(),
+         $question2->getID(),
+      ];
+      $this->array(array_intersect($questionIds, $expectedQuestionIds))->hasSize(2);
    }
 }

@@ -31,7 +31,7 @@
 namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
-use Facebook\WebDriver\Remote\DriverCommand;
+use Plugin;
 
 class PluginFormcreatorForm extends CommonFunctionalTestCase
 {
@@ -71,7 +71,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       // Select the entity for the test
       $this->browsing->changeActiveEntity($entity, true);
 
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
       $this->client->waitFor('footer');
       // Forms are loaded with AJAX
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
@@ -111,7 +111,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
 
       // View the form's tile
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
       $this->client->waitForVisibility($formTileSelector);
       $this->takeScreenshot();
 
@@ -170,7 +170,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
 
       // View the form's tile
       $formIconSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"] i';
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
       $this->client->waitForVisibility($formIconSelector);
       $this->takeScreenshot();
 
@@ -241,7 +241,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       // Select the entity for the test
       $this->browsing->changeActiveEntity($entity, true);
 
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $this->client->waitForVisibility($formTileSelector);
       $this->takeScreenshot();

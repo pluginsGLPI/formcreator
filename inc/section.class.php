@@ -54,6 +54,10 @@ PluginFormcreatorTranslatableInterface
     */
    const COLUMNS = 4;
 
+   public static function getEnumShowRule() : array {
+      return PluginFormcreatorCondition::getEnumShowRule();
+   }
+
    /**
     * Returns the type name with consideration of plural
     *
@@ -105,9 +109,8 @@ PluginFormcreatorTranslatableInterface
 
       // Get next order
       if ($this->useAutomaticOrdering) {
-         $formId = $input['plugin_formcreator_forms_id'];
          $maxOrder = PluginFormcreatorCommon::getMax($this, [
-            "plugin_formcreator_forms_id" => $formId
+            self::$items_id => $input[self::$items_id]
          ], 'order');
          if ($maxOrder === null) {
             $input['order'] = 1;
@@ -199,6 +202,11 @@ PluginFormcreatorTranslatableInterface
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $export = $this->export(true);
+      $export['order'] = PluginFormcreatorCommon::getMax(
+         $this,
+         [$formFk => $this->fields[$formFk]],
+         'order'
+      ) + 1;
       $newSectionId = static::import($linker, $export, $this->fields[$formFk]);
 
       if ($newSectionId === false) {

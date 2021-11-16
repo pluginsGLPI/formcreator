@@ -36,6 +36,7 @@ use Html;
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
+use PluginFormcreatorCommon;
 use Session;
 use Toolbox;
 
@@ -94,7 +95,7 @@ class TextField extends PluginFormcreatorAbstractField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->value);
+      $defaultValue = Html::cleanInputText(__($this->value, $domain));
 
       $html .= Html::input($fieldName, [
          'type'  => 'text',
@@ -196,7 +197,7 @@ class TextField extends PluginFormcreatorAbstractField
       $fieldType = $this->getFieldTypeName();
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
          $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
-         $success = $this->checkRegex($regex);
+         $success = PluginFormcreatorCommon::checkRegex($regex);
          if (!$success) {
             Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
          }

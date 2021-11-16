@@ -49,30 +49,22 @@ class PluginFormcreatorKnowbase {
    }
 
    public function showServiceCatalog() {
-      echo "<div id='formcreator_servicecatalogue'>";
-
       // show wizard
-      echo '<div id="plugin_formcreator_wizard">';
-      $this->showWizard(true);
+      echo '<div>';
+      PluginFormcreatorIssue::showTicketSummary();
       echo '</div>';
-
-      echo '</div>'; // formcreator_servicecatalogue
+      echo '<div id="plugin_formcreator_wizard" class="card-group">';
+      $this->showWizard();
+      echo '</div>';
    }
 
-   public function showWizard($service_catalog = false) {
-      echo '<div id="plugin_formcreator_kb_categories">';
-      echo '<div><h2>'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
+   public function showWizard() {
+      echo '<div id="plugin_formcreator_kb_categories" class="card">';
+      echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
       echo '<div><a href="#" id="kb_seeall">' . __('see all', 'formcreator') . '</a></div>';
       echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard_right">';
-
-      // hook display central (for alert plugin)
-      if ($service_catalog) {
-         echo "<div id='plugin_formcreator_display_central'>";
-         Plugin::doHook('display_central');
-         echo "</div>";
-      }
+      echo '<div id="plugin_formcreator_wizard_right" class="card">';
 
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
@@ -84,7 +76,7 @@ class PluginFormcreatorKnowbase {
 
    protected function showSearchBar() {
       echo '<form name="plugin_formcreator_search" onsubmit="javascript: return false;" >';
-      echo '<input type="text" name="words" id="plugin_formcreator_search_input" required/>';
+      echo '<input type="text" name="words" id="plugin_formcreator_search_input" required  class="form-control"/>';
       echo '<span id="plugin_formcreator_search_input_bar"></span>';
       echo '<label for="plugin_formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
       echo '</form>';

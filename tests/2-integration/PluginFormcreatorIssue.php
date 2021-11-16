@@ -53,8 +53,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
       // find the issue for the ticket
       $issue = $this->newTestedInstance();
       $issue->getFromDBByCrit([
-         'sub_itemtype' => \Ticket::getType(),
-         'original_id'  => $ticket->getID(),
+         'itemtype' => \Ticket::getType(),
+         'items_id'  => $ticket->getID(),
       ]);
       $this->boolean($issue->isNewItem())->isFalse();
 
@@ -94,8 +94,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
       // find the issue for the ticket
       $issue = $this->newTestedInstance();
       $issue->getFromDBByCrit([
-         'sub_itemtype' => \Ticket::getType(),
-         'original_id'  => $ticket->getID(),
+         'itemtype' => \Ticket::getType(),
+         'items_id'  => $ticket->getID(),
       ]);
       $this->boolean($issue->isNewItem())->isFalse();
 
@@ -121,8 +121,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
       // find the issue for the ticket
       $issue = $this->newTestedInstance();
       $issue->getFromDBByCrit([
-         'sub_itemtype' => \Ticket::getType(),
-         'original_id'  => $ticket->getID(),
+         'itemtype' => \Ticket::getType(),
+         'items_id'  => $ticket->getID(),
       ]);
       $this->boolean($issue->isNewItem())->isFalse();
 

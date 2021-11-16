@@ -52,6 +52,10 @@ PluginFormcreatorTranslatableInterface
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private $field = null;
 
+   public static function getEnumShowRule() : array {
+      return PluginFormcreatorCondition::getEnumShowRule();
+   }
+
    /**
     * Returns the type name with consideration of plural
     *
@@ -78,32 +82,31 @@ PluginFormcreatorTranslatableInterface
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       global $DB;
 
-      switch ($item->getType()) {
-         case PluginFormcreatorForm::class:
-            $number      = 0;
-            $found       = $DB->request([
-               'SELECT' => ['id'],
-               'FROM'   => PluginFormcreatorSection::getTable(),
-               'WHERE'  => [
-                  'plugin_formcreator_forms_id' => $item->getID()
-               ]
-            ]);
-            $tab_section = [];
-            foreach ($found as $section_item) {
-               $tab_section[] = $section_item['id'];
-            }
+      if ($item instanceof PluginFormcreatorForm) {
+         $number      = 0;
+         $found       = $DB->request([
+            'SELECT' => ['id'],
+            'FROM'   => PluginFormcreatorSection::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_forms_id' => $item->getID()
+            ]
+         ]);
+         $tab_section = [];
+         foreach ($found as $section_item) {
+            $tab_section[] = $section_item['id'];
+         }
 
-            if (!empty($tab_section)) {
-               $count = $DB->request([
-                  'COUNT' => 'cpt',
-                  'FROM'  => self::getTable(),
-                  'WHERE' => [
-                     'plugin_formcreator_sections_id' => $tab_section
-                  ]
-               ])->next();
-               $number = $count['cpt'];
-            }
-            return self::createTabEntry(self::getTypeName($number), $number);
+         if (!empty($tab_section)) {
+            $count = $DB->request([
+               'COUNT' => 'cpt',
+               'FROM'  => self::getTable(),
+               'WHERE' => [
+                  'plugin_formcreator_sections_id' => $tab_section
+               ]
+            ])->current();
+            $number = $count['cpt'];
+         }
+         return self::createTabEntry(self::getTypeName($number), $number);
       }
       return '';
    }
@@ -120,10 +123,8 @@ PluginFormcreatorTranslatableInterface
     * @return null                     Nothing, just display the list
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      switch (get_class($item)) {
-         case PluginFormcreatorForm::class:
-            static::showForForm($item, $withtemplate);
-            break;
+      if ($item instanceof PluginFormcreatorForm) {
+         static::showForForm($item, $withtemplate);
       }
    }
 
@@ -306,7 +307,7 @@ PluginFormcreatorTranslatableInterface
          . ' data-id="' . $this->getID() . '"'
          . " $hiddenAttribute"
          . ' >';
-      $html .= '<div class="grid-stack-item-content form-group ' . $required . '" id="form-group-field-' . $this->getID() . '">';
+      $html .= '<div class="grid-stack-item-content form-group mb-3 ' . $required . '" id="form-group-field-' . $this->getID() . '">';
       $html .= $field->show($domain, $canEdit);
       $html .= '</div>';
       $html .= '</div>';
@@ -361,7 +362,7 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
       // - field type is compatible with accessibility of the form
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDBByQuestion($this);
       if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
          Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
@@ -388,6 +389,10 @@ PluginFormcreatorTranslatableInterface
       $input = $this->field->prepareQuestionInputForSave($input);
       if ($input === false || !is_array($input)) {
          // Invalid data
+         return [];
+      }
+
+      if (isset($input['_conditions']) && !$this->checkConditions($input['_conditions'])) {
          return [];
       }
 
@@ -422,18 +427,44 @@ PluginFormcreatorTranslatableInterface
       if (!isset($input['width'])) {
          $input['width'] = PluginFormcreatorSection::COLUMNS - $input['col'];
       }
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       // Get next row
       if ($this->useAutomaticOrdering) {
-         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $maxRow = PluginFormcreatorCommon::getMax($this, [
-            $sectionFk => $input[$sectionFk]
+            self::$items_id => $input[self::$items_id]
          ], 'row');
          if ($maxRow === null) {
             $input['row'] = 0;
          } else {
             $input['row'] = $maxRow + 1;
          }
+      }
+
+      // handle description field and its inline pictures
+      if (isset($input['_description'])) {
+         foreach ($input['_description'] as $id => $filename) {
+            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
+            // when is merged https://github.com/glpi-project/glpi/pull/9335
+            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
+               $this->value = str_replace('id="' .  $input['_tag_description'] . '"', $document->fields['tag'], $this->value);
+               $input['_tag_description'][$id] = $document->fields['tag'];
+            }
+         }
+
+         $input = $this->addFiles(
+            $input,
+            [
+               'force_update'  => true,
+               'content_field' => null,
+               'name'          => 'description',
+            ]
+         );
+
+         $input['description'] = Html::entity_decode_deep($input['description']);
+         foreach ($input['_tag_description'] as $tag) {
+            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
+            $input['description'] = preg_replace($regex, "#$tag#", $input['description']);
+         }
+         $input['description'] = Html::entities_deep($input['description']);
       }
 
       // generate a unique id
@@ -463,6 +494,34 @@ PluginFormcreatorTranslatableInterface
 
       if (!is_array($input) || count($input) == 0) {
          return false;
+      }
+
+      // handle description field and its inline pictures
+      if (isset($input['_description'])) {
+         foreach ($input['_description'] as $id => $filename) {
+            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
+            // when is merged https://github.com/glpi-project/glpi/pull/9335
+            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
+               $this->value = str_replace('id="' .  $input['_tag_description'] . '"', $document->fields['tag'], $this->value);
+               $input['_tag_description'][$id] = $document->fields['tag'];
+            }
+         }
+
+         $input = $this->addFiles(
+            $input,
+            [
+               'force_update'  => true,
+               'content_field' => null,
+               'name'          => 'description',
+            ]
+         );
+
+         $input['description'] = Html::entity_decode_deep($input['description']);
+         foreach ($input['_tag_description'] as $tag) {
+            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
+            $input['description'] = preg_replace($regex, "#$tag#", $input['description']);
+         }
+         $input['description'] = Html::entities_deep($input['description']);
       }
 
       // generate a unique id
@@ -563,7 +622,7 @@ PluginFormcreatorTranslatableInterface
     * @param bool $isRequired
     */
    public function setRequired($isRequired) {
-      $this->update([
+      return $this->update([
          'id'           => $this->getID(),
          'required'     => $isRequired,
          '_skip_checks' => true,
@@ -827,7 +886,7 @@ PluginFormcreatorTranslatableInterface
       echo Html::textarea([
          'name'    => 'description',
          'id'      => 'description',
-         'value'   => $this->fields['description'],
+         'value'   => Toolbox::convertTagToImage($this->fields['description'], $this),
          'enable_richtext' => true,
          'filecontainer'   => 'description_info',
          'display' => false,
@@ -992,26 +1051,26 @@ PluginFormcreatorTranslatableInterface
          throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
-      $question = $this->fields;
+      $export = $this->fields;
 
       // remove key and fk
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      unset($question[$sectionFk]);
+      unset($export[$sectionFk]);
 
       // get question conditions
-      $question['_conditions'] = [];
+      $export['_conditions'] = [];
       $condition = new PluginFormcreatorCondition();
       $all_conditions = $condition->getConditionsFromItem($this);
       foreach ($all_conditions as $condition) {
-         $question['_conditions'][] = $condition->export($remove_uuid);
+         $export['_conditions'][] = $condition->export($remove_uuid);
       }
 
       // get question parameters
-      $question['_parameters'] = [];
+      $export['_parameters'] = [];
       $this->loadField($this->fields['fieldtype']);
       $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldname => $parameter) {
-         $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
+         $export['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
       }
 
       // remove ID or UUID
@@ -1019,9 +1078,9 @@ PluginFormcreatorTranslatableInterface
       if ($remove_uuid) {
          $idToRemove = 'uuid';
       }
-      unset($question[$idToRemove]);
+      unset($export[$idToRemove]);
 
-      return $question;
+      return $export;
    }
 
    /**
@@ -1155,13 +1214,15 @@ PluginFormcreatorTranslatableInterface
     * @param array $options
     * @return string|int HTML output or random id
     */
-   public static function dropdownForForm($formId, $crit, $name, $value, $options = []) {
+   public static function dropdownForForm($formId, $crit, $name, $value = null, $options = []) {
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
       $options = $options + [
          'display' => $options['display'] ?? true,
-         'value'   => $value,
       ];
+      if ($value !== null) {
+         $options['value'] = $value;
+      }
       $output = Dropdown::showFromArray($name, $items, $options);
 
       return $output;

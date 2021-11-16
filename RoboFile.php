@@ -306,9 +306,14 @@ class RoboFile extends RoboFilePlugin
 
    public function localesExtract() {
       $potfile = strtolower("glpi.pot");
-      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/field/*.php install/*.php js/*.php";
+      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/field/*.php install/*.php";
       // extract locales from source code
       $command = "xgettext $phpSources -o locales/$potfile -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po";
+      $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
+      $command.= " --keyword=_sx:1c,2,3t --keyword=_nx:1c,2,3,5t";
+      $this->_exec($command);
+      $jsSources = "js/*.js";
+      $command = "xgettext $jsSources -o locales/$potfile -j -L javascript --add-comments=TRANS --from-code=UTF-8 --force-po";
       $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
       $command.= " --keyword=_sx:1c,2,3t --keyword=_nx:1c,2,3,5t";
       $this->_exec($command);

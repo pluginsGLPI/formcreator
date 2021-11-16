@@ -58,7 +58,7 @@ function plugin_formcreator_showWizardCategories() {
 }
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
-   $form = new PluginFormcreatorForm();
+   $form = PluginFormcreatorCommon::getForm();
    $formList = $form->showFormList($rootCategory, $keywords, $helpdeskHome);
    echo json_encode($formList, JSON_UNESCAPED_SLASHES);
 }

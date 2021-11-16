@@ -35,6 +35,47 @@ if (!defined('GLPI_ROOT')) {
 
 trait PluginFormcreatorConditionnableTrait
 {
+
+   /**
+    * Check validity of conditions
+    *
+    * @param array $input conditions to check as sent by the browser
+    * @return boolean
+    */
+   public function checkConditions(array $input): bool {
+      // All arrays of condition exists
+      if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
+         || !isset($input['show_value']) || !isset($input['show_logic'])) {
+         return  false;
+      }
+
+      if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
+         || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
+         return false;
+      }
+
+      if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
+            && count($input['show_value']) == count($input['show_logic'])
+            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
+         return false;
+      }
+
+      while (count($input['show_condition']) > 0) {
+         $showCondition    = html_entity_decode(array_shift($input['show_condition']));
+         $value            = array_shift($input['show_value']);
+         if ($showCondition == PluginFormcreatorCondition::SHOW_CONDITION_REGEX) {
+            $regex = Toolbox::stripslashes_deep($value);
+            $success = PluginFormcreatorCommon::checkRegex($regex);
+            if (!$success) {
+               Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+               return false;
+            }
+         }
+      }
+
+      return true;
+   }
+
    public function updateConditions($input) : bool {
       if (!isset($input['show_rule'])) {
          return false;

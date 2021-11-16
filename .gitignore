@@ -7,6 +7,7 @@ vendor/
 .buildpath
 .project
 /.gtm/
+lib/
 
 # Ignore content of data except for the index
 data/*
@@ -17,3 +18,5 @@ tests/logs/
 
 # Ignore code coverage
 development/
+
+node_modules/

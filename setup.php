@@ -30,21 +30,22 @@
  */
 
 global $CFG_GLPI;
-// Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.12.0-dev');
-// Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.12');
+// Version of the plugin (major.minor.bugfix)
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-dev');
+// Schema version of this version (major.minor only)
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.5');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0');
 // Maximum GLPI version, exclusive (ignored if PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE == false)
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.6');
-
-define ('PLUGIN_FORMCREATOR_TEXTAREA_FIX', true);
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '10.1');
 
 define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
+
+// Advanced features for Formcreator
+define('PLUGIN_FORMCREATOR_ADVANCED', 'advform');
 
 /**
  * Define the plugin's version and informations
@@ -118,201 +119,49 @@ function plugin_formcreator_check_config($verbose = false) {
  * Initialize all classes and generic variables of the plugin
  */
 function plugin_init_formcreator() {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
+   global $CFG_GLPI;
 
-   // Add specific CSS
-   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
+   plugin_formcreator_permanent_hook();
 
-   // Hack for vertical display
-   if (isset($CFG_GLPI['layout_excluded_pages'])) {
-      array_push($CFG_GLPI['layout_excluded_pages'], "targetticket.form.php");
-   }
-
-   // Set the plugin CSRF compliance (required since GLPI 0.84)
-   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
-
-   // Can assign FormAnswer to tickets
-   $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
    array_push($CFG_GLPI["ticket_types"], PluginFormcreatorFormAnswer::class);
    array_push($CFG_GLPI["document_types"], PluginFormcreatorFormAnswer::class);
 
-   // hook to update issues when an operation occurs on a ticket
-   $PLUGIN_HOOKS['item_add']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_add_ticket',
-      ITILFollowup::class => 'plugin_formcreator_hook_update_itilFollowup',
-   ];
-   $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_update_ticket',
-      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
-      Plugin::class => 'plugin_formcreator_hook_update_plugin'
-   ];
-   $PLUGIN_HOOKS['item_delete']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_delete_ticket'
-   ];
-   $PLUGIN_HOOKS['item_restore']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_restore_ticket'
-   ];
-   $PLUGIN_HOOKS['item_purge']['formcreator'] = [
-      Ticket::class => 'plugin_formcreator_hook_purge_ticket',
-      TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
-   ];
-   $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
-      PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
-      PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
-   ];
-   // hook to add custom actions on a ticket in service catalog
-   $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
-
    $plugin = new Plugin();
-   if ($plugin->isActivated('formcreator')) {
-      spl_autoload_register('plugin_formcreator_autoload');
-      require_once(__DIR__ . '/vendor/autoload.php');
-
-      if (isset($_SESSION['glpiactiveentities_string'])) {
-         // Redirect to helpdesk replacement
-         if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
-            if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
-               // Not changing profile or active entity
-               if (Session::getCurrentInterface() !== false
-                     && isset($_SESSION['glpiactive_entity'])) {
-                  // Interface and active entity are set in session
-                  if (plugin_formcreator_replaceHelpdesk()) {
-                     Html::redirect(FORMCREATOR_ROOTDOC."/front/wizard.php");
-                  }
-               }
-            }
-         }
-         if (plugin_formcreator_replaceHelpdesk()) {
-            if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
-               if (!isset($_POST['update'])) {
-                  $decodedUrl = [];
-                  $openItilFollowup = '';
-                  if (isset($_GET['_openfollowup'])) {
-                     $openItilFollowup = '&_openfollowup=1';
-                  }
-                  parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
-                  if (isset($decodedUrl['forcetab'])) {
-                     Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
-                  }
-                  $issue = new PluginFormcreatorIssue();
-                  $issue->getFromDBByCrit([
-                     'sub_itemtype' => Ticket::class,
-                     'original_id'  => (int) $_GET['id']
-                  ]);
-                  if ($issue->isNewItem()) {
-                     Html::displayNotFoundError();
-                  }
-                  Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
-               }
-            }
-
-            $pages = [
-               'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
-               'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
-               'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
-            ];
-            foreach ($pages as $srcPage => $dstPage) {
-               if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
-                  if ($srcPage == 'front/reservationitem.php') {
-                     $_SESSION['plugin_formcreator']['redirected']['POST'] = $_POST;
-                  }
-                  Html::redirect($dstPage);
-                  break;
-               }
-            }
-         }
-
-         // Massive Action definition
-         $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
-
-         // Load menu entries if user is logged in and if he has access to at least one form
-         if (isset($_SESSION['glpiID'])) {
-            // If user have acces to one form or more, add link
-            if (PluginFormcreatorForm::countAvailableForm() > 0) {
-               $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
-            }
-
-            // Add a link in the main menu plugins for technician and admin panel
-            $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
-
-            // Config page
-            $links  = [];
-            if (Session::haveRight('entity', UPDATE)) {
-               $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
-               $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
-               $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
-               $links['add']    = FORMCREATOR_ROOTDOC . '/front/form.form.php';
-            }
-            $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
-                        title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
-
-            $links[$img] = FORMCREATOR_ROOTDOC . '/front/formanswer.php';
-
-            // Set options for pages (title, links, buttons...)
-            $links['search'] = FORMCREATOR_ROOTDOC . '/front/formlist.php';
-            $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
-               'config'       => ['title'  => __('Setup'),
-                                  'page'   => FORMCREATOR_ROOTDOC . '/front/form.php',
-                                  'links'  => $links],
-               'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                                  'links'  => $links],
-            ];
-         }
-
-         $pages = [
-            FORMCREATOR_ROOTDOC . '/front/targetticket.form.php',
-            FORMCREATOR_ROOTDOC . '/front/formdisplay.php',
-            FORMCREATOR_ROOTDOC . '/front/form.form.php',
-            FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
-            FORMCREATOR_ROOTDOC . '/front/issue.form.php',
-            FORMCREATOR_ROOTDOC . '/front/form_language.form.php',
-         ];
-         foreach ($pages as $page) {
-            if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
-               Html::requireJs('tinymce');
-               break;
-            }
-         }
-
-         if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
-               || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
-               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
-               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
-               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
-         }
-
-         Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
-
-         // Load field class and all its method to manage fields
-         Plugin::registerClass(PluginFormcreatorFields::class);
-
-         // Notification
-         Plugin::registerClass(PluginFormcreatorFormAnswer::class, [
-            'notificationtemplates_types' => true
-         ]);
-
-         Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
-
-         $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
-      }
-
-      // Load JS and CSS files if we are on a page which need them
-      if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
-         || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
-         || isset($_SESSION['glpiactiveprofile']) &&
-            Session::getCurrentInterface() == 'helpdesk') {
-
-         // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
-      }
-
-      //Html::requireJs('gridstack');
-      $CFG_GLPI['javascript']['admin'][PluginFormcreatorForm::class] = 'gridstack';
-      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorFormlist::class] = 'gridstack';
-      $CFG_GLPI['javascript']['helpdesk'][PluginFormcreatorIssue::class] = 'photoswipe';
+   if (!$plugin->isActivated('formcreator')) {
+      return;
    }
+
+   plugin_formcreator_redirect();
+
+   spl_autoload_register('plugin_formcreator_autoload');
+   require_once(__DIR__ . '/vendor/autoload.php');
+
+   plugin_formcreator_hook();
+
+   if (isset($_SESSION['glpiactiveentities_string'])) {
+      plugin_formcreator_registerClasses();
+
+      $pages = [
+         FORMCREATOR_ROOTDOC . '/front/targetticket.form.php',
+         FORMCREATOR_ROOTDOC . '/front/formdisplay.php',
+         FORMCREATOR_ROOTDOC . '/front/form.form.php',
+         FORMCREATOR_ROOTDOC . '/front/formanswer.form.php',
+         FORMCREATOR_ROOTDOC . '/front/issue.form.php',
+         FORMCREATOR_ROOTDOC . '/front/form_language.form.php',
+         '/front/entity.form.php',
+      ];
+      foreach ($pages as $page) {
+         if (strpos($_SERVER['REQUEST_URI'], $page) !== false) {
+            Html::requireJs('tinymce');
+            break;
+         }
+      }
+   }
+
+   // Html::requireJs('gridstack');
+   $CFG_GLPI['javascript']['admin'][strtolower(PluginFormcreatorForm::class)] = ['gridstack'];
+   $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorFormlist::class)] = ['gridstack'];
+   $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorIssue::class)] = ['photoswipe'];
 }
 
 /**
@@ -370,7 +219,7 @@ function plugin_formcreator_replaceHelpdesk() {
    }
 
    $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
-   if ($helpdeskMode != 0) {
+   if ($helpdeskMode != PluginFormcreatorEntityConfig::CONFIG_GLPI_HELPDSK) {
       return $helpdeskMode;
    }
 
@@ -449,9 +298,209 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    die($error . "<br><br> Please, check migration log");
 }
 
-function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline) {
    if (0 === error_reporting()) {
       return false;
    }
    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+
+function plugin_formcreator_permanent_hook() {
+   global $PLUGIN_HOOKS;
+
+   // Set the plugin CSRF compliance (required since GLPI 0.84)
+   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
+
+   // Can assign FormAnswer to tickets
+   $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
+
+   // hook to update issues when an operation occurs on a ticket
+   $PLUGIN_HOOKS['item_add']['formcreator'] = [
+      Ticket::class => 'plugin_formcreator_hook_add_ticket',
+      ITILFollowup::class => 'plugin_formcreator_hook_update_itilFollowup',
+   ];
+   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+      Ticket::class => 'plugin_formcreator_hook_update_ticket',
+      TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
+      Plugin::class => 'plugin_formcreator_hook_update_plugin'
+   ];
+   $PLUGIN_HOOKS['item_delete']['formcreator'] = [
+      Ticket::class => 'plugin_formcreator_hook_delete_ticket'
+   ];
+   $PLUGIN_HOOKS['item_restore']['formcreator'] = [
+      Ticket::class => 'plugin_formcreator_hook_restore_ticket'
+   ];
+   $PLUGIN_HOOKS['item_purge']['formcreator'] = [
+      Ticket::class => 'plugin_formcreator_hook_purge_ticket',
+      TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
+   ];
+   $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
+      PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
+      PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
+   ];
+   // hook to add custom actions on a ticket in service catalog
+   $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
+}
+
+function plugin_formcreator_hook() {
+   global $PLUGIN_HOOKS;
+
+   // Add specific CSS
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
+
+   // Load JS and CSS files if we are on a page which need them
+   if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
+      || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+      || isset($_SESSION['glpiactiveprofile']) &&
+         Session::getCurrentInterface() == 'helpdesk') {
+
+      // Add specific JavaScript
+      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
+   }
+
+   if (isset($_SESSION['glpiactiveentities_string'])) {
+      if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
+            || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+            || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
+            || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
+            || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+      }
+   }
+
+   if (Session::getLoginUserID() === false) {
+      return;
+   }
+
+   // If user have acces to one form or more, add link
+   if (PluginFormcreatorForm::countAvailableForm() > 0) {
+      $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
+   }
+
+   // Massive Action definition
+   $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
+
+   // Add a link in the main menu plugins for technician and admin panel
+   $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
+
+   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
+
+   // Config page
+   $links  = [];
+   if (Session::haveRight('entity', UPDATE)) {
+      $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
+      $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
+      $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
+      $links['add']    = FORMCREATOR_ROOTDOC . '/front/form.form.php';
+   }
+   $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
+               title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
+
+   $links[$img] = FORMCREATOR_ROOTDOC . '/front/formanswer.php';
+
+   // Set options for pages (title, links, buttons...)
+   $links['search'] = FORMCREATOR_ROOTDOC . '/front/formlist.php';
+   $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
+      'config'       => ['title'  => __('Setup'),
+                           'page'   => FORMCREATOR_ROOTDOC . '/front/form.php',
+                           'links'  => $links],
+      'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
+                           'links'  => $links],
+   ];
+}
+
+function plugin_formcreator_registerClasses() {
+   // Load menu entries if user is logged in and if he has access to at least one form
+   if (Session::getLoginUserID() !== false) {
+
+      Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+   }
+   Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
+
+   // Load field class and all its method to manage fields
+   Plugin::registerClass(PluginFormcreatorFields::class);
+
+   // Notification
+   Plugin::registerClass(PluginFormcreatorFormAnswer::class, [
+      'notificationtemplates_types' => true
+   ]);
+
+   Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+}
+
+function plugin_formcreator_redirect() {
+   if (!isset($_SESSION['glpiactiveentities_string'])) {
+      return;
+   }
+
+   // Redirect to helpdesk replacement
+   if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
+      if (!isset($_REQUEST['newprofile']) && !isset($_REQUEST['active_entity'])) {
+         // Not changing profile or active entity
+         if (Session::getCurrentInterface() !== false
+               && isset($_SESSION['glpiactive_entity'])) {
+            // Interface and active entity are set in session
+            if (plugin_formcreator_replaceHelpdesk()) {
+               Html::redirect(FORMCREATOR_ROOTDOC."/front/wizard.php");
+            }
+         }
+      }
+   }
+
+   if (plugin_formcreator_replaceHelpdesk() === false) {
+      return;
+   }
+
+   if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
+      if (!isset($_POST['update'])) {
+         $decodedUrl = [];
+         $openItilFollowup = '';
+         if (isset($_GET['_openfollowup'])) {
+            $openItilFollowup = '&_openfollowup=1';
+         }
+         parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
+         if (isset($decodedUrl['forcetab'])) {
+            Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
+         }
+
+         // When an ticket has a matching issue (it means that the ticket is the only generated ticket)
+         $issue = new PluginFormcreatorIssue();
+         $issues = $issue->find([
+            'itemtype' => Ticket::class,
+            'items_id'  => (int) $_GET['id']
+         ]);
+         if (count($issues) == 1) {
+            $issueId = array_pop($issues)['id'];
+            $issue->getFromDB($issueId);
+            Html::redirect($issue->getFormURLWithID($issue->getID()) . $openItilFollowup);
+         }
+
+         // When no or several tickets matches an issue, rely use the Form Answer
+         $itemTicket = new Item_Ticket();
+         $itemTicket->getFromDBByCrit([
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'tickets_id'  => (int) $_GET['id']
+         ]);
+         if ($itemTicket->isNewItem()) {
+            // No formanswer found
+            Html::displayNotFoundError();
+         }
+
+         $issue->getFromDBByCrit([
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id'  => $itemTicket->fields['items_id']
+         ]);
+         if ($issue->isNewItem()) {
+            // No formanswer found
+            Html::displayNotFoundError();
+         }
+         $ticket = Ticket::getById($itemTicket->fields['items_id']);
+         if ($ticket === false) {
+            Html::redirect($issue->getFormURLWithID($itemTicket->fields['items_id']) . $openItilFollowup);
+         }
+
+         Html::redirect($issue->getFormURLWithID($issue->getID()) . '&tickets_id=' . $itemTicket->fields['tickets_id']);
+      }
+   }
 }

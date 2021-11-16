@@ -2,6 +2,7 @@
 
 namespace GlpiPlugin\Formcreator\Tests;
 
+use Plugin;
 trait CommonQuestionTest
 {
 
@@ -20,7 +21,7 @@ trait CommonQuestionTest
       $this->boolean($form->isNewItem())->isFalse();
 
       // navigate to the form designer
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/form.form.php?id=' . $form->getID());
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.form.php?id=' . $form->getID());
       $this->client->waitFor('footer');
       $this->browsing->openTab('Questions');
       $this->client->waitFor('#plugin_formcreator_form.plugin_formcreator_form_design');

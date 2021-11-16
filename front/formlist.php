@@ -56,7 +56,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    );
 }
 
-$form = new PluginFormcreatorForm();
+$form = PluginFormcreatorCommon::getForm();
 $form->showList();
 
 Html::footer();

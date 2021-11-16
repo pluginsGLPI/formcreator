@@ -66,7 +66,8 @@ if (isset($_POST['add'])) {
       $_SESSION['glpilisturl'][$formLanguage::getType()] = PluginFormcreatorForm::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
    }
    $formLanguage->display([
-      'ids' => $_GET['id']
+      'ids' => $_GET['id'],
+      'id'  => $_GET['id'],
    ]);
 
    Html::footer();

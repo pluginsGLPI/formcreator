@@ -8,10 +8,6 @@ ini_set("memory_limit", "-1");
 ini_set("max_execution_time", "0");
 
 require_once __DIR__ . '/../vendor/autoload.php';
-if (is_readable(getenv('HOME') . '/.composer/vendor/symfony/panther/composer.json')) {
-   // To use globally installed packages
-   require_once getenv('HOME') . '/.composer/vendor/autoload.php';
-}
 
 define('TEST_PLUGIN_NAME', 'formcreator');
 define('TEST_SCREENSHOTS_DIR', __DIR__ . '/logs/screenshots');
@@ -61,7 +57,7 @@ register_shutdown_function(function() {
 include (GLPI_ROOT . "/inc/includes.php");
 
 //init cache
-$GLPI_CACHE = Config::getCache('cache_db');
+//$GLPI_CACHE = Config::getCache('cache_db');
 
 // If GLPI debug mode is disabled, atoum cannot produce backtaces
 //\Toolbox::setDebugMode(Session::DEBUG_MODE);

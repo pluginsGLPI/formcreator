@@ -41,7 +41,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 $formFk = PluginFormcreatorForm::getForeignKeyField();
 if (isset($_POST['profiles_id']) && isset($_POST[$formFk])) {
    if (isset($_POST['access_rights'])) {
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->update([
          'id'            => (int) $_POST[$formFk],
          'access_rights' => (int) $_POST['access_rights'],

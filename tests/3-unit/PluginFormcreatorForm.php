@@ -253,7 +253,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $instance->defineTabs();
       $expected = [
          'PluginFormcreatorForm$main' => "Form",
-         'PluginFormcreatorForm_Validator$1' => "Validators",
+         'PluginFormcreatorForm_Validator$1' => 'Validators',
          'PluginFormcreatorQuestion$1' => "Questions",
          'PluginFormcreatorForm_Profile$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
@@ -331,6 +331,43 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
+   public function testUpdateValidators() {
+      $form = $this->getForm();
+
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $rows = $formValidator->find([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->array($rows)->hasSize(0);
+
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users' => ['2'], // glpi account
+      ]);
+
+      $rows = $formValidator->find([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->array($rows)->hasSize(1);
+      $formValidator->getFromResultSet(array_pop($rows));
+      $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(2);
+      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\User::class);
+      $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
+
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         '_validator_groups' => ['1'], // a group ID (not created in this test)
+      ]);
+      $rows = $formValidator->find([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->array($rows)->hasSize(1);
+      $formValidator->getFromResultSet(array_pop($rows));
+      $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(1);
+      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\Group::class);
+      $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
+   }
+
    public function testIncreateUsageCount() {
       $form = $this->getForm();
       $this->integer((int) $form->fields['usage_count'])->isEqualTo(0);
@@ -354,9 +391,12 @@ class PluginFormcreatorForm extends CommonTestCase {
       global $DB, $CFG_GLPI;
 
       // Enable notifications in GLPI
+      \Config::setConfigurationValues(
+         'core',
+         ['use_notifications' => 1, 'notifications_mailing' => 1]
+      );
       $CFG_GLPI['use_notifications'] = 1;
       $CFG_GLPI['notifications_mailing'] = 1;
-
       $user = new \User();
       $user->getFromDBbyName('glpi');
       $_SESSION['glpiID'] = $user->getID();
@@ -365,28 +405,26 @@ class PluginFormcreatorForm extends CommonTestCase {
          'users_id' => $user->getID(),
       ]);
       $user->update([
-         'id' => $user->getID(),
+         'id' => $_SESSION['glpiID'],
          '_useremails' => [
             'glpi@localhost.com',
          ]
       ]);
       $form = $this->getForm([
          'name'                  => 'validation notification',
+         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users'      => [$_SESSION['glpiID']],
       ]);
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => $user::getType(),
-         'items_id' => $user->getID(),
-         'level'    => 1,
+      $this->getSection([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'name' => 'section',
       ]);
-      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $this->disableDebug();
       $formAnswerId = $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => \User::getType() . '_' . $_SESSION['glpiID'],
+         'formcreator_validator'       => \User::class . '_' . $_SESSION['glpiID'],
       ]);
       $this->restoreDebug();
       $this->boolean($formAnswer->isNewItem())->isFalse();
@@ -400,7 +438,7 @@ class PluginFormcreatorForm extends CommonTestCase {
             'itemtype' => \PluginFormcreatorFormAnswer::class,
             'items_id' => $formAnswerId,
          ]
-      ])->next();
+      ])->current();
       $this->integer((int) $foundNotifications['cpt'])->isEqualTo(2);
    }
 
@@ -433,10 +471,11 @@ class PluginFormcreatorForm extends CommonTestCase {
          'language',
          'helpdesk_home',
          'is_deleted',
+         'validation_required',
          'is_default',
          'is_captcha_enabled',
          'show_rule',
-         'validation_percent',
+         'formanswer_name',
       ];
       $extraFields = [
          '_entity',
@@ -473,7 +512,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          'is_deleted',
          'validation_required',
          'is_default',
-         'validation_percent',
          'uuid',
          '_sections',
          '_validators',
@@ -490,49 +528,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          ->hasKeys($keys)
          ->size->isEqualTo(count($keys));
    }
-
-   public function testGetInterface() {
-      // test Public access
-      \Session::destroy();
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('public');
-
-      // test normal interface
-      $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('central');
-
-      // test simplified interface
-      $entityConfig = new \PluginFormcreatorEntityConfig();
-      $entityConfig->update([
-         'id' => '0',
-         'replace_helpdesk' => '0',
-      ]);
-      $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('self-service');
-
-      // test service catalog
-      $entityConfig = new \PluginFormcreatorEntityConfig();
-      $entityConfig->update([
-         'id' => '0',
-         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
-      ]);
-      $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('servicecatalog');
-
-      $entityConfig = new \PluginFormcreatorEntityConfig();
-      $entityConfig->update([
-         'id' => '0',
-         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_EXTENDED_SERVICE_CATALOG,
-      ]);
-      $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('servicecatalog');
-
-   }
-
 
    public function providerIsPublicAcess() {
       return [
@@ -613,6 +608,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'usage_count' => '0',
          'is_default' => '0',
          'show_rule'  => '1',
+         'formanswer_name' => $this->getUniqueString(),
          'uuid' => $uuid,
       ];
 

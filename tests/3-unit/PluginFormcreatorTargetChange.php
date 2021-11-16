@@ -150,7 +150,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function testGetEnumUrgencyRule() {
       $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetChange::URGENCY_RULE_NONE      => 'Medium',
+         \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
          \PluginFormcreatorTargetChange::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
          \PluginFormcreatorTargetChange::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
@@ -159,9 +159,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function testGetEnumCategoryRule() {
       $output = \PluginFormcreatorTargetChange::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => 'None',
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => 'Specific category',
-         \PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE          => 'Category from template or none',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC      => 'Specific category',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
       ]);
    }
 
@@ -397,6 +398,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       // Disable notification to avoid output to console
       $CFG_GLPI['use_notifications'] = '0';
 
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -454,6 +456,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'ola_question_ttr',
       ];
       $extraFields = [
+         '_changetemplate',
          '_actors',
          'conditions',
       ];
@@ -483,13 +486,13 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'checklistcontent' => $this->getUniqueString(),
          'due_date_rule' => \PluginFormcreatorTargetChange::DUE_DATE_RULE_NONE,
          'due_date_question' => '0',
-         'due_date_value' => '',
-         'due_date_period' => '',
+         'due_date_value' => null,
+         'due_date_period' => '0',
          'urgency_rule' => \PluginFormcreatorTargetChange::URGENCY_RULE_NONE,
          'urgency_question' => '0',
          'validation_followup' => '1',
          'destination_entity' => '0',
-         'destination_entity_value' => '',
+         'destination_entity_value' => null,
          'tag_type' => \PluginFormcreatorTargetChange::TAG_TYPE_NONE,
          'tag_questions' => '0',
          'tag_specifics' => '',

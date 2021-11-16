@@ -44,6 +44,7 @@ if (!$question->add($_REQUEST)) {
     http_response_code(400);
     exit;
 }
+$question->getFromDB($question->getID()); // To remove if GLPI #9210 merged
 $json = [
     'y'      => $question->fields['row'],
     'x'      => $question->fields['col'],

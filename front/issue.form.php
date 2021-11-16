@@ -37,33 +37,43 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-// force layout of glpi
-$layout = $_SESSION['glpilayout'];
-$_SESSION['glpilayout'] = "lefttab";
+Session::checkValidSessionId();
 
-$issue = new PluginFormcreatorIssue();
-if (isset($_POST['save_formanswer'])) {
-   $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-   $_POST['status']                      = PluginFormcreatorFormAnswer::STATUS_WAITING;
-   $issue->saveAnswers($_POST);
-   Html::back();
-} else {
-
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-   } else {
-      Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
-   }
-
-   $issue->getFromDB((int) $_REQUEST['id']);
-   $issue->display($_REQUEST);
-
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::footer();
-   } else {
-      Html::footer();
-   }
+// Accessing an issue from a tech profile, redirect to ticket page
+if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
+   /** @var PluginFormcreatorIssue $issue */
+   $issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
+   $id = $issue->fields['items_id'];
+   $itemtype = strtolower($issue->fields['itemtype']);
+   Html::redirect($CFG_GLPI['root_doc'] . "/front/$itemtype.form.php?id=$id");
 }
 
-// restore layout
-$_SESSION['glpilayout'] = $layout;
+// Show issue only if service catalog is enabled
+if (!plugin_formcreator_replaceHelpdesk()) {
+   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
+}
+
+// force layout of glpi
+PluginFormcreatorCommon::saveLayout();
+$_SESSION['glpilayout'] = "lefttab";
+
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
+/** @var PluginFormcreatorIssue $issue */
+$issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
+if ($issue === false) {
+   PluginFormcreatorCommon::restoreLayout();
+   Html::displayNotFoundError();
+}
+$issue->display($_REQUEST);
+
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}
+
+PluginFormcreatorCommon::restoreLayout();

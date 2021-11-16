@@ -109,7 +109,9 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       // Answer the form
       $formAnswer = $this->newTestedInstance();
-      $formAnswer->add(['plugin_formcreator_forms_id' => $form->getID()]);
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID()
+      ]);
 
       // Check a notification was created with the expected template
       $result = $DB->request([
@@ -129,7 +131,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ]
       ]);
       $this->integer($result->count())->isEqualTo(1);
-      $row = $result->next();
+      $row = $result->current();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDBByCrit([
@@ -154,19 +156,21 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'description'         => 'form description',
          'content'             => 'a content',
          'is_active'           => 1,
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users'    => '2', // user is glpi
       ]);
 
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => \User::getType(),
-         'items_id' => 2 // user is glpi
+      $section = $this->getSection([
+         'name'                        => 'a section',
+         'plugin_formcreator_forms_id' => $form->getID()
       ]);
+      $this->boolean($section->isNewItem())->isFalse();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => \Session::getLoginUserID(),
+         'status'                      => 'waiting',
+         'formcreator_validator'       => $_SESSION['glpiID'],
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
 

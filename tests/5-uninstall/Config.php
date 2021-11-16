@@ -76,7 +76,7 @@ class Config extends CommonTestCase
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ]
-      ])->next();
+      ])->current();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
       $rows = $DB->request([
@@ -85,7 +85,7 @@ class Config extends CommonTestCase
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ]
-      ])->next();
+      ])->current();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
       // Check that the requesttype is NOT deleted

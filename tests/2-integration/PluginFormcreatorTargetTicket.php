@@ -131,7 +131,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'content'               => '##FULLFORM##',
          'itemtype'              => \PluginFormcreatorTargetTicket::class,
          'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE,
-         'urgency_question'      => '',
+         'urgency_question'      => '0',
       ]);
       $this->boolean($targetTicket2->isNewItem())->isFalse();
 

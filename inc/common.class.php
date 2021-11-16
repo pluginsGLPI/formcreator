@@ -99,7 +99,7 @@ class PluginFormcreatorCommon {
          ['name' => ['LIKE', 'Formcreator']]
       );
       if (count($request) === 1) {
-         $row = $request->next();
+         $row = $request->current();
          $requesttypes_id = $row['id'];
       }
 
@@ -122,7 +122,7 @@ class PluginFormcreatorCommon {
          'WHERE'  => $condition,
          'ORDER'  => "$fieldName DESC",
          'LIMIT'  => 1
-      ])->next();
+      ])->current();
 
       if (!isset($line[$fieldName])) {
          return null;
@@ -258,23 +258,15 @@ JAVASCRIPT;
     * V = status picked from Validation
     *
     * @param Ticket $item
-    * @return array
+    * @return int
     */
-   public static function getTicketStatusForIssue(Ticket $item) : array {
+   public static function getTicketStatusForIssue(Ticket $item) : int {
       $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
       ], [
          'timeline_position ASC'
       ], 1);
-      $user = 0;
-      $reloadedItem = new Ticket();
-      $reloadedItem->getFromDB($item->getID());
-      $validationPercent = $reloadedItem->fields['validation_percent'];
       $ticketValidationCount = count($ticketValidations);
-      if ($ticketValidationCount) {
-         $row = array_shift($ticketValidations);
-         $user = $row['users_id_validate'];
-      }
 
       $status = $item->fields['status'];
       if ($ticketValidationCount > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
@@ -292,7 +284,7 @@ JAVASCRIPT;
          }
       }
 
-      return ['status' => $status, 'user' => $user, 'validation_percent' => $validationPercent];
+      return (int) $status;
    }
 
    /**
@@ -570,6 +562,163 @@ JAVASCRIPT;
     * @return string
     */
    public static function getCssFilename() : string {
+      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+         return 'css/styles.scss';
+      }
       return 'css_compiled/styles.min.css';
+   }
+
+   /**
+    * Validate a regular expression
+    *
+    * @param string $regex
+    * @return boolean true if the regex is valid, false otherwise
+    */
+   public static function checkRegex($regex) {
+      // Avoid php notice when validating the regular expression
+      set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
+      });
+      $isValid = !(preg_match($regex, null) === false);
+      restore_error_handler();
+
+      return $isValid;
+   }
+
+   public static function saveLayout() {
+      $_SESSION['plugin_formcreator']['layout_backup'] =  $_SESSION['glpilayout'];
+   }
+
+   public static function restoreLayout() {
+      $_SESSION['glpilayout'] = $_SESSION['plugin_formcreator']['layout_backup'] ?? $_SESSION['glpilayout'];
+   }
+
+   /**
+    * Find documents data matching the tags found in the string
+    * Tags are deduplicated
+    *
+    * @param string $content_text String to search tags from
+    *
+    * @return array data from documents having tags found
+    */
+   public static function getDocumentsFromTag(string $content_text): array {
+      preg_match_all('/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/', $content_text,
+                     $matches, PREG_PATTERN_ORDER);
+      if (!isset($matches[1]) || count($matches[1]) == 0) {
+         return [];
+      }
+
+      $document = new Document();
+      return $document->find(['tag' => array_unique($matches[1])]);
+   }
+
+   /**
+    * find a document with a file attached, with respect of blacklisting
+    *
+    * @param integer $entity    entity of the document
+    * @param string  $path      path of the searched file
+    *
+    * @return false|Document
+    */
+   public static function getDuplicateOf(int $entities_id, string $filename) {
+      $document = new Document();
+      if (!$document->getFromDBbyContent($entities_id, $filename)) {
+         return false;
+      }
+
+      if ($document->fields['is_blacklisted']) {
+         return false;
+      }
+
+      return $document;
+   }
+
+   /**
+    * Get an empty form answer object from Formcreator or Advanced Formcreator
+    * Advanced Formcreator redefines some methods of thos class
+    *
+    * TODO: This method is unful as lon tehre is no dependency injection in
+    * GLPI
+    *
+    * @return PluginFormcreatorFormAnswer
+    */
+   public static function getFormAnswer(): PluginFormcreatorFormAnswer {
+      if (Plugin::isPluginActive('advform')) {
+         return new PluginAdvformFormAnswer();
+      }
+
+      return new PluginFormcreatorFormAnswer();
+   }
+
+   /**
+    * Get the real itemtype for form answer implementation, depending on the availability of Advanced Formcreator
+    *
+    * @return string
+    */
+   public static function getFormanswerItemtype() {
+      if (Plugin::isPluginActive('advform')) {
+         return PluginAdvformFormAnswer::class;
+      }
+
+      return PluginFormcreatorFormAnswer::class;
+   }
+
+   public static function getForm() {
+      if (Plugin::isPluginActive('advform')) {
+         return new PluginAdvformForm();
+      }
+
+      return new PluginFormcreatorForm();
+   }
+
+   public static function getInterface() {
+      if (Session::getCurrentInterface() == 'helpdesk') {
+         if (plugin_formcreator_replaceHelpdesk()) {
+            return 'servicecatalog';
+         }
+         return 'self-service';
+      }
+      if (!empty($_SESSION['glpiactiveprofile'])) {
+         return 'central';
+      }
+
+      return 'public';
+   }
+
+   public static function header() {
+      switch (self::getInterface()) {
+         case "servicecatalog";
+         case "self-service";
+            return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
+         case "central";
+            return Html::header(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF'],
+               'helpdesk',
+               'PluginFormcreatorFormlist'
+            );
+         case "public";
+         default:
+            Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
+            Html::displayMessageAfterRedirect();
+            return true;
+      }
+   }
+
+   /**
+    * Gets the footer HTML
+    *
+    * @return string HTML to show a footer
+    */
+   public static function footer() {
+      switch (self::getInterface()) {
+         case "servicecatalog";
+         case "self-service";
+            return Html::helpFooter();
+         case "central";
+            return Html::footer();
+         case "public";
+         default:
+            return Html::nullFooter();
+      }
    }
 }

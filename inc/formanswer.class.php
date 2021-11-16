@@ -25,7 +25,7 @@
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
- * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreatorp@
  * ---------------------------------------------------------------------
  */
 
@@ -57,6 +57,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /** @var boolean True if the answers are loaded and are valid */
    private $isAnswersValid = false;
 
+   /** @var PluginFormcreatorForm $form The form attached to the object */
+   private $form = null;
+
    public static function getStatuses() {
       return [
          self::STATUS_WAITING  => __('Waiting', 'formcreator'),
@@ -86,9 +89,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function canViewItem() {
       global $DB;
 
-      $userId = Session::getLoginUserID();
+      // if (Plugin::isPluginActive('advform')) {
+      //    $advFormAnswer = new PluginAdvformFormanswer();
+      //    $advFormAnswer->getFromDB($this->getID());
+      //    return $advFormAnswer->canViewItem();
+      // }
 
-      if ($userId === false) {
+      $currentUser = Session::getLoginUserID();
+
+      if ($currentUser === false) {
          return false;
       }
 
@@ -96,16 +105,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return true;
       }
 
-      if ($userId == $this->fields['requester_id']) {
+      if ($currentUser == $this->fields['requester_id']) {
          return true;
       }
 
-      if ($userId == $this->fields['users_id_validator']) {
+      if ($currentUser == $this->fields['users_id_validator']) {
          return true;
       }
 
       $groupUser = new Group_User();
-      $groups = $groupUser->getUserGroups($userId);
+      $groups = $groupUser->getUserGroups($currentUser);
       if (in_array($this->fields['users_id_validator'], $groups)) {
          return true;
       }
@@ -131,7 +140,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       ];
       foreach ($DB->request($request) as $row) {
          if ($row['itemtype'] == User::class) {
-            if ($userId == $row['items_id']) {
+            if ($currentUser == $row['items_id']) {
                return true;
             }
          } else {
@@ -165,6 +174,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function rawSearchOptions() {
+      global $DB;
+
       $tab = parent::rawSearchOptions();
 
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
@@ -202,12 +213,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $tab[] = [
          'id'                 => '5',
-         'table'              => 'glpi_users',
+         'table'              => User::getTable(),
          'field'              => 'name',
          'name'               => __('Form approver', 'formcreator'),
          'datatype'           => 'itemlink',
+         'forcegroupby'       => true,
          'massiveaction'      => false,
-         'linkfield'          => 'users_id_validator'
+         'linkfield'          => 'users_id_validator',
       ];
 
       $tab[] = [
@@ -221,10 +233,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $tab[] = [
          'id'            => '7',
-         'table'         => getTableForItemType('Group'),
+         'table'         => Group::getTable(),
          'field'         => 'completename',
          'name'          => __('Form approver group', 'formcreator'),
          'datatype'      => 'itemlink',
+         'forcegroupby'  => true,
          'massiveaction' => false,
          'linkfield'     => 'groups_id_validator',
       ];
@@ -396,7 +409,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $_SESSION['formcreator']['form_search_answers'] = $form->getID();
 
       // prepare params for search
-      $item            = new PluginFormcreatorFormAnswer();
+      $item            = PluginFormcreatorCommon::getFormAnswer();
       $searchOptions   = $item->rawSearchOptions();
       $filteredOptions = [];
       foreach ($searchOptions as $value) {
@@ -420,53 +433,31 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       unset($_SESSION['formcreator']['form_search_answers']);
    }
 
-   /**
+    /**
     * Can the current user validate the form ?
-    * @return bool
     */
    public function canValidate(): bool {
+      // if (Plugin::isPluginActive('advform')) {
+      //    return PluginAdvformFormAnswer::canValidate($this);
+      // }
+
       if (!PluginFormcreatorCommon::canValidate()) {
-         // The current user has no validation right
          return false;
       }
 
-      $formAnswerValidation = new PluginFormcreatorFormAnswerValidation();
-      $rows = $formAnswerValidation->find(
-         [
-            self::getForeignKeyField() => $this->getID(),
-            'level' => ['>=', PluginFormcreatorFormAnswerValidation::getCurrentValidationLevel($this)],
-         ],
-         ['itemtype ASC']
-      );
+      $form = $this->getForm();
+      switch ($form->fields['validation_required']) {
+         case PluginFormcreatorForm_Validator::VALIDATION_USER:
+            return (Session::getLoginUserID() == $this->fields['users_id_validator']);
+            break;
 
-      if (count($rows) < 1) {
-         return false;
-      }
-
-      $currentUser = Session::getLoginUserID();
-      $validatorGroups = [];
-      foreach ($rows as $row) {
-         switch ($row['itemtype']) {
-            case Group::class:
-               $validatorGroups[] = $row['items_id'];
-               break;
-            case User::class:
-               // check if the user is a validator
-               if ($currentUser == $row['items_id']) {
-                  // Current user found in the curent valdiation level
-                  return true;
-               }
-               break;
-         }
-      }
-
-      // Check if the user is a member of validator groups for the current validation level
-      $groupList = Group_User::getUserGroups($currentUser);
-      foreach ($groupList as $group) {
-         if (in_array($group['id'], $validatorGroups)) {
-            // one of the groups of the user is a validator group
-            return true;
-         }
+         case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
+            $groupList = Group_User::getUserGroups(
+               Session::getLoginUserID(),
+               ['glpi_groups.id' => $this->fields['groups_id_validator']]
+            );
+            return (count($groupList) > 0);
+            break;
       }
 
       return false;
@@ -498,11 +489,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $style.= "</style>";
       echo $style;
 
+      $formUrl = static::getFormURL(); // May be called from iinherited classes
       $formName = 'plugin_formcreator_form';
-      self::getFormURL();
       echo '<form name="' . $formName . '" method="post" role="form" enctype="multipart/form-data"'
       . ' class="plugin_formcreator_form"'
-      . ' action="' . self::getFormURL() . '"'
+      . ' action="' . $formUrl . '"'
       . ' id="plugin_formcreator_form"'
       . '>';
 
@@ -532,13 +523,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // Validation status and comment
       if ($this->fields['status'] == self::STATUS_REFUSED) {
          echo '<div class="refused_header">';
-         echo '<div>' . nl2br($this->fields['comment']);
-         echo '</div>';
+         echo '<strong>' . __('Comment', 'formcreator') . '</strong>';
+         echo '<div>' . nl2br($this->fields['comment']) .'</div>';
          echo '</div>';
       } else if ($this->fields['status'] == self::STATUS_ACCEPTED) {
          echo '<div class="accepted_header">';
          echo '<div>';
          if (!empty($this->fields['comment'])) {
+            echo '<strong>' . __('Comment', 'formcreator') . '</strong>';
             echo nl2br($this->fields['comment']);
          } else if ($form->validationRequired()) {
             echo __('Form accepted by validator.', 'formcreator');
@@ -652,17 +644,20 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   'onclick'   => 'reloadTab("edit=0"); return false;',
                ]);
          }
-         echo '</div>';
-         echo '<div class="center">';
+         echo '</div>';         echo '<div class="center">';
          echo Html::submit(
             __('Accept', 'formcreator'), [
                'name'      => 'accept_formanswer',
             ]);
          echo '</div>';
          echo '</div>';
-         $options['canedit'] = true;
-         $options['candel'] = false;
       }
+
+      if (Plugin::isPluginActive('advform')) {
+         PluginAdvformFormanswerValidation::showValidationStatuses($this);
+      }
+      $options['canedit'] = true;
+      $options['candel'] = false;
 
       echo Html::hidden('plugin_formcreator_forms_id', ['value' => $form->getID()]);
       echo Html::hidden('id', ['value' => $this->getID()]);
@@ -699,37 +694,22 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($input['plugin_formcreator_forms_id']);
+      $form = $this->getForm($input['plugin_formcreator_forms_id']);
+
+      if ($form->validationRequired()) {
+         if (($validator = $this->getUniqueValidator($form)) !== null) {
+            $input['formcreator_validator'] = $validator->getType() . '_' . $validator->getID();
+         }
+      }
 
       if (!$this->validateFormAnswer($input)) {
          // Validation of answers failed
          return false;
       }
 
-      $input['name'] = Toolbox::addslashes_deep($form->getName());
+      $input['name'] = $this->parseTags($form->fields['formanswer_name']);
 
-      // Does the form need to be validated?
-      $status = self::STATUS_ACCEPTED;
-      $groupIdValidator = 0;
-      $usersIdValidator = 0;
-      if ($form->validationRequired()) {
-         $status = self::STATUS_WAITING;
-         if (!isset($input['formcreator_validator'])) {
-            // Should trigger an error because no valdiator is slected
-            Session::addMessageAfterRedirect(__('No validator selected.', 'formcreator'));
-            return false;
-         }
-         $validatorItem = explode('_', $input['formcreator_validator']);
-         switch ($validatorItem[0]) {
-            case User::class:
-               $usersIdValidator = (int) $validatorItem[1];
-               break;
-            case Group::class:
-               $groupIdValidator = (int) $validatorItem[1];
-               break;
-         }
-      }
+      $input = $this->setValidator($input, $form);
 
       $input['entities_id'] = isset($_SESSION['glpiactive_entity'])
                             ? $_SESSION['glpiactive_entity']
@@ -739,13 +719,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['plugin_formcreator_forms_id'] = $form->getID();
       // requester_id is actually the author
       // TODO : rename this column
-      $input['requester_id']                = $_SESSION['glpiID'] ?? 0;
-      $input['users_id_validator']          = $usersIdValidator;
-      $input['groups_id_validator']         = $groupIdValidator;
-      $input['status']                      = $status;
+      $input['requester_id']                = isset($_SESSION['glpiID'])
+                                            ? $_SESSION['glpiID']
+                                            : 0;
       $input['request_date']                = date('Y-m-d H:i:s');
       $input['comment']                     = '';
-      $input['validation_percent']          = $form->fields['validation_percent'];
 
       return $input;
    }
@@ -757,6 +735,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $skipValidation = false;
+      $input['status'] = self::STATUS_WAITING;
       if (isset($input['refuse_formanswer']) || isset($input['accept_formanswer'])) {
          // The formanswer is being acepted or refused
 
@@ -769,42 +748,37 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $newStatus = isset($input['refuse_formanswer'])
             ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED
             : PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
-         PluginFormcreatorFormAnswerValidation::updateValidationStatusForLevel($this, $newStatus, $input['comment']);
+         if (Plugin::isPluginActive('advform')) {
+            PluginAdvformFormanswerValidation::updateValidationStatus($this, $newStatus);
+         }
+         $computedStatus = self::getValidationStatus($this);
 
-         switch (PluginFormcreatorFormAnswerValidation::computeValidationStatus($this)) {
-            case PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED:
-               $input['status'] = self::STATUS_ACCEPTED;
-
-               // check if the input contains answers to validate
-               $hasAnswers = false;
-               foreach (array_keys($input) as $key) {
-                  if (strpos($key, 'formcreator_field_') === 0) {
-                     $hasAnswers = true;
-                     break;
-                  }
-               }
-               $skipValidation = !$hasAnswers;
-
-               break;
+         switch ($computedStatus) {
             case PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED:
-               $input['status'] = self::STATUS_REFUSED;
-
-               // Update is restricted to a subset of fields
-               $input = [
-                  'id'      => $input['id'],
-                  'status'  => $input['status'],
-                  'comment' => isset($input['comment']) ? $input['comment'] : 'NULL',
-               ];
+               $input = $this->refuse($input);
                $skipValidation = true;
-
                break;
-            default:
-               $input['status'] = self::STATUS_WAITING;
+
+            case PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED:
+               $input = $this->accept($input);
                break;
          }
-      } else {
-         // The form answer is being updated
-         $input['status'] = self::STATUS_WAITING;
+
+         if ($input['status'] != self::STATUS_REFUSED) {
+            // The requester mai edit his answers
+            // or the validator accepts the answers and may edit the requester's answers
+
+            // check if the input contains answers to validate
+            $fieldPresence = [];
+            $this->getQuestionFields($input['plugin_formcreator_forms_id']);
+            foreach ($this->questionFields as $id => $field) {
+               $fieldPresence[$id] = $field->hasInput($input);
+            }
+            $skipValidation = !in_array(true, $fieldPresence, true);
+            if ($skipValidation) {
+               $this->questionFields = null;
+            }
+         }
       }
 
       if (!$skipValidation && !$this->validateFormAnswer($input, false)) {
@@ -824,11 +798,29 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function pre_deleteItem() {
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
-         'original_id'     => $this->getID(),
-         'sub_itemtype'    => self::getType(),
+         'items_id'    => $this->getID(),
+         'itemtype'    => self::getType(),
       ]);
 
       return true;
+   }
+
+   /**
+    * return the validator user or group if it is the ony choice for the requester
+    *
+    * @param PluginFormcreatorForm $form Form to search the unique validator
+    * @return null|User|Group
+    */
+   protected function getUniqueValidator(PluginFormcreatorForm $form): ?CommonDBTM {
+      $validValidators = PluginFormcreatorForm_Validator::getValidatorsForForm(
+         $form
+      );
+
+      if (count($validValidators) != 1) {
+         return null;
+      }
+
+      return array_pop($validValidators);
    }
 
    /**
@@ -851,7 +843,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->deserializeAnswers();
 
       // Generate targets
-      $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
+      $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket(), $this);
       foreach ($all_targets as $targets) {
          foreach ($targets as $targetObject) {
             // Check the condition of the target
@@ -903,16 +895,21 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    /**
     * Gets the associated form
+    * @param int $formId : specify the form to return. If null, find the form from the FK
     *
     * @return PluginFormcreatorForm|null the form used to create this set of answers
     */
-   public function getForm() {
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
+   public function getForm(int $formId = null): ?PluginFormcreatorForm {
+      if ($this->form !== null) {
+         return $this->form;
+      }
 
-      if ($form->isNewItem()) {
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form = PluginFormcreatorForm::getById($formId ?? $this->fields[$formFk]);
+      if ($form === false) {
          return null;
       }
+      $this->form = $form;
       return $form;
    }
 
@@ -980,7 +977,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ],
       ]);
       $last_section = -1;
-      while ($question_line = $questions->next()) {
+      foreach ($questions as $question_line) {
          // Get and display current section if needed
          if ($last_section != $question_line[$sectionFk]) {
             $currentSection = new PluginFormcreatorSection();
@@ -1027,8 +1024,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_addItem() {
       // Save questions answers
       $formAnswerId = $this->getID();
+      $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
       /** @var PluginFormcreatorAbstractField $field */
-      foreach ($this->questionFields as $questionId => $field) {
+      foreach ($this->getQuestionFields($formId) as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
          $answer->add([
@@ -1045,17 +1043,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
          }
       }
-      $form = $this->getForm();
-      if ($form !== null && $form->validationRequired()) {
-         $this->copyValidatorsToValidation();
-      }
+
       $this->sendNotification();
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
             // TODO: find a way to validate the answers
-            // It the form is not being validated, nothing gives the power to anyone to validate the answers
+            // If the form is not being validated, nothing gives the power to anyone to validate the answers
             $formAnswer = new self();
             $formAnswer->update([
                'id'     => $formAnswerId,
@@ -1071,25 +1066,28 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_updateItem($history = 1) {
       // Save questions answers
       $formAnswerId = $this->getID();
-      /** @var PluginFormcreatorAbstractField $field */
-      foreach ($this->questionFields as $questionId => $field) {
-         $field->moveUploads();
-         $answer = new PluginFormcreatorAnswer();
-         $answer->getFromDBByCrit([
-            'plugin_formcreator_formanswers_id' => $formAnswerId,
-            'plugin_formcreator_questions_id' => $questionId,
-         ]);
-         $answer->update([
-            'id'     => $answer->getID(),
-            'answer' => $field->serializeValue(),
-         ], 0);
-         foreach ($field->getDocumentsForTarget() as $documentId) {
-            $docItem = new Document_Item();
-            $docItem->add([
-               'documents_id' => $documentId,
-               'itemtype'     => __CLASS__,
-               'items_id'     => $formAnswerId,
+      $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
+      if ($this->questionFields !== null) {
+         /** @var PluginFormcreatorAbstractField $field */
+         foreach ($this->getQuestionFields($formId) as $questionId => $field) {
+            $field->moveUploads();
+            $answer = new PluginFormcreatorAnswer();
+            $answer->getFromDBByCrit([
+               'plugin_formcreator_formanswers_id' => $formAnswerId,
+               'plugin_formcreator_questions_id' => $questionId,
             ]);
+            $answer->update([
+               'id'     => $answer->getID(),
+               'answer' => $field->serializeValue(),
+            ], 0);
+            foreach ($field->getDocumentsForTarget() as $documentId) {
+               $docItem = new Document_Item();
+               $docItem->add([
+                  'documents_id' => $documentId,
+                  'itemtype'     => __CLASS__,
+                  'items_id'     => $formAnswerId,
+               ]);
+            }
          }
       }
       $this->sendNotification();
@@ -1098,7 +1096,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
             // TODO: find a way to validate the answers
-            // It the form is not being validated, nothing gives the power to anyone to validate the answers
+            // If the form is not being validated, nothing gives the power to anyone to validate the answers
             $formAnswer = new self();
             $formAnswer->update([
                'id'     => $formAnswerId,
@@ -1159,19 +1157,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
-         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
-         if ($target !== null) {
-            foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
-               $target->addAttachedDocument($documentId);
-            }
-         }
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
-               if (!is_array($value)) {
-                  $value = [$value];
+               if ($target !== null) {
+                  foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
+                     $target->addAttachedDocument($documentId);
+                  }
                }
             }
          }
+         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
@@ -1190,7 +1185,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    protected function validateFormAnswer($input, $checkValidator = true) {
       // Find the form the requester is answering to
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
       $this->getQuestionFields($input['plugin_formcreator_forms_id']);
 
@@ -1226,17 +1221,35 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
-      if ($checkValidator) {
-         // Check required_validator
-         if ($form->validationRequired() && empty($input['formcreator_validator'])) {
-            Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
-            $this->isAnswersValid = false;
-         }
+      if ($form->validationRequired() && $checkValidator) {
+         $this->validateValidator($input);
       }
 
       if (!$this->isAnswersValid) {
          // Save answers in session to display it again with the same values
          $_SESSION['formcreator']['data'] = Toolbox::stripslashes_deep($input);
+         return false;
+      }
+
+      return true;
+   }
+
+   /**
+    * Validate validator
+    *
+    * @param array $input fields from the HTML form
+    * @return boolean true if answers are valid, false otherwise
+    */
+   protected function validateValidator(array $input): bool {
+      // Find the form the requester is answering to
+      $form = PluginFormcreatorCommon::getForm();
+      $form->getFromDB($input['plugin_formcreator_forms_id']);
+
+      // Check required_validator
+      if ($form->validationRequired() && empty($input['formcreator_validator'])) {
+         // Check if only one validator of level 1 is available
+         Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
+         $this->isAnswersValid = false;
          return false;
       }
 
@@ -1291,18 +1304,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if ($rows->count() != 1) {
          // There are several tickets for this form answer
          // The issue must be created from this form answer
+         $issueName = $this->fields['name'] != '' ? addslashes($this->fields['name']) : '(' . $this->getID() . ')';
          $issue->add([
-            'original_id'        => $this->getID(),
-            'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
-            'name'               => addslashes($this->fields['name']),
+            'items_id'           => $this->getID(),
+            'itemtype'           => PluginFormcreatorFormAnswer::class,
+            'name'               => $issueName,
             'status'             => $this->fields['status'],
             'date_creation'      => $this->fields['request_date'],
             'date_mod'           => $this->fields['request_date'],
             'entities_id'        => $this->fields['entities_id'],
             'is_recursive'       => $this->fields['is_recursive'],
             'requester_id'       => $this->fields['requester_id'],
-            'users_id_validator' => $this->fields['users_id_validator'],
-            'groups_id_validator'=> $this->fields['groups_id_validator'],
             'comment'            => '',
          ]);
 
@@ -1311,7 +1323,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // There is one ticket for this form answer
       // The issue must be created from this ticket
-      $result = $rows->next();
+      $result = $rows->current();
       $itemTicket = new Item_Ticket();
       $itemTicket->getFromDB($result['id']);
       $ticket = new Ticket();
@@ -1329,18 +1341,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          1
       );
       $ticketUserRow = array_pop($ticketUserRow);
+      $issueName = $ticket->fields['name'] != '' ? addslashes($ticket->fields['name']) : '(' . $ticket->getID() . ')';
       $issue->add([
-         'original_id'        => $ticketId,
-         'sub_itemtype'       => Ticket::class,
-         'name'               => addslashes($ticket->fields['name']),
+         'items_id'           => $ticketId,
+         'itemtype'           => Ticket::class,
+         'name'               => $issueName,
          'status'             => $ticket->fields['status'],
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $ticketUserRow['users_id'],
-         'users_id_validator' => '',
-         'groups_id_validator'=> '',
          'comment'            => addslashes($ticket->fields['content']),
       ]);
    }
@@ -1352,14 +1363,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if ($this->input['status'] == self::STATUS_REFUSED) {
          $issue->getFromDBByCrit([
             'AND' => [
-              'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-              'original_id'  => $this->getID()
+              'itemtype'     => PluginFormcreatorFormAnswer::class,
+              'items_id'     => $this->getID()
             ]
          ]);
          $issue->update([
             'id'              => $issue->getID(),
-            'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-            'original_id'     => $this->getID(),
+            'itemtype'        => PluginFormcreatorFormAnswer::class,
+            'items_id'        => $this->getID(),
             'status'          => $this->fields['status'],
          ]);
          return;
@@ -1378,23 +1389,22 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // The issue must be updated from this form answer
          $issue->getFromDBByCrit([
             'AND' => [
-            'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-            'original_id'  => $this->getID()
+            'itemtype'     => PluginFormcreatorFormAnswer::class,
+            'items_id'     => $this->getID()
             ]
          ]);
+         $issueName = $this->fields['name'] != '' ? addslashes($this->fields['name']) : '(' . $this->getID() . ')';
          $issue->update([
             'id'                 => $issue->getID(),
-            'original_id'        => $this->getID(),
-            'sub_itemtype'       => PluginFormcreatorFormAnswer::class,
-            'name'               => addslashes($this->fields['name']),
+            'items_id'           => $this->getID(),
+            'itemtype'           => PluginFormcreatorFormAnswer::class,
+            'name'               => $issueName,
             'status'             => $this->fields['status'],
             'date_creation'      => $this->fields['request_date'],
             'date_mod'           => $this->fields['request_date'],
             'entities_id'        => $this->fields['entities_id'],
             'is_recursive'       => $this->fields['is_recursive'],
             'requester_id'       => $this->fields['requester_id'],
-            'users_id_validator' => $this->fields['users_id_validator'],
-            'groups_id_validator'=> $this->fields['groups_id_validator'],
             'comment'            => '',
          ]);
 
@@ -1402,7 +1412,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       // There is one ticket for this form answer
       // The issue must be updated from this ticket
-      $result = $rows->next();
+      $result = $rows->current();
       $itemTicket = new Item_Ticket();
       $itemTicket->getFromDB($result['id']);
       $ticket = new Ticket();
@@ -1422,23 +1432,22 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $ticketUserRow = array_pop($ticketUserRow);
       $issue->getFromDBByCrit([
          'AND' => [
-            'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-            'original_id'  => $this->getID()
+            'itemtype'     => PluginFormcreatorFormAnswer::class,
+            'items_id'     => $this->getID()
          ]
       ]);
+      $issueName = $ticket->fields['name'] != '' ? addslashes($ticket->fields['name']) : '(' . $ticket->getID() . ')';
       $issue->update([
          'id'                 => $issue->getID(),
-         'original_id'        => $ticketId,
-         'sub_itemtype'       => Ticket::class,
-         'name'               => addslashes($ticket->fields['name']),
+         'items_id'           => $ticketId,
+         'itemtype'           => Ticket::class,
+         'name'               => $issueName,
          'status'             => $ticket->fields['status'],
          'date_creation'      => $ticket->fields['date'],
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $ticketUserRow['users_id'],
-         'users_id_validator' => '',
-         'groups_id_validator'=> '',
          'comment'            => addslashes($ticket->fields['content']),
       ]);
    }
@@ -1449,6 +1458,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public static function getMyLastAnswersAsRequester($limit = 5) {
       global $DB;
+
+      if (Plugin::isPluginActive('advform')) {
+         return PluginAdvformFormAnswer::getMyLastAnswersAsRequester($limit);
+      }
 
       $formAnswerTable = self::getTable();
       $formTable = PluginFormcreatorForm::getTable();
@@ -1487,6 +1500,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public static function getMyLastAnswersAsValidator($limit = 5) : DBMysqlIterator {
       global $DB;
 
+      if (Plugin::isPluginActive('advform')) {
+         return PluginAdvformFormAnswer::getMyLastAnswersAsValidator($limit);
+      }
+
       $userId = Session::getLoginUserID();
       $groupList = Group_User::getUserGroups($userId);
       $groupIdList = [];
@@ -1495,24 +1512,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $formAnswerTable = self::getTable();
-      $formAnswerFk = self::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $formTable = PluginFormcreatorForm::getTable();
-      $validationTable = PluginFormcreatorFormAnswerValidation::getTable();
+      $validatorTable = PluginFormcreatorForm_Validator::getTable();
       $where = [
          'OR' => [
-            // level = 1: validate by the user or group chosen by the requester
             [
                'AND' => [
-                  "$validationTable.level" => '1',
-                  "$formAnswerTable.users_id_validator" => $userId
-               ]
-            ],
-            // Level > 1: any user or group defined by the form designer
-            [
-               'AND' => [
-                  "$validationTable.level" => ['>', '1'],
-                  "$validationTable.itemtype" => User::class,
-                  "$validationTable.items_id" => $userId,
+                  "$validatorTable.itemtype" => User::class,
+                  "$validatorTable.items_id" => $userId,
                ]
             ],
          ]
@@ -1520,15 +1528,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       if (count($groupIdList) > 0) {
          $where['OR'][] = [
             'AND' => [
-               "$validationTable.level" => '1',
-               "$formAnswerTable.groups_id_validator" => $groupIdList,
-            ]
-         ];
-         $where['OR'][] = [
-            'AND' => [
-               "$validationTable.level" => ['>', '1'],
-               "$validationTable.itemtype" => Group::class,
-               "$validationTable.items_id" => $groupIdList,
+               "$validatorTable.itemtype" => Group::class,
+               "$validatorTable.items_id" => $groupIdList,
             ]
          ];
       }
@@ -1545,20 +1546,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
                ]
             ],
-            $validationTable => [
+            $validatorTable => [
                'FKEY' => [
-                  $validationTable => $formAnswerFk,
-                  $formAnswerTable => 'id',
-               ],
-            ],
+                  $validatorTable => $formFk,
+                  $formTable => 'id'
+               ]
+            ]
          ],
          'WHERE' => $where,
          'ORDER' => [
             "$formAnswerTable.status ASC",
             "$formAnswerTable.request_date DESC",
-         ],
-         'GROUP' => [
-            self::getForeignKeyField(),
          ],
          'LIMIT' => $limit,
       ];
@@ -1577,7 +1575,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return $this->questionFields;
       }
 
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       if ($form->isNewID($formId)) {
          return [];
       }
@@ -1607,6 +1605,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $answers_values = $this->getAnswers($this->getID());
       foreach (array_keys($this->questionFields) as $id) {
+         if (!$this->questionFields[$id]->hasInput($answers_values)) {
+            continue;
+         }
          $this->questionFields[$id]->deserializeValue($answers_values['formcreator_field_' . $id]);
       }
 
@@ -1631,35 +1632,136 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return PluginFormcreatorFields::isVisible($this->questionFields[$id]->getQuestion(), $this->questionFields);
    }
 
+   protected function setValidator(array $input): array {
+      $groupIdValidator = 0;
+      $usersIdValidator = 0;
+
+      $input['status'] = self::STATUS_ACCEPTED;
+      if (isset($input['formcreator_validator'])) {
+         switch ($this->getForm()->fields['validation_required']) {
+            case PluginFormcreatorForm::VALIDATION_USER:
+               $validatorItem = explode('_', $input['formcreator_validator']);
+               if ($validatorItem[0] != User::class) {
+                  break;
+               }
+               $usersIdValidator = (int) $validatorItem[1];
+               $input['status'] = self::STATUS_WAITING;
+               break;
+
+            case PluginFormcreatorForm::VALIDATION_GROUP:
+               $validatorItem = explode('_', $input['formcreator_validator']);
+               if ($validatorItem[0] != Group::class) {
+                  break;
+               }
+               $groupIdValidator = (int) $validatorItem[1];
+               $input['status'] = self::STATUS_WAITING;
+               break;
+         }
+      }
+
+      $input['users_id_validator']  = $usersIdValidator;
+      $input['groups_id_validator'] = $groupIdValidator;
+
+      return $input;
+   }
+
    /**
     * Undocumented function
     *
-    * @return bool
+    * @param array $input
+    * @return array
     */
-   private function copyValidatorsToValidation(): bool {
-      global $DB;
+   private function refuse(array $input): array {
+      $input['status'] = self::STATUS_REFUSED;
+      // Update is restricted to a subset of fields
+      $input = [
+         'id'      => $input['id'],
+         'status'  => $input['status'],
+         'comment' => $input['comment'] ?? 'NULL',
+      ];
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $result = $DB->request([
-         'FROM' => PluginFormcreatorForm_Validator::getTable(),
-         'WHERE' => [
-            $formFk => $this->fields[$formFk],
-         ]
-      ]);
-      foreach ($result as $row) {
-         $validation = new PluginFormcreatorFormanswerValidation();
-         $newId = $validation->add([
-            self::getForeignKeyField() => $this->getID(),
-            'itemtype' => $row['itemtype'],
-            'items_id' => $row['items_id'],
-            'level'    => $row['level'],
-            'status'   => PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING
-         ]);
+      return $input;
+   }
 
-         if ($newId === false) {
-            return false;
-         }
+   /**
+    * Undocumented function
+    *
+    * @param array $input
+    * @return array
+    */
+   private function accept(array $input): array {
+      $input['status'] = self::STATUS_ACCEPTED;
+
+      return $input;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $input
+    * @return integer
+    */
+   protected static function getValidationStatus(PluginFormcreatorFormAnswer $formAnswer): int {
+      if (Plugin::isPluginActive('advform')) {
+         return PluginAdvformFormAnswer::getValidationStatus($formAnswer);
       }
-      return true;
+
+      return isset($formAnswer->input['refuse_formanswer'])
+             ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED
+             : PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $crit
+    * @return array|null
+    */
+   public function getApprovers(array $crit = []): ?array {
+      if ($this->isNewItem()) {
+         return null;
+      }
+
+      if ($this->fields['users_id_validator'] > 0) {
+         $id = $this->fields['users_id_validator'];
+         return [
+            User::class => [
+               $id => [
+                  'pluginformcreator_formanswers_id' => $this->getID(),
+                  'itemtype' => User::class,
+                  'items_id' => $id,
+               ],
+            ]
+         ];
+      }
+
+      if ($this->fields['groups_id_validator'] > 0) {
+         $id = $this->fields['groups_id_validator'];
+         return [
+            Group::class => [
+               $id => [
+                  'pluginformcreator_formanswers_id' => $this->getID(),
+                  'itemtype' => Group::class,
+                  'items_id' => $id,
+               ],
+            ]
+         ];
+      }
+
+      return null;
+   }
+
+   /**
+    * Get users or groupe in charge of valdiation
+    *
+    * @return array|null
+    */
+   public function  getCurrentApprovers(): ?array {
+      if ($this->fields['status'] =! self::STATUS_WAITING) {
+         return null;
+      }
+
+      // the form answers are waiting for validation
+      return $this->getApprovers();
    }
 }

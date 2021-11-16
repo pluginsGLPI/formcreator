@@ -60,11 +60,12 @@ class DropdownField extends CommonTestCase {
             ],
             'expected' => [
                'name' => $name,
+               'itemtype' => \Location::class,
                'values' => json_encode([
-                  'itemtype' => \Location::class,
                   'show_tree_depth' => '5',
                   'show_tree_root' => '0',
                   'selectable_tree_root' => '0',
+                  'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
                ]),
                'default_values'  => '',
             ]
@@ -79,12 +80,13 @@ class DropdownField extends CommonTestCase {
             ],
             'expected' => [
                'name' => $name,
+               'itemtype' => \ITILCategory::class,
                'values' => json_encode([
-                  'itemtype' => \ITILCategory::class,
                   'show_ticket_categories' => '2',
                   'show_tree_depth' => '3',
                   'show_tree_root'  => '',
                   'selectable_tree_root' => '0',
+                  'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
                ]),
                'default_values'  => '',
             ]
@@ -112,13 +114,13 @@ class DropdownField extends CommonTestCase {
 
    public function testIsPrerequisites() {
       $instance = $this->newTestedInstance($this->getQuestion([
-         'values' => \Computer::class
+         'itemtype' => \Computer::class
       ]));
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
 
       $instance = $this->newTestedInstance($this->getQuestion([
-         'values' => \UndefinedItemtype::class
+         'itemtype' => \UndefinedItemtype::class
       ]));
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(false);
@@ -148,67 +150,63 @@ class DropdownField extends CommonTestCase {
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'values' => json_encode([
-                  'itemtype' => \Location::class,
-               ]),
+               'itemtype' => \Location::class,
+               'values' => '',
                'required' => '0',
                'default_values' => '0',
             ]),
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '0',
-               'show_ticket_categories_depth' => '5',
-               'show_ticket_categories_root' => '0',
+               'show_tree_depth' => '5',
+               'show_tree_root' => '0',
             ],
             'expected' => true,
          ],
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'values' => json_encode([
-                  'itemtype' => \Location::class,
-               ]),
+               'itemtype' => \Location::class,
+               'values' => '',
                'required' => '1',
             ]),
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '0',
-               'show_ticket_categories_depth' => '5',
-               'show_ticket_categories_root' => '0',
+               'show_tree_depth' => '5',
+               'show_tree_root' => '0',
             ],
             'expected' => false,
          ],
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'values' => json_encode([
-                  'itemtype' => \Location::class,
-               ]),
+               'itemtype' => \Location::class,
+               'values' => '',
                'required' => '1',
                'default_values' => '',
             ]),
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '42',
-               'show_ticket_categories_depth' => '5',
-               'show_ticket_categories_root' => '0',
+               'show_tree_depth' => '5',
+               'show_tree_root' => '0',
             ],
             'expected' => false,
          ],
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'values' => json_encode([
-                  'itemtype' => \Location::class,
-               ]),
+               'itemtype' => \Location::class,
+               'values' => '',
                'required' => '1',
                'default_values' => $locationId,
             ]),
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '42',
-               'show_ticket_categories_depth' => '5',
-               'show_ticket_categories_root' => '0',
+               'show_tree_depth' => '5',
+               'show_tree_root' => '0',
             ],
             'expected' => true,
          ],
@@ -234,9 +232,8 @@ class DropdownField extends CommonTestCase {
          [
             'fields' => $this->getQuestion([
                'name' =>  'fieldname',
-               'values' => json_encode([
-                  'itemtype' => \Location::class,
-               ]),
+               'itemtype' => \Location::class,
+               'values' => '',
                'required' => '1',
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '42',
@@ -247,9 +244,8 @@ class DropdownField extends CommonTestCase {
          [
             'fields' => $this->getQuestion([
                'name' =>  'fieldname',
-               'values' => json_encode([
-                  'itemtype' => \Location::class,
-               ]),
+               'itemtype' =>\Location::class,
+               'values' =>'',
                'required' => '1',
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '',

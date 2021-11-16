@@ -1,12 +1,12 @@
 #!/bin/sh
 
-install_plugin() {
+init_plugin() {
    cd plugins/$PLUGINNAME
    composer install --no-interaction
    yarn install --non-interactive --prod
 }
 
-init_plugin() {
+install_plugin_dependencies() {
     : # nothing to do
 }
 

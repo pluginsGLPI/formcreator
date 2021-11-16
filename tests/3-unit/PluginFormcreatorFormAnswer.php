@@ -205,87 +205,90 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       // - issue
       $issue = new \PluginFormcreatorIssue;
       $this->boolean($issue->getFromDBByCrit([
-        'sub_itemtype' => \Ticket::class,
-        'original_id'  => $ticket->getID()
+        'itemtype' => \Ticket::class,
+        'items_id'  => $ticket->getID()
       ]))->isTrue();
 
       $CFG_GLPI['use_notifications'] = $use_notifications;
    }
 
    public function providerCanValidate() {
-      $validatorUserId = 42;
-      $form1 = $this->getForm();
-      $this->boolean($form1->isNewItem())->isFalse();
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form1->getID(),
-         'itemtype' => \User::getType(),
-         'items_id' => $validatorUserId,
-         'level'    => 1,
+      $validatorUserId = 5; // normal
+      $form1 = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => $validatorUserId
       ]);
-      $this->boolean($formValidator->isNewItem())->isFalse();
+      $this->boolean($form1->isNewItem())->isFalse();
 
       $group = new \Group();
       $group->add([
          'name' => $this->getUniqueString(),
       ]);
       $this->boolean($group->isNewItem())->isFalse();
-      $form2 = $this->getForm();
-      $this->boolean($form2->isNewItem())->isFalse();
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form2->getID(),
-         'itemtype' => \Group::getType(),
-         'items_id' => $group->getID(),
-         'level'    => 1,
-      ]);
-      $this->boolean($formValidator->isNewItem())->isFalse();
-
       $groupUser = new \Group_User();
       $groupUser->add([
          'users_id' => $validatorUserId,
          'groups_id' => $group->getID(),
       ]);
+      $form2 = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
+         '_validator_groups' => $group->getID()
+      ]);
+      $this->boolean($form2->isNewItem())->isFalse();
 
       return [
-         [
+         'having validate incident right, validator user can validate' => [
             'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $validatorUserId,
             'userId'    => $validatorUserId,
             'form'      => $form1,
             'expected'  => true,
          ],
-         [
+         'having validate incident right, member of a validator group can validate' => [
             'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => true,
          ],
-         [
+         'having validate incident right, not a validator user cannot validate' => [
             'right'     => \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId + 1,
+            'validator' => $group->getID(),
+            'userId'    => 2, // glpi
             'form'      => $form2,
             'expected'  => false,
          ],
-         [
+         'having validate request right, member of a validator group can validate' => [
             'right'     => \TicketValidation::VALIDATEREQUEST,
+            'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => true,
          ],
-         [
+         'having validate request right and validate incident, member of a validator group can validate' => [
             'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => true,
          ],
-         [
+         'having validate request right and validate incident, not member of a validator group can validate' => [
             'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
-            'userId'    => $validatorUserId + 1,
+            'validator' => $group->getID(),
+            'userId'    => 2, // glpi
             'form'      => $form2,
             'expected'  => false,
          ],
-         [
+         'having no validation right, member of a validator group cannot validate' => [
             'right'     => 0,
+            'validator' => $group->getID(),
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => false,
+         ],
+         'having no validation right, a validator user cannot validate' => [
+            'right'     => 0,
+            'validator' => $group->getID(),
             'userId'    => $validatorUserId,
             'form'      => $form2,
             'expected'  => false,
@@ -296,12 +299,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    /**
     * @dataProvider providerCanValidate
     */
-   public function testCanValidate($right, $userId, $form, $expected) {
+   public function testCanValidate($right, $validator, $userId, $form, $expected) {
       // Save answers for a form
       $instance = $this->newTestedInstance();
       $input = [
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator' => \User::getType() . '_' . $userId,
+         'formcreator_validator' => $validator,
       ];
       $fields = $form->getFields();
       foreach ($fields as $id => $question) {
@@ -363,12 +366,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $formAnswer1 = $this->newTestedInstance();
       $formAnswers[] = $formAnswer1->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => \User::getType() . '_' . $validatorId,
+         'formcreator_validator'       => $validatorId,
       ]);
       $formAnswer2 = $this->newTestedInstance();
       $formAnswers[] = $formAnswer2->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => \User::getType() . '_' . $validatorId,
+         'formcreator_validator'       => $validatorId,
       ]);
 
       // Check the requester does not has his forms in list to validate

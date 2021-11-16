@@ -1,4 +1,5 @@
-<?php
+"use strict";
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,16 +30,10 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-header('Content-Type: text/javascript');
-?>
-"use strict";
-
 var modalWindow;
 var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
 var tiles = [];
-var serviceCatalogEnabled = false;
 var slinkyCategories;
 var timers = [];
 var formcreatorRootDoc = rootDoc + '/' + GLPI_PLUGINS_PATH.formcreator;
@@ -66,20 +61,22 @@ function getTimer(object) {
 }
 
 $(function() {
-   modalWindow = $("<div></div>").dialog({
-      width: 980,
-      autoOpen: false,
-      height: "auto",
-      modal: true,
-      position: {my: 'center'},
-      open: function( event, ui ) {
-         //remove existing tinymce when reopen modal (without this, tinymce don't load on 2nd opening of dialog)
-         modalWindow.find('.mce-container').remove();
-      }
-   });
+   if (!plugin_formcreator.isGlpi10) {
+      modalWindow = $("<div></div>").dialog({
+         width: 980,
+         autoOpen: false,
+         height: "auto",
+         modal: true,
+         position: {my: 'center'},
+         open: function( event, ui ) {
+            //remove existing tinymce when reopen modal (without this, tinymce don't load on 2nd opening of dialog)
+            modalWindow.find('.mce-container').remove();
+         }
+      });
+   }
 
    // toggle menu in desktop mode
-   $('#formcreator-toggle-nav-desktop').change(function() {
+   $('#formcreator-toggle-nav-desktop').on('change', function() {
       $('.plugin_formcreator_container').toggleClass('toggle_menu');
       $.ajax({
          url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
@@ -89,8 +86,6 @@ $(function() {
       })
    });
 
-   serviceCatalogEnabled = $("#plugin_formcreator_serviceCatalog").length;
-
    // Prevent jQuery UI dialog from blocking focusin
    $(document).on('focusin', function(e) {
        if ($(e.target).closest(".mce-window, .moxman-window").length) {
@@ -99,7 +94,6 @@ $(function() {
    });
 
    if (location.pathname.indexOf("helpdesk.public.php") != -1) {
-
       $('.ui-tabs-panel:visible').ready(function() {
          showHomepageFormList();
       });
@@ -116,15 +110,15 @@ $(function() {
       $("#wizard_seeall").parent().addClass('category_active');
 
       // Setup events
-      $('.plugin_formcreator_sort [value=mostPopularSort]').click(function () {
+      $('.plugin_formcreator_sort [value=mostPopularSort]').on('click', function () {
          showTiles(tiles);
       });
 
-      $('.plugin_formcreator_sort [value=alphabeticSort]').click(function () {
+      $('.plugin_formcreator_sort [value=alphabeticSort]').on('click', function () {
          showTiles(tiles);
       });
 
-      $('#plugin_formcreator_wizard_categories #wizard_seeall').click(function () {
+      $('#plugin_formcreator_wizard_categories #wizard_seeall').on('click', function () {
          slinkyCategories.home();
          updateWizardFormsView(0);
          $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
@@ -136,15 +130,15 @@ $(function() {
       $("#kb_seeall").parent().addClass('category_active');
 
       // Setup events
-      $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
+      $('.plugin_formcreator_sort input[value=mostPopularSort]').on('click', function () {
          showTiles(tiles);
       });
 
-      $('.plugin_formcreator_sort input[value=alphabeticSort]').click(function () {
+      $('.plugin_formcreator_sort input[value=alphabeticSort]').on('click', function () {
          showTiles(tiles);
       });
 
-      $('#plugin_formcreator_kb_categories #kb_seeall').click(function () {
+      $('#plugin_formcreator_kb_categories #kb_seeall').on('click', function () {
          slinkyCategories.home();
          updateKbitemsView(0);
          $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
@@ -184,28 +178,19 @@ $(function() {
       });
    }
 
-   // === Add better multi-select on form configuration validators ===
-   fcInitMultiSelect();
-
-   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-      fcInitMultiSelect();
-   });
-
+   // load counters
+   if ($('.status.status_incoming .status_number').length > 0) {
+      plugin_formcreator.getCounters();
+   }
 });
-
-function fcInitMultiSelect() {
-   $("#validator_users").select2();
-   $("#validator_groups").select2();
-}
 
 function showHomepageFormList() {
    if ($('#plugin_formcreatorHomepageForms').length) {
       return;
    }
 
-   $.ajax({
+   $.get({
       url: formcreatorRootDoc + '/ajax/homepage_forms.php',
-      type: "GET"
    }).done(function(response){
       if (!$('#plugin_formcreatorHomepageForms').length) {
          $('.central > tbody:first').first().prepend(response);
@@ -214,10 +199,9 @@ function showHomepageFormList() {
 }
 
 function updateCategoriesView() {
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'categories'},
-      type: "GET",
       dataType: "json"
    }).done(function(response) {
       var html = '<div class="slinky-menu">';
@@ -232,7 +216,7 @@ function updateCategoriesView() {
       slinkyCategories = $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
          label: true
       });
-      $('#plugin_formcreator_wizard_categories a.back').click(
+      $('#plugin_formcreator_wizard_categories a.back').on('click',
          function(event) {
             parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
             parentAnchor = $(parentItem).children('a')[0];
@@ -240,20 +224,18 @@ function updateCategoriesView() {
          }
       );
 
-      $('#plugin_formcreator_wizard_categories a[data-category-id]').click(
+      $('#plugin_formcreator_wizard_categories a[data-category-id]').on('click',
          function (event) {
             $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
             $(this).addClass('category_active');
-            updateWizardFormsView(event.target.getAttribute('data-category-id'));
          }
       );
    });
 }
 
 function updateKbCategoriesView() {
-   $.ajax({
+   $.get({
       url: formcreatorRootDoc + '/ajax/kb_category.php',
-      type: "GET",
       dataType: "json"
    }).done(function(response) {
       var html = '<div class="slinky-menu">';
@@ -268,7 +250,7 @@ function updateKbCategoriesView() {
       slinkyCategories = $('.slinky-menu').slinky({
          label: true
       });
-      $('#plugin_formcreator_kb_categories a.back').click(
+      $('#plugin_formcreator_kb_categories a.back').on('click',
          function(event) {
             parentItem = $(event.target).parentsUntil('#plugin_formcreator_kb_categories > div', 'li')[1];
             parentAnchor = $(parentItem).children('a')[0];
@@ -276,11 +258,10 @@ function updateKbCategoriesView() {
          }
       );
 
-      $('#plugin_formcreator_kb_categories a[data-category-id]').click(
+      $('#plugin_formcreator_kb_categories a[data-category-id]').on('click',
          function (event) {
             $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
             $(this).addClass('category_active');
-            updateKbitemsView(event.target.getAttribute('data-category-id'));
          }
       );
    });
@@ -290,13 +271,12 @@ function getFaqItems(categoryId) {
    var currentCategory = categoryId;
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/knowbaseitem.php',
       data: {
          categoriesId: categoryId,
          keywords: keywords,
          helpdeskHome: 0},
-      type: "GET",
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -313,10 +293,9 @@ function getFaqItems(categoryId) {
 function getFormAndFaqItems(categoryId) {
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
       data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
-      type: "GET",
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -358,7 +337,7 @@ function showTiles(tiles, defaultForms) {
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
-      html += '<p><?php echo Toolbox::addslashes_deep(__('No form found. Please choose a form below instead', 'formcreator'))?></p>'
+      html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead', 'formcreator') + '</p>'
    }
    html += buildTiles(tiles);
 
@@ -381,7 +360,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         var html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -402,7 +381,7 @@ function updateKbitemsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
+         html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -464,7 +443,7 @@ function buildTiles(list) {
    var html = '';
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + "<?php echo Toolbox::addslashes_deep(__('No form yet in this category', 'formcreator')) ?>"
+      + i18n.textdomain('formcreator').__('No form yet in this category', 'formcreator')
       + '</p>'
       +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
@@ -474,11 +453,7 @@ function buildTiles(list) {
          // Build a HTML tile
          var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
          if (item.type != 'form') {
-            if (serviceCatalogEnabled) {
-               url = formcreatorRootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
-            } else {
-               url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
-            }
+            url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
          }
 
          var description = '';
@@ -546,6 +521,10 @@ function buildTiles(list) {
 var plugin_formcreator = new function() {
    this.spinner = '<div"><img src="../../../pics/spinner.48.gif" style="margin-left: auto; margin-right: auto; display: block;" width="48px"></div>'
 
+   this.isGlpi10 = typeof($('<div>/div>').dialog) == 'undefined';
+
+   this.questionColumns = 4;
+
    this.modalSetings = {
       autoOpen: false,
       height: 'auto',
@@ -562,12 +541,12 @@ var plugin_formcreator = new function() {
    // Properties of the item when the user begins to change it
    this.initialPosition = {};
    this.changingItemId = 0;
-   this.questionsColumns = <?php echo PluginFormcreatorSection::COLUMNS; ?>;
+   this.questionsColumns = 4; // @see PluginFormcreatorSection::COLUMNS
    this.dirty = false;
 
    this.setupGridStack = function (group) {
       var that = this;
-      group
+      group.gridstack
       .on('resizestart', this.startChangeItem)
       .on('dragstart', this.startChangeItem)
       .on('change', function(event, item) {
@@ -575,20 +554,20 @@ var plugin_formcreator = new function() {
       })
       .on('dragstop', function(event, item) {
          setTimeout(function() {
-            item.helper.find('a').off('click.prevent');
+            $(item.ddElement.el).find('a').off('click.prevent');
          },
          300);
          // Remove empty rows
          plugin_formcreator.moveUpItems(group);
-      });
-      group.on('dropped', function (event, previousWidget, newWidget) {
+      })
+      .on('dropped', function (event, previousWidget, newWidget) {
          var changes = {};
          var section = $(newWidget.el).closest('[data-itemtype="PluginFormcreatorSection"]');
          var itemId = $(newWidget.el).attr('data-id');
          changes[itemId] = {
             plugin_formcreator_sections_id: section.attr('data-id'),
-            width: newWidget.width,
-            height: newWidget.height,
+            width: newWidget.w,
+            height: newWidget.h,
             x: newWidget.x,
             y: newWidget.y
          };
@@ -609,18 +588,20 @@ var plugin_formcreator = new function() {
 
    this.initGridStack = function (sectionId) {
       var that = this;
-      var group = $('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
-      group.gridstack({
-         width:          this.questionsColumns,
+      var selector = '#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack';
+      var group = document.querySelector(selector);
+      var options = {
          column:         this.questionsColumns,
+         disableOneColumnMode: true,
          cellHeight:     '32px',
-         verticalMargin: '5px',
+         margin: '2px',
          float:          true,
          acceptWidgets:  true,
          resizeable:     {
             handles: 'e, w'
          }
-      });
+      };
+      GridStack.init(options, group);
       $.get({
          url: formcreatorRootDoc + '/ajax/question_get.php',
          dataType: 'json',
@@ -629,26 +610,28 @@ var plugin_formcreator = new function() {
             design: true
          }
       }).success(function(data, httpCode) {
-         var grid = group.data('gridstack');
+         var grid = group.gridstack;
          that.dirty = true;
          $.each(data, function(index, question) {
             grid.addWidget(
                question.html,
-               Number(question.x),
-               Number(question.y),
-               Number(question.width),
-               Number(question.height),
-               false,
-               1,
-               this.questionColumns,
-               1,
-               1
+               {
+                  autoPosition: false,
+                  x: Number(question.x),
+                  y: Number(question.y),
+                  w: Number(question.width),
+                  h: Number(question.height),
+                  minW: 1,
+                  maxW: that.questionColumns,
+                  minH: 1,
+                  maxH: 1,
+               }
             );
          });
          that.dirty = false;
       }).complete(function () {
          that.setupGridStack(group);
-         group.data('gridstack').float(false);
+         group.gridstack.float(false);
       });
    };
 
@@ -656,10 +639,9 @@ var plugin_formcreator = new function() {
    * Event handler : when an item is about to move or resize
    */
   this.startChangeItem = function (event, item) {
-      item.helper.find('a').on('click.prevent', function(event) {
+      $(item.ddElement.el).find('a').on('click.prevent', function(event) {
          return false;
-      });
-      var items = $(event.currentTarget).find('> .grid-stack-item');
+      });      var items = $(event.currentTarget).find('> .grid-stack-item');
       this.initialPosition = {};
       var that = this;
       $.each(items, function(index, item) {
@@ -687,8 +669,8 @@ var plugin_formcreator = new function() {
          var id     = $(item.el).attr('data-id');
          if (typeof(id) !== 'undefined') {
             changes[id] = {
-               width:  item.width,
-               height: item.height,
+               width:  item.w,
+               height: item.h,
                x:      item.x,
                y:      item.y
             };
@@ -722,7 +704,7 @@ var plugin_formcreator = new function() {
          if (id != that.changingItemId) {
             return;
          }
-         $(event.target).data('gridstack').update(
+         $(event.target).gridstack.update(
             item.el,
             that.initialPosition[id]['x'],
             that.initialPosition[id]['y'],
@@ -740,7 +722,7 @@ var plugin_formcreator = new function() {
       if (typeof(id) === 'undefined') {
          return;
       }
-      if (confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
+      if (confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this question?', 'formcreator'))) {
          jQuery.ajax({
          url: formcreatorRootDoc + '/ajax/question_delete.php',
          type: "POST",
@@ -751,7 +733,7 @@ var plugin_formcreator = new function() {
             alert(data.responseText);
          }).done(function() {
             var container = item.closest('.grid-stack');
-            var gridstack = container.data('gridstack');
+            var gridstack = container.gridstack;
             var row = $(item).attr('data-gs-y');
             gridstack.removeWidget(item);
             //plugin_formcreator.moveUpItems(container);
@@ -773,7 +755,7 @@ var plugin_formcreator = new function() {
             return ($(element).attr('data-gs-y') > y);
          }).first();
          if (movable.length > 0) {
-            grid.data('gridstack').move(movable, Number(movable.attr('data-gs-x')), y)
+            grid.gridstack.move(movable, Number(movable.attr('data-gs-x')), y)
          }
       }
    };
@@ -816,28 +798,32 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'json'
       }).fail(function(data) {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
-         var container = $('[data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
-         var grid = container.data('gridstack');
+         var container = document.querySelector('[data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
+         var grid = container.gridstack;
          grid.addWidget(
             data.html,
-            Number(data.x),
-            Number(data.y),
-            Number(data.width),
-            Number(data.height),
-            false,
-            1,
-            this.questionColumns,
-            1,
-            1
+            {
+               autoPosition: false,
+               x: Number(data.x),
+               y: Number(data.y),
+               w: Number(data.width),
+               h: Number(data.height),
+               minW: 1,
+               maxW: that.questionColumns,
+               minH: 1,
+               maxH: 1,
+            }
          );
-         modalWindow.dialog('close');
          that.resetTabs();
       });
+      if (!plugin_formcreator.isGlpi10) {
+         modalWindow.dialog('close');
+      } else {
+         glpi_close_all_dialogs();
+      }
    }
 
    this.editQuestion = function () {
@@ -855,7 +841,9 @@ var plugin_formcreator = new function() {
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)
-         modalWindow.dialog('close');
+         if (!plugin_formcreator.isGlpi10) {
+            modalWindow.dialog('close');
+         }
          that.resetTabs();
       });
    }
@@ -879,18 +867,20 @@ var plugin_formcreator = new function() {
          alert(data.responseText);
       }).done(function(question) {
          var container = item.closest('[data-itemtype="PluginFormcreatorSection"] .grid-stack');
-         var grid = container.data('gridstack');
+         var grid = container.gridstack;
          grid.addWidget(
             question.html,
-            Number(question.x),
-            Number(question.y),
-            Number(question.width),
-            Number(question.height),
-            false,
-            1,
-            this.questionColumns,
-            1,
-            1
+            {
+               autoPosition: false,
+               x: Number(question.x),
+               y: Number(question.y),
+               w: Number(question.width),
+               h: Number(question.height),
+               minW: 1,
+               maxW: that.questionColumns,
+               minH: 1,
+               maxH: 1,
+            }
          );
          that.resetTabs();
       });
@@ -944,7 +934,7 @@ var plugin_formcreator = new function() {
    // === SECTIONS ===
 
    this.deleteSection = function (item) {
-      if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
+      if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this section?', 'formcreator'))) {
          var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
          var sectionId = section.attr('data-id');
          var that = this;
@@ -999,11 +989,29 @@ var plugin_formcreator = new function() {
    };
 
    this.showQuestionForm = function (sectionId, questionId = 0) {
-      modalWindow.load(formcreatorRootDoc + '/ajax/question.php', {
-         question_id: questionId,
-         plugin_formcreator_sections_id: sectionId
-      }).dialog('open');
-      this.plugin_formcreator_scrollToModal($(modalWindow));
+      if (!plugin_formcreator.isGlpi10) {
+         var that = this;
+         $.post({
+            url: formcreatorRootDoc + '/ajax/question.php',
+            data: {
+               question_id: questionId,
+               plugin_formcreator_sections_id: sectionId
+            }
+         }).done(function (data) {
+            modalWindow.html(data).dialog('open');
+            that.plugin_formcreator_scrollToModal($(modalWindow));
+         });
+      } else {
+         // GLPI 10.0
+         glpi_ajax_dialog({
+            dialogclass: 'modal-xl',
+            url: formcreatorRootDoc + '/ajax/question.php',
+            params: {
+               question_id: questionId,
+               plugin_formcreator_sections_id: sectionId
+            },
+         });
+      }
    };
 
    this.duplicateSection = function (item) {
@@ -1030,13 +1038,29 @@ var plugin_formcreator = new function() {
    };
 
    this.showSectionForm = function (formId, sectionId = 0) {
-      modalWindow.load(
-         formcreatorRootDoc + '/ajax/section.php', {
-            section_id: sectionId,
-            plugin_formcreator_forms_id: formId
-         }
-      ).dialog('open');
-      this.plugin_formcreator_scrollToModal($(modalWindow));
+      if (!plugin_formcreator.isGlpi10) {
+         var that = this;
+         $.post({
+            url: formcreatorRootDoc + '/ajax/section.php',
+            data: {
+               section_id: sectionId,
+               plugin_formcreator_forms_id: formId
+            }
+         }).done(function(data) {
+            modalWindow.html(data).dialog('open');
+            that.plugin_formcreator_scrollToModal($(modalWindow));
+         });
+      } else {
+         // GLPI 10.0
+         glpi_ajax_dialog({
+            dialogclass: 'modal-xl',
+            url: formcreatorRootDoc + '/ajax/section.php',
+            params: {
+               section_id: sectionId,
+               plugin_formcreator_forms_id: formId
+            },
+         });
+      }
    }
 
    this.addSection = function () {
@@ -1055,10 +1079,14 @@ var plugin_formcreator = new function() {
          var sectionId = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last().attr('data-id');
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
-         modalWindow.dialog('close');
          that.resetTabs();
       });
-   }
+      if (!plugin_formcreator.isGlpi10) {
+         modalWindow.dialog('close');
+      } else {
+         glpi_close_all_dialogs();
+      }
+}
 
    this.editSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
@@ -1074,7 +1102,9 @@ var plugin_formcreator = new function() {
       }).done(function(data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
          section.find('> [data-field="name"]').text(data);
-         modalWindow.dialog('close');
+         if (!plugin_formcreator.isGlpi10) {
+            modalWindow.dialog('close');
+         }
          that.resetTabs();
       });
    }
@@ -1093,14 +1123,17 @@ var plugin_formcreator = new function() {
    this.createLanguage = function (formId, id = -1) {
       var placeholder = $('#plugin_formcreator_formLanguage');
       this.showSpinner(placeholder);
-      $(placeholder).load(
-         rootDoc + '/ajax/viewsubitem.php', {
+      $.post({
+         url: rootDoc + '/ajax/viewsubitem.php',
+         data: {
             type: "PluginFormcreatorForm_Language",
             parenttype: "PluginFormcreatorForm",
             plugin_formcreator_forms_id: formId,
             id: id
          }
-      );
+      }).done(function (data) {
+         $(placeholder).html(data);
+      });
    }
 
    /**
@@ -1120,9 +1153,12 @@ var plugin_formcreator = new function() {
    this.showTranslationEditor = function (object) {
       var formlanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
       var plugin_formcreator_translations_id = $(object).find('input[name="id"]').val();
-      $('#plugin_formcreator_editTranslation').load(formcreatorRootDoc + '/ajax/edit_translation.php', {
-         plugin_formcreator_form_languages_id: formlanguageId,
-         plugin_formcreator_translations_id: ''
+      $.post({
+         url: formcreatorRootDoc + '/ajax/edit_translation.php',
+         data: {
+            plugin_formcreator_form_languages_id: formlanguageId,
+            plugin_formcreator_translations_id: ''
+         }
       });
    }
 
@@ -1132,51 +1168,56 @@ var plugin_formcreator = new function() {
          .on('dialogclose', function (e, ui) {
             reloadTab();
          });
-      modal.load(
-         '../ajax/form_language.php', {
+      $.post({
+         url: '../ajax/form_language.php',
+         data: {
             action: 'newTranslation',
             id: formLanguageId,
-         }, function (response, status) {
-            if (status == 'error') {
-               // fix for GLPI <= 9.5.2
-               $('[id^="message_after_redirect_"]').remove();
-               displayAjaxMessageAfterRedirect();
-               modal.html('');
-            } else {
-               modal.dialog('open');
-            }
          }
-      )
+      }).done(function (data) {
+         modal.html(data).dialog('open');
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+         modal.html('');
+      });
    }
 
-   this.saveNewTranslation = function () {
+   this.saveNewTranslation = function (element) {
       var that = this;
       var form = document.querySelector('form[name="plugin_formcreator_translation"]');
-      $.ajax({
+      tinyMCE.triggerSave();
+      $.post({
          url: '../ajax/translation.php',
-         type: 'POST',
-         data: $(form).serialize()
+         data: $(element).closest('form').serializeArray()
       }).fail(function () {
-         // fix for GLPI <= 9.5.2
-         $('[id^="message_after_redirect_"]').remove();
          displayAjaxMessageAfterRedirect();
-      }).success(function () {
+      }).done(function () {
          that.showTranslationEditor(form);
       });
    }
 
-   this.showUpdateTranslationForm = function (object) {
-      var formLanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
-      var translationId = $(object.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
+   this.showUpdateTranslationForm = function (element) {
+      var formLanguageId = $(element).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
+      var translationId = $(element.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
       var modal = $(this.spinner);
-      modal.dialog(this.modalSetings);
-      modal.load(
-         '../ajax/form_language.php', {
+      modal.dialog(this.modalSetings)
+         .on('dialogclose', function (e, ui) {
+            reloadTab();
+         });
+      $.post({
+         url: '../ajax/form_language.php',
+         data: {
             action: 'translation',
             id: formLanguageId,
             plugin_formcreator_translations_id: translationId
          }
-      ).dialog('open');
+      }).done(function(data) {
+         modal.html(data).dialog('open');
+         // we edit a translation, then close the dialog when saving the values
+         modal.find('form').on('submit', function () {
+            modal.dialog('close');
+         })
+      });
    }
 
    // make a new selector equivalent to :contains(...) but case insensitive
@@ -1218,33 +1259,130 @@ var plugin_formcreator = new function() {
          location.reload();
       });
    }
+
+   this.getCounters = function () {
+      this.getIncomingCounter().done(function (data) {
+         $('.status.status_incoming .status_number').empty().append(data[1]);
+      }).fail(function () {
+         $('.status.status_incoming .status_number').empty().append('N/A');
+      });
+
+      this.getWaitingCounter().done(function (data) {
+         $('.status.status_waiting .status_number').empty().append(data[4]);
+      }).fail(function () {
+         $('.status.status_waiting .status_number').empty().append('N/A');
+      });
+
+      this.getToValidateCounter().done(function (data) {
+         $('.status.status_validate .status_number').empty().append(data['to_validate']);
+      }).fail(function () {
+         $('.status.status_validate .status_number').empty().append('N/A');
+      });
+
+      this.getSolvedCounter().done(function (data) {
+         $('.status.status_solved .status_number').empty().append(data[5]);
+      }).fail(function () {
+         $('.status.status_solved .status_number').empty().append('N/A');
+      });
+   }
+
+   this.getIncomingCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'incoming'
+         }
+      });
+   }
+
+   this.getWaitingCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'waiting'
+         }
+      });
+   }
+
+   this.getToValidateCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'to_validate'
+         }
+      });
+   }
+
+   this.getSolvedCounter = function () {
+      return $.get({
+         url: formcreatorRootDoc + '/ajax/counter.php',
+         dataType: 'json',
+         data: {
+            counter: 'solved'
+         }
+      });
+   }
 }
 
 // === TARGETS ===
 
-function plugin_formcreator_addTarget(items_id, token) {
-   modalWindow.load(formcreatorRootDoc + '/ajax/target.php', {
-      plugin_formcreator_forms_id: items_id
-   }).dialog("open");
+function plugin_formcreator_addTarget(items_id) {
+   if (!plugin_formcreator.isGlpi10) {
+      $.post({
+         url: formcreatorRootDoc + '/ajax/target.php',
+         data: {
+            plugin_formcreator_forms_id: items_id
+         }
+      }).done(function (data) {
+         modalWindow.html(data).dialog('open');
+      });
+   } else {
+      // GLPI 10.0
+      glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
+         url: formcreatorRootDoc + '/ajax/target.php',
+         params: {
+            plugin_formcreator_forms_id: items_id
+         },
+      });
+   }
 }
 
 function plugin_formcreator_editTarget(itemtype, items_id) {
-   modalWindow.load(formcreatorRootDoc + '/ajax/target_edit.php', {
-      itemtype: itemtype,
-      id: items_id
-   }).dialog("open");
+   if (!plugin_formcreator.isGlpi10) {
+      $.post({
+         url: formcreatorRootDoc + '/ajax/target_edit.php',
+         data: {
+            itemtype: itemtype,
+            id: items_id
+         }
+      }).done(function (data) {
+         modalWindow.html(data).dialog('open');
+      });
+   } else {
+      // GLPI 10.0
+      glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
+         url: formcreatorRootDoc + '/ajax/target_edit.php',
+         params: {
+            itemtype: itemtype,
+            id: items_id
+         },
+      });
+   }
 }
 
-function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
-   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
-      jQuery.ajax({
+function plugin_formcreator_deleteTarget(itemtype, target_id) {
+   if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:', 'formcreator'))) {
+      $.post({
         url: formcreatorRootDoc + '/front/form.form.php',
-        type: "POST",
         data: {
             delete_target: 1,
             itemtype: itemtype,
             items_id: target_id,
-            _glpi_csrf_token: token
          }
       }).done(function () {
          location.reload();
@@ -1436,7 +1574,7 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
    var dropdown_type = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
    var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/dropdown_values.php',
       type: 'GET',
       data: {
@@ -1460,9 +1598,8 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
          return;
       }
 
-      $.ajax({
+      $.post({
          url: formcreatorRootDoc + '/ajax/commontree.php',
-         type: 'GET',
          data: {
             itemtype: dropdown_type,
             root: $("#commonTreeDropdownRoot").val(),
@@ -1476,6 +1613,39 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
          $('.plugin_formcreator_dropdown').html("");
          $('.plugin_formcreator_dropdown').toggle(false);
       });
+
+      var entityAssignable = [
+         'Location',
+         'ITILCategory',
+         'TaskCategory',
+         'TaskTemplate',
+         'SolutionType',
+         'SolutionTemplate',
+         'ProjectTaskTemplate',
+         'SoftwareLicenseType',
+         'CertificateType',
+         'RackType',
+         'PDUType',
+         'ClusterType',
+         'BusinessCriticity',
+         'KnowbaseItemCategory',
+         'Calendar',
+         'Holiday',
+         'Netpoint',
+         'Vlan',
+         'LineOperator',
+         'DomainType',
+         'DomainRecordType',
+         'DomainRelation',
+         'IPNetwork',
+         'FQDN',
+         'WifiNetwork',
+         'NetworkName',
+         'Fieldblacklist',
+         'ApplianceType'
+      ];
+      var showEntityAssignable = (entityAssignable.indexOf(dropdown_type) >= 0);
+      $('.plugin_formcreator_entity_assignable').toggle(showEntityAssignable);
    });
 }
 
@@ -1483,9 +1653,8 @@ function plugin_formcreator_changeGlpiObjectItemType() {
    var glpi_object    = $('[data-itemtype="PluginFormcreatorQuestion"] [name="glpi_objects"]').val();
    var glpi_object_id = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/dropdown_values.php',
-      type: 'GET',
       data: {
          dropdown_itemtype: glpi_object,
          id: glpi_object_id
@@ -1494,9 +1663,8 @@ function plugin_formcreator_changeGlpiObjectItemType() {
       $('#dropdown_default_value_field').html(response);
    });
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/commontree.php',
-      type: 'GET',
       data: {
          itemtype: glpi_object,
          root: $("#commonTreeDropdownRoot").val(),
@@ -1716,16 +1884,15 @@ function plugin_formcreator_changeQuestionType(rand) {
    var questionId = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
    var questionType = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 
-   $.ajax({
+   $.post({
       url: formcreatorRootDoc + '/ajax/question_design.php',
-      type: 'GET',
       data: {
          questionId: questionId,
          questionType: questionType,
       },
    }).done(function(response) {
       try {
-         var response = $.parseJSON(response);
+         var response = JSON.parse(response);
       } catch (e) {
          console.log('Plugin Formcreator: Failed to get subtype fields');
          return;
@@ -1776,13 +1943,21 @@ function plugin_formceator_showPictogram(id, preview) {
 /**
  * update composite ticket (links between tickets) in target ticket (design mode)
  */
-function plugin_formcreator_updateCompositePeerType(rand) {
-   if ($('#dropdown__link_itemtype' + rand).val() == 'Ticket') {
-      $('#plugin_formcreator_link_ticket').show();
-      $('#plugin_formcreator_link_target').hide();
-   } else {
-      $('#plugin_formcreator_link_ticket').hide();
-      $('#plugin_formcreator_link_target').show();
+function plugin_formcreator_updateCompositePeerType(type) {
+   $('#plugin_formcreator_link_ticket').hide();
+   $('#plugin_formcreator_link_target').hide();
+   $('#plugin_formcreator_link_question').hide();
+
+   switch ($(type).val()) {
+      case 'Ticket':
+         $('#plugin_formcreator_link_ticket').show();
+         break;
+      case 'PluginFormcreatorTargetTicket':
+         $('#plugin_formcreator_link_target').show();
+         break;
+      case 'PluginFormcreatorQuestion':
+         $('#plugin_formcreator_link_question').show();
+         break;
    }
 }
 
@@ -1919,16 +2094,6 @@ function plugin_formcreator_changeValidators(value) {
    } else {
       document.getElementById("validators_users").style.display  = "none";
       document.getElementById("validators_groups").style.display = "none";
-   }
-}
-
-function plugin_formcreator_updateCompositePeerType(rand) {
-   if ($('#dropdown__link_itemtype' + rand).val() == 'Ticket') {
-      $('#plugin_formcreator_link_ticket').show();
-      $('#plugin_formcreator_link_target').hide();
-   } else {
-      $('#plugin_formcreator_link_ticket').hide();
-      $('#plugin_formcreator_link_target').show();
    }
 }
 

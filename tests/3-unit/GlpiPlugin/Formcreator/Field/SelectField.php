@@ -371,4 +371,19 @@ class SelectField extends CommonTestCase {
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function testRegex() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'select',
+         'values'    => 'foo\r\nbar',
+      ]);
+      $instance = $question->getSubField();
+      $instance->deserializeValue('foo');
+
+      $output = $instance->regex('/foo/');
+      $this->boolean($output)->isTrue();
+
+      $output = $instance->regex('/bar/');
+      $this->boolean($output)->isFalse();
+   }
 }

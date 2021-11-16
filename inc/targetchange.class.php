@@ -42,22 +42,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return _n('Target change', 'Target changes', $nb, 'formcreator');
    }
 
-   static function getEnumUrgencyRule() {
-      return [
-         PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE      => __('Medium', 'formcreator'),
-         PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
-         PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
-   static function getEnumCategoryRule() {
-      return [
-         PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => __('None', 'formcreator'),
-         PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
-         PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
-      ];
-   }
-
    protected function getItem_User() {
       return new Change_User();
    }
@@ -74,8 +58,16 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return new Change_Item();
    }
 
-   protected function getTargetItemtypeName() {
+   protected function getTargetItemtypeName(): string {
       return Change::class;
+   }
+
+   protected function getTemplateItemtypeName(): string {
+      return ChangeTemplate::class;
+   }
+
+   protected function getTemplatePredefinedFieldItemtype(): string {
+      return ChangeTemplatePredefinedField::class;
    }
 
    protected function getCategoryFilter() {
@@ -94,8 +86,60 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       ];
    }
 
+   public function defineTabs($options = []) {
+      $tab = [];
+      $this->addDefaultFormTab($tab);
+      $this->addStandardTab(__CLASS__, $tab, $options);
+      return $tab;
+   }
+
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      if (!self::canView()) {
+         return '';
+      }
+      switch ($item->getType()) {
+         case __CLASS__ :
+            $tab = [
+               1 => __('Properties', 'formcreator'),
+               2 => __('Actors', 'formcreator'),
+               3 => __('Condition', 'formcreator'),
+            ];
+            // if ((new Plugin)->isActivated('fields')) {
+            //    $tab[4] = __('Fields plugin', 'formcreator');
+            // }
+            return $tab;
+            break;
+      }
+      return '';
+   }
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      switch ($item->getType()) {
+         case self::class:
+            switch ($tabnum) {
+               case 1:
+                  self::showProperties($item);
+                  return true;
+                  break;
+               case 2:
+                  self::showActors($item);
+                  return true;
+                  break;
+               case 3:
+                  self::showConditions($item);
+                  break;
+               // case 4:
+               //    self::showPluginFields($item);
+               //    break;
+            }
+            break;
+      }
+
+      return false;
+   }
+
    /**
-    * Export in an array all the data of the current instanciated target ticket
+    * Export in an array all the data of the current instanciated target change
     * @return array the array with all data (with sub tables)
     */
    public function export(bool $remove_uuid = false) : array {
@@ -108,6 +152,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       // remove key and fk
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       unset($export[$formFk]);
+
+      // replace dropdown ids
+      $export['_changetemplate'] = '';
+      if ($export['changetemplates_id'] > 0) {
+         $export['_changetemplate']
+            = Dropdown::getDropdownName('glpi_changetemplates',
+                                        $export['changetemplates_id']);
+      }
+      unset($export['changetemplates_id']);
 
       $subItems = [
          '_actors'     => PluginFormcreatorTarget_Actor::class,
@@ -286,7 +339,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'target_name',
          'name'               => __('Change title', 'formcreator'),
-         'datatype'           => 'text',
+         'datatype'           => 'string',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -296,7 +349,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'content',
          'name'               => __('Content', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -306,7 +359,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'impactcontent',
          'name'               => __('Impact', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -316,7 +369,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'controlistcontent',
          'name'               => __('Control list', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -325,8 +378,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'id'                 => '8',
          'table'              => $this::getTable(),
          'field'              => 'rolloutplancontent',
-         'name'               => __('Rollout plan', 'formcreator'),
-         'datatype'           => 'string',
+         'name'               => __('Deployment plan', 'formcreator'),
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -336,7 +389,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'backoutplancontent',
          'name'               => __('Backup plan', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -346,7 +399,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'table'              => $this::getTable(),
          'field'              => 'checklistcontent',
          'name'               => __('Check list', 'formcreator'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'searchtype'         => 'contains',
          'massiveaction'      => false
       ];
@@ -361,12 +414,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       } else {
          $title =  __('Edit a target', 'formcreator');
       }
-      $rand = mt_rand();
-
-      $form = $this->getForm();
 
       // TODO: remive the fixed width
-      echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_"'
       . ' method="post"'
       . ' action="' . self::getFormURL() . '"'
@@ -459,43 +508,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       echo '</td>';
       echo '</tr>';
 
-      $rand = mt_rand();
-      $this->showDestinationEntitySetings($rand);
-
-      echo '<tr>';
-      $this->showDueDateSettings($form, $rand);
-      echo '<td colspan="2"></td>';
-      echo '</tr>';
-
-      $this->showSLASettings();
-      $this->showOLASettings();
-
-      // -------------------------------------------------------------------------------------------
-      //  category of the target
-      // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($form, $rand);
-
-      // -------------------------------------------------------------------------------------------
-      // Urgency selection
-      // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($form, $rand);
-
-      // -------------------------------------------------------------------------------------------
-      //  Tags
-      // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($form, $rand);
-
-      // -------------------------------------------------------------------------------------------
-      //  Conditions to generate the target
-      // -------------------------------------------------------------------------------------------
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Condition to create the target', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
-      $this->showConditionsSettings($rand);
-
       echo '</table>';
 
       // Buttons
@@ -519,12 +531,96 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       Html::closeForm();
 
-      $this->showActorsSettings();
-
-      // List of available tags
-
       $this->showTagsList();
-      echo '</div>';
+   }
+
+
+   public static function showConditions(self $item) {
+      echo '<form name="form"'
+      . ' method="post"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' data-itemtype="' . self::class . '"'
+      . '>';
+
+      echo '<table class="tab_cadre_fixe">';
+
+      $item->showConditionsSettings();
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden('id', ['value' => $item->getID()]);
+      echo Html::hidden($formFk, ['value' => $item->fields[$formFk]]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</table>';
+      Html::closeForm();
+   }
+
+   public static function showActors(self $item) {
+      $item->showActorsSettings();
+   }
+
+   public static function showProperties(self $item) {
+      echo '<form name="form"'
+      . ' method="post"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' data-itemtype="' . self::class . '"'
+      . '>';
+
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th class="center" colspan="4">' . __('Properties', 'formcreator') . '</th></tr>';
+
+      $rand = mt_rand();
+      $item->showDestinationEntitySetings($rand);
+
+      echo '<tr>';
+      $item->showTemplateSettings();
+      $item->showDueDateSettings();
+      echo '</tr>';
+
+      $item->showSLASettings();
+      $item->showOLASettings();
+
+      // -------------------------------------------------------------------------------------------
+      //  category of the target
+      // -------------------------------------------------------------------------------------------
+      $item->showCategorySettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      // Urgency selection
+      // -------------------------------------------------------------------------------------------
+      $item->showUrgencySettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      //  Tags
+      // -------------------------------------------------------------------------------------------
+      $item->showPluginTagsSettings($rand);
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden('id', ['value' => $item->getID()]);
+      echo Html::hidden($formFk, ['value' => $item->fields[$formFk]]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</table>';
+      Html::closeForm();
    }
 
    public function prepareInputForAdd($input) {
@@ -534,7 +630,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
    }
 
    /**
-    * Prepare input data for updating the target ticket
+    * Prepare input data for updating the target change
     *
     * @param array $input data used to add the item
     *
@@ -545,7 +641,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       if (!isset($input['_skip_checks'])
             || !$input['_skip_checks']) {
 
-         $input['content'] = Html::entity_decode_deep($input['content']);
+         if (isset($input[('content')])) {
+            $input['content'] = Html::entity_decode_deep($input['content']);
+         }
 
          if (isset($input['destination_entity'])) {
             switch ($input['destination_entity']) {
@@ -672,6 +770,31 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       }
    }
 
+   protected function getTargetTemplate(array $data): int {
+      global $DB;
+
+      $targetItemtype = $this->getTemplateItemtypeName();
+      $targetTemplateFk = $targetItemtype::getForeignKeyField();
+      if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
+         $rows = $DB->request([
+            'SELECT' => [$targetTemplateFk],
+            'FROM'   => ITILCategory::getTable(),
+            'WHERE'  => ['id' => $data['itilcategories_id']]
+         ]);
+         if ($row = $rows->current()) { // assign change template according to resulting change category
+            return $row[$targetTemplateFk];
+         }
+      }
+
+      return $this->fields[$targetTemplateFk] ?? 0;
+   }
+
+   public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
+      $data = parent::getDefaultData($formanswer);
+
+      return $data;
+   }
+
    /**
     * Save form data to the target
     *
@@ -680,58 +803,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     * @return Change|null generated change
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
-      // Prepare actors structures for creation of the ticket
-      $this->requesters = [
-         '_users_id_requester'         => [],
-         '_users_id_requester_notif'   => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-      $this->observers = [
-         '_users_id_observer'          => [],
-         '_users_id_observer_notif'    => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-      $this->assigned = [
-         '_users_id_assign'       => [],
-         '_users_id_assign_notif' => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ],
-      ];
-
-      $this->assignedSuppliers = [
-         '_suppliers_id_assign'        => [],
-         '_suppliers_id_assign_notif'  => [
-            'use_notification'      => [],
-            'alternative_email'     => [],
-         ]
-      ];
-
-      $this->requesterGroups = [
-         '_groups_id_requester'        => [],
-      ];
-
-      $this->observerGroups = [
-         '_groups_id_observer'         => [],
-      ];
-
-      $this->assignedGroups = [
-         '_groups_id_assign'           => [],
-      ];
-
       $data   = [];
       $change  = new Change();
       $form    = $formanswer->getForm();
-
-      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+      $data = $this->getDefaultData($formanswer);
 
       // Parse data
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
       $data['name'] = $this->prepareTemplate(
-         $this->fields['target_name'],
+         __($this->fields['target_name'], $domain),
          $formanswer,
          true
       );
@@ -764,12 +844,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       if (count($this->requesters['_users_id_requester']) == 0) {
          $this->addActor('requester', $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
-      } else if (count($this->requesters['_users_id_requester']) >= 1) {
-         if ($this->requesters['_users_id_requester'][0] == 0) {
-            $this->addActor('requester', $formanswer->fields['requester_id'], true);
+      } else {
+         $requesterAccounts = array_filter($this->requesters['_users_id_requester'], function($v) {
+            return ($v != 0);
+         });
+         $requesters_id = array_shift($requesterAccounts);
+         if ($requesters_id === null) {
+            // No account for requesters, then fallback on the account used to fill the answers
             $requesters_id = $formanswer->fields['requester_id'];
-         } else {
-            $requesters_id = $this->requesters['_users_id_requester'][0];
          }
       }
 
@@ -778,7 +860,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
-      $data = $this->setTargetCategory($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;

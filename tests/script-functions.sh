@@ -7,9 +7,9 @@ COMPOSER=`which composer`
 # init databases
 init_databases() {
    MYSQL_PASSWD_ARG=''
-   if [ ! $MYSQL_ROOT_PASSWD == '' ]; then MYSQL_PASSWD_ARG="-p$MYSQL_ROOT_PASSWD"; fi
+   if [ ! "$MYSQL_ROOT_PASSWORD" = "" ]; then MYSQL_PASSWD_ARG="-p$MYSQL_ROOT_PASSWORD"; fi
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWD';"
-   mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT USAGE ON *.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWD';"
+   mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT USAGE ON *.* TO '$DB_USER'@'%';"
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT ALL PRIVILEGES ON $OLD_DB_NAME.* TO '$DB_USER'@'%';"
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "FLUSH PRIVILEGES";
@@ -18,19 +18,16 @@ init_databases() {
 
 # GLPI install
 install_glpi() {
-   if [ "$GLPI_BRANCH" = '9.4/bugfixes' ]; then
-      echo "Downgrading to composer 1"
-      sudo wget https://getcomposer.org/composer-1.phar -O "$COMPOSER"
-   fi
    echo Installing GLPI
-   sudo rm -rf ../glpi
+   rm -rf ../glpi
    git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
    composer install --no-dev --no-interaction
    php bin/console dependencies install composer-options=--no-dev
+   php bin/console locales:compile
    php bin/console glpi:system:check_requirements
    rm .atoum.php
    mkdir -p tests/files/_cache
-   cp -r ../formcreator plugins/$PLUGINNAME
+   cp -r ../$PLUGINNAME plugins/$PLUGINNAME
 }
 
 
@@ -40,7 +37,6 @@ install_glpi() {
 # $3 : database password
 init_glpi() {
    echo Initializing GLPI
-   pwd
    echo Dropping the database $1
    mysql -u$2 -p$3 -h$DB_HOST --execute "DROP DATABASE IF EXISTS \`$1\`;"
    echo Cleaning up cache directory
@@ -55,6 +51,7 @@ init_glpi() {
 plugin_test_upgrade() {
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_config_2.5.0.sql
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_empty_2.5.0.sql
+   php ../../bin/console glpi:migration:myisam_to_innodb --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
    php ../../bin/console glpi:plugin:install formcreator --username=glpi --config-dir=../../$TEST_GLPI_CONFIG_DIR
 }
 

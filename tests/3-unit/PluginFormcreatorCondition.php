@@ -97,7 +97,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
       $input = [
          'plugin_formcreator_questions_id' => $question2->fields['uuid'],
          'show_value'                      => 'foo',
-         'show_condition'                  => '=',
+         'show_condition'                  => \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
          'show_logic'                      => '1',
          'order'                           => '1',
          'itemtype'                        => \PluginFormcreatorQuestion::class,

@@ -39,28 +39,17 @@ if (!(new Plugin())->isActivated('formcreator')) {
 if (!PluginFormcreatorIssue::canView()) {
    Html::displayRightError();
 }
-if (plugin_formcreator_replaceHelpdesk()) {
-   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   if (Session::getCurrentInterface() == 'helpdesk') {
-      Html::helpHeader(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF']
-      );
-   } else {
-      Html::header(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF'],
-         'helpdesk',
-         'PluginFormcreatorFormlist'
-      );
-   }
+   Html::header(__('Service catalog', 'formcreator'));
 }
 
 Search::show('PluginFormcreatorIssue');
 
-if (plugin_formcreator_replaceHelpdesk()) {
-   PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
 } else {
    Html::footer();
 }
+

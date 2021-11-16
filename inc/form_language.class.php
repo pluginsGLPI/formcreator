@@ -59,18 +59,17 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      switch ($item->getType()) {
-         case PluginFormcreatorForm::class:
-            return self::getTypeName(Session::getPluralNumber());
-            break;
-         case __CLASS__:
-            $nb = 0;
-            return self::createTabEntry(
-               _n('Translation', 'Translations', $nb, 'formcreator'),
-               $nb
-            );
-            break;
+      if ($item instanceof PluginFormcreatorForm) {
+         return self::getTypeName(Session::getPluralNumber());
       }
+      if ($item->getType() == self::class) {
+         $nb = 0;
+         return self::createTabEntry(
+            _n('Translation', 'Translations', $nb, 'formcreator'),
+            $nb
+         );
+      }
+
       return '';
    }
 
@@ -85,19 +84,19 @@ implements PluginFormcreatorExportableInterface
     * @return null                     Nothing, just display the list
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      switch (get_class($item)) {
-         case PluginFormcreatorForm::class:
+      if ($item instanceof PluginFormcreatorForm) {
             self::showForForm($item, $withtemplate);
-            break;
-         case __CLASS__:
-            /** @var self $item */
-            switch ($tabnum) {
-               case 0:
-                  break;
-               case 1:
-                  $item->showTranslations();
-                  break;
-            }
+            return;
+      }
+      if ($item->getType() == self::getType()) {
+         /** @var self $item */
+         switch ($tabnum) {
+            case 0:
+               break;
+            case 1:
+               $item->showTranslations();
+               break;
+         }
       }
    }
 
@@ -167,7 +166,7 @@ implements PluginFormcreatorExportableInterface
    public function massDeleteTranslations($post) {
       global $TRANSLATE;
 
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       if (!$form->getFromDB($this->fields['plugin_formcreator_forms_id'])) {
          return;
       }
@@ -192,14 +191,14 @@ implements PluginFormcreatorExportableInterface
          if (!$this->getFromDB($ID)) {
             return false;
          }
-         $item = new PluginFormcreatorForm();
+         $item = PluginFormcreatorCommon::getForm();
          $item->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
       } else {
          $this->getEmpty();
          if (!isset($options['parent']) || empty($options['parent'])) {
             return false;
          }
-         $this->fields[PluginFormcreatorForm::getForeignKeyField()] = $options['parent'];
+         $this->fields[PluginFormcreatorForm::getForeignKeyField()] = $options['parent']->getID();
          $item = $options['parent'];
       }
 
@@ -239,7 +238,7 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function showNewTranslation($options = []) {
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
 
       echo '<div data-itemtype="PluginFormcreatorForm_Language" data-id="' . $this->getID() . '">';
@@ -257,8 +256,7 @@ implements PluginFormcreatorExportableInterface
       echo "</td><td width='50%'>&nbsp;</td></tr>";
 
       echo '<tr id="plugin_formcreator_editTranslation">';
-      // echo '<td>';
-      // echo '</td>';
+
       echo PluginFormcreatorTranslation::getEditorFieldsHtml($this);
       echo '</tr>';
       echo "<tr class='tab_bg_1'><td>";
@@ -299,7 +297,7 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function showTranslations($options = []) {
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
       echo '<div data-itemtype="PluginFormcreatorForm_Language" data-id="' . $this->getID() . '">';
       echo '<div>';
@@ -430,7 +428,7 @@ implements PluginFormcreatorExportableInterface
       echo "<th>" . __("Language") . "</th>";
       echo "</tr>";
 
-      while ($data = $iterator->next()) {
+      foreach ($iterator as $data) {
          $id = $data['id'];
          $onhover = '';
          if ($canedit) {
@@ -541,7 +539,7 @@ implements PluginFormcreatorExportableInterface
       // add the form language to the linker
       $linker->addObject($originalId, $item);
 
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($input[$formFk]);
       $translations = $input['_strings'] ?? [];
       $form->setTranslations($input['name'], $translations);
@@ -556,6 +554,10 @@ implements PluginFormcreatorExportableInterface
 
       $export = $this->fields;
 
+      // remove key and fk
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      unset($export[$formFk]);
+
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
@@ -563,8 +565,7 @@ implements PluginFormcreatorExportableInterface
       }
       unset($export[$idToRemove]);
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($this->fields[$formFk]);
       $export['_strings'] = $form->getTranslations($this->fields['name']);
 

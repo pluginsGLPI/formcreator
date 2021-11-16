@@ -44,17 +44,11 @@ if (!isset($_POST['plugin_formcreator_forms_id'])) {
 }
 $formId = (int) $_POST['plugin_formcreator_forms_id'];
 $formValidator = new PluginFormcreatorForm_Validator();
-$form = new PluginFormcreatorForm();
-if (isset($_POST['add'])) {
-   // Add a new Form
-   Session::checkRight('entity', UPDATE);
-   $formValidator->addMultipleItems($_POST);
-   Html::redirect($form->getFormURLWithID($formId));
-} else if (isset($_POST['set_validation_percent'])) {
-   $form->update([
-      'id' => $formId,
-      'validation_percent' => $_POST['validation_percent'],
-   ]);
-   Html::redirect($form->getFormURLWithID($formId));
+$form = PluginFormcreatorCommon::getForm();
+if (isset($_POST['save'])) {
+   $input = $_POST;
+   $input['id'] = $formId;
+   unset($input['plugin_formcreator_forms_id']);
+   $form->update($input);
+   Html::back();
 }
-Html::back();

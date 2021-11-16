@@ -88,7 +88,15 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          $html .= '</label>';
       }
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
-         $html .= '<div class="help-block">' . html_entity_decode(__($this->question->fields['description'], $domain)) . '</div>';
+         $description = $this->question->fields['description'];
+         foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
+            $prefix = uniqid('', true);
+            $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
+            if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+               continue;
+            }
+         }
+         $html .= '<div class="help-block">' . html_entity_decode(__($description, $domain)) . '</div>';
       }
       $html .= '<div class="form_field">';
       $html .= $this->getRenderedHtml($domain, $canEdit);
@@ -262,7 +270,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB($this->question->getID());
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getByQuestionId($question->getID());
 
       /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
@@ -308,22 +316,6 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     */
    public function getQuestion() {
       return $this->question;
-   }
-
-   /**
-    * Validate a regular expression
-    *
-    * @param string $regex
-    * @return boolean true if the regex is valid, false otherwise
-    */
-   protected function checkRegex($regex) {
-      // Avoid php notice when validating the regular expression
-      set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
-      });
-      $isValid = !(preg_match($regex, null) === false);
-      restore_error_handler();
-
-      return $isValid;
    }
 
    public function getTranslatableStrings(array $options = []) : array {

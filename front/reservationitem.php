@@ -38,7 +38,11 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
 
 $res = new ReservationItem();
 $res->display($_GET);
@@ -54,4 +58,8 @@ if (isset($_POST['submit'])) {
    unset($_SESSION['glpi_saved']['ReservationItem']);
 }
 
-PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}

@@ -36,7 +36,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-$form = new PluginFormcreatorForm();
+$form = PluginFormcreatorCommon::getForm();
 
 if (isset($_POST['add'])) {
    // Add a new Form
@@ -136,7 +136,7 @@ if (isset($_POST['add'])) {
    }
 
    // Save form
-   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer = PluginFormcreatorCommon::getFormAnswer();
    if ($formAnswer->add($_POST) === false) {
       Html::back();
    }
@@ -173,7 +173,7 @@ if (isset($_POST['add'])) {
    Session::checkRight('entity', UPDATE);
 
    Html::header(
-      PluginFormcreatorForm::getTypeName(2),
+      PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
       $_SERVER['PHP_SELF'],
       'admin',
       'PluginFormcreatorForm',

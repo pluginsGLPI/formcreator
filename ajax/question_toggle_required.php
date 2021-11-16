@@ -56,11 +56,7 @@ if (!$question->canUpdate()) {
     exit;
 }
 
-$success = $question->update([
-    'id'           => $questionId,
-    '_skip_checks' => true,
-    'required'     => ($_REQUEST['required'] ? '1' : '0'),
-]);
+$success = $question->setRequired($_REQUEST['required'] ? '1' : '0');
 if (!$success) {
     http_response_code(500);
     exit();

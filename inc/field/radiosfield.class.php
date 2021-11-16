@@ -122,7 +122,7 @@ class RadiosField extends PluginFormcreatorAbstractField
                $html .= '<span class="form-group-radio">';
                $html .= Html::input($fieldName, [
                   'type'    => 'radio',
-                  'class'   => 'new_radio form-control',
+                  'class'   => 'form-check-input',
                   'id'      => $domId . '_' . $i,
                   'value'   => $value
                ] + $checked);
@@ -132,7 +132,7 @@ class RadiosField extends PluginFormcreatorAbstractField
                $html .= '</label>';
                $html .= '</span>';
                $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= __($value, $domain);
+               $html .= '&nbsp;' . __($value, $domain);
                $html .= '</label>';
                $html .= '</div>';
             }
@@ -272,7 +272,7 @@ class RadiosField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
+      return preg_match($value, $this->value) ? true : false;
    }
 
    public function isAnonymousFormCompatible(): bool {

@@ -69,10 +69,8 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    }
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      switch (get_class($item)) {
-         case PluginFormcreatorForm::class:
-            static::showForForm($item, $withtemplate);
-            break;
+      if ($item instanceof PluginFormcreatorForm) {
+         static::showForForm($item, $withtemplate);
       }
    }
 
@@ -80,7 +78,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       global $DB, $CFG_GLPI;
 
       echo "<form name='form_profiles_form' id='form_profiles_form'
-             method='post' action=' ";
+             method='post' action='";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo '<table class="tab_cadre_fixe">';
 
@@ -167,7 +165,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          echo '<td class="center" colspan="2">';
             echo Html::hidden('profiles_id[]', ['value' => '0']);
             echo Html::hidden($formFk, ['value' => $item->fields['id']]);
-            echo '<input type="submit" name="update" value="'.__('Save').'" class="submit" />';
+            echo '<input type="submit" class="btn btn-primary me-2" name="update" value="'.__('Save').'" class="submit" />';
          echo "</td>";
       echo "</tr>";
 

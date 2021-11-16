@@ -39,7 +39,7 @@ class PluginFormcreatorTranslation
     * get a HTML dropdown of translatable strings
     *
     * @param array $options
-    * @return string
+    * @return string|void
     */
    public static function dropdown(array $options) {
       $params = [
@@ -92,7 +92,7 @@ class PluginFormcreatorTranslation
          $post['searchText'] = '';
       }
 
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
       $strings = $form->getTranslatableStrings([
          'language' => $formLanguage->fields['name'],
@@ -130,7 +130,13 @@ class PluginFormcreatorTranslation
          }
       }
 
-      $ret['results'] = Toolbox::unclean_cross_side_scripting_deep($data);
+      if (class_exists(\Glpi\Toolbox\Sanitizer::class)) {
+         // GLPI 10
+         $data = \Glpi\Toolbox\Sanitizer::unsanitize($data);
+      } else {
+         $data = Toolbox::unclean_cross_side_scripting_deep($data);
+      }
+      $ret['results'] = $data;
       $ret['count']   = $count;
 
       return ($json === true) ? json_encode($ret) : $ret;
@@ -145,7 +151,7 @@ class PluginFormcreatorTranslation
     */
    public static function getEditorFieldsHtml(PluginFormcreatorForm_Language $formLanguage, string $id = '') {
       $out = '';
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
 
       // Find the strings to translate
@@ -213,12 +219,14 @@ class PluginFormcreatorTranslation
     * @return bool
     */
    public function add(array $input) : bool {
+      global $TRANSLATE;
+
       $formLanguage = new PluginFormcreatorForm_Language();
       if (!$formLanguage->getFromDB($input['plugin_formcreator_forms_languages_id'])) {
          Session::addMessageAfterRedirect(__('Language not found.', 'formcreator'), false, ERROR);
          return false;
       }
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       if (!$form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id'])) {
          Session::addMessageAfterRedirect(__('Form not found.', 'formcreator'), false, ERROR);
          return false;
@@ -230,12 +238,14 @@ class PluginFormcreatorTranslation
       $type = $translatableStrings['id'][$input['id']];
       $original = $translatableStrings[$type][$input['id']];
 
-      $translations[$original] = $input['value'];
+      $translations[$original] = Toolbox::stripslashes_deep($input['value']);
 
       if (!$form->setTranslations($formLanguage->fields['name'], $translations)) {
          Session::addMessageAfterRedirect(__('Failed to add the translation.', 'formcreator'), false, ERROR);
          return false;
       }
+      $domain = PluginFormcreatorForm::getTranslationDomain($form->getID(), $formLanguage->fields['name']);
+      $TRANSLATE->clearCache($domain, $formLanguage->fields['name']);
 
       return true;
    }
@@ -249,7 +259,7 @@ class PluginFormcreatorTranslation
    public function delete(PluginFormcreatorForm_Language $formLanguage, $input) : bool {
       global $TRANSLATE;
 
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       if (!$form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id'])) {
          return false;
       }

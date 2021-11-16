@@ -71,7 +71,7 @@ class Config extends CommonTestCase {
 
       $pluginName = TEST_PLUGIN_NAME;
 
-      $this->given(self::setupGLPIFramework())
+      $this->given($this->setupGLPIFramework())
            ->and($this->boolean($DB->connected)->isTrue());
 
       //Drop plugin configuration if exists
@@ -128,16 +128,18 @@ class Config extends CommonTestCase {
       $this->testPluginName();
 
       $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
-      while ($fresh_table = $fresh_tables->next()) {
+      foreach ($fresh_tables as $fresh_table) {
          $table = $fresh_table['TABLE_NAME'];
          $this->boolean($this->olddb->tableExists($table, false))
-            ->isTrue("Table $table does not exists in after an upgrade from an old version!");
+            ->isTrue("Table $table does not exist after an upgrade from an old version!");
 
-         $create = $DB->getTableSchema($table);
+         $tableStructure = $DB->query("SHOW CREATE TABLE `$table`")->fetch_row()[1];
+         $create = $this->getTableSchema($table, $tableStructure);
          $fresh = $create['schema'];
          $fresh_idx = $create['index'];
 
-         $update = $this->olddb->getTableSchema($table);
+         $tableStructure = $this->olddb->query("SHOW CREATE TABLE `$table`")->fetch_row()[1];
+         $update = $this->getTableSchema($table, $tableStructure);
          $updated = $update['schema'];
          $updated_idx = $update['index'];
 
@@ -191,5 +193,101 @@ class Config extends CommonTestCase {
 
       $file = GLPI_ROOT . '/files/_plugins/' . $pluginName . '/font-awesome.php';
       $this->boolean(is_readable($file))->isTrue();
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param string $table
+    * @param string|null $structure
+    * @return array
+    */
+   public function getTableSchema($table, $structure = null) {
+      global $DB;
+
+      if ($structure === null) {
+         $structure = $DB->query("SHOW CREATE TABLE `$table`")->fetch_row();
+         $structure = $structure[1];
+      }
+
+      //get table index
+      $index = preg_grep(
+         "/^\s\s+?KEY/",
+         array_map(
+            function($idx) { return rtrim($idx, ','); },
+            explode("\n", $structure)
+         )
+      );
+      //get table schema, without index, without AUTO_INCREMENT
+      $structure = preg_replace(
+         [
+            "/\s\s+KEY .*/",
+            "/AUTO_INCREMENT=\d+ /"
+         ],
+         "",
+         $structure
+      );
+      $structure = preg_replace('/,(\s)?$/m', '', $structure);
+      $structure = preg_replace('/ COMMENT \'(.+)\'/', '', $structure);
+
+      $structure = str_replace(
+         [
+            " COLLATE utf8mb4_unicode_ci",
+            " CHARACTER SET utf8mb4",
+            " COLLATE utf8_unicode_ci",
+            " CHARACTER SET utf8",
+            ', ',
+         ], [
+            '',
+            '',
+            '',
+            '',
+            ',',
+         ],
+         trim($structure)
+      );
+
+      //do not check engine nor collation
+      $structure = preg_replace(
+         '/\) ENGINE.*$/',
+         '',
+         $structure
+      );
+
+      //Mariadb 10.2 will return current_timestamp()
+      //while older retuns CURRENT_TIMESTAMP...
+      $structure = preg_replace(
+         '/ CURRENT_TIMESTAMP\(\)/i',
+         ' CURRENT_TIMESTAMP',
+         $structure
+      );
+
+      //Mariadb 10.2 allow default values on longblob, text and longtext
+      $defaults = [];
+      preg_match_all(
+         '/^.+ ((medium|long)?(blob|text)) .+$/m',
+         $structure,
+         $defaults
+      );
+      if (count($defaults[0])) {
+         foreach ($defaults[0] as $line) {
+               $structure = str_replace(
+                  $line,
+                  str_replace(' DEFAULT NULL', '', $line),
+                  $structure
+               );
+         }
+      }
+
+      $structure = preg_replace("/(DEFAULT) ([-|+]?\d+)(\.\d+)?/", "$1 '$2$3'", $structure);
+      //$structure = preg_replace("/(DEFAULT) (')?([-|+]?\d+)(\.\d+)(')?/", "$1 '$3'", $structure);
+
+      // Remove integer display width
+      $structure = preg_replace('/(INT)\(\d+\)/i', '$1', $structure);
+
+      return [
+         'schema' => strtolower($structure),
+         'index'  => $index
+      ];
    }
 }

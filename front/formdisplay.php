@@ -34,11 +34,10 @@ include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   PluginFormcreatorForm::header();
    Html::displayNotFoundError();
 }
 
-PluginFormcreatorForm::header();
+PluginFormcreatorCommon::header();
 
 if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
@@ -48,36 +47,20 @@ if (isset($_REQUEST['id'])
       'is_active' => '1',
       'is_deleted'=> '0',
    ];
-   $form = new PluginFormcreatorForm();
+   $form = PluginFormcreatorCommon::getForm();
    if (!$form->getFromDBByCrit($criteria)) {
       Html::displayNotFoundError();
    }
 
-   if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
-      Session::checkLoginUser();
-      if (!$form->checkEntity(true)) {
-         Html::displayRightError();
-         exit();
-      }
-   }
-
-   if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-      $iterator = $DB->request(PluginFormcreatorForm_Profile::getTable(), [
-         'WHERE' => [
-            'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
-            'plugin_formcreator_forms_id' => $form->getID()
-         ],
-         'LIMIT' => 1
-      ]);
-      if (count($iterator) == 0) {
-         Html::displayRightError();
-         exit();
-      }
+   if (!$form->canViewForRequest()) {
+      Html::displayRightError();
+      exit();
    }
    if (($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
       // If user is not authenticated, create temporary user
       if (!isset($_SESSION['glpiname'])) {
          $_SESSION['formcreator_forms_id'] = $form->getID();
+         $_SESSION['formcreator_anonymous'] = true;
          $_SESSION['glpiname'] = 'formcreator_temp_user';
          $_SESSION['valid_id'] = session_id();
          $_SESSION['glpiactiveentities'] = [$form->fields['entities_id']];
@@ -85,19 +68,21 @@ if (isset($_REQUEST['id'])
          $_SESSION['glpiactiveentities_string'] = (!empty($subentities))
                                                 ? "'" . implode("', '", $subentities) . "'"
                                                 : "'" . $form->fields['entities_id'] . "'";
+         $_SESSION['glpilanguage'] = $form->getBestLanguage();
       }
    }
 
    $form->displayUserForm();
 
    // If user was not authenticated, remove temporary user
-   if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
-      session_write_close();
+   if (isset($_SESSION['formcreator_anonymous'])) {
       unset($_SESSION['glpiname']);
+      unset($_SESSION['formcreator_anonymous']);
+      session_write_close();
    }
 } else if (isset($_GET['answer_saved'])) {
    $message = __("The form has been successfully saved!");
    Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
 }
 
-PluginFormcreatorForm::footer();
+PluginFormcreatorCommon::footer();
