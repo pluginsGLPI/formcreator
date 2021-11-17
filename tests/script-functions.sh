@@ -24,6 +24,7 @@ install_glpi() {
    composer install --no-dev --no-interaction
    php bin/console dependencies install composer-options=--no-dev
    php bin/console locales:compile
+   php bin/console glpi:build:compile_scss
    php bin/console glpi:system:check_requirements
    rm .atoum.php
    mkdir -p tests/files/_cache

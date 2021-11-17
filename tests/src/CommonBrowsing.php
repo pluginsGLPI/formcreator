@@ -31,23 +31,23 @@ class CommonBrowsing {
       $this->test->crawler = $this->test->client->request('GET', '/');
 
       // screenshot
-      $this->test->client->waitForVisibility('#boxlogin > form');
+      $this->test->client->waitForVisibility('.page-anonymous  form input#login_name');
       $this->test->takeScreenshot();
-      $form = $this->test->crawler->filter('#boxlogin > form')->form();
+      $form = $this->test->crawler->filter('.page-anonymous  form')->form();
 
       // Login as glpi
       $login = $this->test->crawler->filter('input#login_name')->attr('name');
-      $passwd = $this->test->crawler->filter('input#login_password')->attr('name');
+      $passwd = $this->test->crawler->filter('input[type="password"]')->attr('name');
       $form[$login] = $user;
       $form[$passwd] = $password;
       $this->test->crawler = $this->test->client->submit($form);
 
-      $this->test->client->waitFor('#footer');
+      $this->test->client->waitFor('#backtotop'); // back to top button in footer
    }
 
    public function logout() {
       $this->test->crawler = $this->test->client->request('GET', '/front/logout.php?noAUTO=1');
-      $this->test->client->waitFor('#display-login');
+      $this->test->client->waitFor('.page-anonymous');
    }
 
    /**
@@ -104,18 +104,17 @@ class CommonBrowsing {
 
    public function openTab($title) {
       // Get the anchor to click
-      $tabNameSelector = '.ui-tabs-tab > a[title="' . $title . '"]';
+      $tabNameSelector = '.nav.nav-tabs a[title="' . $title . '"]';
       $anchor = $this->test->crawler->filter($tabNameSelector);
 
       // Get the ID of the display area of the tab
-      $anchorId = $anchor->attr('id');
-      $tabDisplayId = $this->test->crawler->filter('.ui-tabs-tab[aria-labelledby="' . $anchorId . '"]')->attr('aria-controls');
+      $tabId = $anchor->attr('data-bs-target');
 
       // Click the name of the tab to show it
       $this->test->client->executeScript("
-         $('" . $tabNameSelector . "').click();
+         document.querySelector('" . $tabNameSelector . "').click();
       ");
-      $this->test->client->waitFor('#' . $tabDisplayId . ' > *:not(#loadingtabs)');
+      $this->test->client->waitFor($tabId . ' > *:not(i.fa-spinner)');
 
       // TODO : Check the tab area is now visible
    }
