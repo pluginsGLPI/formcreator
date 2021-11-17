@@ -314,6 +314,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // Location selection
       // -------------------------------------------------------------------------------------------
       $item->showLocationSettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      // Validation selection
+      // -------------------------------------------------------------------------------------------
+      $item->showValidationSettings($rand);
+
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
@@ -931,6 +937,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $data = $this->setTargetUrgency($data, $formanswer);
       $data = $this->setTargetLocation($data, $formanswer);
       $data = $this->setTargetAssociatedItem($data, $formanswer);
+      $data = $this->setTargetValidation($data, $formanswer);
 
       // There is always at least one requester
       $data = $this->requesters + $data;

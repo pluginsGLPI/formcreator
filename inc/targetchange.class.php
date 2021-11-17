@@ -605,6 +605,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       // -------------------------------------------------------------------------------------------
       $item->showPluginTagsSettings($rand);
 
+      // -------------------------------------------------------------------------------------------
+      // Validation selection
+      // -------------------------------------------------------------------------------------------
+      $item->showValidationSettings($rand);
+
       echo '<tr>';
       echo '<td colspan="4" class="center">';
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -860,6 +865,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
+      $data = $this->setTargetValidation($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;

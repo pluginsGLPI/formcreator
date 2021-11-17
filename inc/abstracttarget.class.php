@@ -195,6 +195,10 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
 
+   const VALIDATION_RULE_NONE = 1;
+   const VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
+   const VALIDATION_RULE_ANSWER_USER = 3;
+
    const OLA_RULE_NONE = 1;
    const OLA_RULE_SPECIFIC = 2;
    const OLA_RULE_FROM_ANWSER = 3;
@@ -289,6 +293,13 @@ PluginFormcreatorTranslatableInterface
       ];
    }
 
+   public static function getEnumValidationRule() {
+      return [
+         self::VALIDATION_RULE_NONE                      => __('No validation', 'formcreator'),
+         self::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP    => __('Specific user or group', 'formcreator'),
+         self::VALIDATION_RULE_ANSWER_USER               => __('User from question answer', 'formcreator'),
+      ];
+   }
 
    public function isEntityAssign() {
       return false;
@@ -1501,6 +1512,79 @@ SCRIPT;
       echo '</tr>';
    }
 
+   protected function showValidationSettings($rand) {
+      echo '<tr>';
+
+      // Setting label
+      echo '<td width="15%">' . __('Validation') . '</td>';
+
+      // Possible values
+      echo '<td width="45%">';
+      Dropdown::showFromArray('validation_rule', static::getEnumValidationRule(), [
+         'value'     => $this->fields['validation_rule'],
+         'on_change' => "plugin_formcreator_change_validation($rand)",
+         'rand'      => $rand
+      ]);
+      echo Html::scriptBlock("plugin_formcreator_change_validation($rand)");
+      echo '</td>';
+
+      // Hidden secondary labels, displayed according to the user main choice
+      echo '<td width="15%">';
+      $titles = [
+         'validation_specific_title'       => __('Approver'),                 // VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
+         'validation_from_question_title'  => __('Question', 'formcreator'),  // VALIDATION_RULE_ANSWER_USER
+      ];
+      foreach ($titles as $id => $title) {
+         echo "<span id='$id' style='display: none'>$title</span>";
+      }
+      echo '</td>';
+
+      // Hidden secondary values, displayed according to the user main choice
+      echo '<td width="25%">';
+
+      // VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
+      echo '<div id="validation_specific" style="display: none">';
+      $validation_dropdown_params = [
+         'name' => 'validation_specific'
+      ];
+      $validation_data = json_decode($this->fields['validation_question'], true);
+      if (!is_null($validation_data) && isset($validation_data['type'])) {
+         $validation_dropdown_params['users_id_validate'] = $validation_data['values'];
+      }
+      CommonITILValidation::dropdownValidator($validation_dropdown_params);
+      echo '</div>';
+
+      // VALIDATION_RULE_ANSWER_USER
+      echo '<div id="validation_answer_user" style="display: none">';
+      $question = new PluginFormcreatorQuestion();
+      $form_questions = $question->getQuestionsFromForm($this->getForm()->getID(), [
+         'fieldtype' => ['actor', 'glpiselect']
+      ]);
+      $user_questions = [];
+      foreach ($form_questions as $id => $form_question) {
+         if ($form_question->fields['fieldtype'] == 'actor') {
+            // Get all "actor" questions
+            $user_questions[$id] = $form_question->fields['name'];
+         } else if ($form_question->fields['fieldtype'] == 'glpiselect') {
+             // Get all "glpiselect" question on users
+            $decoded_values = json_decode(
+               $form_question->fields['values'],
+               JSON_OBJECT_AS_ARRAY
+            );
+            if (($decoded_values['itemtype'] ?? "") === 'User') {
+               $user_questions[$id] = $form_question->fields['name'];
+            }
+         }
+      }
+      Dropdown::showFromArray('_validation_from_user_question', $user_questions, [
+         'value' => $this->fields['validation_question'],
+      ]);
+      echo '</div>';
+
+      echo '</td>';
+      echo '</tr>';
+   }
+
    /**
     * Sets the time to resolve of the target object
     *
@@ -1569,6 +1653,60 @@ SCRIPT;
       return $data;
    }
 
+   /**
+    * Sets the time to resolve of the target object
+    *
+    * @param array $data data of the target object
+    * @param PluginFormcreatorFormAnswer $formanswer    Answers previously saved
+    * @return array updated data of the target object
+    */
+   protected function setTargetValidation(
+      $data,
+      PluginFormcreatorFormAnswer $formanswer
+   ) {
+      global $DB;
+
+      switch ($this->fields['validation_rule']) {
+         case self::VALIDATION_RULE_NONE:
+         default:
+            // No action
+            break;
+
+         case self::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+            $validation_data = json_decode($this->fields['validation_question'], true);
+
+            if (!is_null($validation_data)) {
+               $data['validatortype'] = $validation_data['type'];
+               $data['users_id_validate'] = $validation_data['values'];
+            }
+
+            break;
+
+         case self::VALIDATION_RULE_ANSWER_USER:
+            $answers = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['validation_question']
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Answer may be "2" or [2], both valid json
+               $answer = json_decode($answer['answer']);
+               if (!is_array($answer)) {
+                  $answer = [$answer];
+               }
+               $data['validatortype'] = 'user';
+               $data['users_id_validate'] = $answer;
+               break;
+            }
+      }
+
+      return $data;
+   }
+
    public function prepareInputForAdd($input) {
       if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
          $this->skipCreateActors = true;
@@ -1632,6 +1770,24 @@ SCRIPT;
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      switch ($input['validation_rule']) {
+         default:
+         case self::VALIDATION_RULE_NONE:
+            $input['validation_question'] = '0';
+            break;
+
+         case self::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+            $input['validation_question'] = json_encode([
+               'type'   => $input['validatortype'],
+               'values' => $input['validation_specific']
+            ]);
+            break;
+
+         case self::VALIDATION_RULE_ANSWER_USER:
+            $input['validation_question'] = $input['_validation_from_user_question'];
+            break;
       }
 
       return $input;

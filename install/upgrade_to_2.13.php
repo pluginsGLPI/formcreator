@@ -41,6 +41,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->defaultValuesForTargets();
       $this->migrateItemtypeInQuestion();
       $this->fixInconsistency();
+      $this->addTargetValidationSetting();
    }
 
    public function addFormAnswerTitle() {
@@ -113,5 +114,15 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_answers';
       $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', 'integer', ['value' => '0']);
       $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer', ['value' => '0']);
+   }
+
+   protected function addTargetValidationSetting() {
+      $table = 'glpi_plugin_formcreator_targetchanges';
+      $this->migration->addField($table, 'validation_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
+      $this->migration->addField($table, 'validation_question', 'string', ['after' => 'validation_rule']);
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $this->migration->addField($table, 'validation_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
+      $this->migration->addField($table, 'validation_question', 'string', ['after' => 'validation_rule']);
    }
 }
