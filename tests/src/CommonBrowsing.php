@@ -16,6 +16,10 @@ class CommonBrowsing {
    private $selectors = [
       // Selectors available in the header of GLPI (most pages)
       '_header' => [
+         'user menu'                     => 'aside.navbar .user-menu a',
+         'entity select dialog'          => 'aside.navbar .dropdown-menu.dropdown-menu-end .dropstart + .dropstart a',
+         'entity search input'           => 'input[name="entsearchtext"]',
+
          'globalEntitySelect'            => '#global_entity_select',
          'entityTreeView'                => 'ul.jstree-container-ul',
          'entityTreeView-rootEntity'     => 'ul.jstree-container-ul li[aria-labelledby="0r_anchor"]',
@@ -57,49 +61,25 @@ class CommonBrowsing {
     * @param bool    $subtree if true, select the subtree of the entity
     */
    public function changeActiveEntity(Entity $entity, bool $subtree) {
-      // Open the entity selection modal
-      $this->test->crawler->filter($this->selectors['_header']['globalEntitySelect'])->link();
+      // Open the user menu
       $this->test->client->executeScript("
-         $('" . $this->selectors['_header']['globalEntitySelect'] . "').click();
+         document.querySelector('" . $this->selectors['_header']['user-menu'] . "').click();
       ");
-      $this->test->client->waitFor($this->selectors['_header']['entityTreeView-rootEntity']);
+      $this->test->client->waitForVisibility($this->selectors['_header']['entity select dialog']);
 
-      // Develop all ancestors to the entity to select
-      $dbUtils = new DbUtils();
-      $ancestors = $dbUtils->getAncestorsOf($entity->getTable(), $entity->getID());
-      foreach ($ancestors as $ancestor) {
-         if ($ancestor == '0') {
-            $ancestor = $ancestor . 'r';
-         }
-         $selector = $this->selectors['_header']['entityTreeView'] . ' li[aria-labelledby="' . $ancestor . '_anchor"] i.jstree-icon.jstree-ocl';
-         $this->test->client->executeScript("
-            $('" . $selector . "').click();
-         ");
-         $this->test->client->waitFor($this->selectors['_header']['entityTreeView'] . ' li[aria-labelledby="' . $ancestor . '_anchor"].jstree-open');
-      }
-
-      // click the entity to activate
-      $id = $entity->getID();
-      if ($id == '0') {
-         $id = $id . 'r';
-      }
-      $selector = $this->selectors['_header']['entityTreeView'] . " a#${id}_anchor";
-      if ($subtree && $entity->haveChildren()) {
-         // select the subtree
-         $selector = $selector . 'i:nth-child(2)';
-      }
+      // Open the entity selection dialog
       $this->test->client->executeScript("
-         $('" . $selector . "').click();
+         document.querySelector('" . $this->selectors['_header']['entity select dialog'] . "').click();
       ");
-      $this->test->crawler = $this->test->client->waitFor($this->selectors['_header']['globalEntitySelect']);
+      $this->test->client->waitForVisibility($this->selectors['_header']['entity search input']);
 
-      //Check the entity is the selected one
-      $expectedNnewEntity = $entity->fields['name'];
-      if ($subtree && $entity->haveChildren()) {
-         $expectedNnewEntity .= ' (tree structure)';
-      }
-      $newEntity = $this->test->crawler->filter($this->selectors['_header']['globalEntitySelect'])->text();
-      $this->test->string($newEntity)->isEqualTo($expectedNnewEntity);
+      //
+      $this->test->client->executeScript("
+         document.querySelector('" . $this->selectors['_header']['entity search input'] . "').value('" . addcslashes($entity->fields['name'], "'") . "');
+      ");
+      $this->test->client->waitForVisibility('tr[id="ui-id-' . $entity->getID() . '"] .fancytree-title');
+
+      // TODO : Find a way to select the entity to use. Thre is nothing in the DOM to select it
    }
 
    public function openTab($title) {

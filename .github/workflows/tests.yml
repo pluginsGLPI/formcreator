@@ -18,6 +18,18 @@ env:
   NOCOVERAGE: -ncc
   COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
   CHROME_DRIVER_BINARY: chromedriver
+  SKIP_INIT: false
+  SKIP_FRESH_GLPI_INSTALL: false
+  SKIP_UPGRADE_GLPI_INSTALL: false
+  SKIP_INSTALL_PLUGIN_DEPENDENCIES: false
+  SKIP_UPGRADE_TESTS: false
+  SKIP_INSTALL_TESTS: false
+  SKIP_TESTS: false
+  SKIP_FUNCTIONAL_TESTS: true
+  SKIP_UNINSTALLL_TESTS: false
+  SKIP_LINT_TESTS: false
+  SKIP_CS_TESTS: false
+  SKIP_PANTHER_INSTALL: true
 
 jobs:
   tests:
@@ -73,20 +85,23 @@ jobs:
         run: |
           . ./tests/script-functions.sh
           . ./tests/script-specific-functions.sh
-          init_databases
-          install_glpi && init_plugin
+          $SKIP_INIT || init_databases
+          $SKIP_INIT || install_glpi
+          $SKIP_INIT || init_plugin
           export TEST_GLPI_CONFIG_DIR="tests/config-$OLD_DB_NAME"
-          init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD
+          $SKIP_UPGRADE_GLPI_INSTALL || init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD
           echo status of plugins
           mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
-          plugin_test_upgrade
+          $SKIP_UPGRADE_TESTS || plugin_test_upgrade
           export TEST_GLPI_CONFIG_DIR="tests/config-$DB_NAME"
-          init_glpi $DB_NAME $DB_USER $DB_PASSWD
-          plugin_test_install
+          $SKIP_FRESH_GLPI_INSTALL || init_glpi $DB_NAME $DB_USER $DB_PASSWD
+          $SKIP_INSTALL_TESTS || plugin_test_install
           mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
-          plugin_test
+          $SKIP_TESTS || plugin_test
           plugin_test_functional
-          plugin_test_uninstall
+          $SKIP_UNINSTALL_TESTS || plugin_test_uninstall
+          $SKIP_LINT_TESTS || plugin_test_lint
+          $SKIP_CS_TESTS || plugin_test_cs
 
   style:
     strategy:
