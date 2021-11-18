@@ -428,7 +428,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
       // TODO: remive the fixed width
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
+      echo '<td>';
+      echo Html::input('name', [
+         'id' => 'name',
+         'autofocus' => '',
+         'value' => $this->fields['name'],
+      ]);
+      echo '</td>';
       echo '</tr>';
       echo '</table>';
 
@@ -439,7 +445,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       echo '<tr>';
       echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"></td>';
+      echo '<td colspan="3">';
+      echo Html::input('target_name', [
+         'id' => 'target_name',
+         'autofocus' => '',
+         'value' => $this->fields['target_name'],
+      ]);
+      echo '</td>';
       echo '</tr>';
 
       echo '<tr>';
