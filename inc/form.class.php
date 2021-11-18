@@ -422,7 +422,14 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr class="tab_bg_1">';
       echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
-      echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      // echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      echo '<td width="30%">';
+      echo Html::input('name', [
+         'id' => 'name',
+         'autofocus' => '',
+         'value' => $this->fields['name'],
+      ]);
+      echo '</td>';
       echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
       echo '<td width="30%">';
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
@@ -461,7 +468,12 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr class="tab_bg_1">';
       echo '<td>' . __('Description') . '</td>';
-      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="35" /></td>';
+      echo '<td>';
+      echo Html::input('description', [
+         'id' => 'name',
+         'value' => $this->fields['description'],
+      ]);
+      echo '</td>';
       echo '<td>' . __('Language') . '</td>';
       echo '<td>';
       Dropdown::showLanguages('language', [
