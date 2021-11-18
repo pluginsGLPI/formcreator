@@ -415,8 +415,6 @@ PluginFormcreatorTranslatableInterface
     * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options = []) {
-      global $DB, $CFG_GLPI;
-
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
