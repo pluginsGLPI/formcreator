@@ -2164,7 +2164,7 @@ SCRIPT;
       echo '<p align="center">';
       echo Html::hidden('id', ['value' => $this->getID()]);
       echo Html::hidden('actor_role', ['value' => $actorRole]);
-      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update_actors', 'value' => __('Add')]);
       echo '</p>';
 
       echo "<hr>";
