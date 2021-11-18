@@ -539,12 +539,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       // dropdown of questions of type GLPI Object / Ticket
       echo '<span id="plugin_formcreator_link_question" style="display: none">';
-      PluginFormcreatorQuestion::dropdownForForm(
+      echo PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'itemtype'  => [Ticket::class],
             'used'      => $excludedQuestionIds,
+            'display'   => false,
          ],
          '_link_plugin_formcreator_questions_id',
          null
