@@ -22,7 +22,7 @@ trait CommonQuestionTest
 
       // navigate to the form designer
       $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.form.php?id=' . $form->getID());
-      $this->client->waitFor('footer');
+      $this->client->waitFor('[role="tablist"]');
       $this->browsing->openTab('Questions');
       $this->client->waitFor('#plugin_formcreator_form.plugin_formcreator_form_design');
 

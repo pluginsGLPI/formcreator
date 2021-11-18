@@ -13,11 +13,23 @@ env:
   DB_NAME: glpitest
   OLD_DB_NAME: glpiupgradetest
   PLUGINNAME: formcreator
-  AFTER_SUCCESS_BRANCH: 9.5/bugfixes
-  ATOUM_ARG: --force-terminal
+  AFTER_SUCCESS_BRANCH: master
+  ATOUM_ARG: --force-terminal --use-dot-report
   NOCOVERAGE: -ncc
   COVERAGE: --nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild
   CHROME_DRIVER_BINARY: chromedriver
+  SKIP_INIT: false
+  SKIP_FRESH_GLPI_INSTALL: false
+  SKIP_UPGRADE_GLPI_INSTALL: false
+  SKIP_INSTALL_PLUGIN_DEPENDENCIES: false
+  SKIP_UPGRADE_TESTS: false
+  SKIP_INSTALL_TESTS: false
+  SKIP_TESTS: false
+  SKIP_FUNCTIONAL_TESTS: true
+  SKIP_UNINSTALLL_TESTS: false
+  SKIP_LINT_TESTS: false
+  SKIP_CS_TESTS: false
+  SKIP_PANTHER_INSTALL: true
 
 jobs:
   tests:
@@ -25,12 +37,12 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php-versions: [7.2]
+        php-versions: [7.4]
         env:
-          - { GLPI_BRANCH: 9.5/bugfixes, SKIP_FUNCTIONAL_TESTS: false }
+          - { GLPI_BRANCH: master, SKIP_FUNCTIONAL_TESTS: false }
     services:
       db:
-        image: mariadb:10.1
+        image: mariadb:10.2
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
@@ -48,9 +60,12 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: curl, fileinfo, gd, json, mbstring, mysqli, zlib, simplexml, xml, intl, bz2
           coverage: xdebug
-      - name: "get browser"
+      - name: "install packages"
         run: |
           sudo apt update
+          sudo apt install gettext
+      - name: "get browser"
+        run: |
           sudo apt install chromium-browser chromium-chromedriver
       - name: "Check tools"
         run: |
@@ -70,20 +85,23 @@ jobs:
         run: |
           . ./tests/script-functions.sh
           . ./tests/script-specific-functions.sh
-          init_databases
-          install_glpi && install_plugin
+          $SKIP_INIT || init_databases
+          $SKIP_INIT || install_glpi
+          $SKIP_INIT || init_plugin
           export TEST_GLPI_CONFIG_DIR="tests/config-$OLD_DB_NAME"
-          init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD && init_plugin
+          $SKIP_UPGRADE_GLPI_INSTALL || init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD
           echo status of plugins
           mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
-          plugin_test_upgrade
+          $SKIP_UPGRADE_TESTS || plugin_test_upgrade
           export TEST_GLPI_CONFIG_DIR="tests/config-$DB_NAME"
-          init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
-          plugin_test_install
+          $SKIP_FRESH_GLPI_INSTALL || init_glpi $DB_NAME $DB_USER $DB_PASSWD
+          $SKIP_INSTALL_TESTS || plugin_test_install
           mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
-          plugin_test
+          $SKIP_TESTS || plugin_test
           plugin_test_functional
-          plugin_test_uninstall
+          $SKIP_UNINSTALL_TESTS || plugin_test_uninstall
+          $SKIP_LINT_TESTS || plugin_test_lint
+          $SKIP_CS_TESTS || plugin_test_cs
 
   style:
     strategy:
