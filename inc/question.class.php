@@ -777,7 +777,8 @@ PluginFormcreatorTranslatableInterface
          'id' => 'name',
          'autofocus' => '',
          'value' => $this->fields['name'],
-         'class' => 'form-control required',
+         'class' => 'form-control',
+         'required' => 'required'
       ]);
       echo '</td>';
 
