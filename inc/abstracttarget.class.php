@@ -195,9 +195,9 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
 
-   const VALIDATION_RULE_NONE = 1;
-   const VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
-   const VALIDATION_RULE_ANSWER_USER = 3;
+   const COMMONITIL_VALIDATION_RULE_NONE = 1;
+   const COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
+   const COMMONITIL_VALIDATION_RULE_ANSWER_USER = 3;
 
    const OLA_RULE_NONE = 1;
    const OLA_RULE_SPECIFIC = 2;
@@ -295,9 +295,9 @@ PluginFormcreatorTranslatableInterface
 
    public static function getEnumValidationRule() {
       return [
-         self::VALIDATION_RULE_NONE                      => __('No validation', 'formcreator'),
-         self::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP    => __('Specific user or group', 'formcreator'),
-         self::VALIDATION_RULE_ANSWER_USER               => __('User from question answer', 'formcreator'),
+         self::COMMONITIL_VALIDATION_RULE_NONE                      => __('No validation', 'formcreator'),
+         self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP    => __('Specific user or group', 'formcreator'),
+         self::COMMONITIL_VALIDATION_RULE_ANSWER_USER               => __('User from question answer', 'formcreator'),
       ];
    }
 
@@ -1520,8 +1520,8 @@ SCRIPT;
 
       // Possible values
       echo '<td width="45%">';
-      Dropdown::showFromArray('validation_rule', static::getEnumValidationRule(), [
-         'value'     => $this->fields['validation_rule'],
+      Dropdown::showFromArray('commonitil_validation_rule', static::getEnumValidationRule(), [
+         'value'     => $this->fields['commonitil_validation_rule'],
          'on_change' => "plugin_formcreator_change_validation($rand)",
          'rand'      => $rand
       ]);
@@ -1531,8 +1531,8 @@ SCRIPT;
       // Hidden secondary labels, displayed according to the user main choice
       echo '<td width="15%">';
       $titles = [
-         'validation_specific_title'       => __('Approver'),                 // VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-         'validation_from_question_title'  => __('Question', 'formcreator'),  // VALIDATION_RULE_ANSWER_USER
+         'validation_specific_title'       => __('Approver'),                 // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
+         'validation_from_question_title'  => __('Question', 'formcreator'),  // COMMONITIL_VALIDATION_RULE_ANSWER_USER
       ];
       foreach ($titles as $id => $title) {
          echo "<span id='$id' style='display: none'>$title</span>";
@@ -1542,19 +1542,19 @@ SCRIPT;
       // Hidden secondary values, displayed according to the user main choice
       echo '<td width="25%">';
 
-      // VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
+      // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
       echo '<div id="validation_specific" style="display: none">';
       $validation_dropdown_params = [
          'name' => 'validation_specific'
       ];
-      $validation_data = json_decode($this->fields['validation_question'], true);
-      if (!is_null($validation_data) && isset($validation_data['type'])) {
+      $validation_data = json_decode($this->fields['commonitil_validation_question'], true);
+      if (isset($validation_data['type'])) {
          $validation_dropdown_params['users_id_validate'] = $validation_data['values'];
       }
       CommonITILValidation::dropdownValidator($validation_dropdown_params);
       echo '</div>';
 
-      // VALIDATION_RULE_ANSWER_USER
+      // COMMONITIL_VALIDATION_RULE_ANSWER_USER
       echo '<div id="validation_answer_user" style="display: none">';
       $question = new PluginFormcreatorQuestion();
       $form_questions = $question->getQuestionsFromForm($this->getForm()->getID(), [
@@ -1577,7 +1577,7 @@ SCRIPT;
          }
       }
       Dropdown::showFromArray('_validation_from_user_question', $user_questions, [
-         'value' => $this->fields['validation_question'],
+         'value' => $this->fields['commonitil_validation_question'],
       ]);
       echo '</div>';
 
@@ -1666,14 +1666,14 @@ SCRIPT;
    ) {
       global $DB;
 
-      switch ($this->fields['validation_rule']) {
-         case self::VALIDATION_RULE_NONE:
+      switch ($this->fields['commonitil_validation_rule']) {
+         case self::COMMONITIL_VALIDATION_RULE_NONE:
          default:
             // No action
             break;
 
-         case self::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
-            $validation_data = json_decode($this->fields['validation_question'], true);
+         case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+            $validation_data = json_decode($this->fields['commonitil_validation_question'], true);
 
             if (!is_null($validation_data)) {
                $data['validatortype'] = $validation_data['type'];
@@ -1682,13 +1682,13 @@ SCRIPT;
 
             break;
 
-         case self::VALIDATION_RULE_ANSWER_USER:
+         case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
             $answers = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
                'WHERE'  => [
                   'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
-                  'plugin_formcreator_questions_id'   => $this->fields['validation_question']
+                  'plugin_formcreator_questions_id'   => $this->fields['commonitil_validation_question']
                ]
             ]);
 
@@ -1772,21 +1772,21 @@ SCRIPT;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      switch ($input['validation_rule']) {
+      switch ($input['commonitil_validation_rule']) {
          default:
-         case self::VALIDATION_RULE_NONE:
-            $input['validation_question'] = '0';
+         case self::COMMONITIL_VALIDATION_RULE_NONE:
+            $input['vcommonitil_alidation_question'] = '0';
             break;
 
-         case self::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
-            $input['validation_question'] = json_encode([
+         case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+            $input['commonitil_validation_question'] = json_encode([
                'type'   => $input['validatortype'],
                'values' => $input['validation_specific']
             ]);
             break;
 
-         case self::VALIDATION_RULE_ANSWER_USER:
-            $input['validation_question'] = $input['_validation_from_user_question'];
+         case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
+            $input['commonitil_validation_question'] = $input['_validation_from_user_question'];
             break;
       }
 
