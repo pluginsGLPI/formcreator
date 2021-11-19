@@ -98,7 +98,7 @@ jobs:
           $SKIP_INSTALL_TESTS || plugin_test_install
           mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
           $SKIP_TESTS || plugin_test
-          plugin_test_functional
+          $SKIP_FUNCTIONAL_TESTS || plugin_test_functional
           $SKIP_UNINSTALL_TESTS || plugin_test_uninstall
           $SKIP_LINT_TESTS || plugin_test_lint
           $SKIP_CS_TESTS || plugin_test_cs
