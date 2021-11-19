@@ -1268,6 +1268,7 @@ PluginFormcreatorTranslatableInterface
       . ' class="plugin_formcreator_form"'
       . ' action="' . self::getFormURL() . '"'
       . ' id="plugin_formcreator_form"'
+      . ' data-itemtype="PluginFormcreatorForm"'
       . ' data-id="' . $formId . '"'
       . '>';
 
