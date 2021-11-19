@@ -518,7 +518,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr>';
       echo '<td>' . __('Answers title', 'formcretor') . '</td>';
-      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name'], 'style' => 'width: calc(100% - 10px)']) . '</td>';
+      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name']]) . '</td>';
       echo '</tr>';
 
       $this->showFormButtons($options);
