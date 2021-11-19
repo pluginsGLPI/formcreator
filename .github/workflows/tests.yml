@@ -39,7 +39,7 @@ jobs:
       matrix:
         php-versions: [7.4]
         env:
-          - { GLPI_BRANCH: master, SKIP_FUNCTIONAL_TESTS: false }
+          - { GLPI_BRANCH: master }
     services:
       db:
         image: mariadb:10.2
