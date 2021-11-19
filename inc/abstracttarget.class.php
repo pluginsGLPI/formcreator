@@ -1543,7 +1543,8 @@ SCRIPT;
       echo '<td width="25%">';
 
       // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-      echo '<div id="validation_specific" style="display: none">';
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      echo "<div id='validation_specific' style='$display'>";
       $validation_dropdown_params = [
          'name' => 'validation_specific'
       ];
@@ -1555,7 +1556,8 @@ SCRIPT;
       echo '</div>';
 
       // COMMONITIL_VALIDATION_RULE_ANSWER_USER
-      echo '<div id="validation_answer_user" style="display: none">';
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
+      echo "<div id='validation_answer_user' style='$display'>";
       $question = new PluginFormcreatorQuestion();
       $form_questions = $question->getQuestionsFromForm($this->getForm()->getID(), [
          'fieldtype' => ['actor', 'glpiselect']
@@ -1775,7 +1777,7 @@ SCRIPT;
       switch ($input['commonitil_validation_rule']) {
          default:
          case self::COMMONITIL_VALIDATION_RULE_NONE:
-            $input['vcommonitil_alidation_question'] = '0';
+            $input['commonitil_alidation_question'] = '0';
             break;
 
          case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
