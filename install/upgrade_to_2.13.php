@@ -41,6 +41,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->defaultValuesForTargets();
       $this->migrateItemtypeInQuestion();
       $this->fixInconsistency();
+      $this->migrateCategory();
    }
 
    public function addFormAnswerTitle() {
@@ -113,5 +114,23 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_answers';
       $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', 'integer', ['value' => '0']);
       $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer', ['value' => '0']);
+   }
+
+   public function migrateCategory() {
+      global $DB;
+      $table_categories = 'glpi_plugin_formcreator_categories';
+      if ($DB->tableExists($table_categories)) {
+         $table_forms = 'glpi_plugin_formcreator_forms';
+         $this->migration->addField($table_forms, 'knowbaseitemcategories_id', 'int', ['value' => '0', 'after' => 'plugin_formcreator_categories_id']);
+         $this->migration->addKey($table_forms, 'knowbaseitemcategories_id');
+         $this->migration->migrationOneTable($table_forms);
+         $query = "UPDATE `$table_forms` f
+                  INNER JOIN `$table_categories` fc
+                     ON fc.`plugin_formcreator_categories_id` = f.`plugin_formcreator_categories_id`
+                  SET f.`knowbaseitemcategories_id` = fc.`knowbaseitemcategories_id`;";
+         $DB->query($query);
+         $this->migration->dropField($table_forms, 'plugin_formcreator_categories_id');
+         $this->migration->dropTable($table_categories);
+      }
    }
 }

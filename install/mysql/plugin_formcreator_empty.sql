@@ -11,22 +11,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
-  `id`                               int(11) NOT NULL AUTO_INCREMENT,
-  `name`                             varchar(255) NOT NULL DEFAULT '',
-  `comment`                          text,
-  `completename`                     varchar(255) DEFAULT NULL,
-  `plugin_formcreator_categories_id` int(11) NOT NULL DEFAULT '0',
-  `level`                            int(11) NOT NULL DEFAULT '1',
-  `sons_cache`                       longtext,
-  `ancestors_cache`                  longtext,
-  `knowbaseitemcategories_id`        int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  INDEX `name` (`name`),
-  INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
-  INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `id`                int(11) NOT NULL,
   `replace_helpdesk`  int(11) NOT NULL DEFAULT '-2',
@@ -49,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `access_rights`                    tinyint(1) NOT NULL DEFAULT '1',
   `description`                      varchar(255) DEFAULT NULL,
   `content`                          longtext,
-  `plugin_formcreator_categories_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `knowbaseitemcategories_id`        int(11) NOT NULL DEFAULT '0',
   `is_active`                        tinyint(1) NOT NULL DEFAULT '0',
   `language`                         varchar(255) NOT NULL DEFAULT '',
   `helpdesk_home`                    tinyint(1) NOT NULL DEFAULT '0',
@@ -63,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `uuid`                             varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `entities_id` (`entities_id`),
-  INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`),
+  INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

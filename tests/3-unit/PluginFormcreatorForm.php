@@ -533,7 +533,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ];
       $this->array($form)->notHasKeys([
          'id',
-         'plugin_formcreator_categories_id',
+         'knowbaseitemcategories_id',
          'entities_id',
          'usage_count',
       ]);
