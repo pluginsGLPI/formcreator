@@ -2322,7 +2322,7 @@ PluginFormcreatorTranslatableInterface
       $itemtype = $input['itemtype'];
       if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
          Session::addMessageAfterRedirect(
-            __('Unsuported target type.', 'formcreator'),
+            __('Unsupported target type.', 'formcreator'),
             false,
             ERROR
          );
