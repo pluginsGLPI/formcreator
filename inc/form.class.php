@@ -115,10 +115,10 @@ PluginFormcreatorTranslatableInterface
    public static function getMenuContent() {
       $menu  = parent::getMenuContent();
       $menu['icon'] = 'fas fa-edit';
-      $validation_image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
-                                title="' . __('Forms waiting for validation', 'formcreator') . '">';
-      $import_image     = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/import.png"
-                                title="' . __('Import forms', 'formcreator') . '">';
+      $validation_image = '<i class="fa fa-check-square"
+                                title="' . __('Forms waiting for validation', 'formcreator') . '"></i>';
+      $import_image     = '<i class="fas fa-upload"
+                                title="' . __('Import forms', 'formcreator') . '"></i>';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
       $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false);
@@ -544,15 +544,13 @@ PluginFormcreatorTranslatableInterface
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/edit.png"
-                     alt="*" title="'.__('Edit').'" ';
-            echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<i class="fas fa-edit" alt="*" title="'.__('Edit').'"
+               onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer"></i> ';
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/delete.png"
-                     alt="*" title="'.__('Delete', 'formcreator').'"
-                     onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<i class="far fa-trash-alt" alt="*" title="'.__('Delete', 'formcreator').'"
+               onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer"></i> ';
             echo '</td>';
 
             echo '</tr>';
@@ -2091,8 +2089,8 @@ PluginFormcreatorTranslatableInterface
 
          echo '<tr class="tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
-         echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
-               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+         echo '<i class="fas fa-plus-circle" alt="+" title=""
+               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer"></i>W';
          echo '&nbsp;';
          echo '<a href="' . FORMCREATOR_ROOTDOC
             . '/front/formdisplay.php?id=' . $row['id'] . '"
@@ -2108,13 +2106,13 @@ PluginFormcreatorTranslatableInterface
       echo '</table>';
       echo '<br />';
       echo Html::scriptBlock('function showDescription(id, img){
-         if(img.alt == "+") {
-            img.alt = "-";
-            img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
+         if(i.alt == "+") {
+            i.alt = "-";
+            i.class = "class="fas fa-minus-circle"";
             document.getElementById("desc" + id).style.display = "table-row";
          } else {
-            img.alt = "+";
-            img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
+            i.alt = "+";
+            i.src = "class="fas fa-plus-circle"";
             document.getElementById("desc" + id).style.display = "none";
          }
       }');
