@@ -1530,21 +1530,21 @@ SCRIPT;
 
       // Hidden secondary labels, displayed according to the user main choice
       echo '<td width="15%">';
-      $titles = [
-         'validation_specific_title'       => __('Approver'),                 // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-         'validation_from_question_title'  => __('Question', 'formcreator'),  // COMMONITIL_VALIDATION_RULE_ANSWER_USER
-      ];
-      foreach ($titles as $id => $title) {
-         echo "<span id='$id' style='display: none'>$title</span>";
-      }
+
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      echo "<span id='commonitil_validation_specific_title' style='$display'>" . __('Approver') . "</span>";
+
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
+      echo "<span id='commonitil_validation_from_question_title' style='$display'>" . __('Question', 'formcreator') . "</span>";
+
       echo '</td>';
 
       // Hidden secondary values, displayed according to the user main choice
       echo '<td width="25%">';
 
       // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
-      echo "<div id='validation_specific' style='$display'>";
+      $display = $this->fields['commonitil_validation_answer_user'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      echo "<div id='commonitil_validation_specific' style='$display'>";
       $validation_dropdown_params = [
          'name' => 'validation_specific'
       ];
@@ -1558,29 +1558,14 @@ SCRIPT;
       // COMMONITIL_VALIDATION_RULE_ANSWER_USER
       $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
       echo "<div id='validation_answer_user' style='$display'>";
-      $question = new PluginFormcreatorQuestion();
-      $form_questions = $question->getQuestionsFromForm($this->getForm()->getID(), [
-         'fieldtype' => ['actor', 'glpiselect']
-      ]);
-      $user_questions = [];
-      foreach ($form_questions as $id => $form_question) {
-         if ($form_question->fields['fieldtype'] == 'actor') {
-            // Get all "actor" questions
-            $user_questions[$id] = $form_question->fields['name'];
-         } else if ($form_question->fields['fieldtype'] == 'glpiselect') {
-             // Get all "glpiselect" question on users
-            $decoded_values = json_decode(
-               $form_question->fields['values'],
-               JSON_OBJECT_AS_ARRAY
-            );
-            if (($decoded_values['itemtype'] ?? "") === 'User') {
-               $user_questions[$id] = $form_question->fields['name'];
-            }
-         }
-      }
-      Dropdown::showFromArray('_validation_from_user_question', $user_questions, [
-         'value' => $this->fields['commonitil_validation_question'],
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            new QueryExpression("`fieldtype` = 'actor' OR (`fieldtype` = 'glpiselect' AND `itemtype`='User')"),
+         ],
+         '_validation_from_user_question',
+         $this->fields['commonitil_validation_question'],
+      );
       echo '</div>';
 
       echo '</td>';

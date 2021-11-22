@@ -2061,32 +2061,24 @@ function plugin_formcreator_change_location(rand) {
 }
 
 function plugin_formcreator_change_validation(rand) {
-   $('#validation_specific_user_title').hide();
-   $('#validation_specific_group_title').hide();
-   $('#validation_from_question_title').hide();
-   $('#validation_specific_user').hide();
-   $('#validation_specific_group').hide();
-   $('#validation_answer_user').hide();
-   $('#validation_answer_group').hide();
-
-   switch($('#dropdown_validation_rule' + rand).val()) {
+   switch($('#dropdown_commonitil_validation_rule' + rand).val()) {
       case '1' : // PluginFormcreatorAbstractTarget::VALIDATION_RULE_NONE
-         $('#validation_specific_title').hide();
-         $('#validation_specific').hide();
-         $('#validation_from_question_title').hide();
-         $('#validation_answer_user').hide();
+         $('#commonitil_validation_specific_title').hide();
+         $('#commonitil_validation_specific').hide();
+         $('#commonitil_validation_from_question_title').hide();
+         $('#commonitil_validation_answer_user').hide();
          break;
 
       case '2' : // PluginFormcreatorAbstractTarget::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-         $('#validation_specific_title').show();
-         $('#validation_specific').show();
+         $('#commonitil_validation_specific_title').show();
+         $('#commonitil_validation_specific').show();
          break;
 
       case '3' : // PluginFormcreatorAbstractTarget::VALIDATION_RULE_ANSWER_USER
-         $('#validation_from_question_title').show();
-         $('#validation_answer_user').show();
-         $('#validation_specific_title').hide();
-         $('#validation_specific').hide();
+         $('#commonitil_validation_from_question_title').show();
+         $('#commonitil_validation_answer_user').show();
+         $('#commonitil_validation_specific_title').hide();
+         $('#commonitil_validation_specific').hide();
          break;
    }
 }
