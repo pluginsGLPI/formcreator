@@ -220,8 +220,8 @@ function updateCategoriesView() {
       });
       $('#plugin_formcreator_wizard_categories a.back').click(
          function(event) {
-            parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
-            parentAnchor = $(parentItem).children('a')[0];
+            var parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories .slinky-menu > ul', 'li')[1];
+            var parentAnchor = $(parentItem).children('a')[0];
             updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
          }
       );
