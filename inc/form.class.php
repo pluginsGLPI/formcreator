@@ -1030,7 +1030,6 @@ PluginFormcreatorTranslatableInterface
       }
       echo '</div>';
 
-
       if (!PluginFormcreatorCommon::canValidate()) {
          // The user cannot validate, then do not show the next card
          return;
