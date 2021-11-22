@@ -245,13 +245,13 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
       // header
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Header', 'formcreator')."</td>";
+      echo "<td>" . _n('Header', 'Headers', 1, 'formcreator') . "</td>";
       echo "<td>";
       echo Html::textarea([
          'name'            => 'header',
          'value'           => $this->fields['header'],
          'enable_richtext' => true,
-         'display'         => false
+         'display'         => false,
       ]);
       echo '</td></tr>';
 

@@ -298,23 +298,6 @@ form#plugin_formcreator_form {
       }
    }
 
-   // [data-itemtype = "PluginFormcreatorSection"] {
-   //    background: #EEE;
-   //    /*box-shadow: 2px 2px 2px #CCC;*/
-   //    margin: 0 0 10px;
-
-   //    > h2 {
-   //       background: #1B2F62;
-   //       color: #FFF;
-   //       margin:  0 0 10px;
-   //       padding: 5px 10px;
-   //       border-bottom: 1px solid #FFF;
-   //       box-shadow: 2px 2px 2px #CCC;
-   //       text-align: center;
-   //       line-height: 24px;
-   //    }
-   // }
-
    .form-group {
       padding: 5px 15px;
 
@@ -491,26 +474,24 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    }
 }
 
-// #formcreator_servicecatalogue_ticket_summary .status_incoming,
-// #formcreator_servicecatalogue_ticket_summary .status_incoming a {
-//    color: #c8ffc8;
-// }
-// #formcreator_servicecatalogue_ticket_summary .status_waiting,
-// #formcreator_servicecatalogue_ticket_summary .status_waiting a {
-//    color: #f7c976;
-// }
-// #formcreator_servicecatalogue_ticket_summary .status_validate,
-// #formcreator_servicecatalogue_ticket_summary .status_validate a {
-//    color: #9B9BE9;
-// }
-// #formcreator_servicecatalogue_ticket_summary .status_solved,
-// #formcreator_servicecatalogue_ticket_summary .status_solved a {
-//    color: #ffffff;
+// #formcreator_servicecatalogue_ticket_summary {
+//    .status_incoming, .status_incoming a {
+//       color: #c8ffc8;
+//    }
+
+//    .status_waiting, .status_waiting a {
+//       color: #f7c976;
+//    }
+
+//    .status_validate, .status_validate a {
+//       color: #9B9BE9;
+//    }
+
+//    .status_solved, .status_solved a {
+//       color: #ffffff;
+//    }
 // }
 
-.plugin_formcreator_marginRight {
-   margin-right: 275px;
-}
 
 /* SLINKY CSS */
 .slinky-menu {
@@ -645,24 +626,49 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       font-size: 1.2em;
    }
 
-   h2 {
+   .card-title {
       padding: 0.83em 0;
-      border-bottom: 1px solid #DDD;
+      // border-bottom: 1px solid #DDD;
       margin: 0;
       padding: 14px;
-      color: #000;
+      // color: #000;
    }
-   .header h2 {
-      text-align: left;
-   }
-   .header .back {
-      right: 20px;
-      color: #000;
-      left: inherit;
-   }
+   // .header h2 {
+   //    text-align: left;
+   // }
+   // .header .back {
+   //    right: 20px;
+   //    color: #000;
+   //    left: inherit;
+   // }
 
    li {
       background-color: inherit;
+   }
+}
+
+.break-column {
+   flex-basis: 100%;
+   width: 0;
+}
+
+#plugin_formcreator_last_req_forms, #plugin_formcreator_val_forms {
+   max-width: 275px;
+   max-height: 300px;
+
+   .card-title {
+      font-weight: bold;
+      padding: 0.83em 0;
+      margin: 0;
+      padding: 14px;
+   }
+
+   .card-body {
+      padding: 4px;
+   }
+
+   li[data-itemtype="PluginFormcreatorFormanswer"] {
+      list-style-type: none;
    }
 }
 
@@ -749,14 +755,14 @@ a.plugin_formcreator_formTile_title {
    }
 }
 
+#plugin_formcreator_wizard .plugin_formcreator_lists_separator {
+   padding: 0;
+}
+
 #plugin_formcreator_wizard_right {
    min-width: 116px;
    overflow-x: hidden;
    overflow-y: auto;
-   // padding: 0 0 3px 23px;
-   // margin: -10px 0 -3px -23px;
-   // background-color: #FFFFFF;
-   // margin-left: 300px;
 }
 
 #plugin_formcreator_wizard_forms {
@@ -1208,12 +1214,6 @@ span.fc_list_icon {
       height: 70px;
       position: relative;
    }
-
-   // #formcreator_servicecatalogue_ticket_summary {
-   //    width: 100%;
-   //    display: block;
-   //    left: 100px;
-   // }
 
    .plugin_formcreator_container #footer {
       display: none;

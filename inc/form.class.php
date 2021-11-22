@@ -642,16 +642,15 @@ PluginFormcreatorTranslatableInterface
     * Show the list of forms to be displayed to the end-user
     */
    public function showList() : void {
-      echo '<div class="center" id="plugin_formcreator_wizard">';
+      echo '<div id="plugin_formcreator_wizard" class="card-group">';
 
-      echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
       $this->showWizard();
-      echo '</div>';
+      // echo '</div>';
 
-      echo '<div id="plugin_formcreator_lastForms">';
+      // echo '<div id="plugin_formcreator_lastForms"class="card-group" >';
+      echo '<div class="d-flex flex-column ms-sm-2">';
       $this->showMyLastForms();
       echo '</div>';
-
       echo '</div>';
    }
 
@@ -993,15 +992,16 @@ PluginFormcreatorTranslatableInterface
    protected function showMyLastForms() : void {
       $limit = 5;
       $userId = Session::getLoginUserID();
-      echo '<div class="plugin_formcreator_card">';
-      echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
+      echo '<div id="plugin_formcreator_last_req_forms" class="card">';
+      echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
       if ($result->count() == 0) {
-         echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
-         echo "<ul>";
+         echo '<div class="card-body" align="center">'.__('No form posted yet', 'formcreator').'</div>';
       } else {
-         foreach ($result as $form) {
-            switch ($form['status']) {
+         echo '<div class="card-body">';
+         echo "<ul>";
+         foreach ($result as $formAnswer) {
+            switch ($formAnswer['status']) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
                   $status = 'waiting';
                   break;
@@ -1012,13 +1012,13 @@ PluginFormcreatorTranslatableInterface
                   $status = 'accepted';
                   break;
             }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
+               echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
+               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
                echo '</li>';
          }
          echo "</ul>";
-         echo '<div align="center">';
+         echo '<div class="text-center">';
          $criteria = 'criteria[0][field]=4'
          . '&criteria[0][searchtype]=equals'
          . '&criteria[0][value]=' . $userId;
@@ -1026,56 +1026,63 @@ PluginFormcreatorTranslatableInterface
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
+         echo '</div>';
       }
       echo '</div>';
 
-      if (PluginFormcreatorCommon::canValidate()) {
-         echo '<div class="plugin_formcreator_card">';
-         echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
-         $groupList = Group_User::getUserGroups($userId);
-         $groupIdList = [];
-         foreach ($groupList as $group) {
-            $groupIdList[] = $group['id'];
-         }
-         $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
-         if ($result->count() == 0) {
-            echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
-         } else {
-            echo "<ul>";
-            foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
-               echo '</li>';
-            }
-            echo "</ul>";
-            echo '<div align="center">';
-            $criteria = 'criteria[0][field]=10'
-                      . '&criteria[0][searchtype]=equals'
-                      . '&criteria[0][value]=' . $userId;
-            $criteria.= "&criteria[1][link]=OR"
-                      . "&criteria[1][field]=11"
-                      . "&criteria[1][searchtype]=equals"
-                      . "&criteria[1][value]=mygroups";
 
-            echo '<a href="formanswer.php?' . $criteria . '">';
-            echo __('All my forms (validator)', 'formcreator');
-            echo '</a>';
-            echo '</div>';
+      if (!PluginFormcreatorCommon::canValidate()) {
+         // The user cannot validate, then do not show the next card
+         return;
+      }
+
+      echo '<div id="plugin_formcreator_val_forms" class="card mt-0 mt-sm-2">';
+      echo '<div class="card-title">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
+      $groupList = Group_User::getUserGroups($userId);
+      $groupIdList = [];
+      foreach ($groupList as $group) {
+         $groupIdList[] = $group['id'];
+      }
+      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
+      if ($result->count() == 0) {
+         echo '<div class="card-body" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
+      } else {
+         echo '<div class="card-body">';
+         echo "<ul>";
+         foreach ($result as $formAnswer) {
+            switch ($formAnswer['status']) {
+               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+                  $status = 'waiting';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_REFUSED:
+                  $status = 'refused';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
+                  $status = 'accepted';
+                  break;
+            }
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '>';
+            echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
+            echo '</li>';
          }
+         echo "</ul>";
+         echo '<div class="text-center">';
+         $criteria = 'criteria[0][field]=10'
+                     . '&criteria[0][searchtype]=equals'
+                     . '&criteria[0][value]=' . $userId;
+         $criteria.= "&criteria[1][link]=OR"
+                     . "&criteria[1][field]=11"
+                     . "&criteria[1][searchtype]=equals"
+                     . "&criteria[1][value]=mygroups";
+
+         echo '<a href="formanswer.php?' . $criteria . '">';
+         echo __('All my forms (validator)', 'formcreator');
+         echo '</a>';
+         echo '</div>';
          echo '</div>';
       }
+      echo '</div>';
    }
 
    /**
