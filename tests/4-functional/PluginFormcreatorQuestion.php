@@ -38,7 +38,7 @@ class PluginFormcreatorQuestion extends CommonFunctionalTestCase {
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
       ]);
       $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/form.form.php?id=' . $form->getID());
-      $this->client->waitFor('footer');
+      $this->client->waitFor('#backtotop');
 
       // Open the questions tab
       $this->browsing->openTab('Questions');

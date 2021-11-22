@@ -31,39 +31,18 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkLoginUser();
-
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    http_response_code(404);
+    die();
 }
 
-if (Session::getCurrentInterface() == 'helpdesk') {
-   if (plugin_formcreator_replaceHelpdesk()) {
-      Html::redirect('issue.php');
-   } else {
-      Html::helpHeader(__('Form list', 'formcreator'));
-      // Html::helpHeader(
-      //    __('Form list', 'formcreator'),
-      //    $_SERVER['PHP_SELF']
-      // );
-   }
-} else {
-   // Html::header(
-   //    __('Form list', 'formcreator'),
-   //    $_SERVER['PHP_SELF'],
-   //    'helpdesk',
-   //    PluginFormcreatorFormlist::class
-   // );
-   Html::header(__('Form list', 'formcreator'));
-
+if (!isset($_REQUEST['itemtype']) || !isset($_REQUEST['items_id']) || !isset($_REQUEST['action'])) {
+    http_response_code(500);
+    die();
 }
 
-$form = PluginFormcreatorCommon::getForm();
-$form->showList();
-
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
-} else {
-   Html::footer();
+Session::checkRight('entity', UPDATE);
+if (!PluginFormcreatorCommon::getForm()->deleteTarget($_REQUEST)) {
+    http_response_code(500);
 }

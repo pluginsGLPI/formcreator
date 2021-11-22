@@ -777,7 +777,8 @@ PluginFormcreatorTranslatableInterface
          'id' => 'name',
          'autofocus' => '',
          'value' => $this->fields['name'],
-         'class' => 'required',
+         'class' => 'form-control',
+         'required' => 'required'
       ]);
       echo '</td>';
 
@@ -1215,6 +1216,9 @@ PluginFormcreatorTranslatableInterface
     * @return string|int HTML output or random id
     */
    public static function dropdownForForm($formId, $crit, $name, $value = null, $options = []) {
+      if (isset($crit['used']) && count($crit['used']) == 0) {
+         unset($crit['used']);
+      }
       $question = new self();
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
       $options = $options + [

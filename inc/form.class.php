@@ -115,10 +115,10 @@ PluginFormcreatorTranslatableInterface
    public static function getMenuContent() {
       $menu  = parent::getMenuContent();
       $menu['icon'] = 'fas fa-edit';
-      $validation_image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
-                                title="' . __('Forms waiting for validation', 'formcreator') . '">';
-      $import_image     = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/import.png"
-                                title="' . __('Import forms', 'formcreator') . '">';
+      $validation_image = '<i class="fa fa-check-square"
+                                title="' . __('Forms waiting for validation', 'formcreator') . '"></i>';
+      $import_image     = '<i class="fas fa-upload"
+                                title="' . __('Import forms', 'formcreator') . '"></i>';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
       $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false);
@@ -415,14 +415,19 @@ PluginFormcreatorTranslatableInterface
     * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options = []) {
-      global $DB, $CFG_GLPI;
-
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
       echo '<tr class="tab_bg_1">';
       echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
-      echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      // echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      echo '<td width="30%">';
+      echo Html::input('name', [
+         'id' => 'name',
+         'autofocus' => '',
+         'value' => $this->fields['name'],
+      ]);
+      echo '</td>';
       echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
       echo '<td width="30%">';
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
@@ -461,7 +466,12 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr class="tab_bg_1">';
       echo '<td>' . __('Description') . '</td>';
-      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="35" /></td>';
+      echo '<td>';
+      echo Html::input('description', [
+         'id' => 'name',
+         'value' => $this->fields['description'],
+      ]);
+      echo '</td>';
       echo '<td>' . __('Language') . '</td>';
       echo '<td>';
       Dropdown::showLanguages('language', [
@@ -508,7 +518,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr>';
       echo '<td>' . __('Answers title', 'formcretor') . '</td>';
-      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name'], 'style' => 'width: calc(100% - 10px)']) . '</td>';
+      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name']]) . '</td>';
       echo '</tr>';
 
       $this->showFormButtons($options);
@@ -534,15 +544,13 @@ PluginFormcreatorTranslatableInterface
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/edit.png"
-                     alt="*" title="'.__('Edit').'" ';
-            echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<i class="fas fa-edit" alt="*" title="'.__('Edit').'"
+               onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer"></i> ';
             echo '</td>';
 
             echo '<td align="center" width="32">';
-            echo '<img src="'.FORMCREATOR_ROOTDOC.'/pics/delete.png"
-                     alt="*" title="'.__('Delete', 'formcreator').'"
-                     onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<i class="far fa-trash-alt" alt="*" title="'.__('Delete', 'formcreator').'"
+               onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer"></i> ';
             echo '</td>';
 
             echo '</tr>';
@@ -634,16 +642,15 @@ PluginFormcreatorTranslatableInterface
     * Show the list of forms to be displayed to the end-user
     */
    public function showList() : void {
-      echo '<div class="center" id="plugin_formcreator_wizard">';
+      echo '<div id="plugin_formcreator_wizard" class="card-group">';
 
-      echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
       $this->showWizard();
-      echo '</div>';
+      // echo '</div>';
 
-      echo '<div id="plugin_formcreator_lastForms">';
+      // echo '<div id="plugin_formcreator_lastForms"class="card-group" >';
+      echo '<div class="d-flex flex-column ms-sm-2">';
       $this->showMyLastForms();
       echo '</div>';
-
       echo '</div>';
    }
 
@@ -985,15 +992,16 @@ PluginFormcreatorTranslatableInterface
    protected function showMyLastForms() : void {
       $limit = 5;
       $userId = Session::getLoginUserID();
-      echo '<div class="plugin_formcreator_card">';
-      echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
+      echo '<div id="plugin_formcreator_last_req_forms" class="card">';
+      echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
       if ($result->count() == 0) {
-         echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
-         echo "<ul>";
+         echo '<div class="card-body" align="center">'.__('No form posted yet', 'formcreator').'</div>';
       } else {
-         foreach ($result as $form) {
-            switch ($form['status']) {
+         echo '<div class="card-body">';
+         echo "<ul>";
+         foreach ($result as $formAnswer) {
+            switch ($formAnswer['status']) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
                   $status = 'waiting';
                   break;
@@ -1004,13 +1012,13 @@ PluginFormcreatorTranslatableInterface
                   $status = 'accepted';
                   break;
             }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
+               echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
+               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
                echo '</li>';
          }
          echo "</ul>";
-         echo '<div align="center">';
+         echo '<div class="text-center">';
          $criteria = 'criteria[0][field]=4'
          . '&criteria[0][searchtype]=equals'
          . '&criteria[0][value]=' . $userId;
@@ -1018,56 +1026,63 @@ PluginFormcreatorTranslatableInterface
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
+         echo '</div>';
       }
       echo '</div>';
 
-      if (PluginFormcreatorCommon::canValidate()) {
-         echo '<div class="plugin_formcreator_card">';
-         echo '<div class="plugin_formcreator_heading">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
-         $groupList = Group_User::getUserGroups($userId);
-         $groupIdList = [];
-         foreach ($groupList as $group) {
-            $groupIdList[] = $group['id'];
-         }
-         $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
-         if ($result->count() == 0) {
-            echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
-         } else {
-            echo "<ul>";
-            foreach ($result as $form) {
-               switch ($form['status']) {
-                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                     $status = 'waiting';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                     $status = 'refused';
-                     break;
-                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                     $status = 'accepted';
-                     break;
-               }
-               echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
-               echo '</li>';
-            }
-            echo "</ul>";
-            echo '<div align="center">';
-            $criteria = 'criteria[0][field]=10'
-                      . '&criteria[0][searchtype]=equals'
-                      . '&criteria[0][value]=' . $userId;
-            $criteria.= "&criteria[1][link]=OR"
-                      . "&criteria[1][field]=11"
-                      . "&criteria[1][searchtype]=equals"
-                      . "&criteria[1][value]=mygroups";
 
-            echo '<a href="formanswer.php?' . $criteria . '">';
-            echo __('All my forms (validator)', 'formcreator');
-            echo '</a>';
-            echo '</div>';
+      if (!PluginFormcreatorCommon::canValidate()) {
+         // The user cannot validate, then do not show the next card
+         return;
+      }
+
+      echo '<div id="plugin_formcreator_val_forms" class="card mt-0 mt-sm-2">';
+      echo '<div class="card-title">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
+      $groupList = Group_User::getUserGroups($userId);
+      $groupIdList = [];
+      foreach ($groupList as $group) {
+         $groupIdList[] = $group['id'];
+      }
+      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
+      if ($result->count() == 0) {
+         echo '<div class="card-body" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
+      } else {
+         echo '<div class="card-body">';
+         echo "<ul>";
+         foreach ($result as $formAnswer) {
+            switch ($formAnswer['status']) {
+               case PluginFormcreatorFormAnswer::STATUS_WAITING:
+                  $status = 'waiting';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_REFUSED:
+                  $status = 'refused';
+                  break;
+               case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
+                  $status = 'accepted';
+                  break;
+            }
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '>';
+            echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
+            echo '</li>';
          }
+         echo "</ul>";
+         echo '<div class="text-center">';
+         $criteria = 'criteria[0][field]=10'
+                     . '&criteria[0][searchtype]=equals'
+                     . '&criteria[0][value]=' . $userId;
+         $criteria.= "&criteria[1][link]=OR"
+                     . "&criteria[1][field]=11"
+                     . "&criteria[1][searchtype]=equals"
+                     . "&criteria[1][value]=mygroups";
+
+         echo '<a href="formanswer.php?' . $criteria . '">';
+         echo __('All my forms (validator)', 'formcreator');
+         echo '</a>';
+         echo '</div>';
          echo '</div>';
       }
+      echo '</div>';
    }
 
    /**
@@ -1107,6 +1122,7 @@ PluginFormcreatorTranslatableInterface
       . ' class="plugin_formcreator_form"'
       . ' action="' . self::getFormURL() . '"'
       . ' id="plugin_formcreator_form"'
+      . ' data-itemtype="PluginFormcreatorForm"'
       . ' data-id="' . $formId . '"'
       . '>';
 
@@ -2081,8 +2097,8 @@ PluginFormcreatorTranslatableInterface
 
          echo '<tr class="tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
-         echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
-               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+         echo '<i class="fas fa-plus-circle" alt="+" title=""
+               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer"></i>W';
          echo '&nbsp;';
          echo '<a href="' . FORMCREATOR_ROOTDOC
             . '/front/formdisplay.php?id=' . $row['id'] . '"
@@ -2098,13 +2114,13 @@ PluginFormcreatorTranslatableInterface
       echo '</table>';
       echo '<br />';
       echo Html::scriptBlock('function showDescription(id, img){
-         if(img.alt == "+") {
-            img.alt = "-";
-            img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
+         if(i.alt == "+") {
+            i.alt = "-";
+            i.class = "class="fas fa-minus-circle"";
             document.getElementById("desc" + id).style.display = "table-row";
          } else {
-            img.alt = "+";
-            img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
+            i.alt = "+";
+            i.src = "class="fas fa-plus-circle"";
             document.getElementById("desc" + id).style.display = "none";
          }
       }');
@@ -2245,7 +2261,15 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr>';
       echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" required="required"/></td>';
+      echo '<td width="40%">';
+      echo Html::input('name', [
+         'id' => 'name',
+         'autofocus' => '',
+         'value' => $this->fields['name'],
+         'required' => 'required',
+      ]);
+      echo '</td>';
+
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $targetTypes = [];
@@ -2306,7 +2330,7 @@ PluginFormcreatorTranslatableInterface
       $itemtype = $input['itemtype'];
       if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
          Session::addMessageAfterRedirect(
-            __('Unsuported target type.', 'formcreator'),
+            __('Unsupported target type.', 'formcreator'),
             false,
             ERROR
          );

@@ -1884,9 +1884,9 @@ SCRIPT;
       echo '<th width="33%">';
       echo $label . ' &nbsp;';
       echo '<i class="fas fa-plus-circle" title="' . __('Add', 'formcreator'). '" alt="' . __('Add', 'formcreator'). '" onclick="' . $displayJSFunction . '" class="pointer"
-         id="' . $buttonAdd . '" src="../../../pics/add_dropdown.png"></i>';
+         id="' . $buttonAdd . '"></i>';
       echo '<i class="fas fa-minus-circle" title="' . __('Cancel', 'formcreator'). '" alt="' . __('Cancel', 'formcreator'). '" onclick="' . $hideJSFunction . '" class="pointer"
-         id="' . $buttonCancel . '" src="../../../pics/delete.png" style="display:none"></i>';
+         id="' . $buttonCancel . '" style="display:none"></i>';
       echo '</th>';
    }
 
@@ -2164,7 +2164,7 @@ SCRIPT;
       echo '<p align="center">';
       echo Html::hidden('id', ['value' => $this->getID()]);
       echo Html::hidden('actor_role', ['value' => $actorRole]);
-      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update_actors', 'value' => __('Add')]);
       echo '</p>';
 
       echo "<hr>";

@@ -16,7 +16,7 @@ variables:
   OLD_DB_NAME: "glpiupgradetest"
   PLUGINNAME: "formcreator"
   AFTER_SUCCESS_BRANCH: "master"
-  ATOUM_ARG: "--force-terminal --use-light-report"
+  ATOUM_ARG: "--force-terminal --use-dot-report"
   NOCOVERAGE: "-ncc"
   COVERAGE: "--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild"
   PANTHER_CHROME_DRIVER_BINARY: "chromedriver"

@@ -72,7 +72,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       $this->browsing->changeActiveEntity($entity, true);
 
       $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
-      $this->client->waitFor('footer');
+      $this->client->waitFor('#backtotop');
       // Forms are loaded with AJAX
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $this->client->waitForVisibility($formTileSelector);

@@ -218,8 +218,8 @@ function updateCategoriesView() {
       });
       $('#plugin_formcreator_wizard_categories a.back').on('click',
          function(event) {
-            parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
-            parentAnchor = $(parentItem).children('a')[0];
+            var parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories .slinky-menu > ul', 'li')[1];
+            var parentAnchor = $(parentItem).children('a')[0];
             updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
          }
       );
@@ -1378,16 +1378,17 @@ function plugin_formcreator_editTarget(itemtype, items_id) {
 function plugin_formcreator_deleteTarget(itemtype, target_id) {
    if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this destination:', 'formcreator'))) {
       $.post({
-        url: formcreatorRootDoc + '/front/form.form.php',
+        url: formcreatorRootDoc + '/ajax/form_delete_target.php',
         data: {
-            delete_target: 1,
+            action: 'delete_target',
             itemtype: itemtype,
             items_id: target_id,
          }
       }).done(function () {
-         location.reload();
+         reloadTab();
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
       });
-
    }
 }
 

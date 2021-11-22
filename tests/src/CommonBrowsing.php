@@ -16,6 +16,10 @@ class CommonBrowsing {
    private $selectors = [
       // Selectors available in the header of GLPI (most pages)
       '_header' => [
+         'user menu'                     => 'aside.navbar .user-menu a',
+         'entity select dialog'          => 'aside.navbar .dropdown-menu.dropdown-menu-end .dropstart + .dropstart a',
+         'entity search input'           => 'input[name="entsearchtext"]',
+
          'globalEntitySelect'            => '#global_entity_select',
          'entityTreeView'                => 'ul.jstree-container-ul',
          'entityTreeView-rootEntity'     => 'ul.jstree-container-ul li[aria-labelledby="0r_anchor"]',
@@ -31,23 +35,23 @@ class CommonBrowsing {
       $this->test->crawler = $this->test->client->request('GET', '/');
 
       // screenshot
-      $this->test->client->waitForVisibility('#boxlogin > form');
+      $this->test->client->waitForVisibility('.page-anonymous  form input#login_name');
       $this->test->takeScreenshot();
-      $form = $this->test->crawler->filter('#boxlogin > form')->form();
+      $form = $this->test->crawler->filter('.page-anonymous  form')->form();
 
       // Login as glpi
       $login = $this->test->crawler->filter('input#login_name')->attr('name');
-      $passwd = $this->test->crawler->filter('input#login_password')->attr('name');
+      $passwd = $this->test->crawler->filter('input[type="password"]')->attr('name');
       $form[$login] = $user;
       $form[$passwd] = $password;
       $this->test->crawler = $this->test->client->submit($form);
 
-      $this->test->client->waitFor('#footer');
+      $this->test->client->waitFor('#backtotop'); // back to top button in footer
    }
 
    public function logout() {
       $this->test->crawler = $this->test->client->request('GET', '/front/logout.php?noAUTO=1');
-      $this->test->client->waitFor('#display-login');
+      $this->test->client->waitFor('.page-anonymous');
    }
 
    /**
@@ -57,65 +61,40 @@ class CommonBrowsing {
     * @param bool    $subtree if true, select the subtree of the entity
     */
    public function changeActiveEntity(Entity $entity, bool $subtree) {
-      // Open the entity selection modal
-      $this->test->crawler->filter($this->selectors['_header']['globalEntitySelect'])->link();
+      // Open the user menu
       $this->test->client->executeScript("
-         $('" . $this->selectors['_header']['globalEntitySelect'] . "').click();
+         document.querySelector('" . $this->selectors['_header']['user-menu'] . "').click();
       ");
-      $this->test->client->waitFor($this->selectors['_header']['entityTreeView-rootEntity']);
+      $this->test->client->waitForVisibility($this->selectors['_header']['entity select dialog']);
 
-      // Develop all ancestors to the entity to select
-      $dbUtils = new DbUtils();
-      $ancestors = $dbUtils->getAncestorsOf($entity->getTable(), $entity->getID());
-      foreach ($ancestors as $ancestor) {
-         if ($ancestor == '0') {
-            $ancestor = $ancestor . 'r';
-         }
-         $selector = $this->selectors['_header']['entityTreeView'] . ' li[aria-labelledby="' . $ancestor . '_anchor"] i.jstree-icon.jstree-ocl';
-         $this->test->client->executeScript("
-            $('" . $selector . "').click();
-         ");
-         $this->test->client->waitFor($this->selectors['_header']['entityTreeView'] . ' li[aria-labelledby="' . $ancestor . '_anchor"].jstree-open');
-      }
-
-      // click the entity to activate
-      $id = $entity->getID();
-      if ($id == '0') {
-         $id = $id . 'r';
-      }
-      $selector = $this->selectors['_header']['entityTreeView'] . " a#${id}_anchor";
-      if ($subtree && $entity->haveChildren()) {
-         // select the subtree
-         $selector = $selector . 'i:nth-child(2)';
-      }
+      // Open the entity selection dialog
       $this->test->client->executeScript("
-         $('" . $selector . "').click();
+         document.querySelector('" . $this->selectors['_header']['entity select dialog'] . "').click();
       ");
-      $this->test->crawler = $this->test->client->waitFor($this->selectors['_header']['globalEntitySelect']);
+      $this->test->client->waitForVisibility($this->selectors['_header']['entity search input']);
 
-      //Check the entity is the selected one
-      $expectedNnewEntity = $entity->fields['name'];
-      if ($subtree && $entity->haveChildren()) {
-         $expectedNnewEntity .= ' (tree structure)';
-      }
-      $newEntity = $this->test->crawler->filter($this->selectors['_header']['globalEntitySelect'])->text();
-      $this->test->string($newEntity)->isEqualTo($expectedNnewEntity);
+      //
+      $this->test->client->executeScript("
+         document.querySelector('" . $this->selectors['_header']['entity search input'] . "').value('" . addcslashes($entity->fields['name'], "'") . "');
+      ");
+      $this->test->client->waitForVisibility('tr[id="ui-id-' . $entity->getID() . '"] .fancytree-title');
+
+      // TODO : Find a way to select the entity to use. Thre is nothing in the DOM to select it
    }
 
    public function openTab($title) {
       // Get the anchor to click
-      $tabNameSelector = '.ui-tabs-tab > a[title="' . $title . '"]';
+      $tabNameSelector = '.nav.nav-tabs a[title="' . $title . '"]';
       $anchor = $this->test->crawler->filter($tabNameSelector);
 
       // Get the ID of the display area of the tab
-      $anchorId = $anchor->attr('id');
-      $tabDisplayId = $this->test->crawler->filter('.ui-tabs-tab[aria-labelledby="' . $anchorId . '"]')->attr('aria-controls');
+      $tabId = $anchor->attr('data-bs-target');
 
       // Click the name of the tab to show it
       $this->test->client->executeScript("
-         $('" . $tabNameSelector . "').click();
+         document.querySelector('" . $tabNameSelector . "').click();
       ");
-      $this->test->client->waitFor('#' . $tabDisplayId . ' > *:not(#loadingtabs)');
+      $this->test->client->waitFor($tabId . ' > *:not(i.fa-spinner)');
 
       // TODO : Check the tab area is now visible
    }

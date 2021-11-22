@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-dev');
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-alpha.1');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
@@ -394,8 +394,8 @@ function plugin_formcreator_hook() {
       $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
       $links['add']    = FORMCREATOR_ROOTDOC . '/front/form.form.php';
    }
-   $img = '<img  src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
-               title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
+   $img = '<i class="fa fa-check-square"
+            title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list"></i>';
 
    $links[$img] = FORMCREATOR_ROOTDOC . '/front/formanswer.php';
 

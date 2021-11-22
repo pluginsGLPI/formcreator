@@ -51,9 +51,9 @@ class PluginFormcreatorFormList extends CommonGLPI
       $menu['title'] = static::getTypeName(2);
       $menu['page'] = '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php';
       $menu['icon'] = 'fas fa-edit';
-      $image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
+      $image = '<i class="fa fa-check-square"
                   title="' . __('Forms waiting for validation', 'formcreator') . '"
-                  alt="' . __('Forms waiting for validation', 'formcreator') . '">';
+                  alt="' . __('Forms waiting for validation', 'formcreator') . '"></i>';
 
       $menu['links']['search'] = PluginFormcreatorFormList::getSearchURL(false);
       if (PluginFormcreatorForm::canCreate()) {
@@ -64,5 +64,4 @@ class PluginFormcreatorFormList extends CommonGLPI
 
       return $menu;
    }
-
 }

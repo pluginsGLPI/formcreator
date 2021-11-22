@@ -352,7 +352,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
 
          case PluginFormcreatorQuestion::class:
             if ($item->isNewID($itemId)) {
-               $parentItemtype = $item::$itemtype;;
+               $parentItemtype = $item::$itemtype;
                $section = new $parentItemtype();
                $section->getFromDB($input[$parentItemtype::getForeignKeyField()]);
                $form->getFromDBBySection($section);
@@ -403,8 +403,8 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       // Value of comparison
       $html.= '<div class="div_show_condition_value">';
       $html.= Html::input('_conditions[show_value][]', [
-         'class' => 'small_text',
-         'size'  => '8',
+         // 'class' => 'small_text',
+         // 'size'  => '8',
          'value' => $show_value,
       ]);
       $html.= '</div>';
