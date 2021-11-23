@@ -33,6 +33,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
+use Glpi\Toolbox\RichText;
 class PluginFormcreatorIssue extends CommonDBTM {
    static $rightname = 'ticket';
 
@@ -797,7 +798,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $link = self::getFormURLWithID($id) . "&itemtype=".$data['raw']['itemtype'];
             $link =  self::getFormURLWithID($data['id']);
             $key = 'id';
-            $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
+            $tooltip = Html::showToolTip(nl2br(RichText::getTextFromHtml($content)), [
                'applyto' => $itemtype.$data['raw'][$key],
                'display' => false,
             ]);
