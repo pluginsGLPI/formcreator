@@ -996,10 +996,10 @@ PluginFormcreatorTranslatableInterface
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
       if ($result->count() == 0) {
-         echo '<div class="card-body" align="center">'.__('No form posted yet', 'formcreator').'</div>';
+         echo '<div class="card-body text-center text-muted">'.__('No form posted yet', 'formcreator').'</div>';
       } else {
          echo '<div class="card-body">';
-         echo "<ul>";
+         echo '<ul class="list-group">';
          foreach ($result as $formAnswer) {
             switch ($formAnswer['status']) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
@@ -1017,8 +1017,8 @@ PluginFormcreatorTranslatableInterface
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
                echo '</li>';
          }
-         echo "</ul>";
-         echo '<div class="text-center">';
+         echo '</ul>';
+         echo '<div class="text-center  card-footer">';
          $criteria = 'criteria[0][field]=4'
          . '&criteria[0][searchtype]=equals'
          . '&criteria[0][value]=' . $userId;
@@ -1044,10 +1044,10 @@ PluginFormcreatorTranslatableInterface
       }
       $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
       if ($result->count() == 0) {
-         echo '<div class="card-body" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
+         echo '<div class="card-body text-center text-muted" >'.__('No form waiting for validation', 'formcreator').'</div>';
       } else {
          echo '<div class="card-body">';
-         echo "<ul>";
+         echo '<ul>';
          foreach ($result as $formAnswer) {
             switch ($formAnswer['status']) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
@@ -1065,8 +1065,8 @@ PluginFormcreatorTranslatableInterface
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
             echo '</li>';
          }
-         echo "</ul>";
-         echo '<div class="text-center">';
+         echo '</ul>';
+         echo '<div class="text-center card-footer">';
          $criteria = 'criteria[0][field]=10'
                      . '&criteria[0][searchtype]=equals'
                      . '&criteria[0][value]=' . $userId;
