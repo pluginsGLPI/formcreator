@@ -150,7 +150,7 @@ class RoboFile extends RoboFilePlugin
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release == 'release') {
-         $this->updateChangelog();
+         // $this->updateChangelog();
       }
 
       $diff = $this->gitDiff(['package.json']);
@@ -193,11 +193,6 @@ class RoboFile extends RoboFilePlugin
       // Extract from the repo all files we want to have in the redistribuable archive
       $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
 
-      // Add extra files to workdir
-      $success = copy(__DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
-      if (!$success) {
-         throw new RuntimeException("failed to generate Font Awesome resources");
-      }
       // Copy SCSS
       $srcFile = __DIR__ . '/css_compiled/styles.min.css';
       $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
