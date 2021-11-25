@@ -224,7 +224,7 @@ function plugin_init_formcreator() {
                      // No formanswer found
                      Html::displayNotFoundError();
                   }
-                  $ticket = Ticket::getById($itemTicket->fields['items_id']);
+                  $ticket = Ticket::getById($itemTicket->fields['tickets_id']);
                   if ($ticket === false) {
                      Html::redirect($issue->getFormURLWithID($itemTicket->fields['items_id']) . $openItilFollowup);
                   }
