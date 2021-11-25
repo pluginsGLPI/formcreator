@@ -1758,6 +1758,7 @@ PluginFormcreatorTranslatableInterface
       $formProfileTable = PluginFormcreatorForm_Profile::getTable();
       $formLanguage     = PluginFormcreatorForm_Language::getTable();
 
+      $nb = 0;
       if ($DB->tableExists($formTable)
           && $DB->tableExists($formProfileTable)
           && isset($_SESSION['glpiactiveprofile']['id'])) {
