@@ -130,7 +130,7 @@ class PluginFormcreatorLinker
     * are not and will not be imported
     *
     * @param string $itemtype itemtype of object to find
-    * @param int $id ID of object to fiind
+    * @param int $id ID of object to find
     * @param string $idField fieldname where the ID is searched for
     * @return CommonDBTM
     */
@@ -141,7 +141,7 @@ class PluginFormcreatorLinker
          $idField = 'id';
       }
       $item = new $itemtype();
-      plugin_formcreator_getFromDBByField($item, $id, $idField);
+      plugin_formcreator_getFromDBByField($item, $idField, $id);
 
       return $item;
    }
