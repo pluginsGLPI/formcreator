@@ -1759,7 +1759,7 @@ SCRIPT;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      switch ($input['commonitil_validation_rule']) {
+      switch ($input['commonitil_validation_rule'] ?? self::COMMONITIL_VALIDATION_RULE_NONE) {
          default:
          case self::COMMONITIL_VALIDATION_RULE_NONE:
             $input['commonitil_validation_question'] = '0';
