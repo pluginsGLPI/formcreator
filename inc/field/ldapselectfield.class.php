@@ -270,25 +270,19 @@ class LdapselectField extends SelectField
          $cookie = '';
          $ds = $config_ldap->connect();
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-         if (version_compare(PHP_VERSION, '7.3') < 0) {
-            // phpcs:ignore Generic.PHP.DeprecatedFunctions
-            ldap_control_paged_result($ds, 1, false, $cookie);
-            $result = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-         } else {
-            $controls = [
-               [
-                  'oid'        =>LDAP_CONTROL_PAGEDRESULTS,
-                  'iscritical' => false,
-                  'value'      => [
-                     'size'    => $config_ldap->fields['pagesize'],
-                     'cookie'  => $cookie
-                  ]
+         $controls = [
+            [
+               'oid'        =>LDAP_CONTROL_PAGEDRESULTS,
+               'iscritical' => false,
+               'value'      => [
+                  'size'    => $config_ldap->fields['pagesize'],
+                  'cookie'  => $cookie
                ]
-            ];
-            $result = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
-            ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-            $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
-         }
+            ]
+         ];
+         $result = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
+         ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
+         $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
          ldap_get_entries($ds, $result);
       } catch (Exception $e) {
          Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
