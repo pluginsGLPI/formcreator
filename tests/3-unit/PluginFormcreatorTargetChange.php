@@ -447,6 +447,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'tag_specifics',
          'category_rule',
          'category_question',
+         'commonitil_validation_rule',
+         'commonitil_validation_question',
          'show_rule',
          'sla_rule',
          'sla_question_tto',
