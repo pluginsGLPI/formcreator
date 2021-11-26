@@ -1762,7 +1762,7 @@ SCRIPT;
       switch ($input['commonitil_validation_rule']) {
          default:
          case self::COMMONITIL_VALIDATION_RULE_NONE:
-            $input['commonitil_alidation_question'] = '0';
+            $input['commonitil_validation_question'] = '0';
             break;
 
          case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
