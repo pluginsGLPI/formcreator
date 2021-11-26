@@ -1759,22 +1759,24 @@ SCRIPT;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      switch ($input['commonitil_validation_rule'] ?? self::COMMONITIL_VALIDATION_RULE_NONE) {
-         default:
-         case self::COMMONITIL_VALIDATION_RULE_NONE:
-            $input['commonitil_validation_question'] = '0';
-            break;
+      if (isset($input['commonitil_validation_rule'])) {
+         switch ($input['commonitil_validation_rule']) {
+            default:
+            case self::COMMONITIL_VALIDATION_RULE_NONE:
+               $input['commonitil_validation_question'] = '0';
+               break;
 
-         case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
-            $input['commonitil_validation_question'] = json_encode([
-               'type'   => $input['validatortype'],
-               'values' => $input['validation_specific']
-            ]);
-            break;
+            case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+               $input['commonitil_validation_question'] = json_encode([
+                  'type'   => $input['validatortype'],
+                  'values' => $input['validation_specific']
+               ]);
+               break;
 
-         case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
-            $input['commonitil_validation_question'] = $input['_validation_from_user_question'];
-            break;
+            case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
+               $input['commonitil_validation_question'] = $input['_validation_from_user_question'];
+               break;
+         }
       }
 
       return $input;
