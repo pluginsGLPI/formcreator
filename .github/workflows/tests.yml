@@ -100,8 +100,6 @@ jobs:
           $SKIP_TESTS || plugin_test
           $SKIP_FUNCTIONAL_TESTS || plugin_test_functional
           $SKIP_UNINSTALL_TESTS || plugin_test_uninstall
-          $SKIP_LINT_TESTS || plugin_test_lint
-          $SKIP_CS_TESTS || plugin_test_cs
 
   style:
     strategy:
@@ -126,6 +124,6 @@ jobs:
           composer config --unset platform
           rm composer.lock
           composer install --no-interaction --no-progress
-          plugin_test_lint
-          plugin_test_cs
+          $SKIP_LINT_TESTS || plugin_test_lint
+          $SKIP_CS_TESTS || plugin_test_cs
 
