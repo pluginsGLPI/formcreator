@@ -150,7 +150,7 @@ class RoboFile extends RoboFilePlugin
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release == 'release') {
-         // $this->updateChangelog();
+         $this->updateChangelog();
       }
 
       $diff = $this->gitDiff(['package.json']);
