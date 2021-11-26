@@ -300,7 +300,10 @@ class LdapselectField extends SelectField
          'ldap_auth'      => $input['ldap_auth'],
          'ldap_filter'    => $input['ldap_filter'],
          'ldap_attribute' => strtolower($input['ldap_attribute']),
-      ]);
+      ], JSON_UNESCAPED_UNICODE);
+      unset($input['ldap_auth']);
+      unset($input['ldap_filter']);
+      unset($input['ldap_attribute']);
 
       return $input;
    }
