@@ -184,11 +184,6 @@ class LdapselectField extends SelectField
                $tab_values[$id] = $attr[$attribute[0]][0];
                $id++;
             }
-
-            if (AuthLDAP::isLdapPageSizeAvailable($config_ldap) && version_compare(PHP_VERSION, '7.3') < 0) {
-               // phpcs:ignore Generic.PHP.DeprecatedFunctions
-               ldap_control_paged_result_response($ds, $result, $cookie);
-            }
          } while ($cookie !== null && $cookie != '');
 
          asort($tab_values);
