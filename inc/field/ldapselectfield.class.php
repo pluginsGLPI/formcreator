@@ -142,26 +142,19 @@ class LdapselectField extends SelectField
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
          do {
             if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
-               // phpcs:ignore Generic.PHP.DeprecatedFunctions
-               if (version_compare(PHP_VERSION, '7.3') < 0) {
-                  // phpcs:ignore Generic.PHP.DeprecatedFunctions
-                  ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
-                  $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-               } else {
-                  $controls = [
-                     [
-                        'oid'        => LDAP_CONTROL_PAGEDRESULTS,
-                        'iscritical' => true,
-                        'value'      => [
-                           'size'    => $config_ldap->fields['pagesize'],
-                           'cookie'  => $cookie
-                        ]
+               $controls = [
+                  [
+                     'oid'        => LDAP_CONTROL_PAGEDRESULTS,
+                     'iscritical' => true,
+                     'value'      => [
+                        'size'    => $config_ldap->fields['pagesize'],
+                        'cookie'  => $cookie
                      ]
-                  ];
-                  $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
-                  ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-                  $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
-               }
+                  ]
+               ];
+               $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
+               ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
+               $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
             } else {
                $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
             }
