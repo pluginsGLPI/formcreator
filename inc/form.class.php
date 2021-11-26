@@ -358,11 +358,13 @@ PluginFormcreatorTranslatableInterface
                $class = "plugin-forcreator-active";
                $title =  __('Active');
             }
-            $output = '<i class="fa fa-circle '
-            . "$faIcon $class"
-            . '" aria-hidden="true" title="' . $title . '"></i>';
             if (isset($options['raw_data']['id'])) {
+               $output = '<i class="fa fa-circle '
+               . $class
+               . '" aria-hidden="true" title="' . $title . '"></i>';
                $output = '<div style="text-align: center" onclick="plugin_formcreator.toggleForm(' . $options['raw_data']['id']. ')">' . $output . '</div>';
+            } else {
+               $output = $title;
             }
             return $output;
             break;
