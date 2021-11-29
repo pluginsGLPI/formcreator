@@ -1024,6 +1024,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
       /** @var PluginFormcreatorAbstractField $field */
       foreach ($this->getQuestionFields($formId) as $questionId => $field) {
+         if (!$field->hasInput($this->input)) {
+            continue;
+         }
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
          $answer->getFromDBByCrit([
