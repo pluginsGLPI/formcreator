@@ -829,8 +829,7 @@ var plugin_formcreator = new function() {
          data: form.serializeArray(),
          dataType: 'html'
       }).fail(function(data) {
-         $('#plugin_formcreator_error').text(data.responseText);
-         $('#plugin_formcreator_error').show();
+         displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)
