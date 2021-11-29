@@ -218,6 +218,13 @@ function updateCategoriesView() {
       slinkyCategories = $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
          label: true
       });
+
+      // Show label of parent in the 'back' item
+      document.querySelectorAll('#plugin_formcreator_wizard_categories .slinky-menu a.back').forEach(item => {
+         var parentLabel = item.closest('ul').closest('li').querySelector('a').innerText;
+         item.innerText = parentLabel;
+     });
+
       $('#plugin_formcreator_wizard_categories a.back').click(
          function(event) {
             var parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories .slinky-menu > ul', 'li')[1];
