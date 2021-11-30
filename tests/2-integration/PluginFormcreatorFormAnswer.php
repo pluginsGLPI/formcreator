@@ -60,38 +60,6 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       }
    }
 
-   public function providerPrepareInputForAdd() {
-      return [
-         [
-            'input' => [
-               'name'         => 'être ou ne pas être',
-            ],
-         ],
-         [
-            'input' => [
-               'name'         => 'test d\\\'apostrophe',
-            ],
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForAdd
-    * @param array $input
-    */
-   /*
-   public function testPrepareInputForAdd($input) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($input);
-
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $output = $formAnswer->prepareInputForAdd([
-         $form::getForeignKeyField() => $form->getID(),
-      ]);
-      $this->string($output['name'])->isEqualTo($input['name']);
-   }
-   */
-
    public function testNotificationFormAnswerCreated() {
       global $DB, $CFG_GLPI;
 

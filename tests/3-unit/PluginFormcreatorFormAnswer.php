@@ -41,8 +41,105 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testCanValidate':
          case 'testIsFieldVisible':
          case 'testPost_UpdateItem':
+         case 'testPrepareInputForAdd':
             $this->login('glpi', 'glpi');
       }
+   }
+
+   public function providerPrepareInputForAdd() {
+      $question = $this->getQuestion(['fieldtype' => 'text']);
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBByQuestion($question);
+      $this->boolean($form->isNewItem())->isFalse();
+      $success = $form->update([
+         'id' => $form->getID(),
+         'formanswer_name' => '##answer_' . $question->getID() . '##',
+      ]);
+      $this->boolean($success)->isTrue();
+
+      $data = [
+         'form FK required' => [
+            'input' => [],
+            'expected' => false,
+            'message' => '',
+         ],
+         'tags parsing in name' => [
+            'input' => [
+               'plugin_formcreator_forms_id' => $form->getID(),
+               'formcreator_field_' . $question->getID() => 'foo',
+            ],
+            'expected' => [
+               'plugin_formcreator_forms_id'             => $form->getID(),
+               'formcreator_field_' . $question->getID() => 'foo',
+               'name'                                    => 'foo',
+               'entities_id'                             => \Session::getActiveEntity(),
+               'is_recursive'                            => 0,
+               'requester_id'                            => \Session::getLoginUserID(),
+               'users_id_validator'                      => 0,
+               'groups_id_validator'                     => 0,
+               'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+               'request_date'                            => $_SESSION['glpi_currenttime'],
+               'comment'                                 => '',
+            ],
+            'message' => '',
+         ],
+      ];
+
+      $question = $this->getQuestion(['fieldtype' => 'text']);
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBByQuestion($question);
+      $this->boolean($form->isNewItem())->isFalse();
+      $success = $form->update([
+         'id'                  => $form->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users'    => [2] // glpi
+      ]);
+      $this->boolean($success)->isTrue();
+
+      $data['unique validator user autoselection'] = [
+         'input' => [
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'formcreator_field_' . $question->getID() => 'foo',
+         ],
+         'expected' => [
+            'plugin_formcreator_forms_id'             => $form->getID(),
+            'formcreator_field_' . $question->getID() => 'foo',
+            'name'                                    => $form->fields['name'],
+            'entities_id'                             => \Session::getActiveEntity(),
+            'is_recursive'                            => 0,
+            'requester_id'                            => \Session::getLoginUserID(),
+            'formcreator_validator'                   => 'User_2',
+            'users_id_validator'                      => 2,
+            'groups_id_validator'                     => 0,
+            'status'                                  => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+            'request_date'                            => $_SESSION['glpi_currenttime'],
+            'comment'                                 => '',
+         ],
+         'message' => '',
+      ];
+
+      return $data;
+   }
+
+   /**
+    * @dataProvider providerPrepareInputForAdd
+    *
+    * @param array $input
+    * @param [type] $expected
+    * @return void
+    */
+   public function testPrepareInputForAdd(array $input, $expected, $expectedMessage) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->prepareInputForAdd($input);
+      if ($expected === false) {
+         $this->boolean($output)->isFalse();
+         if ($expectedMessage != '') {
+            $this->sessionHasMessage($expectedMessage, ERROR);
+         }
+         return;
+      }
+
+      $this->array($output)->isEqualTo($expected);
    }
 
    public function providerGetFullForm() {
