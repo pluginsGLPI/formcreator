@@ -719,10 +719,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['plugin_formcreator_forms_id'] = $form->getID();
       // requester_id is actually the author
       // TODO : rename this column
-      $input['requester_id']                = isset($_SESSION['glpiID'])
-                                            ? $_SESSION['glpiID']
-                                            : 0;
-      $input['request_date']                = date('Y-m-d H:i:s');
+      $input['requester_id']                = $_SESSION['glpiID'] ?? 0;
+      $input['request_date']                = $_SESSION['glpi_currenttime'];
       $input['comment']                     = '';
 
       return $input;
