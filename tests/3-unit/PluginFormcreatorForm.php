@@ -174,7 +174,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function providerPrepareInputForAdd() {
       return [
-         [
+         'empty name not allowed' => [
             'input' => [
                'name'         => '',
                'description'  => '',
@@ -183,7 +183,7 @@ class PluginFormcreatorForm extends CommonTestCase {
             'expected' => false, // An empty name should be rejected
             'message'  => 'The name cannot be empty!',
          ],
-         [
+         'html entities conversion' => [
             'input' => [
                'name'         => 'être ou ne pas être',
                'description'  => 'être ou ne pas être',
@@ -192,7 +192,7 @@ class PluginFormcreatorForm extends CommonTestCase {
             'expected' => true,
             'message' => '',
          ],
-         [
+         'quote escaping' => [
             'input' => [
                'name'         => 'test d\\\'apostrophe',
                'description'  => 'test d\\\'apostrophe',
@@ -218,14 +218,23 @@ class PluginFormcreatorForm extends CommonTestCase {
          $this->sessionHasMessage($expectedMessage, ERROR);
       } else {
          $this->string($output['name'])->isEqualTo($input['name']);
-         $this->string($output['description'])->isEqualTo($output['description']);
-         $this->string($output['content'])->isEqualTo($output['content']);
+         $this->string($output['description'])->isEqualTo($input['description']);
+         $this->string($output['content'])->isEqualTo($input['content']);
          $this->array($output)->hasKey('uuid');
       }
    }
 
    public function providerPrepareInputForUpdate() {
-      return $this->providerPrepareInputForAdd();
+      $data = $this->providerPrepareInputForAdd();
+      $data['remove name forbidden'] = [
+         'input' => [
+            'name' => '',
+         ],
+         'expected' => false,
+         'message'  => 'The name cannot be empty!',
+      ];
+
+      return $data;
    }
 
    /**
@@ -234,17 +243,19 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @param boolean $expected
     */
    public function testPrepareInputForUpdate($input, $expected, $expectedMessage) {
-      $instance = new \PluginFormcreatorForm();
-      $instance->add([
+      $instance = $this->getForm([
          'name' => 'anything',
       ]);
       $output = $instance->prepareInputForUpdate($input);
       if ($expected === false) {
          $this->array($output)->size->isEqualTo(0);
+         if ($expectedMessage != '') {
+            $this->sessionHasMessage($expectedMessage, ERROR);
+         }
       } else {
          $this->string($output['name'])->isEqualTo($input['name']);
-         $this->string($output['description'])->isEqualTo($output['description']);
-         $this->string($output['content'])->isEqualTo($output['content']);
+         $this->string($output['description'])->isEqualTo($input['description']);
+         $this->string($output['content'])->isEqualTo($input['content']);
       }
    }
 
