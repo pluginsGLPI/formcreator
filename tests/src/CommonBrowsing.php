@@ -16,9 +16,11 @@ class CommonBrowsing {
    private $selectors = [
       // Selectors available in the header of GLPI (most pages)
       '_header' => [
-         'user menu'                     => 'aside.navbar .user-menu a',
-         'entity select dialog'          => 'aside.navbar .dropdown-menu.dropdown-menu-end .dropstart + .dropstart a',
+         'user icon'                     => 'body > div.page > header > div > div.ms-md-4.d-none.d-lg-block',
+         'user menu'                     => 'div.navbar-nav.flex-row.order-md-last.user-menu > div > a',
+         'entity select dialog'          => '.dropdown-menu.dropdown-menu-end .dropstart + .dropstart a',
          'entity search input'           => 'input[name="entsearchtext"]',
+         'entity search button'          => 'body > div.page > header > div > div.ms-md-4.d-none.d-lg-block > div > div.navbar-nav.flex-row.order-md-last.user-menu > div > div > div:nth-child(3) > div div > button',
 
          'globalEntitySelect'            => '#global_entity_select',
          'entityTreeView'                => 'ul.jstree-container-ul',
@@ -61,25 +63,7 @@ class CommonBrowsing {
     * @param bool    $subtree if true, select the subtree of the entity
     */
    public function changeActiveEntity(Entity $entity, bool $subtree) {
-      // Open the user menu
-      $this->test->client->executeScript("
-         document.querySelector('" . $this->selectors['_header']['user-menu'] . "').click();
-      ");
-      $this->test->client->waitForVisibility($this->selectors['_header']['entity select dialog']);
-
-      // Open the entity selection dialog
-      $this->test->client->executeScript("
-         document.querySelector('" . $this->selectors['_header']['entity select dialog'] . "').click();
-      ");
-      $this->test->client->waitForVisibility($this->selectors['_header']['entity search input']);
-
-      //
-      $this->test->client->executeScript("
-         document.querySelector('" . $this->selectors['_header']['entity search input'] . "').value('" . addcslashes($entity->fields['name'], "'") . "');
-      ");
-      $this->test->client->waitForVisibility('tr[id="ui-id-' . $entity->getID() . '"] .fancytree-title');
-
-      // TODO : Find a way to select the entity to use. Thre is nothing in the DOM to select it
+      $this->test->crawler = $this->test->client->request('GET', '/front/central.php?active_entity=' . $entity->getID());
    }
 
    public function openTab($title) {
