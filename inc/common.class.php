@@ -565,6 +565,20 @@ JAVASCRIPT;
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          return 'css/styles.scss';
       }
+      $scssFile = Plugin::getPhpDir('formcreator', false) . '/css/styles.scss';
+      $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($scssFile, '.scss') . ".min.css";
+      if (!file_exists($compiled_path)) {
+         $css = Html::compileScss(
+            [
+               'file'    => $scssFile,
+               'nocache' => true,
+               'debug'   => true,
+            ]
+         );
+         if (strlen($css) === @file_put_contents($compiled_path, $css)) {
+            return 'css/styles.scss';
+         }
+      }
       return 'css_compiled/styles.min.css';
    }
 
