@@ -280,7 +280,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       echo '</table>';
       Html::closeForm();
 
-      $this->showTagsList();
+      $this->getForm()->showTagsList();
    }
 
    public static function showProperties(self $item) {
