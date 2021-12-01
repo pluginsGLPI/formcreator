@@ -292,4 +292,28 @@ class HiddenField extends CommonTestCase {
       $this->boolean($output['may_be_empty'])->isEqualTo(false);
       $this->boolean($output['may_be_required'])->isEqualTo(false);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'hidden text',
+            'expected' => 'hidden text',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

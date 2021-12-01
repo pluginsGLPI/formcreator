@@ -386,4 +386,27 @@ class SelectField extends CommonTestCase {
       $output = $instance->regex('/bar/');
       $this->boolean($output)->isFalse();
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'a (select)',
+            'expected' => 'a (select)',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

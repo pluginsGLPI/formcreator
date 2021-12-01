@@ -1904,7 +1904,7 @@ PluginFormcreatorTranslatableInterface
       // Set entity of the form
       $entity = new Entity();
       $entityFk = Entity::getForeignKeyField();
-      $entityId = $_SESSION['glpiactive_entity'];
+      $entityId = Session::getActiveEntity();
       if (isset($input['_entity'])) {
          plugin_formcreator_getFromDBByField(
             $entity,

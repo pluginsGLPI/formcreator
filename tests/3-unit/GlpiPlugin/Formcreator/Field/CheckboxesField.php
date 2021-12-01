@@ -452,4 +452,35 @@ class CheckboxesField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => json_encode([
+               "a (checkbox)",
+               "c (checkbox)"
+            ]),
+            'expected' => [
+               "a (checkbox)",
+               "c (checkbox)"
+            ]
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'values'    => json_encode(["a (checkbox)","b (checkbox)","c (checkbox)"], JSON_OBJECT_AS_ARRAY)
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
+   }
 }

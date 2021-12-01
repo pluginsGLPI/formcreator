@@ -326,4 +326,28 @@ class RadiosField extends CommonTestCase {
       $output = $instance->notEquals($compare);
       $this->boolean($output)->isEqualTo(!$expected);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'b (radio)',
+            'expected' => 'b (radio)',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

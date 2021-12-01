@@ -210,4 +210,27 @@ class TextareaField extends CommonTestCase {
       $output = $instance->greaterThan($comparison);
       $this->boolean($output)->isEqualTo($expected);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'this is a text',
+            'expected' => 'this is a text',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

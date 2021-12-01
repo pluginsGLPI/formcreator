@@ -176,4 +176,35 @@ class MultiSelectField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => json_encode([
+               'a (multiselect)',
+               'b (multiselect)'
+            ]),
+            'expected' => [
+               'a (multiselect)',
+               'b (multiselect)'
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'values' => '["a (multiselect)","b (multiselect)","c (multiselect)"]'
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
+   }
 }

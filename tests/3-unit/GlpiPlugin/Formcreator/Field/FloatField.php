@@ -324,4 +324,28 @@ class FloatField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '3.14',
+            'expected' => '3.14',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

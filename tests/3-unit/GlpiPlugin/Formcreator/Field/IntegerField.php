@@ -270,4 +270,29 @@ class IntegerField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '42',
+            'expected' => '42',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'itemtype' => Location::class
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }
