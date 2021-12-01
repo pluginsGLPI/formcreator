@@ -271,4 +271,27 @@ class TimeField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '12:14:50',
+            'expected' => '12:14:50',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

@@ -31,7 +31,7 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
-
+use User;
 class ActorField extends CommonTestCase {
    public function testGetDesignSpecializationField() {
       $instance = $this->newTestedInstance($this->getQuestion(['fieldtype' => 'actor']));
@@ -450,5 +450,32 @@ class ActorField extends CommonTestCase {
    public function testIsValidValue($instance, $value, $expected) {
       $output = $instance->isValidValue($value);
       $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => json_encode([2, 'email@example.com']),
+            'expected' => [
+               [User::class, 2],
+               'email@example.com',
+            ]
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion();
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }

@@ -224,4 +224,27 @@ class DateField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '2021-05-11',
+            'expected' => '2021-05-11'
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion();
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

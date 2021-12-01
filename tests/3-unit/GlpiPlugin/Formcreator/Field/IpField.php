@@ -156,4 +156,28 @@ class IpField extends CommonTestCase {
          }
       )->isInstanceOf(ComparisonException::class);
    }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '127.0.0.1',
+            'expected' => '127.0.0.1',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
+   }
 }

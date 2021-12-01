@@ -32,6 +32,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Computer;
 
 class GlpiselectField extends CommonTestCase {
 
@@ -294,5 +295,39 @@ class GlpiselectField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      $computer = new Computer();
+      $computer->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => 0,
+      ]);
+      return [
+         [
+            'input'    => $computer->getID(),
+            'expected' => [
+               Computer::class,
+               $computer->getID()
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'itemtype' => Computer::class,
+         'values' => '{"entity_restrict":"2"}'
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }

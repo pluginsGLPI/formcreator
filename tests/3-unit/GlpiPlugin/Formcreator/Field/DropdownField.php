@@ -30,7 +30,7 @@
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-
+use Location;
 class DropdownField extends CommonTestCase {
    public function beforeTestMethod($method) {
       switch ($method) {
@@ -364,5 +364,38 @@ class DropdownField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerGetValueForApi() {
+      $location = new Location();
+      $location->add([
+         'name' => $this->getUniqueString(),
+      ]);
+
+      return [
+         [
+            'input'    => $location->getID(),
+            'expected' => [
+               Location::class,
+               $location->getID(),
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'itemtype' => Location::class
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }
