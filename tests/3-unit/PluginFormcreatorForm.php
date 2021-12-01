@@ -269,6 +269,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'PluginFormcreatorForm_Profile$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
          'PluginFormcreatorForm$2' => "Preview",
+         'PluginFormcreatorForm$3' => "Form answer properties",
          'PluginFormcreatorFormAnswer$1' => "Form answers",
          'PluginFormcreatorForm_Language$1' => 'Form languages',
          'Log$1' => "Historical",
@@ -289,6 +290,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($output)->isEqualTo([
          1 => 'Targets',
          2 => 'Preview',
+         3 => "Form answer properties"
       ]);
 
       $item = new \User();

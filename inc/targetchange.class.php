@@ -543,7 +543,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       Html::closeForm();
 
-      $this->showTagsList();
+      $this->getForm()->showTagsList();
    }
 
 
