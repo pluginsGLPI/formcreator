@@ -387,27 +387,10 @@ function plugin_formcreator_hook() {
    $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
 
    // Config page
-   $links  = [];
    if (Session::haveRight('entity', UPDATE)) {
-      $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
       $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
-      $links['config'] = FORMCREATOR_ROOTDOC . '/front/form.php';
-      $links['add']    = FORMCREATOR_ROOTDOC . '/front/form.form.php';
    }
-   $img = '<i class="fa fa-check-square"
-            title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list"></i>';
 
-   $links[$img] = FORMCREATOR_ROOTDOC . '/front/formanswer.php';
-
-   // Set options for pages (title, links, buttons...)
-   $links['search'] = FORMCREATOR_ROOTDOC . '/front/formlist.php';
-   $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
-      'config'       => ['title'  => __('Setup'),
-                           'page'   => FORMCREATOR_ROOTDOC . '/front/form.php',
-                           'links'  => $links],
-      'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                           'links'  => $links],
-   ];
 }
 
 function plugin_formcreator_registerClasses() {
