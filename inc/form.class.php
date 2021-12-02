@@ -120,7 +120,6 @@ PluginFormcreatorTranslatableInterface
       $import_image     = '<i class="fas fa-download"
                                 title="' . __('Import forms', 'formcreator') . '"></i>';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
-      $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
       $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false);
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
 
