@@ -65,14 +65,8 @@ class PluginFormcreatorFormList extends CommonTestCase {
    public function testGetMenuContent() {
       $output = \PluginFormcreatorFormList::getMenuContent();
       $plugindir = '/' . basename(dirname(dirname(dirname(__DIR__))));
-      $this->string($output['links']['search'])->isEqualTo($plugindir . '/formcreator/front/formlist.php');
-      $this->array($output['links'])->notHasKey('add');
-      $this->string($output['links']['config'])->isEqualTo($plugindir . '/formcreator/front/form.php');
-
-      $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorFormList::getMenuContent();
-      $this->string($output['links']['search'])->isEqualTo($plugindir . '/formcreator/front/formlist.php');
-      $this->string($output['links']['add'])->isEqualTo($plugindir . '/formcreator/front/form.form.php');
-      $this->string($output['links']['config'])->isEqualTo($plugindir . '/formcreator/front/form.php');
+      $this->string($output['title'])->isEqualTo('Forms');
+      $this->string($output['page'])->isEqualTo($plugindir . '/formcreator/front/formlist.php');
+      $this->string($output['icon'])->isEqualTo('fas fa-edit');
    }
 }
