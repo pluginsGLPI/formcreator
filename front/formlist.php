@@ -43,20 +43,9 @@ if (Session::getCurrentInterface() == 'helpdesk') {
       Html::redirect('issue.php');
    } else {
       Html::helpHeader(__('Form list', 'formcreator'));
-      // Html::helpHeader(
-      //    __('Form list', 'formcreator'),
-      //    $_SERVER['PHP_SELF']
-      // );
    }
 } else {
-   // Html::header(
-   //    __('Form list', 'formcreator'),
-   //    $_SERVER['PHP_SELF'],
-   //    'helpdesk',
-   //    PluginFormcreatorFormlist::class
-   // );
    Html::header(__('Form list', 'formcreator'));
-
 }
 
 $form = PluginFormcreatorCommon::getForm();
