@@ -48,7 +48,7 @@ class PluginFormcreatorFormList extends CommonGLPI
 
    public static function getMenuContent() {
       $menu = parent::getMenuContent();
-      $menu['title'] = static::getTypeName(2);
+      $menu['title'] = static::getTypeName(Session::getPluralNumber());
       $menu['page'] = PluginFormcreatorFormList::getSearchURL(false);
       $menu['icon'] = 'fas fa-edit';
 

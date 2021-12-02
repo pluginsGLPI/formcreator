@@ -521,12 +521,34 @@ function plugin_formcreator_redefine_menus($menus) {
    }
 
    if (plugin_formcreator_replaceHelpdesk() !== false) {
-      if (isset($menus['create_ticket'])) {
-         unset($menus['create_ticket']);
+      $newMenu = [];
+      $newMenu['seek_assistance'] = [
+         'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
+         'title'   => __('Seek assistance', 'formcreator'),
+         'icon'    => 'fa fa-paper-plane',
+      ];
+      $newMenu['my_assistance_requests'] = [
+         'default' => PluginFormcreatorIssue::getSearchURL(false),
+         'title'   => __('My requests for assistance', 'formcreator'),
+         'icon'    => 'fa fa-list',
+      ];
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
+         && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+      ) {
+         $newMenu['faq'] = $menus['faq'];
       }
-      $menus['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
-
-      return $menus;
+      $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
+      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+         $newMenu['reservation'] = $menus['reservation'];
+      }
+      if (RSSFeed::canView()) {
+         $newMenu['feeds'] = [
+            'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
+            'title'   => __('Consult feeds', 'formcreator'),
+            'icon'    => 'fa fa-rss',
+         ];
+      }
+      return $newMenu;
    }
 
    // Using GLPI's helpdesk interface; then just modify the menu
