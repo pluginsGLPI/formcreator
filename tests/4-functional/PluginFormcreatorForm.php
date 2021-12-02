@@ -257,4 +257,10 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       $output = $this->crawler->filter($formTileSelector);
       $this->integer(count($output))->isEqualTo(0);
    }
+
+   public function testAcessToIssuesFromAdmin() {
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.php');
+      $href = '/' . Plugin::getWebDir('formcreator', false) . '/front/issue.php';
+      $this->client->waitForVisibility('header li.nav-item a[href="' . $href . '"]');
+   }
 }

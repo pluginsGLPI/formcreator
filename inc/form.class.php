@@ -119,10 +119,13 @@ PluginFormcreatorTranslatableInterface
                                 title="' . __('Forms waiting for validation', 'formcreator') . '"></i>';
       $import_image     = '<i class="fas fa-download"
                                 title="' . __('Import forms', 'formcreator') . '"></i>';
+      $requests_image   = '<i class="fa fa-paper-plane"
+                                 title="' . PluginFormcreatorIssue::getTypeName(Session::getPluralNumber()) . '"></i>';
+
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false);
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
-
+      $menu['links'][$requests_image]   = PluginFormcreatorIssue::getSearchURL(false);
       return $menu;
    }
 
