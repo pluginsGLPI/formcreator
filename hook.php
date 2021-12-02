@@ -127,20 +127,25 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
    $currentUser = Session::getLoginUserID();
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
+         if (Session::haveRight(Entity::$rightname, UPDATE)) {
+            // The user is a Formcreator administrator
+            return '';
+         }
+         // Simplified interface or service catalog
          // Use default where from Tickets
          $condition = Search::addDefaultWhere(Ticket::class);
          if ($condition != '') {
             // Replace references to ticket tables with issues table
             $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
             $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
-            // $condition .= ' OR ';
+            $condition .= ' OR ';
          }
          // condition where current user is a validator of the issue
          if (Plugin::isPluginActive('advform')) {
             $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[9]['joinparams']);
-            $condition .= " OR `glpi_users_$complexJoinId`.`id` = '$currentUser'";
+            $condition .= "`glpi_users_$complexJoinId`.`id` = '$currentUser'";
          } else {
-            $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
+            $condition .= "`glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
          }
          // condition where current user is a member of a validator group of the issue
          $groupList = [];
