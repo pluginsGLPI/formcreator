@@ -117,7 +117,7 @@ PluginFormcreatorTranslatableInterface
       $menu['icon'] = 'fas fa-edit';
       $validation_image = '<i class="fa fa-check-square"
                                 title="' . __('Forms waiting for validation', 'formcreator') . '"></i>';
-      $import_image     = '<i class="fas fa-upload"
+      $import_image     = '<i class="fas fa-download"
                                 title="' . __('Import forms', 'formcreator') . '"></i>';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
