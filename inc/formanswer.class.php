@@ -910,7 +910,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = PluginFormcreatorForm::getById($formId ?? $this->fields[$formFk]);
+      $form = PluginFormcreatorCommon::getForm();
+      $form->getFromDB($formId ?? $this->fields[$formFk]);
       if ($form === false) {
          return null;
       }

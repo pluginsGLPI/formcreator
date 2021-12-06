@@ -1054,8 +1054,9 @@ PluginFormcreatorTranslatableInterface
                   $status = $formAnswer['status'];
             }
             $status = CommonITILOBject::getStatusClass($status);
+            $formAnswerUrl = PluginFormcreatorCommon::getFormAnswer()->getFormURLWithID($formAnswer['id']);
             echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+            echo '<i class="'.$status.'"></i><a href="'.$formAnswerUrl.'">'.$formAnswer['name'].'</a>';
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
             echo '</li>';
          }
@@ -1105,8 +1106,9 @@ PluginFormcreatorTranslatableInterface
                   $status = $formAnswer['status'];
             }
             $status = CommonITILOBject::getStatusClass($status);
+            $formAnswerUrl = PluginFormcreatorCommon::getFormAnswer()->getFormURLWithID($formAnswer['id']);
             echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+            echo '<i class="'.$status.'"></i><a href="'.$formAnswerUrl.'">'.$formAnswer['name'].'</a>';
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
             echo '</li>';
          }
@@ -1160,11 +1162,10 @@ PluginFormcreatorTranslatableInterface
 
       $formName = 'plugin_formcreator_form';
       $formId = $this->getID();
-      self::getFormURL();
       echo '<div class="asset">';
       echo '<form name="' . $formName . '" method="post" role="form" enctype="multipart/form-data"'
       . ' class="plugin_formcreator_form"'
-      . ' action="' . self::getFormURL() . '"'
+      . ' action="' . static::getFormURL() . '"'
       . ' id="plugin_formcreator_form"'
       . ' data-itemtype="PluginFormcreatorForm"'
       . ' data-id="' . $formId . '"'
