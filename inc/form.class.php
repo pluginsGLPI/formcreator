@@ -1856,7 +1856,7 @@ PluginFormcreatorTranslatableInterface
 
          $success = true;
          foreach ($forms_toimport['forms'] as $form) {
-            $linker->current();
+            $linker->reset();
             set_time_limit(30);
             try {
                self::import($linker, $form);
