@@ -377,6 +377,9 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'items_id'  => $id
       ]
    ]);
+   if ($issue->isNewItem()) {
+      return;
+   }
    $issue->update([
       'id'                 => $issue->getID(),
       'items_id'           => $id,
