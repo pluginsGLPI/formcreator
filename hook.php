@@ -187,28 +187,27 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 
          if (Plugin::isPluginActive('advform')) {
             return PluginAdvformCommon::addDefaultWhere($itemtype);
-         } else {
-            // check the user
-            $condition = " (`$table`.`users_id_validator` = $currentUser";
-
-            // check groups of the user
-            $groups = Group_User::getUserGroups($currentUser);
-            if (count($groups) < 1) {
-               // The user is not a member of any group
-               $condition .= ")";
-               return $condition;
-            }
-
-            $groupIDs = [];
-            foreach ($groups as $group) {
-               $groupIDs[] = $group['id'];
-            }
-            $groupIDs = implode(',', $groupIDs);
-            $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs)";
-            $condition .= ")";
-
-            return "$condition";
          }
+         // check the user
+         $condition = " (`$table`.`users_id_validator` = $currentUser";
+
+         // check groups of the user
+         $groups = Group_User::getUserGroups($currentUser);
+         if (count($groups) < 1) {
+            // The user is not a member of any group
+            $condition .= ")";
+            return $condition;
+         }
+
+         $groupIDs = [];
+         foreach ($groups as $group) {
+            $groupIDs[] = $group['id'];
+         }
+         $groupIDs = implode(',', $groupIDs);
+         $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs)";
+         $condition .= ")";
+
+         return "$condition";
          break;
    }
    return '';
