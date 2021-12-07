@@ -1955,8 +1955,8 @@ PluginFormcreatorTranslatableInterface
          if (!$kbItemCategory->isNewItem()) {
             if (!$entity->canUpdateItem()) {
                if ($itemId !== false) {
-                 // The form is in an KB category where we don't have UPDATE right
-                 Session::addMessageAfterRedirect(
+                  // The form is in an KB category where we don't have UPDATE right
+                  Session::addMessageAfterRedirect(
                      sprintf(__('The form %1$s already exists and is in an unmodifiable KB category.', 'formcreator'), $input['name']),
                      false,
                      WARNING
