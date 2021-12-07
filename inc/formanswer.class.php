@@ -1711,10 +1711,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return integer
     */
    protected static function getValidationStatus(PluginFormcreatorFormAnswer $formAnswer): int {
-      if (Plugin::isPluginActive('advform')) {
-         return PluginAdvformFormAnswer::getValidationStatus($formAnswer);
-      }
-
       return isset($formAnswer->input['refuse_formanswer'])
              ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED
              : PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
