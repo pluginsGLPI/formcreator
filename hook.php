@@ -60,15 +60,6 @@ function plugin_formcreator_uninstall() {
    $install->uninstall();
 }
 
-/**
- * Define Dropdown tables to be manage in GLPI :
- */
-function plugin_formcreator_getDropdown() {
-   return [
-      'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
-   ];
-}
-
 
 function plugin_formcreator_addDefaultSelect($itemtype) {
    switch ($itemtype) {

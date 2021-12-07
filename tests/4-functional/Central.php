@@ -33,7 +33,7 @@ class Central extends CommonFunctionalTestCase {
 
       // create a category
       \Session::changeActiveEntities($entity->getID(), true);
-      $category = new \PluginFormcreatorCategory();
+      $category = new \KnowbaseItemCategory();
       $categoryId = $category->import([
          'completename' => $this->getUniqueString(),
          'entities_id'  => $entity->getID(),
@@ -86,7 +86,7 @@ class Central extends CommonFunctionalTestCase {
       // Move the form in a category
       $form->update([
          'id'            => $form->getID(),
-         \PluginFormcreatorCategory::getForeignKeyField() => $categoryId,
+         \KnowbaseItemCategory::getForeignKeyField() => $categoryId,
       ]);
       $this->crawler = $this->client->reload();
       // Open the forms tab
