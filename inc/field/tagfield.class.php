@@ -35,7 +35,6 @@ namespace GlpiPlugin\Formcreator\Field;
 use Dropdown;
 use PluginTagTag;
 use Session;
-use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Html;
 

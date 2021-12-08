@@ -1552,7 +1552,7 @@ PluginFormcreatorTranslatableInterface
       if ($new_form_id === false) {
          return false;
       }
-      $newForm = new self();
+      $newForm = PluginFormcreatorCommon::getForm();
       $newForm->getFromDB($new_form_id);
       $newName = $newForm->fields['name'] . ' [' . __('Duplicate', 'formcreator') . ']';
       $newForm->update([

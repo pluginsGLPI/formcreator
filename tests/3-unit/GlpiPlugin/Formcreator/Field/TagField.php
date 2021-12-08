@@ -40,11 +40,18 @@ class TagField extends CommonTestCase {
    }
 
    public function testIsPrerequisites() {
-      // $instance = $this->newTestedInstance([]);
-      // $output = $instance->isPrerequisites();
-      // $this->boolean($output)->isEqualTo(false);
+      $question = $this->getQuestion([
+         'fieldtype' => 'tag',
+      ]);
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(false);
 
       // TODO : emulate plugin tags loaded and check
       // that the method retures true
+      require_once(__DIR__ . '/../../../../fixture/PluginTagTag.php');
+
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
    }
 }
