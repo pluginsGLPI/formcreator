@@ -41,7 +41,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 $formanswer = PluginFormcreatorCommon::getFormAnswer();
 
 if (isset($_POST['update'])) {
-   // Edit an existing target ticket
+   // Edit an existing form answer
    $formanswer->update($_POST);
    Html::back();
 
