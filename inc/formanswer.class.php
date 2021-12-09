@@ -1057,7 +1057,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // TODO: find a way to validate the answers
             // If the form is not being validated, nothing gives the power to anyone to validate the answers
-            $formAnswer = new self();
+            $formAnswer = PluginFormcreatorCommon::getFormAnswer();
             $formAnswer->update([
                'id'     => $formAnswerId,
                'status' => self::STATUS_WAITING,
@@ -1106,7 +1106,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // TODO: find a way to validate the answers
             // If the form is not being validated, nothing gives the power to anyone to validate the answers
-            $formAnswer = new self();
+            $formAnswer = PluginFormcreatorCommon::getFormAnswer();
             $formAnswer->update([
                'id'     => $formAnswerId,
                'status' => self::STATUS_WAITING,

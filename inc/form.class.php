@@ -1709,7 +1709,7 @@ PluginFormcreatorTranslatableInterface
                   ]),
                ],
             ],
-         ] + (new DbUtils())->getEntitiesRestrictCriteria($formTable, '', '', (new self())->maybeRecursive()),
+         ] + (new DbUtils())->getEntitiesRestrictCriteria($formTable, '', '', (PluginFormcreatorCommon::getForm())->maybeRecursive()),
 
       ]);
       $result->rewind();
@@ -1747,7 +1747,7 @@ PluginFormcreatorTranslatableInterface
          '_profiles'     => PluginFormcreatorForm_Profile::class,
          '_sections'     => PluginFormcreatorSection::class,
          '_conditions'   => PluginFormcreatorCondition::class,
-         '_targets'      => (new self())->getTargetTypes(),
+         '_targets'      => (PluginFormcreatorCommon::getForm())->getTargetTypes(),
          '_validators'   => PluginFormcreatorForm_Validator::class,
          '_translations' => PluginFormcreatorForm_Language::class,
       ];
@@ -1940,7 +1940,9 @@ PluginFormcreatorTranslatableInterface
          throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', self::getTypeName(1)));
       }
 
-      $item = new self();
+      $input['_skip_checks'] = true;
+
+      $item = PluginFormcreatorCommon::getForm();
       // Find an existing form to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
@@ -2037,7 +2039,7 @@ PluginFormcreatorTranslatableInterface
          '_profiles'     => PluginFormcreatorForm_Profile::class,
          '_sections'     => PluginFormcreatorSection::class,
          '_conditions'   => PluginFormcreatorCondition::class,
-         '_targets'      => (new self())->getTargetTypes(),
+         '_targets'      => (PluginFormcreatorCommon::getForm())->getTargetTypes(),
          '_validators'   => PluginFormcreatorForm_Validator::class,
          '_translations' => PluginFormcreatorForm_Language::class,
       ];
@@ -2052,7 +2054,7 @@ PluginFormcreatorTranslatableInterface
          '_profiles'   => PluginFormcreatorForm_Profile::class,
          '_sections'   => PluginFormcreatorSection::class,
          '_conditions' => PluginFormcreatorCondition::class,
-         '_targets'    => (new self())->getTargetTypes(),
+         '_targets'    => (PluginFormcreatorCommon::getForm())->getTargetTypes(),
          '_validators' => PluginFormcreatorForm_Validator::class,
       ];
       return 1 + self::countChildren($input, $subItems);
