@@ -31,6 +31,7 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer as GlobalPluginFormcreatorFormAnswer;
 
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -42,6 +43,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testIsFieldVisible':
          case 'testPost_UpdateItem':
          case 'testPrepareInputForAdd':
+         case 'testGetTartgets':
             $this->login('glpi', 'glpi');
       }
    }
@@ -593,5 +595,75 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
       $this->boolean($answer->isNewItem())->isFalse();
       $this->string($answer->fields['answer'])->isEqualTo('bar');
+   }
+
+   public function testGetTartgets() {
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = 0;
+
+      // Prepare test context
+      // A form with 2 targets of each available type
+      // and a form answer for this form
+      $form = $this->getForm();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $targets = [];
+
+      $targets[] = $this->getTargetTicket([
+         $formFk => $form->getID(),
+      ]);
+      $targets[] = $this->getTargetTicket([
+         $formFk => $form->getID(),
+      ]);
+
+      $targets[] = $this->getTargetChange([
+         $formFk => $form->getID(),
+      ]);
+      $targets[] = $this->getTargetChange([
+         $formFk => $form->getID(),
+      ]);
+
+      $targets[] = $this->getTargetProblem([
+         $formFk => $form->getID(),
+      ]);
+      $targets[] = $this->getTargetProblem([
+         $formFk => $form->getID(),
+      ]);
+
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         $formFk => $form->getID(),
+      ]);
+
+      $output = $instance->getGeneratedTargets();
+
+      $this->array($output)->hasSize(count($targets));
+      $typeCount = [
+         \Ticket::getType()  => 0,
+         \Change::getType()  => 0,
+         \Problem::getType() => 0,
+      ];
+      foreach($output as $generatedTarget) {
+         $typeCount[$generatedTarget::getType()]++;
+      }
+      $this->array($typeCount)->isEqualTo([
+         \Ticket::getType()  => 2,
+         \Change::getType()  => 2,
+         \Problem::getType() => 2,
+      ]);
+   }
+
+   public function testUpdateStatus() {
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = 0;
+
+      // Prepare test context
+      $form = $this->getForm();
+
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
    }
 }

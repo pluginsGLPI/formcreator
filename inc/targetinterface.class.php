@@ -38,4 +38,8 @@ interface PluginFormcreatorTargetInterface
    public function save(PluginFormcreatorFormAnswer $formanswer);
 
    public function addAttachedDocument($documentId);
+
+   public function getTargetItemtypeName();
+
+   public function getItem_Item();
 }

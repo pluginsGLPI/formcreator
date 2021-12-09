@@ -734,6 +734,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $tab;
    }
 
+   public function getForbiddenStandardMassiveAction() {
+      return [
+         'purge',
+         'clone',
+         'update',
+         'add_transfer_list',
+         'amend_comment',
+      ];
+   }
+
    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
       if (!is_array($values)) {
          $values = [$field => $values];
