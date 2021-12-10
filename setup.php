@@ -165,46 +165,6 @@ function plugin_init_formcreator() {
 }
 
 /**
- * Encode special chars
- *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
- */
-function plugin_formcreator_encode($string, $mode_legacy = true) {
-   if (!is_string($string)) {
-      return $string;
-   }
-   if (!$mode_legacy) {
-      $string = Html::clean(Html::entity_decode_deep($string));
-      $string = preg_replace('/\\r\\n/', ' ', $string);
-      $string = preg_replace('/\\n/', ' ', $string);
-      $string = preg_replace('/\\\\r\\\\n/', ' ', $string);
-      $string = preg_replace('/\\\\n/', ' ', $string);
-      $string = Toolbox::stripslashes_deep($string);
-      $string = Toolbox::addslashes_deep($string);
-   } else {
-      $string = stripcslashes($string);
-      $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
-      $string = str_replace('&apos;', "'", $string);
-      $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
-   }
-   return $string;
-}
-
-/**
- * Encode special chars
- *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
- */
-function plugin_formcreator_decode($string) {
-   $string = stripcslashes($string);
-   $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
-   $string = str_replace('&apos;', "'", $string);
-   return $string;
-}
-
-/**
  * Tells if helpdesk replacement is enabled for the current user
  *
  * @return boolean|integer

@@ -138,6 +138,23 @@ class PluginFormcreatorInstall {
          $fromSchemaVersion = $this->getSchemaVersion();
       }
 
+      if (version_compare($fromSchemaVersion, '2.5') < 0) {
+         if (isCommandLine()) {
+            echo 'Upgrade from version < 2.5.0 is no longer supported.' . PHP_EOL;
+            echo 'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,' . PHP_EOL;
+            echo 'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.' . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect(
+               'Upgrade from version < 2.5.0 is no longer supported.<br>' .
+               'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,<br>' .
+               'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.',
+               true,
+               ERROR
+            );
+         }
+         return false;
+      }
+
       while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
          $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
          $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
