@@ -30,10 +30,10 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+   die("Sorry. You can'qt access this file directly");
 }
 
-use Glpi\Toolbox\RichText;
+use Glpi\RichText;
 class PluginFormcreatorIssue extends CommonDBTM {
    static $rightname = 'ticket';
 

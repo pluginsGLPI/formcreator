@@ -38,7 +38,7 @@ require_once(realpath(dirname(__FILE__) . '/../../../inc/includes.php'));
 
 abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldInterface
 {
-   /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
+   /** @var PluginFormcreatorQuestion $question */
    protected $question = null;
 
    /** @var mixed $answer Value of the field */
