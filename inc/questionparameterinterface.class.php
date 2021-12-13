@@ -34,6 +34,15 @@ if (!defined('GLPI_ROOT')) {
 
 interface PluginFormcreatorQuestionParameterInterface {
    /**
+    * set field and options related to this question parameter
+    *
+    * @param PluginFormcreatorFieldInterface $field
+    * @param array $options
+    * @return void
+    */
+   public function setField(PluginFormcreatorFieldInterface $field, array $options);
+
+   /**
     * Gets the HTML form part for the parameters
     * @param PluginFormcreatorForm $form a form used as context when displaying parameters
     * @param PluginFormcreatorQuestion $question question associated to the field, itself associated to the parameter

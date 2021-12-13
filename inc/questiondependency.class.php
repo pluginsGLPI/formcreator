@@ -59,8 +59,8 @@ extends PluginFormcreatorAbstractQuestionParameter
     *                - label    : label for the parameter
     *                - fieldType: array of field types the dependency should filter
     */
-   public function __construct(PluginFormcreatorFieldInterface $field, array $options) {
-      parent::__construct($field, $options);
+   public function setField(PluginFormcreatorFieldInterface $field, array $options) {
+      parent::setField($field, $options);
       $this->fieldtype = isset($options['fieldType']) ? $options['fieldType'] : [];
    }
 

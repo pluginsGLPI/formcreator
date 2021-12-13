@@ -442,9 +442,8 @@ PluginFormcreatorTranslatableInterface
       // handle description field and its inline pictures
       if (isset($input['_description'])) {
          foreach ($input['_description'] as $id => $filename) {
-            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
-            // when is merged https://github.com/glpi-project/glpi/pull/9335
-            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
+            $document = new Document();
+            if ($document->getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
                $this->value = str_replace('id="' .  $input['_tag_description'] . '"', $document->fields['tag'], $this->value);
                $input['_tag_description'][$id] = $document->fields['tag'];
             }
@@ -720,7 +719,7 @@ PluginFormcreatorTranslatableInterface
             'show_rule' => PluginFormcreatorCondition::SHOW_RULE_ALWAYS
          ],
          [
-            'id' => new QuerySubquery([
+            'id' => new QuerySubQuery([
                'SELECT' => self::getForeignKeyField(),
                'FROM' => $condition_table,
                'WHERE' => ['plugin_formcreator_questions_id' => $questionId]

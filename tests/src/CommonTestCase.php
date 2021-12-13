@@ -45,8 +45,6 @@ abstract class CommonTestCase extends atoum
 
       $DB = new DB();
 
-      include_once (GLPI_ROOT . "/inc/timer.class.php");
-
       // Security of PHP_SELF
       $_SERVER['PHP_SELF'] = Html::cleanParametersURL($_SERVER['PHP_SELF']);
 
