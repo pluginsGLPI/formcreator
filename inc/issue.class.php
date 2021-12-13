@@ -179,9 +179,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
                ],
             ],
             [
-               'TABLE' => new QuerySubquery([
+               'TABLE' => new QuerySubQuery([
                   'SELECT' => '*',
-                  'FROM' => new QuerySubquery([
+                  'FROM' => new QuerySubQuery([
                      'SELECT' => ['users_id', $ticketFk],
                      'DISTINCT' => true,
                      'FROM'  => $ticketUserTable,
@@ -222,9 +222,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       // Union of the 3 previous queries
       $union = new QueryUnion([
-         new QuerySubquery($query1),
-         new QuerySubquery($query2),
-         new QuerySubquery($query3)
+         new QuerySubQuery($query1),
+         new QuerySubQuery($query2),
+         new QuerySubQuery($query3)
       ], true);
 
       return $union;

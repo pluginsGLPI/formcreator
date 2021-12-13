@@ -318,15 +318,14 @@ class CheckboxesField extends PluginFormcreatorAbstractField
    }
 
    public function getEmptyParameters(): array {
+      $range = new PluginFormcreatorQuestionRange();
+      $range->setField($this, [
+         'fieldName' => 'range',
+         'label'     => __('Range', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
       return [
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'range' => $range,
       ];
    }
 

@@ -57,23 +57,22 @@ class DependentField extends PluginFormcreatorAbstractField
    }
 
    public function getEmptyParameters(): array {
+      $firstname = new PluginFormcreatorQuestionDependency();
+      $firstname->setField($this, [
+         'fieldName' => 'firstname',
+         'label'     => __('First name field', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      $lastname = new PluginFormcreatorQuestionDependency();
+      $lastname->setField($this, [
+         'fieldName' => 'lastname',
+         'label'     => __('Last name field', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+
       return [
-         'firstname' => new PluginFormcreatorQuestionDependency(
-            $this,
-            [
-               'fieldName' => 'firstname',
-               'label'     => __('First name field', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
-         'lastname' => new PluginFormcreatorQuestionDependency(
-            $this,
-            [
-               'fieldName' => 'lastname',
-               'label'     => __('Last name field', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'firstname' => $firstname,
+         'lastname' => $lastname,
       ];
    }
 

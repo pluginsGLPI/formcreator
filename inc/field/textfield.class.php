@@ -235,23 +235,21 @@ class TextField extends PluginFormcreatorAbstractField
       $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
       $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
       $regexDoc .= '</small>';
+      $range = new PluginFormcreatorQuestionRange();
+      $range->setField($this, [
+         'fieldName' => 'range',
+         'label'     => __('Range', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      $regex = new PluginFormcreatorQuestionRegex();
+      $regex->setField($this, [
+         'fieldName' => 'regex',
+         'label'     => __('Additional validation', 'formcreator') . $regexDoc,
+         'fieldType' => ['text'],
+      ]);
       return [
-         'regex' => new PluginFormcreatorQuestionRegex(
-            $this,
-            [
-               'fieldName' => 'regex',
-               'label'     => __('Additional validation', 'formcreator') . $regexDoc,
-               'fieldType' => ['text'],
-            ]
-         ),
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'regex' => $regex,
+         'range' => $range,
       ];
    }
 
