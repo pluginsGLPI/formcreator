@@ -527,7 +527,7 @@ PluginFormcreatorTranslatableInterface
       Dropdown::showYesNo('is_visible', $this->fields['is_visible']);
       echo "&nbsp;&nbsp;";
       $tooltip = __(
-         "If set to 'no', this form won't be shown for self-services users. They will still be able to access this form through it's URL.",
+         "If set to 'no', this form won't be shown for self-services users. They will still be able to access this form through its URL.",
          'formcreator'
       );
       Html::showToolTip($tooltip);
