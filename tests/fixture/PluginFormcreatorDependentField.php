@@ -38,6 +38,7 @@ use Toolbox;
 use Html;
 use Session;
 use PluginFormcreatorTranslatable;
+use PluginFormcreatorQuestion;
 
 class DependentField extends PluginFormcreatorAbstractField
 {
@@ -79,7 +80,7 @@ class DependentField extends PluginFormcreatorAbstractField
    public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
-      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_1'] === '0') {
+      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
          Session::addMessageAfterRedirect(__('No text field selected for firstname', 'formcreator'), false, ERROR);
          $success =  false;
       }
