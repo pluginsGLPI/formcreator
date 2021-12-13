@@ -524,7 +524,12 @@ PluginFormcreatorTranslatableInterface
       echo __('Visible', 'formcreator');
       echo '</td>';
       echo '<td>';
-      Dropdown::showYesNo('is_visible', $this->fields['is_visible']);
+      if ($this->isNewID($this->getId())) {
+         $value = true;
+      } else {
+         $value = $this->fields['is_visible'];
+      }
+      Dropdown::showYesNo('is_visible', $value);
       echo "&nbsp;&nbsp;";
       $tooltip = __(
          "If set to 'no', this form won't be shown for self-services users. They will still be able to access this form through its URL.",
