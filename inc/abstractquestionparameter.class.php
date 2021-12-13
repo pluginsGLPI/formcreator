@@ -65,7 +65,7 @@ PluginFormcreatorTranslatableInterface
     *                - fieldName: name of the HTML input tag
     *                - label    : label for the parameter
     */
-   public function __construct(PluginFormcreatorFieldInterface $field, array $options) {
+   public function setField(PluginFormcreatorFieldInterface $field, array $options) {
       $fieldType = $field->getFieldTypeName();
       $fieldName = $options['fieldName'];
       $this->domId = $this->domId . "_{$fieldType}_{$fieldName}";

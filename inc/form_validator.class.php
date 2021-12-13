@@ -171,7 +171,7 @@ PluginFormcreatorExportableInterface
          ],
       ];
       $usersCondition = [
-         "$userTable.id" => new QuerySubquery($subQuery)
+         "$userTable.id" => new QuerySubQuery($subQuery)
       ];
       $formValidator = new PluginFormcreatorForm_Validator();
       $selectedValidatorUsers = [];
@@ -253,7 +253,7 @@ PluginFormcreatorExportableInterface
          ],
       ];
       $groupsCondition = [
-         "$groupTable.id" => new QuerySubquery($subQuery),
+         "$groupTable.id" => new QuerySubQuery($subQuery),
       ];
       $groups = $DB->request([
          'SELECT' => ['id' ,'name'],
@@ -541,7 +541,7 @@ PluginFormcreatorExportableInterface
       $profileFk = Profile::getForeignKeyField();
       $profileRightTable = ProfileRight::getTable();
       $usersCondition = [
-         "$userTable.id" => new QuerySubquery([
+         "$userTable.id" => new QuerySubQuery([
             'SELECT' => "$profileUserTable.$userFk",
             'FROM' => $profileUserTable,
             'INNER JOIN' => [
@@ -606,7 +606,7 @@ PluginFormcreatorExportableInterface
       $profileRightTable = ProfileRight::getTable();
       $groupUserTable = Group_User::getTable();
       $groupsCondition = [
-         "$groupTable.id" => new QuerySubquery([
+         "$groupTable.id" => new QuerySubQuery([
             'SELECT' => "$groupUserTable.$groupFk",
             'FROM' => $groupUserTable,
             'INNER JOIN' => [
