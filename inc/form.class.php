@@ -275,16 +275,6 @@ PluginFormcreatorTranslatableInterface
          'massiveaction'      => false
       ];
 
-      $tab[] = [
-         'id'                 => '34',
-         'table'              => $this::getTable(),
-         'field'              => 'is_visible',
-         'name'               => __('Visible', 'formcreator'),
-         'datatype'           => 'bool',
-         'searchtype'         => ['equals'],
-         'massiveaction'      => true
-      ];
-
       return $tab;
    }
 
@@ -513,24 +503,6 @@ PluginFormcreatorTranslatableInterface
       echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
       echo '<td>';
       Dropdown::showYesNo('is_default', $this->fields['is_default']);
-      echo '</td>';
-      echo '<td></td>';
-      echo '<td></td>';
-      echo '</tr>';
-
-      // Show "is_visible" field
-      echo '<tr>';
-      echo '<td>';
-      echo __('Visible', 'formcreator');
-      echo '</td>';
-      echo '<td>';
-      Dropdown::showYesNo('is_visible', $this->fields['is_visible']);
-      echo "&nbsp;&nbsp;";
-      $tooltip = __(
-         "If set to 'no', this form won't be shown for self-services users. They will still be able to access this form through it's URL.",
-         'formcreator'
-      );
-      Html::showToolTip($tooltip);
       echo '</td>';
       echo '<td></td>';
       echo '<td></td>';
@@ -786,7 +758,6 @@ PluginFormcreatorTranslatableInterface
       $where_form = [
          'AND' => [
             "$table_form.is_active" => '1',
-            "$table_form.is_visible" => '1',
             "$table_form.is_deleted" => '0',
             'OR' => [
                "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],

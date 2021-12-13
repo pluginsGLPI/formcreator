@@ -43,7 +43,6 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->fixInconsistency();
       $this->migrateCategory();
       $this->addTargetValidationSetting();
-      $this->addFormVisibility();
    }
 
    public function addFormAnswerTitle() {
@@ -144,11 +143,5 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $this->migration->addField($table, 'commonitil_validation_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
       $this->migration->addField($table, 'commonitil_validation_question', 'string', ['after' => 'commonitil_validation_rule']);
-   }
-
-   protected function addFormVisibility() {
-      // Add is_visible on forms
-      $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->addField($table, "is_visible", 'bool', ['value' => 1]);
    }
 }
