@@ -42,6 +42,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migrateItemtypeInQuestion();
       $this->fixInconsistency();
       $this->migrateCategory();
+      $this->addTargetValidationSetting();
    }
 
    public function addFormAnswerTitle() {
@@ -132,5 +133,15 @@ class PluginFormcreatorUpgradeTo2_13 {
          $this->migration->dropField($table_forms, 'plugin_formcreator_categories_id');
          $this->migration->dropTable($table_categories);
       }
+   }
+
+   protected function addTargetValidationSetting() {
+      $table = 'glpi_plugin_formcreator_targetchanges';
+      $this->migration->addField($table, 'commonitil_validation_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
+      $this->migration->addField($table, 'commonitil_validation_question', 'string', ['after' => 'commonitil_validation_rule']);
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $this->migration->addField($table, 'commonitil_validation_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
+      $this->migration->addField($table, 'commonitil_validation_question', 'string', ['after' => 'commonitil_validation_rule']);
    }
 }

@@ -663,6 +663,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'associate_question',
          'location_rule',
          'location_question',
+         'commonitil_validation_rule',
+         'commonitil_validation_question',
          'show_rule',
          'sla_rule',
          'sla_question_tto',

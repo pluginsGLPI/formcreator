@@ -195,6 +195,10 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
 
+   const COMMONITIL_VALIDATION_RULE_NONE = 1;
+   const COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
+   const COMMONITIL_VALIDATION_RULE_ANSWER_USER = 3;
+
    const OLA_RULE_NONE = 1;
    const OLA_RULE_SPECIFIC = 2;
    const OLA_RULE_FROM_ANWSER = 3;
@@ -289,6 +293,13 @@ PluginFormcreatorTranslatableInterface
       ];
    }
 
+   public static function getEnumValidationRule() {
+      return [
+         self::COMMONITIL_VALIDATION_RULE_NONE                      => __('No validation', 'formcreator'),
+         self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP    => __('Specific user or group', 'formcreator'),
+         self::COMMONITIL_VALIDATION_RULE_ANSWER_USER               => __('User from question answer', 'formcreator'),
+      ];
+   }
 
    public function isEntityAssign() {
       return false;
@@ -1501,6 +1512,66 @@ SCRIPT;
       echo '</tr>';
    }
 
+   protected function showValidationSettings($rand) {
+      echo '<tr>';
+
+      // Setting label
+      echo '<td width="15%">' . __('Validation') . '</td>';
+
+      // Possible values
+      echo '<td width="45%">';
+      Dropdown::showFromArray('commonitil_validation_rule', static::getEnumValidationRule(), [
+         'value'     => $this->fields['commonitil_validation_rule'],
+         'on_change' => "plugin_formcreator_change_validation($rand)",
+         'rand'      => $rand
+      ]);
+      echo Html::scriptBlock("plugin_formcreator_change_validation($rand)");
+      echo '</td>';
+
+      // Hidden secondary labels, displayed according to the user main choice
+      echo '<td width="15%">';
+
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      echo "<span id='commonitil_validation_specific_title' style='$display'>" . __('Approver') . "</span>";
+
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
+      echo "<span id='commonitil_validation_from_question_title' style='$display'>" . __('Question', 'formcreator') . "</span>";
+
+      echo '</td>';
+
+      // Hidden secondary values, displayed according to the user main choice
+      echo '<td width="25%">';
+
+      // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
+      $display = $this->fields['commonitil_validation_answer_user'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      echo "<div id='commonitil_validation_specific' style='$display'>";
+      $validation_dropdown_params = [
+         'name' => 'validation_specific'
+      ];
+      $validation_data = json_decode($this->fields['commonitil_validation_question'], true);
+      if (isset($validation_data['type'])) {
+         $validation_dropdown_params['users_id_validate'] = $validation_data['values'];
+      }
+      CommonITILValidation::dropdownValidator($validation_dropdown_params);
+      echo '</div>';
+
+      // COMMONITIL_VALIDATION_RULE_ANSWER_USER
+      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
+      echo "<div id='validation_answer_user' style='$display'>";
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            new QueryExpression("`fieldtype` = 'actor' OR (`fieldtype` = 'glpiselect' AND `itemtype`='User')"),
+         ],
+         '_validation_from_user_question',
+         $this->fields['commonitil_validation_question'],
+      );
+      echo '</div>';
+
+      echo '</td>';
+      echo '</tr>';
+   }
+
    /**
     * Sets the time to resolve of the target object
     *
@@ -1569,6 +1640,60 @@ SCRIPT;
       return $data;
    }
 
+   /**
+    * Sets the time to resolve of the target object
+    *
+    * @param array $data data of the target object
+    * @param PluginFormcreatorFormAnswer $formanswer    Answers previously saved
+    * @return array updated data of the target object
+    */
+   protected function setTargetValidation(
+      $data,
+      PluginFormcreatorFormAnswer $formanswer
+   ) {
+      global $DB;
+
+      switch ($this->fields['commonitil_validation_rule']) {
+         case self::COMMONITIL_VALIDATION_RULE_NONE:
+         default:
+            // No action
+            break;
+
+         case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+            $validation_data = json_decode($this->fields['commonitil_validation_question'], true);
+
+            if (!is_null($validation_data)) {
+               $data['validatortype'] = $validation_data['type'];
+               $data['users_id_validate'] = $validation_data['values'];
+            }
+
+            break;
+
+         case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
+            $answers = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['commonitil_validation_question']
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Answer may be "2" or [2], both valid json
+               $answer = json_decode($answer['answer']);
+               if (!is_array($answer)) {
+                  $answer = [$answer];
+               }
+               $data['validatortype'] = 'user';
+               $data['users_id_validate'] = $answer;
+               break;
+            }
+      }
+
+      return $data;
+   }
+
    public function prepareInputForAdd($input) {
       if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
          $this->skipCreateActors = true;
@@ -1632,6 +1757,26 @@ SCRIPT;
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      if (isset($input['commonitil_validation_rule'])) {
+         switch ($input['commonitil_validation_rule']) {
+            default:
+            case self::COMMONITIL_VALIDATION_RULE_NONE:
+               $input['commonitil_validation_question'] = '0';
+               break;
+
+            case self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP:
+               $input['commonitil_validation_question'] = json_encode([
+                  'type'   => $input['validatortype'],
+                  'values' => $input['validation_specific']
+               ]);
+               break;
+
+            case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
+               $input['commonitil_validation_question'] = $input['_validation_from_user_question'];
+               break;
+         }
       }
 
       return $input;
