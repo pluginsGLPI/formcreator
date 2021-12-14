@@ -57,18 +57,43 @@ if (!plugin_formcreator_replaceHelpdesk()) {
 PluginFormcreatorCommon::saveLayout();
 $_SESSION['glpilayout'] = "lefttab";
 
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
-} else {
-   Html::header(__('Service catalog', 'formcreator'));
-}
 /** @var PluginFormcreatorIssue $issue */
 $issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
-if ($issue === false) {
+
+if ($issue) {
+   $itemtype = $issue->fields['itemtype'];
+
+   // Trick to change the displayed id as Html::includeHeader() rely on request data
+   $old_id = $_GET['id'];
+   $_GET['id'] = $issue->fields['display_id'];
+
+   // Specific case, viewing a ticket from a formanswer result
+   if ($itemtype == PluginFormcreatorFormAnswer::class && isset($_GET['tickets_id'])) {
+      $itemtype = Ticket::class;
+      $_GET['id'] = "f_$_GET[tickets_id]";
+   }
+
+   $header = __($itemtype::getTypeName(1), 'formcreator');
+   if (Session::getCurrentInterface() == "helpdesk") {
+      Html::helpHeader($header);
+   } else {
+      Html::header($header);
+   }
+
+   // Reset request param in case some other code depends on it
+   $_GET['id'] = $old_id;
+
+   $issue->display($_REQUEST);
+} else {
+   $header = __('Item not found');
+   if (Session::getCurrentInterface() == "helpdesk") {
+      Html::helpHeader($header);
+   } else {
+      Html::header($header);
+   }
    PluginFormcreatorCommon::restoreLayout();
    Html::displayNotFoundError();
 }
-$issue->display($_REQUEST);
 
 if (Session::getCurrentInterface() == "helpdesk") {
    Html::helpFooter();
