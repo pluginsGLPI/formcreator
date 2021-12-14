@@ -1,3 +1,42 @@
+<a name="2.13.0-alpha.2"></a>
+## [2.13.0-alpha.2](https://github.com/pluginsglpi/formcreator/compare/2.13.0-alpha.1..2.13.0-alpha.2) (2021-12-14)
+
+
+### Bug Fixes
+
+*  ineffective code to define menu ([1ab4a065](https://github.com/pluginsglpi/formcreator/commit/1ab4a065))
+*  re-add menu items for service catalog ([f24d4e00](https://github.com/pluginsglpi/formcreator/commit/f24d4e00))
+*  redirection to wrong ticket in some cases ([a2c3898a](https://github.com/pluginsglpi/formcreator/commit/a2c3898a))
+*  remove useless config link in plugin ([58df4079](https://github.com/pluginsglpi/formcreator/commit/58df4079))
+* **form:** PHP warning when displaying form's historical ([893efdab](https://github.com/pluginsglpi/formcreator/commit/893efdab))
+* **form:** duplication error ([0ff45961](https://github.com/pluginsglpi/formcreator/commit/0ff45961)), closes [#2448](https://github.com/pluginsglpi/formcreator/issues/2448)
+* **form:** import linker reset ([1003dc45](https://github.com/pluginsglpi/formcreator/commit/1003dc45))
+* **form:** use download icon for import ([7c9e88ec](https://github.com/pluginsglpi/formcreator/commit/7c9e88ec))
+* **formanswer:** loss of answers upon valdiation ([21a29ba3](https://github.com/pluginsglpi/formcreator/commit/21a29ba3))
+* **formlist:** remove useless links in menu ([e85e04bd](https://github.com/pluginsglpi/formcreator/commit/e85e04bd))
+* **issue:** call to deprecated method ([db56d3e5](https://github.com/pluginsglpi/formcreator/commit/db56d3e5))
+* **issue:** redirection when multiple tickets ([64eb8a50](https://github.com/pluginsglpi/formcreator/commit/64eb8a50))
+* **issue:** use of RichText class ([707a9b91](https://github.com/pluginsglpi/formcreator/commit/707a9b91))
+* **ldapfield:** non latin char escaping ([c4473de3](https://github.com/pluginsglpi/formcreator/commit/c4473de3))
+* **ldapselect:** drop support for PHP 7.3 as GLPI supports 7.4 and later ([52e6cad2](https://github.com/pluginsglpi/formcreator/commit/52e6cad2))
+* **ldapselect:** drop support for PHP 7.3 as GLPI supports 7.4 and later ([c98e3430](https://github.com/pluginsglpi/formcreator/commit/c98e3430))
+* **ldapselect:** drop support for PHP 7.3 as GLPI supports 7.4 and later ([7033c3a4](https://github.com/pluginsglpi/formcreator/commit/7033c3a4))
+* **linker:** inverted arguments in method call ([c477ae91](https://github.com/pluginsglpi/formcreator/commit/c477ae91))
+* **question:** show error toast when editing a question fails ([d90c3f99](https://github.com/pluginsglpi/formcreator/commit/d90c3f99))
+
+
+### Features
+
+*  adapt to new GLPI's autoload ([894df7cc](https://github.com/pluginsglpi/formcreator/commit/894df7cc))
+*  adapt to new GLPI's autoload ([534856df](https://github.com/pluginsglpi/formcreator/commit/534856df))
+*  build css if missing ([9d6aec77](https://github.com/pluginsglpi/formcreator/commit/9d6aec77))
+* **answer:** copmatibility with API ([f4dd4a31](https://github.com/pluginsglpi/formcreator/commit/f4dd4a31))
+* **category:** show parent label in back pseudo-item ([893b2ccc](https://github.com/pluginsglpi/formcreator/commit/893b2ccc))
+* **form:** compliance with GLPI 10; replace form categories by KB categories ([c7c60592](https://github.com/pluginsglpi/formcreator/commit/c7c60592))
+* **issue:** access to admins ([33ee3eaa](https://github.com/pluginsglpi/formcreator/commit/33ee3eaa))
+
+
+
 <a name="2.13.0-alpha.1"></a>
 ## [2.13.0-alpha.1](https://github.com/pluginsglpi/formcreator/compare/v2.12.3..2.13.0-alpha.1) (2021-11-23)
 
