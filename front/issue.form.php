@@ -73,7 +73,7 @@ if ($issue) {
       $_GET['id'] = "f_$_GET[tickets_id]";
    }
 
-   $header = __($itemtype::getTypeName(1), 'formcreator');
+   $header = $itemtype::getTypeName(1);
    if (Session::getCurrentInterface() == "helpdesk") {
       Html::helpHeader($header);
    } else {
