@@ -2063,7 +2063,7 @@ PluginFormcreatorTranslatableInterface
       $formCategoryFk = KnowbaseItemCategory::getForeignKeyField();
 
       // Show categories which have at least one form user can access
-      $result = PluginFormcreatorCategory::getAvailableCategories();
+      $result = PluginFormcreatorCommon::getAvailableCategories();
       // For each categories, show the list of forms the user can fill
       $categories = [0 => __('Forms without category', 'formcreator')];
       foreach ($result as $category) {
@@ -2105,7 +2105,7 @@ PluginFormcreatorTranslatableInterface
          if ($currentCategoryId != $row[$formCategoryFk]) {
             // show header for the category
             $currentCategoryId = $row[$formCategoryFk];
-            echo '<tr class="noHover" data-itemtype="PluginFormcreatorCategory" data-id="' . $currentCategoryId . '"><th>' . $categories[$currentCategoryId] . '</th></tr>';
+            echo '<tr class="noHover" data-itemtype="KnowbaseItemCategory" data-id="' . $currentCategoryId . '"><th>' . $categories[$currentCategoryId] . '</th></tr>';
          }
 
          // Show a row for the form
