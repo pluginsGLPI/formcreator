@@ -332,8 +332,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function displaySimplified($options = []) {
-      global $CFG_GLPI;
-
       if (!isset($this->fields['itemtype'])) {
          Html::displayNotFoundError();
       }
@@ -420,10 +418,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             }
          }
 
-         echo "<div class='timeline_box'>";
-         $rand = mt_rand();
-         $item->showTimelineForm($rand);
-         $item->showTimeline($rand);
+         echo "<div class='tab-content p-2 flex-grow-1 card border-start-0'>";
+         $item->showForm($item->getID());
          echo "</div>";
       } else {
          // No ticket associated to this issue or multiple tickets
