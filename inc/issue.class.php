@@ -462,7 +462,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                $item = $ticket;
             }
          } else {
-            // multiple tickets, no specified ticket then force ticket tab in form anser
+            // multiple tickets, ticket specified, then substitute the ticket to the form answer
             if (isset($options['tickets_id'])) {
                $ticket = Ticket::getById((int) $options['tickets_id']);
                if ($ticket) {
