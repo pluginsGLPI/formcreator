@@ -806,7 +806,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $link = self::getFormURLWithID($data['id']);
 
             // Show "final" item id in the URL
-            $link .= "&" . $subItemtype::getForeignKeyField() . "=$id";
+            if (Toolbox::isCommonDBTM($subItemtype)) {
+               $link .= "&" . $subItemtype::getForeignKeyField() . "=$id";
+            }
 
             $key = 'id';
             $tooltip = Html::showToolTip(nl2br(RichText::getTextFromHtml($content)), [
