@@ -16,8 +16,7 @@ trait CommonQuestionTest
          'helpdesk_home' => '0',
       ]);
       $this->boolean($section->isNewItem())->isFalse();
-      $form = new \PluginFormcreatorForm();
-      $form->getFromDBBySection($section);
+      $form = \PluginFormcreatorForm::getByItem($section);
       $this->boolean($form->isNewItem())->isFalse();
 
       // navigate to the form designer
