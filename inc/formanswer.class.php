@@ -1802,7 +1802,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * get all generated targets by the form answer
     *
-    * @return array An array of associated itemtypes objects
+    * @return array An array of target itemtypes to track
     */
    public function getGeneratedTargets($itemtypes = []): array {
       global $DB;
@@ -1826,6 +1826,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $generatedTypeFk = $generatedType::getForeignKeyField();
          $generatedTypeTable = $generatedType::getTable();
          $iterator = $DB->request([
+            'SELECT' => ["$generatedTypeTable.*"],
             'FROM' => $generatedTypeTable,
             'INNER JOIN' => [
                $relationTable => [
@@ -1860,12 +1861,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function getMinimalStatus(): ?int {
       $generatedTargets = $this->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
 
-      // Find the minimal status of all generated tickets
+      // Find the minimal status of the first generated tickets in the array (deleted items excluded)
       $generatedTarget = array_shift($generatedTargets);
+      while ($generatedTarget!== null && $generatedTarget->fields['is_deleted']) {
+         $generatedTarget = array_shift($generatedTargets);
+      }
       if ($generatedTarget === null) {
          // No target found, nothing to do
          return null;
       }
+
+      // Find the minimal status of all (not deleted) generated targets
       $minimalStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
       foreach ($generatedTargets as $generatedTarget) {
          /** @var Ticket $generatedTarget  */
