@@ -289,7 +289,6 @@ form#plugin_formcreator_form {
 
    > .form_header {
       background: #EEE;
-      /*box-shadow: 2px 2px 2px #CCC;*/
       margin: 0 0 10px;
 
       > h1 {
@@ -523,8 +522,8 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    a {
       display: block;
       border: none;
-      padding: 1em;
-      height: 16px;
+      padding: 16px;
+      height: 51px;
    }
 
    li ul {
@@ -588,23 +587,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    .category_active:not(.next),
    .category_active ~ul .header {
-      border-bottom: 1px dashed #DDD;
       position: relative;
-   }
-
-   .category_active:not(.next):after,
-   .category_active ~ul .header:after {
-      position: absolute;
-      left: calc(100% - 45px);
-      top: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      border-right-color: #FFF;
-      border-width: 23px;
-      margin-top: -23px;
-      z-index: 20;
    }
 
    .category_active:not(.next):before,
@@ -628,22 +611,13 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    .card-title {
       padding: 0.83em 0;
-      // border-bottom: 1px solid #DDD;
       margin: 0;
       padding: 14px;
-      // color: #000;
    }
-   // .header h2 {
-   //    text-align: left;
-   // }
-   // .header .back {
-   //    right: 20px;
-   //    color: #000;
-   //    left: inherit;
-   // }
 
    li {
       background-color: inherit;
+      height: 51px;
    }
 }
 
