@@ -2473,4 +2473,30 @@ SCRIPT;
       $data = array_merge($data, $predefined_fields);
       return $data;
    }
+
+   /**
+    * get all target problems for a form
+    *
+    * @param int $formId
+    * @return array
+    */
+    public function getTargetsForForm($formId) {
+      global $DB;
+
+      $targets = [];
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => static::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $formId
+         ],
+      ]);
+      foreach ($rows as $row) {
+         $target = new static();
+         $target->getFromDB($row['id']);
+         $targets[$row['id']] = $target;
+      }
+
+      return $targets;
+   }
 }

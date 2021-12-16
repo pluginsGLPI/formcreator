@@ -44,30 +44,30 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       // Create a form with a target change
       $form = $this->getForm();
 
-      $targetChange = new \PluginFormcreatorTargetChange();
-      $targetChange->add([
+      $instance = new \PluginFormcreatorTargetChange();
+      $instance->add([
          'name'                        => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
-      $this->boolean($targetChange->isNewItem())->isFalse();
+      $this->boolean($instance->isNewItem())->isFalse();
 
       $requesterActor = new \PluginFormcreatorTarget_Actor();
       $observerActor = new \PluginFormcreatorTarget_Actor();
-      $targetChangeId = $targetChange->getID();
+      $instanceId = $instance->getID();
 
       // find the actors created by default
       $requesterActor->getFromDBByCrit([
          'AND' => [
-            'itemtype'   => $targetChange->getType(),
-            'items_id'   => $targetChangeId,
+            'itemtype'   => $instance->getType(),
+            'items_id'   => $instanceId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([
          'AND' => [
-            'itemtype'   => $targetChange->getType(),
-            'items_id'   => $targetChangeId,
+            'itemtype'   => $instance->getType(),
+            'items_id'   => $instanceId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
             ]
