@@ -788,8 +788,7 @@ JAVASCRIPT;
          'COUNT' => 'count',
          'FROM' => (new QuerySubQuery($query_faqs, 'faqs')),
          'WHERE' => [
-            [(new QueryExpression("glpi_knowbaseitemcategories.id = $cat_table.knowbaseitemcategories_id"))],
-            ["glpi_knowbaseitemcategories.id" => ['!=', '0'],],
+            "$cat_table.id" => ['!=', '0'],
          ]
       ]);
       $request = [
