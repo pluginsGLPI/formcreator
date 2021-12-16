@@ -32,7 +32,7 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorTargetChange extends CommonTestCase {
+class PluginFormcreatorTargetProblem extends CommonTestCase {
 
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -40,11 +40,11 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $this->login('glpi', 'glpi');
    }
 
-   public function testTargetChangeActors() {
-      // Create a form with a target change
+   public function testTargetProblemActors() {
+      // Create a form with a target problem
       $form = $this->getForm();
 
-      $instance = new \PluginFormcreatorTargetChange();
+      $instance = new \PluginFormcreatorTargetProblem();
       $instance->add([
          'name'                        => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()

@@ -294,6 +294,22 @@ abstract class CommonTestCase extends atoum
       return $formAnswer;
    }
 
+   protected function getTargetProblem($input = []) {
+      if (!isset($input['name'])) {
+         $input['name'] = $this->getUniqueString();
+      }
+
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input[$formFk])) {
+         $input[$formFk] = $this->getForm()->getID();
+      }
+
+      $targetProblem = new \PluginFormcreatorTargetProblem();
+      $targetProblem->add($input);
+
+      return $targetProblem;
+   }
+
    /**
     * Tests the session has a specific message
     * this may be replaced by a custom asserter for atoum

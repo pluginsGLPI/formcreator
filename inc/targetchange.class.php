@@ -901,30 +901,4 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       return $change;
    }
-
-   /**
-    * get all target changes for a form
-    *
-    * @param int $formId
-    * @return array
-    */
-   public function getTargetsForForm($formId) {
-      global $DB;
-
-      $targets = [];
-      $rows = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $formId
-         ],
-      ]);
-      foreach ($rows as $row) {
-         $target = new self();
-         $target->getFromDB($row['id']);
-         $targets[$row['id']] = $target;
-      }
-
-      return $targets;
-   }
 }
