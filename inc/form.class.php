@@ -878,6 +878,7 @@ PluginFormcreatorTranslatableInterface
             'faq'      => '1',
             'contains' => $keywords
          ];
+         $params['knowbaseitemcategories_id'] = 0;
          if (count($selectedCategories) > 0) {
             $params['knowbaseitemcategories_id'] = $selectedCategories;
          }
