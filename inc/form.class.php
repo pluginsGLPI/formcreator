@@ -2238,7 +2238,8 @@ PluginFormcreatorTranslatableInterface
    public static function getTargetTypes() : array {
       return [
          PluginFormcreatorTargetTicket::class,
-         PluginFormcreatorTargetChange::class
+         PluginFormcreatorTargetChange::class,
+         PluginFormcreatorTargetProblem::class,
       ];
    }
 
