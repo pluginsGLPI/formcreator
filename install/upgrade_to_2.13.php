@@ -149,6 +149,6 @@ class PluginFormcreatorUpgradeTo2_13 {
    protected function addFormVisibility() {
       // Add is_visible on forms
       $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->addField($table, "is_visible", 'bool', ['value' => 1]);
+      $this->migration->addField($table, "is_visible", 'bool', ['value' => 1, 'after' => 'formanswer_name']);
    }
 }
