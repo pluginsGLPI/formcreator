@@ -737,11 +737,11 @@ JAVASCRIPT;
    }
 
    /**
-    * @param int $rootId id of the subtree root
-    * @param bool $helpdeskHome
+    * Get the tree of categories
+    *
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) : array {
+   public static function getCategoryTree(): array {
       global $DB;
 
       $cat_table  = KnowbaseItemCategory::getTable();
@@ -782,7 +782,6 @@ JAVASCRIPT;
                ])
             ]
          ]
-         + ($helpdeskHome ? ['helpdesk_home' => '1']: [])
          + $entityRestrict,
       ]);
       $count2 = new QuerySubQuery([

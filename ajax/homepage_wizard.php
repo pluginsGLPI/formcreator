@@ -53,7 +53,7 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-   $tree = PluginFormcreatorCommon::getCategoryTree(0, false);
+   $tree = PluginFormcreatorCommon::getCategoryTree();
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
