@@ -2480,7 +2480,7 @@ SCRIPT;
     * @param int $formId
     * @return array
     */
-    public function getTargetsForForm($formId) {
+   public function getTargetsForForm($formId) {
       global $DB;
 
       $targets = [];
