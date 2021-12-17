@@ -377,7 +377,6 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'entities_id'        => $item->fields['entities_id'],
          'is_recursive'       => '0',
          'requester_id'       => $item->fields['users_id_recipient'],
-         'users_id_validator' => $validationStatus['user'],
          'comment'            => addslashes($item->fields['content']),
       ]);
       return;
