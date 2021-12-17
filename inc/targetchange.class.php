@@ -415,7 +415,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          $title =  __('Edit a target', 'formcreator');
       }
 
-      // TODO: remive the fixed width
       echo '<form name="form_"'
       . ' method="post"'
       . ' action="' . self::getFormURL() . '"'
@@ -427,7 +426,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       echo '<tr><th colspan="2">' . $title . '</th></tr>';
       echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      // TODO: remive the fixed width
       echo '<td>';
       echo Html::input('name', [
          'id' => 'name',
