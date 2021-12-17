@@ -415,7 +415,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          $title =  __('Edit a target', 'formcreator');
       }
 
-      // TODO: remive the fixed width
       echo '<form name="form_"'
       . ' method="post"'
       . ' action="' . self::getFormURL() . '"'
@@ -427,7 +426,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       echo '<tr><th colspan="2">' . $title . '</th></tr>';
       echo '<tr>';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      // TODO: remive the fixed width
       echo '<td>';
       echo Html::input('name', [
          'id' => 'name',
@@ -900,31 +898,5 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $this->attachDocument($formanswer->getID(), Change::class, $changeID);
 
       return $change;
-   }
-
-   /**
-    * get all target changes for a form
-    *
-    * @param int $formId
-    * @return array
-    */
-   public function getTargetsForForm($formId) {
-      global $DB;
-
-      $targets = [];
-      $rows = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $formId
-         ],
-      ]);
-      foreach ($rows as $row) {
-         $target = new self();
-         $target->getFromDB($row['id']);
-         $targets[$row['id']] = $target;
-      }
-
-      return $targets;
    }
 }
