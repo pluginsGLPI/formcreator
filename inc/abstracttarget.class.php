@@ -76,6 +76,8 @@ PluginFormcreatorTranslatableInterface
    /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
    protected $skipCreateActors = false;
 
+   public $skipChecks = false;
+
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
 
    /**
@@ -1730,12 +1732,15 @@ SCRIPT;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
+      if (!$this->checkConditionSettings($input)) {
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      }
+
       return $input;
    }
 
    public function prepareInputForUpdate($input) {
-      if (!isset($input['_skip_checks'])
-            || !$input['_skip_checks']) {
+      if (!$this->skipChecks) {
          if (isset($input['name'])
             && empty($input['name'])) {
             Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
@@ -1777,6 +1782,10 @@ SCRIPT;
                $input['commonitil_validation_question'] = $input['_validation_from_user_question'];
                break;
          }
+      }
+
+      if (!$this->checkConditionSettings($input)) {
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
       }
 
       return $input;

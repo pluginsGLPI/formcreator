@@ -145,7 +145,6 @@ class PluginFormcreatorUpgradeTo2_6 {
          ]
       ]);
       foreach ($all_targetTickets as $targetTicket) {
-         $targetTicket['_skip_checks'] = true;
          $targetTicket['title'] = $targetTicket['name'];
          $query = "UPDATE $table
                    SET `uuid` = '" . plugin_formcreator_getUuid() . "'

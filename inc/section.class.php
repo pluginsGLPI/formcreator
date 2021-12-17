@@ -49,6 +49,8 @@ PluginFormcreatorTranslatableInterface
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
 
+   private $skipChecks = false;
+
    /**
     * Number of columns in a section
     */
@@ -119,6 +121,10 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
+      if (!$this->checkConditionSettings($input)) {
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      }
+
       return $input;
    }
 
@@ -144,6 +150,10 @@ PluginFormcreatorTranslatableInterface
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
+      if (!$this->checkConditionSettings($input)) {
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      }
+
       return $input;
    }
 
@@ -155,13 +165,13 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function post_addItem() {
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
 
    public function post_updateItem($history = 1) {
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
@@ -314,8 +324,6 @@ PluginFormcreatorTranslatableInterface
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk]        = $containerId;
 
-      $input['_skip_checks'] = true;
-
       $item = new self();
       // Find an existing section to update, only if an UUID is available
       $itemId = false;
@@ -338,6 +346,7 @@ PluginFormcreatorTranslatableInterface
 
       // Add or update section
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->update($input);
@@ -346,6 +355,7 @@ PluginFormcreatorTranslatableInterface
          $item->useAutomaticOrdering = false;
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));

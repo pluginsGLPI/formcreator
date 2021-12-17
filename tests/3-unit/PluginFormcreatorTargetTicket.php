@@ -296,7 +296,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       \Session::changeActiveEntities($entityId);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_CURRENT,
          'destination_entity_value' => '0',
       ]);
@@ -314,7 +313,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Test requester's entity
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER,
          'destination_entity_value' => '0',
       ]);
@@ -331,7 +329,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Test requester's first entity (alphanumeric order)
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_FIRST,
          'destination_entity_value' => '0',
       ]);
@@ -373,7 +370,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Test requester's last entity (alphanumeric order)
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_LAST,
          'destination_entity_value' => '0',
       ]);
@@ -398,9 +394,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_SPECIFIC,
-         'destination_entity_value' => "$entityId",
+         '_destination_entity_value_specific' => "$entityId",
       ]);
       $instance->getFromDB($targetTicket->getID());
       // Disable notification to avoid output to console
@@ -421,7 +416,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_FORM,
          'destination_entity_value' => '0',
       ]);
@@ -1295,6 +1289,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
                'type_question' => \Ticket::INCIDENT_TYPE,
+               'show_rule'     => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
             ],
             'message' => null,
          ],
@@ -1312,6 +1307,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
                'type_question' => \Ticket::DEMAND_TYPE,
+               'show_rule'     => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
             ],
             'message' => null,
          ],
