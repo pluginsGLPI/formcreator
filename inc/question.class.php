@@ -52,6 +52,8 @@ PluginFormcreatorTranslatableInterface
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private $field = null;
 
+   private $skipChecks = false;
+
    public static function getEnumShowRule() : array {
       return PluginFormcreatorCondition::getEnumShowRule();
    }
@@ -412,8 +414,7 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      if (!isset($input['_skip_checks'])
-          || !$input['_skip_checks']) {
+      if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
       }
       if (count($input) === 0) {
@@ -472,6 +473,10 @@ PluginFormcreatorTranslatableInterface
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
+      if (!$this->checkConditionSettings($input)) {
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      }
+
       return $input;
    }
 
@@ -486,8 +491,7 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForUpdate($input) {
       // global $DB;
 
-      if (!isset($input['_skip_checks'])
-          || !$input['_skip_checks']) {
+      if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
       }
 
@@ -529,6 +533,10 @@ PluginFormcreatorTranslatableInterface
          if (!isset($this->fields['uuid']) && $this->fields['uuid'] != $input['uuid']) {
             $input['uuid'] = plugin_formcreator_getUuid();
          }
+      }
+
+      if (!$this->checkConditionSettings($input)) {
+         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
       }
 
       return $input;
@@ -599,9 +607,9 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
+      $this->skipChecks = true;
       $input2 = [
          'id'     => $this->getID(),
-         '_skip_checks' => true,
          'col'      => $x,
          'row'      => $y,
          'width'  => $width,
@@ -611,6 +619,7 @@ PluginFormcreatorTranslatableInterface
          $input2[$sectionFk] = $input[$sectionFk];
       }
       $success = $this->update($input2);
+      $this->skipChecks = false;
 
       return $success;
    }
@@ -621,11 +630,14 @@ PluginFormcreatorTranslatableInterface
     * @param bool $isRequired
     */
    public function setRequired($isRequired) {
-      return $this->update([
+      $this->skipChecks = true;
+      $sucess = $this->update([
          'id'           => $this->getID(),
          'required'     => $isRequired,
-         '_skip_checks' => true,
       ]);
+      $this->skipChecks = false;
+
+      return $sucess;
    }
 
    /**
@@ -662,15 +674,19 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function post_addItem() {
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
+      }
+      if (!$this->skipChecks) {
          $this->updateParameters($this->input);
       }
    }
 
    public function post_updateItem($history = 1) {
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
+      }
+      if (!$this->skipChecks) {
          $this->updateParameters($this->input);
       }
    }
@@ -962,8 +978,6 @@ PluginFormcreatorTranslatableInterface
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $input[$sectionFk] = $containerId;
 
-      $input['_skip_checks'] = true;
-
       $item = new self();
       // Find an existing question to update, only if an UUID is available
       $itemId = false;
@@ -985,6 +999,7 @@ PluginFormcreatorTranslatableInterface
 
       // Add or update question
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->field = PluginFormcreatorFields::getFieldInstance(
@@ -997,6 +1012,7 @@ PluginFormcreatorTranslatableInterface
          unset($input['id']);
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));

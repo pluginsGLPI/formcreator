@@ -248,12 +248,13 @@ class PluginFormcreatorTargetProblem extends CommonTestCase {
          'name' => $this->getUniqueString()
       ]);
       \Session::changeActiveEntities($entityId);
+      $targetProblem->skipChecks = true;
       $targetProblem->update([
          'id' => $targetProblem->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetProblem::DESTINATION_ENTITY_CURRENT,
          'destination_entity_value' => '0',
       ]);
+      $targetProblem->skipChecks = false;
       $instance->getFromDB($targetProblem->getID());
 
       // Disable notification to avoid output to console
@@ -270,12 +271,13 @@ class PluginFormcreatorTargetProblem extends CommonTestCase {
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's entity
+      $targetProblem->skipChecks = true;
       $targetProblem->update([
          'id' => $targetProblem->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetProblem::DESTINATION_ENTITY_REQUESTER,
          'destination_entity_value' => '0',
       ]);
+      $targetProblem->skipChecks = false;
       $instance->getFromDB($targetProblem->getID());
 
       // Disable notification to avoid output to console
@@ -292,12 +294,13 @@ class PluginFormcreatorTargetProblem extends CommonTestCase {
       $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
       // Test requester's first entity (alphanumeric order)
+      $targetProblem->skipChecks = true;
       $targetProblem->update([
          'id' => $targetProblem->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetProblem::DESTINATION_ENTITY_REQUESTER_DYN_FIRST,
          'destination_entity_value' => '0',
       ]);
+      $targetProblem->skipChecks = false;
       $instance->getFromDB($targetProblem->getID());
       $entityId = $entity->import([
          'entities_id' => '0',
@@ -335,12 +338,13 @@ class PluginFormcreatorTargetProblem extends CommonTestCase {
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's last entity (alphanumeric order)
+      $targetProblem->skipChecks = true;
       $targetProblem->update([
          'id' => $targetProblem->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetProblem::DESTINATION_ENTITY_REQUESTER_DYN_LAST,
          'destination_entity_value' => '0',
       ]);
+      $targetProblem->skipChecks = false;
       $instance->getFromDB($targetProblem->getID());
 
       // Disable notification to avoid output to console
@@ -361,12 +365,13 @@ class PluginFormcreatorTargetProblem extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString(),
       ]);
+      $targetProblem->skipChecks = true;
       $targetProblem->update([
          'id' => $targetProblem->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetProblem::DESTINATION_ENTITY_SPECIFIC,
          'destination_entity_value' => "$entityId",
       ]);
+      $targetProblem->skipChecks = false;
       $instance->getFromDB($targetProblem->getID());
 
       // Disable notification to avoid output to console
@@ -386,12 +391,13 @@ class PluginFormcreatorTargetProblem extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString(),
       ]);
+      $targetProblem->skipChecks = true;
       $targetProblem->update([
          'id' => $targetProblem->getID(),
-         '_skip_checks' => true,
          'destination_entity' => \PluginFormcreatorTargetProblem::DESTINATION_ENTITY_FORM,
          'destination_entity_value' => '0',
       ]);
+      $targetProblem->skipChecks = false;
       $form->update([
          'id' => $form->getID(),
          'entities_id' => $entityId,

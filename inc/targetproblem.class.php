@@ -348,9 +348,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
 
    public function prepareInputForUpdate($input) {
       // Control fields values :
-      if (!isset($input['_skip_checks'])
-            || !$input['_skip_checks']) {
-
+      if (!$this->skipChecks) {
          $input['content'] = Html::entity_decode_deep($input['content']);
 
          if (isset($input['destination_entity'])) {
@@ -444,14 +442,14 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
 
    public function post_addItem() {
       parent::post_addItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
 
    public function post_updateItem($history = 1) {
       parent::post_updateItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
@@ -551,7 +549,6 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
-      $input['_skip_checks'] = true;
       $input['_skip_create_actors'] = true;
 
       $item = new self();
@@ -637,6 +634,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
 
       // Add or update
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->update($input);
@@ -644,6 +642,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
          unset($input['id']);
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));

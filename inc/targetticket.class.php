@@ -623,6 +623,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             $input['type_question'] = Ticket::INCIDENT_TYPE;
          }
       }
+
       return $input;
    }
 
@@ -635,101 +636,117 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     */
    public function prepareInputForUpdate($input) {
       // Control fields values :
-      if (!isset($input['_skip_checks'])
-          || !$input['_skip_checks']) {
-
+      if (!$this->skipChecks) {
          if (isset($input[('content')])) {
             $input['content'] = Html::entity_decode_deep($input['content']);
          }
 
-         switch ($input['destination_entity']) {
-            case self::DESTINATION_ENTITY_SPECIFIC :
-               $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
-               break;
-            case self::DESTINATION_ENTITY_USER :
-               $input['destination_entity_value'] = $input['_destination_entity_value_user'];
-               break;
-            case self::DESTINATION_ENTITY_ENTITY :
-               $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
-               break;
-            default :
-               $input['destination_entity_value'] = 'NULL';
-               break;
+         if (isset($input['destination_entity'])) {
+            switch ($input['destination_entity']) {
+               case self::DESTINATION_ENTITY_SPECIFIC :
+                  $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
+                  break;
+               case self::DESTINATION_ENTITY_USER :
+                  $input['destination_entity_value'] = $input['_destination_entity_value_user'];
+                  break;
+               case self::DESTINATION_ENTITY_ENTITY :
+                  $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
+                  break;
+               default :
+                  $input['destination_entity_value'] = 'NULL';
+                  break;
+            }
          }
 
-         switch ($input['urgency_rule']) {
-            case PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER:
-               $input['urgency_question'] = $input['_urgency_question'];
-               break;
-            case PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC:
-               $input['urgency_question'] = $input['_urgency_specific'];
-               break;
-            default:
-               $input['urgency_question'] = '0';
+         if (isset($input['urgency_rule'])) {
+            switch ($input['urgency_rule']) {
+               case PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER:
+                  $input['urgency_question'] = $input['_urgency_question'];
+                  break;
+               case PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC:
+                  $input['urgency_question'] = $input['_urgency_specific'];
+                  break;
+               default:
+                  $input['urgency_question'] = '0';
+            }
          }
 
-         switch ($input['sla_rule']) {
-            case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
-               $input['sla_question_tto'] = $input['_sla_specific_tto'];
-               $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
-               break;
-            case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
-               $input['sla_question_tto'] = $input['_sla_questions_tto'];
-               $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
-               break;
+         if (isset($input['sla_rule'])) {
+            switch ($input['sla_rule']) {
+               case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
+                  $input['sla_question_tto'] = $input['_sla_specific_tto'];
+                  $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
+                  break;
+               case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
+                  $input['sla_question_tto'] = $input['_sla_questions_tto'];
+                  $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
+                  break;
+            }
          }
 
-         switch ($input['ola_rule']) {
-            case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
-               $input['ola_question_tto'] = $input['_ola_specific_tto'];
-               $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
-               break;
-            case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
-               $input['ola_question_tto'] = $input['_ola_questions_tto'];
-               $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
-               break;
+         if (isset($input['ola_rule'])) {
+            switch ($input['ola_rule']) {
+               case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
+                  $input['ola_question_tto'] = $input['_ola_specific_tto'];
+                  $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
+                  break;
+               case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
+                  $input['ola_question_tto'] = $input['_ola_questions_tto'];
+                  $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
+                  break;
+            }
          }
 
-         $input['type_question'] = '0';
-         switch ($input['type_rule']) {
-            case self::REQUESTTYPE_ANSWER:
-               $input['type_question'] = $input['_type_question'];
-               break;
-            case self::REQUESTTYPE_SPECIFIC:
-               $input['type_question'] = $input['_type_specific'];
-               break;
+         if (isset($input['type_question'])) {
+            $input['type_question'] = '0';
+            switch ($input['type_rule']) {
+               case self::REQUESTTYPE_ANSWER:
+                  $input['type_question'] = $input['_type_question'];
+                  break;
+               case self::REQUESTTYPE_SPECIFIC:
+                  $input['type_question'] = $input['_type_specific'];
+                  break;
+            }
          }
 
-         switch ($input['category_rule']) {
-            case self::CATEGORY_RULE_ANSWER:
-               $input['category_question'] = $input['_category_question'];
-               break;
-            case self::CATEGORY_RULE_SPECIFIC:
-               $input['category_question'] = $input['_category_specific'];
-               break;
-            default:
-               $input['category_question'] = '0';
+         if (isset($input['category_rule'])) {
+            switch ($input['category_rule']) {
+               case self::CATEGORY_RULE_ANSWER:
+                  $input['category_question'] = $input['_category_question'];
+                  break;
+               case self::CATEGORY_RULE_SPECIFIC:
+                  $input['category_question'] = $input['_category_specific'];
+                  break;
+               default:
+                  $input['category_question'] = '0';
+            }
          }
 
-         switch ($input['location_rule']) {
-            case self::LOCATION_RULE_ANSWER:
-               $input['location_question'] = $input['_location_question'];
-               break;
-            case self::LOCATION_RULE_SPECIFIC:
-               $input['location_question'] = $input['_location_specific'];
-               break;
-            default:
-               $input['location_question'] = '0';
+         if (isset($input['location_rule'])) {
+            switch ($input['location_rule']) {
+               case self::LOCATION_RULE_ANSWER:
+                  $input['location_question'] = $input['_location_question'];
+                  break;
+               case self::LOCATION_RULE_SPECIFIC:
+                  $input['location_question'] = $input['_location_specific'];
+                  break;
+               default:
+                  $input['location_question'] = '0';
+            }
          }
 
          $plugin = new Plugin();
          if ($plugin->isActivated('tag')) {
-            $input['tag_questions'] = (!empty($input['_tag_questions']))
-                                       ? implode(',', $input['_tag_questions'])
-                                       : '';
-            $input['tag_specifics'] = (!empty($input['_tag_specifics']))
+            if (isset($input['tag_questions'])) {
+               $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                          ? implode(',', $input['_tag_questions'])
+                                          : '';
+            }
+            if (isset($input['tag_specifics'])) {
+               $input['tag_specifics'] = (!empty($input['_tag_specifics']))
                                        ? implode(',', $input['_tag_specifics'])
                                        : '';
+            }
          }
       }
 
@@ -779,14 +796,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
    public function post_addItem() {
       parent::post_addItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
 
    public function post_updateItem($history = 1) {
       parent::post_updateItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
@@ -1321,7 +1338,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
-      $input['_skip_checks'] = true;
       $input['_skip_create_actors'] = true;
 
       $item = new self;
@@ -1399,6 +1415,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
       // Add or update
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->update($input);
@@ -1406,6 +1423,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          unset($input['id']);
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
