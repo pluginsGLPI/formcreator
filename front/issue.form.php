@@ -48,11 +48,6 @@ if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
    Html::redirect($itemtype::getFormURLWithID($id));
 }
 
-// Show issue only if service catalog is enabled
-if (!plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
-}
-
 /** @var PluginFormcreatorIssue $issue */
 $issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
 
