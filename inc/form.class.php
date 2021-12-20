@@ -706,7 +706,7 @@ PluginFormcreatorTranslatableInterface
       // echo '</div>';
 
       // echo '<div id="plugin_formcreator_lastForms"class="card-group" >';
-      echo '<div class="d-flex flex-column ms-sm-2">';
+      echo '<div id="plugin_formcreator_lastForms" class="d-flex flex-column ms-sm-2">';
       $this->showMyLastForms();
       echo '</div>';
       echo '</div>';
@@ -1038,19 +1038,22 @@ PluginFormcreatorTranslatableInterface
          foreach ($result as $formAnswer) {
             switch ($formAnswer['status']) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                  $status = 'waiting';
+                  $status = CommonITILObject::WAITING;
                   break;
                case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                  $status = 'refused';
+                  $status = Change::REFUSED;
                   break;
                case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                  $status = 'accepted';
+                  $status = CommonITILObject::ACCEPTED;
                   break;
+               default:
+                  $status = $formAnswer['status'];
             }
-               echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
-               echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
-               echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
-               echo '</li>';
+            $status = CommonITILOBject::getStatusClass($status);
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
+            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
+            echo '</li>';
          }
          echo '</ul>';
          echo '<div class="text-center  card-footer">';
@@ -1082,21 +1085,24 @@ PluginFormcreatorTranslatableInterface
          echo '<div class="card-body text-center text-muted" >'.__('No form waiting for validation', 'formcreator').'</div>';
       } else {
          echo '<div class="card-body">';
-         echo '<ul>';
+         echo '<ul class="list-group">';
          foreach ($result as $formAnswer) {
             switch ($formAnswer['status']) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                  $status = 'waiting';
+                  $status = CommonITILObject::WAITING;
                   break;
                case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                  $status = 'refused';
+                  $status = Change::REFUSED;
                   break;
                case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                  $status = 'accepted';
+                  $status = CommonITILObject::ACCEPTED;
                   break;
+               default:
+                  $status = $formAnswer['status'];
             }
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '>';
-            echo ' <a class="plugin_formcreator_'.$status.'" href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
+            $status = CommonITILOBject::getStatusClass($status);
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
+            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
             echo '</li>';
          }
