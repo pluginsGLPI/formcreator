@@ -409,7 +409,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             }
          }
 
-         echo "<div class='tab-content p-2 flex-grow-1 card border-start-0'>";
+         echo "<div class='tab-content card-tabs p-2 flex-grow-1 card border-start-0'>";
          $item->showForm($item->getID());
          echo "</div>";
       } else {
