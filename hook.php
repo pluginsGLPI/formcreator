@@ -512,7 +512,7 @@ function plugin_formcreator_dynamicReport($params) {
 }
 
 function plugin_formcreator_redefine_menus($menus) {
-   if (!Session::getCurrentInterface() == "helpdesk") {
+   if (Session::getCurrentInterface() != "helpdesk") {
       return $menus;
    }
 
