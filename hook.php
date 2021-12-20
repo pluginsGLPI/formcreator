@@ -313,6 +313,11 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       return;
    }
 
+   if (isset($item->input['items_id'][PluginFormcreatorFormAnswer::getType()])) {
+      // the ticket is associated to a form answer
+      return;
+   }
+
    $requester = $DB->request([
       'SELECT' => 'users_id',
       'FROM' => Ticket_User::getTable(),
@@ -437,7 +442,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    }
 
    // delete issue
-   // TODO: add is_deleted column to issue
+   // TODO: add is_deleted column to issue ?
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
       'items_id' => $id,
@@ -475,7 +480,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 
    $id = $item->getID();
 
-   // mark formanswers as deleted
+   // Update status of form answer, if any
    $formAnswer = new PluginFormcreatorFormAnswer();
    $formAnswer->getFromDBByCrit([
       'id' => new QuerySubQuery([
@@ -487,20 +492,18 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
          ]
       ])
    ]);
-   if ($formAnswer->isNewItem() != false) {
+   if (!$formAnswer->isNewItem()) {
       $minimalStatus = $formAnswer->getMinimalStatus();
       if ($minimalStatus !== null) {
          $formAnswer->updateStatus($minimalStatus);
       }
-      return;
    }
 
-   // delete issue
-   // TODO: add is_deleted column to issue
+   // delete issue if any 
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
       'items_id' => $id,
-      'itemtype' => 'Ticket'
+      'itemtype' => Ticket::getType()
    ], 1);
 }
 
