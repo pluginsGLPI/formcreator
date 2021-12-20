@@ -532,8 +532,8 @@ function plugin_formcreator_redefine_menus($menus) {
          && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
       ) {
          $newMenu['faq'] = $menus['faq'];
+         $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
       }
-      $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
          $newMenu['reservation'] = $menus['reservation'];
       }
