@@ -288,12 +288,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $itemtype = $this->fields['itemtype'];
       if (!class_exists($itemtype)) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -321,7 +319,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $this->showNavigationHeader($options);
 
       if (!$item->canViewItem()) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -337,12 +334,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $itemtype = $this->fields['itemtype'];
       if (!class_exists($itemtype)) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -398,10 +393,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       unset($options['_item']);
 
-      // force recall of ticket in layout
-      PluginFormcreatorCommon::saveLayout();
-      $_SESSION['glpilayout'] = "lefttab";
-
       if ($item instanceof Ticket) {
          //Tickets without form associated or single ticket for an answer
          $satisfaction = new TicketSatisfaction();
@@ -428,9 +419,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item->showTabsContent($options);
          echo '</div>';
       }
-
-      // restore layout
-      PluginFormcreatorCommon::restoreLayout();
    }
 
    /**
