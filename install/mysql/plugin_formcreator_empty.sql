@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetproblems` (
   `uuid`                        varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `problemtemplates_id` (`problemtemplates_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
   `id`               int(11) NOT NULL AUTO_INCREMENT,
