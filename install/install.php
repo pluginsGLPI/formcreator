@@ -485,6 +485,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorQuestion',
          'PluginFormcreatorSection',
          'PluginFormcreatorTargetChange',
+         'PluginFormcreatorTargetProblem',
          'PluginFormcreatorTargetTicket',
          'PluginFormcreatorTarget_Actor',
          'PluginFormcreatorItem_TargetTicket',
