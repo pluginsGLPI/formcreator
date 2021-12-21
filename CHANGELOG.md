@@ -4,7 +4,10 @@
 
 ### Bug Fixes
 
+*  category tree broken ([f60043fb](https://github.com/pluginsglpi/formcreator/commit/f60043fb))
+*  do not redefine menu if standard interface ([37001d25](https://github.com/pluginsglpi/formcreator/commit/37001d25))
 *  ineffective code to define menu ([1ab4a065](https://github.com/pluginsglpi/formcreator/commit/1ab4a065))
+*  malformed menu item for KB ([7641ba6b](https://github.com/pluginsglpi/formcreator/commit/7641ba6b))
 *  re-add menu items for service catalog ([f24d4e00](https://github.com/pluginsglpi/formcreator/commit/f24d4e00))
 *  redirection to wrong ticket in some cases ([a2c3898a](https://github.com/pluginsglpi/formcreator/commit/a2c3898a))
 *  remove useless config link in plugin ([58df4079](https://github.com/pluginsglpi/formcreator/commit/58df4079))
@@ -14,6 +17,7 @@
 * **form:** use download icon for import ([7c9e88ec](https://github.com/pluginsglpi/formcreator/commit/7c9e88ec))
 * **formanswer:** loss of answers upon valdiation ([21a29ba3](https://github.com/pluginsglpi/formcreator/commit/21a29ba3))
 * **formlist:** remove useless links in menu ([e85e04bd](https://github.com/pluginsglpi/formcreator/commit/e85e04bd))
+* **fromanwser:** status display enhancements (#2508) ([e87cbdbc](https://github.com/pluginsglpi/formcreator/commit/e87cbdbc))
 * **issue:** call to deprecated method ([db56d3e5](https://github.com/pluginsglpi/formcreator/commit/db56d3e5))
 * **issue:** redirection when multiple tickets ([64eb8a50](https://github.com/pluginsglpi/formcreator/commit/64eb8a50))
 * **issue:** use of RichText class ([707a9b91](https://github.com/pluginsglpi/formcreator/commit/707a9b91))
@@ -27,6 +31,7 @@
 
 ### Features
 
+*  Improve browser tabs names ([58a9b047](https://github.com/pluginsglpi/formcreator/commit/58a9b047))
 *  adapt to new GLPI's autoload ([894df7cc](https://github.com/pluginsglpi/formcreator/commit/894df7cc))
 *  adapt to new GLPI's autoload ([534856df](https://github.com/pluginsglpi/formcreator/commit/534856df))
 *  build css if missing ([9d6aec77](https://github.com/pluginsglpi/formcreator/commit/9d6aec77))
@@ -34,6 +39,8 @@
 * **category:** show parent label in back pseudo-item ([893b2ccc](https://github.com/pluginsglpi/formcreator/commit/893b2ccc))
 * **form:** compliance with GLPI 10; replace form categories by KB categories ([c7c60592](https://github.com/pluginsglpi/formcreator/commit/c7c60592))
 * **issue:** access to admins ([33ee3eaa](https://github.com/pluginsglpi/formcreator/commit/33ee3eaa))
+* **targetproblem:** target problem ([e9af4130](https://github.com/pluginsglpi/formcreator/commit/e9af4130))
+* **targetproblem:** target problem ([4ae2a92e](https://github.com/pluginsglpi/formcreator/commit/4ae2a92e))
 
 
 
