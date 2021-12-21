@@ -82,6 +82,105 @@ class PluginFormcreatorKnowbase {
       echo '</form>';
    }
 
+   /**
+    * @see Knowbase::getJstreeCategoryList()
+    *
+    * @param int $rootId id of the subtree root
+    * @param bool $helpdeskHome
+    *
+    * @return array Tree of form categories as nested array
+    */
+   public static function getCategoryTree() {
+      global $DB;
+
+      $cat_table = KnowbaseItemCategory::getTable();
+      $cat_fk  = KnowbaseItemCategory::getForeignKeyField();
+
+      $kbitem_visibility_crit = KnowbaseItem::getVisibilityCriteria(true);
+
+      $items_subquery = new QuerySubQuery(
+         array_merge_recursive(
+            [
+               'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
+               'FROM'   => KnowbaseItem::getTable(),
+               'WHERE'  => [
+                  KnowbaseItem::getTableField($cat_fk) => new QueryExpression(
+                     DB::quoteName(KnowbaseItemCategory::getTableField('id'))
+                  ),
+               ]
+            ],
+            $kbitem_visibility_crit
+         ),
+         'items_count'
+      );
+
+      $cat_iterator = $DB->request([
+         'SELECT' => [
+            KnowbaseItemCategory::getTableField('id'),
+            KnowbaseItemCategory::getTableField('name'),
+            KnowbaseItemCategory::getTableField($cat_fk),
+            $items_subquery,
+         ],
+         'FROM' => $cat_table,
+         'ORDER' => [
+            KnowbaseItemCategory::getTableField('level') . ' DESC',
+            KnowbaseItemCategory::getTableField('name'),
+         ]
+      ]);
+
+      $inst = new KnowbaseItemCategory;
+      $categories = [];
+      foreach ($cat_iterator as $category) {
+         if (DropdownTranslation::canBeTranslated($inst)) {
+            $tname = DropdownTranslation::getTranslatedValue(
+               $category['id'],
+               $inst->getType()
+            );
+            if (!empty($tname)) {
+               $category['name'] = $tname;
+            }
+         }
+         $categories[] = $category;
+      }
+
+      // Remove categories that have no items and no children
+      // Requires category list to be sorted by level DESC
+      foreach ($categories as $index => $category) {
+         $children = array_filter(
+            $categories,
+            function ($element) use ($category, $cat_fk) {
+               return $category['id'] == $element[$cat_fk];
+            }
+         );
+
+         if (empty($children) && 0 == $category['items_count']) {
+            unset($categories[$index]);
+            continue;
+         }
+         $categories[$index]['subcategories'] = [];
+      }
+
+      // Create root node
+      $nodes = [
+         'name'            => '',
+         'id'              => 0,
+         'parent'          => 0,
+         'subcategories'   => [],
+      ];
+      $flat = [
+         0 => &$nodes,
+      ];
+
+      // Build from root node to leaves
+      $categories = array_reverse($categories);
+      foreach ($categories as $item) {
+         $flat[$item['id']] = $item;
+         $flat[$item[$cat_fk]]['subcategories'][] = &$flat[$item['id']];
+      }
+
+      return $nodes;
+   }
+
    public static function getFaqItems($rootCategory = 0, $keywords = '') {
       global $DB;
 

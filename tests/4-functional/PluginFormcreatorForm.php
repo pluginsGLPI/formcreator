@@ -53,7 +53,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
 
       // create a category
       \Session::changeActiveEntities($entity->getID(), true);
-      $category = new \KnowbaseItemCategory();
+      $category = new \PluginFormcreatorCategory();
       $categoryId = $category->import([
          'completename' => $this->getUniqueString(),
          'entities_id'  => $entity->getID(),
