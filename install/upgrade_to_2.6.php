@@ -40,13 +40,8 @@ class PluginFormcreatorUpgradeTo2_6 {
    public function upgrade(Migration $migration) {
       global $DB;
 
-      $migration->displayMessage("Upgrade to schema version 2.6");
-
-      $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
-
       // update questions
       $table = 'glpi_plugin_formcreator_questions';
-      $migration->displayMessage("Upgrade $table");
 
       $rows = $DB->request([
          'SELECT' => ['id', 'values'],
@@ -72,7 +67,6 @@ class PluginFormcreatorUpgradeTo2_6 {
 
       // Update Form Answers
       $table = 'glpi_plugin_formcreator_forms_answers';
-      $migration->displayMessage("Upgrade $table");
 
       $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
       $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
