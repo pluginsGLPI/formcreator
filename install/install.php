@@ -167,7 +167,6 @@ class PluginFormcreatorInstall {
          $upgradeStep = new $updateClass();
          $upgradeStep->upgrade($this->migration);
          $this->migration->executeMigration();
-         $this->migration->displayMessage('Done');
       }
    }
 
@@ -227,8 +226,6 @@ class PluginFormcreatorInstall {
    protected function installSchema() {
       global $DB;
 
-      $this->migration->displayMessage("create database schema");
-
       $dbFile = __DIR__ . '/mysql/plugin_formcreator_empty.sql';
       if (!$DB->runFile($dbFile)) {
          $this->migration->displayWarning("Error creating tables : " . $DB->error(), true);
@@ -238,8 +235,6 @@ class PluginFormcreatorInstall {
 
    protected function configureExistingEntities() {
       global $DB;
-
-      $this->migration->displayMessage("Configure existing entities");
 
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
                   (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_header_visible)
@@ -263,8 +258,6 @@ class PluginFormcreatorInstall {
    protected function createRequestType() {
       global $DB;
 
-      $this->migration->displayMessage("create request type");
-
       $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
       $result = $DB->query($query) or die ($DB->error());
 
@@ -276,7 +269,6 @@ class PluginFormcreatorInstall {
    }
 
    protected function createDefaultDisplayPreferences() {
-      $this->migration->displayMessage("create default display preferences");
       $this->migration->updateDisplayPrefs([
          'PluginFormcreatorFormAnswer' => [2, 3, 4, 5, 6],
          'PluginFormcreatorForm'       => [30, 3, 10, 7, 8, 9],
@@ -289,8 +281,6 @@ class PluginFormcreatorInstall {
     */
    protected function createNotifications() {
       global $DB;
-
-      $this->migration->displayMessage("create notifications");
 
       $notifications = [
             'plugin_formcreator_form_created' => [
