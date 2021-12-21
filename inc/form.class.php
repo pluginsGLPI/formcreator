@@ -2160,7 +2160,7 @@ PluginFormcreatorTranslatableInterface
          echo '<tr class="tab_bg_' . ($i % 2 +1) . '" data-itemtype="PluginFormcreatorForm" data-id="' . $row['id'] . '">';
          echo '<td>';
          echo '<i class="fas fa-plus-circle" alt="+" title=""
-               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer"></i>W';
+               onclick="showDescription(' . $row['id'] . ', this)" align="absmiddle" style="cursor: pointer"></i>';
          echo '&nbsp;';
          echo '<a href="' . FORMCREATOR_ROOTDOC
             . '/front/formdisplay.php?id=' . $row['id'] . '"
