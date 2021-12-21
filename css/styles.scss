@@ -717,18 +717,6 @@ a.plugin_formcreator_formTile_title {
    margin: 0 5px;
 }
 
-#plugin_formcreator_lastForms {
-   width: 265px;
-   position: absolute;
-   right: 0;
-   top: 0;
-
-
-   > div {
-      margin-bottom: 10px;
-   }
-}
-
 #plugin_formcreator_wizard .plugin_formcreator_lists_separator {
    padding: 0;
 }
@@ -823,38 +811,35 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_lastForms {
-   .plugin_formcreator_card {
-      .plugin_formcreator_answer {
-         margin: 3px;
-         list-style: none;
-         padding: 0;
-         text-align: left;
-         border-bottom: 1px solid rgba(0,0,0,.1);
-      }
+   .plugin_formcreator_answer {
+      margin: 3px;
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,.1);
+   }
 
-      .plugin_formcreator_answer a {
-         margin: 3px;
-         background-repeat: no-repeat;
-         background-position: left center;
-         padding: 11px 11px 11px 20px;
-      }
+   li a {
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding: 11px;
+   }
 
-      .plugin_formcreator_waiting {
-         background-image: url("../pics/waiting.png");
-      }
+   .plugin_formcreator_waiting {
+      background-image: url("../pics/waiting.png");
+   }
 
-      .plugin_formcreator_refused {
-         background-image: url("../pics/refused.png");
-      }
+   .plugin_formcreator_refused {
+      background-image: url("../pics/refused.png");
+   }
 
-      .plugin_formcreator_accepted {
-         background-image: url("../pics/accepted.png");
-      }
+   .plugin_formcreator_accepted {
+      background-image: url("../pics/accepted.png");
+   }
 
-      > div {
-         border-bottom: 1px solid rgba(0,0,0,.1);
-         padding: 11px;
-      }
+   > div {
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      padding: 11px;
    }
 }
 

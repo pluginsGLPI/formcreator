@@ -308,14 +308,21 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       switch ($field) {
          case 'status' :
             if (!isAPI()) {
-               $language = $_SESSION["glpilanguage"];
-               Session::loadLanguage('en_GB');
-               $elements = self::getStatuses();
-               Session::loadLanguage($language);
-               $values = [$field => $elements[$values[$field]]];
-               $output = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/' . strtolower($values[$field]) . '.png"
-                           alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
-               return $output;
+               switch ($values[$field]) {
+                  case PluginFormcreatorFormAnswer::STATUS_WAITING:
+                     $status = CommonITILObject::WAITING;
+                     break;
+                  case PluginFormcreatorFormAnswer::STATUS_REFUSED:
+                     $status = Change::REFUSED;
+                     break;
+                  case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
+                     $status = CommonITILObject::ACCEPTED;
+                     break;
+                  default:
+                     $status = $values[$field];
+               }
+               $status = CommonITILOBject::getStatusClass($status);
+               return '<i class="'.$status.'"></i>';
             }
             break;
       }
