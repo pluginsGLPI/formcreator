@@ -33,7 +33,7 @@ class Central extends CommonFunctionalTestCase {
 
       // create a category
       \Session::changeActiveEntities($entity->getID(), true);
-      $category = new \KnowbaseItemCategory();
+      $category = new \PluginFormcreatorCategory();
       $categoryId = $category->import([
          'completename' => $this->getUniqueString(),
          'entities_id'  => $entity->getID(),
@@ -76,7 +76,7 @@ class Central extends CommonFunctionalTestCase {
       // Open the forms tab
       $this->browsing->openTab('Forms');
       $this->takeScreenshot();
-      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="KnowbaseItemCategory"][data-id="0"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
+      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="PluginFormcreatorCategory"][data-id="0"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $output = $this->crawler->filter($formSelector)->count();
       $this->integer($output)->isEqualTo(1);
       $formSelector .= ' a';
@@ -86,7 +86,7 @@ class Central extends CommonFunctionalTestCase {
       // Move the form in a category
       $form->update([
          'id'            => $form->getID(),
-         \KnowbaseItemCategory::getForeignKeyField() => $categoryId,
+         \PluginFormcreatorCategory::getForeignKeyField() => $categoryId,
       ]);
       $this->crawler = $this->client->reload();
       // Open the forms tab
@@ -94,7 +94,7 @@ class Central extends CommonFunctionalTestCase {
 
       // Check the form shows in the expected category
       $this->takeScreenshot();
-      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="KnowbaseItemCategory"][data-id="' . $categoryId . '"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
+      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="PluginFormcreatorCategory"][data-id="' . $categoryId . '"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $output = $this->crawler->filter($formSelector)->count();
       $this->integer($output)->isEqualTo(1);
       $formSelector .= ' a';

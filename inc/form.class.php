@@ -222,7 +222,7 @@ PluginFormcreatorTranslatableInterface
 
       $tab[] = [
          'id'                 => '10',
-         'table'              => KnowbaseItemCategory::getTable(),
+         'table'              => PluginFormcreatorCategory::getTable(),
          'field'              => 'name',
          'name'               => __('Form category', 'formcreator'),
          'datatype'           => 'dropdown',
@@ -451,10 +451,9 @@ PluginFormcreatorTranslatableInterface
       echo '<tr class="tab_bg_2">';
       echo '<td>' . __('Category') . '</td>';
       echo '<td>';
-      $KnowbaseItemCategoryFk = KnowbaseItemCategory::getForeignKeyField();
-      KnowbaseItemCategory::dropdown([
-         'name'  => $KnowbaseItemCategoryFk,
-         'value' => ($ID != 0) ? $this->fields[$KnowbaseItemCategoryFk] : 0,
+      PluginFormcreatorCategory::dropdown([
+         'name'  => 'plugin_formcreator_categories_id',
+         'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
       ]);
       echo '</td>';
       echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
@@ -768,14 +767,14 @@ PluginFormcreatorTranslatableInterface
    public function showFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false) : array {
       global $DB, $TRANSLATE;
 
-      $table_cat          = getTableForItemType('KnowbaseItemCategory');
+      $table_cat          = getTableForItemType('PluginFormcreatorCategory');
       $table_form         = getTableForItemType('PluginFormcreatorForm');
       $table_fp           = getTableForItemType('PluginFormcreatorForm_Profile');
       $table_section      = getTableForItemType('PluginFormcreatorSections');
       $table_question     = getTableForItemType('PluginFormcreatorQuestions');
       $table_formLanguage = getTableForItemType(PluginFormcreatorForm_Language::class);
 
-      $categoryFk = KnowbaseItemCategory::getForeignKeyField();
+      $categoryFk = PluginFormcreatorCategory::getForeignKeyField();
 
       $order         = "$table_form.name ASC";
 
@@ -910,7 +909,16 @@ PluginFormcreatorTranslatableInterface
          ];
          $params['knowbaseitemcategories_id'] = 0;
          if (count($selectedCategories) > 0) {
-            $params['knowbaseitemcategories_id'] = $selectedCategories;
+            $iterator = $DB->request($table_cat, [
+               'WHERE' => [
+                  'id' => $selectedCategories
+               ]
+            ]);
+            $kbcategories = [];
+            foreach ($iterator as $kbcat) {
+               $kbcategories[] = $kbcat['knowbaseitemcategories_id'];
+            }
+            $params['knowbaseitemcategories_id'] = $kbcategories;
          }
          $query_faqs = KnowbaseItem::getListRequest($params);
 
@@ -969,7 +977,7 @@ PluginFormcreatorTranslatableInterface
                $table_cat => [
                   'FKEY' => [
                      $table_cat => 'id',
-                     $table_form => KnowbaseItemCategory::getForeignKeyField(),
+                     $table_form => PluginFormcreatorCategory::getForeignKeyField(),
                   ]
                ],
                $table_formLanguage => [
@@ -1710,15 +1718,15 @@ PluginFormcreatorTranslatableInterface
       $export['_entity'] = $entity->fields['completename'];
 
       // replace form category id
-      $export['_knowbaseitemcategories'] = '';
-      /** @var KnowbaseItemCategory */
-      $formCategory = KnowbaseItemCategory::getById($export['knowbaseitemcategories_id']);
+      $export['_plugin_formcreator_category'] = '';
+      /** @var PluginFormcreatorCategory */
+      $formCategory = PluginFormcreatorCategory::getById($export['plugin_formcreator_categories_id']);
       if ($formCategory instanceof CommonDBTM) {
-         $export['_knowbaseitemcategories'] = $formCategory->fields['completename'];
+         $export['_plugin_formcreator_category'] = $formCategory->fields['completename'];
       }
 
       // remove non needed keys
-      unset($export['knowbaseitemcategories_id'],
+      unset($export['plugin_formcreator_categories_id'],
             $export['entities_id'],
             $export['usage_count']);
 
@@ -1979,38 +1987,16 @@ PluginFormcreatorTranslatableInterface
       }
       $input[$entityFk] = $entityId;
 
-      // Set category of the form
-      $kbItemCategory = new KnowbaseItemCategory();
-      $kbItemCategoryFk = KnowbaseItemCategory::getForeignKeyField();
-      $kbItemCategoryId = 0;
-      if (isset($input['_knowbaseitemcategories'])) {
-         plugin_formcreator_getFromDBByField(
-            $kbItemCategory,
-            'completename',
-            $input['_knowbaseitemcategories']
-         );
-         if (!$kbItemCategory->isNewItem()) {
-            if (!$entity->canUpdateItem()) {
-               if ($itemId !== false) {
-                  // The form is in an KB category where we don't have UPDATE right
-                  Session::addMessageAfterRedirect(
-                     sprintf(__('The form %1$s already exists and is in an unmodifiable KB category.', 'formcreator'), $input['name']),
-                     false,
-                     WARNING
-                  );
-                  throw new ImportFailureException('Failed to add or update the item');
-               }
-               // The KB category is not updatable
-               Session::addMessageAfterRedirect(
-                  sprintf(__('You don\'t have right to update the KB category %1$s.', 'formcreator'), $input['_knowbaseitemcategories']),
-                  false,
-                  WARNING
-               );
-               throw new ImportFailureException('Failed to add or update the item');
-            }
-         }
+      // Import form category
+      $formCategory = new PluginFormcreatorCategory();
+      $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
+      $formCategoryId = 0;
+      if ($input['_plugin_formcreator_category'] != '') {
+         $formCategoryId = $formCategory->import([
+            'completename' => Toolbox::addslashes_deep($input['_plugin_formcreator_category']),
+         ]);
       }
-      $input[$kbItemCategoryFk] = $kbItemCategoryId;
+      $input[$formCategoryFk] = $formCategoryId;
 
       // Escape text fields
       foreach (['name', 'description', 'content', 'formanswer_name'] as $key) {
@@ -2097,10 +2083,10 @@ PluginFormcreatorTranslatableInterface
       $form_table = PluginFormcreatorForm::getTable();
 
       // Show form whithout category
-      $formCategoryFk = KnowbaseItemCategory::getForeignKeyField();
+      $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
 
       // Show categories which have at least one form user can access
-      $result = PluginFormcreatorCommon::getAvailableCategories();
+      $result = PluginFormcreatorCategory::getAvailableCategories();
       // For each categories, show the list of forms the user can fill
       $categories = [0 => __('Forms without category', 'formcreator')];
       foreach ($result as $category) {
@@ -2142,7 +2128,7 @@ PluginFormcreatorTranslatableInterface
          if ($currentCategoryId != $row[$formCategoryFk]) {
             // show header for the category
             $currentCategoryId = $row[$formCategoryFk];
-            echo '<tr class="noHover" data-itemtype="KnowbaseItemCategory" data-id="' . $currentCategoryId . '"><th>' . $categories[$currentCategoryId] . '</th></tr>';
+            echo '<tr class="noHover" data-itemtype="PluginFormcreatorCategory" data-id="' . $currentCategoryId . '"><th>' . $categories[$currentCategoryId] . '</th></tr>';
          }
 
          // Show a row for the form

@@ -473,6 +473,7 @@ class PluginFormcreatorInstall {
       // Keep  these itemtypes as string because classes might not be available (if plugin is inactive)
       $itemtypes = [
          'PluginFormcreatorAnswer',
+         'PluginFormcreatorCategory',
          'PluginFormcreatorEntityconfig',
          'PluginFormcreatorFormAnswer',
          'PluginFormcreatorForm_Profile',
