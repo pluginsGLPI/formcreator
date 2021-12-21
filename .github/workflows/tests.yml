@@ -26,7 +26,7 @@ env:
   SKIP_INSTALL_TESTS: false
   SKIP_TESTS: false
   SKIP_FUNCTIONAL_TESTS: true
-  SKIP_UNINSTALLL_TESTS: false
+  SKIP_UNINSTALL_TESTS: false
   SKIP_LINT_TESTS: false
   SKIP_CS_TESTS: false
   SKIP_PANTHER_INSTALL: true
@@ -126,4 +126,3 @@ jobs:
           composer install --no-interaction --no-progress
           $SKIP_LINT_TESTS || plugin_test_lint
           $SKIP_CS_TESTS || plugin_test_cs
-
