@@ -158,6 +158,16 @@ function plugin_init_formcreator() {
       }
    }
 
+   if (strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
+      // Html::requireJs('dashboard');
+      // Html::requireJs('gridstack');
+      $CFG_GLPI['javascript']['self-service']['none'] = [
+         'dashboard',
+         'gridstack'
+      ];
+   }
+
+
    // Html::requireJs('gridstack');
    $CFG_GLPI['javascript']['admin'][strtolower(PluginFormcreatorForm::class)] = ['gridstack'];
    $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorFormlist::class)] = ['gridstack'];
@@ -322,7 +332,8 @@ function plugin_formcreator_permanent_hook() {
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
-      Plugin::class => 'plugin_formcreator_hook_update_plugin'
+      Plugin::class => 'plugin_formcreator_hook_update_plugin',
+      Profile::class => 'plugin_formcreator_hook_update_profile',
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'

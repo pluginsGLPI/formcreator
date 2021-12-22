@@ -29,6 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+
+use Glpi\Dashboard\Right as DashboardRight;
+use Glpi\Dashboard\Dashboard;
+
 /**
  * Install all necessary elements for the plugin
  * @param array $args ARguments passed from CLI
@@ -638,4 +642,25 @@ function plugin_formcreator_hook_dashboard_cards() {
    }
 
    return $cards;
+}
+
+function plugin_formcreator_hook_update_profile(CommonDBTM $item) {
+   $dashboard = new Dashboard;
+   if (!$dashboard->getFromDB('plugin_formcreator_issue_counters')){
+      return;
+   }
+   $dashboardRight = new DashboardRight();
+   if ($item->fields['interface'] == 'helpdesk') {
+      $dashboardRight->add([
+         'dashboards_dashboards_id' => $dashboard->fields['id'],
+         'itemtype' => Profile::getType(),
+         'items_id' => $item->getID(),
+      ]);
+   } else {
+      $dashboardRight->delete([
+         'dashboards_dashboards_id' => $dashboard->fields['id'],
+         'itemtype' => Profile::getType(),
+         'items_id' => $item->getID(),
+      ], 1);
+   }
 }

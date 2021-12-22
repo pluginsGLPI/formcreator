@@ -35,6 +35,8 @@ if (!defined('GLPI_ROOT')) {
 
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item as Dashboard_Item;
+use Glpi\Dashboard\Right as Dashboard_Right;
+
 use Ramsey\Uuid\Uuid;
 class PluginFormcreatorInstall {
    protected $migration;
@@ -592,6 +594,20 @@ class PluginFormcreatorInstall {
             'card_options' => array_merge($commonOptions, $options),
          ]]);
          $x += $w;
+      }
+
+      // Give rights to all self service profiles
+      $profile = new Profile();
+      $helpdeskProfiles = $profile->find([
+         'interface' => 'helpdesk',
+      ]);
+      foreach ($helpdeskProfiles as $helpdeskProfile) {
+         $dashboardRight = new Dashboard_Right();
+         $dashboardRight->add([
+            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'itemtype'                 => Profile::getType(),
+            'items_id'                => $helpdeskProfile['id'],
+         ]);
       }
    }
 }
