@@ -50,9 +50,6 @@ class PluginFormcreatorKnowbase {
 
    public function showServiceCatalog() {
       // show wizard
-      echo '<div>';
-      PluginFormcreatorIssue::showTicketSummary();
-      echo '</div>';
       echo '<div id="plugin_formcreator_wizard" class="card-group">';
       $this->showWizard();
       echo '</div>';

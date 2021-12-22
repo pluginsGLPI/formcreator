@@ -573,14 +573,22 @@ class PluginFormcreatorInstall {
          'limit'        => '7',
       ];
       $cards = [
-         'plugin_formcreator_processing' => [],
-         'plugin_formcreator_waiting'    => [],
-         'plugin_formcreator_validate'   => [],
-         'plugin_formcreator_solved'     => [],
+         'plugin_formcreator_processing' => [
+            'color' => '#49bf4d'
+         ],
+         'plugin_formcreator_waiting'    => [
+            'color' => '#FFA500'
+         ],
+         'plugin_formcreator_validate'   => [
+            'color' => '#8CABDB'
+         ],
+         'plugin_formcreator_solved'     => [
+            'color' => '#000000'
+         ],
       ];
       $x = 0;
-      $w = 4; // Width
-      $h = 4; // Height
+      $w = 2; // Width
+      $h = 2; // Height
       $y = 0;
       foreach ($cards as $key => $options) {
          $item = new Dashboard_Item();

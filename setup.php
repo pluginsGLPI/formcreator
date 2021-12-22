@@ -158,16 +158,6 @@ function plugin_init_formcreator() {
       }
    }
 
-   if (strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-      // Html::requireJs('dashboard');
-      // Html::requireJs('gridstack');
-      $CFG_GLPI['javascript']['self-service']['none'] = [
-         'dashboard',
-         'gridstack'
-      ];
-   }
-
-
    // Html::requireJs('gridstack');
    $CFG_GLPI['javascript']['admin'][strtolower(PluginFormcreatorForm::class)] = ['gridstack'];
    $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorFormlist::class)] = ['gridstack'];
@@ -354,7 +344,7 @@ function plugin_formcreator_permanent_hook() {
 }
 
 function plugin_formcreator_hook() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
@@ -377,6 +367,16 @@ function plugin_formcreator_hook() {
             || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+         $CFG_GLPI['javascript']['self-service']['none'] = [
+            'dashboard',
+            'gridstack'
+         ];
+      }
+      if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
+         $CFG_GLPI['javascript']['self-service']['none'] = [
+            'dashboard',
+            'gridstack'
+         ];
       }
    }
 

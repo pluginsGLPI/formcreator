@@ -646,7 +646,7 @@ function plugin_formcreator_hook_dashboard_cards() {
 
 function plugin_formcreator_hook_update_profile(CommonDBTM $item) {
    $dashboard = new Dashboard;
-   if (!$dashboard->getFromDB('plugin_formcreator_issue_counters')){
+   if (!$dashboard->getFromDB('plugin_formcreator_issue_counters')) {
       return;
    }
    $dashboardRight = new DashboardRight();

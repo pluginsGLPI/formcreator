@@ -473,25 +473,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    }
 }
 
-#formcreator_servicecatalogue_ticket_summary {
-   .status_incoming, .status_incoming a {
-      color: #49bf4d;
-   }
-
-   .status_waiting, .status_waiting a {
-      color: orange;
-   }
-
-   .status_validate, .status_validate a {
-      color: #8CABDB;
-   }
-
-   .status_solved, .status_solved a {
-      color: black;
-   }
-}
-
-
 /* SLINKY CSS */
 .slinky-menu {
    overflow: hidden;

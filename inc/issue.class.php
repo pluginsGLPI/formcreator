@@ -866,25 +866,17 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getProcessingCriteria() {
-      $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process'],
-                           //   ['field'      => 8,
-                           //   'searchtype'  => 'equals',
-                           //   'value'       => $currentUser]
                            ],
               'reset'    => 'reset'];
    }
 
    static function getWaitingCriteria() {
-      $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => Ticket::WAITING],
-                              // ['field'      => 8,
-                              // 'searchtype'  => 'equals',
-                              // 'value'       => $currentUser]
                            ],
               'reset'    => 'reset'];
    }
@@ -903,11 +895,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    static function getSolvedCriteria() {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [
-                           //   ['link'       => 'AND',
-                           //    'field'      => 8,
-                           //    'searchtype'  => 'equals',
-                           //    'value'       => $currentUser,
-                           //    ],
                               ['link'       => 'AND',
                               'criteria' => [[
                                'link'       => 'AND',
@@ -1038,50 +1025,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       return $input;
-   }
-
-   public static function showTicketSummary() {
-      // show ticket summary
-      echo "<span id='formcreator_servicecatalogue_ticket_summary'>";
-      //$status_count = PluginFormcreatorIssue::getTicketSummary();
-
-      $link = PluginFormcreatorIssue::getSearchURL();
-      echo "<span class='status status_incoming'>
-            <a href='".$link."?".
-                     Toolbox::append_params(PluginFormcreatorIssue::getProcessingCriteria(), '&amp;')."'>
-            <span class='status_number'><i class='fas fa-spinner fa-spin'></i></span>
-            <label class='status_label'>".__('Processing')."</label>
-            </a>
-            </span>";
-
-      echo "<span class='status status_waiting'>
-            <a href='".$link."?".
-                     Toolbox::append_params(PluginFormcreatorIssue::getWaitingCriteria(), '&amp;')."'>
-            <span class='status_number'><i class='fas fa-spinner fa-spin'></i></span>
-            <label class='status_label'>".__('Pending')."</label>
-            </a>
-            </span>";
-
-      echo "<span class='status status_validate'>
-            <a href='".$link."?".
-                     Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(), '&amp;')."'>
-            <span class='status_number'><i class='fas fa-spinner fa-spin'></i></span>
-            <label class='status_label'>".__('To validate', 'formcreator')."</label>
-            </a>
-            </span>";
-
-      echo "<span class='status status_solved'>
-            <a href='".$link."?".
-                     Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(), '&amp;')."'>
-            <span class='status_number'><i class='fas fa-spinner fa-spin'></i></span>
-            <label class='status_label'>".__('Closed', 'formcreator')."</label>
-            </a>
-            </span>";
-
-      echo '</span>'; // formcreator_servicecatalogue_ticket_summary
-      echo Html::scriptBlock("$(function() {
-         plugin_formcreator.getCounters();
-      })");
    }
 
    public static function nbIssues(array $params): array {
