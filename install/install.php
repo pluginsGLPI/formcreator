@@ -33,6 +33,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
+use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Item as Dashboard_Item;
+use Ramsey\Uuid\Uuid;
 class PluginFormcreatorInstall {
    protected $migration;
 
@@ -87,6 +90,7 @@ class PluginFormcreatorInstall {
       $this->createDefaultDisplayPreferences();
       $this->createCronTasks();
       $this->createNotifications();
+      $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       $task = new CronTask();
@@ -144,6 +148,7 @@ class PluginFormcreatorInstall {
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
       $this->createCronTasks();
+      $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
@@ -537,5 +542,56 @@ class PluginFormcreatorInstall {
             'state'     => '0', // Deprecated since 2.11
          ]
       );
+   }
+
+   protected function createMiniDashboard() {
+      $dashboard = new Dashboard();
+
+      if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
+         // The dashboard already exists, nothing to create
+         return;
+      }
+
+      $dashboard->add([
+         'key'     => 'plugin_formcreator_issue_counters',
+         'name'    => 'Assistance requests counts',
+         'context' => 'mini_core',
+      ]);
+
+      if ($dashboard->isNewItem()) {
+         // Failed to create the dashboard
+         return;
+      };
+
+      $commonOptions = [
+         'color'        => '#FAFAFA',
+         'widgettype'   => 'bigNumber',
+         'use_gradient' => '0',
+         'point_labels' => '0',
+         'limit'        => '7',
+      ];
+      $cards = [
+         'plugin_formcreator_processing' => [],
+         'plugin_formcreator_waiting'    => [],
+         'plugin_formcreator_validate'   => [],
+         'plugin_formcreator_solved'     => [],
+      ];
+      $x = 0;
+      $w = 4; // Width
+      $h = 4; // Height
+      $y = 0;
+      foreach ($cards as $key => $options) {
+         $item = new Dashboard_Item();
+         $item->addForDashboard($dashboard->fields['id'], [[
+            'card_id' => $key,
+            'gridstack_id' => $key . '_' . Uuid::uuid4(),
+            'x'       => $x,
+            'y'       => $y,
+            'width'   => $w,
+            'height'  => $h,
+            'card_options' => array_merge($commonOptions, $options),
+         ]]);
+         $x += $w;
+      }
    }
 }

@@ -369,6 +369,8 @@ function plugin_formcreator_hook() {
       }
    }
 
+   $PLUGIN_HOOKS['dashboard_cards']['formcreator'] = 'plugin_formcreator_hook_dashboard_cards';
+
    if (Session::getLoginUserID() === false) {
       return;
    }

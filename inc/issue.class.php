@@ -1083,4 +1083,48 @@ class PluginFormcreatorIssue extends CommonDBTM {
          plugin_formcreator.getCounters();
       })");
    }
+
+   public static function nbIssues(array $params): array {
+      switch ($params['status']) {
+         case 'processing':
+            $searchCriteria = PluginFormcreatorIssue::getProcessingCriteria();
+            $icon = '';
+            break;
+
+         case 'waiting':
+            $searchCriteria = PluginFormcreatorIssue::getWaitingCriteria();
+            $icon = 'far fa-clock';
+            break;
+
+         case 'validate':
+            $searchCriteria = PluginFormcreatorIssue::getValidateCriteria();
+            $icon = '';
+            break;
+
+         case 'solved':
+            $searchCriteria = PluginFormcreatorIssue::getSolvedCriteria();
+            $icon = '';
+            break;
+      }
+      $searchWaiting = Search::getDatas(
+         PluginFormcreatorIssue::class,
+         $searchCriteria
+      );
+      $count = 0;
+      if (isset($searchWaiting['data']['totalcount'])) {
+         $count = $searchWaiting['data']['totalcount'];
+      }
+
+      $url = self::getSearchURL();
+      $url .= '?' . Toolbox::append_params($searchCriteria);
+      $label = $params['label'];
+      return [
+         'number'     => $count,
+         'url'        => $url,
+         'label'      => $label,
+         'icon'       => $icon,
+         's_criteria' => $searchCriteria,
+         'itemtype'   => 'Ticket',
+      ];
+   }
 }
