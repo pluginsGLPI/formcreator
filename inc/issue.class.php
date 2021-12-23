@@ -302,7 +302,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       unset($options['_item']);
 
-      // Header if the item + link to the list of items
+      // Header of the item + link to the list of items
       switch ($item::getType()) {
          case self::getType():
             $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
