@@ -322,7 +322,8 @@ function plugin_formcreator_permanent_hook() {
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
-      Plugin::class => 'plugin_formcreator_hook_update_plugin'
+      Plugin::class => 'plugin_formcreator_hook_update_plugin',
+      Profile::class => 'plugin_formcreator_hook_update_profile',
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
@@ -343,7 +344,7 @@ function plugin_formcreator_permanent_hook() {
 }
 
 function plugin_formcreator_hook() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
@@ -366,8 +367,20 @@ function plugin_formcreator_hook() {
             || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+         $CFG_GLPI['javascript']['self-service']['none'] = [
+            'dashboard',
+            'gridstack'
+         ];
+      }
+      if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
+         $CFG_GLPI['javascript']['self-service']['none'] = [
+            'dashboard',
+            'gridstack'
+         ];
       }
    }
+
+   $PLUGIN_HOOKS['dashboard_cards']['formcreator'] = 'plugin_formcreator_hook_dashboard_cards';
 
    if (Session::getLoginUserID() === false) {
       return;

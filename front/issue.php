@@ -42,9 +42,18 @@ if (!PluginFormcreatorIssue::canView()) {
 if (Session::getCurrentInterface() == "helpdesk") {
    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+   Html::header(
+      __('Service catalog', 'formcreator'),
+      '',
+      'admin',
+      PluginFormcreatorIssue::class,
+   );
 }
 
+if (Session::getCurrentInterface() == 'helpdesk') {
+   $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 2, 'mini_core');
+   $dashboard->show(true);
+}
 Search::show('PluginFormcreatorIssue');
 
 if (Session::getCurrentInterface() == "helpdesk") {
@@ -52,4 +61,3 @@ if (Session::getCurrentInterface() == "helpdesk") {
 } else {
    Html::footer();
 }
-
