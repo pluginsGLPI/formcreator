@@ -29,10 +29,15 @@
  * ---------------------------------------------------------------------
  */
 namespace tests\units;
+
+use CommonITILObject;
+use Glpi\Agent\Communication\Headers\Common;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
 use PluginFormcreatorFormAnswer as GlobalPluginFormcreatorFormAnswer;
-
+use PluginFormcreatorTargetTicket;
+use PluginFormcreatorTargetChange;
+use PluginFormcreatorTargetProblem;
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -44,6 +49,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testPost_UpdateItem':
          case 'testPrepareInputForAdd':
          case 'testGetTartgets':
+         case 'testGetGeneratedTargets':
+         case 'testGetAggregatedStatus':
             $this->login('glpi', 'glpi');
       }
    }
@@ -665,5 +672,198 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
+   }
+
+   public function testGetGeneratedTargets() {
+      $form = $this->getForm();
+      $targets = [];
+      $targets[1] = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targets[2] = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targets[3] = $this->getTargetProblem([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $instance = $this->newTestedInstance();
+      $output = $instance->getGeneratedTargets();
+      $this->array($output)->hasSize(0);
+
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $generatedTargets = $instance->targetList;
+
+      $output = $instance->getGeneratedTargets();
+      // Check the targetsList is unchanged
+      $this->array($instance->targetList)->hasSize(count($generatedTargets));
+      $this->array($output)->hasSize(3);
+
+      $output = $instance->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
+      // Check the targetsList is unchanged
+      $this->array($instance->targetList)->hasSize(3);
+      $this->array($output)->hasSize(1);
+
+      $output = $instance->getGeneratedTargets([PluginFormcreatorTargetChange::getType()]);
+      // Check the targetsList is unchanged
+      $this->array($instance->targetList)->hasSize(3);
+      $this->array($output)->hasSize(1);
+
+      $output = $instance->getGeneratedTargets([PluginFormcreatorTargetProblem::getType()]);
+      // Check the targetsList is unchanged
+      $this->array($instance->targetList)->hasSize(3);
+      $this->array($output)->hasSize(1);
+   }
+
+   public function testGetAggregatedStatus() {
+      // When no target defined
+      $form = $this->getForm();
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $output = $instance->getAggregatedStatus();
+      $this->variable($output)->isNull();
+
+      // When several targets
+      $form = $this->getForm();
+      $targetTickets = [];
+      for ($i = 1; $i <= 3; $i++) {
+         $targetTickets[$i] = $this->getTargetTicket([
+            'plugin_formcreator_forms_id' => $form->getID(),
+         ]);
+      }
+
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+
+      $tickets = $instance->targetList;
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::INCOMING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::ASSIGNED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::ASSIGNED);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::WAITING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::WAITING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::PLANNED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::WAITING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::WAITING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::INCOMING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::ASSIGNED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::PLANNED,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::PLANNED);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::SOLVED);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::CLOSED);
    }
 }

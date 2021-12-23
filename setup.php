@@ -348,6 +348,13 @@ function plugin_formcreator_hook() {
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
 
+   $PLUGIN_HOOKS['pre_show_tab']['formcreator'] = [
+      PluginFormcreatorCommon::class, 'hookPreShowTab',
+   ];
+   $PLUGIN_HOOKS['post_show_tab']['formcreator'] = [
+      PluginFormcreatorCommon::class, 'hookPostShowTab',
+   ];
+
    // Load JS and CSS files if we are on a page which need them
    if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
       || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false

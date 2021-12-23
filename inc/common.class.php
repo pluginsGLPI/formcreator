@@ -902,4 +902,33 @@ JAVASCRIPT;
         ]
       ];
    }
+
+   /**
+    * remove form answer from associatable items to tickets when viewing a form answer
+    * this removes the button "add a ticket for this item"
+    *
+    * @param array $options
+    * @return void
+    */
+   public static function hookPreShowTab(array $options) {
+      if ($options['item']::getType() == PluginFormcreatorFormAnswer::getType()) {
+         $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
+         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
+            $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
+            [PluginFormcreatorFormAnswer::getType()]
+         );
+      }
+   }
+
+   /**
+   * Restore the associatable items to tickets into the session
+   *
+   * @param array $options
+   * @return void
+   */
+   public static function hookPostShowTab(array $options) {
+      if ($options['item']::getType() == PluginFormcreatorFormAnswer::getType()) {
+         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
+      }
+   }
 }

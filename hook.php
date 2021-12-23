@@ -407,7 +407,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
    }
 
    // set the minimal status to the form answer (which will forward the status to the issue)
-   $minimalStatus = $formAnswer->getMinimalStatus();
+   $minimalStatus = $formAnswer->getAggregatedStatus();
    if ($minimalStatus === null) {
       return;
    }
@@ -434,8 +434,11 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
       ])
    ]);
    if (!$formAnswer->isNewItem()) {
-      $minimalStatus = $formAnswer->getMinimalStatus();
-      if ($minimalStatus !== null) {
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus === null) {
+         // There is no more ticket in the form anwer
+         $formAnswer->updateStatus(CommonITILObject::CLOSED);
+      } else {
          $formAnswer->updateStatus($minimalStatus);
       }
       return;
@@ -467,7 +470,7 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
       return;
    }
 
-   $minimalStatus = $formAnswer->getMinimalStatus();
+   $minimalStatus = $formAnswer->getAggregatedStatus();
    if ($minimalStatus !== null) {
       $formAnswer->updateStatus($minimalStatus);
    }
@@ -493,13 +496,17 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       ])
    ]);
    if (!$formAnswer->isNewItem()) {
-      $minimalStatus = $formAnswer->getMinimalStatus();
-      if ($minimalStatus !== null) {
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus === null) {
+         // There is no more ticket in the form anwer
+         $formAnswer->updateStatus(CommonITILObject::CLOSED);
+      } else {
          $formAnswer->updateStatus($minimalStatus);
       }
+      return;
    }
 
-   // delete issue if any 
+   // delete issue if any
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
       'items_id' => $id,

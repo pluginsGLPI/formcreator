@@ -41,6 +41,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $usenotepad = true;
    public $usenotepadrights = true;
 
+   /**
+    * Generated targets after creation of a form answer
+    *
+    * @var array
+    */
    public $targetList = [];
 
    const SOPTION_ANSWER = 900000;
@@ -1064,7 +1069,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
       $this->createIssue();
-      $minimalStatus = $formAnswer->getMinimalStatus();
+      $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus !== null) {
          $this->updateStatus($minimalStatus);
       }
@@ -1114,7 +1119,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
       $this->updateIssue();
-      $minimalStatus = $formAnswer->getMinimalStatus();
+      $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus !== null) {
          $this->updateStatus($minimalStatus);
       }
@@ -1801,6 +1806,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    /**
     * get all generated targets by the form answer
+    * populates the generated targets associated to the instance
     *
     * @return array An array of target itemtypes to track
     */
@@ -1818,7 +1824,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $itemtypes = array_intersect(PluginFormcreatorForm::getTargetTypes(), $itemtypes);
       }
       /** @var PluginFormcreatorTargetInterface $targetType */
-      foreach ($itemtypes as $targetType) {
+      $this->targetList = [];
+      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
          $targetItem = new $targetType();
          $generatedType = $targetItem->getTargetItemtypeName();
          $relationType = $targetItem->getItem_Item();
@@ -1841,12 +1848,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                "$relationTable.items_id" => $this->getID(),
             ],
          ]);
-         foreach($iterator as $row) {
+         foreach ($iterator as $row) {
             /** @var $item CommonDBTM */
             $item = new $generatedType();
             $item->getFromResultSet($row);
-            $targets[] = $item;
             $this->targetList[] = clone $item;
+            // skip not wanted itemtypes
+            if (!in_array($targetType, $itemtypes)) {
+               continue;
+            }
+            $targets[] = $item;
          }
       }
 
@@ -1858,8 +1869,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     *
     * @return null|int
     */
-   public function getMinimalStatus(): ?int {
+   public function getAggregatedStatus(): ?int {
       $generatedTargets = $this->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
+
+      $isWaiting = false;
+      $isAssigned = false;
+      $isProcessing = false;
 
       // Find the minimal status of the first generated tickets in the array (deleted items excluded)
       $generatedTarget = array_shift($generatedTargets);
@@ -1871,8 +1886,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return null;
       }
 
-      // Find the minimal status of all (not deleted) generated targets
-      $minimalStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
+      // Find status of the first ticket in the array
+      $aggregatedStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
+      if ($aggregatedStatus == CommonITILObject::ASSIGNED) {
+         $isAssigned = true;
+      }
+      if ($aggregatedStatus == CommonITILObject::PLANNED) {
+         $isProcessing = true;
+      }
+      if ($aggregatedStatus == CommonITILObject::WAITING) {
+         $isWaiting = true;
+      }
+
+      // Traverse all other tickets and set the minimal status
       foreach ($generatedTargets as $generatedTarget) {
          /** @var Ticket $generatedTarget  */
          if ($generatedTarget::getType() != Ticket::getType()) {
@@ -1885,10 +1911,33 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
             continue;
          }
-         $minimalStatus = min($minimalStatus, $ticketStatus);
+
+         if ($ticketStatus == CommonITILObject::ASSIGNED) {
+            $isAssigned = true;
+         }
+         if ($ticketStatus == CommonITILObject::PLANNED) {
+            $isProcessing = true;
+         }
+         if ($ticketStatus == CommonITILObject::WAITING) {
+            $isWaiting = true;
+         }
+         $aggregatedStatus = min($aggregatedStatus, $ticketStatus);
       }
 
-      return $minimalStatus;
+      // Assigned status takes precedence
+      if ($isAssigned) {
+         $aggregatedStatus = CommonITILObject::ASSIGNED;
+      }
+      // Planned status takes precedence
+      if ($isProcessing) {
+         $aggregatedStatus = CommonITILObject::PLANNED;
+      }
+      // Waiting status takes precedence to inform the requester his feedback is required
+      if ($isWaiting) {
+         $aggregatedStatus = CommonITILObject::WAITING;
+      }
+
+      return $aggregatedStatus;
    }
 
    /**
