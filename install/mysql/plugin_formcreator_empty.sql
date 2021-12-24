@@ -28,13 +28,14 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
-  `id`                int(11) NOT NULL,
-  `replace_helpdesk`  int(11) NOT NULL DEFAULT '-2',
-  `sort_order`        int(11) NOT NULL DEFAULT '-2',
-  `is_kb_separated`   int(11) NOT NULL DEFAULT '-2',
-  `is_search_visible` int(11) NOT NULL DEFAULT '-2',
-  `is_header_visible` int(11) NOT NULL DEFAULT '-2',
-  `header`            text,
+  `id`                   int(11) NOT NULL,
+  `replace_helpdesk`     int(11) NOT NULL DEFAULT '-2',
+  `sort_order`           int(11) NOT NULL DEFAULT '-2',
+  `is_kb_separated`      int(11) NOT NULL DEFAULT '-2',
+  `is_search_visible`    int(11) NOT NULL DEFAULT '-2',
+  `is_dashboard_visible` int(11) NOT NULL DEFAULT '-2',
+  `is_header_visible`    int(11) NOT NULL DEFAULT '-2',
+  `header`               text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
