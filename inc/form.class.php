@@ -1332,6 +1332,13 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function post_addItem() {
+      if (isset($this->input['_create_empty_section'])) {
+         $section = new PluginFormcreatorSection();
+         $section->add([
+            self::getForeignKeyField() => $this->getID(),
+            'name' => PluginFormcreatorSection::getTypeName(1),
+         ]);
+      }
       $this->updateValidators();
       if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
