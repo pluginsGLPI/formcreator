@@ -260,14 +260,16 @@ class PluginFormcreatorInstall {
    protected function configureExistingEntities() {
       global $DB;
 
+      /** Value -2 is "inheritance from parent" @see PluginFormcreatorEntityconfig::CONFIG_PARENT */
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
-                  (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_header_visible)
+                  (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible)
                SELECT ent.id,
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 1, -2),
+                  IF(ent.id = 0, 0, -2)
                 FROM glpi_entities ent
                 LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
                   ON ent.id = conf.id
@@ -307,36 +309,36 @@ class PluginFormcreatorInstall {
       global $DB;
 
       $notifications = [
-            'plugin_formcreator_form_created' => [
-               'name'     => __('A form has been created', 'formcreator'),
-               'subject'  => __('Your request has been saved', 'formcreator'),
-               'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
-            'plugin_formcreator_need_validation' => [
-               'name'     => __('A form need to be validate', 'formcreator'),
-               'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
-               'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::APPROVER,
-            ],
-            'plugin_formcreator_refused'         => [
-               'name'     => __('The form is refused', 'formcreator'),
-               'subject'  => __('Your form has been refused by the validator', 'formcreator'),
-               'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
-            'plugin_formcreator_accepted'        => [
-               'name'     => __('The form is accepted', 'formcreator'),
-               'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
-               'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
-            'plugin_formcreator_deleted'         => [
-               'name'     => __('The form is deleted', 'formcreator'),
-               'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
-               'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
+         'plugin_formcreator_form_created' => [
+            'name'     => __('A form has been created', 'formcreator'),
+            'subject'  => __('Your request has been saved', 'formcreator'),
+            'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
+         'plugin_formcreator_need_validation' => [
+            'name'     => __('A form need to be validate', 'formcreator'),
+            'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
+            'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::APPROVER,
+         ],
+         'plugin_formcreator_refused'         => [
+            'name'     => __('The form is refused', 'formcreator'),
+            'subject'  => __('Your form has been refused by the validator', 'formcreator'),
+            'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
+         'plugin_formcreator_accepted'        => [
+            'name'     => __('The form is accepted', 'formcreator'),
+            'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
+            'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
+         'plugin_formcreator_deleted'         => [
+            'name'     => __('The form is deleted', 'formcreator'),
+            'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
+            'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
       ];
 
       // Create the notification template
