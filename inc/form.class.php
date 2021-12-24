@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -430,135 +431,12 @@ PluginFormcreatorTranslatableInterface
     */
    public function showForm($ID, $options = []) {
       $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
-      // echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
-      echo '<td width="30%">';
-      echo Html::input('name', [
-         'id' => 'name',
-         'autofocus' => '',
-         'value' => $this->fields['name'],
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form.html.twig', [
+       'item'   => $this,
+       'params' => $options,
       ]);
-      echo '</td>';
-      echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
-      echo '<td width="30%">';
-      Dropdown::showYesNo("is_active", $this->fields["is_active"]);
-      echo '</td>';
-      echo '</tr>';
 
-      echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Category') . '</td>';
-      echo '<td>';
-      PluginFormcreatorCategory::dropdown([
-         'name'  => 'plugin_formcreator_categories_id',
-         'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
-      ]);
-      echo '</td>';
-      echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
-      echo '<td>';
-      Dropdown::showYesNo("helpdesk_home", $this->fields["helpdesk_home"]);
-      echo '</td>';
-
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Form icon', 'formcreator') . '</td>';
-      echo '<td>';
-      $icon = $this->fields['icon'] == '' ? 'fa fa-question-circle' : $this->fields['icon'];
-      PluginFormcreatorCommon::showFontAwesomeDropdown('icon', ['value' => $icon]);
-      $iconColor = $this->fields['icon_color'] == '' ? '#999999' : $this->fields['icon_color'];
-      Html::showColorField('icon_color', ['value' => $iconColor]);
-      echo '</td>';
-      echo '<td>' . __('Background color', 'formcreator') . '</td>';
-      echo '<td>';
-      $tileColor = $this->fields['background_color'] == '' ? '#E7E7E7' : $this->fields['background_color'];
-      Html::showColorField('background_color', ['value' => $tileColor]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Description') . '</td>';
-      echo '<td>';
-      echo Html::input('description', [
-         'id' => 'name',
-         'value' => $this->fields['description'],
-      ]);
-      echo '</td>';
-      echo '<td>' . __('Language') . '</td>';
-      echo '<td>';
-      Dropdown::showLanguages('language', [
-         'value'               => ($ID != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
-         'display_emptychoice' => true,
-         'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . _n('Header', 'Headers', 1, 'formcreator') . '</td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'content',
-         'value'   => $this->fields['content'],
-         'enable_richtext' => true,
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
-      echo '<td>';
-      Dropdown::showYesNo('is_default', $this->fields['is_default']);
-      echo '</td>';
-      echo '<td></td>';
-      echo '<td></td>';
-      echo '</tr>';
-
-      // Show "is_visible" field
-      echo '<tr>';
-      echo '<td>';
-      echo __('Visible', 'formcreator');
-      echo '</td>';
-      echo '<td>';
-      if ($this->isNewID($this->getId())) {
-         $value = true;
-      } else {
-         $value = $this->fields['is_visible'];
-      }
-      Dropdown::showYesNo('is_visible', $value);
-      echo "&nbsp;&nbsp;";
-      $tooltip = __(
-         "If set to 'no', this form won't be shown for self-services users. They will still be able to access this form through its URL.",
-         'formcreator'
-      );
-      Html::showToolTip($tooltip);
-      echo '</td>';
-      echo '<td></td>';
-      echo '<td></td>';
-      echo '</tr>';
-
-      if (!$this->canPurgeItem()) {
-         echo '<tr>';
-         echo '<td colspan="4">'
-         . '<i class="fas fa-exclamation-triangle"></i>&nbsp;'
-         . __('To delete this form you must delete all its answers first.', 'formcreator')
-         . '</td>';
-         echo '</tr>';
-      }
-
-      echo '<tr>';
-      echo '<th colspan="4">'.PluginFormcreatorFormAnswer::getTypeName(1).'</th>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td>' . __('Answers title', 'formcretor') . '</td>';
-      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name']]) . '</td>';
-      echo '</tr>';
-
-      $this->showFormButtons($options);
+      return true;
    }
 
    public function showFormAnswerProperties($ID, $options = []) {
