@@ -42,8 +42,12 @@ if (isset($_POST['add'])) {
    // Add a new Form
    Session::checkRight('entity', UPDATE);
    $_POST['_create_empty_section'] = true;
-   $newID = $form->add($_POST);
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.form.php?id=' . $newID);
+   if ($newID = $form->add($_POST)) {
+      if ($_SESSION['glpibackcreated']) {
+         Html::redirect($form->getLinkURL());
+      }
+   }
+   Html::back();
 
 } else if (isset($_POST['update'])) {
    // Edit an existing form

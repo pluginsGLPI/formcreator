@@ -158,7 +158,9 @@ class PluginFormcreatorCommon {
     * @return array
     */
    public static function getFontAwesomePictoNames() : array {
-      $list = require_once(GLPI_PLUGIN_DOC_DIR . '/formcreator/' . self::getPictoFilename(GLPI_VERSION));
+      static $list = null;
+
+      $list = $list ?? require_once(GLPI_PLUGIN_DOC_DIR . '/formcreator/' . self::getPictoFilename());
       return $list;
    }
 
@@ -168,8 +170,8 @@ class PluginFormcreatorCommon {
     * @param $version string GLPI version
     * @return string
     */
-   public static function getPictoFilename(string $version) : string {
-      return 'font-awesome.php';;
+   public static function getPictoFilename() : string {
+      return 'font-awesome.php';
    }
 
    /**
@@ -177,7 +179,7 @@ class PluginFormcreatorCommon {
     *
     * @param string $name name of the HTML input
     * @param array $options
-    * @return void
+    * @return string
     */
    public static function showFontAwesomeDropdown(string $name, array $options = []) {
       $items = static::getFontAwesomePictoNames();
@@ -187,9 +189,7 @@ class PluginFormcreatorCommon {
          'display_emptychoice' => true,
          'rand'                => mt_rand(),
       ] + $options;
-      if (!isset($options['value'])) {
-         $options['value'] = '';
-      }
+      $options['value'] ?? '';
       Dropdown::showFromArray($name, $items, $options);
 
       // templates for select2 dropdown
