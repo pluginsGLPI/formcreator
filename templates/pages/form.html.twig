@@ -1,0 +1,155 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
+
+{% set bg = '' %}
+{% if item.isDeleted() %}
+   {% set bg = 'asset-deleted' %}
+{% endif %}
+
+<div class="asset {{ bg }}">
+   {{ include('components/form/header.html.twig') }}
+
+   {% set rand = random() %}
+   {% set params  = params ?? [] %}
+   {% set target       = params['target'] ?? item.getFormURL() %}
+   {% set withtemplate = params['withtemplate'] ?? '' %}
+   {% set item_type = item.getType() %}
+   {% set item_has_pictures = item.hasItemtypeOrModelPictures() %}
+
+   {% if item.isNewItem() %}
+       {% set language = session('glpilanguage') %}
+       {% set iconColor = '#999999' %}
+       {% set bgColor = '#E7E7E7' %}
+   {% else %}
+       {% set language = item.fields['language'] %}
+       {% set iconColor = item.fields['icon_color'] %}
+       {% set bgColor = item.fields['background_color'] %}
+   {% endif %}
+
+   <div class="card-body d-flex flex-wrap">
+      <div class="col-12 col-xxl-{{ item_has_pictures ? '9' : '12' }} flex-column">
+         <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+            <div class="row flex-row align-items-start flex-grow-1">
+               <div class="row flex-row">
+
+                    {{ fields.autoNameField(
+                        'name',
+                        item,
+                        __('Name'),
+                    withtemplate,
+                    { required: true }
+                    ) }}
+
+                    {{ fields.dropdownYesNo('is_active', item.fields['is_active'], __('Active'), { required: true }) }}
+
+                    {{ fields.dropdownField(
+                        'PluginFormcreatorCategory',
+                        'plugin_formcreator_categories_id',
+                        item.fields['plugin_formcreator_categories_id'],
+                        'PluginFormcreatorCategory'|itemtype_name
+                    ) }}
+
+                    {{ fields.dropdownYesNo('helpdesk_home', item.fields['helpdesk_home'], __('Direct access on homepage', 'formcreator')) }}
+
+                    <div class="form-field row col-12 col-sm-6  mb-2">
+                        <label class="col-form-label col-xxl-5 text-xxl-end" for="dropdown_language_{{ rand }}">
+                            {{ __('Icon', 'formcreator') }}
+                        </label>
+
+                        <div class="col-xxl-7 field-container">
+                            {% do call('PluginFormcreatorCommon::showFontAwesomeDropdown', ['icon', {
+                                'value': item.fields['icon'],
+                                'rand': rand,
+                                'width': '100%',
+                            }]) %}
+                        </div>
+                    </div>
+
+                    {{ fields.colorField('icon_color', iconColor, __('Icon color')) }}
+
+                    {% set rand = random() %}
+                    <div class="form-field row col-12 col-sm-6  mb-2">
+                        <label class="col-form-label col-xxl-5 text-xxl-end" for="dropdown_language_{{ rand }}">
+                            {{ __('Language', 'formcreator') }}
+                        </label>
+
+                        <div class="col-xxl-7 field-container">
+                            {% do call('Dropdown::showLanguages', ['language', {
+                                'display_emptychoice': true,
+                                'emptylabel':  '--- ' ~ __('All langages', 'formcreator') ~ ' ---',
+                                'value': language,
+                                'rand': rand,
+                                'width': '100%',
+                            }]) %}
+                        </div>
+                    </div>
+
+                    {{ fields.colorField('background_color', bgColor, __('Background color', 'formcreator')) }}
+
+                    {{ fields.textField('description', item.fields['description'], __('Description')) }}
+
+                    {{ fields.textareaField('content', item.fields['content'], __('Header', 'formcreator'), { 'enable_richtext': true }) }}
+
+                    {{ fields.dropdownYesNo('is_default', item.fields['is_default'], __('Default form in service catalog', 'formcreator')) }}
+
+                    {% set tooltip = call('Html::showToolTip',
+                        [__(
+                            "If set to 'no', this form won't be shown for self-services users. They will still be able to access this form through its URL.",
+                            'formcreator'
+                        ),
+                        { display: false }
+                    ]) %}
+                    {{ fields.dropdownYesNo('is_visible', item.fields['is_visible'], __('Visible', 'formcreator'), { 'add_field_html': tooltip }) }}
+
+                    {{ fields.textField('formanswer_name', item.fields['formanswer_name'], __('Answers title', 'formcreator')) }}
+               </div> {# .row #}
+            </div> {# .row #}
+         </div> {# .flex-row #}
+      </div>
+      {% if item_has_pictures %}
+         <div class="col-12 col-xxl-3 flex-column">
+            <div class="flex-row asset-pictures">
+               {{ include('components/form/pictures.html.twig', {'gallery_type': ''}) }}
+            </div>
+         </div>
+      {% endif %}
+   </div> {# .card-body #}
+
+   {{ include('components/form/buttons.html.twig') }}
+
+   {% if params['formfooter'] == null %}
+      <div class="card-footer mx-n2 mb-n2 mt-4">
+         {{ include('components/form/dates.html.twig') }}
+      </div>
+   {% endif %}
+</div>
