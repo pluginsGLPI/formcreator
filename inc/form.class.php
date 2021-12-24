@@ -1328,6 +1328,13 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function post_addItem() {
+      if (isset($this->input['_create_empty_section'])) {
+         $section = new PluginFormcreatorSection();
+         $section->add([
+            self::getForeignKeyField() => $this->getID(),
+            'name' => PluginFormcreatorSection::getTypeName(1),
+         ]);
+      }
       $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
