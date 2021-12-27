@@ -1116,7 +1116,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $sectionFk => $section2->getID(),
       ]);
 
-      $questions = $question1->getQuestionsFromForm($form->getID());
+      $questions = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
       $this->array($questions)->hasSize(2);
 
       $questionIds = [];
@@ -1141,7 +1141,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $sectionFk => $section->getID(),
       ]);
 
-      $questions = $question1->getQuestionsFromSection($section->getID());
+      $questions = \PluginFormcreatorQuestion::getQuestionsFromSection($section->getID());
       $questionIds = [];
       foreach ($questions as $item) {
          $questionIds[] = $item->getID();
