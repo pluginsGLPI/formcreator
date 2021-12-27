@@ -498,4 +498,39 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->boolean(\PluginFormcreatorQuestion::getById($questions[1]->getID()))->isFalse();
       $this->boolean(\PluginFormcreatorQuestion::getById($questions[2]->getID()))->isFalse();
    }
+
+   public function testGetSectionsFromForm() {
+      $form = $this->getForm();
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $this->array($output)->hasSize(0);
+
+      $sections = [];
+      $section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+      $sections[] = $section;
+
+      $section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+      $sections[] = $section;
+
+      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $this->array($output)->hasSize(2);
+
+      $found = 0;
+      foreach ($output as $section) {
+         foreach ($sections as $search) {
+            if ($search->getID() == $section->getID()) {
+               $found++;
+            }
+         }
+      }
+      $this->integer($found)->isEqualTo(2);
+
+   }
 }
