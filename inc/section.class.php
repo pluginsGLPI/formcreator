@@ -414,7 +414,7 @@ PluginFormcreatorTranslatableInterface
     * @param int $formId ID of a form
     * @return self[] sections in a form
     */
-   public function getSectionsFromForm($formId) {
+   public static function getSectionsFromForm($formId) {
       global $DB;
 
       $sections = [];

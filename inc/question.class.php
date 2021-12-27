@@ -1105,7 +1105,7 @@ PluginFormcreatorTranslatableInterface
     * @param array $crit array for the WHERE clause
     * @return PluginFormcreatorQuestion[]
     */
-   public function getQuestionsFromForm($formId, $crit = []) {
+   public static function getQuestionsFromForm($formId, $crit = []) {
       global $DB;
 
       $table_question = PluginFormcreatorQuestion::getTable();
@@ -1150,7 +1150,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return PluginFormcreatorQuestion[]
     */
-   public function getQuestionsFromSection($sectionId) {
+   public static function getQuestionsFromSection($sectionId) {
       global $DB;
 
       $questions = [];
