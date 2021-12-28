@@ -82,7 +82,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
       $this->boolean($condition->isNewItem())->isFalse();
 
       // Check that all conditions are retrieved
-      $output = $condition->getConditionsFromItem($question);
+      $output = \PluginFormcreatorCondition::getConditionsFromItem($question);
       $this->array($output)->hasSize(2);
    }
 
