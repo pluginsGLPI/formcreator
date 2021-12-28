@@ -224,7 +224,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * @param CommonDBTM $item
     * @return PluginFormcreatorCondition[]
     */
-   public function getConditionsFromItem(CommonDBTM $item) : array {
+   public static function getConditionsFromItem(CommonDBTM $item) : array {
       global $DB;
 
       if ($item->isNewItem()) {
@@ -276,7 +276,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
 
       // Get existing conditions for the item
       /** @var CommonDBTM $item */
-      $conditions = $this->getConditionsFromItem($item);
+      $conditions = self::getConditionsFromItem($item);
       foreach ($conditions as $condition) {
          echo $condition->getConditionHtml($item->fields);
       }
