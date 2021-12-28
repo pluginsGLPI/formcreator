@@ -179,7 +179,6 @@ class PluginFormcreatorFields
 
       // Get conditions to show or hide the item
       $condition = new PluginFormcreatorCondition();
-      $conditions = $condition->getConditionsFromItem($item);
       if ($getParentVisibility() === false) {
          // No condition defined or parent hidden
          self::$visibility[$itemtype][$itemId] = false;

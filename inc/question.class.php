@@ -1075,8 +1075,7 @@ PluginFormcreatorTranslatableInterface
 
       // get question conditions
       $export['_conditions'] = [];
-      $condition = new PluginFormcreatorCondition();
-      $all_conditions = $condition->getConditionsFromItem($this);
+      $all_conditions = PluginFormcreatorCondition::getConditionsFromItem($this);
       foreach ($all_conditions as $condition) {
          $export['_conditions'][] = $condition->export($remove_uuid);
       }
