@@ -93,6 +93,12 @@ html, body {
  * Form designer
  */
 
+/* modals */
+.modal-dialog .card-header {
+   // Fix ribbon position
+   position: relative;
+}
+
 /* Sections */
 #plugin_formcreator_form.plugin_formcreator_form_design {
    > ol {
