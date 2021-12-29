@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -289,7 +290,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return string HTML to insert in a rendered web page
     */
-   public function getConditionHtml(array $input) : string {
+   public function getConditionHtml(array $input): string {
       if ($this->isNewItem()) {
          $this->getEmpty();
          $itemtype       = $input['itemtype'];
@@ -307,11 +308,69 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          $show_logic     = $this->fields['show_logic'];
       }
       $item              = new $itemtype();
+      $parentFk = $item::$items_id;
+      $item->fields[$parentFk] = $input[$parentFk];
 
       // Get list of question in the form of the item
       if (!($item instanceof PluginFormcreatorConditionnableInterface)) {
          throw new Exception("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
+
+      // dropdown of questions
+      $form = PluginFormcreatorCommon::getForm();
+      $questionListExclusion = [];
+      switch ($itemtype) {
+         case PluginFormcreatorForm::class:
+            $form->getFromDB($itemId);
+            break;
+
+         case PluginFormcreatorSection::class:
+            if (!$item->isNewID($itemId)) {
+               $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+               $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $itemId]];
+            }
+         case PluginFormcreatorTargetTicket::class:
+         case PluginFormcreatorTargetChange::class:
+            // $form->getFromDB($input['plugin_formcreator_forms_id']);
+            break;
+
+         case PluginFormcreatorQuestion::class:
+            if (!$item->isNewID($itemId)) {
+            //    $parentItemtype = $item::$itemtype;
+            //    $section = new $parentItemtype();
+            //    $section->getFromDB($input[$parentItemtype::getForeignKeyField()]);
+            //    $form->getFromDBByItem($section);
+            // } else {
+               // $item->getFromDB($itemId);
+               $form->getFromDBByItem($item);
+               $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
+            }
+            break;
+
+         default:
+            throw new RuntimeException("Unsupported conditionnable");
+
+      }
+      $sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
+      $sectionsList = [];
+      foreach ($sections as $section) {
+         $sectionsList[] = $section->getID();
+      }
+      if (count($sectionsList) > 0 ) {
+         $questionListExclusion[] = [
+            PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
+         ];
+      }
+
+      $out = TemplateRenderer::getInstance()->render('@formcreator/components/form/condition.html.twig', [
+         'item'   => $item,
+         'params' => [
+            'excludeQuestions' => $questionListExclusion,
+            'questionId'       => $questionId,
+         ],
+      ]);
+
+      return $out;
 
       $rand = mt_rand();
       $html  = '';
@@ -347,6 +406,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $itemId]];
          case PluginFormcreatorTargetTicket::class:
          case PluginFormcreatorTargetChange::class:
+
             $form->getFromDB($input['plugin_formcreator_forms_id']);
             break;
 
@@ -355,10 +415,10 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
                $parentItemtype = $item::$itemtype;
                $section = new $parentItemtype();
                $section->getFromDB($input[$parentItemtype::getForeignKeyField()]);
-               $form->getFromDBBySection($section);
+               $form->getFromDBByItem($section);
             } else {
                $item->getFromDB($itemId);
-               $form->getFromDBByQuestion($item);
+               $form->getFromDBByItem($item);
                $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
             }
             break;
@@ -379,7 +439,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       }
       $html.= '<div class="div_show_condition_field">';
       $html .= PluginFormcreatorQuestion::dropdownForForm(
-         $form->getID(),
+         $form,
          $questionListExclusion,
          '_conditions[plugin_formcreator_questions_id][]',
          $questionId,
