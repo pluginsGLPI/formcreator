@@ -365,7 +365,7 @@ PluginFormcreatorTranslatableInterface
       }
       // - field type is compatible with accessibility of the form
       $form = PluginFormcreatorCommon::getForm();
-      $form->getFromDBByQuestion($this);
+      $form->getFromDBByItem($this);
       if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
          Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
          return [];
@@ -1222,19 +1222,19 @@ PluginFormcreatorTranslatableInterface
    /**
     * Show or return a dropdown to select a question among those of the given form
     *
-    * @param int $formId
+    * @param PluginFormcreatorForm $form
     * @param array $crit
     * @param string $name
     * @param string $value
     * @param array $options
     * @return string|int HTML output or random id
     */
-   public static function dropdownForForm($formId, $crit, $name, $value = null, $options = []) {
+   public static function dropdownForForm($form, $crit, $name, $value = null, $options = []) {
       if (isset($crit['used']) && count($crit['used']) == 0) {
          unset($crit['used']);
       }
       $question = new self();
-      $items = $question->getQuestionsFromFormBySection($formId, $crit);
+      $items = $question->getQuestionsFromFormBySection($form->getID(), $crit);
       $options = $options + [
          'display' => $options['display'] ?? true,
       ];

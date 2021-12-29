@@ -1957,52 +1957,51 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * gets the form containing the given section
+    * Get a form a sub object (section, question, target)
+    * Able to find a form from an item having only its parent FK and no ID
     *
-    * @param PluginFormcreatorSection $section
-    * @return boolean true if success else false
+    * @param CommonDBTM $item
+    * @return null|self
     */
-   public function getFromDBBySection(PluginFormcreatorSection $item) {
-      if ($item->isNewItem()) {
-         return false;
-      }
-      return $this->getFromDB($item->fields[self::getForeignKeyField()]);
-   }
-
-   public function getFromDBByTarget(CommonDBTM $item) {
-      if ($item->isNewItem()) {
-         return false;
-      }
-      return $this->getFromDB($item->fields[self::getForeignKeyField()]);
-   }
-
-   public function getFromDBByQuestion(PluginFormcreatorQuestion $question) {
+   public static function getByItem(CommonDBTM $item): ?self {
       global $DB;
 
-      if ($question->isNewItem()) {
-         return false;
+      if ($item::getType() == self::getType()) {
+         return $item;
       }
-      $questionTable = PluginFormcreatorQuestion::getTable();
-      $sectionTable = PluginFormcreatorSection::getTable();
-      $iterator = $DB->request([
-         'SELECT' => self::getForeignKeyField(),
-         'FROM' => PluginFormcreatorSection::getTable(),
-         'INNER JOIN' => [
-            $questionTable => [
-               'FKEY' => [
-                  $sectionTable => PluginFormcreatorSection::getIndexName(),
-                  $questionTable => PluginFormcreatorSection::getForeignKeyField()
+
+      $form = PluginFormcreatorCommon::getForm();
+      $formFk = self::getForeignKeyField();
+      switch ($item::getType()) {
+         case PluginFormcreatorSection::getType():
+            $form->getFromDB($item->fields[$formFk]);
+            break;
+
+         case PluginFormcreatorQuestion::getType():
+            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+            $iterator = $DB->request([
+               'SELECT' => self::getForeignKeyField(),
+               'FROM' => PluginFormcreatorSection::getTable(),
+               'WHERE' => [
+                  'id' => $item->fields[$sectionFk],
                ]
-            ]
-         ],
-         'WHERE' => [
-            $questionTable . '.' . PluginFormcreatorQuestion::getIndexName() => $question->getID()
-         ]
-      ]);
-      if ($iterator->count() !== 1) {
-         return false;
+            ]);
+            if ($iterator->count() !== 1) {
+               return null;
+            }
+            $form->getFromDB($iterator->current()[$formFk]);
+            break;
       }
-      return $this->getFromDB($iterator->current()[self::getForeignKeyField()]);
+
+      if ($item instanceof PluginFormcreatorTargetInterface) {
+         $form->getFromDB($item->fields[$formFk]);
+      }
+
+      if ($form->isNewItem()) {
+         return null;
+      }
+
+      return $form;
    }
 
    /**
