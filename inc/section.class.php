@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -436,6 +437,17 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showForm($ID, $options = []) {
+      $this->initForm($ID, $options);
+      // $form = PluginFormcreatorCommon::getForm();
+      // $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      TemplateRenderer::getInstance()->display('@formcreator/pages/section.html.twig', [
+       'item'   => $this,
+       'params' => $options,
+      //  'form'   => $form,
+      ]);
+
+      return;
+
       if ($ID == 0) {
          $title =  __('Add a section', 'formcreator');
          $action = 'plugin_formcreator.addSection()';

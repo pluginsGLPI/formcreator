@@ -743,8 +743,10 @@ var plugin_formcreator = new function() {
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)
+         glpi_close_all_dialogs();
          that.resetTabs();
       });
+
    }
 
    this.duplicateQuestion = function (target) {
@@ -1502,7 +1504,7 @@ function plugin_formcreator_changeGlpiObjectItemType() {
 function plugin_formcreator_toggleCondition(target) {
    var form = $(target).closest('form');
 
-   var selector = 'tr[data-itemtype="PluginFormcreatorCondition"]';
+   var selector = 'div[data-itemtype="PluginFormcreatorCondition"]';
    if (target.value == '1') {
       form.find(selector).hide();
    } else {
@@ -1515,11 +1517,9 @@ function plugin_formcreator_toggleCondition(target) {
 
 function plugin_formcreator_addEmptyCondition(target) {
    var form     = $(target).closest('form');
-   var itemtype = form.attr('data-itemtype');
+   var itemtype = form.closest('div.asset[data-itemtype]').attr('data-itemtype');
    // value if the hidden id input field
-   var id       = form.find('[name="id"]').val();
-   var parentKey;
-   var parentId;
+   var id       = form.find('[name="id"]').val() || 0;
    var data = form.serializeArray();
    data.push({
       name: 'itemtype',
@@ -1534,12 +1534,12 @@ function plugin_formcreator_addEmptyCondition(target) {
       url: formcreatorRootDoc + '/ajax/condition.php',
       data: data
    }).done(function (data) {
-      $(target).parents('tr').after(data);
+      target.closest('div.row').after(document.createRange().createContextualFragment(data));
    });
 }
 
 function plugin_formcreator_removeNextCondition(target) {
-   $(target).parents('tr').remove();
+   target.closest('div.row').remove();
 }
 
 // === FIELDS ===
