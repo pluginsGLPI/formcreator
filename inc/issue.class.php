@@ -770,12 +770,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $ticket = new Ticket();
                   $ticket->getFromDB($id);
                   $content = $ticket->fields['content'];
+                  $canViewItem = $ticket->canViewItem();
                   break;
 
                case PluginFormcreatorFormAnswer::class:
                   $formAnswer = new PluginFormcreatorFormAnswer();
                   $formAnswer->getFromDB($id);
                   $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  $canViewItem = $formAnswer->canViewItem();
                   break;
 
                default:
@@ -784,10 +786,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $link = self::getFormURLWithID($id) . "&itemtype=".$data['raw']['itemtype'];
             $link =  self::getFormURLWithID($data['id']);
             $key = 'id';
-            $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
-               'applyto' => $itemtype.$data['raw'][$key],
-               'display' => false,
-            ]);
+            $tooltip = '';
+            if ($canViewItem) {
+               $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
+                  'applyto' => $itemtype.$data['raw'][$key],
+                  'display' => false,
+               ]);
+            }
             return '<a id="' . $itemtype.$data['raw'][$key] . '" href="' . $link . '">'
                . sprintf(__('%1$s %2$s'), $name, $tooltip)
                . '</a>';
