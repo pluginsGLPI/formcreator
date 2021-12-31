@@ -451,7 +451,7 @@ var plugin_formcreator = new function() {
    this.questionsColumns = 4; // @see PluginFormcreatorSection::COLUMNS
    this.dirty = false;
 
-   this.setupGridStack = function (group) {
+   this.setupGridStack = function(group) {
       var that = this;
       group.gridstack
       .on('resizestart', this.startChangeItem)
@@ -611,7 +611,7 @@ var plugin_formcreator = new function() {
          if (id != that.changingItemId) {
             return;
          }
-         $(event.target).gridstack.update(
+         event.target.gridstack.update(
             item.el,
             that.initialPosition[id]['x'],
             that.initialPosition[id]['y'],
@@ -624,8 +624,8 @@ var plugin_formcreator = new function() {
    // === QUESTIONS ===
 
    this.deleteQuestion = function (target) {
-      var item = $(target).closest('.grid-stack-item');
-      var id = item.attr('data-id');
+      var item = target.closest('.grid-stack-item');
+      var id = item.getAttribute('data-id');
       if (typeof(id) === 'undefined') {
          return;
       }
@@ -697,7 +697,7 @@ var plugin_formcreator = new function() {
    }
 
    this.addQuestion = function () {
-      var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
+      var form = document.querySelector('form[data-itemtype="PluginFormcreatorQuestion"]');
       var that = this;
       $.ajax({
          url: formcreatorRootDoc + '/ajax/question_add.php',
@@ -750,8 +750,8 @@ var plugin_formcreator = new function() {
    }
 
    this.duplicateQuestion = function (target) {
-      var item = $(target).closest('.grid-stack-item');
-      var id = item.attr('data-id');
+      var item = target.closest('.grid-stack-item');
+      var id = item.getAttribute('data-id');
       var that = this;
       if (typeof(id) === 'undefined') {
          return;
