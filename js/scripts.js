@@ -464,8 +464,6 @@ var plugin_formcreator = new function() {
             $(item.ddElement.el).find('a').off('click.prevent');
          },
          300);
-         // Remove empty rows
-         plugin_formcreator.moveUpItems(group);
       })
       .on('dropped', function (event, previousWidget, newWidget) {
          var changes = {};
@@ -548,7 +546,8 @@ var plugin_formcreator = new function() {
   this.startChangeItem = function (event, item) {
       $(item.ddElement.el).find('a').on('click.prevent', function(event) {
          return false;
-      });      var items = $(event.currentTarget).find('> .grid-stack-item');
+      });
+      var items = $(event.currentTarget).find('> .grid-stack-item');
       this.initialPosition = {};
       var that = this;
       $.each(items, function(index, item) {
@@ -643,29 +642,10 @@ var plugin_formcreator = new function() {
             var gridstack = container.gridstack;
             var row = $(item).attr('data-gs-y');
             gridstack.removeWidget(item);
-            //plugin_formcreator.moveUpItems(container);
          });
       }
    };
 
-   /**
-    * Move up items in a grid when row is empty
-    * @param grid stack container
-    * @param row  row to fill with items after it
-    */
-   this.moveUpItems = function (grid) {
-      return;
-      // Disabled cause it does not fully works with dropped elements
-      var lastRow = grid.find('.grid-stack-item:not(.grid-stack-placeholder)').last().attr('data-gs-y');
-      for (let y = 0; y < lastRow; y++) {
-         var movable = grid.find('.grid-stack-item:not(.grid-stack-placeholder)').filter(function(index, element) {
-            return ($(element).attr('data-gs-y') > y);
-         }).first();
-         if (movable.length > 0) {
-            grid.gridstack.move(movable, Number(movable.attr('data-gs-x')), y)
-         }
-      }
-   };
 
    this.toggleRequired = function (target) {
       var item = $(target).closest('.grid-stack-item');
