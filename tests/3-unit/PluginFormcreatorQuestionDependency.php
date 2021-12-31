@@ -87,7 +87,7 @@ class PluginFormcreatorQuestionDependency extends CommonTestCase {
          ]
       ]);
       $form = new \PluginFormcreatorForm();
-      $form->getByItem($question);
+      $form = \PluginFormcreatorForm::getByItem($question);
       $question2 = $this->getQuestion([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);

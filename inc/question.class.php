@@ -166,6 +166,12 @@ PluginFormcreatorTranslatableInterface
       return $tab;
    }
 
+   public function getForbiddenStandardMassiveAction() {
+      return [
+         'update', 'clone', 'add_note',
+      ];
+   }
+
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       $options = ['candel' => false];
       TemplateRenderer::getInstance()->display('@formcreator/pages/question_for_form.html.twig', [
@@ -337,7 +343,7 @@ PluginFormcreatorTranslatableInterface
       // - field type is compatible with accessibility of the form
       $form = PluginFormcreatorCommon::getForm();
       $section = PluginFormcreatorSection::getById($input[PluginFormcreatorSection::getForeignKeyField()]);
-      $form->getByItem($section);
+      $form = PluginFormcreatorForm::getByItem($section);
       if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
          Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
          return [];
@@ -464,6 +470,9 @@ PluginFormcreatorTranslatableInterface
       // global $DB;
 
       if (!$this->skipChecks) {
+         if (!isset($input['plugin_formcreator_sections_id'])) {
+            $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];
+         }
          $input = $this->checkBeforeSave($input);
       }
 
@@ -727,6 +736,11 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showForm($ID, $options = []) {
+      TemplateRenderer::getInstance()->display('@formcreator/pages/question.html.twig', [
+         'item' => $this,
+      ]);
+      return true;
+
       if ($ID == 0) {
          $title =  __('Add a question', 'formcreator');
          $action = 'plugin_formcreator.addQuestion()';
@@ -1183,7 +1197,7 @@ PluginFormcreatorTranslatableInterface
       $items = [];
       foreach ($result as $question) {
          $sectionName = $question['sname'];
-         if ($sectionName == '' ) {
+         if ($sectionName == '') {
             $sectionName = '(' . $question['sid'] . ')';
          }
          if (!isset($items[$sectionName])) {

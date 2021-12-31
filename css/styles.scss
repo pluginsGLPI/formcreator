@@ -101,7 +101,7 @@ html, body {
 
 /* Sections */
 #plugin_formcreator_form.plugin_formcreator_form_design {
-   > ol {
+   ol {
       list-style-type: none;
       text-align: left;
       padding-left: 0;
@@ -125,11 +125,11 @@ html, body {
       }
    }
 
-   > ol > .plugin_formcreator_section:not(:first-of-type) {
+   ol > .plugin_formcreator_section:not(:first-of-type) {
       margin-top: 20px;
    }
 
-   > ol > .plugin_formcreator_section.not-sortable > a {
+   ol > .plugin_formcreator_section.not-sortable > a {
       padding-left: 15px;
    }
 

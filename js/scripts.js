@@ -596,6 +596,7 @@ var plugin_formcreator = new function() {
          plugin_formcreator.dirty = false;
       }).done(function(response) {
          plugin_formcreator.dirty = false;
+         that.resetTabs();
       });
    };
 
@@ -992,7 +993,13 @@ var plugin_formcreator = new function() {
     * destroy hidden tabs. Useful when their content is obsoleted
     */
    this.resetTabs = function () {
-      $('.glpi_tabs [role="tabpanel"][aria-hidden="true"] ').empty();
+      // $('.glpi_tabs [role="tabpanel"][aria-hidden="true"] ').empty();
+      var tabs = document.querySelectorAll('.tab-content div[role="tabpanel"]:not(.show)')
+      tabs.forEach(item => {
+            while (item.lastChild) {
+               item.removeChild(item.lastChild);
+            }
+      });
    }
 
    this.showTranslationEditor = function (object) {
@@ -1498,9 +1505,9 @@ function plugin_formcreator_toggleCondition(target) {
 
 function plugin_formcreator_addEmptyCondition(target) {
    var form     = target.closest('form');
-   var itemtype = form.getAttribute('data-itemtype');
+   var itemtype = form.closest('.asset[data-itemtype]').getAttribute('data-itemtype');
    // value if the hidden id input field
-   var id       = form.querySelector('[name="id"]').value;
+   var id       = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : 0;
    var data     = new FormData(form);
    data.append('itemtype', itemtype);
    data.append('items_id', id);
