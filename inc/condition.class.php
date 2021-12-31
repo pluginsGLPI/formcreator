@@ -250,6 +250,14 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       return $conditions;
    }
 
+   public static function countForItem(PluginFormcreatorConditionnableInterface $item): int {
+      /** @var CommonDBTM $item */
+      return (new DBUtils())->countElementsInTable(PluginFormcreatorCondition::getTable(), [
+         'itemtype' => $item::getType(),
+         'items_id' => $item->getID(),
+      ]);
+   }
+
    /**
     * Display HTML for conditions applied on an item
     *
@@ -284,6 +292,54 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    }
 
    /**
+    * get SQL WHERE clause to exclude questions from questions dropdown
+    *
+    * @param PluginFormcreatorConditionnableInterface $item
+    * @return void
+    */
+   public static function getQuestionsExclusion(PluginFormcreatorConditionnableInterface $item) {
+      /** @var CommonDBTM $item */
+      $itemtype = $item->getType();
+      switch ($itemtype) {
+         case PluginFormcreatorForm::class:
+            return [];
+            break;
+
+         case PluginFormcreatorSection::class:
+            if ($item->isNewItem()) {
+               $formFk = PluginFormcreatorForm::getForeignKeyField();
+               $sections = (new PluginFormcreatorSection())->getSectionsFromForm($item->fields[$formFk]);
+               $sectionsList = [];
+               foreach ($sections as $section) {
+                  $sectionsList[] = $section->getID();
+               }
+               $questionListExclusion = [];
+               if (count($sectionsList) > 0) {
+                  $questionListExclusion[] = [
+                     PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
+                  ];
+               }
+               return $questionListExclusion;
+            }
+            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+            return [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $item->getID()]];
+            break;
+
+         case PluginFormcreatorQuestion::class:
+            if (!$item->isNewItem()) {
+               return [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $item->getID()]];
+            }
+            break;
+      }
+      if (in_array($item::getType(), PluginFormcreatorForm::getTargetTypes())) {
+         // No question exclusion for targets
+         return [];
+      }
+
+      throw new RuntimeException("Unsupported conditionnable");
+   }
+
+   /**
     * return HTML to show a condition line for a question
     *
     * @param array $input
@@ -294,197 +350,30 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       if ($this->isNewItem()) {
          $this->getEmpty();
          $itemtype       = $input['itemtype'];
-         $itemId         = $input['items_id'];
          $questionId     = '';
-         $show_condition = self::SHOW_CONDITION_EQ;
-         $show_value     = '';
-         $show_logic     = '';
       } else {
          $itemtype       = $this->fields['itemtype'];
-         $itemId         = $this->fields['items_id'];
          $questionId     = $this->fields['plugin_formcreator_questions_id'];
-         $show_condition = $this->fields['show_condition'];
-         $show_value     = $this->fields['show_value'];
-         $show_logic     = $this->fields['show_logic'];
       }
-      $item              = new $itemtype();
-      $parentFk = $item::$items_id;
-      $item->fields[$parentFk] = $input[$parentFk];
-
-      // Get list of question in the form of the item
-      if (!($item instanceof PluginFormcreatorConditionnableInterface)) {
-         throw new Exception("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
+      if (!is_subclass_of($itemtype, PluginFormcreatorConditionnableInterface::class)) {
+         // security check
+         throw new RuntimeException("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
-
-      // dropdown of questions
-      $form = PluginFormcreatorCommon::getForm();
-      $questionListExclusion = [];
-      switch ($itemtype) {
-         case PluginFormcreatorForm::class:
-            $form->getFromDB($itemId);
-            break;
-
-         case PluginFormcreatorSection::class:
-            if (!$item->isNewID($itemId)) {
-               $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-               $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $itemId]];
-            }
-         case PluginFormcreatorTargetTicket::class:
-         case PluginFormcreatorTargetChange::class:
-            // $form->getFromDB($input['plugin_formcreator_forms_id']);
-            break;
-
-         case PluginFormcreatorQuestion::class:
-            if (!$item->isNewID($itemId)) {
-            //    $parentItemtype = $item::$itemtype;
-            //    $section = new $parentItemtype();
-            //    $section->getFromDB($input[$parentItemtype::getForeignKeyField()]);
-            //    $form->getFromDBByItem($section);
-            // } else {
-               // $item->getFromDB($itemId);
-               $form->getFromDBByItem($item);
-               $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
-            }
-            break;
-
-         default:
-            throw new RuntimeException("Unsupported conditionnable");
-
-      }
-      $sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
-      $sectionsList = [];
-      foreach ($sections as $section) {
-         $sectionsList[] = $section->getID();
-      }
-      if (count($sectionsList) > 0 ) {
-         $questionListExclusion[] = [
-            PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
-         ];
+      $item = new $itemtype();
+      if (!$item->getFromDB($input['id'])) {
+         $item->getEmpty();
+         $parentFk = $item::$items_id;
+         $item->fields[$parentFk] = $input[$parentFk];
       }
 
       $out = TemplateRenderer::getInstance()->render('@formcreator/components/form/condition.html.twig', [
          'item'   => $item,
          'params' => [
-            'excludeQuestions' => $questionListExclusion,
             'questionId'       => $questionId,
          ],
       ]);
 
       return $out;
-
-      $rand = mt_rand();
-      $html  = '';
-      $html .= '<tr'
-      . ' data-itemtype="' . self::class . '"'
-      . ' data-id="' . $this->getID() . '"'
-      . '">';
-      $html .= '<td colspan="4">';
-      $html .= '<div class="div_show_condition">';
-
-      // Boolean operator
-      $html.= '<div class="div_show_condition_logic">';
-      $html.= Dropdown::showFromArray('_conditions[show_logic][]',
-            self::getEnumShowLogic(),
-            [
-               'display'               => false,
-               'value'                 => $show_logic,
-               'display_emptychoice'   => false,
-               'rand'                  => $rand,
-            ]);
-      $html.= '</div>';
-
-      // dropdown of questions
-      $form = PluginFormcreatorCommon::getForm();
-      $questionListExclusion = [];
-      switch ($itemtype) {
-         case PluginFormcreatorForm::class:
-            $form->getFromDB($itemId);
-            break;
-
-         case PluginFormcreatorSection::class:
-            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-            $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $itemId]];
-         case PluginFormcreatorTargetTicket::class:
-         case PluginFormcreatorTargetChange::class:
-
-            $form->getFromDB($input['plugin_formcreator_forms_id']);
-            break;
-
-         case PluginFormcreatorQuestion::class:
-            if ($item->isNewID($itemId)) {
-               $parentItemtype = $item::$itemtype;
-               $section = new $parentItemtype();
-               $section->getFromDB($input[$parentItemtype::getForeignKeyField()]);
-               $form->getFromDBByItem($section);
-            } else {
-               $item->getFromDB($itemId);
-               $form->getFromDBByItem($item);
-               $questionListExclusion = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
-            }
-            break;
-
-         default:
-            throw new RuntimeException("Unsupported conditionnable");
-
-      }
-      $sections = (new PluginFormcreatorSection())->getSectionsFromForm($form->getID());
-      $sectionsList = [];
-      foreach ($sections as $section) {
-         $sectionsList[] = $section->getID();
-      }
-      if (count($sectionsList)) {
-         $questionListExclusion[] = [
-            PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
-         ];
-      }
-      $html.= '<div class="div_show_condition_field">';
-      $html .= PluginFormcreatorQuestion::dropdownForForm(
-         $form,
-         $questionListExclusion,
-         '_conditions[plugin_formcreator_questions_id][]',
-         $questionId,
-         [
-            'display' => false,
-         ]
-      );
-      $html.= '</div>';
-
-      // Equality / inequality operator
-      $html.= '<div class="div_show_condition_operator">';
-
-      $html.= Dropdown::showFromArray(
-         '_conditions[show_condition][]',
-         self::getEnumShowCondition(), [
-            'display'      => false,
-            'value'        => $show_condition,
-            'rand'         => $rand,
-         ]
-      );
-      $html.= '</div>';
-
-      // Value of comparison
-      $html.= '<div class="div_show_condition_value">';
-      $html.= Html::input('_conditions[show_value][]', [
-         // 'class' => 'small_text',
-         // 'size'  => '8',
-         'value' => $show_value,
-      ]);
-      $html.= '</div>';
-
-      // Buttons to add a new comparison or remove the curent one
-      $onclick = 'plugin_formcreator_addEmptyCondition(this, \'' . $itemtype . '\', ' . $itemId . ')';
-      $html.= '<div class="div_show_condition_add">';
-      $html.= '<i class="fas fa-plus-circle" style="cursor: pointer;" onclick="' . $onclick . '"></i>&nbsp;</div>';
-
-      $onclick = 'plugin_formcreator_removeNextCondition(this, \'' . $itemtype . '\', ' . $itemId . ')';
-      $html.= '<div class="div_show_condition_remove">';
-      $html.= '<i class="fas fa-minus-circle"  style="cursor: pointer;" onclick="' . $onclick . '"></i>&nbsp;</div>';
-
-      $html.= '</div>';
-      $html.= '</td>';
-      $html.= '</tr>';
-
-      return $html;
    }
 
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {

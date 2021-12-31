@@ -679,15 +679,16 @@ var plugin_formcreator = new function() {
    this.addQuestion = function () {
       var form = document.querySelector('form[data-itemtype="PluginFormcreatorQuestion"]');
       var that = this;
-      $.ajax({
+      $.post({
          url: formcreatorRootDoc + '/ajax/question_add.php',
-         type: "POST",
-         data: form.serializeArray(),
-         dataType: 'json'
+         data: new FormData(form),
+         processData: false,
+         contentType: false,
+         dataType: 'json',
       }).fail(function(data) {
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
-         var sectionId = form.find('select[name="plugin_formcreator_sections_id"]').val();
+         var sectionId = form.querySelector('select[name="plugin_formcreator_sections_id"]').value;
          var container = document.querySelector('[data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack');
          var grid = container.gridstack;
          grid.addWidget(
@@ -1496,23 +1497,18 @@ function plugin_formcreator_toggleCondition(target) {
 }
 
 function plugin_formcreator_addEmptyCondition(target) {
-   var form     = $(target).closest('form');
-   var itemtype = form.closest('div.asset[data-itemtype]').attr('data-itemtype');
+   var form     = target.closest('form');
+   var itemtype = form.getAttribute('data-itemtype');
    // value if the hidden id input field
-   var id       = form.find('[name="id"]').val() || 0;
-   var data = form.serializeArray();
-   data.push({
-      name: 'itemtype',
-      value: itemtype
-   });
-   data.push({
-      name: 'items_id',
-      value: id
-   });
-   $.ajax({
-      type: 'POST',
+   var id       = form.querySelector('[name="id"]').value;
+   var data     = new FormData(form);
+   data.append('itemtype', itemtype);
+   data.append('items_id', id);
+   $.post({
       url: formcreatorRootDoc + '/ajax/condition.php',
-      data: data
+      processData: false,
+      contentType: false,
+      data: data,
    }).done(function (data) {
       target.closest('div.row').after(document.createRange().createContextualFragment(data));
    });
