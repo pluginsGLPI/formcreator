@@ -39,6 +39,7 @@ if (!isset($_REQUEST['id'])) {
 $questionId = (int) $_REQUEST['id'];
 $question = new PluginFormcreatorQuestion();
 if (!$question->getFromDB($questionId)) {
+    echo __('Question not found', 'formcreator');
     http_response_code(404);
     exit;
 }
