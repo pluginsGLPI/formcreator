@@ -136,6 +136,7 @@ class PluginFormcreatorFields
     * @return  boolean                 If true the question should be visible
     */
    public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
+      /** @var CommonDBTM $item */
       $itemtype = get_class($item);
       $itemId = $item->getID();
       if (!isset(self::$visibility[$itemtype][$itemId])) {
@@ -179,6 +180,7 @@ class PluginFormcreatorFields
 
       // Get conditions to show or hide the item
       $condition = new PluginFormcreatorCondition();
+      $conditions = $condition->getConditionsFromItem($item);
       if ($getParentVisibility() === false) {
          // No condition defined or parent hidden
          self::$visibility[$itemtype][$itemId] = false;

@@ -162,6 +162,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             return false;
          }
       }
+      /** @var CommonDBTM $linked */
       $input['plugin_formcreator_questions_id'] = $linked->getID();
 
       // Add or update condition
@@ -329,6 +330,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             if (!$item->isNewItem()) {
                return [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $item->getID()]];
             }
+            return [];
             break;
       }
       if (in_array($item::getType(), PluginFormcreatorForm::getTargetTypes())) {
@@ -360,7 +362,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          throw new RuntimeException("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
       $item = new $itemtype();
-      if (!$item->getFromDB($input['id'])) {
+      if (!isset($input['id']) || !$item->getFromDB($input['id'])) {
          $item->getEmpty();
          $parentFk = $item::$items_id;
          $item->fields[$parentFk] = $input[$parentFk];

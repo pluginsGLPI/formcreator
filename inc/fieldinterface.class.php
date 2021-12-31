@@ -291,4 +291,6 @@ interface PluginFormcreatorFieldInterface
     * @return array translatable strings under keys 'string' and 'text'
     */
    public function getTranslatableStrings(array $options = []) : array;
+
+   public function getQuestion();
 }
