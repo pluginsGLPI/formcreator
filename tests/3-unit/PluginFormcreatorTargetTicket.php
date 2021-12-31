@@ -448,7 +448,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form1 = new \PluginFormcreatorForm();
-      $form1->getFromDBByQuestion($question1);
+      $form1->getByItem($question1);
       $form1->update([
          'id' => $form1->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
@@ -465,7 +465,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form2 = new \PluginFormcreatorForm();
-      $form2->getFromDBByQuestion($question2);
+      $form2->getByItem($question2);
       $form2->update([
          'id' => $form2->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,

@@ -49,7 +49,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function providerPrepareInputForAdd() {
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form->getByItem($question);
       $this->boolean($form->isNewItem())->isFalse();
       $success = $form->update([
          'id' => $form->getID(),
@@ -87,7 +87,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form->getByItem($question);
       $this->boolean($form->isNewItem())->isFalse();
       $success = $form->update([
          'id'                  => $form->getID(),
@@ -259,7 +259,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       // prepare a form with targets
       $question = $this->getQuestion();
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form->getByItem($question);
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $this->getTargetTicket([
          $formFk => $form->getID(),
@@ -519,7 +519,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function testPost_UpdateItem() {
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm;
-      $form->getFromDBByQuestion($question);
+      $form->getByItem($question);
       $formValidator = new \PluginFormcreatorForm_Validator();
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),

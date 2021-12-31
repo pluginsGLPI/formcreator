@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -166,43 +167,13 @@ PluginFormcreatorTranslatableInterface
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      $formId = $item->getID();
-
-      echo '<div id="plugin_formcreator_form" class="plugin_formcreator_form_design" data-itemtype="' . PluginFormcreatorForm::class . '" data-id="' . $formId . '">';
-      echo '<ol>';
-      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($formId);
-      foreach ($sections as $section) {
-         echo $section->getDesignHtml();
-      }
-
-      // add a section
-      echo '<li class="plugin_formcreator_section not-sortable">';
-      echo '<a href="#" onclick="plugin_formcreator.showSectionForm(' . $item->getID() . ');">';
-      echo '<i class="fas fa-plus"></i>&nbsp;';
-      echo __('Add a section', 'formcreator');
-      echo '</a>';
-      echo '</li>';
-
-      echo '</ol>';
-      echo '</div>';
-
-      echo '<form name="form" method="post" action="'.PluginFormcreatorForm::getFormURL().'" data-itemtype="' . PluginFormcreatorForm::class . '">';
-      echo '<table>';
-
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Show submit button', 'formcreator');
-      echo '</th>';
-      echo '</tr>';
-      $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($item);
-
-      echo '</table>';
-
-      $item->showFormButtons([
-         'candel' => false
+      $options = ['candel' => false];
+      TemplateRenderer::getInstance()->display('@formcreator/pages/question_for_form.html.twig', [
+         'item'   => $item,
+         'params' => $options,
       ]);
-      Html::closeForm();
+
+      return true;
    }
 
    /**
@@ -365,7 +336,8 @@ PluginFormcreatorTranslatableInterface
       }
       // - field type is compatible with accessibility of the form
       $form = PluginFormcreatorCommon::getForm();
-      $form->getFromDBByItem($this);
+      $section = PluginFormcreatorSection::getById($input[PluginFormcreatorSection::getForeignKeyField()]);
+      $form->getByItem($section);
       if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
          Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
          return [];
@@ -1187,7 +1159,7 @@ PluginFormcreatorTranslatableInterface
       $result = $DB->request([
          'SELECT' => [
             $questionTable => ['id as qid', 'name as qname'],
-            $sectionTable => ['name as sname'],
+            $sectionTable => ['id as sid', 'name as sname'],
          ],
          'FROM' => $questionTable,
          'LEFT JOIN' => [
@@ -1210,10 +1182,14 @@ PluginFormcreatorTranslatableInterface
 
       $items = [];
       foreach ($result as $question) {
-         if (!isset($items[$question['sname']])) {
-            $items[$question['sname']] = [];
+         $sectionName = $question['sname'];
+         if ($sectionName == '' ) {
+            $sectionName = '(' . $question['sid'] . ')';
          }
-         $items[$question['sname']][$question['qid']] = $question['qname'];
+         if (!isset($items[$sectionName])) {
+            $items[$sectionName] = [];
+         }
+         $items[$sectionName][$question['qid']] = $question['qname'];
       }
 
       return $items;
