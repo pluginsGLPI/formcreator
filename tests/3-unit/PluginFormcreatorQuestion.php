@@ -1106,7 +1106,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
 
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question1);
+      $form->getByItem($question1);
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $section2 = $this->getSection([
          $formFk => $form->getID(),

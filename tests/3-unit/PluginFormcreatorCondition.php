@@ -89,7 +89,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
    public function testImport() {
       $question = $this->getQuestion();
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form->getByItem($question);
       $question2 = $this->getQuestion([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);

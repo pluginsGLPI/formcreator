@@ -190,7 +190,7 @@ class PluginFormcreatorForm_language extends CommonTestCase
       $question = $this->getQuestion();
       $this->boolean($question->isNewItem())->isFalse();
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form->getByItem($question);
       $this->boolean($form->isNewItem())->isFalse();
 
       $instance = $this->newTestedInstance();
