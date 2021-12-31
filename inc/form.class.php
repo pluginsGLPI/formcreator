@@ -1974,11 +1974,17 @@ PluginFormcreatorTranslatableInterface
       $formFk = self::getForeignKeyField();
       switch ($item::getType()) {
          case PluginFormcreatorSection::getType():
+            if (!isset($item->fields[$formFk])) {
+               return null;
+            }
             $form->getFromDB($item->fields[$formFk]);
             break;
 
          case PluginFormcreatorQuestion::getType():
             $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+            if (!isset($item->fields[$sectionFk])) {
+               return null;
+            }
             $iterator = $DB->request([
                'SELECT' => self::getForeignKeyField(),
                'FROM' => PluginFormcreatorSection::getTable(),

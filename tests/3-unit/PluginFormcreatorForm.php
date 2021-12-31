@@ -579,29 +579,47 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $instance->isPublicAccess();
       $this->boolean($output)->isEqualTo($expected);
    }
-   public function providerGetFromSection() {
+
+   public function providerGetByItem() {
       $section = $this->getSection();
-      $section->getField(\PluginFormcreatorForm::getForeignKeyField());
+      $question = $this->getQuestion();
+
       $dataset = [
          [
-            'section'  => $section,
-            'expectedId' => true,
+            'item'         => $section,
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expectedId'   => true,
          ],
          [
-            'section'  => new \PluginFormcreatorSection(),
-            'expected' => false,
+            'item'         => new \PluginFormcreatorSection(),
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => false,
+         ],
+         [
+            'question'     => $question,
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => true,
+         ],
+         [
+            'question'     => new \PluginFormcreatorQuestion(),
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => false,
          ],
       ];
       return $dataset;
    }
 
    /**
-    * @dataProvider providerGetFromSection
+    * @dataProvider providerGetByItem
     */
-   public function testgetFormFromSection($section, $expected) {
-      $form = new \PluginFormcreatorForm();
-      $output = $form->getFromDBBySection($section);
-      $this->boolean($output)->isEqualTo($expected);
+   public function testgetByItem($item, $expectedType, $expected) {
+      $output = \PluginFormcreatorForm::getByItem($item);
+      if ($expected === false) {
+         $this->variable($output)->isNull();
+         return;
+      }
+      $this->object($output)->isInstanceOf($expectedType);
+      $this->integer($output->getId())->isEqualTo($expected);
    }
 
    public function testImport() {

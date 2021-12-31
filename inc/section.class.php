@@ -71,6 +71,12 @@ PluginFormcreatorTranslatableInterface
       return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
+   public function isEntityAssign() {
+      // avoid to check the parent itemtype
+      return false;
+   }
+
+
    public function rawSearchOptions() {
       $tab = parent::rawSearchOptions();
 
@@ -85,6 +91,12 @@ PluginFormcreatorTranslatableInterface
       ];
 
       return $tab;
+   }
+
+   public function getForbiddenStandardMassiveAction() {
+      return [
+         'update', 'clone', 'add_note',
+      ];
    }
 
    /**
