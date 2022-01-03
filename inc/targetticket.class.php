@@ -379,35 +379,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       Html::closeForm();
    }
 
-   public static function showConditions(self $item) {
-      echo '<form name="form"'
-      . ' method="post"'
-      . ' action="' . self::getFormURL() . '"'
-      . ' data-itemtype="' . self::class . '"'
-      . '>';
-
-      echo '<table class="tab_cadre_fixe">';
-
-      $item->showConditionsSettings();
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo Html::hidden('id', ['value' => $item->getID()]);
-      echo Html::hidden($formFk, ['value' => $item->fields[$formFk]]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '</table>';
-      Html::closeForm();
-   }
-
    public static function showPluginFields(self $item) {
       $formId = $item->getID();
 
@@ -460,7 +431,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
    }
 
-   public static function showActors(PluginFormcreatorTargetTicket $item) {
+   public static function showActors(self $item) {
       $item->showActorsSettings();
    }
 
@@ -546,7 +517,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       // dropdown of questions of type GLPI Object / Ticket
       echo '<span id="plugin_formcreator_link_question" style="display: none">';
       echo PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['glpiselect'],
             'itemtype'  => [Ticket::class],
@@ -1144,7 +1115,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       echo '</div>';
       echo '<div id="requesttype_question_value" style="display: none">';
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['requesttype'],
          ],
@@ -1196,7 +1167,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       echo '<div id="plugin_formcreator_associate_question_value" style="display: none">';
       // select all user questions (GLPI Object)
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => 'glpiselect',
             'values' => $CFG_GLPI['ticket_types']
