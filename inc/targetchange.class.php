@@ -545,36 +545,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $this->getForm()->showTagsList();
    }
 
-
-   public static function showConditions(self $item) {
-      echo '<form name="form"'
-      . ' method="post"'
-      . ' action="' . self::getFormURL() . '"'
-      . ' data-itemtype="' . self::class . '"'
-      . '>';
-
-      echo '<table class="tab_cadre_fixe">';
-
-      $item->showConditionsSettings();
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo Html::hidden('id', ['value' => $item->getID()]);
-      echo Html::hidden($formFk, ['value' => $item->fields[$formFk]]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '</table>';
-      Html::closeForm();
-   }
-
    public static function showActors(self $item) {
       $item->showActorsSettings();
    }
