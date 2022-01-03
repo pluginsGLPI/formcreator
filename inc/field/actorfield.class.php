@@ -249,11 +249,7 @@ class ActorField extends PluginFormcreatorAbstractField
             $user->getFromDB($item);
             if (!$user->isNewItem()) {
                // A user known in the DB
-               if (method_exists($user, 'getFriendlyName')) {
-                  $knownUsers[$user->getID()] = $user->getFriendlyName();
-               } else {
-                  $knownUsers[$user->getID()] = $user->getRawName();
-               }
+               $knownUsers[$user->getID()] = $user->getFriendlyName();
             }
          }
       }
