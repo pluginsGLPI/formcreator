@@ -87,9 +87,6 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
       } else {
          $title =  __('Edit a target', 'formcreator');
       }
-      $rand = mt_rand();
-
-      $form = $this->getForm();
 
       echo '<form name="form"'
       . ' method="post"'
@@ -173,63 +170,6 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
       echo '</td>';
       echo '</tr>';
 
-      $rand = mt_rand();
-      $this->showDestinationEntitySetings($rand);
-
-      echo '<tr>';
-      $this->showTemplateSettings($rand);
-      echo '</tr>';
-
-      // -------------------------------------------------------------------------------------------
-      //  category of the target
-      // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($rand);
-
-      // -------------------------------------------------------------------------------------------
-      // Urgency selection
-      // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($rand);
-
-      // -------------------------------------------------------------------------------------------
-      //  Tags
-      // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($rand);
-
-      // -------------------------------------------------------------------------------------------
-      //  Validation as ticket followup
-      // -------------------------------------------------------------------------------------------
-      if ($form->fields['validation_required']) {
-         echo '<tr>';
-         echo '<td colspan="4">';
-         echo '<input type="hidden" name="validation_followup" value="0" />';
-         echo '<input type="checkbox" name="validation_followup" id="validation_followup" value="1" ';
-         if (!isset($this->fields['validation_followup']) || ($this->fields['validation_followup'] == 1)) {
-            echo ' checked="checked"';
-         }
-         echo '/>';
-         echo ' <label for="validation_followup">';
-         echo __('Add validation message as first ticket followup', 'formcreator');
-         echo '</label>';
-         echo '</td>';
-         echo '</tr>';
-      }
-
-      // -------------------------------------------------------------------------------------------
-      //  Conditions to generate the target
-      // -------------------------------------------------------------------------------------------
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Condition to create the target', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
-      $this->showConditionsSettings($rand);
-
-      echo '</table>';
-
-      // Buttons
-      echo '<table class="tab_cadre_fixe">';
-
       echo '<tr>';
       echo '<td colspan="4" class="center">';
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -247,9 +187,66 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
       echo '</table>';
       Html::closeForm();
 
-      $this->showActorsSettings();
+      $this->getForm()->showTagsList();
+   }
 
-      $this->showTagsList();
+   public static function showProperties(self $item) {
+      echo '<form name="form"'
+      . ' method="post"'
+      . ' action="' . self::getFormURL() . '"'
+      . ' data-itemtype="' . self::class . '"'
+      . '>';
+
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th class="center" colspan="4">' . __('Properties', 'formcreator') . '</th></tr>';
+
+      $form = $item->getForm();
+      $rand = mt_rand();
+      $item->showDestinationEntitySetings($rand);
+
+      echo '<tr>';
+      $item->showTemplateSettings($rand);
+      echo '</tr>';
+
+      // -------------------------------------------------------------------------------------------
+      //  category of the target
+      // -------------------------------------------------------------------------------------------
+      $item->showCategorySettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      // Urgency selection
+      // -------------------------------------------------------------------------------------------
+      $item->showUrgencySettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      //  Tags
+      // -------------------------------------------------------------------------------------------
+      $item->showPluginTagsSettings($rand);
+
+      // Buttons
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden('id', ['value' => $item->getID()]);
+      echo Html::hidden($formFk, ['value' => $item->fields[$formFk]]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr>';
+      echo '<td colspan="5" class="center">';
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</table>';
+      Html::closeForm();
+   }
+
+   public static function showActors(self $item) {
+      $item->showActorsSettings();
    }
 
    /**
@@ -667,6 +664,58 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
       ];
 
       return 1 + self::countChildren($subItems, $input);
+   }
+
+   public function defineTabs($options = []) {
+      $tab = [];
+      $this->addDefaultFormTab($tab);
+      $this->addStandardTab(__CLASS__, $tab, $options);
+      return $tab;
+   }
+
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      if (!self::canView()) {
+         return '';
+      }
+      switch ($item->getType()) {
+         case __CLASS__ :
+            $tab = [
+               1 => __('Properties', 'formcreator'),
+               2 => __('Actors', 'formcreator'),
+               3 => __('Condition', 'formcreator'),
+            ];
+            // if ((new Plugin)->isActivated('fields')) {
+            //    $tab[4] = __('Fields plugin', 'formcreator');
+            // }
+            return $tab;
+            break;
+      }
+      return '';
+   }
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      switch ($item->getType()) {
+         case self::class:
+            switch ($tabnum) {
+               case 1:
+                  self::showProperties($item);
+                  return true;
+                  break;
+               case 2:
+                  self::showActors($item);
+                  return true;
+                  break;
+               case 3:
+                  self::showConditions($item);
+                  break;
+               // case 4:
+               //    self::showPluginFields($item);
+               //    break;
+            }
+            break;
+      }
+
+      return false;
    }
 
    public function rawSearchOptions() {

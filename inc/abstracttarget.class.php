@@ -29,7 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Field\DropdownField;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -960,10 +960,10 @@ PluginFormcreatorTranslatableInterface
 
       echo '<div id="entity_user_value" style="display: none">';
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['glpiselect'],
-            'itemtype'  => USer::class,
+            'itemtype'  => User::class,
          ],
          '_destination_entity_value_user',
          $this->fields['destination_entity_value']
@@ -972,7 +972,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<div id="entity_entity_value" style="display: none">';
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['glpiselect'],
             'itemtype'  => Entity::class,
@@ -1030,7 +1030,7 @@ PluginFormcreatorTranslatableInterface
          echo '<div id="due_date_questions">';
       }
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['date', 'datetime'],
          ],
@@ -1109,7 +1109,7 @@ PluginFormcreatorTranslatableInterface
       echo "<div id='sla_questions' $style_questions>";
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => 'dropdown',
             'itemtype'  => SLA::getType(),
@@ -1119,7 +1119,7 @@ PluginFormcreatorTranslatableInterface
          $this->fields["sla_question_tto"]
       );
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => 'dropdown',
             'itemtype'  => SLA::getType(),
@@ -1182,7 +1182,7 @@ PluginFormcreatorTranslatableInterface
       echo "<div id='ola_questions' $style_questions>";
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => 'dropdown',
             'itemtype'  => OLA::getType(),
@@ -1192,7 +1192,7 @@ PluginFormcreatorTranslatableInterface
          $this->fields["ola_question_tto"]
       );
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => 'dropdown',
             'itemtype'  => OLA::getType(),
@@ -1230,7 +1230,7 @@ PluginFormcreatorTranslatableInterface
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['dropdown'],
             'itemtype'  => ITILCategory::class,
@@ -1275,7 +1275,7 @@ PluginFormcreatorTranslatableInterface
       echo '</div>';
       echo '<div id="urgency_question_value" style="display: none">';
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['urgency'],
          ],
@@ -1348,7 +1348,7 @@ SCRIPT;
          // Tag questions
          echo '<div id="tag_question_value" style="display: none">';
          PluginFormcreatorQuestion::dropdownForForm(
-            $this->getForm()->getID(),
+            $this->getForm(),
             [
                'fieldtype' => ['tag'],
             ],
@@ -1560,14 +1560,15 @@ SCRIPT;
       if (isset($validation_data['type'])) {
          $validation_dropdown_params['users_id_validate'] = $validation_data['values'];
       }
-      CommonITILValidation::dropdownValidator($validation_dropdown_params);
+      $validation_dropdown_params['display'] = false;
+      echo CommonITILValidation::dropdownValidator($validation_dropdown_params);
       echo '</div>';
 
       // COMMONITIL_VALIDATION_RULE_ANSWER_USER
       $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
       echo "<div id='validation_answer_user' style='$display'>";
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             new QueryExpression("`fieldtype` = 'actor' OR (`fieldtype` = 'glpiselect' AND `itemtype`='User')"),
          ],
@@ -2088,7 +2089,7 @@ SCRIPT;
       }
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'OR' => [
                'AND' => [
@@ -2125,7 +2126,7 @@ SCRIPT;
       }
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['glpiselect'],
             'itemtype'  => Group::class,
@@ -2155,7 +2156,7 @@ SCRIPT;
       }
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['glpiselect'],
          ],
@@ -2184,7 +2185,7 @@ SCRIPT;
       }
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['glpiselect'],
          ],
@@ -2213,7 +2214,7 @@ SCRIPT;
       }
 
       PluginFormcreatorQuestion::dropdownForForm(
-         $this->getForm()->getID(),
+         $this->getForm(),
          [
             'fieldtype' => ['actor'],
          ],
@@ -2265,7 +2266,7 @@ SCRIPT;
          }
 
          PluginFormcreatorQuestion::dropdownForForm(
-            $this->getForm()->getID(),
+            $this->getForm(),
             [
                'fieldtype' => ['glpiselect'],
                'itemtype'  => Supplier::class,
@@ -2513,5 +2514,16 @@ SCRIPT;
       }
 
       return $targets;
+   }
+
+   final public static function showConditions(self $item) {
+      $options = [];
+      $item->initForm($item->getID(), $options);
+      $options['candel'] = false;
+      TemplateRenderer::getInstance()->display('@formcreator/pages/condition_for_item.html.twig', [
+         'item'   => $item,
+         'params' => $options,
+      ]);
+      return true;
    }
 }
