@@ -69,6 +69,10 @@ PluginFormcreatorTranslatableInterface
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
+   public static function getIcon() {
+      return 'fas fa-edit';
+   }
+
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}
