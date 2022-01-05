@@ -119,11 +119,11 @@ PluginFormcreatorExportableInterface
       echo "<div class='spaced'><table class='tab_cadre_fixe'>";
 
       echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Need to be validate?', 'formcreator') . '</td>';
+      echo '<td>' . __('Need validaton?', 'formcreator') . '</td>';
       echo '<td class="validators_bloc">';
 
       Dropdown::showFromArray('validation_required', [
-         self::VALIDATION_NONE  => Dropdown::EMPTY_VALUE,
+         self::VALIDATION_NONE  => __('No'),
          self::VALIDATION_USER  => User::getTypeName(1),
          self::VALIDATION_GROUP => Group::getTypeName(1),
       ], [
@@ -175,7 +175,10 @@ PluginFormcreatorExportableInterface
       ];
       $formValidator = new PluginFormcreatorForm_Validator();
       $selectedValidatorUsers = [];
-      foreach ($formValidator->getValidatorsForForm($item, User::class) as $user) {
+      foreach ($formValidator->getValidatorsForForm($item) as $user) {
+         if ($user::getType() != User::getType()) {
+            continue;
+         }
          $selectedValidatorUsers[$user->getID()] = $user->computeFriendlyName();
       }
       $users = $DB->request([
@@ -190,18 +193,14 @@ PluginFormcreatorExportableInterface
       echo '<div id="validators_users">';
       echo User::getTypeName() . '&nbsp';
       $params = [
-         'specific_tags' => [
-            'multiple' => 'multiple',
-         ],
+         'multiple' => true,
          'entity_restrict' => -1,
          'itemtype'        => User::getType(),
          'values'          => array_keys($selectedValidatorUsers),
          'valuesnames'     => array_values($selectedValidatorUsers),
          'condition'       => Dropdown::addNewCondition($usersCondition),
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-      }
+      $params['_idor_token'] = Session::getNewIDORToken(User::getType());
       echo Html::jsAjaxDropdown(
          '_validator_users[]',
          '_validator_users' . mt_rand(),
@@ -262,7 +261,10 @@ PluginFormcreatorExportableInterface
       ]);
       $formValidator = new PluginFormcreatorForm_Validator();
       $selectecValidatorGroups = [];
-      foreach ($formValidator->getValidatorsForForm($item, Group::class) as $group) {
+      foreach ($formValidator->getValidatorsForForm($item) as $group) {
+         if ($group::getType() != Group::getType()) {
+            continue;
+         }
          $selectecValidatorGroups[$group->getID()] = $group->fields['name'];
       }
       $validatorGroups = [];
@@ -272,9 +274,7 @@ PluginFormcreatorExportableInterface
       echo '<div id="validators_groups" style="width: 100%">';
       echo Group::getTypeName() . '&nbsp';
       $params = [
-         'specific_tags' => [
-            'multiple' => 'multiple',
-         ],
+         'multiple' => true,
          'entity_restrict' => -1,
          'itemtype'        => Group::getType(),
          'values'          => array_keys($selectecValidatorGroups),
@@ -282,9 +282,7 @@ PluginFormcreatorExportableInterface
          'condition'       => Dropdown::addNewCondition($groupsCondition),
          'display_emptychoice' => false,
       ];
-      if (version_compare(GLPI_VERSION, '9.5.3') >= 0) {
-         $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
-      }
+      $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
       echo Html::jsAjaxDropdown(
          '_validator_groups[]',
          '_validator_groups' . mt_rand(),
@@ -679,24 +677,20 @@ PluginFormcreatorExportableInterface
       switch ($form->fields['validation_required']) {
          case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
             $itemtype = Group::class;
-            $result = $formValidator->getValidatorsForForm($form, ['itemtype' => $itemtype]);
-            foreach ($result as $validator) {
-               $validatorId = $validator->getID();
-               $validators["${itemtype}_${validatorId}"] = $validator->fields['completename'];
-               $lastValidatorId = $validatorId;
-               $lastValidatorItemtype = $itemtype;
-            }
             break;
          case PluginFormcreatorForm_Validator::VALIDATION_USER:
             $itemtype = User::class;
-            $result = $formValidator->getValidatorsForForm($form, ['itemtype' => $itemtype]);
-            foreach ($result as $validator) {
-               $validatorId = $validator->getID();
-               $validators["${itemtype}_${validatorId}"] = formatUserName($validator->getID(), $validator->fields['name'], $validator->fields['realname'], $validator->fields['firstname']);
-               $lastValidatorId = $validatorId;
-               $lastValidatorItemtype = $itemtype;
-            }
             break;
+      }
+      $result = $formValidator->getValidatorsForForm($form);
+      foreach ($result as $validator) {
+         if ($validator::getType() != $itemtype) {
+            continue;
+         }
+         $validatorId = $validator->getID();
+         $validators["${itemtype}_${validatorId}"] = $validator->getFriendlyName();
+         $lastValidatorId = $validatorId;
+         $lastValidatorItemtype = $itemtype;
       }
 
       $totalCount = count($result);
@@ -715,7 +709,7 @@ PluginFormcreatorExportableInterface
       $out .= '<h2>' . __('Validation', 'formcreator') . '</h2>';
       $out .= '<div class="form-group required liste" id="form-validator">';
       $out .= '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-      Dropdown::showFromArray(
+      $out .= Dropdown::showFromArray(
          'formcreator_validator',
          $validators, [
             'display' => false,
