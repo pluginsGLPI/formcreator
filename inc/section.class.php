@@ -71,6 +71,10 @@ PluginFormcreatorTranslatableInterface
       return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
+   public static function getIcon() {
+      return 'fas fa-edit';
+   }
+
    /**
     * May be removed when GLPI 9.5 will  be the lowest supported version
     * workaround use if entity in WHERE when using PluginFormcreatorQuestion::dropdown
