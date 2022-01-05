@@ -42,13 +42,11 @@ if (!isset($_POST['plugin_formcreator_forms_id'])) {
    // should not happen
    Html::back();
 }
-$formId = (int) $_POST['plugin_formcreator_forms_id'];
-$formValidator = new PluginFormcreatorForm_Validator();
 $form = PluginFormcreatorCommon::getForm();
 if (isset($_POST['save'])) {
    $input = $_POST;
-   $input['id'] = $formId;
+   $input['id'] = (int) $_POST['plugin_formcreator_forms_id'];
    unset($input['plugin_formcreator_forms_id']);
    $form->update($input);
-   Html::back();
 }
+Html::back();
