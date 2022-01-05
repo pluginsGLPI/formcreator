@@ -92,7 +92,6 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
    }
 
    public function prepareInputForAdd($input) {
-
       // generate a unique id
       if (!isset($input['uuid']) || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();

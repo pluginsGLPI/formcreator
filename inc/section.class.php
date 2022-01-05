@@ -71,11 +71,15 @@ PluginFormcreatorTranslatableInterface
       return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
+   /**
+    * May be removed when GLPI 9.5 will  be the lowest supported version
+    * workaround use if entity in WHERE when using PluginFormcreatorQuestion::dropdown
+    * (while editing conditions, list of questions is empty + SQL error)
+    * @see bug on GLPI #6488, might be related
+    */
    public function isEntityAssign() {
-      // avoid to check the parent itemtype
       return false;
    }
-
 
    public function rawSearchOptions() {
       $tab = parent::rawSearchOptions();
