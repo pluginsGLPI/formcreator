@@ -37,7 +37,7 @@ use PluginFormcreatorCommon;
 use Html;
 use Session;
 use Toolbox;
-
+use Glpi\Toolbox\RichText;
 class TextareaField extends TextField
 {
    /** @var array uploaded files on form submit */
@@ -87,7 +87,7 @@ class TextareaField extends TextField
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
-         return Toolbox::getHtmlToDisplay($value);
+         return RichText::getEnhancedHtml($value);
       }
 
       $id           = $this->question->getID();
