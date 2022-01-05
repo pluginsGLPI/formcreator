@@ -46,9 +46,7 @@ if (isset($_POST['update'])) {
 
 } else if (isset($_POST['actor_role'])) {
    $id          = (int) $_POST['id'];
-   $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
-                  ? $_POST['actor_value_' . $_POST['actor_type']]
-                  : '';
+   $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? null;
    $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
    $targetTicket_actor = new PluginFormcreatorTarget_Actor();
    $targetTicket_actor->add([
