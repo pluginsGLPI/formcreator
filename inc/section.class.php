@@ -459,6 +459,7 @@ PluginFormcreatorTranslatableInterface
    public function showForm($ID, $options = []) {
       $this->initForm($ID, $options);
       $options['candel'] = false;
+      $options['formoptions'] = sprintf('data-itemtype="%s"', self::getType());
       TemplateRenderer::getInstance()->display('@formcreator/pages/section.html.twig', [
          'item'   => $this,
          'params' => $options,

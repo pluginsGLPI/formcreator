@@ -2520,6 +2520,7 @@ SCRIPT;
       $options = [];
       $item->initForm($item->getID(), $options);
       $options['candel'] = false;
+      $options['formoptions'] = sprintf('data-itemtype="%s"', self::getType());
       TemplateRenderer::getInstance()->display('@formcreator/pages/condition_for_item.html.twig', [
          'item'   => $item,
          'params' => $options,
