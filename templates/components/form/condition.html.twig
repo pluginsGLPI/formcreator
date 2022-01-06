@@ -77,13 +77,14 @@
                 {% endset %}
                 {{ fields.field(name, field, label, options|merge({'id': 'dropdown_' ~ name ~ '_' ~ options.rand})) }}
 
+                {# value field #}
                 {% set options = {
                     'width': '100%',
                     'display_emptychoice': false,
                     'field_class': 'col-12 col-sm-3',
                     'no_label': true
                 } %}
-                {{ fields.textField('_conditions[show_value][]', condition.fields['show_value'], '', options) }}
+                {{ fields.textField('_conditions[show_value][]', condition.fields['show_value']|verbatim_value, '', options) }}
 
                 <div class="col-12 col-sm-1 mb-3">
                     <button class="btn btn-primary me-2" type="button" name="add" onclick="plugin_formcreator_addEmptyCondition(this, '', '')">

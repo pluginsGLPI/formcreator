@@ -177,7 +177,10 @@ PluginFormcreatorTranslatableInterface
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      $options = ['candel' => false];
+      $options = [
+         'candel'      => false,
+         'formoptions' => sprintf('data-itemtype="%s"', $item::getType()),
+      ];
       TemplateRenderer::getInstance()->display('@formcreator/pages/question_for_form.html.twig', [
          'item'   => $item,
          'params' => $options,
