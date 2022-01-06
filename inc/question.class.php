@@ -740,10 +740,10 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showForm($ID, $options = []) {
-      TemplateRenderer::getInstance()->display('@formcreator/pages/question.html.twig', [
-         'item' => $this,
-      ]);
-      return true;
+      // TemplateRenderer::getInstance()->display('@formcreator/pages/question.html.twig', [
+      //    'item' => $this,
+      // ]);
+      // return true;
 
       if ($ID == 0) {
          $title =  __('Add a question', 'formcreator');
