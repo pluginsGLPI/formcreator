@@ -266,9 +266,9 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * @return void
     */
    public function showConditionsForItem(PluginFormcreatorConditionnableInterface $item) {
-      echo '<tr>';
       echo '<tr><th class="center" colspan="4">' . __('Conditions', 'formcreator') . '</th></tr>';
       echo '<td colspan="4">';
+      echo '<div class="row">';
       Dropdown::showFromArray(
          'show_rule',
          $item::getEnumShowRule(),
@@ -277,6 +277,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             'on_change'    => 'plugin_formcreator_toggleCondition(this);',
          ]
       );
+      echo '</div>';
       echo '</td>';
       echo '</tr>';
 
@@ -288,7 +289,9 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       /** @var CommonDBTM $item */
       $conditions = self::getConditionsFromItem($item);
       foreach ($conditions as $condition) {
+         echo '<tr><td colspan="4">';
          echo $condition->getConditionHtml($item->fields);
+         echo '</td></tr>';
       }
    }
 
@@ -344,7 +347,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    /**
     * return HTML to show a condition line for a question
     *
-    * @param array $input
+    * @param array $input data of the item the condition applies to
     *
     * @return string HTML to insert in a rendered web page
     */
@@ -369,6 +372,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       }
 
       $out = TemplateRenderer::getInstance()->render('@formcreator/components/form/condition.html.twig', [
+         'condition' => $this,
          'item'   => $item,
          'params' => [
             'questionId'       => $questionId,

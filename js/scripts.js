@@ -1538,9 +1538,10 @@ function plugin_formcreator_toggleCondition(target) {
 }
 
 function plugin_formcreator_addEmptyCondition(target) {
-   var form     = target.closest('form');
-   var itemtype = form.closest('.asset[data-itemtype]').getAttribute('data-itemtype');
-   // value if the hidden id input field
+   var form     = target.closest('form[data-itemtype]');
+   // var itemtype = form.closest('.asset[data-itemtype]').getAttribute('data-itemtype');
+   var itemtype = form.getAttribute('data-itemtype');
+   // value of the hidden id input field
    var id       = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : 0;
    var data     = new FormData(form);
    data.append('itemtype', itemtype);
@@ -1550,7 +1551,7 @@ function plugin_formcreator_addEmptyCondition(target) {
       processData: false,
       contentType: false,
       data: data,
-   }).done(function (data) {
+   }).done(function (data) {
       target.closest('div.row').after(document.createRange().createContextualFragment(data));
    });
 }

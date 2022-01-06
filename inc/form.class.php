@@ -1509,7 +1509,7 @@ PluginFormcreatorTranslatableInterface
          '_profiles'     => PluginFormcreatorForm_Profile::class,
          '_sections'     => PluginFormcreatorSection::class,
          '_conditions'   => PluginFormcreatorCondition::class,
-         '_targets'      => (new self())->getTargetTypes(),
+         '_targets'      => self::getTargetTypes(),
          '_validators'   => PluginFormcreatorForm_Validator::class,
          '_translations' => PluginFormcreatorForm_Language::class,
       ];
