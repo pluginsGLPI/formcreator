@@ -85,6 +85,10 @@ trait PluginFormcreatorConditionnableTrait
          return false;
       }
 
+      if (!isset($input['_conditions']) || count($input['_conditions']) < 1) {
+         return false;
+      }
+
       $input = $input['_conditions'];
       // All arrays of condition exists
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
