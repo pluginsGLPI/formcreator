@@ -797,16 +797,14 @@ PluginFormcreatorTranslatableInterface
       echo '<td width="30%">';
       $section = new PluginFormcreatorSection();
       $section->getFromDB($this->fields['plugin_formcreator_sections_id']);
-      $sections = [];
-      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($section->fields[PluginFormcreatorForm::getForeignKeyField()]) as $section) {
-         $sections[$section->getID()] = $section->fields['name'] == '' ? '(' . $section->getID() . ')' : $section->fields['name'];
-      }
-      $currentSectionId = ($this->fields['plugin_formcreator_sections_id'])
-                        ? $this->fields['plugin_formcreator_sections_id']
-                        : (int) $_REQUEST['section_id'];
-      Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, [
-         'value' => $currentSectionId,
-         'rand'  => $rand,
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      PluginFormcreatorSection::dropdown([
+         'name'                => 'plugin_formcreator_sections_id',
+         'display_emptychoice' => false,
+         'value'               => $this->fields['plugin_formcreator_sections_id'],
+         'condition'           => [
+                                    $formFk => $section->fields[$formFk],
+                                  ],
       ]);
       echo '</td>';
       echo '</tr>';
