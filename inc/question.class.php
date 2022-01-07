@@ -287,8 +287,8 @@ PluginFormcreatorTranslatableInterface
       $width = $this->fields['width'];
       $hiddenAttribute = $isVisible ? '' : 'hidden=""';
       $html .= '<div'
-         . ' data-gs-x="' . $x . '"'
-         . ' data-gs-width="' . $width . '"'
+         . ' gs-x="' . $x . '"'
+         . ' gs-w="' . $width . '"'
          . ' data-itemtype="' . self::class . '"'
          . ' data-id="' . $this->getID() . '"'
          . " $hiddenAttribute"
