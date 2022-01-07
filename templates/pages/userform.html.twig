@@ -34,10 +34,11 @@
 	{% set widthPercent = 100 / options.columns %}
 	{% for i in range(1, options.columns ) %}
 		{% set width = i * widthPercent %}
-            #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="{{ i }}"],
-            #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="{{ i }}"] {
+            #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][gs-w="{{ i }}"],
+            #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[gs-w="{{ i }}"] {
                 min-width: {{ widthPercent }}%;
                 width: {{ width }}%;
+                margin-left: -0.25em;
             }
 	{% endfor %}
 </style>
@@ -82,7 +83,7 @@
                                 {% set x = lastQuestion.fields['col'] + lastQuestion.fields['width'] %}
                                 {% set width = question.fields['col'] - x %}
                                 {% if x < question.fields['col'] %}
-                                    <div class="plugin_formcreator_gap" data-gs-x="{{ x }}" data-gs-width="{{ width }}"></div>
+                                    <div class="plugin_formcreator_gap" gs-x="{{ x }}" gs-w="{{ width }}"></div>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
