@@ -290,7 +290,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       $conditions = self::getConditionsFromItem($item);
       foreach ($conditions as $condition) {
          echo '<tr><td colspan="4">';
-         echo $condition->getConditionHtml($item->fields);
+         echo $condition->getConditionHtml();
          echo '</td></tr>';
       }
    }
@@ -347,36 +347,17 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
    /**
     * return HTML to show a condition line for a question
     *
-    * @param array $input data of the item the condition applies to
-    *
     * @return string HTML to insert in a rendered web page
     */
-   public function getConditionHtml(array $input): string {
-      if ($this->isNewItem()) {
-         $this->getEmpty();
-         $itemtype       = $input['itemtype'];
-         $questionId     = '';
-      } else {
-         $itemtype       = $this->fields['itemtype'];
-         $questionId     = $this->fields['plugin_formcreator_questions_id'];
-      }
+   public function getConditionHtml(): string {
+      $itemtype       = $this->fields['itemtype'];
       if (!is_subclass_of($itemtype, PluginFormcreatorConditionnableInterface::class)) {
          // security check
          throw new RuntimeException("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
-      $item = new $itemtype();
-      if (!isset($input['id']) || !$item->getFromDB($input['id'])) {
-         $item->getEmpty();
-         $parentFk = $item::$items_id;
-         $item->fields[$parentFk] = $input[$parentFk];
-      }
 
       $out = TemplateRenderer::getInstance()->render('@formcreator/components/form/condition.html.twig', [
          'condition' => $this,
-         'item'   => $item,
-         'params' => [
-            'questionId'       => $questionId,
-         ],
       ]);
 
       return $out;
