@@ -102,11 +102,8 @@ class GlpiselectField extends DropdownField
       $optgroup = array_merge_recursive($optgroup, $cleanedAditionalTypes);
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues === null) {
-         $itemtype = $this->question->fields['values'];
-      } else {
-         $itemtype = $decodedValues['itemtype'];
-      }
+      $itemtype = $this->question->fields['itemtype'];
+
 
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
