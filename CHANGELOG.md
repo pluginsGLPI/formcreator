@@ -1,3 +1,37 @@
+<a name="v2.12.4"></a>
+## [v2.12.4](https://github.com/pluginsglpi/formcreator/compare/v2.12.3..v2.12.4) (2022-01-10)
+
+
+### Bug Fixes
+
+*  ajax calls converted into post ([baa41ad1](https://github.com/pluginsglpi/formcreator/commit/baa41ad1))
+*  convert GET requests to post ([9d5dccc0](https://github.com/pluginsglpi/formcreator/commit/9d5dccc0))
+*  redirection to wrong ticket in some cases ([13e6f986](https://github.com/pluginsglpi/formcreator/commit/13e6f986))
+*  remove compiled css ([f7a81e33](https://github.com/pluginsglpi/formcreator/commit/f7a81e33))
+*  strict JS code triggers warnings ([db02124b](https://github.com/pluginsglpi/formcreator/commit/db02124b))
+* **form:** PHP warning when displaying form's historical ([41e1bc4b](https://github.com/pluginsglpi/formcreator/commit/41e1bc4b))
+* **form:** php warning - unitialized var ([a5f12bc0](https://github.com/pluginsglpi/formcreator/commit/a5f12bc0))
+* **form:** run conditions for admins ([4eff1c71](https://github.com/pluginsglpi/formcreator/commit/4eff1c71))
+* **form:** store itemtype in DOM ([ba5c573f](https://github.com/pluginsglpi/formcreator/commit/ba5c573f))
+* **formanswer:** loss of answers upon valdiation ([f9070765](https://github.com/pluginsglpi/formcreator/commit/f9070765))
+* **issue:** better definition of comment search options ([842bb499](https://github.com/pluginsglpi/formcreator/commit/842bb499))
+* **issue:** better redirection ([8fb083ed](https://github.com/pluginsglpi/formcreator/commit/8fb083ed))
+* **issue:** redirection when multiple tickets ([ba4ddfc8](https://github.com/pluginsglpi/formcreator/commit/ba4ddfc8))
+* **ldapfield:** non latin char escaping ([80f13370](https://github.com/pluginsglpi/formcreator/commit/80f13370))
+* **linker:** inverted arguments in method call ([f6490e22](https://github.com/pluginsglpi/formcreator/commit/f6490e22))
+* **question:** empty name section unavailable ([69715639](https://github.com/pluginsglpi/formcreator/commit/69715639))
+* **question:** show error message on deletion failure ([9f8905f8](https://github.com/pluginsglpi/formcreator/commit/9f8905f8))
+* **question:** show error message on deletion failure ([1e7134be](https://github.com/pluginsglpi/formcreator/commit/1e7134be))
+* **question:** show error toast when editing a question fails ([02ce9335](https://github.com/pluginsglpi/formcreator/commit/02ce9335))
+* **section:** order lost after section deletion ([91e19288](https://github.com/pluginsglpi/formcreator/commit/91e19288))
+* **targetticket:** do not force request type ([eedb9a44](https://github.com/pluginsglpi/formcreator/commit/eedb9a44))
+
+
+### Features
+
+* **category:** show parent label in back pseudo-item ([6991c9dd](https://github.com/pluginsglpi/formcreator/commit/6991c9dd))
+
+
 <a name="v2.12.3"></a>
 ## [v2.12.3](https://github.com/pluginsglpi/formcreator/compare/v2.12.2..v2.12.3) (2021-11-04)
 
