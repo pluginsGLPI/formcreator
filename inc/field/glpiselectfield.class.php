@@ -104,7 +104,6 @@ class GlpiselectField extends DropdownField
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $itemtype = $this->question->fields['itemtype'];
 
-
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
          'value'     => $itemtype,
