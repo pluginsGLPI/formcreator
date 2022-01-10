@@ -1164,12 +1164,16 @@ PluginFormcreatorTranslatableInterface
    /**
     * get questions of a form grouped by section name and filtered by criteria
     *
-    * @param int $formId
+    * @param PluginFormcreatorForm $form
     * @param array $crit additional slection criterias criterias
     * @return array 1st level is the section name, 2nd level is id and name of the question
     */
-   public function getQuestionsFromFormBySection($formId, $crit = []) {
+   public static function getQuestionsFromFormBySection($form, $crit = []) {
       global $DB;
+
+      if ($form->isNewItem()) {
+         return [];
+      }
 
       $questionTable = PluginFormcreatorQuestion::getTable();
       $sectionTable  = PluginFormcreatorSection::getTable();
@@ -1190,7 +1194,7 @@ PluginFormcreatorTranslatableInterface
             ],
          ],
          'WHERE' => [
-            'AND' => [$formFk => $formId] + $crit,
+            'AND' => [$formFk => $form->getID()] + $crit,
          ],
          'ORDER' => [
             "$sectionTable.order",
@@ -1228,8 +1232,7 @@ PluginFormcreatorTranslatableInterface
       if (isset($crit['used']) && count($crit['used']) == 0) {
          unset($crit['used']);
       }
-      $question = new self();
-      $items = $question->getQuestionsFromFormBySection($form->getID(), $crit);
+      $items = self::getQuestionsFromFormBySection($form, $crit);
       $options = $options + [
          'display' => $options['display'] ?? true,
       ];

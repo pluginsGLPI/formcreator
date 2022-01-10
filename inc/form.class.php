@@ -2494,38 +2494,10 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showTagsList() {
-      echo '<table class="tab_cadre_fixe">';
+      TemplateRenderer::getInstance()->display('@formcreator/components/form/form_taglist.html.twig', [
+         'item'   => $this,
+      ]);
 
-      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
-      echo '<tr>';
-      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
-      echo '<th width="20%" align="center">' . __('Title') . '</th>';
-      echo '<th width="20%" align="center">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
-      echo '<th width="20%" align="center">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center">-</td>';
-      echo '<td align="center"><strong>##FULLFORM##</strong></td>';
-      echo '<td align="center">-</td>';
-      echo '</tr>';
-
-      $question = new PluginFormcreatorQuestion();
-      $result = $question->getQuestionsFromFormBySection($this->getID());
-      $i = 0;
-      foreach ($result as $sectionName => $questions) {
-         foreach ($questions as $questionId => $questionName) {
-            $i++;
-            echo '<tr>';
-            echo '<td colspan="2">' . $questionName . '</td>';
-            echo '<td align="center">##question_' . $questionId . '##</td>';
-            echo '<td align="center">##answer_' . $questionId . '##</td>';
-            echo '<td align="center">' . $sectionName . '</td>';
-            echo '</tr>';
-         }
-      }
-
-      echo '</table>';
+      return true;
    }
 }

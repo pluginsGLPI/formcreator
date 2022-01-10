@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -81,113 +82,18 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
     * @return void
     */
    public function showForm($ID, $options = []) {
-      if ($ID == 0) {
-         // Not used for now
-         $title =  __('Add a target ', 'formcreator');
-      } else {
-         $title =  __('Edit a target', 'formcreator');
-      }
-
-      echo '<form name="form"'
-      . ' method="post"'
-      . ' action="' . self::getFormURL() . '"'
-      . ' data-itemtype="' . self::class . '"'
-      . '>';
-
-      // General information: target_name
-      echo '<table class="tab_cadre_fixe">';
-      echo '<tr><th colspan="2">' . $title . '</th></tr>';
-      echo '<tr>';
-      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td>';
-      echo Html::input('name', [
-         'id' => 'name',
-         'autofocus' => '',
-         'value' => $this->fields['name'],
+      $options = [
+         'candel'      => false,
+         'formoptions' => sprintf('data-itemtype="%s"', $this::getType()),
+      ];
+      TemplateRenderer::getInstance()->display('@formcreator/pages/targetproblem.html.twig', [
+         'item'   => $this,
+         'params' => $options,
       ]);
-      echo '</td>';
-      echo '</tr>';
-      echo '</table>';
-
-      // Ticket information: title, template...
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="4">' . $this->getTypeName(1) . '</th></tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Problem title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3">';
-      echo Html::input('target_name', [
-         'id' => 'target_name',
-         'autofocus' => '',
-         'value' => $this->fields['target_name'],
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'            => 'content',
-         'value'           => $this->fields['content'],
-         'enable_richtext' => true,
-         'display'         => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Impacts') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'impactcontent',
-         'value'   => $this->fields['impactcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Cause') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'causecontent',
-         'value'   => $this->fields['causecontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Symptom') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'symptomcontent',
-         'value'   => $this->fields['symptomcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo Html::hidden('id', ['value' => $ID]);
-      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td colspan="5" class="center">';
-      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '</table>';
-      Html::closeForm();
 
       $this->getForm()->showTagsList();
+
+      return true;
    }
 
    public static function showProperties(self $item) {

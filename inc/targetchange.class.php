@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -409,140 +410,18 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
    }
 
    public function showForm($ID, $options = []) {
-      if ($ID == 0) {
-         // Not used for now
-         $title =  __('Add a target ', 'formcreator');
-      } else {
-         $title =  __('Edit a target', 'formcreator');
-      }
-
-      echo '<form name="form_"'
-      . ' method="post"'
-      . ' action="' . self::getFormURL() . '"'
-      . ' data-itemtype="' . self::class . '"'
-      . '>';
-
-      // General information: target_name
-      echo '<table class="tab_cadre_fixe">';
-      echo '<tr><th colspan="2">' . $title . '</th></tr>';
-      echo '<tr>';
-      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td>';
-      echo Html::input('name', [
-         'id' => 'name',
-         'autofocus' => '',
-         'value' => $this->fields['name'],
+      $options = [
+         'candel'      => false,
+         'formoptions' => sprintf('data-itemtype="%s"', $this::getType()),
+      ];
+      TemplateRenderer::getInstance()->display('@formcreator/pages/targetchange.html.twig', [
+         'item'   => $this,
+         'params' => $options,
       ]);
-      echo '</td>';
-      echo '</tr>';
-      echo '</table>';
-
-      // change information: title, template...
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3">';
-      echo Html::input('target_name', [
-         'id' => 'target_name',
-         'autofocus' => '',
-         'value' => $this->fields['target_name'],
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'content',
-         'value'   => $this->fields['content'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Impacts') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'impactcontent',
-         'value'   => $this->fields['impactcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Control list') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'controlistcontent',
-         'value'   => $this->fields['controlistcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'rolloutplancontent',
-         'value'   => $this->fields['rolloutplancontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'backoutplancontent',
-         'value'   => $this->fields['backoutplancontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Checklist') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'   => 'checklistcontent',
-         'value'  => $this->fields['checklistcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '</table>';
-
-      // Buttons
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo Html::hidden('id', ['value' => $ID]);
-      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td colspan="5" class="center">';
-      echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '</table>';
-
-      Html::closeForm();
 
       $this->getForm()->showTagsList();
+
+      return true;
    }
 
    public static function showActors(self $item) {
