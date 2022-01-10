@@ -2032,18 +2032,18 @@ SCRIPT;
             $type = 'requester';
             unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER]);
             unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER]);
-            $changeActorJSFunction = 'plugin_formcreator_ChangeActorRequester(this.value)';
+            $changeActorJSFunction = 'plugin_formcreator.changeActor("requester", this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER;
             break;
          case CommonITILActor::OBSERVER:
             $type = 'watcher';
-            $changeActorJSFunction = 'plugin_formcreator_ChangeActorWatcher(this.value)';
+            $changeActorJSFunction = 'plugin_formcreator.changeActor("watcher", this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER;
             break;
          case CommonITILActor::ASSIGN:
             $type = 'assigned';
             unset($dropdownItems[PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR]);
-            $changeActorJSFunction = 'plugin_formcreator_ChangeActorAssigned(this.value)';
+            $changeActorJSFunction = 'plugin_formcreator.changeActor("assigned", this.value)';
             $actorRole = PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED;
             break;
       }
