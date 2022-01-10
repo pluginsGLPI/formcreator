@@ -5,10 +5,10 @@
 # 
 # Translators:
 # Alessandro Carloni <kaya84@gmail.com>, 2021
-# Pierfrancesco Passerini <p.passerini@gmail.com>, 2021
 # Thierry Bugier <tbugier@teclib.com>, 2021
 # Roberto <rizrob@gmail.com>, 2021
 # Davide <spam@habilitas.it>, 2021
+# Pierfrancesco Passerini <p.passerini@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-20 09:56+0200\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Davide <spam@habilitas.it>, 2021\n"
+"Last-Translator: Pierfrancesco Passerini <p.passerini@gmail.com>, 2021\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/teclib/teams/28042/it_IT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -845,7 +845,7 @@ msgstr "Abilita captcha"
 
 #: inc/formanswer.class.php:62
 msgid "Waiting"
-msgstr ""
+msgstr "In attesa"
 
 #: inc/formanswer.class.php:63 inc/issue.class.php:648
 msgid "Refused"
@@ -853,7 +853,7 @@ msgstr "Rifiutato"
 
 #: inc/formanswer.class.php:64
 msgid "Accepted"
-msgstr ""
+msgstr "Accettato"
 
 #: inc/formanswer.class.php:164 inc/issue.class.php:642
 msgid "Form answer"

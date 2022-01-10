@@ -7,6 +7,7 @@
 # 5b63a00e0726b96d7ef35c99d5553cd0_b787b5f <8bb2d0f7e8927228f17fba8639d787be_31711>, 2021
 # Nuria Costa <nuria.costa@uvic.cat>, 2021
 # Ricardo Herrero <ricardo.herrero@gmail.com>, 2021
+# Jorge Saiz, 2021
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-20 09:56+0200\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Ricardo Herrero <ricardo.herrero@gmail.com>, 2021\n"
+"Last-Translator: Jorge Saiz, 2021\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/teclib/teams/28042/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1318,7 +1319,7 @@ msgstr "Buscar ayuda"
 
 #: inc/wizard.class.php:106 inc/wizard.class.php:107
 msgid "My requests for assistance"
-msgstr "Mis solucitudes de ayuda"
+msgstr "Mis solicitudes de asistencia"
 
 #: inc/wizard.class.php:115 inc/wizard.class.php:116
 msgid "Knowledge Base"
