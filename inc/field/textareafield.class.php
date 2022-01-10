@@ -37,7 +37,7 @@ use PluginFormcreatorCommon;
 use Html;
 use Session;
 use Toolbox;
-use Glpi\Toolbox\RichText;
+use Glpi\RichText\RichText;
 class TextareaField extends TextField
 {
    /** @var array uploaded files on form submit */
