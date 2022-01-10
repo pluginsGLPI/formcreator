@@ -74,7 +74,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $value = json_decode($this->question->fields['values']);
+      $value = json_decode($this->question->fields['values'], true);
       if ($value === null) {
          $value = [];
       }
