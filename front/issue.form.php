@@ -44,8 +44,8 @@ if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
    /** @var PluginFormcreatorIssue $issue */
    $issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
    $id = $issue->fields['items_id'];
-   $itemtype = strtolower($issue->fields['itemtype']);
-   Html::redirect($CFG_GLPI['root_doc'] . "/front/$itemtype.form.php?id=$id");
+   $itemtype = $issue->fields['itemtype'];
+   Html::redirect($itemtype::getFormUrlWithID($id));
 }
 
 // Show issue only if service catalog is enabled

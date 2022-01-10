@@ -441,4 +441,51 @@ class PluginFormcreatorSection extends CommonTestCase {
          ],
       ]);
    }
+
+   public function post_purgeItem() {
+      $sections = [];
+      $sections[1] = $this->getSection();
+      $this->boolean($sections[1]->isNewItem())->isFalse();
+      $this->integer((int) $sections[1]->fields['order'])->isEqualTo(1);
+
+      /** @var PluginFormcreatorForm $form */
+      $form = \PluginFormcreatorForm::getById($sections[1]->fields['plugin_formcreator_forms_id']);
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $sections[2] = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($sections[2]->isNewItem())->isFalse();
+      $this->integer((int) $sections[2]->fields['order'])->isEqualTo(2);
+      $sections[3] = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($sections[3]->isNewItem())->isFalse();
+      $this->integer((int) $sections[3]->fields['order'])->isEqualTo(3);
+
+      $questions = [];
+      $questions[1] = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sections[1]->getID(),
+      ]);
+      $this->boolean($questions[1]->isNewItem())->isFalse();
+      $questions[1] = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sections[1]->getID(),
+      ]);
+      $this->boolean($questions[2]->isNewItem())->isFalse();
+
+      // A form with 3 sections, the first sections has 2 questions
+
+      $sections[1]->post_purgeItem();
+
+      // check the sections 2 and 3 decreased their position
+      $sections[2]->getFromDB($sections[2]->getID());
+      $sections[3]->getFromDB($sections[3]->getID());
+
+      $this->integer((int) $sections[2]->fields['order'])->isEqualTo(1);
+      $this->integer((int) $sections[3]->fields['order'])->isEqualTo(2);
+
+      // check the questions are deleted
+      $this->boolean(\PluginFormcreatorQuestion::getById($questions[1]->getID()))->isFalse();
+      $this->boolean(\PluginFormcreatorQuestion::getById($questions[2]->getID()))->isFalse();
+   }
 }

@@ -457,7 +457,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
             }
          } else {
             // multiple tickets, no specified ticket then force ticket tab in form anser
-            Session::setActiveTab(PluginFormcreatorFormAnswer::class, 'Ticket$1');
+            if (isset($options['tickets_id'])) {
+               $ticket = Ticket::getById((int) $options['tickets_id']);
+               if ($ticket) {
+                  $item = $ticket;
+               }
+            } else {
+               // multiple tickets, no specified ticket then force ticket tab in form anser
+               Session::setActiveTab(PluginFormcreatorFormAnswer::class, 'Ticket$1');
+            }
          }
       }
 
@@ -589,6 +597,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'comment',
          'name'               => __('Comment'),
          'datatype'           => 'text',
+         'htmltext'           => true,
+         'nodisplay'          => true,
          'massiveaction'      => false
       ];
 

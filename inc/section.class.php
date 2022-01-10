@@ -181,8 +181,9 @@ PluginFormcreatorTranslatableInterface
             $formFk => $this->fields[$formFk]
          ],
       ]);
-      $section = new self();
       foreach ($rows as $row) {
+         /** @var PluginFormcreatorSection $section */
+         $section = self::getById($row['id']);
          $section->update([
             'id' => $row['id'],
             'order' => $section->fields['order'] - 1,

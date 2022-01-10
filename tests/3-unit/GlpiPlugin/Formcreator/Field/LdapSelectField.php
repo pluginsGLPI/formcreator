@@ -30,8 +30,9 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
+use AuthLDAP;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class LdapSelectField extends CommonTestCase {
 
    public function testGetName() {
@@ -139,5 +140,50 @@ class LdapSelectField extends CommonTestCase {
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
+   }
+
+
+   public function providerPrepareQuestionInputForSave() {
+      $authLdap = new AuthLDAP();
+      $authLdap->add([]);
+
+      return [
+         [
+            'input' => [
+               'ldap_auth'      => $authLdap->getID(),
+               'ldap_filter'    => 'по', // Some cyrillic sample
+               'ldap_attribute' => '',
+            ],
+            'expected' => [
+               'values' => json_encode([
+                  'ldap_auth'      => $authLdap->getID(),
+                  'ldap_filter'    => 'по',
+                  'ldap_attribute' => '',
+               ], JSON_UNESCAPED_UNICODE),
+            ]
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareQuestionInputForSave
+    *
+    * @param array $input
+    * @param array $expected
+    * @return void
+    */
+   public function testPrepareQuestionInputForSave(array $input, array $expected) {
+      // Make the form private
+      $question = $this->getQuestion([
+         'ldap_auth' => $input['ldap_auth'],
+         'fieldtype' => 'ldapselect',
+         'ldap_filter' => '',
+         'ldap_attribute' => '',
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+
+      $output = $instance->prepareQuestionInputForSave($input);
+      $this->array($output)->isEqualTo($expected);
    }
 }

@@ -30,6 +30,7 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorForm;
 
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -39,6 +40,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testGetFullForm':
          case 'testCanValidate':
          case 'testIsFieldVisible':
+         case 'testPost_UpdateItem':
             $this->login('glpi', 'glpi');
       }
    }
@@ -404,5 +406,84 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          }
       )->isInstanceOf(\RuntimeException::class);
       $this->string($this->exception->getMessage())->isEqualTo('Question not found');
+   }
+
+   public function testPost_UpdateItem() {
+      $question = $this->getQuestion(['fieldtype' => 'text']);
+      $form = new PluginFormcreatorForm;
+      $form->getFromDBByQuestion($question);
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => \User::class,
+         'items_id'                    => \Session::getLoginUserID(),
+      ]);
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+      ]);
+
+      /**
+       * Test updating a simple form answer
+       */
+
+      // Setup test
+      $instance = $this->newTestedInstance();
+      $formAnswerId = $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_validator'       => \Session::getLoginUserID(),
+         'formcreator_field_' . $question->getID() => 'foo',
+      ]);
+      $this->integer((int) $formAnswerId);
+      $answer = new \PluginFormcreatorAnswer();
+      $answer->getFromDBByCrit([
+         'plugin_formcreator_formanswers_id' => $instance->getID(),
+         'plugin_formcreator_questions_id'  => $question->getID(),
+      ]);
+      $this->boolean($answer->isNewItem())->isFalse();
+      $this->string($answer->fields['answer'])->isEqualTo('foo');
+
+      // check the answer is kept when accepting without edition
+      $instance = $this->newTestedInstance();
+      $instance->getFromDB($formAnswerId);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $input = [
+         'plugin_formcreator_forms_id'             => $form->getID(),
+         'accept_formanswer'                       => 'accept',
+         'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+      ];
+      $input = $instance->prepareInputForUpdate($input);
+      $this->array($input)->size->isGreaterThan(0);
+      $instance->input = $input;
+      $instance->post_updateItem();
+      $answer = new \PluginFormcreatorAnswer();
+      $answer->getFromDBByCrit([
+         'plugin_formcreator_formanswers_id' => $instance->getID(),
+         'plugin_formcreator_questions_id'  => $question->getID(),
+      ]);
+      $this->boolean($answer->isNewItem())->isFalse();
+      $this->string($answer->fields['answer'])->isEqualTo('foo');
+
+      // check the answer is actually changed when accepting with edition
+      $instance = $this->newTestedInstance();
+      $instance->getFromDB($formAnswerId);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $input = [
+         'plugin_formcreator_forms_id'             => $form->getID(),
+         'accept_formanswer'                       => 'accept',
+         'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+         'formcreator_field_' . $question->getID() => 'bar',
+      ];
+      $input = $instance->prepareInputForUpdate($input);
+      $this->array($input)->size->isGreaterThan(0);
+      $instance->input = $input;
+      $instance->post_updateItem();
+      $answer = new \PluginFormcreatorAnswer();
+      $answer->getFromDBByCrit([
+         'plugin_formcreator_formanswers_id' => $instance->getID(),
+         'plugin_formcreator_questions_id'  => $question->getID(),
+      ]);
+      $this->boolean($answer->isNewItem())->isFalse();
+      $this->string($answer->fields['answer'])->isEqualTo('bar');
    }
 }

@@ -39,6 +39,7 @@ if (!isset($_REQUEST['id'])) {
 $questionId = (int) $_REQUEST['id'];
 $question = new PluginFormcreatorQuestion();
 if (!$question->getFromDB($questionId)) {
+    echo __('Question not found', 'formcreator');
     http_response_code(404);
     exit;
 }
@@ -51,5 +52,7 @@ if (!$question->canDeleteItem()) {
 
 if (!$question->delete(['id' => $questionId])) {
     http_response_code(500);
+    echo __('Error deleting the question', 'formcreator');
+    exit;
 }
 http_response_code(204);

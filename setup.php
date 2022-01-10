@@ -31,7 +31,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.12.3');
+define('PLUGIN_FORMCREATOR_VERSION', '2.12.4');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.12');
 // is or is not an official release of the plugin
@@ -224,7 +224,7 @@ function plugin_init_formcreator() {
                      // No formanswer found
                      Html::displayNotFoundError();
                   }
-                  $ticket = Ticket::getById($itemTicket->fields['items_id']);
+                  $ticket = Ticket::getById($itemTicket->fields['tickets_id']);
                   if ($ticket === false) {
                      Html::redirect($issue->getFormURLWithID($itemTicket->fields['items_id']) . $openItilFollowup);
                   }

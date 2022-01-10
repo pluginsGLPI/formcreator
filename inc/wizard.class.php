@@ -228,7 +228,6 @@ class PluginFormcreatorWizard {
    public static function showTicketSummary() {
       // show ticket summary
       echo "<span id='formcreator_servicecatalogue_ticket_summary'>";
-      //$status_count = PluginFormcreatorIssue::getTicketSummary();
 
       $link = PluginFormcreatorIssue::getSearchURL();
       echo "<span class='status status_incoming'>

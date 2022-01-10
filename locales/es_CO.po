@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2021
+# Haider López <hlopez@itsoluciones.com.co>, 2021
 # Cristian Felipe de Jesús Casallas Prieto <dejesuscasallas@gmail.com>, 2021
 # 
 #, fuzzy

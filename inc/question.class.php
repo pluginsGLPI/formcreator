@@ -794,7 +794,7 @@ PluginFormcreatorTranslatableInterface
       $section->getFromDB($this->fields['plugin_formcreator_sections_id']);
       $sections = [];
       foreach ((new PluginFormcreatorSection())->getSectionsFromForm($section->fields[PluginFormcreatorForm::getForeignKeyField()]) as $section) {
-         $sections[$section->getID()] = $section->getField('name');
+         $sections[$section->getID()] = $section->fields['name'] == '' ? '(' . $section->getID() . ')' : $section->fields['name'];
       }
       $currentSectionId = ($this->fields['plugin_formcreator_sections_id'])
                         ? $this->fields['plugin_formcreator_sections_id']
