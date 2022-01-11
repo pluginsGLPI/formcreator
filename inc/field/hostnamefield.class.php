@@ -92,7 +92,7 @@ class HostnameField extends PluginFormcreatorAbstractField
    }
 
    public function hasInput($input): bool {
-      return false;
+      return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
    public function moveUploads() {
