@@ -57,6 +57,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_HEADER_HIDDEN = 0;
    const CONFIG_HEADER_VISIBLE = 1;
 
+   const CONFIG_DASHBOARD_HIDDEN = 0;
+   const CONFIG_DASHBOARD_VISIBLE = 1;
+
    /**
     * @var bool $dohistory maintain history
     */
@@ -105,11 +108,19 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       ];
    }
 
-   public static function getEnumheaderVisibility() : array {
+   public static function getEnumHeaderVisibility() : array {
       return [
          self::CONFIG_PARENT         => __('Inheritance of the parent entity'),
          self::CONFIG_HEADER_VISIBLE => __('Visible', 'formcreator'),
          self::CONFIG_HEADER_HIDDEN  => __('Hidden', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumDashboardVisibility() : array {
+      return [
+         self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         self::CONFIG_DASHBOARD_VISIBLE => __('Visible', 'formcreator'),
+         self::CONFIG_DASHBOARD_HIDDEN  => __('Hidden', 'formcreator'),
       ];
    }
 
@@ -222,6 +233,22 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_search_visible', $elements, ['value' => $this->fields['is_search_visible']]);
       if ($this->fields['is_search_visible'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_search_visible', $ID);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
+      // Dashboard visibility
+      $elements = self::getEnumDashboardVisibility();
+      if ($ID == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Counters dashboard', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_dashboard_visible', $elements, ['value' => $this->fields['is_dashboard_visible']]);
+      if ($this->fields['is_dashboard_visible'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_dashboard_visible', $ID);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
