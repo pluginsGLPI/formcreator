@@ -702,9 +702,6 @@ PluginFormcreatorTranslatableInterface
       echo '<div id="plugin_formcreator_wizard" class="card-group">';
 
       $this->showWizard();
-      // echo '</div>';
-
-      // echo '<div id="plugin_formcreator_lastForms"class="card-group" >';
       echo '<div id="plugin_formcreator_lastForms" class="d-flex flex-column ms-sm-2">';
       $this->showMyLastForms();
       echo '</div>';
