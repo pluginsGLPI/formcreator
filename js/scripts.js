@@ -106,15 +106,6 @@ $(function() {
       updateKbitemsView(0);
       $("#kb_seeall").parent().addClass('category_active');
 
-      // Setup events
-      $('.plugin_formcreator_sort input[value=mostPopularSort]').on('click', function () {
-         showTiles(tiles);
-      });
-
-      $('.plugin_formcreator_sort input[value=alphabeticSort]').on('click', function () {
-         showTiles(tiles);
-      });
-
       $('#plugin_formcreator_kb_categories #kb_seeall').on('click', function () {
          slinkyCategories.home();
          updateKbitemsView(0);
