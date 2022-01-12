@@ -772,8 +772,8 @@ var plugin_formcreator = new function() {
    this.plugin_formcreator_scrollToModal = function (modalWindow) {
    $('html, body').animate({
         scrollTop: $(modalWindow).closest('.ui-dialog').offset().top
-    }, 300);
-}
+      }, 300);
+   }
 
    this.addQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
