@@ -105,7 +105,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'requester_id        as requester_id',
                'users_id_validator  as users_id_validator',
                'groups_id_validator as groups_id_validator',
-               'comment             as comment'
+               'comment             as comment',
+               'requester_id        as users_id_recipient'
             ],
          ],
          'DISTINCT' => true,
@@ -165,6 +166,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
             new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
+            'users_id_recipient                          as users_id_recipient'
          ],
          'DISTINCT' => true,
          'FROM' => $ticketTable,
@@ -999,6 +1001,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!isset($input['items_id']) || !isset($input['itemtype'])) {
          return false;
       }
+
+      $input['users_id_recipient'] = Session::getLoginUserID();
 
       if ($input['itemtype'] == PluginFormcreatorFormAnswer::class) {
          $input['display_id'] = 'f_' . $input['items_id'];
