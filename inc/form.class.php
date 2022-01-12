@@ -720,7 +720,7 @@ PluginFormcreatorTranslatableInterface
    public function showWizard() : void {
       echo '<div id="plugin_formcreator_wizard_categories" class="card">';
       echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div><a href="#" id="wizard_seeall">' . __('see all', 'formcreator') . '</a></div>';
+      echo '<div><a href="#" id="wizard_seeall"><i class="fas fa-home"></a></div>';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right" class="card">';
