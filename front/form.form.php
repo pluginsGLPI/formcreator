@@ -41,6 +41,7 @@ $form = PluginFormcreatorCommon::getForm();
 if (isset($_POST['add'])) {
    // Add a new Form
    Session::checkRight('entity', UPDATE);
+   $_POST['_create_empty_section'] = true;
    $newID = $form->add($_POST);
    Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.form.php?id=' . $newID);
 
