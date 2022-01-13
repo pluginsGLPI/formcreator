@@ -534,7 +534,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ];
       $this->array($form)->notHasKeys([
          'id',
-         'knowbaseitemcategories_id',
+         'plugin_formcreator_categories_id',
          'entities_id',
          'usage_count',
       ]);
@@ -1276,5 +1276,23 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testCheckImportVersion($version, $expected) {
       $output = \PluginFormcreatorForm::checkImportVersion($version);
       $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function testAdd() {
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         '_create_empty_section' => true,
+         'name' => 'form with auto created section'
+      ]);
+
+      $this->boolean($instance->isNewItem())->isFalse();
+      $section = new \PluginFormcreatorSection();
+      $rows = $section->find([
+         'plugin_formcreator_forms_id' => $instance->getID(),
+      ]);
+
+      $this->array($rows)->hasSize(1);
+      $row = array_shift($rows);
+      $this->string($row['name'])->isEqualTo(\PluginFormcreatorSection::getTypeName(1));
    }
 }

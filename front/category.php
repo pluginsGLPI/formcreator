@@ -31,31 +31,7 @@
 
 include ('../../../inc/includes.php');
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+Plugin::load('formcreator', true);
 
-if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
-}
-
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
-} else {
-   Html::header(__('Service catalog', 'formcreator'));
-}
-
-if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-   $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 2, 'mini_core');
-   $dashboard->show(true);
-}
-
-$form = PluginFormcreatorCommon::getForm();
-$form->showServiceCatalog();
-
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
-} else {
-   Html::footer();
-}
+$dropdown = new PluginFormcreatorCategory();
+include (GLPI_ROOT . "/front/dropdown.common.php");

@@ -76,18 +76,16 @@ trait PluginFormcreatorConditionnableTrait
       return true;
    }
 
-   public function updateConditions($input) : bool {
+   public function checkConditionSettings(array $input): bool {
       if (!isset($input['show_rule'])) {
          return false;
       }
       $showRule = $input['show_rule'];
       if ($showRule == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->deleteConditions();
          return false;
       }
 
       $input = $input['_conditions'];
-
       // All arrays of condition exists
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
@@ -96,18 +94,20 @@ trait PluginFormcreatorConditionnableTrait
 
       if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
          || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
-         $this->deleteConditions();
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-         $input['_skip_checks'] = true;
-         $this->update(['id' => $this->fields['id']] + $input);
          return false;
       }
 
       if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
-            && count($input['show_value']) == count($input['show_logic'])
-            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
+         && count($input['show_value']) == count($input['show_logic'])
+         && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
          return false;
       }
+
+      return true;
+   }
+
+   public function updateConditions($input) : bool {
+      $input = $input['_conditions'];
 
       $itemtype = $this->getType();
       $itemId = $this->getID();

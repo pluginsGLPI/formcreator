@@ -33,6 +33,11 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
+use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Item as Dashboard_Item;
+use Glpi\Dashboard\Right as Dashboard_Right;
+
+use Ramsey\Uuid\Uuid;
 class PluginFormcreatorInstall {
    protected $migration;
 
@@ -69,7 +74,8 @@ class PluginFormcreatorInstall {
       '2.11'   => '2.11.3',
       '2.11.3' => '2.12',
       '2.12'   => '2.12.1',
-      '2.12.1' => '2.13'
+      '2.12.1' => '2.12.5',
+      '2.12.5' => '2.13',
    ];
 
    /**
@@ -87,6 +93,7 @@ class PluginFormcreatorInstall {
       $this->createDefaultDisplayPreferences();
       $this->createCronTasks();
       $this->createNotifications();
+      $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       $task = new CronTask();
@@ -132,6 +139,23 @@ class PluginFormcreatorInstall {
          $fromSchemaVersion = $this->getSchemaVersion();
       }
 
+      if (version_compare($fromSchemaVersion, '2.5') < 0) {
+         if (isCommandLine()) {
+            echo 'Upgrade from version < 2.5.0 is no longer supported.' . PHP_EOL;
+            echo 'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,' . PHP_EOL;
+            echo 'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.' . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect(
+               'Upgrade from version < 2.5.0 is no longer supported.<br>' .
+               'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,<br>' .
+               'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.',
+               true,
+               ERROR
+            );
+         }
+         return false;
+      }
+
       while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
          $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
          $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
@@ -144,6 +168,7 @@ class PluginFormcreatorInstall {
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
       $this->createCronTasks();
+      $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
@@ -236,14 +261,16 @@ class PluginFormcreatorInstall {
    protected function configureExistingEntities() {
       global $DB;
 
+      /** Value -2 is "inheritance from parent" @see PluginFormcreatorEntityconfig::CONFIG_PARENT */
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
-                  (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_header_visible)
+                  (id, replace_helpdesk, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible)
                SELECT ent.id,
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT."),
-                  IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 1, -2),
+                  IF(ent.id = 0, 0, -2)
                 FROM glpi_entities ent
                 LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
                   ON ent.id = conf.id
@@ -283,36 +310,36 @@ class PluginFormcreatorInstall {
       global $DB;
 
       $notifications = [
-            'plugin_formcreator_form_created' => [
-               'name'     => __('A form has been created', 'formcreator'),
-               'subject'  => __('Your request has been saved', 'formcreator'),
-               'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
-            'plugin_formcreator_need_validation' => [
-               'name'     => __('A form need to be validate', 'formcreator'),
-               'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
-               'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::APPROVER,
-            ],
-            'plugin_formcreator_refused'         => [
-               'name'     => __('The form is refused', 'formcreator'),
-               'subject'  => __('Your form has been refused by the validator', 'formcreator'),
-               'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
-            'plugin_formcreator_accepted'        => [
-               'name'     => __('The form is accepted', 'formcreator'),
-               'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
-               'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
-            'plugin_formcreator_deleted'         => [
-               'name'     => __('The form is deleted', 'formcreator'),
-               'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
-               'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
-               'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
-            ],
+         'plugin_formcreator_form_created' => [
+            'name'     => __('A form has been created', 'formcreator'),
+            'subject'  => __('Your request has been saved', 'formcreator'),
+            'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
+         'plugin_formcreator_need_validation' => [
+            'name'     => __('A form need to be validate', 'formcreator'),
+            'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
+            'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::APPROVER,
+         ],
+         'plugin_formcreator_refused'         => [
+            'name'     => __('The form is refused', 'formcreator'),
+            'subject'  => __('Your form has been refused by the validator', 'formcreator'),
+            'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
+         'plugin_formcreator_accepted'        => [
+            'name'     => __('The form is accepted', 'formcreator'),
+            'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
+            'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
+         'plugin_formcreator_deleted'         => [
+            'name'     => __('The form is deleted', 'formcreator'),
+            'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
+            'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
+            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+         ],
       ];
 
       // Create the notification template
@@ -466,6 +493,7 @@ class PluginFormcreatorInstall {
       // Keep  these itemtypes as string because classes might not be available (if plugin is inactive)
       $itemtypes = [
          'PluginFormcreatorAnswer',
+         'PluginFormcreatorCategory',
          'PluginFormcreatorEntityconfig',
          'PluginFormcreatorFormAnswer',
          'PluginFormcreatorForm_Profile',
@@ -537,5 +565,78 @@ class PluginFormcreatorInstall {
             'state'     => '0', // Deprecated since 2.11
          ]
       );
+   }
+
+   protected function createMiniDashboard() {
+      $dashboard = new Dashboard();
+
+      if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
+         // The dashboard already exists, nothing to create
+         return;
+      }
+
+      $dashboard->add([
+         'key'     => 'plugin_formcreator_issue_counters',
+         'name'    => 'Assistance requests counts',
+         'context' => 'mini_core',
+      ]);
+
+      if ($dashboard->isNewItem()) {
+         // Failed to create the dashboard
+         return;
+      };
+
+      $commonOptions = [
+         'color'        => '#FAFAFA',
+         'widgettype'   => 'bigNumber',
+         'use_gradient' => '0',
+         'point_labels' => '0',
+         'limit'        => '7',
+      ];
+      $cards = [
+         'plugin_formcreator_processing' => [
+            'color' => '#49bf4d'
+         ],
+         'plugin_formcreator_waiting'    => [
+            'color' => '#FFA500'
+         ],
+         'plugin_formcreator_validate'   => [
+            'color' => '#8CABDB'
+         ],
+         'plugin_formcreator_solved'     => [
+            'color' => '#000000'
+         ],
+      ];
+      $x = 0;
+      $w = 2; // Width
+      $h = 2; // Height
+      $y = 0;
+      foreach ($cards as $key => $options) {
+         $item = new Dashboard_Item();
+         $item->addForDashboard($dashboard->fields['id'], [[
+            'card_id' => $key,
+            'gridstack_id' => $key . '_' . Uuid::uuid4(),
+            'x'       => $x,
+            'y'       => $y,
+            'width'   => $w,
+            'height'  => $h,
+            'card_options' => array_merge($commonOptions, $options),
+         ]]);
+         $x += $w;
+      }
+
+      // Give rights to all self service profiles
+      $profile = new Profile();
+      $helpdeskProfiles = $profile->find([
+         'interface' => 'helpdesk',
+      ]);
+      foreach ($helpdeskProfiles as $helpdeskProfile) {
+         $dashboardRight = new Dashboard_Right();
+         $dashboardRight->add([
+            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'itemtype'                 => Profile::getType(),
+            'items_id'                => $helpdeskProfile['id'],
+         ]);
+      }
    }
 }

@@ -205,4 +205,13 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          \PluginFormcreatorEntityconfig::CONFIG_HEADER_HIDDEN  => __('Hidden', 'formcreator'),
       ]);
    }
+
+   public function testGetEnumDashboardVisibility() {
+      $output = \PluginFormcreatorEntityconfig::getEnumheaderVisibility();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE => __('Visible', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_HIDDEN  => __('Hidden', 'formcreator'),
+      ]);
+   }
 }

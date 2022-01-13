@@ -50,9 +50,6 @@ class PluginFormcreatorKnowbase {
 
    public function showServiceCatalog() {
       // show wizard
-      echo '<div>';
-      PluginFormcreatorIssue::showTicketSummary();
-      echo '</div>';
       echo '<div id="plugin_formcreator_wizard" class="card-group">';
       $this->showWizard();
       echo '</div>';
@@ -61,7 +58,7 @@ class PluginFormcreatorKnowbase {
    public function showWizard() {
       echo '<div id="plugin_formcreator_kb_categories" class="card">';
       echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div><a href="#" id="kb_seeall">' . __('see all', 'formcreator') . '</a></div>';
+      echo '<div><a href="#" id="kb_seeall"><i class="fas fa-home"></i></a></div>';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right" class="card">';
@@ -80,6 +77,105 @@ class PluginFormcreatorKnowbase {
       echo '<span id="plugin_formcreator_search_input_bar"></span>';
       echo '<label for="plugin_formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
       echo '</form>';
+   }
+
+   /**
+    * @see Knowbase::getJstreeCategoryList()
+    *
+    * @param int $rootId id of the subtree root
+    * @param bool $helpdeskHome
+    *
+    * @return array Tree of form categories as nested array
+    */
+   public static function getCategoryTree() {
+      global $DB;
+
+      $cat_table = KnowbaseItemCategory::getTable();
+      $cat_fk  = KnowbaseItemCategory::getForeignKeyField();
+
+      $kbitem_visibility_crit = KnowbaseItem::getVisibilityCriteria(true);
+
+      $items_subquery = new QuerySubQuery(
+         array_merge_recursive(
+            [
+               'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
+               'FROM'   => KnowbaseItem::getTable(),
+               'WHERE'  => [
+                  KnowbaseItem::getTableField($cat_fk) => new QueryExpression(
+                     DB::quoteName(KnowbaseItemCategory::getTableField('id'))
+                  ),
+               ]
+            ],
+            $kbitem_visibility_crit
+         ),
+         'items_count'
+      );
+
+      $cat_iterator = $DB->request([
+         'SELECT' => [
+            KnowbaseItemCategory::getTableField('id'),
+            KnowbaseItemCategory::getTableField('name'),
+            KnowbaseItemCategory::getTableField($cat_fk),
+            $items_subquery,
+         ],
+         'FROM' => $cat_table,
+         'ORDER' => [
+            KnowbaseItemCategory::getTableField('level') . ' DESC',
+            KnowbaseItemCategory::getTableField('name'),
+         ]
+      ]);
+
+      $inst = new KnowbaseItemCategory;
+      $categories = [];
+      foreach ($cat_iterator as $category) {
+         if (DropdownTranslation::canBeTranslated($inst)) {
+            $tname = DropdownTranslation::getTranslatedValue(
+               $category['id'],
+               $inst->getType()
+            );
+            if (!empty($tname)) {
+               $category['name'] = $tname;
+            }
+         }
+         $categories[] = $category;
+      }
+
+      // Remove categories that have no items and no children
+      // Requires category list to be sorted by level DESC
+      foreach ($categories as $index => $category) {
+         $children = array_filter(
+            $categories,
+            function ($element) use ($category, $cat_fk) {
+               return $category['id'] == $element[$cat_fk];
+            }
+         );
+
+         if (empty($children) && 0 == $category['items_count']) {
+            unset($categories[$index]);
+            continue;
+         }
+         $categories[$index]['subcategories'] = [];
+      }
+
+      // Create root node
+      $nodes = [
+         'name'            => '',
+         'id'              => 0,
+         'parent'          => 0,
+         'subcategories'   => [],
+      ];
+      $flat = [
+         0 => &$nodes,
+      ];
+
+      // Build from root node to leaves
+      $categories = array_reverse($categories);
+      foreach ($categories as $item) {
+         $flat[$item['id']] = $item;
+         $flat[$item[$cat_fk]]['subcategories'][] = &$flat[$item['id']];
+      }
+
+      return $nodes;
    }
 
    public static function getFaqItems($rootCategory = 0, $keywords = '') {

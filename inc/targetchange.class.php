@@ -214,7 +214,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
-      $input['_skip_checks'] = true;
       $input['_skip_create_actors'] = true;
 
       $item = new self();
@@ -289,6 +288,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       // Add or update
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->update($input);
@@ -296,6 +296,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          unset($input['id']);
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
@@ -653,9 +654,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     */
    public function prepareInputForUpdate($input) {
       // Control fields values :
-      if (!isset($input['_skip_checks'])
-            || !$input['_skip_checks']) {
-
+      if (!$this->skipChecks) {
          if (isset($input[('content')])) {
             $input['content'] = Html::entity_decode_deep($input['content']);
          }
@@ -710,36 +709,44 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
             }
          }
 
-         switch ($input['sla_rule']) {
-            case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
-               $input['sla_question_tto'] = $input['_sla_specific_tto'];
-               $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
-               break;
-            case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
-               $input['sla_question_tto'] = $input['_sla_questions_tto'];
-               $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
-               break;
+         if (isset($input['sla_rule'])) {
+            switch ($input['sla_rule']) {
+               case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
+                  $input['sla_question_tto'] = $input['_sla_specific_tto'];
+                  $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
+                  break;
+               case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
+                  $input['sla_question_tto'] = $input['_sla_questions_tto'];
+                  $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
+                  break;
+            }
          }
 
-         switch ($input['ola_rule']) {
-            case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
-               $input['ola_question_tto'] = $input['_ola_specific_tto'];
-               $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
-               break;
-            case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
-               $input['ola_question_tto'] = $input['_ola_questions_tto'];
-               $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
-               break;
+         if (isset($input['ola_rule'])) {
+            switch ($input['ola_rule']) {
+               case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
+                  $input['ola_question_tto'] = $input['_ola_specific_tto'];
+                  $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
+                  break;
+               case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
+                  $input['ola_question_tto'] = $input['_ola_questions_tto'];
+                  $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
+                  break;
+            }
          }
 
          $plugin = new Plugin();
          if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-            $input['tag_questions'] = (!empty($input['_tag_questions']))
-                                       ? implode(',', $input['_tag_questions'])
-                                       : '';
-            $input['tag_specifics'] = (!empty($input['_tag_specifics']))
-                                       ? implode(',', $input['_tag_specifics'])
-                                       : '';
+            if (isset($input['tag_questions'])) {
+               $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                          ? implode(',', $input['_tag_questions'])
+                                          : '';
+            }
+            if (isset($input['tag_specifics'])) {
+               $input['tag_specifics'] = (!empty($input['_tag_specifics']))
+                                          ? implode(',', $input['_tag_specifics'])
+                                          : '';
+            }
          }
       }
 
@@ -773,14 +780,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
    public function post_addItem() {
       parent::post_addItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }
 
    public function post_updateItem($history = 1) {
       parent::post_updateItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
+      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);
       }
    }

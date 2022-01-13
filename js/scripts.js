@@ -32,7 +32,6 @@
 
 var modalWindow;
 var rootDoc          = CFG_GLPI['root_doc'];
-var currentCategory  = "0";
 var tiles = [];
 var slinkyCategories;
 var timers = [];
@@ -61,31 +60,6 @@ function getTimer(object) {
 }
 
 $(function() {
-   if (!plugin_formcreator.isGlpi10) {
-      modalWindow = $("<div></div>").dialog({
-         width: 980,
-         autoOpen: false,
-         height: "auto",
-         modal: true,
-         position: {my: 'center'},
-         open: function( event, ui ) {
-            //remove existing tinymce when reopen modal (without this, tinymce don't load on 2nd opening of dialog)
-            modalWindow.find('.mce-container').remove();
-         }
-      });
-   }
-
-   // toggle menu in desktop mode
-   $('#formcreator-toggle-nav-desktop').on('change', function() {
-      $('.plugin_formcreator_container').toggleClass('toggle_menu');
-      $.ajax({
-         url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
-         data: {wizard: 'toggle_menu'},
-         type: "POST",
-         dataType: "json"
-      })
-   });
-
    // Prevent jQuery UI dialog from blocking focusin
    $(document).on('focusin', function(e) {
        if ($(e.target).closest(".mce-window, .moxman-window").length) {
@@ -106,41 +80,19 @@ $(function() {
 
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
       updateCategoriesView();
-      updateWizardFormsView(0);
-      $("#wizard_seeall").parent().addClass('category_active');
 
-      // Setup events
-      $('.plugin_formcreator_sort [value=mostPopularSort]').on('click', function () {
-         showTiles(tiles);
-      });
-
-      $('.plugin_formcreator_sort [value=alphabeticSort]').on('click', function () {
-         showTiles(tiles);
-      });
-
-      $('#plugin_formcreator_wizard_categories #wizard_seeall').on('click', function () {
+      $('#plugin_formcreator_wizard_categories #wizard_seeall').on('click', function (event) {
          slinkyCategories.home();
-         updateWizardFormsView(0);
+         plugin_formcreator.updateWizardFormsView(event.target);
          $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
          $(this).addClass('category_active');
       });
    } else if ($('#plugin_formcreator_kb_categories').length > 0) {
       updateKbCategoriesView();
-      updateKbitemsView(0);
-      $("#kb_seeall").parent().addClass('category_active');
 
-      // Setup events
-      $('.plugin_formcreator_sort input[value=mostPopularSort]').on('click', function () {
-         showTiles(tiles);
-      });
-
-      $('.plugin_formcreator_sort input[value=alphabeticSort]').on('click', function () {
-         showTiles(tiles);
-      });
-
-      $('#plugin_formcreator_kb_categories #kb_seeall').on('click', function () {
+      $('#plugin_formcreator_kb_categories #kb_seeall').on('click', function (event) {
          slinkyCategories.home();
-         updateKbitemsView(0);
+         plugin_formcreator.updateKbitemsView(event.target);
          $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
          $(this).addClass('category_active');
       });
@@ -151,23 +103,20 @@ $(function() {
    if (searchInput.length == 1) {
       // Dynamically update forms and faq items while the user types in the search bar
       var timer = getTimer(searchInput);
+      var callbackFunc;
       if ($('#plugin_formcreator_kb_categories .category_active').length > 0) {
-         var callback = function() {
-            updateKbitemsView(currentCategory);
-         }
+         callbackFunc = plugin_formcreator.updateKbitemsView.bind(plugin_formcreator);
       } else {
-         var callback = function() {
-            updateWizardFormsView(currentCategory);
-         }
+         callbackFunc = plugin_formcreator.updateWizardFormsView.bind(plugin_formcreator);
       }
-      timer(300, callback);
+      timer(300, callbackFunc);
       timers.push(timer);
 
       // Clear the search bar if it gains focus
       $('#plugin_formcreator_searchBar input').focus(function(event) {
          if (searchInput.val().length > 0) {
             searchInput.val('');
-            updateWizardFormsView(currentCategory);
+            plugin_formcreator.updateWizardFormsView(null);
             $.when(getFormAndFaqItems(0)).then(
                function (response) {
                   tiles = response;
@@ -176,11 +125,6 @@ $(function() {
             );
          }
       });
-   }
-
-   // load counters
-   if ($('.status.status_incoming .status_number').length > 0) {
-      plugin_formcreator.getCounters();
    }
 });
 
@@ -227,7 +171,7 @@ function updateCategoriesView() {
          function(event) {
             var parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories .slinky-menu > ul', 'li')[1];
             var parentAnchor = $(parentItem).children('a')[0];
-            updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
+            plugin_formcreator.updateWizardFormsView(parentAnchor);
          }
       );
 
@@ -275,7 +219,6 @@ function updateKbCategoriesView() {
 }
 
 function getFaqItems(categoryId) {
-   var currentCategory = categoryId;
    var keywords = $('#plugin_formcreator_searchBar input:first').val();
    var deferred = jQuery.Deferred();
    $.post({
@@ -359,54 +302,12 @@ function showTiles(tiles, defaultForms) {
    });
 }
 
-function updateWizardFormsView(categoryId) {
-   $.when(getFormAndFaqItems(categoryId)).done(
-      function (response) {
-         tiles = response.forms;
-         showTiles(tiles, response.default);
-      }
-   ).fail(
-      function () {
-         var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
-         $('#plugin_formcreator_wizard_forms').empty();
-         $('#plugin_formcreator_wizard_forms').prepend(html);
-         $('#plugin_formcreator_formlist').masonry({
-            horizontalOrder: true
-         });
-         $('#plugin_formcreator_faqlist').masonry({
-            horizontalOrder: true
-         });
-      }
-   );
-}
-
-function updateKbitemsView(categoryId) {
-   $.when(getFaqItems(categoryId)).done(
-      function (response) {
-         tiles = response.forms;
-         showTiles(tiles, false);
-      }
-   ).fail(
-      function () {
-         html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
-         $('#plugin_formcreator_wizard_forms').empty();
-         $('#plugin_formcreator_wizard_forms').prepend(html);
-         $('#plugin_formcreator_formlist').masonry({
-            horizontalOrder: true
-         });
-         $('#plugin_formcreator_faqlist').masonry({
-            horizontalOrder: true
-         });
-      }
-   );
-}
-
 function buildKbCategoryList(tree) {
    var html = '';
    if (tree.id != 0) {
       html += '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="updateKbitemsView(' + tree.id + ')">'
+         + ' onclick="plugin_formcreator.updateWizardFormsView(this)">'
          + tree.name
          + '</a>';
    }
@@ -421,13 +322,12 @@ function buildKbCategoryList(tree) {
    return html;
 }
 
-
 function buildCategoryList(tree) {
    var html = '';
    if (tree.id != 0) {
       html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="updateWizardFormsView(' + tree.id + ')">'
+         + ' onclick="plugin_formcreator.updateWizardFormsView(this)">'
          + tree.name
          + '</a>';
    }
@@ -528,9 +428,9 @@ function buildTiles(list) {
 var plugin_formcreator = new function() {
    this.spinner = '<div"><img src="../../../pics/spinner.48.gif" style="margin-left: auto; margin-right: auto; display: block;" width="48px"></div>'
 
-   this.isGlpi10 = typeof($('<div>/div>').dialog) == 'undefined';
-
    this.questionColumns = 4;
+
+   this.activeCategory = 0;
 
    this.modalSetings = {
       autoOpen: false,
@@ -793,8 +693,8 @@ var plugin_formcreator = new function() {
    this.plugin_formcreator_scrollToModal = function (modalWindow) {
    $('html, body').animate({
         scrollTop: $(modalWindow).closest('.ui-dialog').offset().top
-    }, 300);
-}
+      }, 300);
+   }
 
    this.addQuestion = function () {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
@@ -826,11 +726,7 @@ var plugin_formcreator = new function() {
          );
          that.resetTabs();
       });
-      if (!plugin_formcreator.isGlpi10) {
-         modalWindow.dialog('close');
-      } else {
-         glpi_close_all_dialogs();
-      }
+      glpi_close_all_dialogs();
    }
 
    this.editQuestion = function () {
@@ -847,9 +743,6 @@ var plugin_formcreator = new function() {
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data)
-         if (!plugin_formcreator.isGlpi10) {
-            modalWindow.dialog('close');
-         }
          that.resetTabs();
       });
    }
@@ -995,29 +888,14 @@ var plugin_formcreator = new function() {
    };
 
    this.showQuestionForm = function (sectionId, questionId = 0) {
-      if (!plugin_formcreator.isGlpi10) {
-         var that = this;
-         $.post({
-            url: formcreatorRootDoc + '/ajax/question.php',
-            data: {
-               question_id: questionId,
-               plugin_formcreator_sections_id: sectionId
-            }
-         }).done(function (data) {
-            modalWindow.html(data).dialog('open');
-            that.plugin_formcreator_scrollToModal($(modalWindow));
-         });
-      } else {
-         // GLPI 10.0
-         glpi_ajax_dialog({
-            dialogclass: 'modal-xl',
-            url: formcreatorRootDoc + '/ajax/question.php',
-            params: {
-               question_id: questionId,
-               plugin_formcreator_sections_id: sectionId
-            },
-         });
-      }
+      glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
+         url: formcreatorRootDoc + '/ajax/question.php',
+         params: {
+            question_id: questionId,
+            plugin_formcreator_sections_id: sectionId
+         },
+      });
    };
 
    this.duplicateSection = function (item) {
@@ -1044,29 +922,14 @@ var plugin_formcreator = new function() {
    };
 
    this.showSectionForm = function (formId, sectionId = 0) {
-      if (!plugin_formcreator.isGlpi10) {
-         var that = this;
-         $.post({
-            url: formcreatorRootDoc + '/ajax/section.php',
-            data: {
-               section_id: sectionId,
-               plugin_formcreator_forms_id: formId
-            }
-         }).done(function(data) {
-            modalWindow.html(data).dialog('open');
-            that.plugin_formcreator_scrollToModal($(modalWindow));
-         });
-      } else {
-         // GLPI 10.0
-         glpi_ajax_dialog({
-            dialogclass: 'modal-xl',
-            url: formcreatorRootDoc + '/ajax/section.php',
-            params: {
-               section_id: sectionId,
-               plugin_formcreator_forms_id: formId
-            },
-         });
-      }
+      glpi_ajax_dialog({
+         dialogclass: 'modal-xl',
+         url: formcreatorRootDoc + '/ajax/section.php',
+         params: {
+            section_id: sectionId,
+            plugin_formcreator_forms_id: formId
+         },
+      });
    }
 
    this.addSection = function () {
@@ -1087,12 +950,8 @@ var plugin_formcreator = new function() {
          plugin_formcreator.updateSectionControls();
          that.resetTabs();
       });
-      if (!plugin_formcreator.isGlpi10) {
-         modalWindow.dialog('close');
-      } else {
-         glpi_close_all_dialogs();
-      }
-}
+      glpi_close_all_dialogs();
+   }
 
    this.editSection = function () {
       var form = $('form[data-itemtype="PluginFormcreatorSection"]');
@@ -1108,9 +967,6 @@ var plugin_formcreator = new function() {
       }).done(function(data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
          section.find('> [data-field="name"]').text(data);
-         if (!plugin_formcreator.isGlpi10) {
-            modalWindow.dialog('close');
-         }
          that.resetTabs();
       });
    }
@@ -1266,119 +1122,76 @@ var plugin_formcreator = new function() {
       });
    }
 
-   this.getCounters = function () {
-      this.getIncomingCounter().done(function (data) {
-         $('.status.status_incoming .status_number').empty().append(data[1]);
-      }).fail(function () {
-         $('.status.status_incoming .status_number').empty().append('N/A');
-      });
-
-      this.getWaitingCounter().done(function (data) {
-         $('.status.status_waiting .status_number').empty().append(data[4]);
-      }).fail(function () {
-         $('.status.status_waiting .status_number').empty().append('N/A');
-      });
-
-      this.getToValidateCounter().done(function (data) {
-         $('.status.status_validate .status_number').empty().append(data['to_validate']);
-      }).fail(function () {
-         $('.status.status_validate .status_number').empty().append('N/A');
-      });
-
-      this.getSolvedCounter().done(function (data) {
-         $('.status.status_solved .status_number').empty().append(data[5]);
-      }).fail(function () {
-         $('.status.status_solved .status_number').empty().append('N/A');
-      });
+   this.updateWizardFormsView = function (item) {
+      if (item) {
+         this.activeCategory = item.getAttribute('data-category-id');
+      }
+      $.when(getFormAndFaqItems(this.activeCategory)).done(
+         function (response) {
+            tiles = response.forms;
+            showTiles(tiles, response.default);
+         }
+      ).fail(
+         function () {
+            var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
+            $('#plugin_formcreator_wizard_forms').empty();
+            $('#plugin_formcreator_wizard_forms').prepend(html);
+            $('#plugin_formcreator_formlist').masonry({
+               horizontalOrder: true
+            });
+            $('#plugin_formcreator_faqlist').masonry({
+               horizontalOrder: true
+            });
+         }
+      );
    }
 
-   this.getIncomingCounter = function () {
-      return $.get({
-         url: formcreatorRootDoc + '/ajax/counter.php',
-         dataType: 'json',
-         data: {
-            counter: 'incoming'
+   this.updateKbitemsView = function (item) {
+      if (item) {
+         this.activeCategory = item.getAttribute('data-category-id');
+      }
+      $.when(getFaqItems(this.activeCategory)).done(
+         function (response) {
+            tiles = response.forms;
+            showTiles(tiles, false);
          }
-      });
-   }
-
-   this.getWaitingCounter = function () {
-      return $.get({
-         url: formcreatorRootDoc + '/ajax/counter.php',
-         dataType: 'json',
-         data: {
-            counter: 'waiting'
+      ).fail(
+         function () {
+            html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
+            $('#plugin_formcreator_wizard_forms').empty();
+            $('#plugin_formcreator_wizard_forms').prepend(html);
+            $('#plugin_formcreator_formlist').masonry({
+               horizontalOrder: true
+            });
+            $('#plugin_formcreator_faqlist').masonry({
+               horizontalOrder: true
+            });
          }
-      });
-   }
-
-   this.getToValidateCounter = function () {
-      return $.get({
-         url: formcreatorRootDoc + '/ajax/counter.php',
-         dataType: 'json',
-         data: {
-            counter: 'to_validate'
-         }
-      });
-   }
-
-   this.getSolvedCounter = function () {
-      return $.get({
-         url: formcreatorRootDoc + '/ajax/counter.php',
-         dataType: 'json',
-         data: {
-            counter: 'solved'
-         }
-      });
+      );
    }
 }
 
 // === TARGETS ===
 
 function plugin_formcreator_addTarget(items_id) {
-   if (!plugin_formcreator.isGlpi10) {
-      $.post({
-         url: formcreatorRootDoc + '/ajax/target.php',
-         data: {
-            plugin_formcreator_forms_id: items_id
-         }
-      }).done(function (data) {
-         modalWindow.html(data).dialog('open');
-      });
-   } else {
-      // GLPI 10.0
-      glpi_ajax_dialog({
-         dialogclass: 'modal-xl',
-         url: formcreatorRootDoc + '/ajax/target.php',
-         params: {
-            plugin_formcreator_forms_id: items_id
-         },
-      });
-   }
+   glpi_ajax_dialog({
+      dialogclass: 'modal-xl',
+      url: formcreatorRootDoc + '/ajax/target.php',
+      params: {
+         plugin_formcreator_forms_id: items_id
+      },
+   });
 }
 
 function plugin_formcreator_editTarget(itemtype, items_id) {
-   if (!plugin_formcreator.isGlpi10) {
-      $.post({
-         url: formcreatorRootDoc + '/ajax/target_edit.php',
-         data: {
-            itemtype: itemtype,
-            id: items_id
-         }
-      }).done(function (data) {
-         modalWindow.html(data).dialog('open');
-      });
-   } else {
-      // GLPI 10.0
-      glpi_ajax_dialog({
-         dialogclass: 'modal-xl',
-         url: formcreatorRootDoc + '/ajax/target_edit.php',
-         params: {
-            itemtype: itemtype,
-            id: items_id
-         },
-      });
-   }
+   glpi_ajax_dialog({
+      dialogclass: 'modal-xl',
+      url: formcreatorRootDoc + '/ajax/target_edit.php',
+      params: {
+         itemtype: itemtype,
+         id: items_id
+      },
+   });
 }
 
 function plugin_formcreator_deleteTarget(itemtype, target_id) {

@@ -165,46 +165,6 @@ function plugin_init_formcreator() {
 }
 
 /**
- * Encode special chars
- *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
- */
-function plugin_formcreator_encode($string, $mode_legacy = true) {
-   if (!is_string($string)) {
-      return $string;
-   }
-   if (!$mode_legacy) {
-      $string = Html::clean(Html::entity_decode_deep($string));
-      $string = preg_replace('/\\r\\n/', ' ', $string);
-      $string = preg_replace('/\\n/', ' ', $string);
-      $string = preg_replace('/\\\\r\\\\n/', ' ', $string);
-      $string = preg_replace('/\\\\n/', ' ', $string);
-      $string = Toolbox::stripslashes_deep($string);
-      $string = Toolbox::addslashes_deep($string);
-   } else {
-      $string = stripcslashes($string);
-      $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
-      $string = str_replace('&apos;', "'", $string);
-      $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
-   }
-   return $string;
-}
-
-/**
- * Encode special chars
- *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
- */
-function plugin_formcreator_decode($string) {
-   $string = stripcslashes($string);
-   $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
-   $string = str_replace('&apos;', "'", $string);
-   return $string;
-}
-
-/**
  * Tells if helpdesk replacement is enabled for the current user
  *
  * @return boolean|integer
@@ -322,7 +282,8 @@ function plugin_formcreator_permanent_hook() {
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
-      Plugin::class => 'plugin_formcreator_hook_update_plugin'
+      Plugin::class => 'plugin_formcreator_hook_update_plugin',
+      Profile::class => 'plugin_formcreator_hook_update_profile',
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
@@ -343,7 +304,7 @@ function plugin_formcreator_permanent_hook() {
 }
 
 function plugin_formcreator_hook() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
@@ -373,8 +334,20 @@ function plugin_formcreator_hook() {
             || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+         $CFG_GLPI['javascript']['self-service']['none'] = [
+            'dashboard',
+            'gridstack'
+         ];
+      }
+      if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
+         $CFG_GLPI['javascript']['self-service']['none'] = [
+            'dashboard',
+            'gridstack'
+         ];
       }
    }
+
+   $PLUGIN_HOOKS['dashboard_cards']['formcreator'] = 'plugin_formcreator_hook_dashboard_cards';
 
    if (Session::getLoginUserID() === false) {
       return;

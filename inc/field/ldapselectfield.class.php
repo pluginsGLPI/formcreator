@@ -49,7 +49,7 @@ class LdapselectField extends SelectField
       $label .= _n('LDAP directory', 'LDAP directories', 1);
       $label .= '</label>';
 
-      $ldap_values = json_decode(plugin_formcreator_decode($this->question->fields['values']), JSON_OBJECT_AS_ARRAY);
+      $ldap_values = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       if ($ldap_values === null) {
          $ldap_values = [];
       }
@@ -120,7 +120,7 @@ class LdapselectField extends SelectField
          return [];
       }
 
-      $ldap_values   = json_decode(plugin_formcreator_decode($this->question->fields['values']));
+      $ldap_values   = json_decode($this->question->fields['values']);
       $ldap_dropdown = new RuleRightParameter();
       if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
          return [];

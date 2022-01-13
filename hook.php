@@ -29,6 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+
+use Glpi\Dashboard\Right as DashboardRight;
+use Glpi\Dashboard\Dashboard;
+
 /**
  * Install all necessary elements for the plugin
  * @param array $args ARguments passed from CLI
@@ -58,6 +62,15 @@ function plugin_formcreator_uninstall() {
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
    $install->uninstall();
+}
+
+/**
+ * Define Dropdown tables to be manage in GLPI :
+ */
+function plugin_formcreator_getDropdown() {
+   return [
+      'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
+   ];
 }
 
 
@@ -153,6 +166,8 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          // condition where current user is a validator of a issue of type ticket
          $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
+         // Add users_id_recipient
+         $condition .= " OR `users_id_recipient` = $currentUser ";
          return "($condition)";
       break;
 
@@ -692,4 +707,55 @@ function plugin_formcreator_timelineActions($options) {
    echo "<li class='plugin_formcreator_cancel_my_ticket' onclick='".
       "javascript:plugin_formcreator_cancelMyTicket(".$item->fields['id'].");'>"
       ."<i class='fa'></i>".__('Cancel my ticket', 'formcreator')."</li>";
+}
+
+function plugin_formcreator_hook_dashboard_cards() {
+   $cards = [];
+
+   $counters = [
+      'processing' => __('processing issues', 'formcreator'),
+      'waiting'    => __('waiting issues', 'formcreator'),
+      'validate'   => __('issues to validate', 'formcreator'),
+      'solved'     => __('solved issues', 'formcreator'),
+   ];
+   foreach ($counters as $key => $label) {
+      $cards['plugin_formcreator_' . $key] = [
+         'widgettype' => ['bigNumber'],
+         'itemtype'   => PluginFormcreatorIssue::getType(),
+         'group'      => __('Assistance'),
+         'label'      => sprintf(__("Number of %s"), $label),
+         'provider'   => 'PluginFormcreatorIssue::nbIssues',
+         'args'       => [
+            'params' => [
+               'status' => $key,
+               'label'  => $label
+            ]
+         ],
+         'cache'      => false,
+         'filters'    => []
+      ];
+   }
+
+   return $cards;
+}
+
+function plugin_formcreator_hook_update_profile(CommonDBTM $item) {
+   $dashboard = new Dashboard;
+   if (!$dashboard->getFromDB('plugin_formcreator_issue_counters')) {
+      return;
+   }
+   $dashboardRight = new DashboardRight();
+   if ($item->fields['interface'] == 'helpdesk') {
+      $dashboardRight->add([
+         'dashboards_dashboards_id' => $dashboard->fields['id'],
+         'itemtype' => Profile::getType(),
+         'items_id' => $item->getID(),
+      ]);
+   } else {
+      $dashboardRight->delete([
+         'dashboards_dashboards_id' => $dashboard->fields['id'],
+         'itemtype' => Profile::getType(),
+         'items_id' => $item->getID(),
+      ], 1);
+   }
 }

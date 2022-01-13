@@ -28,34 +28,25 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_12_5 {
+   /** @var Migration */
+   protected $migration;
 
-include ('../../../inc/includes.php');
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      global $DB;
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+      $this->migration = $migration;
 
-if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
-}
+      // Add users_id_recipient
+      $table = 'glpi_plugin_formcreator_issues';
+      $this->migration->addField($table, 'users_id_recipient', 'integer');
 
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
-} else {
-   Html::header(__('Service catalog', 'formcreator'));
-}
-
-if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-   $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 2, 'mini_core');
-   $dashboard->show(true);
-}
-
-$form = PluginFormcreatorCommon::getForm();
-$form->showServiceCatalog();
-
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
-} else {
-   Html::footer();
+      // Update issues
+      $this->migration->migrationOneTable($table);
+      $DB->query("TRUNCATE `$table`");
+      PluginFormcreatorIssue::syncIssues();
+   }
 }
