@@ -45,6 +45,7 @@ class PluginFormcreatorUpgradeTo2_12_5 {
       $this->migration->addField($table, 'users_id_recipient', 'integer');
 
       // Update issues
+      $this->migration->migrationOneTable($table);
       $DB->query("TRUNCATE `$table`");
       PluginFormcreatorIssue::syncIssues();
    }
