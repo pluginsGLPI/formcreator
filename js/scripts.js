@@ -61,17 +61,6 @@ function getTimer(object) {
 }
 
 $(function() {
-   // toggle menu in desktop mode
-   $('#formcreator-toggle-nav-desktop').on('change', function() {
-      $('.plugin_formcreator_container').toggleClass('toggle_menu');
-      $.ajax({
-         url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
-         data: {wizard: 'toggle_menu'},
-         type: "POST",
-         dataType: "json"
-      })
-   });
-
    // Prevent jQuery UI dialog from blocking focusin
    $(document).on('focusin', function(e) {
        if ($(e.target).closest(".mce-window, .moxman-window").length) {
