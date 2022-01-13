@@ -137,7 +137,9 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       // answer the form
       $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([\PluginFormcreatorForm::getForeignKeyField() => $form->getID()]);
+      $formAnswer->add([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
+      ]);
       // Get the generated ticket
       $ticket = array_pop($formAnswer->targetList);
       $this->object($ticket);
@@ -158,6 +160,5 @@ class PluginFormcreatorIssue extends CommonTestCase {
       // Check the issue has been deleted
       $success = $issue->getFromDB($issue->getID());
       $this->boolean($success)->isFalse();
-
    }
 }

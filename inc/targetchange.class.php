@@ -54,11 +54,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return new Change_Supplier();
    }
 
-   protected function getItem_Item() {
+   public function getItem_Item() {
       return new Change_Item();
    }
 
-   protected function getTargetItemtypeName(): string {
+   public function getTargetItemtypeName(): string {
       return Change::class;
    }
 
