@@ -110,7 +110,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return CommonDBTM
     */
-   abstract protected function getItem_Item();
+   abstract public function getItem_Item();
 
    /**
     * Get the class name of the target itemtype's template class
@@ -131,7 +131,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return string
     */
-   abstract protected function getTargetItemtypeName(): string;
+   abstract public function getTargetItemtypeName(): string;
 
    /**
     * Get the query criterias to query the ITIL categories

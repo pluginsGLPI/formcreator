@@ -64,11 +64,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return new Supplier_Ticket();
    }
 
-   protected function getItem_Item() {
+   public function getItem_Item() {
       return new Item_Ticket();
    }
 
-   protected function getTargetItemtypeName(): string {
+   public function getTargetItemtypeName(): string {
       return Ticket::class;
    }
 

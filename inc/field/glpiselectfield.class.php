@@ -180,9 +180,7 @@ class GlpiselectField extends DropdownField
       $input['itemtype'] = $itemtype;
       $input['values'] = [];
       // Params for entity restrictables itemtypes
-      if ((new $itemtype)->isEntityAssign()) {
-         $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
-      }
+      $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       unset($input['entity_restrict']);
 
       $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
