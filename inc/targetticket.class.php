@@ -697,20 +697,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return true;
    }
 
-   public function post_addItem() {
-      parent::post_addItem();
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
-   }
-
-   public function post_updateItem($history = 1) {
-      parent::post_updateItem();
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
-   }
-
    /**
     * Save links to other items for composite tickets
     * @param array $input form data

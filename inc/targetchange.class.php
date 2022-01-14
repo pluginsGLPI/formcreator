@@ -627,20 +627,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return true;
    }
 
-   public function post_addItem() {
-      parent::post_addItem();
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
-   }
-
-   public function post_updateItem($history = 1) {
-      parent::post_updateItem();
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
-   }
-
    protected function getTargetTemplate(array $data): int {
       global $DB;
 

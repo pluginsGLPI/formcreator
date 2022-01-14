@@ -1799,6 +1799,7 @@ SCRIPT;
    }
 
    public function post_addItem() {
+      $this->updateConditions($this->input);
       if ($this->skipCreateActors) {
          return;
       }
@@ -1819,6 +1820,10 @@ SCRIPT;
          'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
          'use_notification'    => '1',
       ]);
+   }
+
+   public function post_updateItem($history = 1) {
+      $this->updateConditions($this->input);
    }
 
    protected static function getDeleteImage($id) {

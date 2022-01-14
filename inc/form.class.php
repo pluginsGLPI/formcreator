@@ -1099,9 +1099,7 @@ PluginFormcreatorTranslatableInterface
          ]);
       }
       $this->updateValidators();
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
+      $this->updateConditions($this->input);
       return true;
    }
 
@@ -1112,9 +1110,7 @@ PluginFormcreatorTranslatableInterface
     */
    public function post_updateItem($history = 1) {
       $this->updateValidators();
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
+      $this->updateConditions($this->input);
    }
 
    /**
