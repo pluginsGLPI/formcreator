@@ -662,18 +662,14 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function post_addItem() {
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
+      $this->updateConditions($this->input);
       if (!$this->skipChecks) {
          $this->updateParameters($this->input);
       }
    }
 
    public function post_updateItem($history = 1) {
-      if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $this->updateConditions($this->input);
-      }
+      $this->updateConditions($this->input);
       if (!$this->skipChecks) {
          $this->updateParameters($this->input);
       }
