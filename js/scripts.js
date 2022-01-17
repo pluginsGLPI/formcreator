@@ -715,16 +715,15 @@ var plugin_formcreator = new function() {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = form.find('[name="id"]').val();
       var that = this;
-      $.ajax({
+      $.post({
          url: formcreatorRootDoc + '/ajax/question_update.php',
-         type: "POST",
          data: form.serializeArray(),
-         dataType: 'html'
+         dataType: 'json'
       }).fail(function(data) {
          displayAjaxMessageAfterRedirect();
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
-         question.find('[data-field="name"]').text(data)
+         question.find('[data-field="name"]').text(data['name'])
          glpi_close_all_dialogs();
          that.resetTabs();
       });
@@ -872,13 +871,28 @@ var plugin_formcreator = new function() {
    };
 
    this.showQuestionForm = function (sectionId, questionId = 0) {
-      glpi_ajax_dialog({
+      var modalId = glpi_ajax_dialog({
          dialogclass: 'modal-xl',
          url: formcreatorRootDoc + '/ajax/question.php',
          params: {
             question_id: questionId,
             plugin_formcreator_sections_id: sectionId
          },
+         done: function () {
+            document.querySelector('#' + modalId + ' form[name="asset_form"]').addEventListener('submit', function(event) {
+               var idInput = event.target.querySelector('[name="id"]');
+               var questionId = null;
+               if (idInput) {
+                  questionId = idInput.getAttribute('value');
+               }
+               if (questionId === null) {
+                  plugin_formcreator.addQuestion(event);
+               } else {
+                  plugin_formcreator.editQuestion(event);
+               }
+               $('#' + modalId).modal('hide');
+            });
+         }
       });
    };
 
@@ -906,52 +920,76 @@ var plugin_formcreator = new function() {
    };
 
    this.showSectionForm = function (formId, sectionId = 0) {
-      glpi_ajax_dialog({
+      var modalId = glpi_ajax_dialog({
          dialogclass: 'modal-xl',
          url: formcreatorRootDoc + '/ajax/section.php',
+         autoShow: true,
          params: {
             section_id: sectionId,
             plugin_formcreator_forms_id: formId
          },
+         done: function () {
+            document.querySelector('#' + modalId + ' form[name="asset_form"]').addEventListener('submit', function(event) {
+               var idInput = event.target.querySelector('[name="id"]');
+               var sectionId = null;
+               if (idInput) {
+                  sectionId = idInput.getAttribute('value');
+               }
+               if (sectionId === null) {
+                  plugin_formcreator.addSection(event);
+               } else {
+                  plugin_formcreator.editSection(event);
+               }
+               $('#' + modalId).modal('hide');
+            });
+         }
       });
    }
 
-   this.addSection = function () {
-      var form = $('form[data-itemtype="PluginFormcreatorSection"]');
+   this.addSection = function (event) {
+      var form = event.target;
       var that = this;
-      $.ajax({
+      $.post({
          url: formcreatorRootDoc + '/ajax/section_add.php',
-         type: "POST",
-         data: form.serializeArray(),
-         dataType: 'html'
-      }).fail(function(data) {
-         alert(data.responseText);
-      }).done(function(data) {
+         processData: false,
+         contentType: false,
+         data: new FormData(form),
+         dataType: 'json'
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      }).done(function (data) {
          var addSectionRow = $('[data-itemtype="PluginFormcreatorForm"] li').last();
-         addSectionRow.before(data);
+         addSectionRow.before(data['html']);
          var sectionId = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last().attr('data-id');
          plugin_formcreator.initGridStack(sectionId);
          plugin_formcreator.updateSectionControls();
          that.resetTabs();
+      }).complete(function () {
+         var myModal = form.closest('div.modal');
+         $(myModal).modal('hide');
       });
-      glpi_close_all_dialogs();
+
    }
 
-   this.editSection = function () {
-      var form = $('form[data-itemtype="PluginFormcreatorSection"]');
-      var sectionId = form.find('[name="id"]').val();
+   this.editSection = function (event) {
+      var form = event.target;
+      var sectionId = form.querySelector('[name="id"]').value;
       var that = this;
-      $.ajax({
+      $.post({
          url: formcreatorRootDoc + '/ajax/section_update.php',
-         type: "POST",
-         data: form.serializeArray(),
-         dataType: 'html'
-      }).fail(function(data) {
-         alert(data.responseText);
-      }).done(function(data) {
+         processData: false,
+         contentType: false,
+         data: new FormData(form),
+         dataType: 'json'
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      }).done(function (data) {
          var section = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"]');
-         section.find('> [data-field="name"]').text(data);
+         section.find('> a [data-field="name"]').text(data['name']);
          that.resetTabs();
+      }).complete(function () {
+         var myModal = form.closest('div.modal');
+         $(myModal).modal('hide');
       });
    }
 
@@ -1109,6 +1147,31 @@ var plugin_formcreator = new function() {
       });
    }
 
+   this.changeActor = function(type, value) {
+      $('#block_' + type + '_user').hide();
+      $('#block_' + type + '_question_user').hide();
+      $('#block_' + type + '_group').hide();
+      $('#block_' + type + '_question_group').hide();
+      $('#block_' + type + '_group_from_object').hide();
+      $('#block_' + type + '_tech_group_from_object').hide();
+      $('#block_' + type + '_question_actors').hide();
+      $('#block_' + type + '_supplier').hide();
+      $('#block_' + type + '_question_supplier').hide();
+
+      // The numbers match PluginFormcreatorTarget_Actor::ACTOR_TYPE_* constants
+      switch (value) {
+         case '3' : $('#block_' + type + '_user').show();                   break;
+         case '4' : $('#block_' + type + '_question_user').show();          break;
+         case '5' : $('#block_' + type + '_group').show();                  break;
+         case '6' : $('#block_' + type + '_question_group').show();         break;
+         case '9' : $('#block_' + type + '_question_actors').show();        break;
+         case '7' : $('#block_' + type + '_supplier').show();               break;
+         case '8' : $('#block_' + type + '_question_supplier').show();      break;
+         case '10': $('#block_' + type + '_group_from_object').show();      break;
+         case '11': $('#block_' + type + '_tech_group_from_object').show(); break;
+      }
+   }
+
    this.updateWizardFormsView = function (item) {
       if (item) {
          this.activeCategory = item.getAttribute('data-category-id');
@@ -1191,17 +1254,6 @@ function plugin_formcreator_addTarget(items_id) {
       url: formcreatorRootDoc + '/ajax/target.php',
       params: {
          plugin_formcreator_forms_id: items_id
-      },
-   });
-}
-
-function plugin_formcreator_editTarget(itemtype, items_id) {
-   glpi_ajax_dialog({
-      dialogclass: 'modal-xl',
-      url: formcreatorRootDoc + '/ajax/target_edit.php',
-      params: {
-         itemtype: itemtype,
-         id: items_id
       },
    });
 }
@@ -1631,8 +1683,8 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
 }
 
 function plugin_formcreator_changeQuestionType(rand) {
-   var questionId = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
-   var questionType = $('form[name="form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
+   var questionId = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
+   var questionType = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 
    $.post({
       url: formcreatorRootDoc + '/ajax/question_design.php',

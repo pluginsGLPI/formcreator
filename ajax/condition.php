@@ -41,9 +41,13 @@ if (!is_subclass_of($_POST['itemtype'], PluginFormcreatorConditionnableInterface
     http_response_code(400);
     die();
 }
+/** @var CommonDBTM $parent */
+$parent = new $_POST['itemtype'];
+$parent->getEmpty();
+$parent->fields = array_intersect_key($_POST, $parent->fields);
 
 // get an empty condition HTML table row
 $condition = new PluginFormcreatorCondition();
 $condition->fields['itemtype'] = $_POST['itemtype'];
 $condition->fields['items_id'] = $_POST['items_id'];
-echo $condition->getConditionHtml();
+echo $condition->getConditionHtml($parent);

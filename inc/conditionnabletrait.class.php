@@ -111,17 +111,17 @@ trait PluginFormcreatorConditionnableTrait
    }
 
    public function updateConditions($input) : bool {
-      $input = $input['_conditions'];
-
       $itemtype = $this->getType();
       $itemId = $this->getID();
 
       // Delete all existing conditions for the question
       $this->deleteConditions();
-      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+      if ($this->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          // No condition ? Exit now !
          return true;
       }
+
+      $input = $input['_conditions'];
 
       // Arrays all have the same count and have at least one item
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
