@@ -708,7 +708,6 @@ var plugin_formcreator = new function() {
          );
          that.resetTabs();
       });
-      glpi_close_all_dialogs();
    }
 
    this.editQuestion = function () {
@@ -724,7 +723,6 @@ var plugin_formcreator = new function() {
       }).done(function(data) {
          var question = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorQuestion"][data-id="' + questionId + '"]');
          question.find('[data-field="name"]').text(data['name'])
-         glpi_close_all_dialogs();
          that.resetTabs();
       });
 
@@ -1683,7 +1681,7 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
 }
 
 function plugin_formcreator_changeQuestionType(rand) {
-   var questionId = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
+   var questionId = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val() || 0;
    var questionType = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 
    $.post({
