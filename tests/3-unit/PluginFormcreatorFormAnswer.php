@@ -650,7 +650,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          \Change::getType()  => 0,
          \Problem::getType() => 0,
       ];
-      foreach($output as $generatedTarget) {
+      foreach ($output as $generatedTarget) {
          $typeCount[$generatedTarget::getType()]++;
       }
       $this->array($typeCount)->isEqualTo([
