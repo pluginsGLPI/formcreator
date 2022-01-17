@@ -277,6 +277,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             'on_change'    => 'plugin_formcreator_toggleCondition(this);',
          ]
       );
+      echo "<div>&nbsp;</div>";
       echo '</div>';
       echo '</td>';
       echo '</tr>';
