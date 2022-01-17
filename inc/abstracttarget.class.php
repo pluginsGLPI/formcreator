@@ -839,15 +839,21 @@ PluginFormcreatorTranslatableInterface
             return false;
       }
 
-      $actorKey = array_search($userId, $actorType);
+      if ($userId > 0) {
+         // search duplicate account
+         $actorKey = array_search($userId, $actorType);
+      } else {
+         // search duplicate email
+         $actorKey = array_search($alternativeEmail, $actorTypeNotif['alternative_email']);
+      }
       if ($actorKey === false) {
          // Add the actor
-         $actorType[]                      = $userId;
+         $actorType[]                           = $userId;
          $actorTypeNotif['use_notification'][]  = ($notify == true);
          $actorTypeNotif['alternative_email'][] = $alternativeEmail;
       } else {
          // New actor settings takes precedence
-         $actorType[$actorKey] = $userId;
+         $actorType[$actorKey]                           = $userId;
          $actorTypeNotif['use_notification'][$actorKey]  = ($notify == true);
          $actorTypeNotif['alternative_email'][$actorKey] = $alternativeEmail;
       }
