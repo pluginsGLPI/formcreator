@@ -41,6 +41,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $usenotepad = true;
    public $usenotepadrights = true;
 
+   /**
+    * Generated targets after creation of a form answer
+    *
+    * @var array
+    */
    public $targetList = [];
 
    const SOPTION_ANSWER = 900000;
@@ -1027,6 +1032,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function post_addItem() {
+      global $DB;
+
       // Save questions answers
       $formAnswerId = $this->getID();
       $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
@@ -1050,21 +1057,22 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $this->sendNotification();
+      $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
             // TODO: find a way to validate the answers
-            // If the form is not being validated, nothing gives the power to anyone to validate the answers
-            $formAnswer = new self();
-            $formAnswer->update([
-               'id'     => $formAnswerId,
-               'status' => self::STATUS_WAITING,
-            ]);
+            // It the form is not being validated, nothing gives the power to anyone to validate the answers
+            $formAnswer->updateStatus(self::STATUS_WAITING);
             return;
          }
       }
       $this->createIssue();
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus !== null) {
+         $this->updateStatus($minimalStatus);
+      }
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }
 
@@ -1099,21 +1107,22 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
       $this->sendNotification();
+      $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
             // TODO: find a way to validate the answers
             // If the form is not being validated, nothing gives the power to anyone to validate the answers
-            $formAnswer = new self();
-            $formAnswer->update([
-               'id'     => $formAnswerId,
-               'status' => self::STATUS_WAITING,
-            ]);
+            $this->updateStatus(self::STATUS_WAITING);
             return;
          }
       }
       $this->updateIssue();
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus !== null) {
+         $this->updateStatus($minimalStatus);
+      }
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }
 
@@ -1301,16 +1310,27 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // when no item exist
       // or when several rows matches
       // Both are processed the same way
+      $ticketTable = Ticket::getTable();
+      $itemTicketTable = Item_Ticket::getTable();
+      $ticketFk = Ticket::getForeignKeyField();
       $rows = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => Item_Ticket::getTable(),
+         'SELECT' => ["$itemTicketTable.id", $ticketFk, 'status'],
+         'FROM'   => $itemTicketTable,
+         'INNER JOIN' => [
+            $ticketTable => [
+               'FKEY' => [
+                  $ticketTable => 'id',
+                  $itemTicketTable => $ticketFk,
+               ],
+            ],
+         ],
          'WHERE'  => [
             'itemtype' => PluginFormcreatorFormAnswer::class,
             'items_id' => $this->getID(),
          ]
       ]);
       if ($rows->count() != 1) {
-         // There are several tickets for this form answer
+         // There is no or several tickets for this form answer
          // The issue must be created from this form answer
          $issueName = $this->fields['name'] != '' ? addslashes($this->fields['name']) : '(' . $this->getID() . ')';
          $issue->add([
@@ -1384,9 +1404,20 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return;
       }
 
+      $ticketTable = Ticket::getTable();
+      $itemTicketTable = Item_Ticket::getTable();
+      $ticketFk = Ticket::getForeignKeyField();
       $rows = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => Item_Ticket::getTable(),
+         'SELECT' => ["$itemTicketTable.id", $ticketFk, 'status'],
+         'FROM'   => $itemTicketTable,
+         'INNER JOIN' => [
+            $ticketTable => [
+               'FKEY' => [
+                  $ticketTable => 'id',
+                  $itemTicketTable => $ticketFk,
+               ],
+            ],
+         ],
          'WHERE'  => [
             'itemtype' => PluginFormcreatorFormAnswer::class,
             'items_id' => $this->getID(),
@@ -1771,5 +1802,168 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // the form answers are waiting for validation
       return $this->getApprovers();
+   }
+
+   /**
+    * get all generated targets by the form answer
+    * populates the generated targets associated to the instance
+    *
+    * @return array An array of target itemtypes to track
+    */
+   public function getGeneratedTargets($itemtypes = []): array {
+      global $DB;
+
+      $targets = [];
+      if ($this->isNewItem()) {
+         return [];
+      }
+
+      if (count($itemtypes) < 1) {
+         $itemtypes = PluginFormcreatorForm::getTargetTypes();
+      } else {
+         $itemtypes = array_intersect(PluginFormcreatorForm::getTargetTypes(), $itemtypes);
+      }
+      /** @var PluginFormcreatorTargetInterface $targetType */
+      $this->targetList = [];
+      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
+         $targetItem = new $targetType();
+         $generatedType = $targetItem->getTargetItemtypeName();
+         $relationType = $targetItem->getItem_Item();
+         $relationTable = $relationType::getTable();
+         $generatedTypeFk = $generatedType::getForeignKeyField();
+         $generatedTypeTable = $generatedType::getTable();
+         $iterator = $DB->request([
+            'SELECT' => ["$generatedTypeTable.*"],
+            'FROM' => $generatedTypeTable,
+            'INNER JOIN' => [
+               $relationTable => [
+                  'FKEY' => [
+                     $generatedTypeTable => 'id',
+                     $relationTable => $generatedTypeFk,
+                  ],
+               ],
+            ],
+            'WHERE' => [
+               "$relationTable.itemtype" => self::getType(),
+               "$relationTable.items_id" => $this->getID(),
+            ],
+         ]);
+         foreach ($iterator as $row) {
+            /** @var $item CommonDBTM */
+            $item = new $generatedType();
+            $item->getFromResultSet($row);
+            $this->targetList[] = clone $item;
+            // skip not wanted itemtypes
+            if (!in_array($targetType, $itemtypes)) {
+               continue;
+            }
+            $targets[] = $item;
+         }
+      }
+
+      return $targets;
+   }
+
+   /**
+    * Get the lowest status among the associated tickets
+    *
+    * @return null|int
+    */
+   public function getAggregatedStatus(): ?int {
+      $generatedTargets = $this->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
+
+      $isWaiting = false;
+      $isAssigned = false;
+      $isProcessing = false;
+
+      // Find the minimal status of the first generated tickets in the array (deleted items excluded)
+      $generatedTarget = array_shift($generatedTargets);
+      while ($generatedTarget!== null && $generatedTarget->fields['is_deleted']) {
+         $generatedTarget = array_shift($generatedTargets);
+      }
+      if ($generatedTarget === null) {
+         // No target found, nothing to do
+         return null;
+      }
+
+      // Find status of the first ticket in the array
+      $aggregatedStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
+      if ($aggregatedStatus == CommonITILObject::ASSIGNED) {
+         $isAssigned = true;
+      }
+      if ($aggregatedStatus == CommonITILObject::PLANNED) {
+         $isProcessing = true;
+      }
+      if ($aggregatedStatus == CommonITILObject::WAITING) {
+         $isWaiting = true;
+      }
+
+      // Traverse all other tickets and set the minimal status
+      foreach ($generatedTargets as $generatedTarget) {
+         /** @var Ticket $generatedTarget  */
+         if ($generatedTarget::getType() != Ticket::getType()) {
+            continue;
+         }
+         if ($generatedTarget->isDeleted()) {
+            continue;
+         }
+         $ticketStatus = PluginFormcreatorCommon::getTicketStatusForIssue($generatedTarget);
+         if ($ticketStatus >= PluginFormcreatorFormAnswer::STATUS_WAITING) {
+            continue;
+         }
+
+         if ($ticketStatus == CommonITILObject::ASSIGNED) {
+            $isAssigned = true;
+         }
+         if ($ticketStatus == CommonITILObject::PLANNED) {
+            $isProcessing = true;
+         }
+         if ($ticketStatus == CommonITILObject::WAITING) {
+            $isWaiting = true;
+         }
+         $aggregatedStatus = min($aggregatedStatus, $ticketStatus);
+      }
+
+      // Assigned status takes precedence
+      if ($isAssigned) {
+         $aggregatedStatus = CommonITILObject::ASSIGNED;
+      }
+      // Planned status takes precedence
+      if ($isProcessing) {
+         $aggregatedStatus = CommonITILObject::PLANNED;
+      }
+      // Waiting status takes precedence to inform the requester his feedback is required
+      if ($isWaiting) {
+         $aggregatedStatus = CommonITILObject::WAITING;
+      }
+
+      return $aggregatedStatus;
+   }
+
+   /**
+    * update the status
+    *
+    * @param integer $status
+    * @return bool
+    */
+   public function updateStatus(int $status): bool {
+      global $DB;
+
+      $success = $DB->update(static::getTable(), [
+         'status' => $status,
+      ], [
+         'id' => $this->getID()
+      ]);
+      if (!$success) {
+         return false;
+      }
+      $this->fields['status'] = $status;
+
+      return $DB->update(PluginFormcreatorIssue::getTable(), [
+         'status' => $status,
+      ], [
+         'itemtype' => $this->getType(),
+         'items_id' => $this->getID(),
+      ]);
    }
 }

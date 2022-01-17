@@ -43,6 +43,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->fixInconsistency();
       $this->addTargetValidationSetting();
       $this->addFormVisibility();
+      $this->addDashboardVisibility();
    }
 
    public function addFormAnswerTitle() {
@@ -130,6 +131,13 @@ class PluginFormcreatorUpgradeTo2_13 {
    protected function addFormVisibility() {
       // Add is_visible on forms
       $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->addField($table, "is_visible", 'bool', ['value' => 1, 'after' => 'formanswer_name']);
+      $this->migration->addField($table, 'is_visible', 'bool', ['value' => 1, 'after' => 'formanswer_name']);
+   }
+
+   protected function addDashboardVisibility() {
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+      $this->migration->addField($table, 'is_dashboard_visible', 'integer', ['after' => 'is_search_visible', 'value' => '-2']);
+
+      $this->migration->addPostQuery("UPDATE glpi_plugin_formcreator_entityconfigs SET `is_dashboard_visible`=1 WHERE `id`=0");
    }
 }

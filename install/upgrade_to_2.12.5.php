@@ -28,18 +28,25 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_12_5 {
+   /** @var Migration */
+   protected $migration;
 
-if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
-}
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      global $DB;
 
-interface PluginFormcreatorTargetInterface
-{
-   public function save(PluginFormcreatorFormAnswer $formanswer);
+      $this->migration = $migration;
 
-   public function addAttachedDocument($documentId);
+      // Add users_id_recipient
+      $table = 'glpi_plugin_formcreator_issues';
+      $this->migration->addField($table, 'users_id_recipient', 'integer');
 
-   public function getTargetItemtypeName();
-
-   public function getItem_Item();
+      // Update issues
+      $this->migration->migrationOneTable($table);
+      $DB->query("TRUNCATE `$table`");
+      PluginFormcreatorIssue::syncIssues();
+   }
 }

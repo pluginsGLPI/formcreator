@@ -702,9 +702,6 @@ PluginFormcreatorTranslatableInterface
       echo '<div id="plugin_formcreator_wizard" class="card-group">';
 
       $this->showWizard();
-      // echo '</div>';
-
-      // echo '<div id="plugin_formcreator_lastForms"class="card-group" >';
       echo '<div id="plugin_formcreator_lastForms" class="d-flex flex-column ms-sm-2">';
       $this->showMyLastForms();
       echo '</div>';
@@ -720,7 +717,7 @@ PluginFormcreatorTranslatableInterface
    public function showWizard() : void {
       echo '<div id="plugin_formcreator_wizard_categories" class="card">';
       echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div><a href="#" id="wizard_seeall">' . __('see all', 'formcreator') . '</a></div>';
+      echo '<div><a href="#" id="wizard_seeall"><i class="fas fa-home"></i></a></div>';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right" class="card">';
@@ -741,13 +738,13 @@ PluginFormcreatorTranslatableInterface
       echo '<span class="radios">';
       $sortOrder = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', Session::getActiveEntity());
       $selected = $sortOrder == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
-      echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.'/>';
+      echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_mostPopular">&nbsp;'.$sortSettings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] .'</label>';
       echo '</span>';
       echo '&nbsp;';
       echo '<span class="radios">';
       $selected = $sortOrder == PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL ? 'checked="checked"' : '';
-      echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.'/>';
+      echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_alphabetic">&nbsp;'.$sortSettings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL].'</label>';
       echo '</span>';
       echo '</div>';
@@ -1332,6 +1329,13 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    public function post_addItem() {
+      if (isset($this->input['_create_empty_section'])) {
+         $section = new PluginFormcreatorSection();
+         $section->add([
+            self::getForeignKeyField() => $this->getID(),
+            'name' => PluginFormcreatorSection::getTypeName(1),
+         ]);
+      }
       $this->updateValidators();
       if ($this->input['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $this->updateConditions($this->input);

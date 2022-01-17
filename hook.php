@@ -166,6 +166,8 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          // condition where current user is a validator of a issue of type ticket
          $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
+         // Add users_id_recipient
+         $condition .= " OR `users_id_recipient` = $currentUser ";
          return "($condition)";
       break;
 
@@ -326,6 +328,11 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       return;
    }
 
+   if (isset($item->input['items_id'][PluginFormcreatorFormAnswer::getType()])) {
+      // the ticket is associated to a form answer
+      return;
+   }
+
    $requester = $DB->request([
       'SELECT' => 'users_id',
       'FROM' => Ticket_User::getTable(),
@@ -377,70 +384,149 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'items_id'  => $id
       ]
    ]);
-   $issue->update([
-      'id'                 => $issue->getID(),
-      'items_id'           => $id,
-      'display_id'         => "t_$id",
-      'itemtype'           => 'Ticket',
-      'name'               => $issueName,
-      'status'             => $validationStatus,
-      'date_creation'      => $item->fields['date'],
-      'date_mod'           => $item->fields['date_mod'],
-      'entities_id'        => $item->fields['entities_id'],
-      'is_recursive'       => '0',
-      'requester_id'       => $item->fields['users_id_recipient'],
-      'comment'            => addslashes($item->fields['content']),
+   if (!$issue->isNewItem()) {
+      $issue->update([
+         'id'                 => $issue->getID(),
+         'items_id'           => $id,
+         'display_id'         => "t_$id",
+         'itemtype'           => 'Ticket',
+         'name'               => $issueName,
+         'status'             => $validationStatus,
+         'date_creation'      => $item->fields['date'],
+         'date_mod'           => $item->fields['date_mod'],
+         'entities_id'        => $item->fields['entities_id'],
+         'is_recursive'       => '0',
+         'requester_id'       => $item->fields['users_id_recipient'],
+         'comment'            => addslashes($item->fields['content']),
+      ]);
+      return;
+   }
+
+   // No issue linked to the ticket,
+   // then find the form answer linked to the ticket
+   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer->getFromDBByCrit([
+      'id' => new QuerySubQuery([
+         'SELECT' => 'items_id',
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => PluginFormcreatorFormAnswer::getType(),
+            'tickets_id' => $id,
+         ]
+      ])
    ]);
+   if ($formAnswer->isNewItem()) {
+      // Should not happen as one and only one form answer shall be linked to a ticket
+      // If several formanswer found, the previous getFromDBByCrit() logs an error
+      return;
+   }
+
+   // set the minimal status to the form answer (which will forward the status to the issue)
+   $minimalStatus = $formAnswer->getAggregatedStatus();
+   if ($minimalStatus === null) {
+      return;
+   }
+   $formAnswer->updateStatus($minimalStatus);
 }
 
 function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
-   global $DB;
-
    if (!($item instanceof Ticket)) {
       return;
    }
 
    $id = $item->getID();
 
-   // mark formanswers as deleted
-   $iterator = $DB->request([
-      'SELECT' => ['id'],
-      'FROM'   => Item_Ticket::getTable(),
-      'WHERE'  => [
-         'itemtype'   => PluginFormcreatorFormAnswer::class,
-         'tickets_id' => $id,
-      ]
+   // find a formanswer linked to the ticket
+   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer->getFromDBByCrit([
+      'id' => new QuerySubQuery([
+         'SELECT' => 'items_id',
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => PluginFormcreatorFormAnswer::getType(),
+            'tickets_id' => $id,
+         ]
+      ])
    ]);
-   foreach ($iterator as $row) {
-      $form_answer = PluginFormcreatorCommon::getFormAnswer();
-      $form_answer->update([
-         'id'           => $row['id'],
-         'is_deleted'   => 1,
-      ]);
+   if (!$formAnswer->isNewItem()) {
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus === null) {
+         // There is no more ticket in the form anwer
+         $formAnswer->updateStatus(CommonITILObject::CLOSED);
+      } else {
+         $formAnswer->updateStatus($minimalStatus);
+      }
+      return;
    }
 
    // delete issue
+   // TODO: add is_deleted column to issue ?
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
-      'display_id'   => "t_$id",
-      'itemtype' => Ticket::class
+      'items_id' => $id,
+      'itemtype' => 'Ticket'
    ], 1);
 }
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
-   plugin_formcreator_hook_add_ticket($item);
+   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer->getFromDBByCrit([
+      'id' => new QuerySubQuery([
+         'SELECT' => 'items_id',
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => PluginFormcreatorFormAnswer::getType(),
+            'tickets_id' => $item->getID(),
+         ]
+      ])
+   ]);
+   if ($formAnswer->isNewItem()) {
+      plugin_formcreator_hook_add_ticket($item);
+      return;
+   }
+
+   $minimalStatus = $formAnswer->getAggregatedStatus();
+   if ($minimalStatus !== null) {
+      $formAnswer->updateStatus($minimalStatus);
+   }
 }
 
 function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
-   if ($item instanceof Ticket) {
-      $id = $item->getID();
-
-      $issue = new PluginFormcreatorIssue();
-      $issue->deleteByCriteria([
-         'display_id'   => "t_$id",
-         'itemtype' => Ticket::class
-      ], 1);
+   if (!($item instanceof Ticket)) {
+      return;
    }
+
+   $id = $item->getID();
+
+   // Update status of form answer, if any
+   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer->getFromDBByCrit([
+      'id' => new QuerySubQuery([
+         'SELECT' => 'items_id',
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype' => PluginFormcreatorFormAnswer::getType(),
+            'tickets_id' => $id,
+         ]
+      ])
+   ]);
+   if (!$formAnswer->isNewItem()) {
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus === null) {
+         // There is no more ticket in the form anwer
+         $formAnswer->updateStatus(CommonITILObject::CLOSED);
+      } else {
+         $formAnswer->updateStatus($minimalStatus);
+      }
+      return;
+   }
+
+   // delete issue if any
+   $issue = new PluginFormcreatorIssue();
+   $issue->deleteByCriteria([
+      'items_id' => $id,
+      'itemtype' => Ticket::getType()
+   ], 1);
 }
 
 function plugin_formcreator_hook_pre_purge_targetTicket(CommonDBTM $item) {

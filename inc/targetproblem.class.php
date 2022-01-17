@@ -53,11 +53,11 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
       return new Problem_Supplier();
    }
 
-   protected function getItem_Item() {
+   public function getItem_Item() {
       return new Item_Problem();
    }
 
-   protected function getTargetItemtypeName(): string {
+   public function getTargetItemtypeName(): string {
       return Problem::class;
    }
 

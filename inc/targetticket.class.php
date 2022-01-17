@@ -64,11 +64,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return new Supplier_Ticket();
    }
 
-   protected function getItem_Item() {
+   public function getItem_Item() {
       return new Item_Ticket();
    }
 
-   protected function getTargetItemtypeName(): string {
+   public function getTargetItemtypeName(): string {
       return Ticket::class;
    }
 
@@ -893,7 +893,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
 
    public function getDefaultData(PluginFormcreatorFormAnswer $formanswer): array {
       $data = parent::getDefaultData($formanswer);
-      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       return $data;
    }
@@ -909,6 +908,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $ticket  = new Ticket();
       $form = $formanswer->getForm();
       $data = $this->getDefaultData($formanswer);
+      $data['requesttypes_id'] = $data['requesttypes_id'] ?? PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
