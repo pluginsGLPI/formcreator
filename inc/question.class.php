@@ -912,7 +912,9 @@ PluginFormcreatorTranslatableInterface
 
       echo '<tr>';
       echo '<td colspan="4" class="center">';
-      echo Html::hidden('id', ['value' => $ID]);
+      if ($ID > 0) {
+         echo Html::hidden('id', ['value' => $ID]);
+      }
       echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
       echo '</td>';
       echo '</tr>';
