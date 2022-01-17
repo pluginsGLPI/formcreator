@@ -739,8 +739,11 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showForm($ID, $options = []) {
+      // $options['candel'] = false;
+      // $options['formoptions'] = sprintf('data-itemtype="%s"', self::getType());
       // TemplateRenderer::getInstance()->display('@formcreator/pages/question.html.twig', [
       //    'item' => $this,
+      //    'params' => $options,
       // ]);
       // return true;
 
@@ -753,9 +756,9 @@ PluginFormcreatorTranslatableInterface
       }
 
       $rand = mt_rand();
-      echo '<form name="form"'
+      echo '<form name="asset_form"'
       . ' method="post"'
-      . ' action="javascript:' . $action . '"'
+      . ' action="javascript:;"'
       . ' data-itemtype="' . self::class . '"'
       . '>';
       echo '<table class="tab_cadre_fixe">';

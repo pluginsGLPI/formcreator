@@ -29,7 +29,7 @@
  #}
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
-<div class="col-12 col-xxl-12 flex-column">
+<div class="col-12 col-xxl-12 flex-column" data-itemtype="PluginFormcreatorCondition">
     <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
         <div class="row flex-row align-items-start flex-grow-1">
             <div class="row flex-row">
@@ -55,7 +55,7 @@
                     'rand': random(),
                     'width': '100%',
                 } %}
-                {% set parent = get_item(condition.fields['itemtype'], condition.fields['items_id']) %}
+                {# {% set parent = get_item(condition.fields['itemtype'], condition.fields['items_id']) %} #}
                 {% set excludeQuestions = call('PluginFormcreatorCondition::getQuestionsExclusion', [parent]) %}
                 {% set form = call('PluginFormcreatorForm::getByItem', [parent]) %}
                 {% set field %}

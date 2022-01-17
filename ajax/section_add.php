@@ -35,13 +35,13 @@ Session::checkRight('entity', UPDATE);
 $section = new PluginFormcreatorSection();
 if (!$section->canCreate()) {
     http_response_code(403);
-    echo __('You don\'t have right for this action', 'formcreator');
+    Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);
     exit;
 }
 
 if (!$section->add($_REQUEST)) {
     http_response_code(500);
-    echo __('Could not add the section', 'formcreator');
+    Session::addMessageAfterRedirect(__('Could not add the section', 'formcreator'), false, ERROR);
     exit;
 }
-echo $section->getDesignHtml();
+echo json_encode(['id' => $section->getID(), 'html' => $section->getDesignHtml()], JSON_UNESCAPED_UNICODE);

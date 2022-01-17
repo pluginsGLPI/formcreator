@@ -64,6 +64,7 @@
                     {{ fields.smallTitle('Condition to show the section') }}
 
                     {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'full_width': true, 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
+                    {% set parent = item %}
                     {% set conditions = call('PluginFormcreatorCondition::getConditionsFromItem', [item]) %}
                     {% for condition in conditions %}
                         {{ include('@formcreator/components/form/condition.html.twig') }}

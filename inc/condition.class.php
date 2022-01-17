@@ -290,7 +290,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       $conditions = self::getConditionsFromItem($item);
       foreach ($conditions as $condition) {
          echo '<tr><td colspan="4">';
-         echo $condition->getConditionHtml();
+         echo $condition->getConditionHtml($item);
          echo '</td></tr>';
       }
    }
@@ -301,7 +301,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     * @param PluginFormcreatorConditionnableInterface $item
     * @return void
     */
-   public static function getQuestionsExclusion(PluginFormcreatorConditionnableInterface $item) {
+   public static function getQuestionsExclusion(?PluginFormcreatorConditionnableInterface $item) {
+      if ($item === null) {
+         return [];
+      }
+
       /** @var CommonDBTM $item */
       $itemtype = $item->getType();
       switch ($itemtype) {
@@ -349,8 +353,8 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
     *
     * @return string HTML to insert in a rendered web page
     */
-   public function getConditionHtml(): string {
-      $itemtype       = $this->fields['itemtype'];
+   public function getConditionHtml(CommonDBTM $parent): string {
+      $itemtype = $parent->getType();
       if (!is_subclass_of($itemtype, PluginFormcreatorConditionnableInterface::class)) {
          // security check
          throw new RuntimeException("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
@@ -358,6 +362,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
 
       $out = TemplateRenderer::getInstance()->render('@formcreator/components/form/condition.html.twig', [
          'condition' => $this,
+         'parent'    => $parent
       ]);
 
       return $out;
