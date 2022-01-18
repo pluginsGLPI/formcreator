@@ -1424,7 +1424,10 @@ SCRIPT;
          ];
       }
 
-      echo '<table class="tab_cadre_fixe">';
+      echo '<table class="tab_cadre_fixe" '
+      . ' data-itemtype="' . $this->getType() . '"'
+      . ' data-id="' . $this->getID() . '"'
+      . '>';
 
       echo '<tr><th class="center" colspan="3">' . __('Actors', 'formcreator') . '</th></tr>';
 
@@ -1828,7 +1831,10 @@ SCRIPT;
 
    protected function getDeleteImage($id) {
       $formUrl = static::getFormURL();
-      $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '&id=' . $this->getID() . '">';
+      // $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '&id=' . $this->getID() . '">';
+      // $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
+      // $link .= '</a>';
+      $link = '<a onclick="plugin_formcreator.deleteActor(this)">';
       $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
       $link .= '</a>';
       return $link;
@@ -2054,8 +2060,11 @@ SCRIPT;
       }
 
       echo '<td valign="top">';
-      echo '<form name="form_target" id="form_add_' . $type . '" method="post" style="display:none" action="'
-           . static::getFormURL() . '">';
+      echo '<form name="form_target"'
+      . ' id="form_add_' . $type . '"'
+      . ' style="display:none"'
+      . 'action="javascript:;"'
+      . '">';
       Dropdown::showFromArray(
          'actor_type',
          $dropdownItems, [
@@ -2291,9 +2300,8 @@ SCRIPT;
       echo '</div>';
 
       echo '<p align="center">';
-      echo Html::hidden('id', ['value' => $this->getID()]);
       echo Html::hidden('actor_role', ['value' => $actorRole]);
-      echo Html::submit(_x('button', 'Save'), ['name' => 'update_actors', 'value' => __('Add')]);
+      echo Html::submit(_x('button', 'Save'), ['name' => 'update_actors', 'value' => __('Add'), 'onclick' => 'plugin_formcreator.addActor(this)']);
       echo '</p>';
 
       echo "<hr>";
@@ -2307,7 +2315,7 @@ SCRIPT;
       $img_nomail   = '<i class="fas fa-envelope pointer" title="' . __('Email followup') . ' ' . __('No') . '" width="20"></i>';
 
       foreach ($actors[$actorRole] as $id => $values) {
-         echo '<div>';
+         echo '<div data-itemtype="PluginFormcreatorTarget_Actor" data-id="' . $id . '">';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR :
                echo $img_user . ' <b>' . __('Form author', 'formcreator') . '</b>';

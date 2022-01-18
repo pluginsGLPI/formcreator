@@ -1242,6 +1242,41 @@ var plugin_formcreator = new function() {
          case '11': $('#block_' + type + '_tech_group_from_object').show(); break;
       }
    }
+
+   this.deleteActor = function (item) {
+      var item = item.closest('div[data-itemtype="PluginFormcreatorTarget_Actor"][data-id]');
+      var id = item.getAttribute('data-id');
+      $.post({
+         url: formcreatorRootDoc + '/ajax/target_actor.php',
+         data: {
+            action: 'delete',
+            id: id
+         }
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      }).success(function () {
+         reloadTab();
+      });
+   }
+
+   this.addActor = function (item) {
+      var form = item.closest('form');
+      var target = form.closest('[data-itemtype][data-id]');
+      var data = new FormData(form);
+      data.append('action', 'add');
+      data.append('itemtype', target.getAttribute('data-itemtype'));
+      data.append('items_id', target.getAttribute('data-id'));
+      $.post({
+         url: formcreatorRootDoc + '/ajax/target_actor.php',
+         processData: false,
+         contentType: false,
+         data: data
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      }).success(function () {
+         reloadTab();
+      });
+   }
 }
 
 // === TARGETS ===
