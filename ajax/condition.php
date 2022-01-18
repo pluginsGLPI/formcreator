@@ -34,25 +34,25 @@ Session::checkRight('entity', UPDATE);
 
 // integrity check
 if (!isset($_POST['itemtype']) || !isset($_POST['items_id'])) {
-    http_response_code(400);
-    die();
+   http_response_code(400);
+   die();
 }
 if (!is_subclass_of($_POST['itemtype'], PluginFormcreatorConditionnableInterface::class)) {
-    http_response_code(400);
-    die();
+   http_response_code(400);
+   die();
 }
 
 // Build an empty item or load it from DB
 /** @var CommonDBTM $parent */
 $parent = new $_POST['itemtype'];
 if ($parent::isNewID((int) $_POST['items_id'])) {
-    $parent->getEmpty();
-    $parent->fields = array_intersect_key($_POST, $parent->fields);
+   $parent->getEmpty();
+   $parent->fields = array_intersect_key($_POST, $parent->fields);
 } else {
-    if (!$parent->getFromDB((int) $_POST['items_id'])) {
-        http_response_code(404);
-        die();
-    }
+   if (!$parent->getFromDB((int) $_POST['items_id'])) {
+      http_response_code(404);
+      die();
+   }
 }
 
 // get an empty condition HTML table row

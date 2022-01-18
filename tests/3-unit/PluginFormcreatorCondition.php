@@ -35,7 +35,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
 
-      self::login('glpi', 'glpi');
+      $this->login('glpi', 'glpi');
    }
 
    public function testGetEnumShowLogic() {
@@ -144,11 +144,9 @@ class PluginFormcreatorCondition extends CommonTestCase {
       ]);
       $question2 = $this->getQuestion([
          'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $question2->updateConditions([
          'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions' => [
-            'id' => $question2->getID(),
+            // 'id' => $question2->getID(),
             'plugin_formcreator_questions_id' => [
                $question1->getID(),
             ],

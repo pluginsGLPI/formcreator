@@ -108,14 +108,14 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             }
             break;
 
-            case self::ACTOR_TYPE_QUESTION_PERSON:
-            case self::ACTOR_TYPE_QUESTION_GROUP:
-            case self::ACTOR_TYPE_QUESTION_ACTORS:
-               if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
-                  Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
-                  return false;
-               }
-               break;
+         case self::ACTOR_TYPE_QUESTION_PERSON:
+         case self::ACTOR_TYPE_QUESTION_GROUP:
+         case self::ACTOR_TYPE_QUESTION_ACTORS:
+            if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
+               Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+               return false;
+            }
+            break;
 
       }
 
