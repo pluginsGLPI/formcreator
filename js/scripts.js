@@ -1507,7 +1507,8 @@ function plugin_formcreator_addEmptyCondition(target) {
    var form     = target.closest('form[data-itemtype]');
    var itemtype = form.getAttribute('data-itemtype');
    // value of the hidden id input field
-   var id       = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : 0;
+   // var id       = form.querySelector('[name="id"]') ? form.querySelector('[name="id"]').value : 0;
+   var id       = form.getAttribute('data-id') || null;
    var data     = new FormData(form);
    data.append('itemtype', itemtype);
    data.append('items_id', id);

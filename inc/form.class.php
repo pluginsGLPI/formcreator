@@ -1962,7 +1962,7 @@ PluginFormcreatorTranslatableInterface
     * @param CommonDBTM $item
     * @return null|self
     */
-   public static function getByItem(CommonDBTM $item): ?self {
+   public static function getByItem( $item): ?self {
       global $DB;
 
       if ($item::getType() == self::getType()) {
