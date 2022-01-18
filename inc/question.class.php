@@ -179,7 +179,7 @@ PluginFormcreatorTranslatableInterface
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       $options = [
          'candel'      => false,
-         'formoptions' => sprintf('data-itemtype="%s"', $item::getType()),
+         'formoptions' => sprintf('data-itemtype="%s" data-id="%s"', $item::getType(), $item->getID()),
       ];
       TemplateRenderer::getInstance()->display('@formcreator/pages/question_for_form.html.twig', [
          'item'   => $item,
@@ -760,6 +760,7 @@ PluginFormcreatorTranslatableInterface
       . ' method="post"'
       . ' action="javascript:;"'
       . ' data-itemtype="' . self::class . '"'
+      . ' data-id="' . $ID . '"'
       . '>';
       echo '<table class="tab_cadre_fixe">';
 

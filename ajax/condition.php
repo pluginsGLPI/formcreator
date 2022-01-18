@@ -41,13 +41,22 @@ if (!is_subclass_of($_POST['itemtype'], PluginFormcreatorConditionnableInterface
     http_response_code(400);
     die();
 }
+
+// Build an empty item or load it from DB
 /** @var CommonDBTM $parent */
 $parent = new $_POST['itemtype'];
-$parent->getEmpty();
-$parent->fields = array_intersect_key($_POST, $parent->fields);
+if ($parent::isNewID((int) $_POST['items_id'])) {
+    $parent->getEmpty();
+    $parent->fields = array_intersect_key($_POST, $parent->fields);
+} else {
+    if (!$parent->getFromDB((int) $_POST['items_id'])) {
+        http_response_code(404);
+        die();
+    }
+}
 
 // get an empty condition HTML table row
 $condition = new PluginFormcreatorCondition();
 $condition->fields['itemtype'] = $_POST['itemtype'];
-$condition->fields['items_id'] = $_POST['items_id'];
+$condition->fields['items_id'] = (int) $_POST['items_id'];
 echo $condition->getConditionHtml($parent);

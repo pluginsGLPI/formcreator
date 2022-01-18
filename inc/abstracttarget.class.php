@@ -2525,10 +2525,11 @@ SCRIPT;
       $options = [];
       $item->initForm($item->getID(), $options);
       $options['candel'] = false;
-      $options['formoptions'] = sprintf('data-itemtype="%s"', self::getType());
+      $options['formoptions'] = sprintf('data-itemtype="%s" data-id="%s"', self::getType(), $item->getID());
       TemplateRenderer::getInstance()->display('@formcreator/pages/condition_for_item.html.twig', [
          'item'   => $item,
          'params' => $options,
+         'parent' => $item,
       ]);
       return true;
    }
