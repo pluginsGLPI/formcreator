@@ -92,11 +92,18 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
    }
 
    public function prepareInputForAdd($input) {
-
-      $requiredKeys = ['itemtype', 'items_id', 'actor_role', 'actor_type', 'use_notification'];
+      $requiredKeys = ['itemtype', 'items_id', 'actor_role', 'actor_type'];
       if (count(array_intersect(array_keys($input), $requiredKeys)) < count($requiredKeys)) {
          Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
          return false;
+      }
+
+      $input['actor_value'] = $input['actor_value_' . $input['actor_type']] ?? null;
+
+      if (isset($input['use_notification'])) {
+         $input['use_notification'] = ($input['use_notification'] == 0) ? 0 : 1;
+      } else {
+         $input['use_notification'] = 0;
       }
 
       switch ($input['actor_type']) {
