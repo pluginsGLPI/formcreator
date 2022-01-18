@@ -1826,9 +1826,9 @@ SCRIPT;
       $this->updateConditions($this->input);
    }
 
-   protected static function getDeleteImage($id) {
+   protected function getDeleteImage($id) {
       $formUrl = static::getFormURL();
-      $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '">';
+      $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '&id=' . $this->getID() . '">';
       $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
       $link .= '</a>';
       return $link;
@@ -2371,7 +2371,7 @@ SCRIPT;
                break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
-         echo self::getDeleteImage($id);
+         echo $this->getDeleteImage($id);
          echo '</div>';
       }
 
