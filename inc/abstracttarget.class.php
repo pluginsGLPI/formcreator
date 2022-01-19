@@ -994,7 +994,7 @@ PluginFormcreatorTranslatableInterface
       }
       // List questions
       if ($this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_ANSWER
-            && $this->fields['due_date_rule'] != 'calcul') {
+            && $this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_CALC) {
          echo '<div id="due_date_questions" style="display:none">';
       } else {
          echo '<div id="due_date_questions">';
@@ -1009,8 +1009,9 @@ PluginFormcreatorTranslatableInterface
       );
       echo '</div>';
 
-      if ($this->fields['due_date_rule'] != '2'
-            && $this->fields['due_date_rule'] != '3') {
+      // time shift in minutes
+      if ($this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_TICKET
+            && $this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_CALC) {
          echo '<div id="due_date_time" style="display:none">';
       } else {
          echo '<div id="due_date_time">';
