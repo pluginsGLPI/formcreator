@@ -334,7 +334,7 @@ PluginFormcreatorTranslatableInterface
             return Dropdown::showLanguages($name, [
                'value'               => $values[$field],
                'display_emptychoice' => true,
-               'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
+               'emptylabel'          => '--- ' . __('All languages', 'formcreator') . ' ---',
                'display'             => false
             ]);
             break;
