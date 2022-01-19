@@ -87,7 +87,7 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                        {% if not options.anonymous or question.getSubField().isAnonymousFormCompatible() %}
+                        {% if options.anonymous or question.getSubField().isAnonymousFormCompatible() %}
                             {% set sessionData = session('formcreator') %}
                             {{ question.getRenderedHtml(domain, true, sessionData.data)|raw }}
                         {% endif %}
