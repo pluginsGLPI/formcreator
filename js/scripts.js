@@ -1118,12 +1118,9 @@ var plugin_formcreator = new function() {
    this.showTranslationEditor = function (object) {
       var formlanguageId = $(object).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
       var plugin_formcreator_translations_id = $(object).find('input[name="id"]').val();
-      $.post({
-         url: formcreatorRootDoc + '/ajax/edit_translation.php',
-         data: {
-            plugin_formcreator_form_languages_id: formlanguageId,
-            plugin_formcreator_translations_id: ''
-         }
+      $('#plugin_formcreator_editTranslation').load(formcreatorRootDoc + '/ajax/edit_translation.php', {
+         plugin_formcreator_form_languages_id: formlanguageId,
+         plugin_formcreator_translations_id: ''
       });
    }
 
