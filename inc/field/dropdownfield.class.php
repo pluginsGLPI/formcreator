@@ -254,6 +254,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             $dparams['right'] = 'all';
             $currentEntity = Session::getActiveEntity();
             $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
+            $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
             switch ($decodedValues['entity_restrict']) {
                case self::ENTITY_RESTRICT_FORM:
                   $form = new PluginFormcreatorForm();
