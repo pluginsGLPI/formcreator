@@ -43,9 +43,9 @@ if (isset($_POST['profiles_id']) && isset($_POST[$formFk])) {
    if (isset($_POST['access_rights'])) {
       $form = PluginFormcreatorCommon::getForm();
       $form->update([
-         'id'            => (int) $_POST[$formFk],
-         'access_rights' => (int) $_POST['access_rights'],
-         'is_captcha_enabled' => $_POST['is_captcha_enabled'],
+         'id'                 => (int) $_POST[$formFk],
+         'access_rights'      => (int) $_POST['access_rights'],
+         'is_captcha_enabled' => $_POST['is_captcha_enabled'] ?? false,
       ]);
    }
 
