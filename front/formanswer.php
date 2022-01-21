@@ -40,16 +40,15 @@ if (!PluginFormcreatorFormAnswer::canView()) {
    Html::displayRightError();
 }
 
-if (Session::getCurrentInterface() == "helpdesk") {
+if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
    Html::header(__('Service catalog', 'formcreator'));
 }
 
-
 Search::show(PluginFormcreatorCommon::getFormanswerItemtype());
 
-if (Session::getCurrentInterface() == "helpdesk") {
+if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpFooter();
 } else {
    Html::footer();
