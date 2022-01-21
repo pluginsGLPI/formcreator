@@ -1467,6 +1467,7 @@ PluginFormcreatorTranslatableInterface
       $this->updateValidators();
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
+      }
 
       if (count($this->updates) < 1) {
          // When updating conditions in the questions tab, need to clear saved inputs
