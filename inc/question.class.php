@@ -184,6 +184,7 @@ PluginFormcreatorTranslatableInterface
       TemplateRenderer::getInstance()->display('@formcreator/pages/question_for_form.html.twig', [
          'item'   => $item,
          'params' => $options,
+         'parent' => $item,
       ]);
 
       return true;
