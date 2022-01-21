@@ -159,6 +159,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             case self::ACTOR_TYPE_QUESTION_PERSON :
             case self::ACTOR_TYPE_QUESTION_GROUP :
             case self::ACTOR_TYPE_QUESTION_SUPPLIER :
+            case self::ACTOR_TYPE_QUESTION_ACTORS :
             case self::ACTOR_TYPE_GROUP_FROM_OBJECT :
             case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
                /** @var PluginFormcreatorQuestion $question */
@@ -248,7 +249,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          switch ($target_actor['actor_type']) {
             case self::ACTOR_TYPE_QUESTION_PERSON:
             case self::ACTOR_TYPE_QUESTION_GROUP:
-            case self::ACTOR_TYPE_SUPPLIER:
+            case self::ACTOR_TYPE_QUESTION_SUPPLIER:
             case self::ACTOR_TYPE_QUESTION_ACTORS:
             case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
             case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
