@@ -71,7 +71,7 @@ if (!$formanswer->checkEntity()) {
    Html::displayRightError();
 }
 
-if (Session::getCurrentInterface() == "helpdesk") {
+if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
    Html::header(__('Service catalog', 'formcreator'));
@@ -80,7 +80,7 @@ if (Session::getCurrentInterface() == "helpdesk") {
 
 $formanswer->display($_REQUEST);
 
-if (Session::getCurrentInterface() == "helpdesk") {
+if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpFooter();
 } else {
    Html::footer();
