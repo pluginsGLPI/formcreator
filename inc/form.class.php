@@ -1111,6 +1111,13 @@ PluginFormcreatorTranslatableInterface
    public function post_updateItem($history = 1) {
       $this->updateValidators();
       $this->updateConditions($this->input);
+
+      if (count($this->updates) < 1) {
+         // When updating conditions in the questions tab, need to clear saved inputs
+         // because no data changed in the form itself, and GLPI does not clears the input
+         // saved in the session
+         $this->clearSavedInput();
+      }
    }
 
    /**
