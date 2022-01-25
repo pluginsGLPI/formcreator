@@ -212,7 +212,7 @@ class GlpiselectField extends DropdownField
 
    public function equals($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtypeForValues($this->question->fields['values']);
+      $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if ($item->isNewId($this->value)) {
          return ($value === '');
@@ -229,7 +229,7 @@ class GlpiselectField extends DropdownField
 
    public function greaterThan($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtypeForValues($this->question->fields['values']);
+      $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
          throw new ComparisonException('Item not found for comparison');

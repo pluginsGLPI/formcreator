@@ -915,22 +915,6 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    /**
-    * Get the itemtype of the item to show for the given values
-    *
-    * @param string $values json or raw string
-    *
-    * @return string
-    */
-   public static function getSubItemtypeForValues($values) {
-      $decodedValues = json_decode($values, JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues === null) {
-         return $values;
-      }
-
-      return $decodedValues['itemtype'];
-   }
-
-   /**
     * get HTML code to show entity restriction policy
     * @return string HTML code
     */
