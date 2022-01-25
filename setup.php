@@ -393,6 +393,8 @@ function plugin_formcreator_registerClasses() {
 }
 
 function plugin_formcreator_redirect() {
+   global $CFG_GLPI;
+
    if (!isset($_SESSION['glpiactiveentities_string'])) {
       return;
    }
@@ -422,9 +424,15 @@ function plugin_formcreator_redirect() {
          if (isset($_GET['_openfollowup'])) {
             $openItilFollowup = '&_openfollowup=1';
          }
-         parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
-         if (isset($decodedUrl['forcetab'])) {
-            Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
+         if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $decodedUrl);
+            if (isset($decodedUrl['forcetab'])) {
+               Session::setActiveTab(Ticket::class, $decodedUrl['forcetab']);
+            }
+         }
+         if (!isset($_GET['id'])) {
+            // invalid url
+            Html::redirect($CFG_GLPI["root_doc"]);
          }
 
          // When an ticket has a matching issue (it means that the ticket is the only generated ticket)
