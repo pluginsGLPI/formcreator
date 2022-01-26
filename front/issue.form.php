@@ -48,15 +48,6 @@ if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
    Html::redirect($itemtype::getFormURLWithID($id));
 }
 
-// Show issue only if service catalog is enabled
-if (!plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
-}
-
-// force layout of glpi
-PluginFormcreatorCommon::saveLayout();
-$_SESSION['glpilayout'] = "lefttab";
-
 /** @var PluginFormcreatorIssue $issue */
 $issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
 
@@ -91,7 +82,6 @@ if ($issue) {
    } else {
       Html::header($header);
    }
-   PluginFormcreatorCommon::restoreLayout();
    Html::displayNotFoundError();
 }
 
@@ -100,5 +90,3 @@ if (Session::getCurrentInterface() == "helpdesk") {
 } else {
    Html::footer();
 }
-
-PluginFormcreatorCommon::restoreLayout();

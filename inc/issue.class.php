@@ -288,12 +288,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $itemtype = $this->fields['itemtype'];
       if (!class_exists($itemtype)) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -304,7 +302,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       unset($options['_item']);
 
-      // Header if the item + link to the list of items
+      // Header of the item + link to the list of items
       switch ($item::getType()) {
          case self::getType():
             $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
@@ -321,7 +319,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $this->showNavigationHeader($options);
 
       if (!$item->canViewItem()) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -332,19 +329,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function displaySimplified($options = []) {
-      global $CFG_GLPI;
-
       if (!isset($this->fields['itemtype'])) {
          Html::displayNotFoundError();
       }
       $itemtype = $this->fields['itemtype'];
       if (!class_exists($itemtype)) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
-         PluginFormcreatorCommon::restoreLayout();
          Html::displayNotFoundError();
       }
 
@@ -400,10 +393,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       unset($options['_item']);
 
-      // force recall of ticket in layout
-      PluginFormcreatorCommon::saveLayout();
-      $_SESSION['glpilayout'] = "lefttab";
-
       if ($item instanceof Ticket) {
          //Tickets without form associated or single ticket for an answer
          $satisfaction = new TicketSatisfaction();
@@ -420,10 +409,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             }
          }
 
-         echo "<div class='timeline_box'>";
-         $rand = mt_rand();
-         $item->showTimelineForm($rand);
-         $item->showTimeline($rand);
+         echo "<div class='tab-content p-2 flex-grow-1 card '>";
+         $item->showForm($item->getID());
          echo "</div>";
       } else {
          // No ticket associated to this issue or multiple tickets
@@ -432,9 +419,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item->showTabsContent($options);
          echo '</div>';
       }
-
-      // restore layout
-      PluginFormcreatorCommon::restoreLayout();
    }
 
    /**
@@ -466,7 +450,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                $item = $ticket;
             }
          } else {
-            // multiple tickets, no specified ticket then force ticket tab in form anser
+            // multiple tickets, ticket specified, then substitute the ticket to the form answer
             if (isset($options['tickets_id'])) {
                $ticket = Ticket::getById((int) $options['tickets_id']);
                if ($ticket) {
