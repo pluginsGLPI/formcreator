@@ -704,9 +704,11 @@ function plugin_formcreator_timelineActions($options) {
        $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
       return;
    }
-   echo "<li class='plugin_formcreator_cancel_my_ticket' onclick='".
+   echo "<li>";
+   echo "<button class='btn btn-primary' onclick='".
       "javascript:plugin_formcreator_cancelMyTicket(".$item->fields['id'].");'>"
-      ."<i class='fa'></i>".__('Cancel my ticket', 'formcreator')."</li>";
+      ."<i class='fa'></i>".__('Cancel my ticket', 'formcreator')."</button>";
+   echo "</li>";
 }
 
 function plugin_formcreator_hook_dashboard_cards() {
