@@ -269,6 +269,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       echo '<tr><th class="center" colspan="4">' . __('Conditions', 'formcreator') . '</th></tr>';
       echo '<td colspan="4">';
       echo '<div class="row">';
+      echo '<div class="col-12 col-sm-5 mb-3">';
       Dropdown::showFromArray(
          'show_rule',
          $item::getEnumShowRule(),
@@ -277,6 +278,7 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
             'on_change'    => 'plugin_formcreator_toggleCondition(this);',
          ]
       );
+      echo '<div>';
       echo "<div>&nbsp;</div>";
       echo '</div>';
       echo '</td>';
