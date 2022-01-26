@@ -1551,7 +1551,7 @@ SCRIPT;
       echo '<td width="25%">';
 
       // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-      $display = $this->fields['commonitil_validation_answer_user'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      $display = $this->fields['commonitil_validation_question'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
       echo "<div id='commonitil_validation_specific' style='$display'>";
       $validation_dropdown_params = [
          'name' => 'validation_specific'
