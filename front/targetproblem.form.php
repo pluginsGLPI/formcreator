@@ -41,7 +41,12 @@ $targetProblem = new PluginFormcreatorTargetProblem();
 
 // Edit an existing target problem
 if (isset($_POST['update'])) {
-   $targetProblem->update($_POST);
+   $targetProblem->getFromDB((int) $_POST['id']);
+   if (!$targetProblem->canUpdateItem()) {
+      Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
+   } else {
+      $targetProblem->update($_POST);
+   }
    Html::back();
 
 } else if (isset($_POST['actor_role'])) {
@@ -78,17 +83,6 @@ if (isset($_POST['update'])) {
       'admin',
       'PluginFormcreatorForm'
    );
-
-   $itemtype = PluginFormcreatorTargetProblem::class;
-   $targetProblem->getFromDB((int) $_REQUEST['id']);
-   $form = $targetProblem->getForm();
-
-   $_SESSION['glpilisttitle'][$itemtype] = sprintf(
-      __('%1$s = %2$s'),
-      $form->getTypeName(1), $form->getName()
-   );
-   $_SESSION['glpilisturl'][$itemtype]   = $form->getFormURL()."?id=".$form->getID();
-
    $targetProblem->display($_REQUEST);
 
    Html::footer();

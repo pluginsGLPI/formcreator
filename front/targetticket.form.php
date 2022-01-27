@@ -37,28 +37,29 @@ Session::checkRight('entity', UPDATE);
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-$targetticket = new PluginFormcreatorTargetTicket();
+$targetTicket = new PluginFormcreatorTargetTicket();
 
 // Edit an existing target ticket
 if (isset($_POST['update'])) {
-   if (!$targetticket->canUpdateItem()) {
+   $targetTicket->getFromDB((int) $_POST['id']);
+   if (!$targetTicket->canUpdateItem()) {
       Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
    } else {
-      $targetticket->update($_POST);
+      $targetTicket->update($_POST);
    }
    Html::back();
 
 } else if (isset($_POST['actor_role'])) {
    $id = (int) $_POST['id'];
-   $targetticket->getFromDB($id);
-   if (!$targetticket->canUpdateItem()) {
+   $targetTicket->getFromDB($id);
+   if (!$targetTicket->canUpdateItem()) {
       Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
    } else {
       $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? null;
       $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
       $targetTicket_actor = new PluginFormcreatorTarget_Actor();
       $targetTicket_actor->add([
-         'itemtype'         => $targetticket->getType(),
+         'itemtype'         => $targetTicket->getType(),
          'items_id'         => $id,
          'actor_role'       => $_POST['actor_role'],
          'actor_type'       => $_POST['actor_type'],
@@ -75,13 +76,13 @@ if (isset($_POST['update'])) {
       Html::back();
    }
    $id = (int) $_GET['id'];
-   $targetticket->getFromDB($id);
-   if (!$targetticket->canUpdateItem()) {
+   $targetTicket->getFromDB($id);
+   if (!$targetTicket->canUpdateItem()) {
       Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
    } else {
       $targetTicket_actor = new PluginFormcreatorTarget_Actor();
       $targetTicket_actor->delete([
-         'itemtype' => $targetticket->getType(),
+         'itemtype' => $targetTicket->getType(),
          'items_id' => $id,
          'id'       => (int) $_GET['delete_actor']
       ]);
@@ -97,17 +98,9 @@ if (isset($_POST['update'])) {
       'PluginFormcreatorForm'
    );
 
-   $itemtype = PluginFormcreatorTargetTicket::class;
-   $targetticket->getFromDB((int) $_REQUEST['id']);
-   $form = $targetticket->getForm();
-
-   $_SESSION['glpilisttitle'][$itemtype] = sprintf(
-      __('%1$s = %2$s'),
-      $form->getTypeName(1), $form->getName()
-   );
-   $_SESSION['glpilisturl'][$itemtype]   = $form->getFormURL()."?id=".$form->getID();
-
-   $targetticket->display($_REQUEST);
+   $targetTicket->display([
+      'id' => $_GET['id'],
+   ]);
 
    Html::footer();
 }
