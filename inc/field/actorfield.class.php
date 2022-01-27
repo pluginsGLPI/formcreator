@@ -131,13 +131,14 @@ class ActorField extends PluginFormcreatorAbstractField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
 
-      // Value needs to be non empty to allow execition of select2's initSelection
+      // Value needs to be non empty to allow execution of select2's initSelection
       $params = [
          'specific_tags' => [
             'multiple' => 'multiple',
          ],
          'entity_restrict' => -1,
          'itemtype'        => User::getType(),
+         'display_emptychoice' => false,
          'values'          => array_keys($value),
          'valuesnames'     => array_values($value),
          '_idor_token'     => Session::getNewIDORToken(User::getType()),
