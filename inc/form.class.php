@@ -401,7 +401,7 @@ PluginFormcreatorTranslatableInterface
 
          case 'language' :
             if (empty($values[$field])) {
-               return __('All langages', 'formcreator');
+               return __('All languages', 'formcreator');
             } else {
                return Dropdown::getLanguageName($values[$field]);
             }
