@@ -1136,12 +1136,19 @@ PluginFormcreatorTranslatableInterface
          ];
       }
 
+      if (isset($input['usage_count'])) {
+         // update usage count after form submission
+         return [
+            'id' => $input['id'],
+            'usage_count' => $input['usage_count'],
+         ];
+      }
+
       // prevent change of UUID
       unset($input['uuid']);
 
       if (isset($input['access_rights'])
-            || isset($_POST['massiveaction'])
-            || isset($input['usage_count'])) {
+            || isset($_POST['massiveaction'])) {
 
          if (isset($input['access_rights'])
             && $input['access_rights'] == self::ACCESS_PUBLIC
@@ -1259,9 +1266,9 @@ PluginFormcreatorTranslatableInterface
       }
    }
 
-   public function increaseUsageCount() : void {
+   public function increaseUsageCount(): bool {
       // Increase usage count of the form
-      $this->update([
+      return $this->update([
             'id' => $this->getID(),
             'usage_count' => $this->fields['usage_count'] + 1,
       ]);
