@@ -58,7 +58,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          'field' => '',
          'additions' => $this->getParametersHtmlForDesign(),
          'may_be_empty' => false,
-         'may_be_required' => true,
+         'may_be_required' => static::canRequire(),
       ];
    }
 

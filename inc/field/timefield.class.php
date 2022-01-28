@@ -80,7 +80,7 @@ class TimeField extends PluginFormcreatorAbstractField
          'field' => $field,
          'additions' => $additions,
          'may_be_empty' => false,
-         'may_be_required' => true,
+         'may_be_required' => static::canRequire(),
       ];
    }
 

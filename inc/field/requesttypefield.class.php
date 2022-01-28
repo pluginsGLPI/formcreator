@@ -78,7 +78,7 @@ class RequestTypeField extends SelectField
          'field' => $field,
          'additions' => $additions,
          'may_be_empty' => true,
-         'may_be_required' => true,
+         'may_be_required' => static::canRequire(),
       ];
    }
 
