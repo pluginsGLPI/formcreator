@@ -52,7 +52,7 @@ class IpField extends PluginFormcreatorAbstractField
          'field' => '',
          'additions' => $additions,
          'may_be_empty' => false,
-         'may_be_required' => false,
+         'may_be_required' => static::canRequire(),
       ];
    }
 
