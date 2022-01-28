@@ -1254,7 +1254,7 @@ PluginFormcreatorTranslatableInterface
          return false;
       }
 
-      if (is_array($input[$fieldName]) && count($input[$fieldName]) < 1 ) {
+      if (is_array($input[$fieldName]) && count($input[$fieldName]) < 1) {
          return false;
       }
 
