@@ -929,7 +929,7 @@ PluginFormcreatorTranslatableInterface
                default:
                   $status = $formAnswer['status'];
             }
-            $status = CommonITILOBject::getStatusClass($status);
+            $status = CommonITILObject::getStatusClass($status);
             echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
             echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
@@ -980,7 +980,7 @@ PluginFormcreatorTranslatableInterface
                default:
                   $status = $formAnswer['status'];
             }
-            $status = CommonITILOBject::getStatusClass($status);
+            $status = CommonITILObject::getStatusClass($status);
             echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
             echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';

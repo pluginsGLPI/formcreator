@@ -326,7 +326,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   default:
                      $status = $values[$field];
                }
-               $status = CommonITILOBject::getStatusClass($status);
+               $status = CommonITILObject::getStatusClass($status);
                return '<i class="'.$status.'"></i>';
             }
             break;
