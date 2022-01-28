@@ -529,15 +529,16 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm;
       $form = \PluginFormcreatorForm::getByItem($question);
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype'                    => \User::class,
-         'items_id'                    => \Session::getLoginUserID(),
-      ]);
+      // $formValidator = new \PluginFormcreatorForm_Validator();
+      // $formValidator->add([
+      //    'plugin_formcreator_forms_id' => $form->getID(),
+      //    'itemtype'                    => \User::class,
+      //    'items_id'                    => \Session::getLoginUserID(),
+      // ]);
       $form->update([
          'id' => $form->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => \Session::getLoginUserID(),
       ]);
 
       /**

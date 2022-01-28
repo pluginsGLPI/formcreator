@@ -144,11 +144,11 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          'name' => 'user D' . $this->getUniqueString(),
       ]);
 
+      // Add users into groups
       $this->getGlpiCoreItem(\Group_User::class, [
          'users_id' => $userA->getID(),
          'groups_id' => $groupA->getID(),
       ]);
-
       $this->getGlpiCoreItem(\Group_User::class, [
          'users_id' => $userB->getID(),
          'groups_id' => $groupB->getID(),
@@ -164,21 +164,25 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          'itemtype' => $groupB->gettype(),
          'items_id' => $groupB->getID(),
       ]);
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => $userC->gettype(),
-         'items_id' => $userC->getID(),
-      ]);
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => $userD->gettype(),
-         'items_id' => $userD->getID(),
-      ]);
+      // $formValidator->add([
+      //    'plugin_formcreator_forms_id' => $form->getID(),
+      //    'itemtype' => $userC->gettype(),
+      //    'items_id' => $userC->getID(),
+      // ]);
+      // $formValidator->add([
+      //    'plugin_formcreator_forms_id' => $form->getID(),
+      //    'itemtype' => $userD->gettype(),
+      //    'items_id' => $userD->getID(),
+      // ]);
 
       // Test when form has users as validators
       $form->update([
          'id' => $form->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users'    => [
+            $userC->getID(),
+            $userD->getID(),
+         ]
       ]);
       $output = $formValidator->getValidatorsForForm($form);
 
@@ -186,12 +190,16 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          ->hasKeys([
             $userC->getID(),
             $userD->getID(),
-         ]);
+         ])->hasSize(2);
 
       // Test when form has groups as validators
       $form->update([
          'id' => $form->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
+         '_validator_groups'    => [
+            $groupA->getID(),
+            $groupB->getID(),
+         ]
       ]);
       $output = $formValidator->getValidatorsForForm($form);
 
@@ -199,7 +207,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          ->hasKeys([
             $groupA->getID(),
             $groupB->getID(),
-         ]);
+         ])->hasSize(2);
 
       // Test when form has no validation
       $form->update([
