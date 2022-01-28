@@ -133,9 +133,7 @@ class ActorField extends PluginFormcreatorAbstractField
 
       // Value needs to be non empty to allow execution of select2's initSelection
       $params = [
-         'specific_tags' => [
-            'multiple' => 'multiple',
-         ],
+         'multiple' => 'multiple',
          'entity_restrict' => -1,
          'itemtype'        => User::getType(),
          'display_emptychoice' => false,

@@ -321,52 +321,43 @@ JAVASCRIPT;
    public static function jsAjaxDropdown($name, $field_id, $url, $params = []) {
       global $CFG_GLPI;
 
-      if (!isset($params['value'])) {
-         $value = 0;
-      } else {
-         $value = $params['value'];
-      }
-      if (!isset($params['value'])) {
-         $valuename = Dropdown::EMPTY_VALUE;
-      } else {
-         $valuename = $params['valuename'];
-      }
-      $on_change = '';
-      if (isset($params["on_change"])) {
-         $on_change = $params["on_change"];
-         unset($params["on_change"]);
-      }
-      $width = '80%';
-      if (isset($params["width"])) {
-         $width = $params["width"];
-         unset($params["width"]);
-      }
+      $default_options = [
+         'value'               => 0,
+         'valuename'           => Dropdown::EMPTY_VALUE,
+         'multiple'            => false,
+         'values'              => [],
+         'valuesnames'         => [],
+         'on_change'           => '',
+         'width'               => '80%',
+         'placeholder'         => '',
+         'display_emptychoice' => false,
+         'specific_tags'       => [],
+         'parent_id_field'     => null,
+         'multiple'            => false,
+      ];
+      $params = array_merge($default_options, $params);
 
-      $placeholder = isset($params['placeholder']) ? $params['placeholder'] : '';
+      $value = $params['value'];
+      $width = $params["width"];
+      $valuename = $params['valuename'];
+      $on_change = $params["on_change"];
+      $placeholder = $params['placeholder'] ?? '';
+      $multiple = $params['multiple'];
+      unset($params["on_change"]);
+      unset($params["width"]);
+
       $allowclear =  "false";
       if (strlen($placeholder) > 0 && !$params['display_emptychoice']) {
          $allowclear = "true";
       }
 
-      unset($params['placeholder']);
-      unset($params['value']);
-      unset($params['valuename']);
-
       $options = [
          'id'        => $field_id,
          'selected'  => $value
       ];
-      if (!empty($params['specific_tags'])) {
-         foreach ($params['specific_tags'] as $tag => $val) {
-            if (is_array($val)) {
-               $val = implode(' ', $val);
-            }
-            $options[$tag] = $val;
-         }
-      }
 
-      // manage multiple select (with multiple values)
-      if (isset($params['values']) && count($params['values'])) {
+       // manage multiple select (with multiple values)
+      if ($params['multiple']) {
          $values = array_combine($params['values'], $params['valuesnames']);
          $options['multiple'] = 'multiple';
          $options['selected'] = $params['values'];
@@ -374,15 +365,25 @@ JAVASCRIPT;
          $values = [];
 
          // simple select (multiple = no)
-         if ((isset($params['display_emptychoice']) && $params['display_emptychoice'])
-             || isset($params['toadd'][$value])
-             || $value > 0) {
-            $values = ["$value" => $valuename];
+         if ($value !== null) {
+               $values = ["$value" => $valuename];
          }
+      }
+      $parent_id_field = $params['parent_id_field'];
+
+      unset($params['placeholder']);
+      unset($params['value']);
+      unset($params['valuename']);
+
+      foreach ($params['specific_tags'] as $tag => $val) {
+         if (is_array($val)) {
+            $val = implode(' ', $val);
+         }
+         $options[$tag] = $val;
       }
 
       // display select tag
-      $output = Html::select($name, $values, $options);
+      $output = '';
 
       $js = "
          var params_$field_id = {";
@@ -398,6 +399,7 @@ JAVASCRIPT;
 
          $('#$field_id').select2({
             width: '$width',
+            multiple: '$multiple',
             placeholder: '$placeholder',
             allowClear: $allowclear,
             minimumInputLength: 0,
@@ -413,7 +415,12 @@ JAVASCRIPT;
                data: function (params) {
                   query = params;
                   return $.extend({}, params_$field_id, {
-                     searchText: params.term,
+                     searchText: params.term,";
+      if ($parent_id_field !== null) {
+         $js .= "
+                     parent_id : document.getElementById('" . $parent_id_field . "').value,";
+         }
+         $js .= "
                      page_limit: ".$CFG_GLPI['dropdown_max'].", // page size
                      page: params.page || 1, // page number
                   });
@@ -473,8 +480,19 @@ JAVASCRIPT;
       }
 
       $js .= " $('label[for=$field_id]').on('click', function(){ $('#$field_id').select2('open'); });";
+      $js .= " $('#$field_id').on('select2:open', function(e){";
+      $js .= "    const search_input = document.querySelector(`.select2-search__field[aria-controls='select2-\${e.target.id}-results']`);";
+      $js .= "    if (search_input) {";
+      $js .= "       search_input.focus();";
+      $js .= "    }";
+      $js .= " });";
 
       $output .= Html::scriptBlock('$(function() {' . $js . '});');
+
+      // display select tag
+      $options['class'] = $params['class'] ?? 'form-select';
+      $output .= Html::select($name, $values, $options);
+
       return $output;
    }
 
