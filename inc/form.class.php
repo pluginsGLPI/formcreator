@@ -1168,7 +1168,6 @@ PluginFormcreatorTranslatableInterface
          return $input;
       }
 
-      unset($input['uuid']);
       // Control fields values :
       // - name is required
       if (isset($input['name'])) {
