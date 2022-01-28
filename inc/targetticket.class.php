@@ -1432,7 +1432,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                'NOT' => ['itemtype' => [
                   PluginFormcreatorTargetTicket::class,
                   Ticket::class,
-               ]]
+               ]],
+               self::getForeignKeyField() => $this->getID(),
             ]);
             $targetTicketFk = self::getForeignKeyField();
             foreach ($input['items_id'] as $itemtype => $items) {
