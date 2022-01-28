@@ -49,7 +49,9 @@ PluginFormcreatorTranslatableInterface
 
    static $rightname = 'entity';
 
-   public $dohistory         = true;
+   public $dohistory = true;
+
+   public $skipChecks = false;
 
    const ACCESS_PUBLIC       = 0;
    const ACCESS_PRIVATE      = 1;
@@ -1078,8 +1080,14 @@ PluginFormcreatorTranslatableInterface
          $input['formanswer_name'] = $input['name'] ?? $this->fields['formanswer_name'];
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      if (!$this->skipChecks) {
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
+
+         if (!$this->checkValidators($input)) {
+            $input['validation_required'] = self::VALIDATION_NONE;
+         }
       }
 
       return $input;
@@ -1150,26 +1158,18 @@ PluginFormcreatorTranslatableInterface
       if (isset($input['access_rights'])
             || isset($_POST['massiveaction'])) {
 
-         if (isset($input['access_rights'])
-            && $input['access_rights'] == self::ACCESS_PUBLIC
-         ) {
-            // check that accessibility to the form is compatible with its questions
-            $fields = $this->getFields();
-            $incompatibleQuestion = false;
-            foreach ($fields as $field) {
-               if (!$field->isAnonymousFormCompatible()) {
-                  $incompatibleQuestion = true;
-                  $message = __('The question %s is not compatible with public forms', 'formcreator');
-                  Session::addMessageAfterRedirect(sprintf($message, $field->getLabel()), false, ERROR);
-               }
+         if (!$this->skipChecks) {
+            if (!$this->checkAccessRight($input)) {
+               return false;
             }
-            if ($incompatibleQuestion) {
-               return [];
-            }
-         }
 
-         if (!$this->checkConditionSettings($input)) {
-            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+            if (!$this->checkConditionSettings($input)) {
+               $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+            }
+
+            if (!$this->checkValidators($input)) {
+               $input['validation_required'] = self::VALIDATION_NONE;
+            }
          }
 
          return $input;
@@ -1192,8 +1192,14 @@ PluginFormcreatorTranslatableInterface
          unset($input['formanswer_name']);
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+      if (!$this->skipChecks) {
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
+
+         if (!$this->checkValidators($input)) {
+            $input['validation_required'] = self::VALIDATION_NONE;
+         }
       }
 
       return $input;
@@ -1217,6 +1223,74 @@ PluginFormcreatorTranslatableInterface
          $item = new $itemtype();
          $item->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
       }
+   }
+
+   /**
+    * Validate validators settings
+    *
+    * @param array $input
+    * @return bool
+    */
+   protected function checkValidators(array $input): bool {
+      if (!isset($input['validation_required'])) {
+         return true;
+      }
+
+      switch ($input['validation_required']) {
+         case self::VALIDATION_NONE:
+            return true;
+            break;
+
+         case self::VALIDATION_USER:
+            $fieldName = '_validator_users';
+            break;
+
+         case self::VALIDATION_GROUP:
+            $fieldName = '_validator_groups';
+            break;
+      }
+
+      if (!isset($input[$fieldName])) {
+         return false;
+      }
+
+      if (is_array($input[$fieldName]) && count($input[$fieldName]) < 1 ) {
+         return false;
+      }
+
+      return true;
+   }
+
+   /**
+    * Validate acess rights settings
+    *
+    * @param array $input
+    * @return boolean
+    */
+   protected function checkAccessRight(array $input): bool {
+      if (!isset($input['access_rights'])) {
+         return true;
+      }
+
+      switch ($input['access_rights']) {
+         case self::ACCESS_PUBLIC:
+            $fields = $this->getFields();
+            $incompatibleQuestion = false;
+            foreach ($fields as $field) {
+               if (!$field->isAnonymousFormCompatible()) {
+                  $incompatibleQuestion = true;
+                  $message = __('The question %s is not compatible with public forms', 'formcreator');
+                  Session::addMessageAfterRedirect(sprintf($message, $field->getLabel()), false, ERROR);
+               }
+            }
+            if ($incompatibleQuestion) {
+               return false;
+            }
+
+         break;
+      }
+
+      return true;
    }
 
    /**

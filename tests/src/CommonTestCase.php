@@ -354,13 +354,13 @@ abstract class CommonTestCase extends atoum
    }
 
    /**
-    * Undocumented function
+    * Create an item of the given itemtype
     *
-    * @param string $itemtype
+    * @param string $itemtype itemtype to create
     * @param array $input
-    * @return \CommonDBTM|void
+    * @return \CommonDBTM
     */
-   protected function getGlpiCoreItem(string $itemtype, array $input = []) {
+   protected function getGlpiCoreItem(string $itemtype, array $input = []): \CommonDBTM {
       /** @var \CommonDBTM */
       $item = new $itemtype();
 
