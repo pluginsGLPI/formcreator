@@ -680,6 +680,7 @@ var plugin_formcreator = new function() {
    this.addQuestion = function () {
       var form = document.querySelector('form[data-itemtype="PluginFormcreatorQuestion"]');
       var that = this;
+      tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/question_add.php',
          data: new FormData(form),
@@ -714,6 +715,7 @@ var plugin_formcreator = new function() {
       var form = $('form[data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = form.find('[name="id"]').val();
       var that = this;
+      tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/question_update.php',
          data: form.serializeArray(),
@@ -947,6 +949,7 @@ var plugin_formcreator = new function() {
    this.addSection = function (event) {
       var form = event.target;
       var that = this;
+      tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/section_add.php',
          processData: false,
@@ -973,6 +976,7 @@ var plugin_formcreator = new function() {
       var form = event.target;
       var sectionId = form.querySelector('[name="id"]').value;
       var that = this;
+      tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/section_update.php',
          processData: false,
