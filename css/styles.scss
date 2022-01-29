@@ -318,7 +318,7 @@ form#plugin_formcreator_form {
          text-align: justify;
          word-wrap: break-word;
 
-         ul {
+         ul:not(.select2-selection__rendered) {
             list-style: initial;
             margin: initial;
             padding: initial;
