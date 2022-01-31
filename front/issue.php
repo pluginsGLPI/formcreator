@@ -46,7 +46,7 @@ if (Session::getCurrentInterface() == "helpdesk") {
       __('Service catalog', 'formcreator'),
       '',
       'admin',
-      PluginFormcreatorIssue::class,
+      PluginFormcreatorForm::class
    );
 }
 
