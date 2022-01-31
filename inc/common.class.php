@@ -419,8 +419,8 @@ JAVASCRIPT;
       if ($parent_id_field !== null) {
          $js .= "
                      parent_id : document.getElementById('" . $parent_id_field . "').value,";
-         }
-         $js .= "
+      }
+      $js .= "
                      page_limit: ".$CFG_GLPI['dropdown_max'].", // page size
                      page: params.page || 1, // page number
                   });
