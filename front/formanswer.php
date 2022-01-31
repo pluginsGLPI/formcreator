@@ -43,7 +43,12 @@ if (!PluginFormcreatorFormAnswer::canView()) {
 if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+   Html::header(
+      __('Form Creator', 'formcreator'),
+      '',
+      'admin',
+      PluginFormcreatorForm::class
+   );
 }
 
 Search::show(PluginFormcreatorCommon::getFormanswerItemtype());
