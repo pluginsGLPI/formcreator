@@ -415,7 +415,9 @@ class DropdownField extends PluginFormcreatorAbstractField
             unset($sons[$decodedValues['show_tree_root']]);
          }
 
-         $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
+         if (count($sons) > 0) {
+            $dparams_cond_crit[$itemtype::getTable() . '.id'] = $sons;
+         }
          $rootItem = new $itemtype();
          if ($rootItem->getFromDB($decodedValues['show_tree_root'])) {
             $baseLevel = $rootItem->fields['level'];
