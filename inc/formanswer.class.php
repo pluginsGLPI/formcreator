@@ -1165,6 +1165,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $domain = PluginFormcreatorForm::getTranslationDomain($form->getID());
 
       foreach ($this->questionFields as $questionId => $field) {
+         if (!$field->isPrerequisites()) {
+            continue;
+         }
          $question = $field->getQuestion();
          $name = '';
          $value = '';
