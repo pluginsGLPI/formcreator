@@ -964,7 +964,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                   'plugin_formcreator_questions_id'   => $this->fields['location_question']
                ]
             ])->current();
-            if (ctype_digit($location['answer'])) {
+            if (isset($location['answer']) && ctype_digit($location['answer'])) {
                $location = $location['answer'];
             }
             break;
@@ -993,13 +993,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                   'plugin_formcreator_questions_id'   => $this->fields['type_question']
                ]
             ])->current();
-            $type = $type['answer'];
+            if (isset($type['answer']) && ctype_digit($type['answer'])) {
+               $type = $type['answer'];
+            }
             break;
          case self::REQUESTTYPE_SPECIFIC:
             $type = $this->fields['type_question'];
             break;
-         default:
-            $type = null;
       }
       if (!is_null($type)) {
          $data['type'] = $type;
