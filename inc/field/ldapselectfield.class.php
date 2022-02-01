@@ -36,7 +36,9 @@ use PluginFormcreatorAbstractField;
 use AuthLDAP;
 use Dropdown;
 use Exception;
+use Entity;
 use Html;
+use QuerySubQuery;
 use Session;
 use RuleRightParameter;
 
@@ -53,10 +55,17 @@ class LdapselectField extends SelectField
       if ($ldap_values === null) {
          $ldap_values = [];
       }
-      $current_entity = $_SESSION['glpiactive_entity'];
+      $current_entity = Session::getActiveEntity();
       $auth_ldap_condition = '';
       if ($current_entity != 0) {
-         $auth_ldap_condition = "glpi_authldaps.id = (select glpi_entities.authldaps_id from glpi_entities where id=${current_entity})";
+         $entityTable = Entity::getTable();
+         $auth_ldap_condition = [
+            'glpi_authldaps.id' => new QuerySubQuery([
+               'SELECT' => "$entityTable.authldaps_id",
+               'FROM'   => $entityTable,
+               'WHERE'  => ['id' => $current_entity],
+            ])
+         ];
       }
       $field = Dropdown::show(AuthLDAP::class, [
          'name'      => 'ldap_auth',
