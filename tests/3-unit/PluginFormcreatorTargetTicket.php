@@ -597,9 +597,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                   . $eolSimple . \Toolbox::addslashes_deep($sectionName) . $eolSimple
                   . '---------------------------------' . $eolSimple
                   . '1) ' . $questionTag . ' : ' . $answerTag . $eolSimple . $eolSimple,
-               1 => '&lt;h1&gt;Form data&lt;/h1&gt;'
-                  . '&lt;h2&gt;' . \Toolbox::addslashes_deep($sectionName) . '&lt;/h2&gt;'
-                  . '&lt;div&gt;&lt;b&gt;1) ' . $questionTag . ' : &lt;/b&gt;' . $answerTag . '&lt;/div&gt;',
+               1 => '&#60;h1&#62;Form data&#60;/h1&#62;'
+                  . '&#60;h2&#62;' . \Toolbox::addslashes_deep($sectionName) . '&#60;/h2&#62;'
+                  . '&#60;div&#62;&#60;b&#62;1) ' . $questionTag . ' : &#60;/b&#62;' . $answerTag . '&#60;/div&#62;',
             ],
          ],
       ];
