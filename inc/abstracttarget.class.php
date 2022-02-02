@@ -30,6 +30,7 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -1866,7 +1867,7 @@ SCRIPT;
 
       if ($richText) {
          $template = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $template);
-         $template = Html::entities_deep($template);
+         $template = Sanitizer::sanitize($template);
       }
 
       return $template;
