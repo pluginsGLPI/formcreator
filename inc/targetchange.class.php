@@ -523,7 +523,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
                   unset($input['_destination_entity_value_entity']);
                   break;
                default :
-                  $input['destination_entity_value'] = 'NULL';
+                  $input['destination_entity_value'] = 0;
                   break;
             }
          }

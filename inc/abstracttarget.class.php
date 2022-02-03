@@ -1595,7 +1595,7 @@ SCRIPT;
       global $DB;
 
       $answer  = new PluginFormcreatorAnswer();
-      if ($this->fields['due_date_question'] !== null) {
+      if ($this->fields['due_date_question'] != 0) {
          $request = [
             'FROM' => $answer::getTable(),
             'WHERE' => [

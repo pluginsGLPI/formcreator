@@ -55,7 +55,7 @@ if (isset($_POST['update'])) {
    if (!$targetTicket->canUpdateItem()) {
       Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
    } else {
-      $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? null;
+      $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? 0;
       $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
       $targetTicket_actor = new PluginFormcreatorTarget_Actor();
       $targetTicket_actor->add([
