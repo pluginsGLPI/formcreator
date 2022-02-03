@@ -146,21 +146,21 @@ class PluginFormcreatorUpgradeTo2_13 {
       global $DB;
 
       $table = 'glpi_plugin_formcreator_formanswers';
-      $DB->queryOrDie("UPDATE `$table`, SET `requester_id` = 0 WHERE `requester_id` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `requester_id` = 0 WHERE `requester_id` IS NULL");
 
       $table = 'glpi_plugin_formcreator_targetchanges';
-      $DB->queryOrDie("UPDATE `$table`, SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
-      $DB->queryOrDie("UPDATE `$table`, SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
 
       $table = 'glpi_plugin_formcreator_targettickets';
-      $DB->queryOrDie("UPDATE `$table`, SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
-      $DB->queryOrDie("UPDATE `$table`, SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
 
       $table = 'glpi_plugin_formcreator_targetproblems';
-      $DB->queryOrDie("UPDATE `$table`, SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
 
       $table = 'glpi_plugin_formcreator_targets_actors';
-      $DB->queryOrDie("UPDATE `$table`, SET `actor_value` = 0 WHERE `actor_value` IS NULL");
+      $DB->queryOrDie("UPDATE `$table` SET `actor_value` = 0 WHERE `actor_value` IS NULL");
 
       $tables = [
          'glpi_plugin_formcreator_answers' => [
