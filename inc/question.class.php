@@ -508,21 +508,10 @@ PluginFormcreatorTranslatableInterface
             }
          }
 
-         $input = $this->addFiles(
-            $input,
-            [
-               'force_update'  => true,
-               'content_field' => null,
-               'name'          => 'description',
-            ]
-         );
-
-         $input['description'] = Html::entity_decode_deep($input['description']);
          foreach ($input['_tag_description'] as $tag) {
             $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
             $input['description'] = preg_replace($regex, "#$tag#", $input['description']);
          }
-         $input['description'] = Html::entities_deep($input['description']);
       }
 
       // generate a unique id
