@@ -149,9 +149,6 @@ class PluginFormcreatorUpgradeTo2_13 {
       $DB->queryOrDie("UPDATE `$table` SET `due_date_question` = 0 WHERE `due_date_question` IS NULL");
       $DB->queryOrDie("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
 
-      $table = 'glpi_plugin_formcreator_targetproblems';
-      $DB->queryOrDie("UPDATE `$table` SET `destination_entity_value` = 0 WHERE `destination_entity_value` IS NULL");
-
       $table = 'glpi_plugin_formcreator_targets_actors';
       $DB->queryOrDie("UPDATE `$table` SET `actor_value` = 0 WHERE `actor_value` IS NULL");
 
@@ -233,14 +230,6 @@ class PluginFormcreatorUpgradeTo2_13 {
             'sla_question_ttr',
             'ola_question_tto',
             'ola_question_ttr',
-         ],
-         'glpi_plugin_formcreator_targetproblems' => [
-            'id',
-            'plugin_formcreator_forms_id',
-            'problemtemplates_id',
-            'urgency_question',
-            'destination_entity_value',
-            'category_question',
          ],
          'glpi_plugin_formcreator_targets_actors' => [
             'id',
