@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
 use Session;
+use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class DescriptionField extends PluginFormcreatorAbstractField
@@ -56,7 +57,8 @@ class DescriptionField extends PluginFormcreatorAbstractField
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
-      return nl2br(html_entity_decode(__($this->question->fields['description'], $domain)));
+      $value = Toolbox::convertTagToImage(__($this->question->fields['description'], $domain), $this->getQuestion());
+      return nl2br(html_entity_decode($value));
    }
 
    public function serializeValue(): string {
