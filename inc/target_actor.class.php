@@ -98,7 +98,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          return false;
       }
 
-      $input['actor_value'] = $input['actor_value_' . $input['actor_type']] ?? null;
+      $input['actor_value'] = $input['actor_value_' . $input['actor_type']] ?? 0;
 
       if (isset($input['use_notification'])) {
          $input['use_notification'] = ($input['use_notification'] == 0) ? 0 : 1;

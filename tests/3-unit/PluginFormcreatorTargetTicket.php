@@ -702,7 +702,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'location_question' => '0',
          'validation_followup' => '1',
          'destination_entity' => '0',
-         'destination_entity_value' => null,
+         'destination_entity_value' => 0,
          'tag_type' => \PluginFormcreatorTargetTicket::TAG_TYPE_NONE,
          'tag_questions' => '0',
          'tag_specifics' => '',
