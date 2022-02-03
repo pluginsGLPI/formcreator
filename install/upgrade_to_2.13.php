@@ -41,7 +41,6 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addFormAnswerTitle();
       $this->defaultValuesForTargets();
       $this->migrateItemtypeInQuestion();
-      // $this->fixInconsistency();
       $this->addTargetValidationSetting();
       $this->addFormVisibility();
       $this->addDashboardVisibility();
@@ -111,12 +110,6 @@ class PluginFormcreatorUpgradeTo2_13 {
             'id' => $row['id']
          ]);
       }
-   }
-
-   protected function fixInconsistency() {
-      $table = 'glpi_plugin_formcreator_answers';
-      $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', 'integer', ['value' => '0']);
-      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer', ['value' => '0']);
    }
 
    protected function addTargetValidationSetting() {
