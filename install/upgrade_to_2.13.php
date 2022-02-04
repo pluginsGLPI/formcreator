@@ -165,59 +165,25 @@ class PluginFormcreatorUpgradeTo2_13 {
       $DB->queryOrDie("UPDATE `$table` SET `actor_value` = 0 WHERE `actor_value` IS NULL");
 
       $tables = [
-         'glpi_plugin_formcreator_answers' => [
-            'id',
-            'plugin_formcreator_formanswers_id',
-            'plugin_formcreator_questions_id',
-         ],
-         'glpi_plugin_formcreator_categories' => [
-            'id',
-            'plugin_formcreator_categories_id',
-            'knowbaseitemcategories_id',
-         ],
-         'glpi_plugin_formcreator_entityconfigs' => [
-            'plugin_formcreator_categories_id',
-         ],
-         'glpi_plugin_formcreator_forms' => [
-            'id',
-            'entities_id',
-            'plugin_formcreator_categories_id',
-         ],
          'glpi_plugin_formcreator_formanswers' => [
-            'id',
-            'entities_id',
             'plugin_formcreator_forms_id',
             'requester_id',
-            'users_id_validator',
-            'groups_id_validator',
          ],
          'glpi_plugin_formcreator_forms_profiles' => [
-            'id',
             'plugin_formcreator_forms_id',
             'profiles_id',
          ],
          'glpi_plugin_formcreator_forms_validators' => [
-            'id',
             'plugin_formcreator_forms_id',
             'items_id',
          ],
          'glpi_plugin_formcreator_questions' => [
-            'id',
             'plugin_formcreator_sections_id',
          ],
-         'glpi_plugin_formcreator_conditions' => [
-            'id',
-            'items_id',
-            'plugin_formcreator_questions_id',
-         ],
          'glpi_plugin_formcreator_sections' => [
-            'id',
             'plugin_formcreator_forms_id',
          ],
          'glpi_plugin_formcreator_targetchanges' => [
-            'id',
-            'plugin_formcreator_forms_id',
-            'changetemplates_id',
             'due_date_question',
             'urgency_question',
             'destination_entity_value',
@@ -228,10 +194,7 @@ class PluginFormcreatorUpgradeTo2_13 {
             'ola_question_ttr',
          ],
          'glpi_plugin_formcreator_targettickets' => [
-            'id',
-            'plugin_formcreator_forms_id',
             'type_question',
-            'tickettemplates_id',
             'due_date_question',
             'urgency_question',
             'destination_entity_value',
@@ -244,40 +207,14 @@ class PluginFormcreatorUpgradeTo2_13 {
             'ola_question_ttr',
          ],
          'glpi_plugin_formcreator_targets_actors' => [
-            'id',
             'items_id',
             'actor_value',
          ],
-         'glpi_plugin_formcreator_issues' => [
-            'id',
-            'items_id',
-            'entities_id',
-            'requester_id',
-            'users_id_validator',
-            'groups_id_validator',
-            'users_id_recipient',
-         ],
-         'glpi_plugin_formcreator_items_targettickets' => [
-            'id',
-            'plugin_formcreator_targettickets_id',
-            'items_id',
-         ],
-         'glpi_plugin_formcreator_questiondependencies' => [
-            'id',
-            'plugin_formcreator_questions_id',
-            'plugin_formcreator_questions_id_2',
-         ],
          'glpi_plugin_formcreator_questionregexes' => [
-            'id',
             'plugin_formcreator_questions_id',
          ],
          'glpi_plugin_formcreator_questionranges' => [
-            'id',
             'plugin_formcreator_questions_id',
-         ],
-         'glpi_plugin_formcreator_forms_languages' => [
-            'id',
-            'plugin_formcreator_forms_id',
          ],
       ];
 
