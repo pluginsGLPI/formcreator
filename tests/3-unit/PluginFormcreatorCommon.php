@@ -420,8 +420,9 @@ class PluginFormcreatorCommon extends CommonTestCase {
 
       // test simplified interface
       $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => 0]);
       $entityConfig->update([
-         'id' => '0',
+         'id' => $entityConfig->getID(),
          'replace_helpdesk' => '0',
       ]);
       $this->login('post-only', 'postonly');
@@ -430,8 +431,9 @@ class PluginFormcreatorCommon extends CommonTestCase {
 
       // test service catalog
       $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => 0]);
       $entityConfig->update([
-         'id' => '0',
+         'id' => $entityConfig->getId(),
          'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
       ]);
       $this->login('post-only', 'postonly');
@@ -440,7 +442,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
 
       $entityConfig = new \PluginFormcreatorEntityConfig();
       $entityConfig->update([
-         'id' => '0',
+         'id' => $entityConfig->getId(),
          'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_EXTENDED_SERVICE_CATALOG,
       ]);
       $this->login('post-only', 'postonly');

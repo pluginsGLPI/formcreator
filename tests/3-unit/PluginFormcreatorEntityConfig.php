@@ -87,7 +87,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       // Set configuration for the 2 sub entities
       $instance = $this->newTestedInstance();
       $instance->add([
-         'id' => $entityId,
+         'entities_id'      => $entityId,
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG,
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_MERGED,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL,
@@ -96,7 +96,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
 
       $instance = $this->newTestedInstance();
       $instance->add([
-         'id' => $entityId1,
+         'entities_id'      => $entityId1,
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_MERGED,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL,
@@ -105,7 +105,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
 
       $instance = $this->newTestedInstance();
       $instance->add([
-         'id' => $entityId2,
+         'entities_id'      => $entityId2,
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG,
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY,
@@ -114,7 +114,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
 
       $instance = $this->newTestedInstance();
       $instance->add([
-         'id' => $entityId3,
+         'entities_id'      => $entityId3,
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
@@ -145,8 +145,9 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
 
       // Check change on parent entity propagates to child with inherited settings
       $instance = $this->newTestedInstance();
+      $instance->getFromDBByCrit(['entities_id' => $entityId]);
       $instance->update([
-         'id' => $entityId,
+         'id'               => $instance->getID(),
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY,

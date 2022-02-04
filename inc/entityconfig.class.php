@@ -132,6 +132,13 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    }
 
    public function prepareInputForAdd($input) {
+      if (!isset($input['entities_id'])) {
+         return false;
+      }
+      $entity = new Entity();
+      if (!$entity->getFromDB($input['entities_id'])) {
+         return false;
+      }
       $input['header'] = $input['header'] ?? '';
 
       $config = Toolbox::getHtmLawedSafeConfig();
@@ -285,7 +292,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       if ($canedit) {
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
-         echo Html::hidden('id', ['value' => $entity->fields["id"]]);
+         echo Html::hidden('entities_id', ['value' => $entity->fields["entities_id"]]);
          echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
          echo "</td></tr>";
          Html::closeForm();
@@ -382,7 +389,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       // Search in entity data of the current entity
       if ($entity->getFromDB($entities_id)) {
          // Value is defined : use it
-         if ($entityConfig->getFromDB($entities_id)) {
+         if ($entityConfig->getFromDBByCrit(['entities_id' => $entities_id])) {
             if (is_numeric($default_value)
                   && ($entityConfig->fields[$fieldref] != self::CONFIG_PARENT)) {
                      return $entityConfig->fields[$fieldval];
