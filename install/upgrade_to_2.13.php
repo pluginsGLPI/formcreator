@@ -37,6 +37,7 @@ class PluginFormcreatorUpgradeTo2_13 {
     */
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
+      $this->migrateEntityConfig();
       $this->migrateFkToUnsignedInt();
       $this->addFormAnswerTitle();
       $this->defaultValuesForTargets();
@@ -132,7 +133,18 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_entityconfigs';
       $this->migration->addField($table, 'is_dashboard_visible', 'integer', ['after' => 'is_search_visible', 'value' => '-2']);
 
-      $this->migration->addPostQuery("UPDATE glpi_plugin_formcreator_entityconfigs SET `is_dashboard_visible`=1 WHERE `id`=0");
+      $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `is_dashboard_visible`=1 WHERE `id`=0");
+   }
+
+   protected function migrateEntityConfig() {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+
+      $this->migration->addField($table, 'entities_id', 'int unsigned not null default 0', ['after' => 'id']);
+      $this->migration->migrationOneTable($table);
+      $this->migration->addKey($table, 'entities_id', 'unicity', 'UNIQUE');
+      $DB->queryOrDie("UPDATE `$table` SET `entities_id`=`id`");
    }
 
    protected function migrateFkToUnsignedInt() {
@@ -280,8 +292,7 @@ class PluginFormcreatorUpgradeTo2_13 {
          }
       }
 
-      // Exception for ID key of glpi_plugin_formcreator_entityconfigs : it is not an autoincrement
       $table = 'glpi_plugin_formcreator_entityconfigs';
-      $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null');
+      $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null auto_increment');
    }
 }
