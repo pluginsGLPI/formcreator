@@ -1284,6 +1284,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
 
       $ticketUserRow = array_pop($ticketUserRow);
+      if ($ticketUserRow === null) {
+         $requesterId = 0;
+      } else {
+         $requesterId = $ticketUserRow['users_id'];
+      }
       $issueName = $ticket->fields['name'] != '' ? addslashes($ticket->fields['name']) : '(' . $ticket->getID() . ')';
       $issue->add([
          'items_id'           => $ticketId,
@@ -1294,7 +1299,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
-         'requester_id'       => $ticketUserRow['users_id'],
+         'requester_id'       => $requesterId,
          'users_id_validator' => '',
          'groups_id_validator'=> '',
          'comment'            => addslashes($ticket->fields['content']),
