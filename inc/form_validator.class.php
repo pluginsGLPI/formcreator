@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -112,8 +113,17 @@ PluginFormcreatorExportableInterface
       }
    }
 
-   public function showForForm(PluginFormcreatorForm $item, $options = []) {
+   public function showForForm(PluginFormcreatorForm $item) {
       global $DB, $CFG_GLPI;
+
+      $options = [];
+      $this->initForm($item->getID(), $options);
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form.html.twig', [
+         'item'   => $this,
+         'params' => $options,
+      ]);
+      // return true;
+
 
       echo "<form method='post' action='".self::getFormURL()."'>";
       echo "<div class='spaced'><table class='tab_cadre_fixe'>";
@@ -122,14 +132,13 @@ PluginFormcreatorExportableInterface
       echo '<td>' . __('Need validaton?', 'formcreator') . '</td>';
       echo '<td class="validators_bloc">';
 
-      Dropdown::showFromArray('validation_required', [
-         self::VALIDATION_NONE  => __('No'),
-         self::VALIDATION_USER  => User::getTypeName(1),
-         self::VALIDATION_GROUP => Group::getTypeName(1),
-      ], [
-         'value'     =>  $item->fields['validation_required'],
-         'on_change' => 'plugin_formcreator_changeValidators(this.value)'
-      ]);
+      Dropdown::showFromArray(
+         'validation_required',
+         PluginFormcreatorForm::getEnumAccessType(), [
+            'value'     =>  $item->fields['validation_required'],
+            'on_change' => 'plugin_formcreator_changeValidators(this.value)'
+         ]
+      );
       echo '</td>';
       echo '<td colspan="2">';
       // Select all users with ticket validation right and the groups
@@ -529,7 +538,7 @@ PluginFormcreatorExportableInterface
     *
     * @return string
     */
-   public static function dropdownValidatorUser(): string {
+   public static function dropdownValidatorUser(string $name): void {
       global $CFG_GLPI;
 
       $userTable = User::getTable();
@@ -578,9 +587,9 @@ PluginFormcreatorExportableInterface
          '_idor_token'     => Session::getNewIDORToken(User::getType()),
       ];
 
-      return Html::jsAjaxDropdown(
-         '_validator_users[]',
-         '_validator_users' . mt_rand(),
+      echo Html::jsAjaxDropdown(
+         $name . '[]',
+         "$name" . mt_rand(),
          $CFG_GLPI['root_doc']."/ajax/getDropdownValue.php",
          $params
       );
@@ -591,7 +600,7 @@ PluginFormcreatorExportableInterface
     *
     * @return string
     */
-   public static function dropdownValidatorGroup(): string {
+   public static function dropdownValidatorGroup(string $name): void {
       global $CFG_GLPI;
 
       $userTable = User::getTable();
@@ -657,9 +666,9 @@ PluginFormcreatorExportableInterface
          '_idor_token'         => Session::getNewIDORToken(Group::getType()),
       ];
 
-      return Html::jsAjaxDropdown(
-         '_validator_groups[]',
-         '_validator_groups' . mt_rand(),
+      echo Html::jsAjaxDropdown(
+         $name . '[]',
+         $name . mt_rand(),
          $CFG_GLPI['root_doc']."/ajax/getDropdownValue.php",
          $params
       );

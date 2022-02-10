@@ -69,6 +69,14 @@ PluginFormcreatorTranslatableInterface
       ];
    }
 
+   public static function getEnumValidationType() {
+      return [
+         self::VALIDATION_NONE  => __('No'),
+         self::VALIDATION_USER  => User::getTypeName(1),
+         self::VALIDATION_GROUP => Group::getTypeName(1),
+      ];
+   }
+
    public static function getEnumShowRule() : array {
       return PluginFormcreatorCondition::getEnumShowRule();
    }
@@ -441,28 +449,38 @@ PluginFormcreatorTranslatableInterface
       return true;
    }
 
-   public function showFormAnswerProperties($ID, $options = []) {
+   public static function showValidators(self $item) {
+      $options = [];
+      $item->initForm($item->getID(), $options);
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form_validator.html.twig', [
+         'item'   => $item,
+         'params' => $options,
+      ]);
+      return true;
+   }
+
+   public static function showFormAnswerProperties($item, $options = []) {
       $options['candel'] = false;
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
+      $item->initForm($item->getID(), $options);
+      $item->showFormHeader($options);
 
       echo '<tr class="tab_bg_1">';
       echo '<td>' . __('Answers title', 'formcretor') . '</td>';
-      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name']]) . '</td>';
+      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $item->fields['formanswer_name']]) . '</td>';
       echo '</tr>';
 
-        $this->showFormButtons($options);
+        $item->showFormButtons($options);
 
-      $this->showTagsList();
+      $item->showTagsList();
    }
 
-   public function showTargets($ID, $options = []) {
+   public static function showTargets($item, $options = []) {
       echo '<table class="tab_cadrehov">';
       echo '<tr>';
       echo '<th colspan="3">'._n('Target', 'Targets', 2, 'formcreator').'</th>';
       echo '</tr>';
 
-      $allTargets = $this->getTargetsFromForm();
+      $allTargets = $item->getTargetsFromForm();
       $token = Session::getNewCSRFToken();
       $i = 0;
       foreach ($allTargets as $targetType => $targets) {
@@ -492,7 +510,7 @@ PluginFormcreatorTranslatableInterface
       // Display add target link...
       echo '<tr class="tab_bg_'.(($i + 1) % 2).' id="add_target_row">';
       echo '<td colspan="3">';
-      echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
+      echo '<a href="javascript:plugin_formcreator_addTarget('.$item->getID().', \''.$token.'\');">
                 <i class="fa fa-plus"></i>
                 '.__('Add a target', 'formcreator').'
             </a>';
@@ -510,12 +528,13 @@ PluginFormcreatorTranslatableInterface
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
          return [
-            1 => self::createTabEntry(
+            1 => Plugin::isPluginActive('advform') ? PluginAdvformForm_Validator::getTypeName(1) : PluginFormcreatorForm_Validator::getTypeName(),
+            2 => self::createTabEntry(
                _n('Target', 'Targets', Session::getPluralNumber(), 'formcreator'),
                $item->countTargets()
             ),
-            2 => __('Preview'),
-            3 => PluginFormcreatorFormAnswer::getTypeName(1) . ' ' .__('properties', 'formcreator'),
+            3 => __('Preview'),
+            4 => PluginFormcreatorFormAnswer::getTypeName(1) . ' ' .__('properties', 'formcreator'),
          ];
       }
       if ($item->getType() == Central::class) {
@@ -540,24 +559,25 @@ PluginFormcreatorTranslatableInterface
          /** @var PluginFormcreatorForm $item */
          switch ($tabnum) {
             case 1:
-               $item->showTargets($item->getID());
+               Plugin::isPluginActive('advform') ? PluginAdvformForm_Validator::showForForm($item) : self::showValidators($item);
                break;
 
             case 2:
-               echo '<div style="text-align: left">';
-               $item->displayUserForm($item);
-               echo '</div>';
+               self::showTargets($item);
                break;
 
             case 3:
-               $item->showFormAnswerProperties($item->getID());
+               self::displayUserForm($item);
+               break;
+
+            case 4:
+               self::showFormAnswerProperties($item);
                break;
          }
          return;
       }
       if ($item->getType() == Central::getType()) {
-         $form = PluginFormcreatorCommon::getForm();
-         $form->showForCentral();
+         self::showForCentral($item);
       }
    }
 
@@ -565,10 +585,9 @@ PluginFormcreatorTranslatableInterface
    public function defineTabs($options = []) {
       $ong = [];
       $this->addDefaultFormTab($ong);
-      $this->addStandardTab(PluginFormcreatorForm_Validator::class, $ong, $options);
+      $this->addStandardTab(self::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorQuestion::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
-      $this->addStandardTab(self::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
@@ -1010,14 +1029,16 @@ PluginFormcreatorTranslatableInterface
     *
     * @return void
     */
-   public function displayUserForm() : void {
+   public static function displayUserForm($item) : void {
       global $TRANSLATE;
+
+      echo '<div style="text-align: left">';
 
       // Print css media
       $css = '/' . Plugin::getWebDir('formcreator', false) . '/css/print_form.css';
       echo Html::css($css, ['media' => 'print']);
 
-      $formId = $this->getID();
+      $formId = $item->getID();
       $domain = self::getTranslationDomain($formId);
       $phpfile = self::getTranslationFile($formId, $_SESSION['glpilanguage']);
       if (file_exists($phpfile)) {
@@ -1027,7 +1048,7 @@ PluginFormcreatorTranslatableInterface
          $_SESSION['formcreator']['data'] = [];
       }
       TemplateRenderer::getInstance()->display('@formcreator/pages/userform.html.twig', [
-         'item'    => $this,
+         'item'    => $item,
          'options' => [
             'columns' => PluginFormcreatorSection::COLUMNS,
             'domain'  => $domain, // For translation
@@ -1041,12 +1062,14 @@ PluginFormcreatorTranslatableInterface
 
       // Show validator selector
       if (Plugin::isPluginActive('advform')) {
-         echo PluginAdvformForm_Validator::dropdownValidator($this);
+         echo PluginAdvformForm_Validator::dropdownValidator($item);
       } else {
-         if ($this->validationRequired()) {
-            echo PluginFormcreatorForm_Validator::dropdownValidator($this);
+         if ($item->validationRequired()) {
+            echo PluginFormcreatorForm_Validator::dropdownValidator($item);
          }
       }
+
+      echo '</div>';
    }
 
    /**
@@ -1937,8 +1960,8 @@ PluginFormcreatorTranslatableInterface
    /**
     * show list of available forms
     */
-   public function showForCentral() {
-      global $DB, $CFG_GLPI, $TRANSLATE;
+   public static function showForCentral(CommonDBTM $item) {
+      global $DB, $TRANSLATE;
 
       // Define tables
       $form_table = PluginFormcreatorForm::getTable();
@@ -2612,5 +2635,4 @@ PluginFormcreatorTranslatableInterface
       }
       return $this->getFromDB($iterator->next()[self::getForeignKeyField()]);
    }
-
 }
