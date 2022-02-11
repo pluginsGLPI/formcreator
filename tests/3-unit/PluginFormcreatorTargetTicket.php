@@ -45,6 +45,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          case 'testDeleteLinkedTickets':
          case 'testSetTargetAssociatedItem':
          case 'testImport':
+         case 'testSetRequestSource':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -75,6 +76,23 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testGetTypeName($number, $expected) {
       $output = \PluginFormcreatorTargetTicket::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetEnumRequestTypeRule(): void {
+      $output = \PluginFormcreatorTargetTicket::getEnumRequestTypeRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::REQUESTTYPE_NONE      => 'Default or from a template',
+         \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC  => "Specific type",
+         \PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER    => "Equals to the answer to the question",
+      ]);
+   }
+
+   public function testGetEnumRequestSourceRule(): void {
+      $output = \PluginFormcreatorTargetTicket::getEnumRequestSourceRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::REQUESTTYPE_NONE      => 'Source from template or user default or GLPI default',
+         \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC  => "Formcreator",
+      ]);
    }
 
    public function testGetEnumDestinationEntity() {
@@ -646,6 +664,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $fieldsWithoutID = [
          'name',
          'target_name',
+         'source_rule',
+         'source_question',
          'type_rule',
          'type_question',
          'content',
@@ -719,6 +739,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'category_question' => '0',
          'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE,
          'associate_question' => '0',
+         'source_rule' => 0,
+         'source_question' => 0,
          'type_rule' => 1,
          'type_question' => 0,
          'uuid' => $uuid,
@@ -1304,6 +1326,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm();
       $name = $this->getUniqueString();
+      $sourceId = \PluginFormcreatorCommon::getFormcreatorRequestTypeId();
       return [
          'name is mandatory' => [
             'input'    => [
@@ -1324,6 +1347,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
                'type_question' => \Ticket::INCIDENT_TYPE,
+               'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_SPECIFIC,
+               'source_question' => $sourceId,
             ],
             'message' => null,
          ],
@@ -1333,6 +1358,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'name' => $name,
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
                'type_question' => \Ticket::DEMAND_TYPE,
+               'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_NONE,
             ],
             'expected' => [
                $formFk => $form->getID(),
@@ -1341,6 +1367,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
                'type_question' => \Ticket::DEMAND_TYPE,
+               'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_NONE,
+               'source_question' => 0,
             ],
             'message' => null,
          ],
@@ -1362,5 +1390,79 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $this->boolean($output)->isFalse();
          $this->sessionHasMessage($message, ERROR);
       }
+   }
+
+   public function providerSetRequestSource_none(): array {
+      $form = $this->getForm();
+      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer->isNewItem())->isFalse();
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'source_rule' => \PluginFormcreatorTargetTicket::REQUESTSOURCE_NONE,
+      ]);
+      $this->boolean($targetTicket->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $targetTicket,
+            'formanswer' => $formanswer,
+            'expected'   => 0
+         ],
+      ];
+   }
+
+   public function providerSetRequestSource_specific(): array{
+      $form = $this->getForm();
+      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer->isNewItem())->isFalse();
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->add([
+         'name' => 'target ticket',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'source_rule' => \PluginFormcreatorTargetTicket::REQUESTSOURCE_SPECIFIC,
+         'source_question' => \PluginFormcreatorCommon::getFormcreatorRequestTypeId(),
+      ]);
+      $this->boolean($targetTicket->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $targetTicket,
+            'formanswer' => $formanswer,
+            'expected'   => 0
+         ],
+      ];
+   }
+
+   public function providerSetRequestSource(): array {
+      return array_merge(
+         $this->providerSetRequestSource_none(),
+         $this->providerSetRequestSource_specific()
+      );
+   }
+
+   /**
+    * @dataProvider providerSetRequestSource
+    */
+   public function testSetRequestSource($instance, $formanswer, $expected): void {
+      // Substitute a dummy class to access protected / private methods
+      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
+      $dummyInstance = new $dummyItemtype();
+      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
+      $instance->getFromDB($instance->getID());
+      $dummyInstance->fields = $instance->fields;
+
+      $data = $dummyInstance->publicGetDefaultData($formanswer);
+      $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
+      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }
 }

@@ -36,9 +36,14 @@ class PluginFormcreatorUpgradeTo2_12_5 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $this->migration = $migration;
+
+      $this->addUserRecipient();
+      $this->addRequestSourceSeting();
+   }
+
+   public function addUserRecipient(): void {
+      global $DB;
 
       // Add users_id_recipient
       $table = 'glpi_plugin_formcreator_issues';
@@ -48,5 +53,19 @@ class PluginFormcreatorUpgradeTo2_12_5 {
       $this->migration->migrationOneTable($table);
       $DB->query("TRUNCATE `$table`");
       PluginFormcreatorIssue::syncIssues();
+   }
+
+   public function addRequestSourceSeting(): void {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+
+      if (!$DB->fieldExists($table, 'request_source')) {
+         $this->migration->addField($table, 'source_rule', 'integer', ['after' => 'target_name']);
+         $this->migration->addField($table, 'source_question', 'integer', ['after' => 'source_rule']);
+         $this->migration->migrationOneTable($table);
+         $formcreatorSourceId = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+         $DB->queryOrDie("UPDATE `$table` SET `source_rule` = '1', `source_question` = '$formcreatorSourceId'");
+      }
    }
 }

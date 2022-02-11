@@ -47,6 +47,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
    const REQUESTTYPE_SPECIFIC = 1;
    const REQUESTTYPE_ANSWER = 2;
 
+   const REQUESTSOURCE_NONE = 0;
+   const REQUESTSOURCE_SPECIFIC = 1;
 
    public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
@@ -95,6 +97,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          self::ASSOCIATE_RULE_SPECIFIC    => __('Specific asset', 'formcreator'),
          self::ASSOCIATE_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
          self::ASSOCIATE_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumRequestSourceRule(): array {
+      return [
+         self::REQUESTSOURCE_NONE      => __('Source from template or user default or GLPI default', 'formcreator'),
+         self::REQUESTSOURCE_SPECIFIC  => __('Formcreator', 'formcreator'),
       ];
    }
 
@@ -209,6 +218,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $this->showSLASettings();
       $this->showOLASettings();
 
+      $this->showSourceSettings($rand);
       $this->showTypeSettings($rand);
       // -------------------------------------------------------------------------------------------
       //  associated elements of the target
@@ -449,6 +459,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             $input['type_question'] = Ticket::INCIDENT_TYPE;
          }
       }
+
+      if (!isset($input['source_rule'])) {
+         $input['source_rule'] = self::REQUESTSOURCE_SPECIFIC;
+      }
+      $input['source_question'] = 0;
+      if ($input['source_rule'] == self::REQUESTTYPE_SPECIFIC) {
+         $input['source_question'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+      }
       return $input;
    }
 
@@ -521,6 +539,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                break;
             case self::REQUESTTYPE_SPECIFIC:
                $input['type_question'] = $input['_type_specific'];
+               break;
+         }
+
+         $input['source_question'] = '0';
+         switch ($input['source_rule']) {
+            case self::REQUESTSOURCE_NONE:
+               $input['source_question'] = 0;
+               break;
+            case self::REQUESTSOURCE_SPECIFIC:
+               $input['source_question'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
                break;
          }
 
@@ -715,7 +743,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $ticket  = new Ticket();
       $form = $formanswer->getForm();
       $data = $this->getDefaultData($formanswer);
-      $data['requesttypes_id'] = $data['requesttypes_id'] ?? PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
@@ -767,6 +794,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       $data['users_id_lastupdater'] = Session::getLoginUserID();
 
       $data = $this->setTargetType($data, $formanswer);
+      $data = $this->setTargetSource($data, $formanswer);
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
       $data = $this->setSLA($data, $formanswer);
@@ -896,6 +924,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       return $data;
    }
 
+   protected function setTargetSource(array $data, PluginFormcreatorFormAnswer $formanswer): array {
+      switch ($this->fields['source_rule']) {
+         case self::REQUESTSOURCE_SPECIFIC:
+            $data['requesttypes_id'] = $this->fields['source_question'];
+            break;
+      }
+
+      return $data;
+   }
+
    protected function setTargetType(array $data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
@@ -923,6 +961,19 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
 
       return $data;
+   }
+
+   protected function showSourceSettings($rand): void {
+      echo '<tr>';
+      echo '<td width="15%">' . __('Request source') . '</td>';
+      echo '<td width="25%">';
+      Dropdown::showFromArray('source_rule', static::getEnumRequestSourceRule(), [
+         'value' => $this->fields['source_rule'],
+         'rand' => $rand,
+      ]);
+      echo '<td></td><td></td>';
+      echo '</td>';
+      echo '</tr>';
    }
 
    protected  function showTypeSettings($rand) {
