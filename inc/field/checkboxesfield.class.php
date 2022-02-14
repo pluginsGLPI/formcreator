@@ -300,6 +300,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       if ($richText) {
          $value = '<br />' . implode('<br />', $value);
+         $value = Html::entities_deep($value);
       } else {
          $value = implode(', ', $value);
       }

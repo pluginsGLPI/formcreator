@@ -35,7 +35,6 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use Html;
 use User;
-use Toolbox;
 use Session;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
@@ -218,6 +217,7 @@ class ActorField extends PluginFormcreatorAbstractField
 
       if ($richText) {
          $value = '<br />' . implode('<br />', $value);
+         $value = Html::entities_deep($value);
       } else {
          $value = implode(', ', $value);
       }
