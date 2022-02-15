@@ -340,7 +340,7 @@ class LdapselectField extends SelectField
       return (preg_grep($value, $this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return false;
    }
 

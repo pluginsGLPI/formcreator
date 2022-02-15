@@ -273,7 +273,7 @@ class TextField extends PluginFormcreatorAbstractField
       return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 

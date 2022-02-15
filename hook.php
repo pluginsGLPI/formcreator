@@ -167,7 +167,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
          // Add users_id_recipient
-         $condition .= " OR `users_id_recipient` = $currentUser ";
+         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_recipient` = $currentUser ";
          return "($condition)";
       break;
 

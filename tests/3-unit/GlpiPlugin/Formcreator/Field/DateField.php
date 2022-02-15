@@ -117,9 +117,9 @@ class DateField extends CommonTestCase {
       $this->string($output)->isEqualTo('Date');
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 

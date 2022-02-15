@@ -241,7 +241,7 @@ class TagField extends DropdownField
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return false;
    }
 
