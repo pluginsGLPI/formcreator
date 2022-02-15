@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Toolbox\Sanitizer;
 use GlpiPlugin\Formcreator\Field\DropdownField;
 
 if (!defined('GLPI_ROOT')) {
@@ -1191,6 +1192,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);
          }
+      }
+
+      if ($richText) {
+         // convert sanitization from old style GLPI ( up to 9.5 to modern style)
+         $content = Sanitizer::unsanitize($content);
+         $content = Sanitizer::sanitize($content);
       }
 
       return $content;
