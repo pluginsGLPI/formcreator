@@ -97,10 +97,10 @@ class EmailField extends CommonTestCase {
       $this->string($output)->isEqualTo($expected ? $value : '');
    }
 
-   public function  testIsAnonymousFormCompatible() {
+   public function  testisPublicFormCompatible() {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isEqualTo(true);
    }
 

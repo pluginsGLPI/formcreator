@@ -160,7 +160,7 @@ class IpField extends PluginFormcreatorAbstractField
       return (preg_grep($value, $this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 

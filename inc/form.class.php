@@ -1031,7 +1031,7 @@ PluginFormcreatorTranslatableInterface
          'options' => [
             'columns' => PluginFormcreatorSection::COLUMNS,
             'domain'  => $domain, // For translation
-            'anonymous'=> isset($_SESSION['formcreator_anonymous']),
+            'public'  => isset($_SESSION['formcreator_public']),
             'use_captcha' => ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
                               && $this->fields['is_captcha_enabled'] != '0'),
          ]
@@ -1277,7 +1277,7 @@ PluginFormcreatorTranslatableInterface
             $fields = $this->getFields();
             $incompatibleQuestion = false;
             foreach ($fields as $field) {
-               if (!$field->isAnonymousFormCompatible()) {
+               if (!$field->isPublicFormCompatible()) {
                   $incompatibleQuestion = true;
                   $message = __('The question %s is not compatible with public forms', 'formcreator');
                   Session::addMessageAfterRedirect(sprintf($message, $field->getLabel()), false, ERROR);
@@ -2032,8 +2032,8 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * Is the form accessible anonymously (without being logged in) ?
-    * @return boolean true if the form is accessible anonymously
+    * Is the form accessible publicly (without being logged in) ?
+    * @return boolean true if the form is accessible publicly
     */
    public function isPublicAccess() : bool {
       if ($this->isNewItem()) {
@@ -2480,7 +2480,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * Choose the best language for anonymous form
+    * Choose the best language for publicly form
     *
     * @return string the best language for this form and session context
     */
