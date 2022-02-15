@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2022 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -29,39 +29,21 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-
-Session::checkRight('entity', UPDATE);
-
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
 }
 
-$formFk = PluginFormcreatorForm::getForeignKeyField();
-if (isset($_POST['profiles_id']) && isset($_POST[$formFk])) {
-   if (isset($_POST['access_rights'])) {
-      $form = PluginFormcreatorCommon::getForm();
-      $form->update([
-         'id'                 => (int) $_POST[$formFk],
-         'access_rights'      => (int) $_POST['access_rights'],
-         'is_captcha_enabled' => $_POST['is_captcha_enabled'] ?? false,
-      ]);
+class PluginFormcreatorRestrictedFormDropdown extends AbstractRightsDropdown
+{
+   protected static function getAjaxUrl(): string {
+      return Plugin::getWebDir('formcreator') . "/ajax/getRestrictedFormDropdownValue.php";
    }
 
-   $form_profile = new PluginFormcreatorForm_Profile();
-   $form_profile->deleteByCriteria([
-         $formFk    => (int) $_POST[$formFk],
-   ]);
-
-   foreach ($_POST['profiles_id'] as $profile_id) {
-      if ($profile_id != 0) {
-         $form_profile = new PluginFormcreatorForm_Profile();
-         $form_profile->add([
-               'plugin_formcreator_forms_id' => (int) $_POST[$formFk],
-               'profiles_id'                 => (int) $profile_id,
-         ]);
-      }
+   protected static function getTypes(): array {
+      return [
+         User::getType(),
+         Group::getType(),
+         Profile::getType(),
+      ];
    }
 }
-Html::back();

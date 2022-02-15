@@ -497,6 +497,8 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorEntityconfig',
          'PluginFormcreatorFormAnswer',
          'PluginFormcreatorForm_Profile',
+         'PluginFormcreatorForm_User',
+         'PluginFormcreatorForm_Group',
          'PluginFormcreatorForm_Validator',
          'PluginFormcreatorForm',
          'PluginFormcreatorCondition',

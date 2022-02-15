@@ -20,3 +20,5 @@ tests/logs/
 development/
 
 node_modules/
+
+tests/code-coverage
