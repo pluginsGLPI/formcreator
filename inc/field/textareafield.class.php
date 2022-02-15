@@ -239,7 +239,10 @@ class TextareaField extends TextField
 
    public function getValueForTargetText($domain, $richText): ?string {
       $value = $this->value;
-      if (!$richText) {
+      if ($richText) {
+         $value = Sanitizer::unsanitize($value);
+         $value = Html::entities_deep($value);
+      } else {
          $value = Sanitizer::unsanitize($value);
          $value = strip_tags($value);
       }
