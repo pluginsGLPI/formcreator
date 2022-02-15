@@ -799,7 +799,7 @@ PluginFormcreatorTranslatableInterface
     * Adds an user to the given actor role (requester, observer assigned or supplier)
     *
     * @param string $role role of the user
-    * @param string $user user ID or email address for anonymous users
+    * @param string $user user ID or email address for accountless users
     * @param bool $notify true to enable notification for the actor
     * @return boolean true on success, false on error
     */

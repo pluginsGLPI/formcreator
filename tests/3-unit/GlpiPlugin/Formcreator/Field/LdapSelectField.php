@@ -41,9 +41,9 @@ class LdapSelectField extends CommonTestCase {
       $this->string($output)->isEqualTo('LDAP Select');
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isFalse();
    }
 

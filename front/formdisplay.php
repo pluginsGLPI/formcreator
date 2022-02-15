@@ -60,7 +60,7 @@ if (isset($_REQUEST['id'])
       // If user is not authenticated, create temporary user
       if (!isset($_SESSION['glpiname'])) {
          $_SESSION['formcreator_forms_id'] = $form->getID();
-         $_SESSION['formcreator_anonymous'] = true;
+         $_SESSION['formcreator_public'] = true;
          $_SESSION['glpiname'] = 'formcreator_temp_user';
          $_SESSION['valid_id'] = session_id();
          $_SESSION['glpiactiveentities'] = [$form->fields['entities_id']];
@@ -75,9 +75,9 @@ if (isset($_REQUEST['id'])
    $form->displayUserForm();
 
    // If user was not authenticated, remove temporary user
-   if (isset($_SESSION['formcreator_anonymous'])) {
+   if (isset($_SESSION['formcreator_public'])) {
       unset($_SESSION['glpiname']);
-      unset($_SESSION['formcreator_anonymous']);
+      unset($_SESSION['formcreator_public']);
       session_write_close();
    }
 } else if (isset($_GET['answer_saved'])) {

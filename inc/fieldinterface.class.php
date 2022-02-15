@@ -252,9 +252,9 @@ interface PluginFormcreatorFieldInterface
    /**
     * Is the field compatible with anonymous form ?
     *
-    * @return boolean true if the field can work with anonymous forms
+    * @return boolean true if the field can work with public forms
     */
-   public function isAnonymousFormCompatible() : bool;
+   public function isPublicFormCompatible() : bool;
 
    /**
     * Gets HTML code for the icon of a field

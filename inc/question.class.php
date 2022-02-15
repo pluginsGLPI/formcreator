@@ -354,7 +354,7 @@ PluginFormcreatorTranslatableInterface
       $form = PluginFormcreatorCommon::getForm();
       $section = PluginFormcreatorSection::getById($input[PluginFormcreatorSection::getForeignKeyField()]);
       $form = PluginFormcreatorForm::getByItem($section);
-      if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
+      if ($form->isPublicAccess() && !$this->field->isPublicFormCompatible()) {
          Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
          return [];
       }

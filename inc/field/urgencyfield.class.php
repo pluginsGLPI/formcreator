@@ -227,7 +227,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
