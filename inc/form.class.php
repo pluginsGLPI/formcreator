@@ -1541,6 +1541,7 @@ PluginFormcreatorTranslatableInterface
          'WHERE' => [
             "$formTable.is_active" => '1',
             "$formTable.is_deleted" => '0',
+            "$formTable.is_visible" => '1',
             'OR' => [
                "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
                "$formLanguage.name"  => $_SESSION['glpilanguage'],
