@@ -763,7 +763,6 @@ PluginFormcreatorTranslatableInterface
 
       $result_forms = $DB->request($where_form);
 
-
       $formList = [];
       if ($result_forms->count() > 0) {
          foreach ($result_forms as $form) {
@@ -832,53 +831,13 @@ PluginFormcreatorTranslatableInterface
          $defaultForms = true;
          // No form nor FAQ have been selected
          // Fallback to default forms
-         $where_form = [
-            'AND' => [
-               "$table_form.is_active" => '1',
-               "$table_form.is_deleted" => '0',
-               'OR' => [
-                  "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
-                  "$table_formLanguage.name" => $_SESSION['glpilanguage'],
-               ],
-               "$table_form.is_default" => ['<>', '0']
-            ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false),
+         $query_forms = self::getFormListQuery();
+         $query_forms['AND']["$table_form.is_default"] = ['<>', '0'];
+         $query_forms['SELECT'] = [
+            $table_form => ['id', 'name', 'icon', 'icon_color', 'background_color', 'description', 'usage_count'],
          ];
-         $where_form['AND'][] = [
-            'OR' => [
-               'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
-               "$table_form.id" => new QuerySubQuery([
-                  'SELECT' => 'plugin_formcreator_forms_id',
-                  'FROM' => $table_fp,
-                  'WHERE' => [
-                     'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                  ]
-               ])
-            ]
-         ];
-
-         $query_forms = [
-            'SELECT' => [
-               $table_form => ['id', 'name', 'icon', 'icon_color', 'background_color', 'description', 'usage_count'],
-            ],
-            'FROM' => $table_form,
-            'LEFT JOIN' => [
-               $table_cat => [
-                  'FKEY' => [
-                     $table_cat => 'id',
-                     $table_form => PluginFormcreatorCategory::getForeignKeyField(),
-                  ]
-               ],
-               $table_formLanguage => [
-                  'FKEY' => [
-                     $table_form => 'id',
-                     $table_formLanguage => PluginFormcreatorForm::getForeignKeyField(),
-                  ]
-               ]
-            ],
-            'WHERE' => $where_form,
-            'ORDER' => [
-               $order
-            ],
+         $query_forms['ORDER'] = [
+            $order
          ];
          $result_forms = $DB->request($query_forms);
 

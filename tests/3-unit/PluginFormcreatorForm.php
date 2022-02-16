@@ -1313,4 +1313,26 @@ class PluginFormcreatorForm extends CommonTestCase {
       $row = array_shift($rows);
       $this->string($row['name'])->isEqualTo(\PluginFormcreatorSection::getTypeName(1));
    }
+
+   // public function countAvailableFormProvider() {
+   //    $form1 = $this->getForm([
+   //       ''
+   //    ]);
+
+   //    return [
+   //       [
+   //          'form' => $form1
+   //       ]
+   //    ];
+   // }
+
+   // /**
+   //  * @dataProvider countAvailableFormProvider
+   //  */
+   // public function testCountAvailableForm($formProperties, $expected) {
+   //    $form = $this->getForm();
+   //    $success = $form->update(['id' => $form->getID()] + $formProperties);
+
+   //    $this->boolean($success)->isTrue();
+   // }
 }
