@@ -1828,7 +1828,7 @@ PluginFormcreatorTranslatableInterface
       /** @var PluginFormcreatorCategory */
       $formCategory = PluginFormcreatorCategory::getById($export['plugin_formcreator_categories_id']);
       if ($formCategory instanceof CommonDBTM) {
-         $export['_plugin_formcreator_category'] = $formCategory->fiels['completename'];
+         $export['_plugin_formcreator_category'] = $formCategory->fields['completename'];
       }
 
       // remove non needed keys
