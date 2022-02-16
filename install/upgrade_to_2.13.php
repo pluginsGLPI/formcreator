@@ -230,6 +230,22 @@ class PluginFormcreatorUpgradeTo2_13 {
       }
 
       $table = 'glpi_plugin_formcreator_entityconfigs';
+      $rows = $DB->request([
+         'COUNT' => 'c',
+         'FROM' => $table,
+         'WHERE' => ['id' => 0]
+      ]);
+      $count = $rows !== null ?$rows->current()['c'] : null;
+      if ($count !== null) {
+         if ($count == 1) {
+            $rows = $DB->request([
+               'SELECT' => ['MAX' => 'id AS max_id'],
+               'FROM' => $table,
+            ]);
+            $newId = (int) ($rows->current()['max_id'] + 1);
+            $DB->query("UPDATE `$table` SET `id`='$newId' WHERE `id` = 0");
+         }
+      }
       $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null auto_increment');
    }
 }
