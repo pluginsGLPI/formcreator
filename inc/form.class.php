@@ -634,6 +634,58 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
+    * get the SQL joins and conditions to select the forms available for the current user
+    */
+   public static function getFormListQuery() {
+      $dbUtils           = new DbUtils();
+      $formTable         = getTableForItemType(PluginFormcreatorForm::class);
+      $formLanguageTable = getTableForItemType(PluginFormcreatorForm_Language::class);
+      $formProfileTable  = getTableForItemType(PluginFormcreatorForm_Profile::class);
+
+      $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($formTable, '', '', true, false, (new PluginFormcreatorForm())->maybeRecursive());
+      $condition = [
+         'FROM' => $formTable,
+         'LEFT JOIN' => [
+            $formProfileTable => [
+               'FKEY' => [
+                  $formProfileTable => PluginFormcreatorForm::getForeignKeyField(),
+                  $formTable => 'id',
+               ]
+            ],
+            $formLanguageTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formLanguageTable => PluginFormcreatorForm::getForeignKeyField(),
+               ]
+            ],
+         ],
+         'WHERE' => [
+            'AND' => [
+               "$formTable.is_active"  => '1',
+               "$formTable.is_visible" => '1',
+               "$formTable.is_deleted" => '0',
+               [
+                  'OR' => [
+                     "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                     "$formLanguageTable.name" => $_SESSION['glpilanguage']
+                  ],
+               ],
+               [
+                  'OR' => [
+                     'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                     [
+                        "$formProfileTable.profiles_id" => $_SESSION['glpiactiveprofile']['id']
+                     ]
+                  ],
+               ]
+            ] + $entityRestrict,
+         ],
+      ];
+
+      return $condition;
+   }
+
+   /**
     * Show form and FAQ items
     * @param number $rootCategory Items of this subtree only. 0 = no filtering
     * @param string $keywords Filter items with keywords
@@ -655,32 +707,36 @@ PluginFormcreatorTranslatableInterface
       $order         = "$table_form.name ASC";
 
       $dbUtils = new DbUtils();
-      $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($table_form, "", "", true, false);
-      if (count($entityRestrict)) {
-         $entityRestrict = [$entityRestrict];
-      }
-      $where_form = [
-         'AND' => [
-            "$table_form.is_active" => '1',
-            "$table_form.is_visible" => '1',
-            "$table_form.is_deleted" => '0',
-            'OR' => [
-               "$table_form.language" => [$_SESSION['glpilanguage'], '0', '', null],
-               "$table_formLanguage.name" => $_SESSION['glpilanguage']
-            ],
-         ] + $entityRestrict
+
+      $where_form = self::getFormListQuery();
+      $where_form['SELECT'] = [
+         $table_form => ['id', 'name', 'icon', 'icon_color', 'background_color', 'description', 'usage_count', 'is_default'],
+      ];
+      $where_form['LEFT JOIN'][$table_cat] = [
+         'FKEY' => [
+            $table_cat => 'id',
+            $table_form => $categoryFk,
+         ]
+      ];
+      $where_form['LEFT JOIN'][$table_section] = [
+         'FKEY' => [
+            $table_section => PluginFormcreatorForm::getForeignKeyField(),
+            $table_form => 'id',
+         ]
+      ];
+      $where_form['LEFT JOIN'][$table_question] = [
+         'FKEY' => [
+            $table_question => PluginFormcreatorSection::getForeignKeyField(),
+            $table_section => 'id'
+         ]
       ];
       if ($helpdeskHome) {
          $where_form['AND']["$table_form.helpdesk_home"] = '1';
-      }
-
-      $selectedCategories = [];
+      }      $selectedCategories = [];
       if ($rootCategory != 0) {
          $selectedCategories = getSonsOf($table_cat, $rootCategory);
          $where_form['AND']["$table_form.$categoryFk"] = $selectedCategories;
       }
-
-      // Find forms accessible by the current user
       $keywords = trim($keywords);
       if (!empty($keywords)) {
          $keywordsWithWilcards = $DB->escape(PluginFormcreatorCommon::prepareBooleanKeywords($keywords));
@@ -693,64 +749,20 @@ PluginFormcreatorTranslatableInterface
             ]
          ];
       }
-      $where_form['AND'][] = [
-         'OR' => [
-            'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
-            [
-               "$table_fp.profiles_id" => $_SESSION['glpiactiveprofile']['id']
-            ]
-         ]
+
+      $where_form['GROUPBY'] = [
+         "$table_form.id",
+         "$table_form.name",
+         "$table_form.description",
+         "$table_form.usage_count",
+         "$table_form.is_default"
+      ];
+      $where_form['ORDER'] = [
+         $order
       ];
 
-      $result_forms = $DB->request([
-         'SELECT' => [
-            $table_form => ['id', 'name', 'icon', 'icon_color', 'background_color', 'description', 'usage_count', 'is_default'],
-         ],
-         'FROM' => $table_form,
-         'LEFT JOIN' => [
-            $table_cat => [
-               'FKEY' => [
-                  $table_cat => 'id',
-                  $table_form => $categoryFk,
-               ]
-            ],
-            $table_section => [
-               'FKEY' => [
-                  $table_section => PluginFormcreatorForm::getForeignKeyField(),
-                  $table_form => 'id',
-               ]
-            ],
-            $table_question => [
-               'FKEY' => [
-                  $table_question => PluginFormcreatorSection::getForeignKeyField(),
-                  $table_section => 'id'
-               ]
-            ],
-            $table_fp => [
-               'FKEY' => [
-                  $table_fp => PluginFormcreatorForm::getForeignKeyField(),
-                  $table_form => 'id',
-               ]
-            ],
-            $table_formLanguage => [
-               'FKEY' => [
-                  $table_form => 'id',
-                  $table_formLanguage => PluginFormcreatorForm::getForeignKeyField(),
-               ]
-            ],
-         ],
-         'WHERE' => $where_form,
-         'GROUPBY' => [
-            "$table_form.id",
-            "$table_form.name",
-            "$table_form.description",
-            "$table_form.usage_count",
-            "$table_form.is_default"
-         ],
-         'ORDER' => [
-            $order
-         ],
-      ]);
+      $result_forms = $DB->request($where_form);
+
 
       $formList = [];
       if ($result_forms->count() > 0) {
@@ -1515,7 +1527,7 @@ PluginFormcreatorTranslatableInterface
    public static function countAvailableForm(): int {
       global $DB;
 
-      $formTable        = self::getTable();
+      $formTable        = PluginFormcreatorForm::getTable();
       $formProfileTable = PluginFormcreatorForm_Profile::getTable();
 
       if (!$DB->tableExists($formTable)
@@ -1524,43 +1536,9 @@ PluginFormcreatorTranslatableInterface
              return 0;
       }
 
-      $formFk       = self::getForeignKeyField();
-      $formLanguage = PluginFormcreatorForm_Language::getTable();
-
-      $result = $DB->request([
-         'COUNT' => 'c',
-         'FROM' => $formTable,
-         'LEFT JOIN' => [
-            $formLanguage => [
-               'FKEY' => [
-                  $formLanguage => $formFk,
-                  $formTable    => 'id',
-               ],
-            ],
-         ],
-         'WHERE' => [
-            "$formTable.is_active" => '1',
-            "$formTable.is_deleted" => '0',
-            "$formTable.is_visible" => '1',
-            'OR' => [
-               "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
-               "$formLanguage.name"  => $_SESSION['glpilanguage'],
-            ],
-            [
-               'OR' => [
-                  "$formTable.access_rights" => ['<>', self::ACCESS_RESTRICTED],
-                  "$formTable.id" => new QuerySubQuery([
-                     'SELECT' => $formFk,
-                     'FROM' => $formProfileTable,
-                     'WHERE' => [
-                        'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                     ]
-                  ]),
-               ],
-            ],
-         ] + (new DbUtils())->getEntitiesRestrictCriteria($formTable, '', '', (new self())->maybeRecursive()),
-
-      ]);
+      $listQuery = self::getFormListQuery();
+      $listQuery['COUNT'] = 'c';
+      $result = $DB->request($listQuery);
       $result->rewind();
       $nb = $result->current()['c'];
 
