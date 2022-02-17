@@ -1418,7 +1418,7 @@ function plugin_formcreator_hideAssignedForm() {
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
    var dropdown_type = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
-   var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
+   var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"][name="asset_form"]').data('id');
 
    $.post({
       url: formcreatorRootDoc + '/ajax/dropdown_values.php',
@@ -1719,7 +1719,7 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
 }
 
 function plugin_formcreator_changeQuestionType(rand) {
-   var questionId = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val() || 0;
+   var questionId = $('[data-itemtype="PluginFormcreatorQuestion"][name="asset_form"]').data('id') || 0;
    var questionType = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
 
    $.post({
