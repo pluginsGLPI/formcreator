@@ -197,6 +197,7 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_NONE = 1;
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
+   const LOCATION_RULE_LAST_ANSWER  = 4;
 
    const COMMONITIL_VALIDATION_RULE_NONE = 1;
    const COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
@@ -277,9 +278,10 @@ PluginFormcreatorTranslatableInterface
 
    public static function getEnumLocationRule() {
       return [
-         self::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
-         self::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
-         self::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_NONE         => __('Location from template or none', 'formcreator'),
+         self::LOCATION_RULE_SPECIFIC     => __('Specific location', 'formcreator'),
+         self::LOCATION_RULE_ANSWER       => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_LAST_ANSWER  => __('Last valid answer', 'formcreator'),
       ];
    }
 
