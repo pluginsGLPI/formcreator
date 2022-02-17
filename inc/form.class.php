@@ -470,15 +470,10 @@ PluginFormcreatorTranslatableInterface
             $i++;
             echo '<tr class="tab_bg_'.($i % 2).'">';
             $targetItemUrl = $targetType::getFormURLWithID($targetId);
-            echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
+            echo '<td><a href="' . $targetItemUrl . '">';
 
             echo $target->fields['name'];
-            echo '</td>';
-
-            echo '<td align="center" width="32">';
-            echo '<i class="fas fa-edit" alt="*" title="'.__('Edit').'"
-               onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer"></i> ';
-            echo '</td>';
+            echo '</a></td>';
 
             echo '<td align="center" width="32">';
             echo '<i class="far fa-trash-alt" alt="*" title="'.__('Delete', 'formcreator').'"
