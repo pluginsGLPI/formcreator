@@ -87,12 +87,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       $label .= _n('Dropdown', 'Dropdowns', 1);
       $label .= '</label>';
 
-      $itemtype = $this->question->fields['values'];
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues !== null) {
-         $itemtype = $decodedValues['itemtype'];
-      }
+      $itemtype = $this->question->fields['itemtype'];
 
+      // Parse json values (show_tree_root, show_tree_depth and selectable_tree_root)
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $root = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
       $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
