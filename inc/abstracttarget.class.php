@@ -476,7 +476,7 @@ PluginFormcreatorTranslatableInterface
             $category = $this->fields['category_question'];
             break;
          case self::CATEGORY_RULE_LAST_ANSWER:
-            $form_id = $formanswer->fields['id'];
+            $form_answer_id = $formanswer->fields['id'];
 
             // Get all answers for dropdown questions of this form, ordered
             // from last to first displayed
@@ -492,7 +492,7 @@ PluginFormcreatorTranslatableInterface
                   ]
                ],
                'WHERE' => [
-                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
                   'question.fieldtype'                       => "dropdown",
                ],
                'ORDER' => [
