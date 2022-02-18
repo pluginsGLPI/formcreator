@@ -387,7 +387,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       $entity = new Entity();
       $entityConfig = new self();
       // Search in entity data of the current entity
-      if ($entity->getFromDbByCrit(['entities_id' => $entities_id])) {
+      if ($entity->getFromDB($entities_id)) {
          // Value is defined : use it
          if ($entityConfig->getFromDBByCrit(['entities_id' => $entities_id])) {
             if (is_numeric($default_value)
