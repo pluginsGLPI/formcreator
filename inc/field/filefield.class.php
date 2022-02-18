@@ -41,6 +41,7 @@ use PluginFormcreatorForm;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use PluginFormcreatorSection;
 use PluginFormcreatorQuestion;
+use PluginFormcreatorCommon;
 
 class FileField extends PluginFormcreatorAbstractField
 {
