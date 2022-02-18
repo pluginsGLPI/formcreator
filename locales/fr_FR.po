@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Johan Cwiklinski <jcwiklinski@teclib.com>, 2021
+# Johan Cwiklinski, 2021
 # gerald antoniolli <deeper26@gmail.com>, 2021
 # Tiago Graça, 2021
 # tguichard25 <t.guichard@mut25.fr>, 2021
