@@ -58,12 +58,13 @@ function plugin_version_formcreator() {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
+   $webDir = Plugin::getWebDir('formcreator');
    $requirements = [
       'name'           => 'Form Creator',
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
-      'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
+      'license'        => '<a href="' . $webDir . '/LICENSE.md" target="_blank">GPLv2</a>',
       'requirements'   => [
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
