@@ -83,6 +83,15 @@ if (isset($_POST['update'])) {
       'admin',
       'PluginFormcreatorForm'
    );
+
+   $targetProblem->getFromDB((int) $_REQUEST['id']);
+   $form = PluginFormcreatorForm::getByItem($targetProblem);
+   $_SESSION['glpilisttitle'][$targetProblem::getType()] = sprintf(
+      __('%1$s = %2$s'),
+      $form->getTypeName(1), $form->getName()
+   );
+   $_SESSION['glpilisturl'][$targetProblem::getType()]   = $form->getFormURL()."?id=".$form->getID();
+
    $targetProblem->display($_REQUEST);
 
    Html::footer();
