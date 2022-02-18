@@ -2059,7 +2059,6 @@ PluginFormcreatorTranslatableInterface
       echo Html::input('name', [
          'id' => 'name',
          'autofocus' => '',
-         'value' => $this->fields['name'],
          'required' => 'required',
       ]);
       echo '</td>';
