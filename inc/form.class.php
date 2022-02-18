@@ -1264,38 +1264,6 @@ PluginFormcreatorTranslatableInterface
       ]);
    }
 
-   /**
-    * gets a form from database from a question
-    *
-    * @param int $questionId
-    */
-   public function getByQuestionId(int $questionId) : void {
-      $formTable = PluginFormcreatorForm::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $sectionTable = PluginFormcreatorSection::getTable();
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $questionTable = PluginFormcreatorQuestion::getTable();
-      $this->getFromDBByRequest([
-         'INNER JOIN' => [
-            $sectionTable => [
-               'FKEY' => [
-                  $formTable    => 'id',
-                  $sectionTable => $formFk,
-               ]
-            ],
-            $questionTable => [
-               'FKEY' => [
-                  $questionTable => $sectionFk,
-                  $sectionTable  => 'id'
-               ]
-            ]
-         ],
-         'WHERE' => [
-            $questionTable . '.id' => $questionId,
-         ]
-      ]);
-   }
-
    public function duplicate(array $options = []) {
       $linker = new PluginFormcreatorLinker($options);
 

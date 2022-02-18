@@ -970,8 +970,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => \Computer::class,
       ]);
-      $form = new \PluginFormcreatorForm();
-      $form->getByQuestionId($question->getID());
+      $form = \PluginFormcreatorForm::getByItem($question);
 
       // Have an item to associate
       $computer = new \Computer();
@@ -1049,8 +1048,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $validItemtype,
       ]);
-      $form1 = new \PluginFormcreatorForm();
-      $form1->getByQuestionId($question1->getID());
+      $form1 = \PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1079,8 +1077,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $validItemtype,
       ]);
-      $form2 = new \PluginFormcreatorForm();
-      $form2->getByQuestionId($question3->getID());
+      $form2 = \PluginFormcreatorForm::getByItem($question3);
       $sectionId = $question3->fields['plugin_formcreator_sections_id'];
       $question4 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1112,8 +1109,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $invalidItemtype,
       ]);
-      $form3 = new \PluginFormcreatorForm();
-      $form3->getByQuestionId($question5->getID());
+      $form3 = \PluginFormcreatorForm::getByItem($question5);
       $sectionId = $question5->fields['plugin_formcreator_sections_id'];
       $question6 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1146,8 +1142,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $validItemtype,
       ]);
-      $form4 = new \PluginFormcreatorForm();
-      $form4->getByQuestionId($question7->getID());
+      $form4 = \PluginFormcreatorForm::getByItem($question7);
       $sectionId = $question7->fields['plugin_formcreator_sections_id'];
       $question8 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,

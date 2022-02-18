@@ -390,17 +390,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $form->fields['usage_count'])->isEqualTo(1);
    }
 
-   public function testGetByQuestionId() {
-      $question = $this->getQuestion();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields['plugin_formcreator_sections_id']);
-      $expected = $section->fields['plugin_formcreator_forms_id'];
-      $form = $this->newTestedInstance();
-      $form->getByQuestionId($question->getID());
-
-      $this->integer((int) $form->getID())->isEqualTo($expected);
-   }
-
    public function testCreateValidationNotification() {
       global $DB, $CFG_GLPI;
 
