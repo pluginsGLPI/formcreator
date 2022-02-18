@@ -162,9 +162,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          return false;
       }
 
-      if (!$this->getFromDB($ID)) {
+      if (!$this->getFromDbByCrit(['entities_id' => $ID])) {
          $this->add([
-            'id'                => $ID,
+            'entities_id'       => $ID,
             'replace_helpdesk'  => self::CONFIG_PARENT,
             'is_kb_separated'   => self::CONFIG_PARENT,
             'is_search_visible' => self::CONFIG_PARENT,
