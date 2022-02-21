@@ -921,13 +921,15 @@ JAVASCRIPT;
     * @return void
     */
    public static function hookPreShowTab(array $options) {
-      if ($options['item']::getType() == PluginFormcreatorFormAnswer::getType()) {
-         $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
-         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
-            $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
-            [PluginFormcreatorFormAnswer::getType()]
-         );
+      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+         return;
       }
+
+      $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
+         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
+         [PluginFormcreatorFormAnswer::getType()]
+      );
    }
 
    /**
@@ -937,8 +939,10 @@ JAVASCRIPT;
    * @return void
    */
    public static function hookPostShowTab(array $options) {
-      if ($options['item']::getType() == PluginFormcreatorFormAnswer::getType()) {
-         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
+      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+         return;
       }
+
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
    }
 }
