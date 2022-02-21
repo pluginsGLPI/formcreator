@@ -848,7 +848,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
 
       $data['users_id_recipient'] = $formanswer->fields['requester_id'];
-      $data['users_id_lastupdater'] = Session::getLoginUserID();
+      $lastUpdater = Session::getLoginUserID();
+      $data['users_id_lastupdater'] = $lastUpdater != '' ? $lastUpdater : 0;
 
       $data = $this->setTargetType($data, $formanswer);
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
