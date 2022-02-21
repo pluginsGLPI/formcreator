@@ -44,6 +44,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          case 'testPrepareTemplate':
          case 'testDeleteLinkedTickets':
          case 'testSetTargetAssociatedItem':
+         case 'testSetTargetLocation':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -1329,6 +1330,116 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       } else {
          $this->boolean($output)->isFalse();
          $this->sessionHasMessage($message, ERROR);
+      }
+   }
+
+   public function providerSetTargetLocation_NotSet() {
+      // Prepare form
+
+      $form1 = $this->getForm();
+
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => 'foo',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+         'location_question' => '0',
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => null,
+         ],
+      ];
+   }
+
+   public function providerSetTargetLocation_LastItem() {
+      // Prepare form
+      $validItemtype = \Location::class;
+      $invalidItemtype = \Monitor::getType();
+
+      $item1 = new $validItemtype();
+      $item1->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item1->isNewItem())->isFalse();
+      $item2 = new $validItemtype();
+      $item2->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item2->isNewItem())->isFalse();
+
+      $question1 = $this->getQuestion([
+         'fieldtype'       => 'dropdown',
+         'dropdown_values' => $validItemtype,
+      ]);
+      $form1 = \PluginFormcreatorForm::getByItem($question1);
+      $sectionId = $question1->fields['plugin_formcreator_sections_id'];
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'dropdown',
+         'dropdown_values'                => $validItemtype
+      ]);
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => 'foo',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER,
+         'location_question' => '0',
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
+         'formcreator_field_' . $question2->getID() => (string) $item2->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => $item2->getID(),
+         ],
+      ];
+   }
+
+   public function providerSetTargetLocation() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
+      return array_merge(
+         $this->providerSetTargetLocation_NotSet(),
+         $this->providerSetTargetLocation_LastItem(),
+      );
+   }
+
+   /**
+    * @dataProvider providerSetTargetLocation
+    */
+   public function testSetTargetLocation($instance, $formanswer, $expected) {
+      $output = $instance->publicSetTargetLocation([], $formanswer);
+      if ($expected !== null) {
+         $this->integer((int) $output['locations_id'])->isIdenticalTo($expected);
+      } else {
+         $this->array($output)->notHasKey('locations_id');
       }
    }
 }
