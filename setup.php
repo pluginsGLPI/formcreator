@@ -365,7 +365,7 @@ function plugin_formcreator_hook() {
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
+   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
 
    // Config page
    $links  = [];
