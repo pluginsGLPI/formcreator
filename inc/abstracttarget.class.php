@@ -197,6 +197,7 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_NONE = 1;
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
+   const LOCATION_RULE_LAST_ANSWER  = 4;
 
    const COMMONITIL_VALIDATION_RULE_NONE = 1;
    const COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
@@ -277,9 +278,10 @@ PluginFormcreatorTranslatableInterface
 
    public static function getEnumLocationRule() {
       return [
-         self::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
-         self::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
-         self::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_NONE         => __('Location from template or none', 'formcreator'),
+         self::LOCATION_RULE_SPECIFIC     => __('Specific location', 'formcreator'),
+         self::LOCATION_RULE_ANSWER       => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_LAST_ANSWER  => __('Last valid answer', 'formcreator'),
       ];
    }
 
@@ -474,7 +476,7 @@ PluginFormcreatorTranslatableInterface
             $category = $this->fields['category_question'];
             break;
          case self::CATEGORY_RULE_LAST_ANSWER:
-            $form_id = $formanswer->fields['id'];
+            $form_answer_id = $formanswer->fields['id'];
 
             // Get all answers for dropdown questions of this form, ordered
             // from last to first displayed
@@ -490,7 +492,7 @@ PluginFormcreatorTranslatableInterface
                   ]
                ],
                'WHERE' => [
-                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
                   'question.fieldtype'                       => "dropdown",
                ],
                'ORDER' => [

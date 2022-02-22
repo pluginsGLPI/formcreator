@@ -1379,6 +1379,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          1
       );
       $ticketUserRow = array_pop($ticketUserRow);
+      $requester = $ticketUserRow !== null ? $ticketUserRow['users_id'] : 0;
       $issueName = $ticket->fields['name'] != '' ? addslashes($ticket->fields['name']) : '(' . $ticket->getID() . ')';
       $issue->add([
          'items_id'           => $ticketId,
@@ -1389,7 +1390,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'date_mod'           => $ticket->fields['date_mod'],
          'entities_id'        => $ticket->fields['entities_id'],
          'is_recursive'       => '0',
-         'requester_id'       => $ticketUserRow['users_id'],
+         'requester_id'       => $requester,
          'comment'            => addslashes($ticket->fields['content']),
       ]);
    }
