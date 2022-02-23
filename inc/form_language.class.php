@@ -393,7 +393,7 @@ implements PluginFormcreatorExportableInterface
          $formId = $item->getID();
          $url = self::getFormURL();
          echo "<div class='center'>" .
-            "<a class='vsubmit' href='#' onclick='plugin_formcreator.createLanguage($formId);'>" . __('Add a new language') .
+            "<a class='vsubmit' href='#' onclick='plugin_formcreator.createLanguage($formId);'>" . __('Add a new language', 'formcreator') .
             "</a></div><br>";
          echo '<div id="plugin_formcreator_formLanguage"></div>';
       }
