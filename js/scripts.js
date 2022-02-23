@@ -1900,21 +1900,34 @@ function plugin_formcreator_change_location(rand) {
 
 function plugin_formcreator_change_validation(rand) {
    switch($('#dropdown_commonitil_validation_rule' + rand).val()) {
-      case '1' : // PluginFormcreatorAbstractTarget::VALIDATION_RULE_NONE
+      case '1' : // PluginFormcreatorAbstractTarget::COMMONITIL_VALIDATION_RULE_NONE
          $('#commonitil_validation_specific_title').hide();
          $('#commonitil_validation_specific').hide();
          $('#commonitil_validation_from_question_title').hide();
          $('#commonitil_validation_answer_user').hide();
+         $('#commonitil_validation_answer_group').hide();
          break;
 
-      case '2' : // PluginFormcreatorAbstractTarget::VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
+      case '2' : // PluginFormcreatorAbstractTarget::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
          $('#commonitil_validation_specific_title').show();
          $('#commonitil_validation_specific').show();
+         $('#commonitil_validation_from_question_title').hide();
+         $('#commonitil_validation_answer_user').hide();
+         $('#commonitil_validation_answer_group').hide();
          break;
 
-      case '3' : // PluginFormcreatorAbstractTarget::VALIDATION_RULE_ANSWER_USER
+      case '3' : // PluginFormcreatorAbstractTarget::COMMONITIL_VALIDATION_RULE_ANSWER_USER
          $('#commonitil_validation_from_question_title').show();
          $('#commonitil_validation_answer_user').show();
+         $('#commonitil_validation_answer_group').hide();
+         $('#commonitil_validation_specific_title').hide();
+         $('#commonitil_validation_specific').hide();
+         break;
+
+      case '4' : // PluginFormcreatorAbstractTarget::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP
+         $('#commonitil_validation_from_question_title').show();
+         $('#commonitil_validation_answer_group').show();
+         $('#commonitil_validation_answer_user').hide();
          $('#commonitil_validation_specific_title').hide();
          $('#commonitil_validation_specific').hide();
          break;
