@@ -921,13 +921,15 @@ JAVASCRIPT;
     * @return void
     */
    public static function hookPreShowTab(array $options) {
-      if ($options['item']::getType() == PluginFormcreatorFormAnswer::getType()) {
-         $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
-         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
-            $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
-            [PluginFormcreatorFormAnswer::getType()]
-         );
+      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+         return;
       }
+
+      $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
+         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
+         [PluginFormcreatorFormAnswer::getType()]
+      );
    }
 
    /**
@@ -937,8 +939,77 @@ JAVASCRIPT;
    * @return void
    */
    public static function hookPostShowTab(array $options) {
-      if ($options['item']::getType() == PluginFormcreatorFormAnswer::getType()) {
-         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
+      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+         return;
       }
+
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
+   }
+
+   public static function hookRedefineMenu($menus) {
+      if (Session::getCurrentInterface() != 'helpdesk') {
+         return $menus;
+      }
+
+      if (plugin_formcreator_replaceHelpdesk() !== false) {
+         $newMenu = [];
+         $newMenu['seek_assistance'] = [
+            'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
+            'title'   => __('Seek assistance', 'formcreator'),
+            'icon'    => 'fa fa-paper-plane',
+         ];
+         $newMenu['my_assistance_requests'] = [
+            'default' => PluginFormcreatorIssue::getSearchURL(false),
+            'title'   => __('My requests for assistance', 'formcreator'),
+            'icon'    => 'fa fa-list',
+         ];
+         if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
+            && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+         ) {
+            $newMenu['faq'] = $menus['faq'];
+            $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
+         }
+         if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+            if (isset($menus['reservation'])) {
+               $newMenu['reservation'] = $menus['reservation'];
+            }
+         }
+         if (RSSFeed::canView()) {
+            $newMenu['feeds'] = [
+               'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
+               'title'   => __('Consult feeds', 'formcreator'),
+               'icon'    => 'fa fa-rss',
+            ];
+         }
+         return $newMenu;
+      }
+
+      // Using GLPI's helpdesk interface; then just modify the menu
+      $newMenus = [];
+      foreach ($menus as $key => $menu) {
+         switch ($key) {
+            case 'create_ticket':
+               $newMenus['forms'] = [
+                  'default' => '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php',
+                  'title'   => _n('Form', 'Forms', 2, 'formcreator'),
+                  'icon' => 'fas fa-edit',
+               ];
+               break;
+
+            case 'tickets':
+               $newMenus['tickets'] = [
+                  'default' => PluginFormcreatorIssue::getSearchURL(false),
+                  'title'   => PluginFormcreatorIssue::getTypeName(Session::getPluralNumber()),
+                  'icon' => 'fas fa-exclamation-circle',
+               ];
+               break;
+
+            default:
+               $newMenus[$key] = $menu;
+         }
+      }
+      $menus = $newMenus;
+
+      return $menus;
    }
 }

@@ -38,6 +38,8 @@ use Html;
 use Session;
 use Toolbox;
 use Glpi\RichText\RichText;
+use Glpi\Toolbox\Sanitizer;
+
 class TextareaField extends TextField
 {
    /** @var array uploaded files on form submit */
@@ -237,17 +239,13 @@ class TextareaField extends TextField
 
    public function getValueForTargetText($domain, $richText): ?string {
       $value = $this->value;
-      if (!$richText) {
-         if (class_exists(\Glpi\Toolbox\Sanitizer::class)) {
-            // GLPI 10
-            $value = \Glpi\Toolbox\Sanitizer::unsanitize($value);
-         } else {
-            $value = Toolbox::unclean_cross_side_scripting_deep($value);
-         }
+      if ($richText) {
+         $value = Sanitizer::unsanitize($value);
+         $value = Html::entities_deep($value);
+      } else {
+         $value = Sanitizer::unsanitize($value);
          $value = strip_tags($value);
       }
-      // $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
-      // $value = Toolbox::getHtmlToDisplay($value);
 
       return $value;
    }

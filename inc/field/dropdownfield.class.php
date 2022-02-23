@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorCommon;
+use PluginFormcreatorForm;
 use Html;
 use Toolbox;
 use Session;
@@ -87,12 +88,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       $label .= _n('Dropdown', 'Dropdowns', 1);
       $label .= '</label>';
 
-      $itemtype = $this->question->fields['values'];
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues !== null) {
-         $itemtype = $decodedValues['itemtype'];
-      }
+      $itemtype = $this->question->fields['itemtype'];
 
+      // Parse json values (show_tree_root, show_tree_depth and selectable_tree_root)
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $root = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
       $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
@@ -214,8 +213,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $fieldName = 'formcreator_field_' . $id;
       $itemtype = $this->getSubItemtype();
 
-      $form = PluginFormcreatorCommon::getForm();
-      $form->getFromDBByQuestion($this->getQuestion());
+      $form = PluginFormcreatorForm::getByItem($this->getQuestion());
       $dparams = [
          'name'     => $fieldName,
          'value'    => $this->value,
@@ -255,15 +253,13 @@ class DropdownField extends PluginFormcreatorAbstractField
             $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
             switch ($decodedValues['entity_restrict']) {
                case self::ENTITY_RESTRICT_FORM:
-                  $form = new PluginFormcreatorForm();
-                  $form->getFromDBByQuestion($this->getQuestion());
+                  $form = PluginFormcreatorForm::getByItem($this->getQuestion());
                   $currentEntity = $form->fields['entities_id'];
                   $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
                   break;
 
                case self::ENTITY_RESTRICT_BOTH:
-                  $form = new PluginFormcreatorForm();
-                  $form->getFromDBByQuestion($this->getQuestion());
+                  $form = PluginFormcreatorForm::getByItem($this->getQuestion());
                   $currentEntity = [$currentEntity, $form->fields['entities_id']];
                   $ancestorEntities = array_merge($ancestorEntities, getAncestorsOf(Entity::getTable(), $currentEntity));
                   break;
@@ -955,8 +951,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $restrictionPolicy = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       switch ($restrictionPolicy) {
          case self::ENTITY_RESTRICT_FORM:
-            $form = PluginFormcreatorCommon::getForm();
-            $form->getFromDBByQuestion($this->getQuestion());
+            $form = PluginFormcreatorForm::getByItem($this->getQuestion());
             $formEntities = [$form->fields['entities_id']];
             if ($form->fields['is_recursive']) {
                $formEntities = $formEntities + (new DBUtils())->getSonsof(Entity::getTable(), $form->fields['entities_id']);
@@ -965,8 +960,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             break;
 
          case self::ENTITY_RESTRICT_BOTH:
-            $form = PluginFormcreatorCommon::getForm();
-            $form->getFromDBByQuestion($this->getQuestion());
+            $form = PluginFormcreatorForm::getByItem($this->getQuestion());
             $formEntities = [$form->fields['entities_id']];
             if ($form->fields['is_recursive']) {
                $formEntities = $formEntities + (new DBUtils())->getSonsof(Entity::getTable(), $form->fields['entities_id']);

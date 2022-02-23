@@ -44,6 +44,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          case 'testPrepareTemplate':
          case 'testDeleteLinkedTickets':
          case 'testSetTargetAssociatedItem':
+         case 'testSetTargetLocation':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -114,9 +115,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testGetEnumLocationType() {
       $output = \PluginFormcreatorTargetTicket::getEnumLocationRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE        => __('Location from template or none', 'formcreator'),
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ]);
    }
 
@@ -597,9 +599,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                   . $eolSimple . \Toolbox::addslashes_deep($sectionName) . $eolSimple
                   . '---------------------------------' . $eolSimple
                   . '1) ' . $questionTag . ' : ' . $answerTag . $eolSimple . $eolSimple,
-               1 => '&lt;h1&gt;Form data&lt;/h1&gt;'
-                  . '&lt;h2&gt;' . \Toolbox::addslashes_deep($sectionName) . '&lt;/h2&gt;'
-                  . '&lt;div&gt;&lt;b&gt;1) ' . $questionTag . ' : &lt;/b&gt;' . $answerTag . '&lt;/div&gt;',
+               1 => '&#60;h1&#62;Form data&#60;/h1&#62;'
+                  . '&#60;h2&#62;' . \Toolbox::addslashes_deep($sectionName) . '&#60;/h2&#62;'
+                  . '&#60;div&#62;&#60;b&#62;1) ' . $questionTag . ' : &#60;/b&#62;' . $answerTag . '&#60;/div&#62;',
             ],
          ],
       ];
@@ -968,8 +970,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => \Computer::class,
       ]);
-      $form = new \PluginFormcreatorForm();
-      $form->getByQuestionId($question->getID());
+      $form = \PluginFormcreatorForm::getByItem($question);
 
       // Have an item to associate
       $computer = new \Computer();
@@ -1047,8 +1048,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $validItemtype,
       ]);
-      $form1 = new \PluginFormcreatorForm();
-      $form1->getByQuestionId($question1->getID());
+      $form1 = \PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1077,8 +1077,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $validItemtype,
       ]);
-      $form2 = new \PluginFormcreatorForm();
-      $form2->getByQuestionId($question3->getID());
+      $form2 = \PluginFormcreatorForm::getByItem($question3);
       $sectionId = $question3->fields['plugin_formcreator_sections_id'];
       $question4 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1110,8 +1109,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $invalidItemtype,
       ]);
-      $form3 = new \PluginFormcreatorForm();
-      $form3->getByQuestionId($question5->getID());
+      $form3 = \PluginFormcreatorForm::getByItem($question5);
       $sectionId = $question5->fields['plugin_formcreator_sections_id'];
       $question6 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1144,8 +1142,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'glpi_objects' => $validItemtype,
       ]);
-      $form4 = new \PluginFormcreatorForm();
-      $form4->getByQuestionId($question7->getID());
+      $form4 = \PluginFormcreatorForm::getByItem($question7);
       $sectionId = $question7->fields['plugin_formcreator_sections_id'];
       $question8 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
@@ -1328,6 +1325,116 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       } else {
          $this->boolean($output)->isFalse();
          $this->sessionHasMessage($message, ERROR);
+      }
+   }
+
+   public function providerSetTargetLocation_NotSet() {
+      // Prepare form
+
+      $form1 = $this->getForm();
+
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => 'foo',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+         'location_question' => '0',
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => null,
+         ],
+      ];
+   }
+
+   public function providerSetTargetLocation_LastItem() {
+      // Prepare form
+      $validItemtype = \Location::class;
+      $invalidItemtype = \Monitor::getType();
+
+      $item1 = new $validItemtype();
+      $item1->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item1->isNewItem())->isFalse();
+      $item2 = new $validItemtype();
+      $item2->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item2->isNewItem())->isFalse();
+
+      $question1 = $this->getQuestion([
+         'fieldtype'       => 'dropdown',
+         'dropdown_values' => $validItemtype,
+      ]);
+      $form1 = \PluginFormcreatorForm::getByItem($question1);
+      $sectionId = $question1->fields['plugin_formcreator_sections_id'];
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'dropdown',
+         'dropdown_values'                => $validItemtype
+      ]);
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => 'foo',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER,
+         'location_question' => '0',
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
+         'formcreator_field_' . $question2->getID() => (string) $item2->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => $item2->getID(),
+         ],
+      ];
+   }
+
+   public function providerSetTargetLocation() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
+      return array_merge(
+         $this->providerSetTargetLocation_NotSet(),
+         $this->providerSetTargetLocation_LastItem(),
+      );
+   }
+
+   /**
+    * @dataProvider providerSetTargetLocation
+    */
+   public function testSetTargetLocation($instance, $formanswer, $expected) {
+      $output = $instance->publicSetTargetLocation([], $formanswer);
+      if ($expected !== null) {
+         $this->integer((int) $output['locations_id'])->isIdenticalTo($expected);
+      } else {
+         $this->array($output)->notHasKey('locations_id');
       }
    }
 }

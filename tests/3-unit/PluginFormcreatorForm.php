@@ -43,6 +43,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testDuplicate':
          case 'testCreateValidationNotification':
          case 'testGetTranslatableStrings':
+         case 'testCountAvailableForm':
             $this->login('glpi', 'glpi');
       }
    }
@@ -387,17 +388,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $form->increaseUsageCount();
       $this->integer((int) $form->fields['usage_count'])->isEqualTo(1);
-   }
-
-   public function testGetByQuestionId() {
-      $question = $this->getQuestion();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields['plugin_formcreator_sections_id']);
-      $expected = $section->fields['plugin_formcreator_forms_id'];
-      $form = $this->newTestedInstance();
-      $form->getByQuestionId($question->getID());
-
-      $this->integer((int) $form->getID())->isEqualTo($expected);
    }
 
    public function testCreateValidationNotification() {
@@ -1312,5 +1302,71 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($rows)->hasSize(1);
       $row = array_shift($rows);
       $this->string($row['name'])->isEqualTo(\PluginFormcreatorSection::getTypeName(1));
+   }
+
+   /**
+    *
+    */
+   public function testCountAvailableForm() {
+      $entity = new \Entity();
+      $entityId = $entity->import([
+         'entities_id' => '0',
+         'name' => $this->getUniqueString()
+      ]);
+
+      $this->boolean(\Session::changeActiveEntities($entityId))->isTrue();
+
+      $form1 = $this->getForm([
+         'entities_id' => $entityId,
+         'is_visible'  => 1,
+         'is_deleted'  => 0,
+         'is_active'   => 1,
+         'language'    => ''
+      ]);
+
+      $form2 = $this->getForm([
+         'entities_id' => $entityId,
+         'is_visible'  => 1,
+         'is_deleted'  => 0,
+         'is_active'   => 1,
+         'language'    => $_SESSION['glpilanguage'],
+      ]);
+
+      // All nextform should not be counted
+      $form3 = $this->getForm([
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 0,
+         'is_active'   => 1,
+         'language'    => '',
+      ]);
+
+      $form4 = $this->getForm([
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 0,
+         'is_active'   => 0,
+         'language'    => '',
+      ]);
+
+      $form5 = $this->getForm([
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 1,
+         'is_active'   => 0,
+         'language'    => '',
+      ]);
+
+      $form6 = $this->getForm([
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 1,
+         'is_active'   => 0,
+         'language'    => 'de_DE',
+      ]);
+
+      $output = \PluginFormcreatorForm::countAvailableForm();
+
+      $this->integer($output)->isEqualTo(2);
    }
 }

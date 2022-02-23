@@ -35,7 +35,7 @@ define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-alpha.3');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
-define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0');
@@ -58,12 +58,13 @@ function plugin_version_formcreator() {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
+   $webDir = Plugin::getWebDir('formcreator');
    $requirements = [
       'name'           => 'Form Creator',
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
-      'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
+      'license'        => '<a href="' . $webDir . '/LICENSE.md" target="_blank">GPLv2</a>',
       'requirements'   => [
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
@@ -364,7 +365,7 @@ function plugin_formcreator_hook() {
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = "plugin_formcreator_redefine_menus";
+   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
 
    // Config page
    $links  = [];

@@ -30,11 +30,15 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use ITILFollowup;
+use KnowbaseItem;
+use ReservationItem;
+use Plugin;
+use Session;
+use Ticket;
 
 class PluginFormcreatorCommon extends CommonTestCase {
    public function beforeTestMethod($method) {
-      global $CFG_GLPI;
-
       switch ($method) {
          case 'testGetTicketStatusForIssue':
             $this->login('glpi', 'glpi');
@@ -448,5 +452,70 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->login('post-only', 'postonly');
       $output = \PluginFormcreatorCommon::getInterface();
       $this->string($output)->isEqualTo('servicecatalog');
+   }
+
+   public function testHookRedefineMenu() {
+      // Create an entity
+      $this->login('glpi', 'glpi');
+      $entity = new \Entity();
+      $entityId = $entity->import([
+         'entities_id' => '0',
+         'name' => __FUNCTION__ . $this->getUniqueString(),
+      ]);
+      // Force creation of the entity config
+      \PluginFormcreatorEntityConfig::getUsedConfig('replace_helpdesk', $entityId);
+
+      // Use an not-self-service account
+      $this->login('glpi', 'glpi');
+
+      // Check the menu is left as is
+      $menus = \Html::generateMenuSession(true);
+      $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
+      $this->array($output)->isIdenticalTo($menus);
+
+      // Check taht service  catalog enabled does not impacts the menu for Central users
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => $entityId]);
+      $this->boolean($entityConfig->isNewItem())->isFalse();
+      $entityConfig->update([
+         'id' => $entityConfig->getID(),
+         'replace_helpdesk' => '1',
+      ]);
+      $this->login('glpi', 'glpi');
+
+      $menus = \Html::generateHelpMenu();
+      $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
+      $this->array($output)->isIdenticalTo($menus);
+
+      $this->login('post-only', 'postonly');
+      $menus = \Html::generateHelpMenu(true);
+      $expected = [
+         'seek_assistance' =>
+         [
+           'default' => 'plugins/formcreator/front/wizard.php',
+           'title' => 'Seek assistance',
+           'icon' => 'fa fa-paper-plane',
+         ],
+         'my_assistance_requests' =>
+         [
+           'default' => '/plugins/formcreator/front/issue.php',
+           'title' => 'My requests for assistance',
+           'icon' => 'fa fa-list',
+         ],
+         'reservation' =>
+         [
+           'default' => '/front/reservationitem.php',
+           'title' => 'Reservations',
+           'icon' => 'ti ti-calendar-event',
+         ],
+         'feeds' =>
+         [
+           'default' => 'plugins/formcreator/front/wizardfeeds.php',
+           'title' => 'Consult feeds',
+           'icon' => 'fa fa-rss',
+         ],
+      ];
+      $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
+      $this->array($output)->isIdenticalTo($expected);
    }
 }

@@ -32,6 +32,7 @@
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Formcreator\Field\DropdownField;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -633,6 +634,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                case self::LOCATION_RULE_SPECIFIC:
                   $input['location_question'] = $input['_location_specific'];
                   break;
+               case self::LOCATION_RULE_LAST_ANSWER:
                default:
                   $input['location_question'] = '0';
             }
@@ -847,7 +849,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
       }
 
       $data['users_id_recipient'] = $formanswer->fields['requester_id'];
-      $data['users_id_lastupdater'] = Session::getLoginUserID();
+      $lastUpdater = Session::getLoginUserID();
+      $data['users_id_lastupdater'] = $lastUpdater != '' ? $lastUpdater : 0;
 
       $data = $this->setTargetType($data, $formanswer);
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
@@ -971,6 +974,57 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             break;
          case self::LOCATION_RULE_SPECIFIC:
             $location = $this->fields['location_question'];
+            break;
+         case self::LOCATION_RULE_LAST_ANSWER:
+            $form_answer_id = $formanswer->fields['id'];
+
+            // Get all answers for dropdown questions of this form, ordered
+            // from last to first displayed
+            $answers = $DB->request([
+               'SELECT' => ['answer.plugin_formcreator_questions_id', 'answer.answer', 'question.values'],
+               'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
+               'JOIN' => [
+                  PluginFormcreatorQuestion::getTable() . ' AS question' => [
+                     'ON' => [
+                        'answer' => 'plugin_formcreator_questions_id',
+                        'question' => 'id',
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
+                  'question.fieldtype'                       => "dropdown",
+               ],
+               'ORDER' => [
+                  'row DESC',
+                  'col DESC',
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Decode dropdown settings
+               $question = PluginFormcreatorQuestion::getById($answer[PluginFormcreatorQuestion::getForeignKeyField()]);
+               $itemtype = $question->fields['itemtype'];
+
+               // Skip if not a dropdown on locations
+               if ($itemtype !== Location::class) {
+                  continue;
+               }
+
+               // Skip if question was not answered
+               if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Skip if question is not visible
+               if (!$formanswer->isFieldVisible($answer['plugin_formcreator_questions_id'])) {
+                  continue;
+               }
+
+               // Found a valid answer, stop here
+               $location = $answer['answer'];
+               break;
+            }
             break;
       }
       if (!is_null($location)) {
@@ -1154,7 +1208,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
             break;
 
          case self::ASSOCIATE_RULE_LAST_ANSWER:
-            $form_id = $formanswer->fields['id'];
+            $form_answer_id = $formanswer->fields['id'];
 
             // Get all answers for glpiselect questions of this form, ordered
             // from last to first displayed
@@ -1170,7 +1224,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                   ]
                ],
                'WHERE' => [
-                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
                   'question.fieldtype'                       => "glpiselect",
                ],
                'ORDER' => [

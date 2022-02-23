@@ -270,8 +270,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB($this->question->getID());
-      $form = PluginFormcreatorCommon::getForm();
-      $form->getByQuestionId($question->getID());
+      $form = PluginFormcreatorForm::getByItem($question);
 
       /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
       $column = 0;

@@ -98,6 +98,15 @@ if (isset($_POST['update'])) {
       'PluginFormcreatorForm'
    );
 
+
+   $targetTicket->getFromDB((int) $_REQUEST['id']);
+   $form = PluginFormcreatorForm::getByItem($targetTicket);
+   $_SESSION['glpilisttitle'][$targetTicket::getType()] = sprintf(
+      __('%1$s = %2$s'),
+      $form->getTypeName(1), $form->getName()
+   );
+   $_SESSION['glpilisturl'][$targetTicket::getType()]   = $form->getFormURL()."?id=".$form->getID();
+
    $targetTicket->display([
       'id' => $_GET['id'],
    ]);

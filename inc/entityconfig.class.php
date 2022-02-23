@@ -148,6 +148,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    }
 
    public function prepareInputForUpdate($input) {
+      // Disallow changing the linked entity
+      unset($input['entities_id']);
+
       $input['header'] = $input['header'] ?? '';
 
       $config = Toolbox::getHtmLawedSafeConfig();
@@ -156,22 +159,31 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       return $input;
    }
 
+   protected static function createDefaultsForEntity($entityId): self {
+      $entityConfig = new self();
+      if ($entityConfig->getFromDbByCrit(['entities_id' => $entityId])) {
+         return $entityConfig;
+      }
+
+      $entityConfig->add([
+         'entities_id'       => $entityId,
+         'replace_helpdesk'  => self::CONFIG_PARENT,
+         'is_kb_separated'   => self::CONFIG_PARENT,
+         'is_search_visible' => self::CONFIG_PARENT,
+         'is_header_visible' => self::CONFIG_PARENT,
+         'sort_order'        => self::CONFIG_PARENT,
+      ]);
+
+      return $entityConfig;
+   }
+
    public function showFormForEntity(Entity $entity) {
-      $ID = $entity->getField('id');
+      $ID = $entity->getID();
       if (!$entity->can($ID, READ)) {
          return false;
       }
 
-      if (!$this->getFromDB($ID)) {
-         $this->add([
-            'id'                => $ID,
-            'replace_helpdesk'  => self::CONFIG_PARENT,
-            'is_kb_separated'   => self::CONFIG_PARENT,
-            'is_search_visible' => self::CONFIG_PARENT,
-            'is_header_visible' => self::CONFIG_PARENT,
-            'sort_order'        => self::CONFIG_PARENT,
-         ]);
-      }
+      $this->getFromDB(self::createDefaultsForEntity($ID)->getID());
 
       $canedit = Entity::canUpdate() && $entity->canUpdateItem();
       echo "<div class='spaced'>";
@@ -389,6 +401,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       // Search in entity data of the current entity
       if ($entity->getFromDB($entities_id)) {
          // Value is defined : use it
+         self::createDefaultsForEntity($entities_id);
          if ($entityConfig->getFromDBByCrit(['entities_id' => $entities_id])) {
             if (is_numeric($default_value)
                   && ($entityConfig->fields[$fieldref] != self::CONFIG_PARENT)) {

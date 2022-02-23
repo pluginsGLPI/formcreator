@@ -30,6 +30,7 @@
  */
 
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -196,10 +197,12 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_NONE = 1;
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
+   const LOCATION_RULE_LAST_ANSWER  = 4;
 
    const COMMONITIL_VALIDATION_RULE_NONE = 1;
    const COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
    const COMMONITIL_VALIDATION_RULE_ANSWER_USER = 3;
+   const COMMONITIL_VALIDATION_RULE_ANSWER_GROUP = 4;
 
    const OLA_RULE_NONE = 1;
    const OLA_RULE_SPECIFIC = 2;
@@ -276,9 +279,10 @@ PluginFormcreatorTranslatableInterface
 
    public static function getEnumLocationRule() {
       return [
-         self::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
-         self::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
-         self::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_NONE         => __('Location from template or none', 'formcreator'),
+         self::LOCATION_RULE_SPECIFIC     => __('Specific location', 'formcreator'),
+         self::LOCATION_RULE_ANSWER       => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_LAST_ANSWER  => __('Last valid answer', 'formcreator'),
       ];
    }
 
@@ -300,6 +304,7 @@ PluginFormcreatorTranslatableInterface
          self::COMMONITIL_VALIDATION_RULE_NONE                      => __('No validation', 'formcreator'),
          self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP    => __('Specific user or group', 'formcreator'),
          self::COMMONITIL_VALIDATION_RULE_ANSWER_USER               => __('User from question answer', 'formcreator'),
+         self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP              => __('Group from question answer', 'formcreator'),
       ];
    }
 
@@ -473,7 +478,7 @@ PluginFormcreatorTranslatableInterface
             $category = $this->fields['category_question'];
             break;
          case self::CATEGORY_RULE_LAST_ANSWER:
-            $form_id = $formanswer->fields['id'];
+            $form_answer_id = $formanswer->fields['id'];
 
             // Get all answers for dropdown questions of this form, ordered
             // from last to first displayed
@@ -489,7 +494,7 @@ PluginFormcreatorTranslatableInterface
                   ]
                ],
                'WHERE' => [
-                  'answer.plugin_formcreator_formanswers_id' => $form_id,
+                  'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
                   'question.fieldtype'                       => "dropdown",
                ],
                'ORDER' => [
@@ -1542,11 +1547,18 @@ SCRIPT;
       // Hidden secondary labels, displayed according to the user main choice
       echo '<td width="15%">';
 
-      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
-      echo "<span id='commonitil_validation_specific_title' style='$display'>" . __('Approver') . "</span>";
+      // Read values
+      $validation_rule = $this->fields['commonitil_validation_rule'];
 
-      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
-      echo "<span id='commonitil_validation_from_question_title' style='$display'>" . __('Question', 'formcreator') . "</span>";
+      $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      echo "<span id='commonitil_validation_specific_title' style='$display'>";
+      echo __('Approver');
+      echo "</span>";
+
+      $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER || $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP ? "" : "display: none";
+      echo "<span id='commonitil_validation_from_question_title' style='$display'>";
+      echo __('Question', 'formcreator');
+      echo "</span>";
 
       echo '</td>';
 
@@ -1554,7 +1566,7 @@ SCRIPT;
       echo '<td width="25%">';
 
       // COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP
-      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
+      $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP ? "" : "display: none";
       echo "<div id='commonitil_validation_specific' style='$display'>";
       $validation_dropdown_params = [
          'name' => 'validation_specific'
@@ -1568,14 +1580,28 @@ SCRIPT;
       echo '</div>';
 
       // COMMONITIL_VALIDATION_RULE_ANSWER_USER
-      $display = $this->fields['commonitil_validation_rule'] == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
-      echo "<div id='validation_answer_user' style='$display'>";
+      $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER ? "" : "display: none";
+      echo "<div id='commonitil_validation_answer_user' style='$display'>";
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm(),
          [
             new QueryExpression("`fieldtype` = 'actor' OR (`fieldtype` = 'glpiselect' AND `itemtype`='User')"),
          ],
          '_validation_from_user_question',
+         $this->fields['commonitil_validation_question'],
+      );
+      echo '</div>';
+
+      // COMMONITIL_VALIDATION_RULE_ANSWER_GROUP
+      $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP ? "" : "display: none";
+      echo "<div id='commonitil_validation_answer_group' style='$display'>";
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm(),
+         [
+            'fieldtype' => 'glpiselect',
+            'itemtype'  => 'Group',
+         ],
+         '_validation_from_group_question',
          $this->fields['commonitil_validation_question'],
       );
       echo '</div>';
@@ -1701,6 +1727,40 @@ SCRIPT;
                $data['users_id_validate'] = $answer;
                break;
             }
+
+         case self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP:
+            $answers = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['commonitil_validation_question']
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Answer may be "2" or [2], both valid json
+               $answer = json_decode($answer['answer']);
+               if (!is_array($answer)) {
+                  $answer = [$answer];
+               }
+
+               // Get all user in the given group
+               $user_group = new Group_User();
+               $user_groups = $user_group->find([
+                  'groups_id' => $answer
+               ]);
+
+               // Parse values
+               $values = [];
+               foreach ($user_groups as $row) {
+                  $values[] = $row['users_id'];
+               }
+
+               $data['validatortype'] = 'group';
+               $data['users_id_validate'] = $values;
+               break;
+            }
       }
 
       return $data;
@@ -1791,6 +1851,10 @@ SCRIPT;
             case self::COMMONITIL_VALIDATION_RULE_ANSWER_USER:
                $input['commonitil_validation_question'] = $input['_validation_from_user_question'];
                break;
+
+            case self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP:
+               $input['commonitil_validation_question'] = $input['_validation_from_group_question'];
+               break;
          }
       }
 
@@ -1866,7 +1930,7 @@ SCRIPT;
 
       if ($richText) {
          $template = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $template);
-         $template = Html::entities_deep($template);
+         $template = Sanitizer::sanitize($template);
       }
 
       return $template;
