@@ -60,7 +60,7 @@ class PluginFormcreatorUpgradeTo2_12_5 {
 
       $table = 'glpi_plugin_formcreator_targettickets';
 
-      if (!$DB->fieldExists($table, 'request_source')) {
+      if (!$DB->fieldExists($table, 'source_rule')) {
          $this->migration->addField($table, 'source_rule', 'integer', ['after' => 'target_name']);
          $this->migration->addField($table, 'source_question', 'integer', ['after' => 'source_rule']);
          $this->migration->migrationOneTable($table);
