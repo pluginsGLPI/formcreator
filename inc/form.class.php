@@ -474,6 +474,10 @@ PluginFormcreatorTranslatableInterface
       $item->showTagsList();
    }
 
+   public static function showQuestions($item) {
+      PluginFormcreatorQuestion::showForForm($item);
+   }
+
    public static function showTargets($item, $options = []) {
       echo '<table class="tab_cadrehov">';
       echo '<tr>';
@@ -524,12 +528,15 @@ PluginFormcreatorTranslatableInterface
       if ($item instanceof PluginFormcreatorForm) {
          return [
             1 => Plugin::isPluginActive('advform') ? PluginAdvformForm_Validator::getTypeName(1) : PluginFormcreatorForm_Validator::getTypeName(),
-            2 => self::createTabEntry(
+            2 => PluginFormcreatorQuestion::getTypeName(Session::getPluralNumber()),
+            3 => PluginFormcreatorForm_Profile::getTypeName(Session::getPluralNumber()),
+            4 => self::createTabEntry(
                _n('Target', 'Targets', Session::getPluralNumber(), 'formcreator'),
                $item->countTargets()
             ),
-            3 => __('Preview'),
-            4 => PluginFormcreatorFormAnswer::getTypeName(1) . ' ' .__('properties', 'formcreator'),
+            5 => PluginFormcreatorForm_Language::getTypeName(Session::getPluralNumber()),
+            6 => PluginFormcreatorFormAnswer::getTypeName(1) . ' ' .__('properties', 'formcreator'),
+            7 => __('Preview'),
          ];
       }
       if ($item->getType() == Central::class) {
@@ -558,15 +565,23 @@ PluginFormcreatorTranslatableInterface
                break;
 
             case 2:
-               self::showTargets($item);
-               break;
-
-            case 3:
-               self::displayUserForm($item);
+               self::showQuestions($item);
                break;
 
             case 4:
+               self::showTargets($item);
+               break;
+
+            case 5:
+               self::showLanguages($item);
+               break;
+
+            case 6:
                self::showFormAnswerProperties($item);
+               break;
+
+            case 7:
+               self::displayUserForm($item);
                break;
          }
          return;
@@ -581,10 +596,7 @@ PluginFormcreatorTranslatableInterface
       $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(self::class, $ong, $options);
-      $this->addStandardTab(PluginFormcreatorQuestion::class, $ong, $options);
-      $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
-      $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
    }
@@ -940,6 +952,10 @@ PluginFormcreatorTranslatableInterface
       echo '</div>';
    }
 
+   public static function showLanguages($item) {
+      PluginFormcreatorForm_Language::showForForm($item);
+   }
+
    /**
     * Display the Form end-user form to be filled
     *
@@ -969,8 +985,8 @@ PluginFormcreatorTranslatableInterface
             'columns' => PluginFormcreatorSection::COLUMNS,
             'domain'  => $domain, // For translation
             'public'  => isset($_SESSION['formcreator_public']),
-            'use_captcha' => ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
-                              && $this->fields['is_captcha_enabled'] != '0'),
+            'use_captcha' => ($item->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
+                              && $item->fields['is_captcha_enabled'] != '0'),
          ]
       ]);
       // Delete saved answers if any
