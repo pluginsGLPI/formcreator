@@ -1106,6 +1106,11 @@ PluginFormcreatorTranslatableInterface
 
       if (isset($input['formanswer_name']) && strlen($input['formanswer_name']) < 1) {
          unset($input['formanswer_name']);
+         Session::addMessageAfterRedirect(
+            __('Cannot use empty name for form answers. Keeping the previous value', 'formcreator'),
+            false,
+            WARNING
+         );
       }
 
       if (!$this->skipChecks) {
