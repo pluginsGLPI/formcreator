@@ -240,6 +240,10 @@ class TextareaField extends TextField
       if (!$richText) {
          $value = Toolbox::unclean_cross_side_scripting_deep($value);
          $value = strip_tags($value);
+      } else {
+         // TinyMCE creates line breaks with <br />. The slash causes problem when
+         // generatiing a ticket. Replacing with <br> workarounds the issue.
+         $value = str_replace('&lt;br /&gt;', '&lt;br&gt;', $value);
       }
       // $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
       // $value = Toolbox::getHtmlToDisplay($value);
