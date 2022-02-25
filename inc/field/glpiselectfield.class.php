@@ -106,7 +106,7 @@ class GlpiselectField extends DropdownField
       if ($decodedValues === null) {
          $itemtype = $this->question->fields['values'];
       } else {
-         $itemtype = $decodedValues['itemtype'];
+         $itemtype = $decodedValues['itemtype'] ?? 0;
       }
 
       array_unshift($optgroup, '---');
