@@ -39,6 +39,7 @@ use PluginFormcreatorQuestionRegex;
 use PluginFormcreatorCommon;
 use Session;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 class TextField extends PluginFormcreatorAbstractField
 {
@@ -46,7 +47,19 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      $parameters = $this->getParameters();
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'question_params' => $parameters,
+         'params' => $options,
+      ]);
+   }
+
+   public function getDesignSpecializationField(): string {
       $rand = mt_rand();
 
       $label = '';

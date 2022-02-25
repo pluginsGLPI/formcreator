@@ -41,10 +41,27 @@ use Html;
 use QuerySubQuery;
 use Session;
 use RuleRightParameter;
+use Glpi\Application\View\TemplateRenderer;
 
 class LdapselectField extends SelectField
 {
-   public function getDesignSpecializationField(): array {
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $this->question->fields['_ldap_auth'] = $decodedValues['ldap_auth'] ?? '';
+      $this->question->fields['_ldap_filter'] = $decodedValues['ldap_filter'] ?? '';
+      $this->question->fields['_ldap_attribute'] = $decodedValues['ldap_attribute'] ?? '';
+
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
+   }
+
+   public function getDesignSpecializationField(): string {
       $rand = mt_rand();
 
       $label = '<label for="dropdown_ldap_auth' . $rand . '">';

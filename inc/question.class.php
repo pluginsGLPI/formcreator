@@ -731,199 +731,35 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showForm($ID, $options = []) {
-      // $options['candel'] = false;
-      // $options['formoptions'] = sprintf('data-itemtype="%s"', self::getType());
-      // TemplateRenderer::getInstance()->display('@formcreator/pages/question.html.twig', [
-      //    'item' => $this,
-      //    'params' => $options,
-      // ]);
-      // return true;
+      $options['candel'] = false;
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
-      if ($ID == 0) {
-         $title =  __('Add a question', 'formcreator');
-         $action = 'plugin_formcreator.addQuestion()';
-      } else {
-         $title =  __('Edit a question', 'formcreator');
-         $action = 'plugin_formcreator.editQuestion()';
+      $template = '@formcreator/field/undefined.html.twig';
+      if (!$this->loadField($this->fields['fieldtype'])) {
+         TemplateRenderer::getInstance()->display($template, [
+            'item' => $this,
+            'params' => $options,
+         ]);
+         return true;
       }
 
-      $rand = mt_rand();
-      echo '<form name="asset_form"'
-      . ' method="post"'
-      . ' action="javascript:;"'
-      . ' data-itemtype="' . self::class . '"'
-      . ' data-id="' . $ID . '"'
-      . '>';
-      echo '<table class="tab_cadre_fixe">';
+      $this->field->showForm($options);
 
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo $title;
-      echo '</th>';
-      echo '</tr>';
+      return true;
+   }
 
-      echo '<tr>';
-
-      // name
-      echo '<td width="20%">';
-      echo '<label for="name" id="label_name">';
-      echo  __('Title');
-      echo '<span style="color:red;">*</span>';
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td width="30%">';
-      echo Html::input('name', [
-         'id' => 'name',
-         'autofocus' => '',
-         'value' => $this->fields['name'],
-         'class' => 'form-control',
-         'required' => 'required'
-      ]);
-      echo '</td>';
-
-      // Section
-      echo '<td width="20%">';
-      echo '<label for="dropdown_plugin_formcreator_sections_id'.$rand.'" id="label_name">';
-      echo  _n('Section', 'Sections', 1, 'formcreator');
-      echo '<span style="color:red;">*</span>';
-      echo '</label>';
-      echo '</td>';
-      echo '<td width="30%">';
-      $section = new PluginFormcreatorSection();
-      $section->getFromDB($this->fields['plugin_formcreator_sections_id']);
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      PluginFormcreatorSection::dropdown([
-         'name'                => 'plugin_formcreator_sections_id',
-         'display_emptychoice' => false,
-         'value'               => $this->fields['plugin_formcreator_sections_id'],
-         'condition'           => [
-                                    $formFk => $section->fields[$formFk],
-                                  ],
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-
-      // Field type
-      echo '<td>';
-      echo '<label for="dropdown_fieldtype'.$rand.'" id="label_fieldtype">';
-      echo _n('Type', 'Types', 1);
-      echo '<span style="color:red;">*</span>';
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td>';
+   /**
+    * Show a question type dropdown
+    *
+    * @param string $name
+    * @param array $options
+    * @return void
+    */
+   public static function dropdownQuestionType(string $name, array $options): void {
       $fieldtypes = PluginFormcreatorFields::getNames();
-      Dropdown::showFromArray('fieldtype', $fieldtypes, [
-         'value'       => $this->fields['fieldtype'],
-         'on_change'   => "plugin_formcreator_changeQuestionType($rand)",
-         'rand'        => $rand,
-      ]);
-      echo '</td>';
-
-      // Dynamically filled for questions with a itemtype parameter (glpi select field)
-      echo '<td id="plugin_formcreator_subtype_label">';
-      echo '</td>';
-
-      echo '<td id="plugin_formcreator_subtype_value">';
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      // required
-      echo '<td>';
-      echo '<div class="plugin_formcreator_required">';
-      echo '<label for="dropdown_required'.$rand.'">';
-      echo __('Required', 'formcreator');
-      echo '</label>';
-      echo '</div>';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<div class="plugin_formcreator_required">';
-      dropdown::showYesNo('required', $this->fields['required'], -1, [
-         'rand'  => $rand,
-      ]);
-      echo '</div>';
-      echo '</td>';
-
-      // show empty
-      echo '<td>';
-      echo '<div class="plugin_formcreator_mayBeEmpty">';
-      echo '<label for="dropdown_show_empty'.$rand.'">';
-      echo __('Show empty', 'formcreator');
-      echo '</label>';
-      echo '</div>';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<div class="plugin_formcreator_mayBeEmpty">';
-      dropdown::showYesNo('show_empty', $this->fields['show_empty'], -1, [
-         'rand'  => $rand,
-      ]);
-      echo '</div>';
-      echo '</td>';
-      echo '</tr>';
-
-      // Empty row for question-specific settings
-      // To be replaced dynamically
-      echo '<tr class="plugin_formcreator_question_specific">';
-      echo '<td></td><td></td><td></td><td></td>';
-      echo '</tr>';
-
-      echo '<tr id="description_tr">';
-      // Description of the question
-      echo '<td>';
-      echo '<label for="description" id="label_description">';
-      echo __('Description');
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td width="80%" colspan="3">';
-      echo Html::textarea([
-         'name'    => 'description',
-         'id'      => 'description',
-         'value'   => Toolbox::convertTagToImage($this->fields['description'], $this),
-         'enable_richtext' => true,
-         'filecontainer'   => 'description_info',
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      // Condiion to show the question
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Condition to show the question', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
-      $condition = new PluginFormcreatorCondition();
-      $condition->showConditionsForItem($this);
-
-      echo '<tr>';
-      echo '<td colspan="4" class="center">';
-      if ($ID > 0) {
-         echo Html::hidden('id', ['value' => $ID]);
-      }
-      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
-      echo '</td>';
-      echo '</tr>';
-
-      // Area for errors
-      echo '<tr>';
-      echo '<td id="plugin_formcreator_error" colspan="4" class="center">';
-      echo '</td>';
-      echo '</tr>';
-
-      $this->showFormButtons($options + [
-         'candel' => false
-      ]);
-
-      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
-      Html::closeForm();
+      $options['on_change'] = "plugin_formcreator.changeQuestionType(this)";
+      Dropdown::showFromArray($name, $fieldtypes, $options);
    }
 
    public function duplicate(array $options = []) {
@@ -1365,13 +1201,17 @@ PluginFormcreatorTranslatableInterface
    /**
     * load instance if field associated to the question
     *
-    * @return void
+    * @return bool true on sucess, false otherwise
     */
-   private function loadField($fieldType) {
+   private function loadField($fieldType): bool {
       if (!$this->field === null) {
-         return;
+         return false;
       }
       $this->field = PluginFormcreatorFields::getFieldInstance($fieldType, $this);
+      if ($this->field === null) {
+         return false;
+      }
+      return true;
    }
 
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
@@ -1431,4 +1271,91 @@ PluginFormcreatorTranslatableInterface
 
       return $strings;
    }
+
+   /**
+    * Show a dropdown of dropdown itemtypes (ITIL categories, locations, ...)
+    *
+    * @param string $name
+    * @param array $options
+    * @return void
+    */
+   public static function dropdownDropdownSubType(string $name, array $options = []): void {
+      $optgroup = Dropdown::getStandardDropdownItemTypes();
+      $optgroup[__('Service levels')] = [
+         SLA::getType() => __("SLA", "formcreator"),
+         OLA::getType() => __("OLA", "formcreator"),
+      ];
+
+      $itemtype = is_subclass_of($options['value'], CommonDBTM::class) ? $options['value'] : '';
+      Dropdown::showFromArray($name, $optgroup, [
+         'value'               => $itemtype,
+         'display_emptychoice' => true,
+         'display'             => true,
+         'specific_tags' => [
+            'data-type'     => \GlpiPlugin\Formcreator\Field\DropdownField::class,
+            'data-itemtype' => $itemtype
+         ],
+      ] + $options);
+   }
+
+   public static function dropdownObjectSubType(string $name, array $options = []): void {
+      $optgroup = [
+         __("Assets") => [
+            Computer::class           => Computer::getTypeName(2),
+            Monitor::class            => Monitor::getTypeName(2),
+            Software::class           => Software::getTypeName(2),
+            NetworkEquipment::class   => Networkequipment::getTypeName(2),
+            Peripheral::class         => Peripheral::getTypeName(2),
+            Printer::class            => Printer::getTypeName(2),
+            CartridgeItem::class      => CartridgeItem::getTypeName(2),
+            ConsumableItem::class     => ConsumableItem::getTypeName(2),
+            Phone::class              => Phone::getTypeName(2),
+            Line::class               => Line::getTypeName(2),
+            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
+            Appliance::class          => Appliance::getTypeName(2),
+         ],
+         __("Assistance") => [
+            Ticket::class             => Ticket::getTypeName(2),
+            Problem::class            => Problem::getTypeName(2),
+            TicketRecurrent::class    => TicketRecurrent::getTypeName(2)
+         ],
+         __("Management") => [
+            Budget::class             => Budget::getTypeName(2),
+            Supplier::class           => Supplier::getTypeName(2),
+            Contact::class            => Contact::getTypeName(2),
+            Contract::class           => Contract::getTypeName(2),
+            Document::class           => Document::getTypeName(2),
+            Project::class            => Project::getTypeName(2),
+            Certificate::class        => Certificate::getTypeName(2)
+         ],
+         __("Tools") => [
+            Reminder::class           => __("Notes"),
+            RSSFeed::class            => __("RSS feed")
+         ],
+         __("Administration") => [
+            User::class               => User::getTypeName(2),
+            Group::class              => Group::getTypeName(2),
+            Entity::class             => Entity::getTypeName(2),
+            Profile::class            => Profile::getTypeName(2)
+         ],
+      ];
+      if ((new Plugin())->isActivated('appliances')) {
+         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+      if ((new Plugin())->isActivated('databases')) {
+         $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
+      }
+
+      $itemtype = is_subclass_of($options['value'], CommonDBTM::class) ? $options['value'] : '';
+      Dropdown::showFromArray($name, $optgroup, [
+         'value'               => $itemtype,
+         'display_emptychoice' => true,
+         'display'             => true,
+         'specific_tags' => [
+            'data-type'     => \GlpiPlugin\Formcreator\Field\GlpiselectField::class,
+            'data-itemtype' => $itemtype
+         ],
+      ] + $options);
+   }
+
 }

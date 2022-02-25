@@ -35,10 +35,9 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use Html;
 use DateTime;
-use Toolbox;
 use Session;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
-
+use Glpi\Application\View\TemplateRenderer;
 
 class DateField extends PluginFormcreatorAbstractField
 {
@@ -48,39 +47,49 @@ class DateField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::showDateField('default_values', ['value' => $value, 'display' => false]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
+
+   // public function getDesignSpecializationField(): string {
+   //    $templateFile = '@formcreator/field/datefield.html.twig';
+   //    $question = $this->question;
+   //    $question->fields['default_values'] = Html::entities_deep($question->fields['default_values']);
+
+   //    $additions = TemplateRenderer::getInstance()->renderBlock(
+   //       $templateFile,
+   //       'additions',
+   //       [
+   //          'item' => $question,
+   //       ]
+   //    );
+
+   //    $common = parent::getDesignSpecializationField();
+   //    $additions .= $common['additions'];
+
+   //    return [
+   //       'field'           => TemplateRenderer::getInstance()->renderBlock(
+   //          $templateFile,
+   //          'subtype'
+   //       ),
+   //       'additions'       => $additions,
+   //       'required'        => TemplateRenderer::getInstance()->renderBlock(
+   //          $templateFile,
+   //          'required'
+   //       ),
+   //       'empty'           => TemplateRenderer::getInstance()->renderBlock(
+   //          $templateFile,
+   //          'empty'
+   //       ),
+   //    ];
+   // }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {

@@ -50,8 +50,6 @@ extends PluginFormcreatorAbstractQuestionParameter
    /** @var string $fieldtype type of field useable for the dependency */
    protected $fieldType;
 
-   protected $domId = 'plugin_formcreator_questionDependency';
-
    /**
     * @param PluginFormcreatorFieldInterface $field Field
     * @param array $options
@@ -72,7 +70,9 @@ extends PluginFormcreatorAbstractQuestionParameter
       return 0;
    }
 
-   public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question) {
+   public function getParameterForm(PluginFormcreatorQuestion $question) {
+      $form = PluginFormcreatorForm::getByItem($question);
+
       // get questions of type text in the form
       $eligibleQuestions = [];
       $criteria = ['fieldtype' => $this->fieldtype];
@@ -114,10 +114,6 @@ extends PluginFormcreatorAbstractQuestionParameter
       $out.= '<td>' . $questionsDropdown . '</td>';
 
       return $out;
-   }
-
-   public function getJsShowHideSelector() {
-      return "#" . $this->domId;
    }
 
    public function prepareInputForAdd($input) {

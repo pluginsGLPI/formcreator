@@ -32,14 +32,13 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
+$question_id = $_REQUEST['id'] ?? 0;
 $question = new PluginFormcreatorQuestion();
-if (empty($_REQUEST['question_id'])) {
-   $question_id = 0;
+if ($question_id == 0) {
    $question->getEmpty();
    $sectionFk = PluginFormcreatorSection::getForeignKeyField();
    $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
 } else {
-   $question_id = (int) $_REQUEST['question_id'];
    $question->getFromDB($question_id);
 }
 $question->showForm($question_id);

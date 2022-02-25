@@ -32,35 +32,36 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-if (!isset($_REQUEST['questionId'])) {
+if (!isset($_REQUEST['id'])) {
    http_response_code(400);
    exit();
 }
-if (!isset($_REQUEST['questionType'])) {
+if (!isset($_REQUEST['fieldtype'])) {
    http_response_code(400);
    exit();
 }
 
 $question = new PluginFormcreatorQuestion();
 $question->getEmpty();
-if (!$question->isNewID((int) $_REQUEST['questionId']) && !$question->getFromDB((int) $_REQUEST['questionId'])) {
+if (!$question->isNewID((int) $_REQUEST['id']) && !$question->getFromDB((int) $_REQUEST['id'])) {
    http_response_code(400);
    exit();
 }
 
-$question->fields['fieldtype'] = $_REQUEST['questionType'];
+// Modify the question to reflect changes in the form
+$question->fields['plugin_formcreator_sections_id'] = (int) $_REQUEST['plugin_formcreator_sections_id'];
+foreach (array_keys($question->fields) as $key) {
+   if (!isset($_REQUEST[$key])) {
+      continue;
+   }
+   $question->fields[$key] = $_REQUEST[$key];
+}
 $field = PluginFormcreatorFields::getFieldInstance(
-   $question->fields['fieldtype'],
+   $_REQUEST['fieldtype'],
    $question
 );
-$json = [
-   'label' => '',
-   'field' => '',
-   'additions' => '',
-   'may_be_empty' => false,
-];
+$question->fields['fieldtype'] = '';
 if ($field !== null) {
-   $field->deserializeValue($question->fields['default_values']);
-   $json = $field->getDesignSpecializationField();
+   $question->fields['fieldtype'] = $_REQUEST['fieldtype'];
 }
-echo json_encode($json);
+$question->showForm($question->getID());

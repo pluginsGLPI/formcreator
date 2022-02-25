@@ -40,35 +40,35 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public static function getName() : string;
+   public static function getName(): string;
 
    /**
     * Can the fild be required ?
     *
     * @return boolean true if yes, false otherwise
     */
-   public static function canRequire() : bool;
+   public static function canRequire(): bool;
 
    /**
     * Are the prerequisites met to use this field ?
     *
     * @return boolean true if prerequisites met, false otherwise
     */
-   public function isPrerequisites() : bool;
+   public function isPrerequisites(): bool;
 
    /**
-    * get HTML for specific properties of the field type at design time
+    * Show HTML to design a question
     *
     * @return array
     */
-   public function getDesignSpecializationField() : array;
+   public function showForm(array $options): void;
 
    /**
     * Is the field valid for the given value?
     *
     * @return boolean True if the field has a valid value, false otherwise
     */
-   public function isValid() : bool;
+   public function isValid(): bool;
 
    /**
     * Check if a value is valid for the field type
@@ -76,14 +76,14 @@ interface PluginFormcreatorFieldInterface
     * @param string|array $value
     * @return boolean true if valid, false otherwise
     */
-   public function isValidValue($value) : bool;
+   public function isValidValue($value): bool;
 
    /**
     * Is the field required?
     *
     * @return boolean
     */
-   public function isRequired() : bool;
+   public function isRequired(): bool;
 
    /**
     * Serialize a value for save in the database
@@ -91,7 +91,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string JSON encoded string
     */
-   public function serializeValue() : string;
+   public function serializeValue(): string;
 
    /**
     * Deserialize a JSON encoded value or default value
@@ -107,7 +107,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public function getValueForDesign() : string;
+   public function getValueForDesign(): string;
 
    /**
     * Get the value of the field for display in a target
@@ -136,7 +136,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return integer[]
     */
-   public function getDocumentsForTarget() : array;
+   public function getDocumentsForTarget(): array;
 
    /**
     * Transform input to properly save it in the database
@@ -152,7 +152,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function hasInput($input) : bool;
+   public function hasInput($input): bool;
 
    /**
     * Read the value of the field from answers
@@ -161,7 +161,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true on sucess, false otherwise
     */
-   public function parseAnswerValues($input, $nonDestructive = false) : bool;
+   public function parseAnswerValues($input, $nonDestructive = false): bool;
 
    /**
     * Prepares an answer value for output in a target object
@@ -176,21 +176,21 @@ interface PluginFormcreatorFieldInterface
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public function getEmptyParameters() : array;
+   public function getEmptyParameters(): array;
 
    /**
     * Gets parameters of the field with their settings
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public function getParameters() : array;
+   public function getParameters(): array;
 
    /**
     * Gets the name of the field type
     *
     * @return string
     */
-   public function getFieldTypeName() : string;
+   public function getFieldTypeName(): string;
 
    /**
     * Adds parameters of the field into the database
@@ -212,49 +212,49 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true if success, false otherwise
     */
-   public function deleteParameters(PluginFormcreatorQuestion $question) : bool;
+   public function deleteParameters(PluginFormcreatorQuestion $question): bool;
 
    /**
     * Tests if the given value equals the field value
     *
     * @return boolean True if the value equals the field value
     */
-   public function equals($value) : bool;
+   public function equals($value): bool;
 
    /**
     * Tests if the given value is not equal to field value
     *
     * @return boolean True if the value is not equal to the field value
     */
-   public function notEquals($value) : bool;
+   public function notEquals($value): bool;
 
    /**
     * Tests if the given value is greater than the field value
     *
     * @return boolean True if the value is greater than the field value
     */
-   public function greaterThan($value) : bool;
+   public function greaterThan($value): bool;
 
    /**
     * Tests if the given value is less than the field value
     *
     * @return boolean True if the value is less than the field value
     */
-   public function LessThan($value) : bool;
+   public function LessThan($value): bool;
 
    /**
     * Tests if the given value is match with regex
     *
     * @return boolean True if the value is match with regex
     */
-   public function regex($value) : bool;
+   public function regex($value): bool;
 
    /**
     * Is the field compatible with anonymous form ?
     *
     * @return boolean true if the field can work with public forms
     */
-   public function isPublicFormCompatible() : bool;
+   public function isPublicFormCompatible(): bool;
 
    /**
     * Gets HTML code for the icon of a field
@@ -276,7 +276,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function isEditableField() : bool;
+   public function isEditableField(): bool;
 
    /**
     * Is the field visible ?
@@ -285,12 +285,12 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function isVisibleField() : bool;
+   public function isVisibleField(): bool;
 
    /** Get all translatable strings
     * @return array translatable strings under keys 'string' and 'text'
     */
-   public function getTranslatableStrings(array $options = []) : array;
+   public function getTranslatableStrings(array $options = []): array;
 
    public function getQuestion();
 }

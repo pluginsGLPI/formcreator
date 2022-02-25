@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -46,8 +47,6 @@ class PluginFormcreatorQuestionRange
 extends PluginFormcreatorAbstractQuestionParameter
 {
    use PluginFormcreatorTranslatable;
-
-   protected $domId = 'plugin_formcreator_questionRange';
 
    public static function getTypeName($nb = 0) {
       return _n('Question range', 'Question ranges', $nb, 'formcreator');
@@ -81,7 +80,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return 0;
    }
 
-   public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question) {
+   public function getParameterForm(PluginFormcreatorQuestion $question) {
       // get the name of the HTML input field
       $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
@@ -97,16 +96,16 @@ extends PluginFormcreatorAbstractQuestionParameter
          $rangeMax = $this->fields['range_max'];
       }
 
-      // build HTML code
-      $selector = $this->domId;
-      $out = '';
-      $out.= '<td id="' . $selector . '">' . $this->label . '</td>';
-      $out.= '<td>';
-      $out.= '<label for="' . $name . '[range_min]" id="label_range_min">' . __('Min', 'formcreator') . '</label>&nbsp;';
-      $out.= '<input type="text" name="'. $name . '[range_min]" id="range_min" class="small_text" style="width:90px;" value="'.$rangeMin.'" />';
-      $out.= '&nbsp;<label for="' . $name . '[range_max]" id="label_range_max">' . __('Max', 'formcreator') . '</label>&nbsp;';
-      $out.= '<input type="text" name="'. $name . '[range_max]" id="range_max" class="small_text" style="width:90px;" value="'.$rangeMax.'" />';
-      $out.= '</td>';
+      $out = TemplateRenderer::getInstance()->render(
+         '@formcreator/questionparameter/range.html.twig',
+         [
+            'item'   => $this,
+            'label'  => $this->label,
+            'params' => [
+               'name'  => $name,
+            ],
+         ]
+      );
 
       return $out;
    }
@@ -114,10 +113,6 @@ extends PluginFormcreatorAbstractQuestionParameter
    public function post_getEmpty() {
       $this->fields['range_min'] = '0';
       $this->fields['range_max'] = '0';
-   }
-
-   public function getJsShowHideSelector() {
-      return "#" . $this->domId;
    }
 
    public function prepareInputForAdd($input) {

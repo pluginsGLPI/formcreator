@@ -37,6 +37,7 @@ use Html;
 use User;
 use Session;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 
 /**
  * Actors field is a field which accepts several users. Those users may be
@@ -49,44 +50,15 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => Html::entities_deep($this->getValueForDesign()),
-         'cols'             => '50',
-         'display'          => false,
+      $this->question->fields['default_values'] = Html::entities_deep($this->getValueForDesign());
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
       ]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
    }
 
    public static function getName(): string {
