@@ -55,7 +55,7 @@
                     'rand': random(),
                     'width': '100%',
                 } %}
-                {# {% set parent = get_item(condition.fields['itemtype'], condition.fields['items_id']) %} #}
+                {% set parent = get_item(condition.fields['itemtype'], condition.fields['items_id']) %}
                 {% set excludeQuestions = call('PluginFormcreatorCondition::getQuestionsExclusion', [parent]) %}
                 {% set form = call('PluginFormcreatorForm::getByItem', [parent]) %}
                 {% set field %}

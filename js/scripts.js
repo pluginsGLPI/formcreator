@@ -874,27 +874,27 @@ var plugin_formcreator = new function() {
       var modalId = glpi_ajax_dialog({
          dialogclass: 'modal-xl',
          url: formcreatorRootDoc + '/ajax/question.php',
+         autoShow: true,
          params: {
-            question_id: questionId,
+            id: questionId,
             plugin_formcreator_sections_id: sectionId
-         },
-         done: function () {
-            document.querySelector('#' + modalId + ' form[name="asset_form"]').addEventListener('submit', function(event) {
-               var idInput = event.target.querySelector('[name="id"]');
-               var questionId = null;
-               if (idInput) {
-                  questionId = idInput.getAttribute('value');
-               }
-               if (questionId === null) {
-                  plugin_formcreator.addQuestion(event);
-               } else {
-                  plugin_formcreator.editQuestion(event);
-               }
-               $('#' + modalId).modal('hide');
-            });
          }
       });
    };
+
+   this.submitQuestion = function (target) {
+      var idInput = target.querySelector('[name="id"]');
+      var questionId = null;
+      if (idInput) {
+         questionId = idInput.getAttribute('value');
+      }
+      if (questionId === null) {
+         plugin_formcreator.addQuestion(target);
+      } else {
+         plugin_formcreator.editQuestion(target);
+      }
+      $(target).closest('div.modal').modal('hide');
+   }
 
    this.duplicateSection = function (item) {
       var section = $(item).closest('#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"]');
@@ -1281,6 +1281,33 @@ var plugin_formcreator = new function() {
          reloadTab();
       });
    }
+
+   this.changeQuestionType = function (target) {
+      var form = document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"]');
+      var questionId = 0;
+      if (document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]')) {
+         questionId = document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').value;
+      }
+      var data = new FormData(form);
+      data.append('id', questionId);
+      $.post({
+         url: formcreatorRootDoc + '/ajax/question_design.php',
+         processData: false,
+         contentType: false,
+         data: data,
+      }).done(function(response) {
+         try {
+            // The response may contain script tags, to be interpreted
+            // We cannot use document.querySelector here
+            $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"]')
+            .closest('div.asset')
+            .replaceWith(response);
+         } catch (e) {
+            console.log('Plugin Formcreator: Failed to get subtype fields');
+            return;
+         }
+      });
+   }
 }
 
 // === TARGETS ===
@@ -1415,85 +1442,6 @@ function plugin_formcreator_hideAssignedForm() {
 }
 
 // === FIELDS EDITION ===
-
-function plugin_formcreator_changeDropdownItemtype(rand) {
-   var dropdown_type = $('[data-itemtype="PluginFormcreatorQuestion"] [name="dropdown_values"]').val();
-   var dropdown_id   = $('[data-itemtype="PluginFormcreatorQuestion"][name="asset_form"]').data('id');
-
-   $.post({
-      url: formcreatorRootDoc + '/ajax/dropdown_values.php',
-      type: 'GET',
-      data: {
-         dropdown_itemtype: dropdown_type,
-         'id': dropdown_id
-      },
-   }).done(function(response) {
-      var showTicketCategorySpecific = false;
-      var showServiceLevelSpecific = false;
-      if (dropdown_type == 'ITILCategory') {
-         showTicketCategorySpecific = true;
-      } else if (dropdown_type == 'SLA' || dropdown_type == 'OLA') {
-         showServiceLevelSpecific = true;
-      }
-      $('#dropdown_default_value_field').html(response);
-      $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
-      $('.plugin_formcreator_dropdown_service_level').toggle(showServiceLevelSpecific);
-
-      if (!isNaN(dropdown_type)) {
-         // The variable seems not to be a itemtype
-         return;
-      }
-
-      $.post({
-         url: formcreatorRootDoc + '/ajax/commontree.php',
-         data: {
-            itemtype: dropdown_type,
-            root: $("#commonTreeDropdownRoot").val(),
-            maxDepth: $("#commonTreeDropdownMaxDepth").val(),
-            selectableRoot: $("#commonTreeDropdownSelectableRoot").val(),
-         },
-      }).done(function(response) {
-         $('.plugin_formcreator_dropdown').html(response);
-         $('.plugin_formcreator_dropdown').toggle(true);
-      }).fail(function() {
-         $('.plugin_formcreator_dropdown').html("");
-         $('.plugin_formcreator_dropdown').toggle(false);
-      });
-
-      var entityAssignable = [
-         'Location',
-         'ITILCategory',
-         'TaskCategory',
-         'TaskTemplate',
-         'SolutionType',
-         'SolutionTemplate',
-         'ProjectTaskTemplate',
-         'SoftwareLicenseType',
-         'CertificateType',
-         'RackType',
-         'PDUType',
-         'ClusterType',
-         'BusinessCriticity',
-         'KnowbaseItemCategory',
-         'Calendar',
-         'Holiday',
-         'Netpoint',
-         'Vlan',
-         'LineOperator',
-         'DomainType',
-         'DomainRecordType',
-         'DomainRelation',
-         'IPNetwork',
-         'FQDN',
-         'WifiNetwork',
-         'NetworkName',
-         'Fieldblacklist',
-         'ApplianceType'
-      ];
-      var showEntityAssignable = (entityAssignable.indexOf(dropdown_type) >= 0);
-      $('.plugin_formcreator_entity_assignable').toggle(showEntityAssignable);
-   });
-}
 
 function plugin_formcreator_changeGlpiObjectItemType() {
    var glpi_object    = $('[data-itemtype="PluginFormcreatorQuestion"] [name="glpi_objects"]').val();
@@ -1715,35 +1663,6 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
    var field = $('[name="' + fieldName + '"]');
    field.on("change", function(e) {
       plugin_formcreator.showFields($(field[0].form));
-   });
-}
-
-function plugin_formcreator_changeQuestionType(rand) {
-   var questionId = $('[data-itemtype="PluginFormcreatorQuestion"][name="asset_form"]').data('id') || 0;
-   var questionType = $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]').val();
-
-   $.post({
-      url: formcreatorRootDoc + '/ajax/question_design.php',
-      data: {
-         questionId: questionId,
-         questionType: questionType,
-      },
-   }).done(function(response) {
-      try {
-         var response = JSON.parse(response);
-      } catch (e) {
-         console.log('Plugin Formcreator: Failed to get subtype fields');
-         return;
-      }
-
-      $('#plugin_formcreator_subtype_label').html(response.label);
-      $('#plugin_formcreator_subtype_value').html(response.field);
-
-      $('.plugin_formcreator_required').toggle(response.may_be_required);
-      $('.plugin_formcreator_mayBeEmpty').toggle(response.may_be_empty);
-      $('#plugin_formcreator_subtype_label').html(response.label);
-      $('#plugin_formcreator_subtype_value').html(response.field);
-      plugin_formcreator_updateQuestionSpecific(response.additions);
    });
 }
 

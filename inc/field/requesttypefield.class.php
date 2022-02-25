@@ -37,10 +37,22 @@ use Session;
 use Ticket;
 use Dropdown;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 use PluginFormcreatorAbstractField;
 class RequestTypeField extends SelectField
 {
-   public function getDesignSpecializationField(): array {
+
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
+   }
+
+   public function getDesignSpecializationField(): string {
       $rand = mt_rand();
 
       $label = '';

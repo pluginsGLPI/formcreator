@@ -42,7 +42,6 @@ if (!isset($_POST['action'])) {
    die();
 }
 
-
 switch ($_POST['action']) {
    case 'add':
       $id = (int) $_POST['id'];

@@ -39,6 +39,7 @@ use Toolbox;
 use Session;
 use PluginFormcreatorForm;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 use PluginFormcreatorSection;
 use PluginFormcreatorQuestion;
 use PluginFormcreatorCommon;
@@ -54,6 +55,17 @@ class FileField extends PluginFormcreatorAbstractField
       '_prefix_filename' => [],
       '_tag_filename' => [],
    ];
+
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
+   }
 
    public function isPrerequisites(): bool {
       return true;

@@ -33,7 +33,6 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
-use PluginFormcreatorCommon;
 use PluginFormcreatorForm;
 use Html;
 use Toolbox;
@@ -54,12 +53,11 @@ use Ticket;
 use Ticket_User;
 use Search;
 use SLA;
-use SLM;
 use OLA;
 use QuerySubQuery;
 use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
-
+use Glpi\Application\View\TemplateRenderer;
 class DropdownField extends PluginFormcreatorAbstractField
 {
 
@@ -81,129 +79,29 @@ class DropdownField extends PluginFormcreatorAbstractField
       return class_exists($itemtype);
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
-
-      $label = '<label for="dropdown_dropdown_values' . $rand . '" id="label_dropdown_values">';
-      $label .= _n('Dropdown', 'Dropdowns', 1);
-      $label .= '</label>';
-
-      $itemtype = $this->question->fields['itemtype'];
-
-      // Parse json values (show_tree_root, show_tree_depth and selectable_tree_root)
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $root = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
-      $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
-      $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
-
-      $optgroup = Dropdown::getStandardDropdownItemTypes();
-
-      $optgroup[__('Service levels')] = [
-         SLA::getType() => __("SLA", "formcreator"),
-         OLA::getType() => __("OLA", "formcreator"),
-      ];
-
-      $field = '<div id="dropdown_values_field">';
-      $field .= Dropdown::showFromArray('dropdown_values', $optgroup, [
-         'value'               => $itemtype,
-         'rand'                => $rand,
-         'on_change'           => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
-         'display_emptychoice' => true,
-         'display'             => false,
-         'specific_tags' => [
-            'data-type'     => __CLASS__,
-            'data-itemtype' => $itemtype
-         ],
-      ]);
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td id="dropdown_default_value_field">';
-      $additions .= '</td>';
-      $additions .= '<td></td>';
-      $additions .= '<td></td>';
-      $additions .= '</tr>';
+      $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
+      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_show_ticket_categories'] = isset($decodedValues['show_ticket_categories']) ? $decodedValues['show_ticket_categories'] : 'both';
+      $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
+      $this->question->fields['_is_tree'] = '0';
+      $this->question->fields['_is_entity_restrict'] = '0';
+      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
+         $this->question->fields['_is_tree'] = '1';
+         $item = new $this->question->fields['itemtype'];
+         $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+      }
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
 
-      // Ticket category specific
-      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_ticket">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_show_ticket_categories' . $rand . '" id="label_show_ticket_categories">';
-      $additions .= __('Show ticket categories', 'formcreator');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $ticketCategoriesOptions = [
-         'request'  => __('Request categories', 'formcreator'),
-         'incident' => __('Incident categories', 'formcreator'),
-         'both'     => __('Request categories', 'formcreator') . " + " . __('Incident categories', 'formcreator'),
-         'change'   => __('Change categories', 'formcreator'),
-         'all'      => __('All'),
-      ];
-      $additions .= Dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
-         'rand'  => $rand,
-         'value' => isset($decodedValues['show_ticket_categories'])
-            ? $decodedValues['show_ticket_categories']
-            : 'both',
-         'display' => false,
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
       ]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= "<input id='commonTreeDropdownRoot' type='hidden' value='$root'>";
-      $additions .= "<input id='commonTreeDropdownMaxDepth' type='hidden' value='$maxDepth'>";
-      $additions .= "<input id='commonTreeDropdownSelectableRoot' type='hidden' value='$selectableRoot'>";
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown">';
-      // This row will be generated by an AJAX request
-      $additions .= '</tr>';
-      $additions .= Html::scriptBlock("plugin_formcreator_changeDropdownItemtype($rand);");
-
-      $additions .= $this->getEntityRestrictSettiing();
-
-      // Service level specific
-      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_service_level">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_show_service_level_types' . $rand . '" id="label_show_service_level_types">';
-      $additions .= __('Type', 'formcreator');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $serviceLevelTypes = [
-         SLM::TTO  => __('Time to own', 'formcreator'),
-         SLM::TTR  => __('Time to resolve', 'formcreator'),
-      ];
-      $additions .= dropdown::showFromArray('show_service_level_types', $serviceLevelTypes, [
-         'rand'  => $rand,
-         'value' => isset($decodedValues['show_service_level_types'])
-            ? $decodedValues['show_service_level_types']
-            : SLM::TTO,
-         'display' => false,
-      ]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => true,
-         'may_be_required' => static::canRequire(),
-      ];
    }
 
    public function buildParams($rand = null) {
@@ -569,7 +467,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (!isset($input['dropdown_values']) || empty($input['dropdown_values'])) {
+      if (!isset($input['itemtype']) || empty($input['itemtype'])) {
          Session::addMessageAfterRedirect(
             sprintf(__('The field value is required: %s', 'formcreator'), $input['name']),
             false,
@@ -585,7 +483,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $allowedDropdownValues[] = SLA::getType();
       $allowedDropdownValues[] = OLA::getType();
 
-      if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
+      if (!in_array($input['itemtype'], $allowedDropdownValues)) {
          Session::addMessageAfterRedirect(
             sprintf(__('Invalid dropdown type: %s', 'formcreator'), $input['name']),
             false,
@@ -593,8 +491,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          );
          return [];
       }
-      $itemtype = $input['dropdown_values'];
-      $input['itemtype'] = $itemtype;
+      $itemtype = $input['itemtype'];
       $input['values'] = [];
 
       // Params for CommonTreeDropdown fields
@@ -612,15 +509,14 @@ class DropdownField extends PluginFormcreatorAbstractField
          $input['values']['show_tree_depth'] = (string) (int) ($input['show_tree_depth'] ?? '-1');
          $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
          $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
-      } else if ($input['dropdown_values'] == SLA::getType()
-         || $input['dropdown_values'] == OLA::getType()
+      } else if ($input['itemtype'] == SLA::getType()
+         || $input['itemtype'] == OLA::getType()
       ) {
          $input['values']['show_service_level_types'] = $input['show_service_level_types'];
          unset($input['show_service_level_types']);
       }
 
       // Params for entity restrictables itemtypes
-      $itemtype = $input['dropdown_values'];
       if ((new $itemtype)->isEntityAssign()) {
          $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       }
@@ -628,8 +524,6 @@ class DropdownField extends PluginFormcreatorAbstractField
 
       $input['values'] = json_encode($input['values']);
 
-      $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
-      unset($input['dropdown_default_value']);
       unset($input['show_ticket_categories']);
       unset($input['show_tree_depth']);
       unset($input['show_tree_root']);
@@ -926,10 +820,9 @@ class DropdownField extends PluginFormcreatorAbstractField
       $html .= '<label for="entity_restrict">' . __('Entity restriction', 'formcreator') . '</label>';
       $html .= '</td>';
       $html .= '<td>';
-      $settings = $this->getEnumEntityRestriction();
       $html .= Dropdown::showFromArray(
          'entity_restrict',
-         $settings,
+         $this->getEnumEntityRestriction(),
          ['display' => false, 'value' => $restrictionPolicy]
       );
       $html .= '&nbsp;' . Html::showToolTip(

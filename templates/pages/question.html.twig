@@ -28,66 +28,77 @@
  # ---------------------------------------------------------------------
  #}
 
+{% extends "generic_show_form.html.twig" %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
-{% set bg = '' %}
-{% if item.isDeleted() %}
-   {% set bg = 'asset-deleted' %}
-{% endif %}
+{% block form_fields %}
+   {{ fields.autoNameField(
+      'name',
+      item,
+      __('Name'),
+   withtemplate,
+   {
+      value: item.fields['name'],
+      required: true
+   } ) }}
 
-<div class="asset {{ bg }}" data-itemtype="{{ item.getType }}">
-   {{ include('components/form/header.html.twig') }}
+   {% set section = get_item('PluginFormcreatorSection', item.fields['plugin_formcreator_sections_id']) %}
+   {{ fields.dropdownField(
+      'PluginFormcreatorSection',
+      'plugin_formcreator_sections_id',
+      item.fields['plugin_formcreator_sections_id'],
+      __('Section', 'formcreator'),
+      {
+         'display_emptychoice': false,
+         'condition': {'plugin_formcreator_forms_id': section.fields['plugin_formcreator_forms_id']}
+      }
+   ) }}
 
-   {% set rand = random() %}
-   {% set params  = params ?? [] %}
-   {% set target       = params['target'] ?? item.getFormURL() %}
-   {% set withtemplate = params['withtemplate'] ?? '' %}
-   {% set item_type = item.getType() %}
-   {% set item_has_pictures = item.hasItemtypeOrModelPictures() %}
+   {{ formcreatorFields.dropdownQuestionType(
+      'fieldtype',
+      item.fields['fieldtype'],
+      _n('Type', 'Types', 1),
+   ) }}
 
-   <div class="card-body d-flex flex-wrap">
-      <div class="col-12 col-xxl-{{ item_has_pictures ? '9' : '12' }} flex-column">
-         <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
-            <div class="row flex-row align-items-start flex-grow-1">
-               <div class="row flex-row">
+   {% block questionFields %}
+      {{ fields.nullField({'add_field_class': 'plugin_formcreator_subtype'}) }}
 
-                    {{ fields.autoNameField(
-                        'name',
-                        item,
-                        __('Name'),
-                    withtemplate,
-                    { required: true }
-                    ) }}
+      {{ fields.dropdownYesNo(
+         'required',
+         item.fields['required'],
+         __('Required', 'formcreator'),
+         {
+            'add_field_class': 'plugin_formcreator_required'
+         }
+      ) }}
 
-                    {% set section = get_item('PluginFormcreatorSection', item.fields['plugin_formcreator_sections_id']) %}
-                    {{ fields.dropdownField('PluginFormcreatorSection', 'plugin_formcreator_sections_id', item.fields['plugin_formcreator_sections_id'], __('Section', 'formcreator'), { 'display_emptychoice': false, 'condition': {'plugin_formcreator_forms_id': section.fields['plugin_formcreator_forms_id']} }) }}
+      {{ fields.nullField({'add_field_class': 'plugin_formcreator_empty'}) }}
 
-                    {{ fields.smallTitle('Condition to show the section') }}
-
-                    {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
-                    {% set conditions = call('PluginFormcreatorCondition::getConditionsFromItem', [item]) %}
-                    {% for condition in conditions %}
-                        {{ include('@formcreator/components/form/condition.html.twig') }}
-                    {% endfor %}
-               </div> {# .row #}
-            </div> {# .row #}
-         </div> {# .flex-row #}
-      </div>
-
-      {% if item_has_pictures %}
-         <div class="col-12 col-xxl-3 flex-column">
-            <div class="flex-row asset-pictures">
-               {{ include('components/form/pictures.html.twig', {'gallery_type': ''}) }}
-            </div>
-         </div>
+      {% if additions|length == 0%}
+         {{ fields.nullField({'add_field_class': 'plugin_formcreator_additions'}) }}
+      {% else %}
+         {{ additions|raw }}
       {% endif %}
-   </div> {# .card-body #}
 
-   {{ include('components/form/buttons.html.twig') }}
+      {# Placeholder to force new row #}
+      {{ fields.nullField() }}
+   {% endblock %}
 
-   {% if params['formfooter'] == null %}
-      <div class="card-footer mx-n2 mb-n2 mt-4">
-         {{ include('components/form/dates.html.twig') }}
-      </div>
+   {% if not (item.fields['fieldtype'] is null) %}
+      {{ fields.textareaField('description', item.fields['description'], __('Description'), {'full_width': true} ) }}
+
+      {% if question_params|length > 0 %}
+         {% block questionParameters %}
+         {% endblock %}
+      {% endif %}
+
+      {{ fields.smallTitle(__('Condition to show the section', 'formcreator')) }}
+
+      {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
+      {% set conditions = call('PluginFormcreatorCondition::getConditionsFromItem', [item]) %}
+      {% for condition in conditions %}
+         {{ include('@formcreator/components/form/condition.html.twig') }}
+      {% endfor %}
    {% endif %}
-</div>
+{% endblock %}
