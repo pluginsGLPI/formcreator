@@ -1417,7 +1417,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
-   public function providerSetRequestSource_specific(): array{
+   public function providerSetRequestSource_specific(): array {
       $form = $this->getForm();
       $formanswer = new \PluginFormcreatorFormanswer();
       $formanswer->add([
