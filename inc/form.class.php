@@ -2400,6 +2400,8 @@ PluginFormcreatorTranslatableInterface
     * @return boolean true if the user can use the form
     */
    public function canViewForRequest(): bool {
+      global $PLUGIN_HOOKS;
+
       if ($this->isNewItem()) {
          return false;
       }
@@ -2426,6 +2428,19 @@ PluginFormcreatorTranslatableInterface
          return false;
       }
 
+      // Check plugins restrictions
+      foreach ($PLUGIN_HOOKS['formcreator_restrict_form'] as $plugin => $callable) {
+         // Skip if invalid hook
+         if (!is_callable($callable)) {
+            trigger_error("formcreator_restrict_form[$plugin]: not a callable", E_USER_WARNING);
+            continue;
+         }
+
+         if (!call_user_func($callable, $this)) {
+            return false;
+         }
+      }
+
       // All checks were succesful, display form
       return true;
    }
@@ -2442,6 +2457,8 @@ PluginFormcreatorTranslatableInterface
     * get the SQL joins and conditions to select the forms available for the current user
     */
    public static function getFormListQuery() {
+      global $PLUGIN_HOOKS;
+
       $dbUtils           = new DbUtils();
       $formTable         = getTableForItemType(PluginFormcreatorForm::class);
       $formLanguageTable = getTableForItemType(PluginFormcreatorForm_Language::class);
@@ -2473,7 +2490,8 @@ PluginFormcreatorTranslatableInterface
                      'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
                      PluginFormcreatorFormAccessType::getRestrictedFormListCriteria(),
                   ],
-               ]
+               ],
+               ...array_values($PLUGIN_HOOKS['formcreator_restrict_forms'] ?? [])
             ] + $entityRestrict,
          ],
       ];
