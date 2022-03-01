@@ -87,14 +87,6 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
    public function show(string $domain, bool $canEdit = true): string {
       $html = '';
 
-      if ($this->isVisibleField()) {
-         $html .= '<label for="formcreator_field_' . $this->question->getID() . '">';
-         $html .= __($this->getLabel(), $domain);
-         if ($canEdit && $this->question->fields['required']) {
-            $html .= ' <span class="red">*</span>';
-         }
-         $html .= '</label>';
-      }
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
          $description = $this->question->fields['description'];
          foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
@@ -110,7 +102,22 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $html .= $this->getRenderedHtml($domain, $canEdit);
       $html .= '</div>';
 
-      return $html;
+
+      //Determine if fields is mandatory after generate it's HTML
+      //usefull for fields plugin
+      //because fields plugin manage it's own mandatory system and can overload $this->question->fields['required']
+      //when HTML is generated (see $this->getRenderedHtml)
+      $label = '';
+      if ($this->isVisibleField()) {
+         $label .= '<label for="formcreator_field_' . $this->question->getID() . '">';
+         $label .= __($this->getLabel(), $domain);
+         if ($canEdit && $this->question->fields['required']) {
+            $label .= ' <span class="red">*</span>';
+         }
+         $label .= '</label>';
+      }
+
+      return $label.$html;
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {

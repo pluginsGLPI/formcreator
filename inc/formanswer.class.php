@@ -1029,6 +1029,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
 
+         if ($question_line['fieldtype'] == 'fields') {
+            continue;
+         }
+
          if (!PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $this->questionFields)) {
             continue;
          }
