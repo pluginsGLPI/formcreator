@@ -1478,10 +1478,10 @@ SCRIPT;
          $decodedValues = json_decode($formQuestion->fields['values'], JSON_OBJECT_AS_ARRAY);
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
 
-         if (strpos($field_name, 'dropdown') !== false){
+         if (strpos($field_name, 'dropdown') !== false) {
             $dropdownInputName = "plugin_fields_" . $field_name . "dropdowns_id" ?? '';
             $input[$dropdownInputName] = $line['answer'];
-         }else {
+         } else {
             $input[$field_name] = $line['answer'];
          }
          $input['c_id'] = $formQuestion->fields['itemtype'];

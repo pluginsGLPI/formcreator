@@ -102,7 +102,6 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $html .= $this->getRenderedHtml($domain, $canEdit);
       $html .= '</div>';
 
-
       //Determine if fields is mandatory after generate it's HTML
       //usefull for fields plugin
       //because fields plugin manage it's own mandatory system and can overload $this->question->fields['required']
