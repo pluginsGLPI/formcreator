@@ -42,7 +42,7 @@ if (isset($_REQUEST['block_id'])
 
    //get value in case of update
    $selectedValue = 0;
-   if (isset($_REQUEST['question_id'])){
+   if (isset($_REQUEST['question_id'])) {
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB((int) $_REQUEST['question_id']);
       $decodedValues = json_decode($question->fields['values'], JSON_OBJECT_AS_ARRAY);

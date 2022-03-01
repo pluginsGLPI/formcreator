@@ -58,13 +58,13 @@ class FieldsField extends PluginFormcreatorAbstractField
     *
     * @param array $question PluginFormcreatorQuestion instance
     */
-    public function __construct(PluginFormcreatorQuestion $question) {
+   public function __construct(PluginFormcreatorQuestion $question) {
       $this->question  = $question;
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $field_name = $decodedValues['dropdown_fields_field'] ?? '';
       $fieldObj = new PluginFieldsField();
-      if ($fieldObj->getFromDBByCrit(['name' => $field_name])){
+      if ($fieldObj->getFromDBByCrit(['name' => $field_name])) {
          $this->field  = $fieldObj;
       }
    }
@@ -217,7 +217,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       }
 
       //compute default values
-      if(!empty($value)){
+      if (!empty($value)) {
          $field['value'] = $value;
       } else {
          //get default value
@@ -341,7 +341,7 @@ class FieldsField extends PluginFormcreatorAbstractField
                $os->getFromDB($value);
                $html.= $os->fields['name'];
             }
-         }
+      }
 
       unset($_SESSION['plugin']['fields']['values_sent']);
       return $html;
@@ -367,13 +367,13 @@ class FieldsField extends PluginFormcreatorAbstractField
       return "";
    }
 
-   public function getValueForApi(): string{
+   public function getValueForApi(): string {
       return "";
    }
 
    public function isValidValue($value): bool {
 
-      if (!is_null($this->field)){
+      if (!is_null($this->field)) {
 
          //check data type for input number / url
          $valid = true;
@@ -397,7 +397,7 @@ class FieldsField extends PluginFormcreatorAbstractField
                                              " : ".implode(', ', $url_errors), false, ERROR);
          }
 
-         if(!$valid) {
+         if (!$valid) {
             return false;
          }
 
@@ -407,7 +407,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function isValid(): bool {
-      if (!is_null($this->field)){
+      if (!is_null($this->field)) {
          // If the field is required it can't be empty
          if ($this->field->fields['mandatory'] && $this->value == '') {
             Session::addMessageAfterRedirect(
@@ -446,7 +446,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       $input['itemtype'] = $itemtype;
       $input['values'] = [];
 
-      $input['values']['dropdown_fields_field'] = $input['dropdown_fields_field'] ;
+      $input['values']['dropdown_fields_field'] = $input['dropdown_fields_field'];
       unset($input['dropdown_fields_field']);
 
       $input['values'] = json_encode($input['values']);
