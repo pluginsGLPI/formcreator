@@ -724,6 +724,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
+      $this->appendFieldsData($formanswer, $data);
+
       // Create the target change
       if (!$changeID = $change->add($data)) {
          return null;

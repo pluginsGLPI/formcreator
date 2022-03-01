@@ -904,6 +904,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
+      $this->appendFieldsData($formanswer, $data);
+
       // Create the target ticket
       $data['_auto_import'] = true;
       if (!$ticketID = $ticket->add($data)) {
