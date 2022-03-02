@@ -164,6 +164,10 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             $groupList = implode("', '", $groupList);
             $condition .= " OR `glpi_groups_groups_id_validator`.`id` IN ('$groupList')";
          }
+
+         // Add users_id_recipient
+         $condition .= " OR `glpi_plugin_formcreator_issues`.`users_id_recipient` = $currentUser ";
+
          $condition = "($condition)";
       break;
 

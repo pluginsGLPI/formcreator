@@ -1468,6 +1468,13 @@ PluginFormcreatorTranslatableInterface
       if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
          $this->updateConditions($this->input);
       }
+
+      if (count($this->updates) < 1) {
+         // When updating conditions in the questions tab, need to clear saved inputs
+         // because no data changed in the form itself, and GLPI does not clears the input
+         // saved in the session
+         $this->clearSavedInput();
+      }
    }
 
    /**
@@ -1821,7 +1828,7 @@ PluginFormcreatorTranslatableInterface
       /** @var PluginFormcreatorCategory */
       $formCategory = PluginFormcreatorCategory::getById($export['plugin_formcreator_categories_id']);
       if ($formCategory instanceof CommonDBTM) {
-         $export['_plugin_formcreator_category'] = $formCategory->fiels['completename'];
+         $export['_plugin_formcreator_category'] = $formCategory->fields['completename'];
       }
 
       // remove non needed keys

@@ -104,7 +104,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'requester_id        as requester_id',
                'users_id_validator  as users_id_validator',
                'groups_id_validator as groups_id_validator',
-               'comment             as comment'
+               'comment             as comment',
+               'requester_id        as users_id_recipient'
             ],
          ],
          'DISTINCT' => true,
@@ -164,6 +165,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
             new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
+            'users_id_recipient                          as users_id_recipient'
          ],
          'DISTINCT' => true,
          'FROM' => $ticketTable,
@@ -770,12 +772,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $ticket = new Ticket();
                   $ticket->getFromDB($id);
                   $content = $ticket->fields['content'];
+                  $canViewItem = $ticket->canViewItem();
                   break;
 
                case PluginFormcreatorFormAnswer::class:
                   $formAnswer = new PluginFormcreatorFormAnswer();
                   $formAnswer->getFromDB($id);
                   $content = $formAnswer->parseTags($formAnswer->getFullForm());
+                  $canViewItem = $formAnswer->canViewItem();
                   break;
 
                default:
@@ -784,10 +788,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $link = self::getFormURLWithID($id) . "&itemtype=".$data['raw']['itemtype'];
             $link =  self::getFormURLWithID($data['id']);
             $key = 'id';
-            $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
-               'applyto' => $itemtype.$data['raw'][$key],
-               'display' => false,
-            ]);
+            $tooltip = '';
+            if ($canViewItem) {
+               $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
+                  'applyto' => $itemtype.$data['raw'][$key],
+                  'display' => false,
+               ]);
+            }
             return '<a id="' . $itemtype.$data['raw'][$key] . '" href="' . $link . '">'
                . sprintf(__('%1$s %2$s'), $name, $tooltip)
                . '</a>';
@@ -941,6 +948,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!isset($input['items_id']) || !isset($input['itemtype'])) {
          return false;
       }
+
+      $input['users_id_recipient'] = Session::getLoginUserID();
 
       if ($input['itemtype'] == PluginFormcreatorFormAnswer::class) {
          $input['display_id'] = 'f_' . $input['items_id'];

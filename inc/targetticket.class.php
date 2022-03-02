@@ -870,6 +870,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
    protected function setTargetLocation($data, $formanswer) {
       global $DB;
 
+      $location = null;
       switch ($this->fields['location_rule']) {
          case self::LOCATION_RULE_ANSWER:
             $location = $DB->request([
@@ -880,13 +881,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                   'plugin_formcreator_questions_id'   => $this->fields['location_question']
                ]
             ])->next();
-            $location = $location['answer'];
+            if (ctype_digit($location['answer'])) {
+               $location = $location['answer'];
+            }
             break;
          case self::LOCATION_RULE_SPECIFIC:
             $location = $this->fields['location_question'];
             break;
-         default:
-            $location = null;
       }
       if (!is_null($location)) {
          $data['locations_id'] = $location;
@@ -1360,7 +1361,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
                'NOT' => ['itemtype' => [
                   PluginFormcreatorTargetTicket::class,
                   Ticket::class,
-               ]]
+               ]],
+               self::getForeignKeyField() => $this->getID(),
             ]);
             $targetTicketFk = self::getForeignKeyField();
             foreach ($input['items_id'] as $itemtype => $items) {

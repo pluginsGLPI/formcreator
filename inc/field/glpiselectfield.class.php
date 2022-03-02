@@ -106,7 +106,7 @@ class GlpiselectField extends DropdownField
       if ($decodedValues === null) {
          $itemtype = $this->question->fields['values'];
       } else {
-         $itemtype = $decodedValues['itemtype'];
+         $itemtype = $decodedValues['itemtype'] ?? 0;
       }
 
       array_unshift($optgroup, '---');
@@ -182,9 +182,7 @@ class GlpiselectField extends DropdownField
          'itemtype' => $itemtype
       ];
       // Params for entity restrictables itemtypes
-      if ((new $itemtype)->isEntityAssign()) {
-         $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
-      }
+      $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       unset($input['entity_restrict']);
 
       $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';

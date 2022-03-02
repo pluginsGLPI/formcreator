@@ -255,6 +255,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `users_id_validator`    int(11)       NOT NULL DEFAULT '0',
   `groups_id_validator`   int(11)       NOT NULL DEFAULT '0',
   `comment`               longtext,
+  `users_id_recipient`    int(11)        NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `item` (`itemtype`, `items_id`),
   INDEX `entities_id` (`entities_id`),
