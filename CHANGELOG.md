@@ -1,3 +1,36 @@
+<a name="v2.12.5"></a>
+## [v2.12.5](https://github.com/pluginsglpi/formcreator/compare/v2.12.4..v2.12.5) (2022-02-23)
+
+
+### Bug Fixes
+
+*  height of category should not be limtied ([4a98be86](https://github.com/pluginsglpi/formcreator/commit/4a98be86)), closes [#2574](https://github.com/pluginsglpi/formcreator/issues/2574)
+* **abstracttarget:** email actors deduplication ([4ec19042](https://github.com/pluginsglpi/formcreator/commit/4ec19042))
+* **descriptionfield:** do not convert description into docs ([563f2771](https://github.com/pluginsglpi/formcreator/commit/563f2771))
+* **descriptionfield:** picture rendering in user form ([ddff108f](https://github.com/pluginsglpi/formcreator/commit/ddff108f))
+* **dropdownfield:** invalid SQL ([d7f47a6d](https://github.com/pluginsglpi/formcreator/commit/d7f47a6d))
+* **dropdownfield:** prevent PHP notice ([8a7f3f3b](https://github.com/pluginsglpi/formcreator/commit/8a7f3f3b))
+* **dropdownfield:** tree management ([99ecf426](https://github.com/pluginsglpi/formcreator/commit/99ecf426))
+* **form:** missing closing braacket ([8cd6a021](https://github.com/pluginsglpi/formcreator/commit/8cd6a021))
+* **form:** redirect anon user to success page ([5ffa1b96](https://github.com/pluginsglpi/formcreator/commit/5ffa1b96))
+* **form:** saved input problem ([bdd1211d](https://github.com/pluginsglpi/formcreator/commit/bdd1211d))
+* **form:** typo in export code ([946f47f6](https://github.com/pluginsglpi/formcreator/commit/946f47f6))
+* **form_language:** untranslated string ([df9ddf0f](https://github.com/pluginsglpi/formcreator/commit/df9ddf0f))
+* **formlanguage:** chained translation broken ([d32682ca](https://github.com/pluginsglpi/formcreator/commit/d32682ca))
+* **glpiselectfield:** entity restriction not applied on users ([79af87d2](https://github.com/pluginsglpi/formcreator/commit/79af87d2))
+* **hostnamefield:** value not read from answers ([0d799600](https://github.com/pluginsglpi/formcreator/commit/0d799600))
+* **install:** force update of the table before updating it with syncIssues ([3f5ebaa9](https://github.com/pluginsglpi/formcreator/commit/3f5ebaa9))
+* **install:** prevent NULL from upgrading table ([9f188dd6](https://github.com/pluginsglpi/formcreator/commit/9f188dd6))
+* **issue:** ambiguous column in SQL query ([db757baf](https://github.com/pluginsglpi/formcreator/commit/db757baf))
+* **issue:** show tooltip only when sub item is readable ([cbef735b](https://github.com/pluginsglpi/formcreator/commit/cbef735b))
+* **ldapfield:** raw condition expression must be replaced by array ([996a3523](https://github.com/pluginsglpi/formcreator/commit/996a3523))
+* **target_actor:** bad  error message ([e90a9d94](https://github.com/pluginsglpi/formcreator/commit/e90a9d94))
+* **targetticket:** fix TTR input display ([dfa1371d](https://github.com/pluginsglpi/formcreator/commit/dfa1371d))
+* **targetticket:** loss of associated element ([a88d44c7](https://github.com/pluginsglpi/formcreator/commit/a88d44c7))
+* **targetticket:** possible SQL error ([0847a0c0](https://github.com/pluginsglpi/formcreator/commit/0847a0c0))
+
+
+
 <a name="v2.12.4"></a>
 ## [v2.12.4](https://github.com/pluginsglpi/formcreator/compare/v2.12.3..v2.12.4) (2022-01-10)
 

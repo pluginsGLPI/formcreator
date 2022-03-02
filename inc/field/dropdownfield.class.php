@@ -91,7 +91,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       if ($decodedValues === null) {
          $itemtype = $this->question->fields['values'];
       } else {
-         $itemtype = $decodedValues['itemtype'];
+         $itemtype = $decodedValues['itemtype'] ?? 0;
       }
 
       $root = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;

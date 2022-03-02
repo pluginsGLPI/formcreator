@@ -165,9 +165,13 @@ class ActorField extends PluginFormcreatorAbstractField
 
    public function deserializeValue($value) {
       $deserialized  = [];
+
       $serialized = ($value !== null && $value !== '')
          ? json_decode($value, JSON_OBJECT_AS_ARRAY)
          : [];
+      if (!is_array($serialized)) {
+         $serialized = [];
+      }
       foreach ($serialized as $item) {
          $item = trim($item);
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
