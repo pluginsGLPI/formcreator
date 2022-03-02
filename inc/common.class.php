@@ -923,13 +923,14 @@ JAVASCRIPT;
          $newMenu['seek_assistance'] = [
             'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
             'title'   => __('Seek assistance', 'formcreator'),
-            'icon'    => 'fa fa-paper-plane',
+            'icon'    => 'fa-fw ti ti-send',
          ];
          $newMenu['my_assistance_requests'] = [
             'default' => PluginFormcreatorIssue::getSearchURL(false),
             'title'   => __('My requests for assistance', 'formcreator'),
-            'icon'    => 'fa fa-list',
+            'icon'    => 'fa-fw ti ti-list',
          ];
+
          if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
             && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
          ) {
@@ -945,7 +946,7 @@ JAVASCRIPT;
             $newMenu['feeds'] = [
                'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
                'title'   => __('Consult feeds', 'formcreator'),
-               'icon'    => 'fa fa-rss',
+               'icon'    => 'fa-fw ti ti-rss',
             ];
          }
          return $newMenu;
@@ -975,8 +976,7 @@ JAVASCRIPT;
                $newMenus[$key] = $menu;
          }
       }
-      $menus = $newMenus;
 
-      return $menus;
+      return $newMenus;
    }
 }
