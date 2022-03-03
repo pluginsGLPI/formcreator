@@ -52,6 +52,7 @@
         {% if item.fields['content'] != '' %}
             <div class="form_header">
             {{ __(item.fields['content'], domain)|safe_html }}
+            {{ item.getExtraHeader()|safe_html }}
             </div>
         {% endif %}
         <ol>

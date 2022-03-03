@@ -2489,4 +2489,34 @@ PluginFormcreatorTranslatableInterface
 
       return $condition;
    }
+
+   /**
+    * Get the extra content from other plugins to be added to the form header
+    *
+    * @return string
+    */
+   public function getExtraHeader(): string
+   {
+      global $PLUGIN_HOOKS;
+
+      $extra_header = "";
+
+      $callbacks = $PLUGIN_HOOKS['formcreator_insert_header'] ?? [];
+      foreach ($callbacks as $plugin => $callback) {
+         // Make sure the supplied hook is a valid callback
+         if (!is_callable($callback)) {
+            trigger_error(
+               "Invalid 'formcreator_insert_header' hook for '$plugin' plugin",
+               E_USER_WARNING
+            );
+         }
+
+         // Insert extra plugin header if not empty
+         if ($extra_plugin_header = call_user_func($callback, $this)) {
+            $extra_header .= $extra_plugin_header;
+         }
+      }
+
+      return $extra_header;
+   }
 }
