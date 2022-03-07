@@ -58,63 +58,6 @@ class RadiosField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $rand = mt_rand();
-
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::input(
-         'default_values',
-         [
-            'id'               => 'default_values',
-            'value'            => Html::entities_deep($this->getValueForDesign()),
-            'cols'             => '50',
-            'display'          => false,
-         ]
-      );
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Values');
-      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $value = json_decode($this->question->fields['values'], true);
-      if ($value === null) {
-         $value = [];
-      }
-      $additions .= Html::textarea([
-         'name'             => 'values',
-         'id'               => 'values',
-         'value'            => implode("\r\n", $value),
-         'cols'             => '50',
-         'display'          => false,
-      ]);
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
-   }
-
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return __($this->value, $domain);

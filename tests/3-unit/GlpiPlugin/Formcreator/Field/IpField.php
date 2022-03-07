@@ -70,15 +70,6 @@ class IpField extends CommonTestCase {
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getDesignSpecializationField();
-      $this->string($output['label'])->isEqualTo('');
-      $this->string($output['field'])->isEqualTo('');
-      $this->boolean($output['may_be_empty'])->isEqualTo(false);
-      $this->boolean($output['may_be_required'])->isEqualTo(false);
-   }
-
    public function providerEquals() {
       return [
          [

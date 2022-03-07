@@ -795,7 +795,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'request category',
          'fieldtype'                      => 'dropdown',
-         'dropdown_values'                => \ITILCategory::class,
+         'itemtype'                       => \ITILCategory::class,
          'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions'                    => [
             'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
@@ -808,7 +808,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'incident category',
          'fieldtype'                      => 'dropdown',
-         'dropdown_values'                => \ITILCategory::class,
+         'itemtype'                       => \ITILCategory::class,
          'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions'                    => [
             'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
@@ -821,7 +821,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'plugin_formcreator_sections_id' => $section->getID(),
          'name'                           => 'other category',
          'fieldtype'                      => 'dropdown',
-         'dropdown_values'                => \TaskCategory::class,
+         'itemtype'                       => \TaskCategory::class,
          '_conditions'                    => [
             'show_logic' => [],
             'plugin_formcreator_questions_id' => [],
@@ -968,7 +968,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Prepare form
       $question = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'glpi_objects' => \Computer::class,
+         'itemtype' => \Computer::class,
       ]);
       $form = \PluginFormcreatorForm::getByItem($question);
 
@@ -1046,14 +1046,14 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $question1 = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'glpi_objects' => $validItemtype,
+         'itemtype'  => $validItemtype,
       ]);
       $form1 = \PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
-         'glpi_objects'                   => $validItemtype
+         'itemtype'                       => $validItemtype
       ]);
       $instance1 = new PluginFormcreatorTargetTicketDummy();
       $instance1->add([
@@ -1075,14 +1075,14 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $question3 = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'glpi_objects' => $validItemtype,
+         'itemtype'  => $validItemtype,
       ]);
       $form2 = \PluginFormcreatorForm::getByItem($question3);
       $sectionId = $question3->fields['plugin_formcreator_sections_id'];
       $question4 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
-         'glpi_objects'                   => $invalidItemtype
+         'itemtype'                       => $invalidItemtype
       ]);
 
       $instance2 = new PluginFormcreatorTargetTicketDummy();
@@ -1107,14 +1107,14 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $question5 = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'glpi_objects' => $invalidItemtype,
+         'itemtype'  => $invalidItemtype,
       ]);
       $form3 = \PluginFormcreatorForm::getByItem($question5);
       $sectionId = $question5->fields['plugin_formcreator_sections_id'];
       $question6 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
-         'glpi_objects'                   => $invalidItemtype
+         'itemtype'                       => $invalidItemtype
       ]);
       $instance3 = new PluginFormcreatorTargetTicketDummy();
       $instance3->add([
@@ -1140,14 +1140,14 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $question7 = $this->getQuestion([
          'fieldtype' => 'glpiselect',
-         'glpi_objects' => $validItemtype,
+         'itemtype'  => $validItemtype,
       ]);
       $form4 = \PluginFormcreatorForm::getByItem($question7);
       $sectionId = $question7->fields['plugin_formcreator_sections_id'];
       $question8 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
-         'glpi_objects'                   => $validItemtype
+         'itemtype'                       => $validItemtype
       ]);
 
       $instance4 = new PluginFormcreatorTargetTicketDummy();
@@ -1377,15 +1377,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->boolean($item2->isNewItem())->isFalse();
 
       $question1 = $this->getQuestion([
-         'fieldtype'       => 'dropdown',
-         'dropdown_values' => $validItemtype,
+         'fieldtype' => 'dropdown',
+         'itemtype'  => $validItemtype,
       ]);
       $form1 = \PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'dropdown',
-         'dropdown_values'                => $validItemtype
+         'itemtype'                       => $validItemtype
       ]);
       $instance1 = new PluginFormcreatorTargetTicketDummy();
       $instance1->add([

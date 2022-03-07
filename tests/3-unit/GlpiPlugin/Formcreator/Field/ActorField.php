@@ -33,15 +33,6 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use User;
 class ActorField extends CommonTestCase {
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion(['fieldtype' => 'actor']));
-      $output = $instance->getDesignSpecializationField();
-      $this->string($output['label'])->isEqualTo('');
-      $this->string($output['field'])->isEqualTo('');
-      $this->boolean($output['may_be_empty'])->isEqualTo(false);
-      $this->boolean($output['may_be_required'])->isEqualTo(true);
-   }
-
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
       $output = $itemtype::getName();

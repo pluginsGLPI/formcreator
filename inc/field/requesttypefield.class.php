@@ -52,48 +52,6 @@ class RequestTypeField extends SelectField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $rand = mt_rand();
-
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Ticket::dropdownType(
-         'default_values',
-         [
-            'value'   => $this->value,
-            'rand'    => $rand,
-            'display' => false,
-            'toadd' => [
-               0  => Dropdown::EMPTY_VALUE,
-            ],
-         ]
-      );
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $additions .= $this->getParametersHtmlForDesign();
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => true,
-         'may_be_required' => static::canRequire(),
-      ];
-   }
-
    public function getRenderedHtml($domain, $canEdit = true): string {
       $html = "";
       if (!$canEdit) {

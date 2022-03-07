@@ -55,19 +55,6 @@ class IpField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $common = parent::getDesignSpecializationField();
-      $additions = $common['additions'];
-
-      return [
-         'label' => '',
-         'field' => '',
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
-   }
-
    public function prepareQuestionInputForSave($input) {
       return $input;
    }

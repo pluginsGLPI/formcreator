@@ -58,39 +58,6 @@ class DateField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   // public function getDesignSpecializationField(): string {
-   //    $templateFile = '@formcreator/field/datefield.html.twig';
-   //    $question = $this->question;
-   //    $question->fields['default_values'] = Html::entities_deep($question->fields['default_values']);
-
-   //    $additions = TemplateRenderer::getInstance()->renderBlock(
-   //       $templateFile,
-   //       'additions',
-   //       [
-   //          'item' => $question,
-   //       ]
-   //    );
-
-   //    $common = parent::getDesignSpecializationField();
-   //    $additions .= $common['additions'];
-
-   //    return [
-   //       'field'           => TemplateRenderer::getInstance()->renderBlock(
-   //          $templateFile,
-   //          'subtype'
-   //       ),
-   //       'additions'       => $additions,
-   //       'required'        => TemplateRenderer::getInstance()->renderBlock(
-   //          $templateFile,
-   //          'required'
-   //       ),
-   //       'empty'           => TemplateRenderer::getInstance()->renderBlock(
-   //          $templateFile,
-   //          'empty'
-   //       ),
-   //    ];
-   // }
-
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return $this->value;

@@ -62,43 +62,6 @@ class TextareaField extends TextField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $rand = mt_rand();
-
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td width="80%" colspan="3">';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => $this->getValueForDesign(),
-         'enable_richtext'  => true,
-         'filecontainer'   => 'default_values_info',
-         'display'          => false,
-      ]);
-      //$additions .= Html::initEditorSystem('default_values', '', false);
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = PluginFormcreatorAbstractField::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
-   }
-
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
