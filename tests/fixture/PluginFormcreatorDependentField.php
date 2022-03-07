@@ -57,6 +57,9 @@ class DependentField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function showForm(array $options): void {
+   }
+
    public function getEmptyParameters(): array {
       $firstname = new PluginFormcreatorQuestionDependency();
       $firstname->setField($this, [

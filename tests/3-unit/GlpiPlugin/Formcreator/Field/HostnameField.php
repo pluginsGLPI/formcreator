@@ -52,18 +52,6 @@ class HostnameField extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getDesignSpecializationField();
-      $this->array($output)->isIdenticalTo([
-         'label' => '',
-         'field' => '',
-         'additions' => '',
-         'may_be_empty' => false,
-         'may_be_required' => false,
-      ]);
-   }
-
    public function providerSerializeValue() {
       return [
          [

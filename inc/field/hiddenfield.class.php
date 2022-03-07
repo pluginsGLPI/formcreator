@@ -54,38 +54,6 @@ class HiddenField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $rand = mt_rand();
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default value');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td id="dropdown_default_value_field">';
-      $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::input('default_values', [
-         'id' => 'default_values',
-         'value' => $value,
-      ]);
-      $additions .= '</td>';
-      $additions .= '<td></td>';
-      $additions .= '<td></td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => '',
-         'field' => '',
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
-   }
-
    public function show($domain, $canEdit = true) {
       if (!$canEdit) {
          return '';

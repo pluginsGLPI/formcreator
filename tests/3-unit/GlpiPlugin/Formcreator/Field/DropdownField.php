@@ -35,7 +35,6 @@ class DropdownField extends CommonTestCase {
    public function beforeTestMethod($method) {
       switch ($method) {
          case 'testPrepareQuestionInputForSave':
-         case 'testGetDesignSpecializationField':
          case 'testIsValid':
             $this->login('glpi', 'glpi');
       }
@@ -53,7 +52,7 @@ class DropdownField extends CommonTestCase {
          [
             'input' => [
                'name' => $name,
-               'dropdown_values' => \Location::class,
+               'itemtype' => \Location::class,
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
                'selectable_tree_root' => '0',
@@ -67,13 +66,12 @@ class DropdownField extends CommonTestCase {
                   'selectable_tree_root' => '0',
                   'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
                ]),
-               'default_values'  => '',
             ]
          ],
          [
             'input' => [
                'name' => $name,
-               'dropdown_values' => \ITILCategory::class,
+               'itemtype' => \ITILCategory::class,
                'show_ticket_categories' => '2',
                'show_tree_depth' => '3',
                'default_values'  => '',
@@ -266,20 +264,6 @@ class DropdownField extends CommonTestCase {
       $output = $instance->getValueForTargetText('', true);
       $this->string($output)->isEqualTo($expected);
    }
-
-   public function testGetDesignSpecializationField() {
-      $question = $this->getQuestion([
-         'values' => json_encode([
-            'itemtype' => \User::class,
-         ]),
-      ]);
-
-      $instance = $this->newTestedInstance($question);
-      $output = $instance->getDesignSpecializationField();
-      $this->boolean($output['may_be_empty'])->isEqualTo(true);
-      $this->boolean($output['may_be_required'])->isEqualTo(true);
-   }
-
 
    public function providerEquals() {
       $location1 = new \Location();

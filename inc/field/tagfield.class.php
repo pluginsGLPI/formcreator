@@ -55,21 +55,6 @@ class TagField extends DropdownField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $label = '';
-      $field = '';
-
-      $additions = '';
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => static::canRequire(),
-      ];
-   }
-
    public function getRenderedHtml($domain, $canEdit = true): string {
       global $DB;
 

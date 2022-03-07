@@ -73,7 +73,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $user->getID(),
-               'glpi_objects'     => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -88,7 +88,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => '',
-               'glpi_objects'    => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -103,7 +103,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => $user->getID(),
-               'glpi_objects'    => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -118,7 +118,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '0',
-               'glpi_objects'    => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -134,7 +134,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $computer->getID(),
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -149,7 +149,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -164,7 +164,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $computer->getID(),
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -179,7 +179,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
@@ -194,7 +194,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '0',
-               'glpi_objects'     => \Entity::class,
+               'itemtype'         => \Entity::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -209,7 +209,7 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '-1',
-               'glpi_objects'     => \Entity::class,
+               'itemtype'        => \Entity::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
@@ -254,8 +254,8 @@ class GlpiselectField extends CommonTestCase {
 
       // Create a question glpi Object / computer
       $question = $this->getQuestion([
-         'fieldtype'    => 'glpiselect',
-         'glpi_objects' => \Computer::class,
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => \Computer::class,
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($computer->getID());
@@ -275,8 +275,8 @@ class GlpiselectField extends CommonTestCase {
 
       // Create a question glpi Object / User
       $question = $this->getQuestion([
-         'fieldtype'    => 'glpiselect',
-         'glpi_objects' => \User::class,
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => \User::class,
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($user->getID());
