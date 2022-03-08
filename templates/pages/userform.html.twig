@@ -47,6 +47,7 @@
     {% set formName = 'plugin_formcreator_form' %}
 	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action={{ item.getFormURL() }} id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}">
 		<h1 class='form-title'>
+		        {{ __(item.fields['name'], domain) }}
 			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
 		</h1>
         {% if item.fields['content'] != '' %}
