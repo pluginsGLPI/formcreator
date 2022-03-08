@@ -157,10 +157,10 @@ class PluginFormcreatorCommon {
     *
     * @return array
     */
-   public static function getFontAwesomePictoNames() : array {
+   public static function getFontAwesomePictoNames(): array {
       static $list = null;
 
-      $list = $list ?? require_once(GLPI_PLUGIN_DOC_DIR . '/formcreator/' . self::getPictoFilename());
+      $list = $list ?? require_once(Plugin::getPhpDir('formcreator') . '/data/' . self::getPictoFilename());
       return $list;
    }
 
@@ -539,39 +539,6 @@ JAVASCRIPT;
             }
          }
       }
-   }
-
-   public static function buildFontAwesomeData() {
-      $fontAwesomeDir = GLPI_ROOT . '/public/lib/fortawesome/fontawesome-free/webfonts';
-      $outFile = GLPI_PLUGIN_DOC_DIR . '/formcreator/font-awesome.php';
-      @mkdir(dirname($outFile));
-      if (!is_readable($fontAwesomeDir) || !is_writable(dirname($outFile))) {
-         return false;
-      }
-
-      $faSvgFiles = [
-            'fa' => "$fontAwesomeDir/fa-regular-400.svg",
-            'fab' => "$fontAwesomeDir/fa-brands-400.svg",
-            'fas' => "$fontAwesomeDir/fa-solid-900.svg",
-         ];
-
-      $fanames = [];
-      $searchRegex = '#glyph-name=\"([^\"]*)\"#i';
-      foreach ($faSvgFiles as $key => $svgSource) {
-         $svg = file_get_contents($svgSource);
-         $matches = null;
-         preg_match_all($searchRegex, $svg, $matches);
-         foreach ($matches[1] as $name) {
-            $fanames["$key fa-$name"] = $name;
-         }
-         $list = '<?php' . PHP_EOL . 'return ' . var_export($fanames, true) . ';';
-         $size = file_put_contents($outFile, $list);
-         if ($size != strlen($list)) {
-            return false;
-         }
-      }
-
-      return true;
    }
 
    /**

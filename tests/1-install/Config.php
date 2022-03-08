@@ -124,7 +124,6 @@ class Config extends CommonTestCase {
 
       // Check the version saved in configuration
       $this->checkConfig();
-      $this->checkFontAwesomeData();
       $this->testPluginName();
 
       $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
@@ -186,13 +185,6 @@ class Config extends CommonTestCase {
       ]);
       $this->boolean($cronTask->isNewItem())->isFalse();
       $this->integer((int) $cronTask->fields['state'])->isEqualTo(0);
-   }
-
-   public function checkFontAwesomeData() {
-      $pluginName = TEST_PLUGIN_NAME;
-
-      $file = GLPI_ROOT . '/files/_plugins/' . $pluginName . '/font-awesome.php';
-      $this->boolean(is_readable($file))->isTrue();
    }
 
    /**
