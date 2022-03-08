@@ -177,6 +177,7 @@
 {% endmacro %}
 
 {% macro dropdownLanguageField(name, value, label = '', options = {}) %}
+   {% import 'components/form/fields_macros.html.twig' as fields %}
    {% set options = {'rand': random()}|merge(options) %}
 
    {% if options.disabled %}
@@ -198,6 +199,7 @@
 {% endmacro %}
 
 {% macro dropdownFontAwesomeIconField(name, value, label = '', options = {}) %}
+   {% import 'components/form/fields_macros.html.twig' as fields %}
    {% set options = {'rand': random()}|merge(options) %}
 
    {% if options.disabled %}

@@ -30,17 +30,18 @@
 
 {% extends "generic_show_form.html.twig" %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
 {% block form_fields %}
-   {% if item.isNewItem() %}
-       {% set language = session('glpilanguage') %}
-       {% set iconColor = '#999999' %}
-       {% set bgColor = '#E7E7E7' %}
-   {% else %}
-       {% set language = item.fields['language'] %}
-       {% set iconColor = item.fields['icon_color'] %}
-       {% set bgColor = item.fields['background_color'] %}
-   {% endif %}
+    {% if item.isNewItem() %}
+        {% set language = session('glpilanguage') %}
+        {% set iconColor = '#999999' %}
+        {% set bgColor = '#E7E7E7' %}
+    {% else %}
+        {% set language = item.fields['language'] %}
+        {% set iconColor = item.fields['icon_color'] %}
+        {% set bgColor = item.fields['background_color'] %}
+    {% endif %}
 
     {{ fields.autoNameField(
         'name',
@@ -61,38 +62,20 @@
 
     {{ fields.dropdownYesNo('helpdesk_home', item.fields['helpdesk_home'], __('Direct access on homepage', 'formcreator')) }}
 
-    <div class="form-field row col-12 col-sm-6  mb-2">
-        <label class="col-form-label col-xxl-5 text-xxl-end" for="dropdown_language_{{ rand }}">
-            {{ __('Icon', 'formcreator') }}
-        </label>
-
-        <div class="col-xxl-7 field-container">
-            {% do call('PluginFormcreatorCommon::showFontAwesomeDropdown', ['icon', {
-                'value': item.fields['icon'],
-                'rand': rand,
-                'width': '100%',
-            }]) %}
-        </div>
-    </div>
+    {{ formcreatorFields.dropdownFontAwesomeIconField('icon', item.fields['icon'], __('Icon', 'formcreator')) }}
 
     {{ fields.colorField('icon_color', iconColor, __('Icon color')) }}
 
-    {% set rand = random() %}
-    <div class="form-field row col-12 col-sm-6  mb-2">
-        <label class="col-form-label col-xxl-5 text-xxl-end" for="dropdown_language_{{ rand }}">
-            {{ __('Language', 'formcreator') }}
-        </label>
-
-        <div class="col-xxl-7 field-container">
-            {% do call('Dropdown::showLanguages', ['language', {
-                'display_emptychoice': true,
-                'emptylabel':  '--- ' ~ __('All languages', 'formcreator') ~ ' ---',
-                'value': language,
-                'rand': rand,
-                'width': '100%',
-            }]) %}
-        </div>
-    </div>
+    {{ formcreatorFields.dropdownLanguageField(
+        'language',
+        item.fields['icon'],
+        __('Language', 'formcreator'),
+        {
+            'display_emptychoice': true,
+            'emptylabel':  '--- ' ~ __('All languages', 'formcreator') ~ ' ---',
+            'value': language,
+        }
+    ) }}
 
     {{ fields.colorField('background_color', bgColor, __('Background color', 'formcreator')) }}
 
