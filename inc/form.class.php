@@ -2495,8 +2495,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return string
     */
-   public function getExtraHeader(): string
-   {
+   public function getExtraHeader(): string {
       global $PLUGIN_HOOKS;
 
       $extra_header = "";
