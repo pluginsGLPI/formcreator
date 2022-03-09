@@ -71,7 +71,7 @@ See [the tags section of our GitHub project](https://github.com/pluginsGLPI/form
 ## Contact
 
 For notices about major changes and general discussion of development, subscribe to the [/r/glpi](http://www.reddit.com/r/glpi) subreddit.
-You can also chat with us via IRC in [#GLPI on freenode](http://webchat.freenode.net/?channels=GLPI) if you get stuck, and [@glpien on Telegram](https://t.me/glpien).
+You can also chat with us via [@glpien on Telegram](https://t.me/glpien).
 
 ## Professional Services
 
