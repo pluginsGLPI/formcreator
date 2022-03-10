@@ -104,6 +104,8 @@ class PluginFormcreatorInstall {
          $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
       }
 
+      $this->changeTypeChampAnswerInTableGlpiPluginFormcreatorAnswers();
+
       $this->migration->executeMigration();
       // if the schema contains new tables
       $this->installSchema();
@@ -528,5 +530,28 @@ class PluginFormcreatorInstall {
             'mode'      => CronTask::MODE_EXTERNAL
          ]
       );
+   }
+
+   /**
+    * Change field answer type to LONGTEXT
+    */
+    protected function changeTypeChampAnswerInTableGlpiPluginFormcreatorAnswers() {
+      global $DB;
+
+      $this->migration->displayMessage("Change field answer type from TEXT to LONGTEXT in glpi_plugin_formcreator_answers");
+
+      $table = 'glpi_plugin_formcreator_answers';
+      if ($DB->fieldExists($table, 'answer')) {
+
+         $query = "ALTER TABLE `glpi_plugin_formcreator_answers` CHANGE `answer` `answer` LONGTEXT";
+         $result = $DB->query($query);
+         if (!$result) {
+            Toolbox::logInFile('sql-errors', $DB->error());
+            die ($DB->error());
+         }
+      } else {
+         Toolbox::logInFile('sql-errors', "Field (answer) not find in dans glpi_plugin_formcreator_answers");
+         die ($DB->error());
+      }
    }
 }
