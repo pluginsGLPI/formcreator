@@ -119,7 +119,7 @@ class HiddenField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      $this->value = $input[$key];
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 

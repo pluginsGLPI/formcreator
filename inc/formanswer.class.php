@@ -1041,10 +1041,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       foreach ($this->getQuestionFields($formId) as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
+         $answer_value = $field->serializeValue();
          $answer->add([
             'plugin_formcreator_formanswers_id'  => $formAnswerId,
             'plugin_formcreator_questions_id'    => $questionId,
-            'answer'                             => $field->serializeValue(),
+            'answer'                             => Toolbox::addslashes_deep($answer_value),
          ], [], 0);
          foreach ($field->getDocumentsForTarget() as $documentId) {
             $docItem = new Document_Item();
@@ -1176,7 +1177,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $value = $this->questionFields[$questionId]->getValueForTargetText($domain, $richText);
          }
 
-         $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
+         $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
                if ($target !== null) {
@@ -1186,7 +1187,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             }
          }
-         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
+         $content = str_replace('##answer_' . $questionId . '##', Sanitizer::sanitize($value), $content);
 
          if ($this->questionFields[$questionId] instanceof DropdownField) {
             $content = $this->questionFields[$questionId]->parseObjectProperties($field->getValueForDesign(), $content);

@@ -40,6 +40,7 @@ use PluginFormcreatorCommon;
 use Session;
 use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class TextField extends PluginFormcreatorAbstractField
 {
@@ -88,7 +89,7 @@ class TextField extends PluginFormcreatorAbstractField
          return '';
       }
 
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function deserializeValue($value) {
@@ -106,7 +107,7 @@ class TextField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return $this->value;
+      return Sanitizer::unsanitize($this->value);
    }
 
    public function moveUploads() {
@@ -200,7 +201,8 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      $this->value = Toolbox::stripslashes_deep($input[$key]);
+      $this->value = Sanitizer::sanitize($input[$key]);
+      $this->value = Sanitizer::unsanitize($input[$key]);
       return true;
    }
 

@@ -137,7 +137,7 @@ class TextareaField extends TextField
          $this->value = Html::entities_deep($this->value);
       }
 
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function deserializeValue($value) {
@@ -183,6 +183,8 @@ class TextareaField extends TextField
          return [];
       }
 
+      $this->value = $input['default_values'];
+
       // Handle uploads
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input['_tag_default_values']) && isset($input['_default_values']) && isset($input['_prefix_default_values'])) {
@@ -213,11 +215,7 @@ class TextareaField extends TextField
 
    public function getValueForTargetText($domain, $richText): ?string {
       $value = $this->value;
-      if ($richText) {
-         $value = Sanitizer::unsanitize($value);
-         $value = Html::entities_deep($value);
-      } else {
-         $value = Sanitizer::unsanitize($value);
+      if (!$richText) {
          $value = strip_tags($value);
       }
 

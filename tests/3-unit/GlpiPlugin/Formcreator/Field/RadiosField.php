@@ -124,7 +124,7 @@ class RadiosField extends CommonTestCase {
          [
             'instance'  => $instance,
             'value'     => "test d'apostrophe",
-            'expected'  => 'test d\\\'apostrophe',
+            'expected'  => 'test d\'apostrophe',
          ],
       ];
    }
