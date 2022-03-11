@@ -475,3 +475,9 @@ function plugin_formcreator_redirect() {
       }
    }
 }
+
+function plugin_formcreator_options() {
+   return [
+      Plugin::OPTION_AUTOINSTALL_DISABLED => true,
+   ];
+}
