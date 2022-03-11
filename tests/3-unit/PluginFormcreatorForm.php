@@ -617,7 +617,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $input = [
          'name' => $this->getUniqueString(),
          '_entity' => 'Root entity',
-         'is_recursive' => '1',
+         'is_recursive' => '0',
          'access_rights' => \PluginFormcreatorForm::ACCESS_RESTRICTED,
          'description' => '',
          'content' => '',

@@ -153,7 +153,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'password2'             => 'superadmin',
          '_profiles_id'          => '4', // super admin profile
          '_entities_id'          => 0,
-         '_is_recursive'         => 1,
+         '_is_recursive'         => 0,
       ]);
       $this->boolean($user->isNewItem())
          ->isFalse(json_encode(
