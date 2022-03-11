@@ -1034,8 +1034,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function post_addItem() {
-      global $DB;
-
       // Save questions answers
       $formAnswerId = $this->getID();
       $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
