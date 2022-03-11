@@ -52,7 +52,6 @@ class TextareaField extends TextField
 
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
       $parameters = $this->getParameters();
       TemplateRenderer::getInstance()->display($template, [
@@ -71,7 +70,7 @@ class TextareaField extends TextField
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $value        = nl2br(__($this->value, $domain));
+      $value = $this->value;
       $html = '';
       $html .= Html::textarea([
          'name'              => $fieldName,
@@ -183,7 +182,6 @@ class TextareaField extends TextField
       if (!$success) {
          return [];
       }
-      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input['default_values']));
 
       // Handle uploads
       $key = 'formcreator_field_' . $this->question->getID();
