@@ -42,10 +42,14 @@
 
     {{ fields.nullField() }}
 
-    {{ fields.textField(
+    {{ fields.textareaField(
         'default_values',
         item.fields['default_values'],
         __('Default values'),
+        {
+            'full_width': true,
+            'enable_richtext': true
+        }
     ) }}
 {% endblock %}
 

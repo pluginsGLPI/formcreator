@@ -86,7 +86,14 @@
    {% endblock %}
 
    {% if not (item.fields['fieldtype'] is null) %}
-      {{ fields.textareaField('description', item.fields['description'], __('Description'), {'full_width': true} ) }}
+      {{ fields.textareaField(
+         'description',
+         item.fields['description'],
+         __('Description'), {
+            'full_width': true,
+            'enable_richtext': true
+         }
+      ) }}
 
       {% if question_params|length > 0 %}
          {% block questionParameters %}
