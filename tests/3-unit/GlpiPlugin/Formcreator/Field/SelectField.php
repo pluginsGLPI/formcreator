@@ -267,7 +267,7 @@ class SelectField extends CommonTestCase {
          ],
          [
             'value'     => 'test d\'apostrophe',
-            'expected'  => "test d\'apostrophe",
+            'expected'  => 'test d\'apostrophe',
          ],
       ];
    }

@@ -157,7 +157,7 @@ class RadiosField extends PluginFormcreatorAbstractField
          return '';
       }
 
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function deserializeValue($value) {

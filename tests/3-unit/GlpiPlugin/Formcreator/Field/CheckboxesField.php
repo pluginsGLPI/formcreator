@@ -148,15 +148,15 @@ class CheckboxesField extends CommonTestCase {
          ],
          [
             'value'     => ['foo'],
-            'expected'  => '[\"foo\"]',
+            'expected'  => '["foo"]',
          ],
          [
             'value'     => ["test d'apostrophe"],
-            'expected'  => '[\"test d\\\'apostrophe\"]',
+            'expected'  => '["test d\'apostrophe"]',
          ],
          [
             'value'     => ['foo', 'bar'],
-            'expected'  => '[\"foo\",\"bar\"]',
+            'expected'  => '["foo","bar"]',
          ],
       ];
    }
@@ -349,11 +349,11 @@ class CheckboxesField extends CommonTestCase {
       return [
          [
             'input' => ['a', 'c'],
-            'expected' => '[\"a\",\"c\"]',
+            'expected' => '["a","c"]',
          ],
          [
             'input' => ['a', "test d\'apostrophe"],
-            'expected' => '[\"a\",\"test d\\\'apostrophe\"]',
+            'expected' => '["a","test d\'apostrophe"]',
          ],
       ];
    }

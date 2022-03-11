@@ -51,7 +51,7 @@ class TextareaField extends CommonTestCase {
             'expected' => '',
          ],
          [
-            'value' => "quote ' test",
+            'value' => "quote \' test", // Post data escaped by GLPI
             'expected' => "quote \' test",
          ],
       ];

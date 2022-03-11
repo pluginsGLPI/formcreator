@@ -820,7 +820,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          $richText
       );
 
-      $data['content'] = Toolbox::addslashes_deep($data['content']);
+      // $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['content'] = $formanswer->parseTags($data['content'], $this, $richText);
 
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];

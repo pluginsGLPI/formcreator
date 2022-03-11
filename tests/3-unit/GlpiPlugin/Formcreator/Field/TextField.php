@@ -252,7 +252,7 @@ class TextField extends CommonTestCase {
          ],
          [
             'value' => "quote ' test",
-            'expected' => "quote \' test",
+            'expected' => "quote ' test",
          ],
       ];
    }

@@ -121,7 +121,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          return '';
       }
 
-      return Toolbox::addslashes_deep(json_encode($this->value, JSON_OBJECT_AS_ARRAY + JSON_UNESCAPED_UNICODE));
+      return json_encode($this->value, JSON_OBJECT_AS_ARRAY + JSON_UNESCAPED_UNICODE);
    }
 
    public function deserializeValue($value) {
@@ -264,7 +264,6 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       if ($richText) {
          $value = '<br />' . implode('<br />', $value);
-         $value = Html::entities_deep($value);
       } else {
          $value = implode(', ', $value);
       }
