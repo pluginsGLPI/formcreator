@@ -278,21 +278,21 @@ class CheckboxesField extends CommonTestCase {
                'values' => "[]"
             ]),
             'value' => json_encode(['a']),
-            'expected' => '&lt;br /&gt;'
+            'expected' => '<br />'
          ],
          [
             'question' => $this->getQuestion([
                'values' => json_encode(['a', 'b', 'c'])
             ]),
             'value' => json_encode(['a']),
-            'expected' => '&lt;br /&gt;a'
+            'expected' => '<br />a'
          ],
          [
             'question' => $this->getQuestion([
                'values' => json_encode(['a', 'b', 'c'])
             ]),
             'value' => json_encode(['a', 'c']),
-            'expected' => '&lt;br /&gt;a&lt;br /&gt;c'
+            'expected' => '<br />a<br />c'
          ],
       ];
    }
