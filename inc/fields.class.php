@@ -154,7 +154,8 @@ class PluginFormcreatorFields
       $getParentVisibility = function() use ($item, $fields) {
          // Check if item has a condtionnable visibility parent
          if ($item instanceof CommonDBChild) {
-            if ($item::$itemtype instanceof PluginFormcreatorConditionnableInterface) {
+            $interfaces = class_implements($item::$itemtype);
+            if (in_array(PluginFormcreatorConditionnableInterface::class, $interfaces)) {
                if ($parent = $item->getItem(true, false)) {
                   $parentItemtype = $parent->getType();
                   $parentId = $parent->getID();
