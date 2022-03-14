@@ -911,8 +911,6 @@ var plugin_formcreator = new function() {
          var lastSection = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last();
          lastSection.after(data);
          sectionId = $('.plugin_formcreator_form_design[data-itemtype="PluginFormcreatorForm"] [data-itemtype="PluginFormcreatorSection"]').last().attr('data-id');
-         plugin_formcreator.initGridStack(sectionId);
-         plugin_formcreator.updateSectionControls();
          that.resetTabs();
       }).fail(function(data) {
          alert(data.responseText);
