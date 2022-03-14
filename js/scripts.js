@@ -496,13 +496,13 @@ var plugin_formcreator = new function() {
       var selector = '#plugin_formcreator_form.plugin_formcreator_form_design [data-itemtype="PluginFormcreatorSection"][data-id="' + sectionId + '"] .grid-stack';
       var group = document.querySelector(selector);
       var options = {
-         column:         this.questionsColumns,
+         column:               this.questionsColumns,
          disableOneColumnMode: true,
-         cellHeight:     '32px',
-         margin: '2px',
-         float:          true,
-         acceptWidgets:  true,
-         resizeable:     {
+         cellHeight:           '32px',
+         margin:               '2px',
+         float:                true,
+         acceptWidgets:        true,
+         resizeable: {
             handles: 'e, w'
          }
       };

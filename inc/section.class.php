@@ -517,10 +517,11 @@ PluginFormcreatorTranslatableInterface
     *
     * @return string HTML
     */
-   public function getDesignHtml() {
-      return TemplateRenderer::getInstance()->render('@formcreator/components/form/section_design.html.twig', [
+   public function getDesignHtml(): string {
+      $out = TemplateRenderer::getInstance()->render('@formcreator/components/form/section_design.html.twig', [
          'item'   => $this,
       ]);
+      return $out;
    }
 
    /**
