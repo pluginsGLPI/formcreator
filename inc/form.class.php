@@ -671,13 +671,13 @@ PluginFormcreatorTranslatableInterface
          ]
       ];
       if ($helpdeskHome) {
-         $where_form['AND']["$table_form.helpdesk_home"] = '1';
+         $where_form['WHERE']['AND']["$table_form.helpdesk_home"] = '1';
       }
 
       $selectedCategories = [];
       if ($rootCategory != 0) {
          $selectedCategories = getSonsOf($table_cat, $rootCategory);
-         $where_form['AND']["$table_form.$categoryFk"] = $selectedCategories;
+         $where_form['WHERE']['AND']["$table_form.$categoryFk"] = $selectedCategories;
       }
 
       $where_form['GROUPBY'] = [
@@ -780,7 +780,7 @@ PluginFormcreatorTranslatableInterface
          $query_forms['SELECT'] = [
             $table_form => ['id', 'name', 'icon', 'icon_color', 'background_color', 'description', 'usage_count'],
          ];
-         $query_forms['AND']["$table_form.is_default"] = ['<>', '0'];
+         $query_forms['WHERE']['AND']["$table_form.is_default"] = ['<>', '0'];
          $query_forms['ORDER'] = [
             $order
          ];
