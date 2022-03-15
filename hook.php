@@ -151,18 +151,22 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          } else {
             $condition .= "`glpi_plugin_formcreator_issues`.`users_id_validator` = '$currentUser'";
          }
+
          // condition where current user is a member of a validator group of the issue
          $groupList = [];
          foreach (Group_User::getUserGroups($currentUser) as $group) {
             $groupList[] = $group['id'];
          }
-         $groupList = implode("', '", $groupList);
-         if (Plugin::isPluginActive('advform')) {
-            $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[9]['joinparams']);
-            $condition .= " OR `glpi_groups_$complexJoinId`.`id` IN ('$groupList')";
-         } else {
-            $condition .= " OR `glpi_plugin_formcreator_issues`.`groups_id_validator` IN ('$groupList')";
+         if (count($groupList) > 0) {
+            $groupList = implode("', '", $groupList);
+            if (Plugin::isPluginActive('advform')) {
+               $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[9]['joinparams']);
+               $condition .= " OR `glpi_groups_$complexJoinId`.`id` IN ('$groupList')";
+            } else {
+               $condition .= " OR `glpi_plugin_formcreator_issues`.`groups_id_validator` IN ('$groupList')";
+            }
          }
+
          // condition where current user is a validator of a issue of type ticket
          $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[11]['joinparams']);
          $condition .= " OR `glpi_users_users_id_validate_$complexJoinId`.`id` = '$currentUser'";
