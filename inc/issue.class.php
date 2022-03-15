@@ -712,7 +712,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       if (Plugin::isPluginActive('advform')) {
-         foreach (PluginADvformIssue::rawSearchOptions() as $so) {
+         foreach (PluginAdvformIssue::rawSearchOptions() as $so) {
             $tab[] = $so;
          }
       }
@@ -883,7 +883,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
                               'searchtype' => 'equals',
                               'value'      => PluginFormcreatorFormAnswer::STATUS_WAITING,
                               ],
-                             ['link' => 'AND'] + self::getMeAsValidatorCriteria()
                             ],
               'reset'    => 'reset'];
    }
@@ -891,58 +890,37 @@ class PluginFormcreatorIssue extends CommonDBTM {
    static function getSolvedCriteria() {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [
-                              ['link'       => 'AND',
-                              'criteria' => [[
-                               'link'       => 'AND',
-                               'field' => 4,
-                               'searchtype' => 'equals',
-                               'value'      => 'old', // see Ticket::getAllStatusArray()
-                              ],
-                              ['field' => 4,
-                               'searchtype' => 'equals',
-                               'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-                               'link'       => 'OR']
-                              ]],
-                              ['link'       => 'OR',
-                              'criteria' => [[
-                                 'link'       => 'AND',
-                                 'field'      => 9,
-                                 'searchtype' => 'equals',
-                                 'value'      => $currentUser,
-                              ],
-                              ['link'       => 'OR',
-                                 'field'      => 16,
-                                 'searchtype' => 'equals',
-                                 'value'      => 'mygroups',
-                              ],
-                              ]],
-                              ['link'       => 'AND',
-                                 'field' => 4,
-                                 'searchtype' => 'equals',
-                                 'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-                              ]],
-              'reset'    => 'reset'];
-   }
-
-   public static function getMeAsValidatorCriteria() {
-      $currentUser = Session::getLoginUserID();
-      return ['criteria'   => [[
-         'link'       => 'AND',
-         'field'      => 18,
-         'searchtype' => 'equals',
-         'value'      => $currentUser,
-        ],
-        ['link'       => 'OR',
-         'field'      => 17,
-         'searchtype' => 'equals',
-         'value'      => 'mygroups',
-        ],
-        ['link'       => 'OR',
-         'field'      => 11,
-         'searchtype' => 'equals',
-         'value'      => $currentUser,
-        ]]
-      ];
+         ['link'       => 'AND',
+         'criteria' => [[
+            'link'       => 'AND',
+            'field' => 4,
+            'searchtype' => 'equals',
+            'value'      => 'old', // see Ticket::getAllStatusArray()
+         ],
+         ['field' => 4,
+            'searchtype' => 'equals',
+            'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
+            'link'       => 'OR']
+         ]],
+         ['link'       => 'OR',
+         'criteria' => [[
+            'link'       => 'AND',
+            'field'      => 9,
+            'searchtype' => 'equals',
+            'value'      => $currentUser,
+         ],
+         ['link'       => 'OR',
+            'field'      => 16,
+            'searchtype' => 'equals',
+            'value'      => 'mygroups',
+         ],
+         ]],
+         ['link'       => 'AND',
+            'field' => 4,
+            'searchtype' => 'equals',
+            'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
+         ]],
+      'reset'    => 'reset'];
    }
 
    static function getTicketSummary(?string $counter = null) {
