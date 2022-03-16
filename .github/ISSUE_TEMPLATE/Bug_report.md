@@ -22,7 +22,7 @@ If applicable, add screenshots to help explain your problem.
 
 **GLPI / Plugins (please complete the following information):**
 - GLPI version
-- list of all plugins (available in GLPI > Setup > General > tab System > bottom of the page)
+- list of all plugins with their version (available in GLPI > Setup > General > tab System > bottom of the page)
 
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
