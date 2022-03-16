@@ -37,31 +37,47 @@
         'ldap_auth',
         item.fields['_ldap_auth'],
         _n('LDAP directory', 'LDAP directories', 1),
-        { on_change: 'plugin_formcreator_changeLDAP(this)' }
+        {
+            on_change: 'plugin_formcreator_changeLDAP(this)',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.dropdownYesNo(
         'required',
         item.fields['required'],
-        __('Required', 'formcreator')
+        __('Required', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.dropdownYesNo(
         'show_empty',
         item.fields['show_empty'],
-        __('Show empty', 'formcreator')
+        __('Show empty', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.textField(
         'ldap_filter',
         item.fields['_ldap_filter'],
-        __('Filter', 'formcreator'),
+        __('Filter', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.dropdownField(
         'RuleRightParameter',
         'ldap_attribute',
         item.fields['_ldap_attribute'],
-        __('Attribute', 'formcreator'),
+        __('Attribute', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 {% endblock %}

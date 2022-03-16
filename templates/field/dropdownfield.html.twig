@@ -36,19 +36,29 @@
         'itemtype',
         item.fields['itemtype'],
         _n('Dropdown', 'Dropdowns', 1),
-        { on_change: 'plugin_formcreator.changeQuestionType(this)' }
+        {
+            on_change: 'plugin_formcreator.changeQuestionType(this)',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.dropdownYesNo(
         'required',
         item.fields['required'],
-        __('Required', 'formcreator')
+        __('Required', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.dropdownYesNo(
         'show_empty',
         item.fields['show_empty'],
-        __('Show empty', 'formcreator')
+        __('Show empty', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {% if item.fields['itemtype'] is defined and item.fields['itemtype'] != '0' %}
@@ -56,22 +66,37 @@
             item.fields['itemtype'],
             'default_values',
             item.fields['default_values'],
-            __('Default values'),
+            __('Default values'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
         ) }}
     {% else %}
-        {{ fields.nullField() }}
+        {{ fields.nullField({
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }) }}
     {% endif %}
 
-    {{ fields.nullField() }}
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {% if item.fields['itemtype'] is defined and item.fields['itemtype'] == 'ITILCategory' %}
         {{ formcreatorFields.dropdownItilCategoryFilter(
             'show_ticket_categories',
             item.fields['_show_ticket_categories'],
-            __('Show ticket categories', 'formcreator')
+            __('Show ticket categories', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
         ) }}
 
-        {{ fields.nullField() }}
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
     {% endif %}
 
     {# _is_tree is set in the showForm method, and helps to find if the itemtype is a tree #}
@@ -81,22 +106,34 @@
             item.fields['itemtype'],
             'show_tree_root',
             item.fields['_tree_root'],
-            __('Subtree root', 'formcreator'),
+            __('Subtree root', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
         ) }}
 
         {{ fields.numberField(
             'show_tree_depth',
             item.fields['_show_tree_depth'],
-            __('Limit subtree depth', 'formcreator'),
+            __('Limit subtree depth', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
         ) }}
 
         {{ fields.dropdownYesNo(
             'selectable_tree_root',
             item.fields['_tree_root_selectable'],
-            __('Selectable root', 'formcreator')
+            __('Selectable root', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
         ) }}
 
-        {{ fields.nullField() }}
+        {{ fields.nullField({
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }) }}
     {% endif %}
 
     {% if item.fields['itemtype'] is defined and item.fields['_is_entity_restrict'] == '1' %}
@@ -104,8 +141,15 @@
             'entity_restrict',
             item.fields['_entity_restrict'],
             __('Entity restriction', 'formcreator'),
+            {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
         ) }}
 
-        {{ fields.nullField() }}
+        {{ fields.nullField({
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }) }}
     {% endif %}
 {% endblock %}

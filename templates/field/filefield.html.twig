@@ -33,14 +33,19 @@
 
 {% block questionFields %}
 
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {{ fields.dropdownYesNo(
         'required',
         item.fields['required'],
         __('Required', 'formcreator'),
         {
-            'add_field_class': 'plugin_formcreator_required'
+            'add_field_class': 'plugin_formcreator_required',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
         }
     ) }}
 {% endblock %}

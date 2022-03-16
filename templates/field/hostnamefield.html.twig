@@ -32,5 +32,8 @@
 {% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
 {% block questionFields %}
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 {% endblock %}

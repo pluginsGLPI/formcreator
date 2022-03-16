@@ -32,28 +32,43 @@
 {% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
 {% block questionFields %}
-    {{ fields.nullField() }}
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {{ fields.dropdownYesNo(
         'required',
         item.fields['required'],
-        __('Required', 'formcreator'),
+        __('Required', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {# May be empty has no meaning as required makes mandatory to have at lease 1 checkbox ticked #}
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {% import 'components/form/fields_macros.html.twig' as fields %}
     {{ fields.textareaField(
         'default_values',
         item.fields['default_values'],
-        __('Default values'),
+        __('Default values'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
     {{ fields.textareaField(
         'values',
         item.fields['values'],
-        __('Values'),
+        __('Values'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 {% endblock %}
 

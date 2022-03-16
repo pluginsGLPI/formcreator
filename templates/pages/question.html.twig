@@ -40,7 +40,9 @@
    withtemplate,
    {
       value: item.fields['name'],
-      required: true
+      required: true,
+      label_class: 'col-xxl-4',
+      input_class: 'col-xxl-8',
    } ) }}
 
    {% set section = get_item('PluginFormcreatorSection', item.fields['plugin_formcreator_sections_id']) %}
@@ -51,7 +53,9 @@
       __('Section', 'formcreator'),
       {
          'display_emptychoice': false,
-         'condition': {'plugin_formcreator_forms_id': section.fields['plugin_formcreator_forms_id']}
+         'condition': {'plugin_formcreator_forms_id': section.fields['plugin_formcreator_forms_id']},
+         label_class: 'col-xxl-4',
+         input_class: 'col-xxl-8',
       }
    ) }}
 
@@ -59,6 +63,10 @@
       'fieldtype',
       item.fields['fieldtype'],
       _n('Type', 'Types', 1),
+      {
+         label_class: 'col-xxl-4',
+         input_class: 'col-xxl-8',
+      }
    ) }}
 
    {% block questionFields %}
@@ -69,20 +77,33 @@
          item.fields['required'],
          __('Required', 'formcreator'),
          {
-            'add_field_class': 'plugin_formcreator_required'
+            add_field_class: 'plugin_formcreator_required',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
          }
       ) }}
 
-      {{ fields.nullField({'add_field_class': 'plugin_formcreator_empty'}) }}
+      {{ fields.nullField({
+         'add_field_class': 'plugin_formcreator_empty',
+         label_class: 'col-xxl-4',
+         input_class: 'col-xxl-8',
+      }) }}
 
       {% if additions|length == 0%}
-         {{ fields.nullField({'add_field_class': 'plugin_formcreator_additions'}) }}
+         {{ fields.nullField({
+            'add_field_class': 'plugin_formcreator_additions',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+         }) }}
       {% else %}
          {{ additions|raw }}
       {% endif %}
 
       {# Placeholder to force new row #}
-      {{ fields.nullField() }}
+      {{ fields.nullField({
+         label_class: 'col-xxl-4',
+         input_class: 'col-xxl-8',
+      }) }}
    {% endblock %}
 
    {% if not (item.fields['fieldtype'] is null) %}
@@ -90,8 +111,11 @@
          'description',
          item.fields['description'],
          __('Description'), {
-            'full_width': true,
-            'enable_richtext': true
+            full_width: true,
+            full_width_adapt_column: false,
+            label_class: 'col-xxl-2',
+            input_class: 'col-xxl-10',
+            enable_richtext: true
          }
       ) }}
 

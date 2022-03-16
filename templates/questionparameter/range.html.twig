@@ -36,6 +36,25 @@
 {% macro rangeField(name, item, label = '', options = {}) %}
     {% import 'components/form/fields_macros.html.twig' as fields %}
 
-    {{ fields.textField(name ~ '[range_min]', item.fields.range_min, __('Min', 'formcreator'), {rand: ''}) }}
-    {{ fields.textField(name ~ '[range_max]', item.fields.range_max, __('Max', 'formcreator'), {rand: ''}) }}
+    {{ fields.textField(
+        name ~ '[range_min]',
+        item.fields.range_min,
+        __('Min', 'formcreator'),
+        {
+            rand: '',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+    ) }}
+
+    {{ fields.textField(
+        name ~ '[range_max]',
+        item.fields.range_max,
+        __('Max', 'formcreator'),
+        {
+            rand: '',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+    ) }}
 {% endmacro %}
