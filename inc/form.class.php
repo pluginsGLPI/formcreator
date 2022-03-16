@@ -540,7 +540,7 @@ PluginFormcreatorTranslatableInterface
 
             case 2:
                echo '<div style="text-align: left">';
-               $item->displayUserForm($item);
+               $item->displayUserForm();
                echo '</div>';
                break;
 
