@@ -32,20 +32,32 @@
 {% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
 {% block questionFields %}
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {{ fields.dropdownYesNo(
         'required',
         item.fields['required'],
-        __('Required', 'formcreator')
+        __('Required', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {{ fields.textField(
         'default_values',
         item.fields['default_values'],
-        __('Default values'),
+        __('Default values'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 {% endblock %}
 

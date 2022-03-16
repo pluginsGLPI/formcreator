@@ -36,7 +36,19 @@
 {% macro regexField(name, item, label = '', options = {}) %}
     {% import 'components/form/fields_macros.html.twig' as fields %}
 
-    {{ fields.textField(name ~ '[regex]', item.fields.regex, __('Regular expression', 'formcreator'), {rand: ''}) }}
+    {{ fields.textField(
+        name ~ '[regex]',
+        item.fields.regex,
+        __('Regular expression', 'formcreator'),
+        {
+            rand: '',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+    ) }}
 
-    {{ fields.nullField() }}
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 {% endmacro %}

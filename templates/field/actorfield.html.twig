@@ -33,23 +33,34 @@
 
 {% block questionFields %}
 
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {{ fields.dropdownYesNo(
         'required',
         item.fields['required'],
         __('Required', 'formcreator'),
         {
-            'add_field_class': 'plugin_formcreator_required'
+            'add_field_class': 'plugin_formcreator_required',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
         }
     ) }}
 
     {# May be empty has no meaning as required makes mandatory to have at lease 1 checkbox ticked #}
-    {{ fields.nullField() }}
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
 
     {{ fields.textareaField(
         'default_values',
         item.fields['default_values'],
-        __('Default values')
+        __('Default values'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
     ) }}
 {% endblock %}
