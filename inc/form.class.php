@@ -562,7 +562,7 @@ PluginFormcreatorTranslatableInterface
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginFormcreatorForm_Validator::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorQuestion::class, $ong, $options);
-      $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorFormAccessType::class, $ong, $options);
       $this->addStandardTab(self::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorForm_Language::class, $ong, $options);
@@ -1042,6 +1042,11 @@ PluginFormcreatorTranslatableInterface
          // saved in the session
          $this->clearSavedInput();
       }
+
+      // Update access types restrictions
+      $this->update1NTableData(PluginFormcreatorForm_User::class, 'users');
+      $this->update1NTableData(PluginFormcreatorForm_Group::class, 'groups');
+      $this->update1NTableData(PluginFormcreatorForm_Profile::class, 'profiles');
    }
 
    /**
@@ -1138,6 +1143,8 @@ PluginFormcreatorTranslatableInterface
          PluginFormcreatorSection::class,
          PluginFormcreatorForm_Validator::class,
          PluginFormcreatorForm_Profile::class,
+         PluginFormcreatorForm_User::class,
+         PluginFormcreatorForm_Group::class,
          PluginFormcreatorForm_Language::class,
       ];
       foreach ($associated as $itemtype) {
@@ -1406,9 +1413,13 @@ PluginFormcreatorTranslatableInterface
 
       $formTable        = self::getTable();
       $formProfileTable = PluginFormcreatorForm_Profile::getTable();
+      $formUserTable = PluginFormcreatorForm_user::getTable();
+      $formGroupTable = PluginFormcreatorForm_Group::getTable();
 
       if (!$DB->tableExists($formTable)
           || !$DB->tableExists($formProfileTable)
+          || !$DB->tableExists($formUserTable)
+          || !$DB->tableExists($formGroupTable)
           || !isset($_SESSION['glpiactiveprofile']['id'])) {
              return 0;
       }
@@ -1449,6 +1460,8 @@ PluginFormcreatorTranslatableInterface
 
       $subItems = [
          '_profiles'     => PluginFormcreatorForm_Profile::class,
+         '_users'        => PluginFormcreatorForm_User::class,
+         '_groups'       => PluginFormcreatorForm_Group::class,
          '_sections'     => PluginFormcreatorSection::class,
          '_conditions'   => PluginFormcreatorCondition::class,
          '_targets'      => self::getTargetTypes(),
@@ -1739,6 +1752,8 @@ PluginFormcreatorTranslatableInterface
 
       $subItems = [
          '_profiles'     => PluginFormcreatorForm_Profile::class,
+         '_users'        => PluginFormcreatorForm_User::class,
+         '_groups'       => PluginFormcreatorForm_Group::class,
          '_sections'     => PluginFormcreatorSection::class,
          '_conditions'   => PluginFormcreatorCondition::class,
          '_targets'      => (new self())->getTargetTypes(),
@@ -1754,6 +1769,8 @@ PluginFormcreatorTranslatableInterface
       // Code similar to ImportChildrenObjects
       $subItems = [
          '_profiles'   => PluginFormcreatorForm_Profile::class,
+         '_users'      => PluginFormcreatorForm_User::class,
+         '_groups'     => PluginFormcreatorForm_Group::class,
          '_sections'   => PluginFormcreatorSection::class,
          '_conditions' => PluginFormcreatorCondition::class,
          '_targets'    => (new self())->getTargetTypes(),
@@ -1794,7 +1811,7 @@ PluginFormcreatorTranslatableInterface
     * show list of available forms
     */
    public function showForCentral() {
-      global $DB, $CFG_GLPI, $TRANSLATE;
+      global $DB, $TRANSLATE;
 
       // Define tables
       $form_table = PluginFormcreatorForm::getTable();
@@ -1809,21 +1826,19 @@ PluginFormcreatorTranslatableInterface
       foreach ($result as $category) {
          $categories[$category['id']] = $category['name'];
       }
-      $formRestriction = PluginFormcreatorForm::getFormRestrictionCriterias($form_table);
-      $formRestriction["$form_table.$formCategoryFk"] = 0;
-      $formRestriction["$form_table.helpdesk_home"] = 1;
-      $formRestriction["$form_table.$formCategoryFk"] = array_keys($categories);
-      $result_forms = $DB->request([
-         'SELECT' => [
-            $form_table => ['id', 'name', 'description', $formCategoryFk],
-         ],
-         'FROM'  => $form_table,
-         'WHERE' => $formRestriction,
-         'ORDER' => [
-            "$form_table.$formCategoryFk ASC",
-            "$form_table.name ASC",
-         ]
-      ]);
+
+      $form_query = PluginFormcreatorForm::getFormListQuery();
+      $form_query['SELECT'] = [
+         $form_table => ['id', 'name', 'description', $formCategoryFk],
+      ];
+      $form_query['WHERE']["$form_table.helpdesk_home"] = 1;
+      $form_query['WHERE']["$form_table.$formCategoryFk"] = array_keys($categories);
+      $form_query['ORDER'] = [
+         "$form_table.$formCategoryFk ASC",
+         "$form_table.name ASC",
+      ];
+
+      $result_forms = $DB->request($form_query);
 
       if ($result_forms->count() < 1) {
          echo '<table class="tab_cadrehov" id="plugin_formcreatorHomepageForms">';
@@ -2142,6 +2157,11 @@ PluginFormcreatorTranslatableInterface
          }
       }
       $_SESSION['formcreator']['languages'][$formId][$language] = true;
+
+      // Load visibility restrictions
+      $this->load1NTableData(PluginFormcreatorForm_User::class, 'users');
+      $this->load1NTableData(PluginFormcreatorForm_Group::class, 'groups');
+      $this->load1NTableData(PluginFormcreatorForm_Profile::class, 'profiles');
    }
 
    /**
@@ -2162,34 +2182,14 @@ PluginFormcreatorTranslatableInterface
       return $nb;
    }
 
-   public static function getFormRestrictionCriterias($formTable = '') {
-      if ($formTable == '') {
-         $formTable       = PluginFormcreatorForm::getTable();
-      }
-      $formFk           = self::getForeignKeyField();
-      $table_fp         = PluginFormcreatorForm_Profile::getTable();
-      $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCriteria($formTable, '', '', true, false);
-      $language         = $_SESSION['glpilanguage'];
+   public static function getFormRestrictionSubQuery($helpdesk_home) {
+      $form_table = PluginFormcreatorForm::getTable();
 
-      $restriction = [
-         "$formTable.is_active" => 1,
-         "$formTable.is_deleted" => 0,
-         "$formTable.language" => [$language, 0, null, ''],
-         [
-            'OR' => [
-               "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-               "$formTable.id" => new QuerySubQuery([
-                  'SELECT' => $formFk,
-                  'FROM' => $table_fp,
-                  'WHERE' => [
-                     'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                  ]
-               ]),
-            ],
-         ],
-      ] + $entitiesRestrict;
+      $query = self::getFormListQuery();
+      $query['SELECT'] = ["$form_table.id"];
+      $query['WHERE']["$form_table.helpdesk_home"]  = "$helpdesk_home";
 
-      return $restriction;
+      return new QuerySubQuery($query);
    }
 
    public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
@@ -2402,31 +2402,33 @@ PluginFormcreatorTranslatableInterface
     * @return boolean true if the user can use the form
     */
    public function canViewForRequest(): bool {
-      global $DB;
-
       if ($this->isNewItem()) {
          return false;
       }
 
-      if ($this->fields['access_rights'] != self::ACCESS_PUBLIC) {
-         if (Session::getLoginUserID() === false || !$this->checkEntity(true)) {
-            return false;
-         }
+      // Public forms -> always visible
+      if ($this->fields['access_rights'] == self::ACCESS_PUBLIC) {
+         return true;
       }
 
-      if (!Session::haveRight('entity', UPDATE) && $this->fields['access_rights'] == self::ACCESS_RESTRICTED) {
-         $iterator = $DB->request(PluginFormcreatorForm_Profile::getTable(), [
-            'WHERE' => [
-               'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
-               'plugin_formcreator_forms_id' => $this->getID()
-            ],
-            'LIMIT' => 1
-         ]);
-         if (count($iterator) == 0) {
-            return false;
-         }
+      // Restricted and private forms -> Check session
+      if (Session::getLoginUserID() === false || !$this->checkEntity(true)) {
+         return false;
       }
 
+      // Form administrators can always access any forms
+      if (self::canCreate()) {
+         return true;
+      }
+
+      // Check restrictions if needed
+      if ($this->fields['access_rights'] == self::ACCESS_RESTRICTED
+         && !PluginFormcreatorFormAccessType::canSeeRestrictedForm($this)
+      ) {
+         return false;
+      }
+
+      // All checks were succesful, display form
       return true;
    }
 
@@ -2445,18 +2447,11 @@ PluginFormcreatorTranslatableInterface
       $dbUtils           = new DbUtils();
       $formTable         = getTableForItemType(PluginFormcreatorForm::class);
       $formLanguageTable = getTableForItemType(PluginFormcreatorForm_Language::class);
-      $formProfileTable  = getTableForItemType(PluginFormcreatorForm_Profile::class);
 
       $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($formTable, '', '', true, false, (new PluginFormcreatorForm())->maybeRecursive());
       $condition = [
          'FROM' => $formTable,
          'LEFT JOIN' => [
-            $formProfileTable => [
-               'FKEY' => [
-                  $formProfileTable => PluginFormcreatorForm::getForeignKeyField(),
-                  $formTable => 'id',
-               ]
-            ],
             $formLanguageTable => [
                'FKEY' => [
                   $formTable => 'id',
@@ -2478,9 +2473,7 @@ PluginFormcreatorTranslatableInterface
                [
                   'OR' => [
                      'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                     [
-                        "$formProfileTable.profiles_id" => $_SESSION['glpiactiveprofile']['id']
-                     ]
+                     PluginFormcreatorFormAccessType::getRestrictedFormListCriteria(),
                   ],
                ]
             ] + $entityRestrict,

@@ -32,43 +32,6 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorForm_Profile extends CommonTestCase {
-   public function providerGetTypeName() {
-      return [
-         [
-            0,
-            'Access types'
-         ],
-         [
-            1,
-            'Access type'
-         ],
-         [
-            2,
-            'Access types'
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerGetTypeName
-    *
-    * @param integer $nb
-    * @param string $expected
-    * @return void
-    */
-   public function testGetTypeName($nb, $expected) {
-      $instance = $this->newTestedInstance();
-      $output = $instance->getTypeName($nb);
-      $this->string($output)->isEqualTo($expected);
-   }
-
-   public function testGetTabNameForItem() {
-      $instance = $this->newTestedInstance();
-      $item = new \Computer();
-      $output = $instance->getTabNameForItem($item);
-
-      $this->string($output)->isEqualTo('Access types');
-   }
 
    public function testPrepareInputForAdd() {
       $instance = $this->newTestedInstance();

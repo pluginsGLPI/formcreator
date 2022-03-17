@@ -100,6 +100,24 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`profiles_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_users` (
+  `id`                          int unsigned NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_forms_id` int unsigned NOT NULL,
+  `users_id`                    int unsigned NOT NULL,
+  `uuid`                        varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`users_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_groups` (
+  `id`                          int unsigned NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_forms_id` int unsigned NOT NULL,
+  `groups_id`                   int unsigned NOT NULL,
+  `uuid`                        varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`groups_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
   `id`                          int unsigned NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_forms_id` int unsigned NOT NULL DEFAULT '0',
