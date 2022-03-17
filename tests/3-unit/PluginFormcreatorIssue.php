@@ -49,7 +49,16 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket->add([
          'name'    => 'simple ticket',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING
+         'status'  =>  \Ticket::INCOMING,
+         '_actors' => [
+            'requester' => [
+               0 => ['itemtype' => \User::class,
+                  'items_id' => 2, // glpi
+                  'use_notification' => 1,
+                  'alternative_email' => '',
+               ]
+            ]
+         ]
       ]);
       $this->boolean($ticket->isNewItem())->isFalse();
       $ticket->getFromDB($ticket->getID());
@@ -58,7 +67,16 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket2->add([
          'name' => '',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING
+         'status'  =>  \Ticket::INCOMING,
+         '_actors' => [
+            'requester' => [
+               0 => ['itemtype' => \User::class,
+                  'items_id' => 2, // glpi
+                  'use_notification' => 1,
+                  'alternative_email' => '',
+               ]
+            ]
+         ]
       ]);
       $this->boolean($ticket2->isNewItem())->isFalse();
       $ticket2->getFromDB($ticket2->getID());
@@ -278,6 +296,15 @@ class PluginFormcreatorIssue extends CommonTestCase {
          '_add_validation' => '0',
          'validatortype' => User::class,
          'users_id_validate' => [4], // Tech
+         '_actors' => [
+            'requester' => [
+               0 => ['itemtype' => \User::class,
+                  'items_id' => 2, // glpi
+                  'use_notification' => 1,
+                  'alternative_email' => '',
+               ]
+            ]
+         ]
       ]);
       $this->boolean($ticket->isNewItem())->isFalse();
       $ticket->getFromDB($ticket->getID());
@@ -310,6 +337,15 @@ class PluginFormcreatorIssue extends CommonTestCase {
          '_add_validation' => '0',
          'validatortype' => User::class,
          'users_id_validate' => [4], // Tech
+         '_actors' => [
+            'requester' => [
+               0 => ['itemtype' => \User::class,
+                  'items_id' => 2, // glpi
+                  'use_notification' => 1,
+                  'alternative_email' => '',
+               ]
+            ]
+         ]
       ]);
       $this->boolean($ticket->isNewItem())->isFalse();
       $ticket->getFromDB($ticket->getID());

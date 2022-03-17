@@ -494,13 +494,13 @@ class PluginFormcreatorCommon extends CommonTestCase {
          [
            'default' => 'plugins/formcreator/front/wizard.php',
            'title' => 'Seek assistance',
-           'icon' => 'fa fa-paper-plane',
+           'icon' => 'fa-fw ti ti-send',
          ],
          'my_assistance_requests' =>
          [
            'default' => '/plugins/formcreator/front/issue.php',
            'title' => 'My requests for assistance',
-           'icon' => 'fa fa-list',
+           'icon' => 'fa-fw ti ti-list',
          ],
          'reservation' =>
          [
@@ -512,7 +512,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          [
            'default' => 'plugins/formcreator/front/wizardfeeds.php',
            'title' => 'Consult feeds',
-           'icon' => 'fa fa-rss',
+           'icon' => 'fa-fw ti ti-rss',
          ],
       ];
       $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
