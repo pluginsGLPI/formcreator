@@ -35,7 +35,6 @@ namespace GlpiPlugin\Formcreator\Field;
 use Session;
 use Toolbox;
 use PluginFormcreatorCommon;
-use Glpi\Application\View\TemplateRenderer;
 
 class IntegerField extends FloatField
 {

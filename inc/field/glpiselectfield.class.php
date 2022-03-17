@@ -36,7 +36,6 @@ use Html;
 use Session;
 use Dropdown;
 use Entity;
-use Plugin;
 use CommonTreeDropdown;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;

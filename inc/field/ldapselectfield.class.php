@@ -32,13 +32,9 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
 use AuthLDAP;
-use Dropdown;
 use Exception;
-use Entity;
 use Html;
-use QuerySubQuery;
 use Session;
 use RuleRightParameter;
 use Glpi\Application\View\TemplateRenderer;

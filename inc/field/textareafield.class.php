@@ -38,7 +38,6 @@ use Html;
 use Session;
 use Toolbox;
 use Glpi\RichText\RichText;
-use Glpi\Toolbox\Sanitizer;
 use Glpi\Application\View\TemplateRenderer;
 
 class TextareaField extends TextField

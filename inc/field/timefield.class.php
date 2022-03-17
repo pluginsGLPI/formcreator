@@ -36,7 +36,6 @@ use DateTime;
 use Html;
 use PluginFormcreatorAbstractField;
 use Session;
-use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 
