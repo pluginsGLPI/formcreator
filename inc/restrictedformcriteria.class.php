@@ -229,18 +229,18 @@ abstract class PluginFormcreatorRestrictedFormCriteria
          );
       }
 
-      $form_item = $this->fields;
+      $export = $this->fields;
 
       // export fk
       $item = new $itemtype2();
-      if ($item->getFromDB($form_item[static::$items_id_2])) {
-         $form_item[$item2_input_key] = $item->fields['name'];
+      if ($item->getFromDB($export[static::$items_id_2])) {
+         $export[$item2_input_key] = $item->fields['name'];
       }
 
       // remove fk
       unset(
-         $form_item[static::$items_id_2],
-         $form_item['plugin_formcreator_forms_id']
+         $export[static::$items_id_2],
+         $export['plugin_formcreator_forms_id']
       );
 
       // remove ID or UUID
@@ -248,8 +248,8 @@ abstract class PluginFormcreatorRestrictedFormCriteria
       if ($remove_uuid) {
          $id_to_remove = 'uuid';
       }
-      unset($form_item[$id_to_remove]);
+      unset($export[$id_to_remove]);
 
-      return $form_item;
+      return $export;
    }
 }
