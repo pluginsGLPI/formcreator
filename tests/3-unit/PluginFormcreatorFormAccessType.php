@@ -23,37 +23,51 @@
  * ---------------------------------------------------------------------
  * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
- * @link     https://github.com/pluginsGLPI/formcreator/
- * @link     https://pluginsglpi.github.io/formcreator/
- * @link     http://plugins.glpi-project.org/#/plugin/formcreator
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+namespace tests\units;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
-}
-
-class PluginFormcreatorForm_Profile extends PluginFormcreatorRestrictedFormCriteria
+class PluginFormcreatorFormAccessType extends CommonTestCase
 {
-   public static $itemtype_2 = Profile::class;
-   public static $items_id_2 = 'profiles_id';
+   public function providerGetTypeName() {
+      return [
+         [
+            0,
+            'Access types'
+         ],
+         [
+            1,
+            'Access type'
+         ],
+         [
+            2,
+            'Access types'
+         ],
+      ];
+   }
 
    /**
-    * Check if the current logged user's active profile is in the "whitelisted"
-    * profiles list for this form
-    *
-    * @param PluginFormcreatorForm $form The given form
-    *
-    * @return bool True if there is a match, the user is whitelisted
-    */
-   public static function getListCriteriaSubQuery(): QuerySubQuery {
-      // Allow only the current user active profile
-      return new QuerySubQuery([
-         'SELECT' => static::$items_id_1,
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            static::$items_id_2 => $_SESSION['glpiactiveprofile']['id']
-         ]
-      ]);
+   * @dataProvider providerGetTypeName
+   *
+   * @param integer $nb
+   * @param string $expected
+   * @return void
+   */
+   public function testGetTypeName($nb, $expected) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->getTypeName($nb);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetTabNameForItem() {
+      $instance = $this->newTestedInstance();
+      $item = new \Computer();
+      $output = $instance->getTabNameForItem($item);
+
+      $this->string($output)->isEqualTo('Access types');
    }
 }

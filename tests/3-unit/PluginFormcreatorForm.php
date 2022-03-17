@@ -267,7 +267,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'PluginFormcreatorForm$main' => "Form",
          'PluginFormcreatorForm_Validator$1' => 'Validators',
          'PluginFormcreatorQuestion$1' => "Questions",
-         'PluginFormcreatorForm_Profile$1' => "Access types",
+         'PluginFormcreatorFormAccessType$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
          'PluginFormcreatorForm$2' => "Preview",
          'PluginFormcreatorForm$3' => "Form answer properties",
@@ -480,11 +480,16 @@ class PluginFormcreatorForm extends CommonTestCase {
          'show_rule',
          'formanswer_name',
          'is_visible',
+         'profiles',
+         'users',
+         'groups',
       ];
       $extraFields = [
          '_entity',
          '_plugin_formcreator_category',
          '_profiles',
+         '_users',
+         '_groups',
          '_sections',
          '_targets',
          '_validators',
@@ -617,7 +622,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $input = [
          'name' => $this->getUniqueString(),
          '_entity' => 'Root entity',
-         'is_recursive' => '1',
+         'is_recursive' => '0',
          'access_rights' => \PluginFormcreatorForm::ACCESS_RESTRICTED,
          'description' => '',
          'content' => '',
@@ -1308,6 +1313,8 @@ class PluginFormcreatorForm extends CommonTestCase {
     *
     */
    public function testCountAvailableForm() {
+      global $DB;
+
       $entity = new \Entity();
       $entityId = $entity->import([
          'entities_id' => '0',
@@ -1317,6 +1324,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean(\Session::changeActiveEntities($entityId))->isTrue();
 
       $form1 = $this->getForm([
+         'name'        => 'form1 testCountAvailableForm',
          'entities_id' => $entityId,
          'is_visible'  => 1,
          'is_deleted'  => 0,
@@ -1325,6 +1333,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $form2 = $this->getForm([
+         'name'        => 'form2 testCountAvailableForm',
          'entities_id' => $entityId,
          'is_visible'  => 1,
          'is_deleted'  => 0,
@@ -1334,6 +1343,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       // All nextform should not be counted
       $form3 = $this->getForm([
+         'name'        => 'form3 testCountAvailableForm',
          'entities_id' => $entityId,
          'is_visible'  => 0,
          'is_deleted'  => 0,
@@ -1342,6 +1352,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $form4 = $this->getForm([
+         'name'        => 'form4 testCountAvailableForm',
          'entities_id' => $entityId,
          'is_visible'  => 0,
          'is_deleted'  => 0,
@@ -1350,6 +1361,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $form5 = $this->getForm([
+         'name'        => 'form5 testCountAvailableForm',
          'entities_id' => $entityId,
          'is_visible'  => 0,
          'is_deleted'  => 1,
@@ -1358,6 +1370,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $form6 = $this->getForm([
+         'name'        => 'form6 testCountAvailableForm',
          'entities_id' => $entityId,
          'is_visible'  => 0,
          'is_deleted'  => 1,
@@ -1366,6 +1379,14 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $output = \PluginFormcreatorForm::countAvailableForm();
+
+      // Debug information in case test fails
+      if ($output != 2) {
+         $listQuery = \PluginFormcreatorForm::getFormListQuery();
+         $listQuery['SELECT'] = \PluginFormcreatorForm::getTable() . '.name';
+         $result = $DB->request($listQuery);
+         var_dump(iterator_to_array($result));
+      }
 
       $this->integer($output)->isEqualTo(2);
    }
