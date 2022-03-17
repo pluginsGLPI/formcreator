@@ -88,7 +88,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // must match the same logic as PluginFormcreatorCommon::getTicketStatusForIssue()
       // @see PluginFormcreatorCommon::getTicketStatusForIssue()
 
-      // assistance requests having no or deveral tickets
+      // assistance requests having no or several tickets
       $query1 = [
          'SELECT' => [
             new QueryExpression('NULL as `id`'),
@@ -213,7 +213,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) = 0")
       ];
 
-      // assistance requests having only one generated ticket (use query2)
+      // assistance requests having only one generated ticket (reuse query2)
       $query3 = $query2;
       // replace LEFT JOIN with INNER JOIN to exclude tickets not linked to a Formanswer object
       $query3['INNER JOIN'][$itemTicketTable] = $query3['LEFT JOIN'][$itemTicketTable];
