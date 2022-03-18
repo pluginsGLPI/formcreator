@@ -224,7 +224,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          'comments' => false,
          'entity'   => $this->getEntityRestriction(),
          //'entity_sons' => (bool) $form->isRecursive(),
-         'displaywith' => ['id'],
+         'displaywith' => [],
       ];
 
       if ($rand !== null) {
