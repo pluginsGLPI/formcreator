@@ -51,6 +51,10 @@ implements PluginFormcreatorExportableInterface
       return _n('Form language', 'Form languages', $nb, 'formcreator');
    }
 
+   public function isEntityAssign() {
+      return false;
+   }
+
    public function defineTabs($options = []) {
       $tabs = [];
       $this->addDefaultFormTab($tabs);
