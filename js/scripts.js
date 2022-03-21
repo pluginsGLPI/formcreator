@@ -1056,6 +1056,7 @@ var plugin_formcreator = new function() {
             action: 'newTranslation',
             id: formLanguageId,
          },
+         title: i18n.textdomain('formcreator').__('Add translations', 'formcreator'),
          close: function () {
             reloadTab();
          },
@@ -1080,8 +1081,6 @@ var plugin_formcreator = new function() {
    }
 
    this.updateTranslation = function (element) {
-      var that = this;
-      var form = document.querySelector('form[name="plugin_formcreator_translation"]');
       tinyMCE.triggerSave();
       $.post({
          url: '../ajax/translation.php',
@@ -1104,33 +1103,13 @@ var plugin_formcreator = new function() {
             id: formLanguageId,
             plugin_formcreator_translations_id: translationId
          },
+         title: i18n.textdomain('formcreator').__('Update a translation', 'formcreator'),
          close: function () {
             reloadTab();
          },
          fail: function () {
             displayAjaxMessageAfterRedirect();
          }
-      });
-      return;
-
-      var modal = $(this.spinner);
-      modal.dialog(this.modalSetings)
-         .on('dialogclose', function (e, ui) {
-            reloadTab();
-         });
-      $.post({
-         url: '../ajax/form_language.php',
-         data: {
-            action: 'translation',
-            id: formLanguageId,
-            plugin_formcreator_translations_id: translationId
-         }
-      }).done(function(data) {
-         modal.html(data).dialog('open');
-         // we edit a translation, then close the dialog when saving the values
-         modal.find('form').on('submit', function () {
-            modal.dialog('close');
-         })
       });
    }
 
