@@ -303,18 +303,20 @@ implements PluginFormcreatorExportableInterface
    public function showTranslations($options = []) {
       $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
+      $this->showFormHeader($options);
+      $this->initForm($this->getID());
       echo '<div data-itemtype="PluginFormcreatorForm_Language" data-id="' . $this->getID() . '">';
-      echo '<div>';
+      echo '<span>';
       echo '<button'
       . ' name="new_override"'
       . ' class="vsubmit"'
       . ' value="<i class=\'fas fa-plus\'></i>&nbsp;' . __('New translation', 'formcreator') . '"'
       .' onclick="' . 'plugin_formcreator.newTranslation(' . $this->getID() . ')'
       . '"><i class=\'fas fa-plus\'></i>&nbsp;' . __('New translation', 'formcreator') . '</button>';
-      echo '</div>';
-      echo '<div class="plugin_formcreator_filter_translations">';
+      echo '</span>';
+      echo '<span class="plugin_formcreator_filter_translations">';
       echo '<input type="text" placeholder="'.__("Filter list", 'formcreator').'">';
-      echo '</div>';
+      echo '</span>';
 
       $translations = $form->getTranslations($this->fields['name']);
       if (count($translations) < 1) {
@@ -324,8 +326,6 @@ implements PluginFormcreatorExportableInterface
 
       $options['formtitle'] = false;
       $options['formoptions'] = 'onsubmit="' . Html::getConfirmationOnActionScript(__('Do you want to delete the selected items?', 'formcreator')) . '"';
-      $this->showFormHeader($options);
-      $this->initForm($this->getID());
       $rand = mt_rand();
 
       if (count($translations) > 15) {
