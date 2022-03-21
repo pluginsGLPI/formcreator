@@ -365,11 +365,9 @@ PluginFormcreatorTranslatableInterface
       switch ($field) {
          case 'is_active':
             if ($values[$field] == 0) {
-               $faIcon = 'far fa-circle';
                $class = "plugin-formcreator-inactive";
                $title =  __('Inactive');
             } else {
-               $faIcon = 'fa fa-circle';
                $class = "plugin-formcreator-active";
                $title =  __('Active');
             }
