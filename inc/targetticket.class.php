@@ -816,6 +816,32 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          $data['_tag_content'][] = $document['tag'];
       }
 
+   //KKK
+   $saved_documents = $formanswer->getFileProperties();
+
+   if ($saved_documents) {
+      foreach ($formanswer->getFileFields() as $questionId) {
+	 $data["_filename"]=array_merge($data["_filename"],$saved_documents["_filename"][$questionId]);
+	 $data["_tag_filename"]=array_merge($data["_tag_filename"],$saved_documents["_tag_filename"][$questionId]);
+
+	 foreach ( $saved_documents["_filename"][$questionId] as $key => $filename) {
+	    $uploaded_filename=$formanswer->getFileName($questionId,$key);
+	    copy(GLPI_DOC_DIR . '/' . $uploaded_filename, GLPI_TMP_DIR . '/' . $filename);
+	 }
+      }
+
+   } else {
+      foreach ($formanswer->getFileFields() as $questionId) {
+	 $data["_filename"]=array_merge($data["_filename"],$formanswer->input["_formcreator_field_".$questionId]);
+	 $data["_prefix_filename"]=array_merge($data["_prefix_filename"],$formanswer->input["_prefix_formcreator_field_".$questionId]);
+	 $data["_tag_filename"]=array_merge($data["_tag_filename"],$formanswer->input["_tag_formcreator_field_".$questionId]);
+	 foreach ( $formanswer->input["_formcreator_field_".$questionId] as $key => $filename) {
+	    $uploaded_filename=$formanswer->getFileName($questionId,$key);
+	    copy(GLPI_DOC_DIR . '/' . $uploaded_filename, GLPI_TMP_DIR . '/' . $filename);
+	 }
+      }
+   }
+
       // Create the target ticket
       $data['_auto_import'] = true;
       if (!$ticketID = $ticket->add($data)) {
@@ -832,7 +858,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
          'tickets_id' => $ticketID,
       ]);
 
-      $this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration

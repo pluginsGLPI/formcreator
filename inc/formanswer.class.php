@@ -1572,4 +1572,41 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       return PluginFormcreatorFields::isVisible($this->questionFields[$id]->getQuestion(), $this->questionFields);
    }
+
+//KKK
+   public function getFileName($questionId,$index) {
+      $doc = new Document();
+      $doc->getFromDB($this->questionFields[$questionId]->getDocumentsForTarget()[$index]);
+      return $doc->fields['filepath'];
+   }
+
+   public function getFileFields() : Array {
+      $filefields=[];
+      $form = $this->getForm();
+      foreach ($this->getQuestionFields($form) as $questionId => $field) {
+	 $question = $field->getQuestion();
+	 if ($question->fields['fieldtype'] === 'file') 
+	    $filefields[] = $questionId;
+      }
+
+      return $filefields;
+   }
+
+   public function getFileProperties() : Array {
+      $form = $this->getForm();
+      foreach ($this->getFileFields() as $questionId) {
+	 foreach ($this->getQuestionFields($form)[$questionId]->getDocumentsForTarget() as $key => $documentId){
+	    $doc = new Document();
+	    $doc->getFromDB($documentId);
+	    $formcreator_field[]= $doc->fields['filename'];
+	    $tag_formcreator_field[]= $doc->fields['tag'];
+	 }
+	 $formcreator_field_array[$questionId] = $formcreator_field;
+	 $tag_formcreator_field_array[$questionId] = $tag_formcreator_field;
+      }
+
+      return [ "_filename" => $formcreator_field_array,
+	       "_tag_filename" => $tag_formcreator_field_array];
+   }
+
 }
