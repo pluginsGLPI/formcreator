@@ -280,9 +280,9 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function showTranslationEntry($input) : void {
-      $options['formtitle'] = __('Add a translation', 'formcreator');
+      $options['formtitle'] = __('Update a translation', 'formcreator');
       $this->initForm($this->getID(), $options);
-      echo '<form name="plugin_formcreator_translation" onsubmit="plugin_formcreator.saveNewTranslation(this); return false;" >';
+      echo '<form name="plugin_formcreator_translation" onsubmit="plugin_formcreator.updateTranslation(this); return false;" >';
       echo "<div class='spaced' id='tabsbody'>";
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
 

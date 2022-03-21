@@ -1063,7 +1063,6 @@ var plugin_formcreator = new function() {
             displayAjaxMessageAfterRedirect();
          }
       });
-      return;
    }
 
    this.saveNewTranslation = function (element) {
@@ -1080,9 +1079,40 @@ var plugin_formcreator = new function() {
       });
    }
 
+   this.updateTranslation = function (element) {
+      var that = this;
+      var form = document.querySelector('form[name="plugin_formcreator_translation"]');
+      tinyMCE.triggerSave();
+      $.post({
+         url: '../ajax/translation.php',
+         data: $(element).closest('form').serializeArray()
+      }).fail(function () {
+         displayAjaxMessageAfterRedirect();
+      }).done(function () {
+         $(element).closest('div.modal').modal('hide');
+      });
+   }
+
    this.showUpdateTranslationForm = function (element) {
       var formLanguageId = $(element).closest('[data-itemtype="PluginFormcreatorForm_Language"][data-id]').attr('data-id');
       var translationId = $(element.closest('[data-itemtype="PluginFormcreatorTranslation"]')).attr('data-id');
+      var modal;
+      modal = glpi_ajax_dialog({
+         url: '../ajax/form_language.php',
+         params: {
+            action: 'translation',
+            id: formLanguageId,
+            plugin_formcreator_translations_id: translationId
+         },
+         close: function () {
+            reloadTab();
+         },
+         fail: function () {
+            displayAjaxMessageAfterRedirect();
+         }
+      });
+      return;
+
       var modal = $(this.spinner);
       modal.dialog(this.modalSetings)
          .on('dialogclose', function (e, ui) {
