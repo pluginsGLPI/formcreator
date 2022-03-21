@@ -311,7 +311,7 @@ implements PluginFormcreatorExportableInterface
       . ' name="new_override"'
       . ' class="vsubmit"'
       . ' value="<i class=\'fas fa-plus\'></i>&nbsp;' . __('New translation', 'formcreator') . '"'
-      .' onclick="' . 'plugin_formcreator.newTranslation(' . $this->getID() . ')'
+      .' onclick="' . 'plugin_formcreator.newTranslation(' . $this->getID() . '); return false;'
       . '"><i class=\'fas fa-plus\'></i>&nbsp;' . __('New translation', 'formcreator') . '</button>';
       echo '</span>';
       echo '<span class="plugin_formcreator_filter_translations">';
