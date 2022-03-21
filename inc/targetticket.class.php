@@ -38,7 +38,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
+class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 {
    const ASSOCIATE_RULE_NONE = 1;
    const ASSOCIATE_RULE_SPECIFIC = 2;
@@ -795,7 +795,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractTarget
     *
     * @return Ticket|null Generated ticket if success, null otherwise
     */
-   public function save(PluginFormcreatorFormAnswer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer): ?CommonDBTM {
       $ticket  = new Ticket();
       $form = $formanswer->getForm();
       $data = $this->getDefaultData($formanswer);

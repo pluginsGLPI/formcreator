@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
+class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget {
    public static function getTypeName($nb = 1) {
       return _n('Target problem', 'Target problems', $nb, 'formcreator');
    }
@@ -162,7 +162,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractTarget {
     *
     * @return Ticket|null Generated ticket if success, null otherwise
     */
-   public function save(PluginFormcreatorFormAnswer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer): ?CommonDBTM {
       $data    = [];
       $problem = new Problem();
       $form    = $formanswer->getForm();

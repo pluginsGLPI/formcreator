@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
+class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
 {
    public static function getTypeName($nb = 1) {
       return _n('Target change', 'Target changes', $nb, 'formcreator');
@@ -560,11 +560,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
          if (isset($input['sla_rule'])) {
             switch ($input['sla_rule']) {
-               case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
+               case self::SLA_RULE_SPECIFIC:
                   $input['sla_question_tto'] = $input['_sla_specific_tto'];
                   $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
                   break;
-               case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
+               case self::SLA_RULE_FROM_ANWSER:
                   $input['sla_question_tto'] = $input['_sla_questions_tto'];
                   $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
                   break;
@@ -573,11 +573,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
          if (isset($input['ola_rule'])) {
             switch ($input['ola_rule']) {
-               case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
+               case self::OLA_RULE_SPECIFIC:
                   $input['ola_question_tto'] = $input['_ola_specific_tto'];
                   $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
                   break;
-               case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
+               case self::OLA_RULE_FROM_ANWSER:
                   $input['ola_question_tto'] = $input['_ola_questions_tto'];
                   $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
                   break;
@@ -659,7 +659,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     *
     * @return Change|null generated change
     */
-   public function save(PluginFormcreatorFormAnswer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer): ?CommonDBTM {
       $data   = [];
       $change  = new Change();
       $form    = $formanswer->getForm();

@@ -1180,7 +1180,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = str_replace('##question_' . $questionId . '##', Sanitizer::sanitize($name), $content);
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
-               if ($target !== null) {
+               if ($target !== null && $target instanceof PluginFormcreatorAbstractItilTarget) {
                   foreach ($this->questionFields[$questionId]->getDocumentsForTarget() as $documentId) {
                      $target->addAttachedDocument($documentId);
                   }
@@ -1823,6 +1823,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * get all generated targets by the form answer
     * populates the generated targets associated to the instance
     *
+    * Assumes that the generated target has a relation with the form answer
+    *
+    * @param array $itemtypes Get only the targets of the given itemtypes
+    *
     * @return array An array of target itemtypes to track
     */
    public function getGeneratedTargets($itemtypes = []): array {
@@ -1844,6 +1848,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $targetItem = new $targetType();
          $generatedType = $targetItem->getTargetItemtypeName();
          $relationType = $targetItem->getItem_Item();
+         if ($relationType === null) {
+            continue;
+         }
          $relationTable = $relationType::getTable();
          $generatedTypeFk = $generatedType::getForeignKeyField();
          $generatedTypeTable = $generatedType::getTable();
