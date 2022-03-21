@@ -100,11 +100,6 @@ class PluginFormcreatorTranslation
          'is_translated' => $post['condition']['is_translated'],
       ]);
 
-      // Clean HTML in strings
-      // foreach ($strings['string'] as &$string) {
-      //    $string = htmlentities(strip_tags(html_entity_decode($string)));
-      // }
-
       $foundCount = 0;
       $data = [];
       foreach (['itemlink', 'string', 'text'] as $stringType) {
@@ -130,12 +125,7 @@ class PluginFormcreatorTranslation
          }
       }
 
-      if (class_exists(\Glpi\Toolbox\Sanitizer::class)) {
-         // GLPI 10
-         $data = \Glpi\Toolbox\Sanitizer::unsanitize($data);
-      } else {
-         $data = Toolbox::unclean_cross_side_scripting_deep($data);
-      }
+      $data = \Glpi\Toolbox\Sanitizer::unsanitize($data);
       $ret['results'] = $data;
       $ret['count']   = $count;
 
