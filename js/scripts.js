@@ -1050,23 +1050,20 @@ var plugin_formcreator = new function() {
    }
 
    this.newTranslation = function (formLanguageId) {
-      var modal = $(this.spinner)
-         .dialog(this.modalSetings)
-         .on('dialogclose', function (e, ui) {
-            reloadTab();
-         });
-      $.post({
+      glpi_ajax_dialog({
          url: '../ajax/form_language.php',
-         data: {
+         params: {
             action: 'newTranslation',
             id: formLanguageId,
+         },
+         close: function () {
+            reloadTab();
+         },
+         fail: function () {
+            displayAjaxMessageAfterRedirect();
          }
-      }).done(function (data) {
-         modal.html(data).dialog('open');
-      }).fail(function () {
-         displayAjaxMessageAfterRedirect();
-         modal.html('');
       });
+      return;
    }
 
    this.saveNewTranslation = function (element) {
