@@ -1993,4 +1993,73 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'items_id' => $this->getID(),
       ]);
    }
+
+   /**
+    * Get the filename of a document for a question of this formanswer
+    *
+    * @param int $questionId
+    * @param int $index
+    *
+    * @return string
+    */
+   public function getFileName($questionId, $index): string {
+      $document = Document::getById($this->questionFields[$questionId]->getDocumentsForTarget()[$index]);
+      if (!is_object($document)) {
+         return '';
+      }
+
+      return $document->fields['filepath'];
+   }
+
+   /**
+    * Get ID of questions of type 'file'
+    *
+    * @return int[]
+    */
+   public function getFileFields(): array {
+      $filefields = [];
+
+      $form = $this->getForm();
+      foreach ($this->getQuestionFields($form) as $questionId => $field) {
+         $question = $field->getQuestion();
+         if ($question->fields['fieldtype'] != 'file') {
+            continue;
+         }
+         $filefields[] = $questionId;
+      }
+
+      return $filefields;
+   }
+
+   /**
+    * get properties of file uploads
+    *
+    * @return array
+    *
+    */
+   public function getFileProperties(): array {
+      $file_names = [];
+      $file_tags = [];
+
+      foreach ($this->getQuestionFields($this->getForm()->getID()) as $question_id => $field) {
+         if ($field->getQuestion()->fields['fieldtype'] != 'file') {
+            continue;
+         }
+
+         foreach ($field->getDocumentsForTarget() as $question_id) {
+            $document = Document::getById($question_id);
+            if (!is_object($document)) {
+               // If the document no longer exists
+               continue;
+            }
+            $file_names[$question_id][] = $document->fields['filename'];
+            $file_tags[$question_id][] = $document->fields['tag'];
+         }
+      }
+
+      return [
+         "_filename" => $file_names,
+         "_tag_filename" => $file_tags
+      ];
+   }
 }

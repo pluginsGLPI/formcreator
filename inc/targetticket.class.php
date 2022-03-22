@@ -902,6 +902,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $data['_tag_content'][] = $document['tag'];
       }
 
+      $data = $this->prepareUploadedFiles($data, $formanswer);
+
       // Create the target ticket
       $data['_auto_import'] = true;
       if (!$ticketID = $ticket->add($data)) {
@@ -917,8 +919,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ]);
-
-      $this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration

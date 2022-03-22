@@ -219,6 +219,8 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
 
+      $data = $this->prepareUploadedFiles($data, $formanswer);
+
       // Create the target problem
       if (!$problemID = $problem->add($data)) {
          return null;
@@ -233,8 +235,6 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
          'items_id'     => $formanswer->fields['id'],
          'problems_id'  => $problemID,
       ]);
-
-      $this->attachDocument($formanswer->getID(), Problem::class, $problem);
 
       return $problem;
    }
