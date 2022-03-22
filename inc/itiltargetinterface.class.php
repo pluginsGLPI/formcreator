@@ -33,9 +33,13 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-interface PluginFormcreatorTargetInterface
+interface PluginFormcreatorItilTargetInterface extends PluginFormcreatorTargetInterface
 {
    public function save(PluginFormcreatorFormAnswer $formanswer);
 
+   public function addAttachedDocument($documentId);
+
    public function getTargetItemtypeName();
+
+   public function getItem_Item();
 }

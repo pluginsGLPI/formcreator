@@ -119,7 +119,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'target_name'           => 'urgency from answer',
          'content'               => '##FULLFORM##',
          'itemtype'              => \PluginFormcreatorTargetTicket::class,
-         'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER,
+         'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_ANSWER,
          'urgency_question'      => $question->getID(),
       ]);
       $this->boolean($targetTicket1->isNewItem())->isFalse();
@@ -130,7 +130,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'target_name'           => 'default urgency',
          'content'               => '##FULLFORM##',
          'itemtype'              => \PluginFormcreatorTargetTicket::class,
-         'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE,
+         'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_NONE,
          'urgency_question'      => '0',
       ]);
       $this->boolean($targetTicket2->isNewItem())->isFalse();
