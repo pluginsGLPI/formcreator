@@ -722,6 +722,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
 
+      $data = $this->prepareUploadedFiles($data, $formanswer);
+
       // Create the target change
       if (!$changeID = $change->add($data)) {
          return null;
@@ -736,8 +738,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          'items_id'     => $formanswer->fields['id'],
          'changes_id'  => $changeID,
       ]);
-
-      $this->attachDocument($formanswer->getID(), Change::class, $changeID);
 
       return $change;
    }

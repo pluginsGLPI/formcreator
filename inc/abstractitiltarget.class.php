@@ -2201,4 +2201,43 @@ SCRIPT;
       $data = array_merge($data, $predefined_fields);
       return $data;
    }
+
+   /**
+    * Emulate file uploads for documents provided to file questions
+    *
+    * @param array $data
+    * @param PluginFormcreatorFormAnswer $formanswer a form answer
+    * @return array input $data updated with (fake) file uploads
+    */
+   protected function prepareUploadedFiles(array $data, $formanswer): array {
+      $saved_documents = $formanswer->getFileProperties();
+
+      if ($saved_documents) {
+         foreach ($formanswer->getFileFields() as $questionId) {
+            $data["_filename"] = array_merge($data["_filename"], $saved_documents["_filename"][$questionId]);
+            $data["_tag_filename"] = array_merge($data["_tag_filename"], $saved_documents["_tag_filename"][$questionId]);
+
+            foreach ($saved_documents["_filename"][$questionId] as $key => $filename) {
+               $uploaded_filename = $formanswer->getFileName($questionId, $key);
+               if ($uploaded_filename != '') {
+                  copy(GLPI_DOC_DIR . '/' . $uploaded_filename, GLPI_TMP_DIR . '/' . $filename);
+               }
+            }
+         }
+      } else {
+         foreach ($formanswer->getFileFields() as $questionId) {
+            $data["_filename"] = array_merge($data["_filename"], $formanswer->input["_formcreator_field_" . $questionId]);
+            $data["_prefix_filename"] = array_merge($data["_prefix_filename"], $formanswer->input["_prefix_formcreator_field_" . $questionId]);
+            $data["_tag_filename"] = array_merge($data["_tag_filename"], $formanswer->input["_tag_formcreator_field_" . $questionId]);
+            foreach ($formanswer->input["_formcreator_field_" . $questionId] as $key => $filename) {
+               $uploaded_filename = $formanswer->getFileName($questionId, $key);
+               if ($uploaded_filename != '') {
+                  copy(GLPI_DOC_DIR . '/' . $uploaded_filename, GLPI_TMP_DIR . '/' . $filename);
+               }
+            }
+         }
+      }
+
+      return $data;
+   }
 }
