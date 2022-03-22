@@ -46,10 +46,10 @@ use PluginFormcreatorCommon;
 
 class FileField extends PluginFormcreatorAbstractField
 {
-   /**@var $uploadData array uploads saved as documents   */
+   /**@var array $uploadData uploads saved as documents   */
    private $uploadData = [];
 
-   /** @var $uploads array uploaded files on form submit */
+   /** @var array $uploads uploaded files on form submit */
    private $uploads = [
       '_filename' => [],
       '_prefix_filename' => [],
