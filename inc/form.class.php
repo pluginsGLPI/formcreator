@@ -1985,10 +1985,7 @@ PluginFormcreatorTranslatableInterface
       $question = new PluginFormcreatorQuestion();
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+         $fields[$id] = $question->getSubField();
       }
 
       return $fields;
