@@ -147,10 +147,7 @@ extends PluginFormcreatorAbstractQuestionParameter
 
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB($containerId);
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $question->fields['fieldtype'],
-         $question
-      );
+      $field = $question->getSubField();
 
       $item = $field->getEmptyParameters();
       $item = $item[$input['fieldname']];

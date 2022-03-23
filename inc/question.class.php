@@ -271,10 +271,7 @@ PluginFormcreatorTranslatableInterface
 
       $html = '';
 
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $this->fields['fieldtype'],
-         $this
-      );
+      $field = $this->getSubField();
       if (!$field->isPrerequisites()) {
          return '';
       }
@@ -1150,10 +1147,7 @@ PluginFormcreatorTranslatableInterface
                $question->getFromDB($key);
 
                /** @var PluginFormcreatorDropdownField */
-               $field = PluginFormcreatorFields::getFieldInstance(
-                  $question['fieldtype'],
-                  $question
-               );
+               $field = $question->getSubField();
 
                $decodedValues = json_decode($question->fields['values'], JSON_OBJECT_AS_ARRAY);
                if ($decodedValues === null) {

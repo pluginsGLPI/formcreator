@@ -1665,10 +1665,7 @@ SCRIPT;
          foreach ($result as $line) {
             $question = new PluginFormcreatorQuestion();
             $question->getFromDB($line['plugin_formcreator_questions_id']);
-            $field = PluginFormcreatorFields::getFieldInstance(
-               $question->fields['fieldtype'],
-               $question
-            );
+            $field = $question->getSubField();
             $field->deserializeValue($line['answer']);
             $tab = $field->getRawValue();
             if (is_integer($tab)) {
