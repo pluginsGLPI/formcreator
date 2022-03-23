@@ -261,8 +261,10 @@ PluginFormcreatorTranslatableInterface
     * @param boolean $canEdit Can the requester edit the field of the question ?
     * @param array   $value   Values all fields of the form
     * @param bool $isVisible is the question visible by default ?
+    *
+    * @return string
     */
-   public function getRenderedHtml($domain, $canEdit = true, $value = [], $isVisible = true) : string {
+   public function getRenderedHtml($domain, $canEdit = true, $value = [], $isVisible = true): string {
       if ($this->isNewItem()) {
          return '';
       }

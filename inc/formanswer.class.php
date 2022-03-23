@@ -514,11 +514,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // Edit mode for validator
       $editMode = !isset($options['edit']) ? false : ($options['edit'] != '0');
-      // Can the current user edit the answers ?
-      $canEdit = $this->fields['status'] == self::STATUS_REFUSED
-                 && Session::getLoginUserID() == $this->fields['requester_id']
-                 || $this->fields['status'] == self::STATUS_WAITING
-                 && $this->canValidate();
 
       // form title
       echo "<h1 class='form-title'>";
@@ -559,9 +554,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $domain = PluginFormcreatorForm::getTranslationDomain($_SESSION['glpilanguage'], $form->getID());
 
       // Get fields populated with answers
-      $answers = $this->getAnswers(
-         $this->getID()
-      );
+      $answers = $this->getAnswers($this->getID());
       $answers['plugin_formcreator_forms_id'] = $form->getID();
       $visibility = PluginFormcreatorFields::updateVisibility($answers);
 
