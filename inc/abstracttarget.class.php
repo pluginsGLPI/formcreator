@@ -1441,12 +1441,12 @@ SCRIPT;
    }
 
    /**
-    * Append fields data to input
-    *
-    * @param PluginFormcreatorFormanswer $formanswer the source formanswer
-    * @param array $input data of the generated target
-    * @return void
-    */
+   * Append fields data to input
+   *
+   * @param PluginFormcreatorFormanswer $formanswer the source formanswer
+   * @param array $input data of the generated target
+   * @return void
+   */
    protected function appendFieldsData(PluginFormcreatorFormanswer $formanswer, &$input) {
       global $DB;
 
@@ -1477,6 +1477,7 @@ SCRIPT;
 
          $decodedValues = json_decode($formQuestion->fields['values'], JSON_OBJECT_AS_ARRAY);
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
+         $blocks_field = $decodedValues['blocks_field'] ?? '';
 
          if (strpos($field_name, 'dropdown') !== false) {
             $dropdownInputName = "plugin_fields_" . $field_name . "dropdowns_id" ?? '';
@@ -1484,7 +1485,7 @@ SCRIPT;
          } else {
             $input[$field_name] = $line['answer'];
          }
-         $input['c_id'] = $formQuestion->fields['itemtype'];
+         $input['c_id'] = $blocks_field;
       }
    }
 

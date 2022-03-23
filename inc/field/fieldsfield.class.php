@@ -46,6 +46,7 @@ use OperatingSystem;
 use PluginFieldsDropdown;
 use PluginFieldsField;
 use PluginFormcreatorQuestion;
+use Toolbox;
 use User;
 
 class FieldsField extends PluginFormcreatorAbstractField
@@ -160,7 +161,9 @@ class FieldsField extends PluginFormcreatorAbstractField
       $label .= '</label>';
 
       $optgroup = $this->getBlocks();
-      $itemtype = $this->question->fields['itemtype'];
+
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $itemtype = $decodedValues['blocks_field'] ?? '';
 
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('blocks_field', $optgroup, [
@@ -204,17 +207,25 @@ class FieldsField extends PluginFormcreatorAbstractField
          return '';
       }
 
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $blocks_field = $decodedValues['blocks_field'] ?? '';
+
+      $id           = $this->question->getID();
+      $fieldName    = 'formcreator_field_' . $id;
+
       $html         = '';
-      $html .= $this->prepareHtmlField( $canEdit, $this->value);
-      $html .= Html::hidden('c_id', ['value' => $this->question->fields['itemtype']]);
+      $html .= $this->prepareHtmlField($fieldName, $canEdit, $this->value,);
+      $html .= Html::hidden('c_id', ['value' => $blocks_field]);
       return $html;
    }
 
-   function prepareHtmlField($canedit = true, $value = '') {
+   function prepareHtmlField($fieldName, $canedit = true, $value = '') {
 
       if (empty($this->field->fields)) {
          return false;
       }
+
+      $rand         = mt_rand();
 
       //compute default values
       if (!empty($value)) {
@@ -241,31 +252,45 @@ class FieldsField extends PluginFormcreatorAbstractField
          case 'text':
             $value = Html::cleanInputText($value);
             if ($canedit && !$readonly) {
-               $html.= Html::input($this->field->fields['name'], ['value' => $value]);
+
+               $html .= Html::input($fieldName, ['value' => $value]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeField('$fieldName', '$rand');
+               });");
             } else {
                $html.= $value;
             }
+
+
+
             break;
          case 'url':
             $value = Html::cleanInputText($value);
             if ($canedit && !$readonly) {
-               $html.= Html::input($this->field->fields['name'], ['value' => $value]);
+               $html.= Html::input($fieldName, ['value' => $value]);
                if ($value != '') {
                   $html .= "<a target=\"_blank\" href=\"$value\">" . __('show', 'fields') . "</a>";
                }
             } else {
                $html .= "<a target=\"_blank\" href=\"$value\">$value</a>";
             }
+
+            $html .= Html::scriptBlock("$(function() {
+               pluginFormcreatorInitializeField('$fieldName', '$rand');
+            });");
             break;
          case 'textarea':
             if ($canedit && !$readonly) {
                $html.= Html::textarea([
-                  'name'    => $this->field->fields['name'],
+                  'name'    => $fieldName,
                   'value'   => $value,
                   'cols'    => 45,
                   'rows'    => 4,
                   'display' => false,
                ]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
+               });");
             } else {
                $html.= nl2br($value);
             }
@@ -280,6 +305,7 @@ class FieldsField extends PluginFormcreatorAbstractField
                }
                $html.= Dropdown::show($dropdown_itemtype,
                                        ['value'   => $value,
+                                       'name' => $fieldName,
                                        'entity'  => $_SESSION['glpiactiveentities'],
                                        'display' => false]);
             } else {
@@ -287,26 +313,39 @@ class FieldsField extends PluginFormcreatorAbstractField
                $html.= Dropdown::getDropdownName($dropdown_table, $value);
             }
 
+            $html .= Html::scriptBlock("$(function() {
+               pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
+            });");
+
             break;
          case 'yesno':
             if ($canedit && !$readonly) {
-               $html.= Dropdown::showYesNo($this->field->fields['name'], $value, -1, ['display' => false]);
+               $html.= Dropdown::showYesNo($fieldName, $value, -1, ['display' => false]);
             } else {
                $html.= Dropdown::getYesNo($value);
             }
+            $html .= Html::scriptBlock("$(function() {
+               pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
+            });");
             break;
          case 'date':
             if ($canedit && !$readonly) {
-               $html.= Html::showDateField($this->field->fields['name'], ['value'   => $value,
+               $html.= Html::showDateField($fieldName, ['value'   => $value,
                                                             'display' => false]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeDate('$fieldName', '$rand');
+               });");
             } else {
                $html.= Html::convDate($value);
             }
             break;
          case 'datetime':
             if ($canedit && !$readonly) {
-               $html.= Html::showDateTimeField($this->field->fields['name'], ['value'   => $value,
+               $html.= Html::showDateTimeField($fieldName, ['value'   => $value,
                                                                   'display' => false]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeTime('$fieldName', '$rand');
+               });");
             } else {
                $html.= Html::convDateTime($value);
             }
@@ -314,12 +353,15 @@ class FieldsField extends PluginFormcreatorAbstractField
          case 'dropdownuser':
 
             if ($canedit && !$readonly) {
-               $html.= User::dropdown(['name'      => $this->field->fields['name'],
+               $html.= User::dropdown(['name'      => $fieldName,
                                        'value'     => $value,
                                        'entity'    => -1,
                                        'right'     => 'all',
                                        'display'   => false,
                                        'condition' => ['is_active' => 1, 'is_deleted' => 0]]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
+               });");
             } else {
                $showuserlink = 0;
                if (Session::haveRight('user', READ)) {
@@ -330,12 +372,14 @@ class FieldsField extends PluginFormcreatorAbstractField
             break;
          case 'dropdownoperatingsystems':
             if ($canedit && !$readonly) {
-               $html.= OperatingSystem::dropdown(['name'      => $this->field->fields['name'],
+               $html.= OperatingSystem::dropdown(['name'      => $fieldName,
                                        'value'     => $value,
                                        'entity'    => -1,
                                        'right'     => 'all',
-                                       'display'   => false//,
-                                       /*'condition' => 'is_active=1 && is_deleted=0'*/]);
+                                       'display'   => false]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
+               });");
             } else {
                $os = new OperatingSystem();
                $os->getFromDB($value);
@@ -442,12 +486,11 @@ class FieldsField extends PluginFormcreatorAbstractField
          return [];
       }
 
-      $itemtype = $input['blocks_field'];
-      $input['itemtype'] = $itemtype;
       $input['values'] = [];
-
       $input['values']['dropdown_fields_field'] = $input['dropdown_fields_field'];
+      $input['values']['blocks_field'] = $input['blocks_field'];
       unset($input['dropdown_fields_field']);
+      unset($input['blocks_field']);
 
       $input['values'] = json_encode($input['values']);
 
@@ -485,28 +528,29 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public static function canRequire(): bool {
-      return true;
+      return false;
    }
 
    public function equals($value): bool {
-      return true;
+      return Toolbox::stripslashes_deep($this->value) == $value;
    }
 
    public function notEquals($value): bool {
-      return true;
+      return !$this->equals($value);
    }
 
    public function greaterThan($value): bool {
-      return true;
+      return Toolbox::stripslashes_deep($this->value) > $value;
    }
 
    public function lessThan($value): bool {
-      return true;
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 
    public function regex($value): bool {
-      return true;
+      return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
    }
+
 
    public function isPublicFormCompatible(): bool {
       return true;
@@ -521,6 +565,10 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function isEditableField(): bool {
+      return true;
+   }
+
+   public function isAnonymousFormCompatible(): bool {
       return true;
    }
 
