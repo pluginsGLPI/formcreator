@@ -66,6 +66,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /** @var PluginFormcreatorForm $form The form attached to the object */
    private $form = null;
 
+   /** @var array $answers set od answers */
+   private array $answers = [];
+
    public static function getStatuses() {
       return [
          self::STATUS_WAITING  => __('Waiting', 'formcreator'),
@@ -554,9 +557,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $domain = PluginFormcreatorForm::getTranslationDomain($_SESSION['glpilanguage'], $form->getID());
 
       // Get fields populated with answers
-      $answers = $this->getAnswers($this->getID());
-      $answers['plugin_formcreator_forms_id'] = $form->getID();
-      $visibility = PluginFormcreatorFields::updateVisibility($answers);
+      $this->loadAnswers();
+      $this->answers['plugin_formcreator_forms_id'] = $form->getID();
+      $visibility = PluginFormcreatorFields::updateVisibility($this->answers);
 
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
       foreach ($sections as $section) {
@@ -596,7 +599,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   }
                }
             }
-            echo $question->getRenderedHtml($domain, $editMode, $answers, $visibility[$question->getType()][$question->getID()]);
+            echo $question->getRenderedHtml($domain, $editMode, $this, $visibility[$question->getType()][$question->getID()]);
             $lastQuestion = $question;
          }
          echo '</div>';
@@ -878,24 +881,32 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * Gets answers of all fields of a form answer
     *
-    * @param int $formAnswerId
-    * @return array
+    * @return void
     */
-   public function getAnswers($formAnswerId): array {
+   public function loadAnswers(): void {
       global $DB;
+
+      $this->answers = [];
+      if ($this->isNewItem()) {
+         return;
+      }
 
       $answers = $DB->request([
          'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
          'FROM'   => PluginFormcreatorAnswer::getTable(),
          'WHERE'  => [
-            'plugin_formcreator_formanswers_id' => $formAnswerId
+            'plugin_formcreator_formanswers_id' => $this->getID()
          ]
       ]);
       $answers_values = [];
       foreach ($answers as $found_answer) {
          $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];
       }
-      return $answers_values;
+      $this->answers = $answers_values;
+   }
+
+   public function getAnswers() {
+      return $this->answers;
    }
 
    /**
@@ -1650,7 +1661,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $answers_values = $this->getAnswers($this->getID());
+      $this->loadAnswers();
+      $answers_values = $this->getAnswers();
       foreach (array_keys($this->questionFields) as $id) {
          if (!$this->questionFields[$id]->hasInput($answers_values)) {
             continue;

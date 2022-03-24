@@ -259,12 +259,12 @@ PluginFormcreatorTranslatableInterface
     * Get the HTML to display the question for a requester
     * @param string  $domain  Translation domain of the form
     * @param boolean $canEdit Can the requester edit the field of the question ?
-    * @param array   $value   Values all fields of the form
+    * @param PluginFormcreatorFormAnswer $value   Values all fields of the form
     * @param bool $isVisible is the question visible by default ?
     *
     * @return string
     */
-   public function getRenderedHtml($domain, $canEdit = true, $value = [], $isVisible = true): string {
+   public function getRenderedHtml($domain, $canEdit = true, ?PluginFormcreatorFormAnswer $form_answer = null, $isVisible = true): string {
       if ($this->isNewItem()) {
          return '';
       }
@@ -276,13 +276,7 @@ PluginFormcreatorTranslatableInterface
          return '';
       }
 
-      if ($field->hasInput($value)) {
-         // Parse an HTML input
-         $field->parseAnswerValues($value);
-      } else {
-         // Deserialize the default value from DB
-         $field->deserializeValue($this->fields['default_values']);
-      }
+      $field->setFormAnswer($form_answer);
 
       $required = ($this->fields['required']) ? ' required' : '';
       $x = $this->fields['col'];

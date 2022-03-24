@@ -45,11 +45,29 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
    protected $value = null;
 
    /**
+    * the form answer to source the values from
+    *
+    * @var PluginFormcreatorFormAnswer|null
+    */
+   protected ?PluginFormcreatorFormAnswer $form_answer = null;
+
+   /**
     *
     * @param array $question PluginFormcreatorQuestion instance
     */
    public function __construct(PluginFormcreatorQuestion $question) {
-      $this->question  = $question;
+      $this->question = $question;
+   }
+
+   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {
+      $this->form_answer = $form_answer;
+      if ($this->hasInput($this->form_answer->getAnswers())) {
+         // Parse an HTML input
+         $this->parseAnswerValues($this->form_answer->getAnswers());
+      } else {
+         // Deserialize the default value from DB
+         $this->deserializeValue($this->fields['default_values']);
+      }
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -66,7 +84,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     * @param string  $domain  Translation domain of the form
     * @param boolean $canEdit is the field editable ?
     */
-   public function show($domain, $canEdit = true) {
+   public function show(string $domain, bool $canEdit = true): string {
       $html = '';
 
       if ($this->isVisibleField()) {

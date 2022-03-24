@@ -116,7 +116,7 @@ class DependentField extends PluginFormcreatorAbstractField
          : '';
    }
 
-   public function show($domain, $canEdit = true) {
+   function show(string $domain, bool $canEdit = true): string {
       parent::show($canEdit);
       $questionId = $this->fields['id'];
       $domId = "input[name=\"formcreator_field_$questionId\"]";
@@ -129,7 +129,7 @@ class DependentField extends PluginFormcreatorAbstractField
       }
       $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
       $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
-      echo Html::scriptBlock("$(function() {
+      return Html::scriptBlock("$(function() {
          plugin_formcreator_field_$questionId()
          $('input[name=\"formcreator_field_$firstnameQuestionId\"]').on('input', plugin_formcreator_field_$questionId)
          $('input[name=\"formcreator_field_$lastnameQuestionId\"]').on('input', plugin_formcreator_field_$questionId)
