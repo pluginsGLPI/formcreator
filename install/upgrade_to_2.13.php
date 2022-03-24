@@ -141,6 +141,11 @@ class PluginFormcreatorUpgradeTo2_13 {
 
       $table = 'glpi_plugin_formcreator_entityconfigs';
 
+      if ($DB->fieldExists($table, 'entities_id')) {
+         // Already migrated
+         return;
+      }
+
       $this->migration->addField($table, 'entities_id', 'int unsigned not null default 0', ['after' => 'id']);
       $this->migration->migrationOneTable($table);
       $this->migration->addKey($table, 'entities_id', 'unicity', 'UNIQUE');
