@@ -230,7 +230,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
             ]
          ],
          'WHERE' => [
-            'answer.'.$formAnswerFk => [(int) $formanswer->fields['id']],
+            'answer.'.$formAnswerFk => (int) $formanswer->fields['id'],
             'question.fieldtype' => 'fields'
          ],
       ]);
