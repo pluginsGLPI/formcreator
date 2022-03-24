@@ -38,6 +38,7 @@ class PluginFormcreatorUpgradeTo2_13 {
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
       $this->migrateEntityConfig();
+      $this->fixRootEntityConfig();
       $this->migrateFkToUnsignedInt();
       $this->addFormAnswerTitle();
       $this->defaultValuesForTargets();
@@ -150,6 +151,26 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
       $this->migration->addKey($table, 'entities_id', 'unicity', 'UNIQUE');
       $DB->queryOrDie("UPDATE `$table` SET `entities_id`=`id`");
+   }
+
+   /**
+    * Fix possible invalid root entity config
+    *
+    * @return void
+    */
+   private function fixRootEntityConfig() {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+      $DB->update($table, [
+         'replace_helpdesk' => new QueryExpression("IF(`replace_helpdesk` = -2, 0, `replace_helpdesk`)"),
+         'sort_order' => new QueryExpression("IF(`sort_order` = -2, 0, `sort_order`)"),
+         'is_kb_separated' => new QueryExpression("IF(`is_kb_separated` = -2, 0, `is_kb_separated`)"),
+         'is_search_visible' => new QueryExpression("IF(`is_search_visible` = -2, 1, `is_search_visible`)"),
+         'is_header_visible' => new QueryExpression("IF(`is_header_visible` = -2, 1, `is_header_visible`)"),
+      ], [
+         'entities_id' => 0,
+      ]);
    }
 
    protected function migrateFkToUnsignedInt() {
