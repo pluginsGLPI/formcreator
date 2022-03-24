@@ -287,10 +287,20 @@ interface PluginFormcreatorFieldInterface
     */
    public function isVisibleField(): bool;
 
-   /** Get all translatable strings
+   /**
+    * Get all translatable strings
     * @return array translatable strings under keys 'string' and 'text'
     */
    public function getTranslatableStrings(array $options = []): array;
 
    public function getQuestion();
+
+   /**
+    * get the HTML to show the field
+    *
+    * @param string $domain translation domain
+    * @param boolean $canEdit true if the field is editable
+    * @return string HTML of the field
+    */
+   public function show(string $domain, bool $canEdit): string;
 }
