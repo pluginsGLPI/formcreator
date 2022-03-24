@@ -1506,4 +1506,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       unset($input['items_id']);
       return $input;
    }
+
+   public static function getIcon()
+   {
+      return Ticket::getIcon();
+   }
 }
