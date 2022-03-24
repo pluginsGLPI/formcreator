@@ -1330,7 +1330,6 @@ var plugin_formcreator = new function() {
 }
 
 // === TARGETS ===
-
 function plugin_formcreator_addTarget(items_id) {
    glpi_ajax_dialog({
       dialogclass: 'modal-xl',
@@ -1491,24 +1490,6 @@ function plugin_formcreator_changeGlpiObjectItemType() {
       $('.plugin_formcreator_dropdown').html("");
       $('.plugin_formcreator_dropdown').toggle(false);
    });
-}
-
-
-function plugin_formcreator_changePluginFieldBlock() {
-   var glpi_fields_block_id    = $('[data-itemtype="PluginFormcreatorQuestion"] [name="blocks_field"]').val();
-   var glpi_question_id = $('[data-itemtype="PluginFormcreatorQuestion"] [name="id"]').val();
-
-   $.post({
-      url: formcreatorRootDoc + '/ajax/dropdown_fields_values.php',
-      data: {
-         block_id: glpi_fields_block_id,
-         question_id: glpi_question_id
-      },
-   }).done(function(response) {
-      $('#dropdown_fields_field').html(response);
-      $('.plugin_formcreator_dropdown').toggle(true);
-   });
-
 }
 
 // === CONDITIONS ===
