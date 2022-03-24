@@ -55,9 +55,9 @@ $values = [];
 //add other keys to 'values' key
 foreach ($_REQUEST as $request_key => $request_value) {
    foreach (array_keys($question->fields) as $key) {
-      if($key == $request_key) {
+      if ($key == $request_key) {
          $question->fields[$key] = $_REQUEST[$key];
-      } else{
+      } else {
          $values[$request_key] = $request_value;
       }
    }
