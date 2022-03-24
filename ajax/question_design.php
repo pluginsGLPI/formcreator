@@ -50,12 +50,20 @@ if (!$question->isNewID((int) $_REQUEST['id']) && !$question->getFromDB((int) $_
 
 // Modify the question to reflect changes in the form
 $question->fields['plugin_formcreator_sections_id'] = (int) $_REQUEST['plugin_formcreator_sections_id'];
-foreach (array_keys($question->fields) as $key) {
-   if (!isset($_REQUEST[$key])) {
-      continue;
+$values = [];
+//compute question->fields from $_REQUEST (by comparing key)
+//add other keys to 'values' key
+foreach ($_REQUEST as $request_key => $request_value) {
+   foreach (array_keys($question->fields) as $key) {
+      if($key == $request_key) {
+         $question->fields[$key] = $_REQUEST[$key];
+      } else{
+         $values[$request_key] = $request_value;
+      }
    }
-   $question->fields[$key] = $_REQUEST[$key];
 }
+
+$question->fields['values'] = json_encode($values);
 $field = PluginFormcreatorFields::getFieldInstance(
    $_REQUEST['fieldtype'],
    $question
