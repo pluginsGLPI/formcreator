@@ -32,7 +32,6 @@
 {% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
 {% block questionFields %}
-
    {% if item.fields['_block_id'] is defined %}
       {{ fields.dropdownArrayField(
          'blocks_field',
@@ -53,7 +52,6 @@
       }) }}
    {% endif %}
 
-
    {% if item.fields['_field_name'] is defined and item.fields['_block_id'] != 0 %}
       {{ fields.dropdownArrayField(
          'dropdown_fields_field',
@@ -72,8 +70,4 @@
             input_class: 'col-xxl-8',
       }) }}
    {% endif %}
-
-
-
-
 {% endblock %}
