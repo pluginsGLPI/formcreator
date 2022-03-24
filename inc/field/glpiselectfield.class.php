@@ -48,9 +48,6 @@ class GlpiselectField extends DropdownField
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
 
-      var_dump($decodedValues);
-
-      
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
