@@ -54,7 +54,7 @@ class HiddenField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function show($domain, $canEdit = true) {
+   public function show(string $domain, bool $canEdit = true): string {
       if (!$canEdit) {
          return '';
       }

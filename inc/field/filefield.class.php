@@ -81,7 +81,7 @@ class FileField extends PluginFormcreatorAbstractField
          }
          foreach ($answer as $item) {
             if (is_numeric($item) && $doc->getFromDB($item)) {
-               $html .= $doc->getDownloadLink();
+               $html .= $doc->getDownloadLink($this->form_answer);
             }
          }
          return $html;

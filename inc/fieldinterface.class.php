@@ -302,5 +302,13 @@ interface PluginFormcreatorFieldInterface
     * @param boolean $canEdit true if the field is editable
     * @return string HTML of the field
     */
-   public function show(string $domain, bool $canEdit): string;
+   public function show(string $domain, bool $canEdit = true): string;
+
+   /**
+    * Set the form answer containing the value of the field
+    *
+    * @param PluginFormcreatorFormAnswer $form_answer
+    * @return void
+    */
+   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void;
 }
