@@ -211,7 +211,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     * @param array $input data of the generated target
     * @return void
     */
-    protected function appendFieldsData(PluginFormcreatorFormanswer $formanswer, &$input) {
+   protected function appendFieldsData(PluginFormcreatorFormanswer $formanswer, &$input): void {
       global $DB;
 
       //get all PluginFormcreatorAnswer
@@ -236,9 +236,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       ]);
 
       foreach ($result as $line) {
-         $formQuestion = new PluginFormcreatorQuestion();
-         $formQuestion->getFromDB($line['plugin_formcreator_questions_id']);
-
+         $formQuestion = PluginFormcreatorQuestion::getById($line['plugin_formcreator_questions_id']);
          $decodedValues = json_decode($formQuestion->fields['values'], JSON_OBJECT_AS_ARRAY);
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
          $blocks_field = $decodedValues['blocks_field'] ?? '';

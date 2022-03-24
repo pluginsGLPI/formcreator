@@ -80,7 +80,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       global $DB;
       $optgroup = [];
 
-      if ($block_id == 0){
+      if ($block_id == 0) {
          return $optgroup;
       }
 
@@ -176,12 +176,12 @@ class FieldsField extends PluginFormcreatorAbstractField
       $fieldName    = 'formcreator_field_' . $id;
 
       $html         = '';
-      $html .= $this->prepareHtmlField($fieldName, $canEdit, $this->value,);
+      $html .= $this->prepareHtmlField($fieldName, $canEdit, $this->value);
       $html .= Html::hidden('c_id', ['value' => $blocks_field]);
       return $html;
    }
 
-   function prepareHtmlField($fieldName, $canedit = true, $value = '') {
+   public function prepareHtmlField($fieldName, $canedit = true, $value = '') {
 
       if (empty($this->field->fields)) {
          return false;
@@ -222,9 +222,6 @@ class FieldsField extends PluginFormcreatorAbstractField
             } else {
                $html.= $value;
             }
-
-
-
             break;
          case 'url':
             $value = Html::cleanInputText($value);
@@ -379,37 +376,38 @@ class FieldsField extends PluginFormcreatorAbstractField
 
    public function isValidValue($value): bool {
 
-      if (!is_null($this->field)) {
-
-         //check data type for input number / url
-         $valid = true;
-         if ($this->field->fields['type'] == 'number' && !empty($this->value) && !is_numeric($this->value)) {
-            $number_errors[] = $this->field->fields['label'];
-            $valid = false;
-         } else if ($this->field->fields['type'] == 'url' && !empty($this->value)) {
-            if (filter_var($this->value, FILTER_VALIDATE_URL) === false) {
-               $url_errors[] = $this->field->fields['label'];
-               $valid = false;
-            }
-         }
-
-         if (!empty($number_errors)) {
-            Session::AddMessageAfterRedirect(__("Some numeric fields contains non numeric values", "fields").
-                                             " : ".implode(', ', $number_errors), false, ERROR);
-         }
-
-         if (!empty($url_errors)) {
-            Session::AddMessageAfterRedirect(__("Some URL fields contains invalid links", "fields").
-                                             " : ".implode(', ', $url_errors), false, ERROR);
-         }
-
-         if (!$valid) {
-            return false;
-         }
-
-         //All is OK
-         return true;
+      if (is_null($this->field)) {
+         return false;
       }
+
+      //check data type for input number / url
+      $valid = true;
+      if ($this->field->fields['type'] == 'number' && !empty($this->value) && !is_numeric($this->value)) {
+         $number_errors[] = $this->field->fields['label'];
+         $valid = false;
+      } else if ($this->field->fields['type'] == 'url' && !empty($this->value)) {
+         if (filter_var($this->value, FILTER_VALIDATE_URL) === false) {
+            $url_errors[] = $this->field->fields['label'];
+            $valid = false;
+         }
+      }
+
+      if (!empty($number_errors)) {
+         Session::AddMessageAfterRedirect(__("Some numeric fields contains non numeric values", "fields").
+                                          " : ".implode(', ', $number_errors), false, ERROR);
+      }
+
+      if (!empty($url_errors)) {
+         Session::AddMessageAfterRedirect(__("Some URL fields contains invalid links", "fields").
+                                          " : ".implode(', ', $url_errors), false, ERROR);
+      }
+
+      if (!$valid) {
+         return false;
+      }
+
+      //All is OK
+      return true;
    }
 
    public function isValid(): bool {

@@ -1330,6 +1330,7 @@ var plugin_formcreator = new function() {
 }
 
 // === TARGETS ===
+
 function plugin_formcreator_addTarget(items_id) {
    glpi_ajax_dialog({
       dialogclass: 'modal-xl',
