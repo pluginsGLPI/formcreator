@@ -527,9 +527,9 @@ PluginFormcreatorTranslatableInterface
    /**
     * Update size or position of the question
     * @param array $input
-    * @return boolean false on error
+    * @return bool false on error
     */
-   public function change($input) {
+   public function change($input): bool {
       $x = $this->fields['col'];
       $y = $this->fields['row'];
       $width = $this->fields['width'];
