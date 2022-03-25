@@ -691,19 +691,21 @@ PluginFormcreatorTranslatableInterface
          // Rows of the item are empty
          $row = $this->fields['row'];
          $sectionId = $this->fields[$sectionFk];
-         $DB->query("
-            UPDATE `$table`
-            SET `row` = `row` - 1
-            WHERE `row` > '$row' AND `$sectionFk` = '$sectionId'
-         ");
-         // $DB->update(
-         //    $table,
-         //    new QueryExpression("`row` = `row` - 1"),
-         //   [
-         //      'row' => ['>', $row],
-         //      $sectionFk => $this->fields[$sectionFk]
-         //   ]
-         // );
+         // $DB->query("
+         //    UPDATE `$table`
+         //    SET `row` = `row` - 1
+         //    WHERE `row` > '$row' AND `$sectionFk` = '$sectionId'
+         // ");
+         $DB->update(
+            $table,
+            [
+               'row' => new QueryExpression('`row` - 1')
+            ],
+            [
+              'row' => ['>', $row],
+              $sectionFk => $this->fields[$sectionFk]
+            ]
+         );
       }
 
       // Always show questions with conditional display on the question being deleted
