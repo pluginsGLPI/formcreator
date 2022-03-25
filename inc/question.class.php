@@ -610,16 +610,17 @@ PluginFormcreatorTranslatableInterface
     * set or reset the required flag
     *
     * @param bool $isRequired
+    * @return bool true if success, false otherwise
     */
-   public function setRequired($isRequired) {
+   public function setRequired($isRequired): bool {
       $this->skipChecks = true;
-      $sucess = $this->update([
+      $success = $this->update([
          'id'           => $this->getID(),
          'required'     => $isRequired,
       ]);
       $this->skipChecks = false;
 
-      return $sucess;
+      return $success;
    }
 
    /**
