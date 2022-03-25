@@ -690,12 +690,6 @@ PluginFormcreatorTranslatableInterface
       if ($section->isRowEmpty($this->fields['row'])) {
          // Rows of the item are empty
          $row = $this->fields['row'];
-         $sectionId = $this->fields[$sectionFk];
-         // $DB->query("
-         //    UPDATE `$table`
-         //    SET `row` = `row` - 1
-         //    WHERE `row` > '$row' AND `$sectionFk` = '$sectionId'
-         // ");
          $DB->update(
             $table,
             [
