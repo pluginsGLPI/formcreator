@@ -675,8 +675,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
       return $tab;
    }
 
-   public static function getIcon()
-   {
+   public static function getIcon() {
       return Problem::getIcon();
    }
 }

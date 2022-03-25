@@ -1507,8 +1507,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       return $input;
    }
 
-   public static function getIcon()
-   {
+   public static function getIcon() {
       return Ticket::getIcon();
    }
 }
