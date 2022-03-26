@@ -162,8 +162,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'entities_id                              as entities_id'
             ],
             new QueryExpression('0                       as is_recursive'),
-            new QueryExpression("COALESCE($ticketUserTable.users_id, 0) as requester_id"),
-            new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
+            new QueryExpression("COALESCE(`$ticketUserTable`.`users_id`, 0) as `requester_id`"),
+            new QueryExpression("COALESCE(`$ticketValidationTable`.`users_id_validate`, 0)  as `users_id_validator`"),
             new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
             'users_id_recipient                          as users_id_recipient'
@@ -182,9 +182,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ],
             [
                'TABLE' => new QuerySubQuery([
-                  'SELECT' => '*',
+                  'SELECT' => ['tickets_id', 'users_id',],
                   'FROM' => new QuerySubQuery([
-                     'SELECT' => ['users_id', $ticketFk],
+                     'SELECT' => ['users_id', $ticketFk, 'id'],
                      'DISTINCT' => true,
                      'FROM'  => $ticketUserTable,
                      'WHERE' => [
@@ -192,7 +192,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      ],
                      'ORDER' => ['id ASC'],
                   ], 'inner_glpi_tickets_users'),
-                  'GROUPBY' => 'tickets_id'
+                  'GROUPBY' => ['tickets_id', 'users_id'],
                ], 'glpi_tickets_users'),
                'FKEY' => [
                   $ticketTable => 'id',
@@ -209,7 +209,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'WHERE' => [
             "$ticketTable.is_deleted" => 0,
          ],
-         'GROUPBY' => ["$ticketTable.id"],
+         'GROUPBY' => ["$ticketTable.id", "$ticketValidationTable.status", "$ticketUserTable.users_id", "$ticketValidationTable.users_id_validate"],
          'HAVING' => new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) = 0")
       ];
 
@@ -219,7 +219,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $query3['INNER JOIN'][$itemTicketTable] = $query3['LEFT JOIN'][$itemTicketTable];
       unset($query3['LEFT JOIN'][$itemTicketTable]);
       // Only 1 relation to a Formanswer object
-      $query3['GROUPBY'] = ["$itemTicketTable.items_id"];
       $query3['HAVING'] = new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) = 1");
 
       // Union of the 3 previous queries

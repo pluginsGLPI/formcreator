@@ -182,14 +182,12 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
    public function providerGetSyncIssuesRequest_formAnswerWithSeveralTickets() {
       $form = $this->getForm();
-      $targetTicket1 = new \PluginFormcreatorTargetTicket();
-      $targetTicket1->add([
+      $targetTicket1 = $this->getTargetTicket([
          'plugin_formcreator_forms_id' => $form->getID(),
          'name' => 'foo',
       ]);
       $this->boolean($targetTicket1->isNewItem())->isFalse();
-      $targetTicket2 = new \PluginFormcreatorTargetTicket();
-      $targetTicket2->add([
+      $targetTicket2 = $this->getTargetTicket([
          'plugin_formcreator_forms_id' => $form->getID(),
          'name' => 'bar',
       ]);
