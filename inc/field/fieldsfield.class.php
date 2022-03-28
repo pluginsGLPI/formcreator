@@ -346,6 +346,9 @@ class FieldsField extends PluginFormcreatorAbstractField
                $os->getFromDB($value);
                $html.= $os->fields['name'];
             }
+            break;
+         default:
+            $html .= __('Field type not implemented yet !', 'formcreator');
       }
 
       unset($_SESSION['plugin']['fields']['values_sent']);
