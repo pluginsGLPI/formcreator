@@ -74,7 +74,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function isPrerequisites(): bool {
-      return  (!(new Plugin())->isActivated('field'));
+      return  (new Plugin())->isActivated('field');
    }
 
    public static function getFieldsFromBlock($block_id): array {
