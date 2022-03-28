@@ -139,7 +139,7 @@ function plugin_init_formcreator() {
 
    plugin_formcreator_hook();
 
-   if (isset($_SESSION['glpiactiveentities_string'])) {
+   if (isset($_SERVER['REQUEST_URI']) && isset($_SESSION['glpiactiveentities_string'])) {
       plugin_formcreator_registerClasses();
 
       $pages = [
@@ -317,33 +317,35 @@ function plugin_formcreator_hook() {
    ];
 
    // Load JS and CSS files if we are on a page which need them
-   if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
-      || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
-      || isset($_SESSION['glpiactiveprofile']) &&
-         Session::getCurrentInterface() == 'helpdesk') {
+   if (isset($_SERVER['REQUEST_URI'])) {
+      if (strpos($_SERVER['REQUEST_URI'], 'formcreator') !== false
+         || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+         || isset($_SESSION['glpiactiveprofile']) &&
+            Session::getCurrentInterface() == 'helpdesk') {
 
-      // Add specific JavaScript
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
-   }
-
-   if (isset($_SESSION['glpiactiveentities_string'])) {
-      if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
-            || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
-            || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
-            || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
-            || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
-         $CFG_GLPI['javascript']['self-service']['none'] = [
-            'dashboard',
-            'gridstack'
-         ];
+         // Add specific JavaScript
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js';
       }
-      if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
-         $CFG_GLPI['javascript']['self-service']['none'] = [
-            'dashboard',
-            'gridstack'
-         ];
+
+      if (isset($_SESSION['glpiactiveentities_string'])) {
+         if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+            $CFG_GLPI['javascript']['self-service']['none'] = [
+               'dashboard',
+               'gridstack'
+            ];
+         }
+         if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
+            $CFG_GLPI['javascript']['self-service']['none'] = [
+               'dashboard',
+               'gridstack'
+            ];
+         }
       }
    }
 
@@ -395,7 +397,7 @@ function plugin_formcreator_registerClasses() {
 function plugin_formcreator_redirect() {
    global $CFG_GLPI;
 
-   if (!isset($_SESSION['glpiactiveentities_string'])) {
+   if (!isset($_SERVER['REQUEST_URI']) || !isset($_SESSION['glpiactiveentities_string'])) {
       return;
    }
 
