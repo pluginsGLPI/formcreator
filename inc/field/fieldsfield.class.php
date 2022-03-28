@@ -368,7 +368,38 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return "";
+
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $original_fields = new PluginFieldsField();
+      $value = "";
+
+      //load native field
+      if ($original_fields->getFromDBByCrit([
+         'name' => $decodedValues['dropdown_fields_field']
+      ])) {
+         //switch type compute table to load dropdown value
+         $dropdown_table = null;
+         if($original_fields->fields['type'] == 'dropdown') {
+            $dropdown_table = "glpi_plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns";
+         } else if ($original_fields->fields['type'] == 'dropdownuser') {
+            $dropdown_table = getTableForItemType("User");
+         } else if ($original_fields->fields['type'] == 'dropdownoperatingsystems') {
+            $dropdown_table = getTableForItemType("OperatingSystem");
+         }
+
+         if ($dropdown_table != null) {
+            $value = Dropdown::getDropdownName($dropdown_table, $this->value);
+         } else {
+            //manage yesno type
+            if($original_fields->fields['type'] == "yesno") {
+               $value = Dropdown::getYesNo($this->value);
+            } else{
+               $value = $this->value;
+            }
+         }
+      }
+
+      return $value;
    }
 
    public function getValueForApi(): string {
