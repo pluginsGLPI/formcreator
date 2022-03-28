@@ -162,8 +162,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'entities_id                              as entities_id'
             ],
             new QueryExpression('0                       as is_recursive'),
-            new QueryExpression("COALESCE($ticketUserTable.users_id, 0) as requester_id"),
-            new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
+            new QueryExpression("COALESCE(`$ticketUserTable`.`users_id`, 0) as `requester_id`"),
+            new QueryExpression("COALESCE(`$ticketValidationTable`.`users_id_validate`, 0) as `users_id_validator`"),
             new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
             'users_id_recipient                          as users_id_recipient'
