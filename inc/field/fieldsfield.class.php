@@ -524,11 +524,11 @@ class FieldsField extends PluginFormcreatorAbstractField
       return false;
    }
 
-   public function equals($value): bool {
+   public function computeValueForComparaison(): mixed{
 
-      $value = html_entity_decode($value);
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $original_fields = new PluginFieldsField();
+      $value = '';
 
       //load native field
       if ($original_fields->getFromDBByCrit([
@@ -545,26 +545,30 @@ class FieldsField extends PluginFormcreatorAbstractField
          }
 
          if ($dropdown_itemtype != null) {
-
             $item = new $dropdown_itemtype();
             if ($item->isNewId($this->value)) {
-               return ($value === '');
+               $value = '';
             }
             if (!$item->getFromDB($this->value)) {
                throw new ComparisonException('Item not found for comparison');
             }
-            return $item->getField($item->getNameField()) == $value;
-
+            $value = $item->getField($item->getNameField());
          } else {
             //manage yesno type
             if($original_fields->fields['type'] == "yesno") {
-               $computed_value = Dropdown::getYesNo($this->value);
-               return Toolbox::stripslashes_deep($computed_value) == $value;
+               $value = Dropdown::getYesNo($this->value);
             } else{
-               return Toolbox::stripslashes_deep($this->value) == $value;
+               $value = $this->value;
             }
          }
       }
+
+      return $value;
+   }
+
+   public function equals($value): bool {
+      $internal_value = $this->computeValueForComparaison();
+      return Toolbox::stripslashes_deep($internal_value) == $value;
    }
 
    public function notEquals($value): bool {
@@ -580,48 +584,9 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-
-      $value = html_entity_decode($value);
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $original_fields = new PluginFieldsField();
-
-      //load native field
-      if ($original_fields->getFromDBByCrit([
-         'name' => $decodedValues['dropdown_fields_field']
-      ])) {
-         //switch type compute table to load dropdown value
-         $dropdown_itemtype = null;
-         if($original_fields->fields['type'] == 'dropdown') {
-            $dropdown_itemtype = getItemTypeForTable("glpi_plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns");
-         } else if ($original_fields->fields['type'] == 'dropdownuser') {
-            $dropdown_itemtype = "User";
-         } else if ($original_fields->fields['type'] == 'dropdownoperatingsystems') {
-            $dropdown_itemtype = "OperatingSystem";
-         }
-
-         if ($dropdown_itemtype != null) {
-
-            $item = new $dropdown_itemtype();
-            if ($item->isNewId($this->value)) {
-               return ($value === '');
-            }
-            if (!$item->getFromDB($this->value)) {
-               throw new ComparisonException('Item not found for comparison');
-            }
-            return preg_match($value, Toolbox::stripslashes_deep($item->getField($item->getNameField()))) ? true : false;
-
-         } else {
-            //manage yesno type
-            if($original_fields->fields['type'] == "yesno") {
-               $computed_value = Dropdown::getYesNo($this->value);
-               return preg_match($value, Toolbox::stripslashes_deep($computed_value)) ? true : false;
-            } else{
-               return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
-            }
-         }
-      }
+      $internal_value = $this->computeValueForComparaison();
+      return preg_match($value, Toolbox::stripslashes_deep($internal_value)) ? true : false;
    }
-
 
    public function isPublicFormCompatible(): bool {
       return true;
