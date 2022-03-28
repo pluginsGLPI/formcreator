@@ -49,6 +49,7 @@ use PluginFormcreatorQuestion;
 use Toolbox;
 use User;
 
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 class FieldsField extends PluginFormcreatorAbstractField
 {
@@ -524,7 +525,49 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function equals($value): bool {
-      return Toolbox::stripslashes_deep($this->value) == $value;
+
+      $value = html_entity_decode($value);
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $original_fields = new PluginFieldsField();
+
+      //load native field
+      if ($original_fields->getFromDBByCrit([
+         'name' => $decodedValues['dropdown_fields_field']
+      ])) {
+         //switch type compute table to load dropdown value
+         $dropdown_itemtype = null;
+         if($original_fields->fields['type'] == 'dropdown') {
+            $dropdown_itemtype = getItemTypeForTable("glpi_plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns");
+         } else if ($original_fields->fields['type'] == 'dropdownuser') {
+            $dropdown_itemtype = "User";
+         } else if ($original_fields->fields['type'] == 'dropdownoperatingsystems') {
+            $dropdown_itemtype = "OperatingSystem";
+         }
+
+         if ($dropdown_itemtype != null) {
+
+            $item = new $dropdown_itemtype();
+            if ($item->isNewId($this->value)) {
+               return ($value === '');
+            }
+            if (!$item->getFromDB($this->value)) {
+               throw new ComparisonException('Item not found for comparison');
+            }
+            Toolbox::logDebug($this->question->fields['name']." - ".$item->getNameField()." and1 ".$value);
+            return $item->getField($item->getNameField()) == $value;
+
+         } else {
+            //manage yesno type
+            if($original_fields->fields['type'] == "yesno") {
+               $computed_value = Dropdown::getYesNo($this->value);
+               Toolbox::logDebug($this->question->fields['name']." - ".$computed_value." and2 ".$value);
+               return Toolbox::stripslashes_deep($computed_value) == $value;
+            } else{
+               Toolbox::logDebug($this->question->fields['name']." - ".$this->value." and3 ".$value);
+               return Toolbox::stripslashes_deep($this->value) == $value;
+            }
+         }
+      }
    }
 
    public function notEquals($value): bool {
