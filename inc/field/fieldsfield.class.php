@@ -63,7 +63,7 @@ class FieldsField extends PluginFormcreatorAbstractField
     */
    public function __construct(PluginFormcreatorQuestion $question) {
       $this->question  = $question;
-      if (isset($this->question->fields['values'])){
+      if (isset($this->question->fields['values'])) {
          $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
          $fieldObj = new PluginFieldsField();
@@ -383,7 +383,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       ])) {
          //switch type compute table to load dropdown value
          $dropdown_table = null;
-         if($original_fields->fields['type'] == 'dropdown') {
+         if ($original_fields->fields['type'] == 'dropdown') {
             $dropdown_table = "glpi_plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns";
          } else if ($original_fields->fields['type'] == 'dropdownuser') {
             $dropdown_table = getTableForItemType("User");
@@ -395,9 +395,9 @@ class FieldsField extends PluginFormcreatorAbstractField
             $value = Dropdown::getDropdownName($dropdown_table, $this->value);
          } else {
             //manage yesno type
-            if($original_fields->fields['type'] == "yesno") {
+            if ($original_fields->fields['type'] == "yesno") {
                $value = Dropdown::getYesNo($this->value);
-            } else{
+            } else {
                $value = $this->value;
             }
          }
@@ -527,7 +527,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       return false;
    }
 
-   public function computeValueForComparaison(): mixed{
+   public function computeValueForComparaison(): mixed {
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $original_fields = new PluginFieldsField();
@@ -539,7 +539,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       ])) {
          //switch type compute table to load dropdown value
          $dropdown_itemtype = null;
-         if($original_fields->fields['type'] == 'dropdown') {
+         if ($original_fields->fields['type'] == 'dropdown') {
             $dropdown_itemtype = getItemTypeForTable("glpi_plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns");
          } else if ($original_fields->fields['type'] == 'dropdownuser') {
             $dropdown_itemtype = "User";
@@ -558,9 +558,9 @@ class FieldsField extends PluginFormcreatorAbstractField
             $value = $item->getField($item->getNameField());
          } else {
             //manage yesno type
-            if($original_fields->fields['type'] == "yesno") {
+            if ($original_fields->fields['type'] == "yesno") {
                $value = Dropdown::getYesNo($this->value);
-            } else{
+            } else {
                $value = $this->value;
             }
          }
