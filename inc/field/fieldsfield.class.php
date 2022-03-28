@@ -166,7 +166,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
-      if ((new Plugin())->isActivated('field')) {
+      if (!(new Plugin())->isActivated('field')) {
          // Plugin field not available
          return '';
       }
