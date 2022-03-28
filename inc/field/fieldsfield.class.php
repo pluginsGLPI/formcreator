@@ -62,12 +62,13 @@ class FieldsField extends PluginFormcreatorAbstractField
     */
    public function __construct(PluginFormcreatorQuestion $question) {
       $this->question  = $question;
-
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $field_name = $decodedValues['dropdown_fields_field'] ?? '';
-      $fieldObj = new PluginFieldsField();
-      if ($fieldObj->getFromDBByCrit(['name' => $field_name])) {
-         $this->field  = $fieldObj;
+      if (isset($this->question->fields['values'])){
+         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+         $field_name = $decodedValues['dropdown_fields_field'] ?? '';
+         $fieldObj = new PluginFieldsField();
+         if ($fieldObj->getFromDBByCrit(['name' => $field_name])) {
+            $this->field  = $fieldObj;
+         }
       }
    }
 
