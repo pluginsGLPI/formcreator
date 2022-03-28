@@ -616,7 +616,6 @@ class FieldsField extends PluginFormcreatorAbstractField
                $computed_value = Dropdown::getYesNo($this->value);
                return preg_match($value, Toolbox::stripslashes_deep($computed_value)) ? true : false;
             } else{
-               Toolbox::lgDebug($this->question->fields['name']." - ".$this->value." and3 ".$value);
                return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
             }
          }
