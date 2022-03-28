@@ -107,7 +107,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       return $optgroup;
    }
 
-   public function getBlocks() {
+   public function getBlocks(): array {
       global $DB;
       $optgroup = [];
 
