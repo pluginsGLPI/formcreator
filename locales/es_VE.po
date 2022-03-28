@@ -2149,19 +2149,19 @@ msgstr "Cancelar mi caso"
 
 #: hook.php:630
 msgid "processing issues"
-msgstr "procesando asuntos"
+msgstr "asuntos procesados"
 
 #: hook.php:631
 msgid "waiting issues"
-msgstr "esperando asuntos"
+msgstr "asuntos en espera"
 
 #: hook.php:632
 msgid "issues to validate"
-msgstr "Asuntos para validar"
+msgstr "asuntos por validar"
 
 #: hook.php:633
 msgid "solved issues"
-msgstr "Asuntos resueltos"
+msgstr "asuntos resueltos"
 
 #: hook.php:640
 #, php-format
