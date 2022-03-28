@@ -180,19 +180,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
                ],
             ],
             [
-               'TABLE' => new QuerySubquery([
-                  'SELECT' => '*',
-                  'FROM' => new QuerySubquery([
-                     'SELECT' => ['users_id', $ticketFk],
-                     'DISTINCT' => true,
-                     'FROM'  => $ticketUserTable,
-                     'WHERE' => [
-                        'type' => CommonITILActor::REQUESTER,
-                     ],
-                     'ORDER' => ['id ASC'],
-                  ], 'inner_glpi_tickets_users'),
-                  'GROUPBY' => 'tickets_id'
-               ], 'glpi_tickets_users'),
+               'TABLE' => new QuerySubQuery([
+                  'SELECT' => ['users_id', $ticketFk],
+                  'DISTINCT' => true,
+                  'FROM'  => $ticketUserTable,
+                  'WHERE' => [
+                     'type' => CommonITILActor::REQUESTER,
+                  ],
+                  'GROUPBY' => 'tickets_id',
+                  'ORDER' => ['id ASC']
+               ], $ticketUserTable),
                'FKEY' => [
                   $ticketTable => 'id',
                   $ticketUserTable => $ticketFk,
