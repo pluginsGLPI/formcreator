@@ -776,8 +776,8 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      if (count($formList) == 0) {
-         $defaultForms = true;
+      $defaultForms = (count($formList) == 0);
+      if ($defaultForms) {
          // No form nor FAQ have been selected
          // Fallback to default forms
          $query_forms = self::getFormListQuery();
@@ -790,23 +790,19 @@ PluginFormcreatorTranslatableInterface
          ];
          $result_forms = $DB->request($query_forms);
 
-         if ($result_forms->count() > 0) {
-            foreach ($result_forms as $form) {
-               $formList[] = [
-                  'id'           => $form['id'],
-                  'name'         => $form['name'],
-                  'icon'         => $form['icon'],
-                  'icon_color'   => $form['icon_color'],
-                  'background_color'   => $form['background_color'],
-                  'description'  => $form['description'],
-                  'type'         => 'form',
-                  'usage_count'  => $form['usage_count'],
-                  'is_default'   => true
-               ];
-            }
+         foreach ($result_forms as $form) {
+            $formList[] = [
+               'id'               => $form['id'],
+               'name'             => $form['name'],
+               'icon'             => $form['icon'],
+               'icon_color'       => $form['icon_color'],
+               'background_color' => $form['background_color'],
+               'description'      => $form['description'],
+               'type'             => 'form',
+               'usage_count'      => $form['usage_count'],
+               'is_default'       => true,
+            ];
          }
-      } else {
-         $defaultForms = false;
       }
       return ['default' => $defaultForms, 'forms' => $formList];
    }
