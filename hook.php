@@ -342,7 +342,7 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       'FROM' => Ticket_User::getTable(),
       'WHERE' => [
          'tickets_id' => $item->getID(),
-         'type' =>  '1',
+         'type' =>  CommonITILActor::REQUESTER,
       ],
       'ORDER' => ['id'],
       'LIMIT' => '1',
