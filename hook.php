@@ -388,11 +388,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       'ORDER' => ['id'],
       'LIMIT' => '1',
    ])->next();
-   if ($requester === null) {
-      $requester = [
-         'users_id' => 0,
-      ];
-   }
+   $requester = $requester['users_id'] ?? 0;
 
    $issue->update([
       'id'                 => $issue->getID(),
@@ -405,7 +401,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       'date_mod'           => $item->fields['date_mod'],
       'entities_id'        => $item->fields['entities_id'],
       'is_recursive'       => '0',
-      'requester_id'       => $requester['users_id'],
+      'requester_id'       => $requester,
       'users_id_validator' => $validationStatus['user'],
       'comment'            => addslashes($item->fields['content']),
    ]);
