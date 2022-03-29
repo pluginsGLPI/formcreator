@@ -372,6 +372,8 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
+   global $DB;
+
    if (!($item instanceof Ticket)) {
       return;
    }
@@ -389,6 +391,19 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       ]
    ]);
    if (!$issue->isNewItem()) {
+      // find the 1st requester
+      $requester = $DB->request([
+         'SELECT' => 'users_id',
+         'FROM' => Ticket_User::getTable(),
+         'WHERE' => [
+            'tickets_id' => $item->getID(),
+            'type' => CommonITILActor::REQUESTER,
+         ],
+         'ORDER' => ['id'],
+         'LIMIT' => '1',
+      ])->current();
+      $requester = $requester['users_id'] ?? 0;
+
       $issue->update([
          'id'                 => $issue->getID(),
          'items_id'           => $id,
@@ -400,7 +415,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
          'date_mod'           => $item->fields['date_mod'],
          'entities_id'        => $item->fields['entities_id'],
          'is_recursive'       => '0',
-         'requester_id'       => $item->fields['users_id_recipient'],
+         'requester_id'       => $requester,
          'comment'            => addslashes($item->fields['content']),
       ]);
       return;
