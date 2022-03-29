@@ -713,26 +713,24 @@ PluginFormcreatorTranslatableInterface
       $result_forms = $DB->request($where_form);
 
       $formList = [];
-      if ($result_forms->count() > 0) {
-         foreach ($result_forms as $form) {
-            // load thanguage for the form, if any
-            $domain = self::getTranslationDomain($form['id']);
-            $phpfile = self::getTranslationFile($form['id'], $_SESSION['glpilanguage']);
-            if (file_exists($phpfile)) {
-               $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
-            }
-            $formList[] = [
-               'id'               => $form['id'],
-               'name'             => __($form['name'], $domain),
-               'icon'             => $form['icon'],
-               'icon_color'       => $form['icon_color'],
-               'background_color' => $form['background_color'],
-               'description'      => __($form['description'], $domain),
-               'type'             => 'form',
-               'usage_count'      => $form['usage_count'],
-               'is_default'       => $form['is_default'] ? "true" : "false"
-            ];
+      foreach ($result_forms as $form) {
+         // load thanguage for the form, if any
+         $domain = self::getTranslationDomain($form['id']);
+         $phpfile = self::getTranslationFile($form['id'], $_SESSION['glpilanguage']);
+         if (file_exists($phpfile)) {
+            $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
          }
+         $formList[] = [
+            'id'               => $form['id'],
+            'name'             => __($form['name'], $domain),
+            'icon'             => $form['icon'],
+            'icon_color'       => $form['icon_color'],
+            'background_color' => $form['background_color'],
+            'description'      => __($form['description'], $domain),
+            'type'             => 'form',
+            'usage_count'      => $form['usage_count'],
+            'is_default'       => $form['is_default'] ? "true" : "false"
+         ];
       }
 
       if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT
@@ -759,20 +757,18 @@ PluginFormcreatorTranslatableInterface
          $query_faqs = KnowbaseItem::getListRequest($params);
 
          $result_faqs = $DB->request($query_faqs);
-         if ($result_faqs->count() > 0) {
-            foreach ($result_faqs as $faq) {
-               $formList[] = [
-                  'id'               => $faq['id'],
-                  'name'             => $faq['name'],
-                  'icon'             => '',
-                  'icon_color'       => '',
-                  'background_color' => '',
-                  'description'      => '',
-                  'type'             => 'faq',
-                  'usage_count'      => $faq['view'],
-                  'is_default'       => false
-               ];
-            }
+         foreach ($result_faqs as $faq) {
+            $formList[] = [
+               'id'               => $faq['id'],
+               'name'             => $faq['name'],
+               'icon'             => '',
+               'icon_color'       => '',
+               'background_color' => '',
+               'description'      => '',
+               'type'             => 'faq',
+               'usage_count'      => $faq['view'],
+               'is_default'       => false
+            ];
          }
       }
 
