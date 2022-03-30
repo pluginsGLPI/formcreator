@@ -225,7 +225,7 @@ abstract class CommonTestCase extends atoum
          'required'                       => '0',
          'show_empty'                     => '0',
          'default_values'                 => '',
-         'desription'                     => '',
+         'description'                    => '',
          'row'                            => '0',
          'col'                            => '0',
          'width'                          => '4',

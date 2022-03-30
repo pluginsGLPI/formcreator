@@ -47,12 +47,12 @@
     {% set formName = 'plugin_formcreator_form' %}
 	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action={{ item.getFormURL() }} id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}">
 		<h1 class='form-title'>
-		        {{ __(item.fields['name'], domain) }}
+		        {{ __(item.fields['name'], options.domain) }}
 			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
 		</h1>
         {% if item.fields['content'] != '' %}
             <div class="form_header">
-            {{ __(item.fields['content'], domain)|safe_html }}
+            {{ __(item.fields['content'], options.domain)|safe_html }}
             {{ item.getExtraHeader()|safe_html }}
             </div>
         {% endif %}
@@ -68,7 +68,7 @@
                         {% if section.fields['name'] == '' %}
                             ({{ sectionId }})
                         {% else %}
-                            {{ __(section.fields['name'], domain) }}
+                            {{ __(section.fields['name'], options.domain) }}
                         {% endif %}
                     </h2>
                 </div>
@@ -91,7 +91,7 @@
                         {% endif %}
                         {% if not options.public or question.getSubField().isPublicFormCompatible() %}
                             {% set sessionData = session('formcreator') %}
-                            {{ question.getRenderedHtml(domain, true, sessionData.data)|raw }}
+                            {{ question.getRenderedHtml(options.domain, true, null)|raw }}
                         {% endif %}
                         {% set lastQuestion = question %}
                     {% endfor %}

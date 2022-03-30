@@ -307,8 +307,8 @@ interface PluginFormcreatorFieldInterface
    /**
     * Set the form answer containing the value of the field
     *
-    * @param PluginFormcreatorFormAnswer $form_answer
+    * @param PluginFormcreatorFormAnswer|null $form_answer
     * @return void
     */
-   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void;
+   public function setFormAnswer(?PluginFormcreatorFormAnswer $form_answer): void;
 }

@@ -1226,7 +1226,6 @@ PluginFormcreatorTranslatableInterface
             $this
          );
       }
-
       return $this->field;
    }
 

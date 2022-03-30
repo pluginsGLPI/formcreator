@@ -38,6 +38,10 @@ use PluginFormcreatorCommon;
 
 class IntegerField extends FloatField
 {
+   public static function getInputType(): string {
+      return "number";
+   }
+
    public function serializeValue(): string {
       if ($this->value === null || $this->value === '') {
          return '';

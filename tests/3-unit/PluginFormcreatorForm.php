@@ -30,6 +30,7 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorSection;
 
 class PluginFormcreatorForm extends CommonTestCase {
 
@@ -1389,5 +1390,17 @@ class PluginFormcreatorForm extends CommonTestCase {
       }
 
       $this->integer($output)->isEqualTo(2);
+   }
+
+   public function testDisplayForm(): void {
+      // Create test form
+      $question = $this->getQuestion([]);
+      $section = PluginFormcreatorSection::getById($question->fields['plugin_formcreator_sections_id']);
+      $form = \PluginFormcreatorForm::getById($section->fields['plugin_formcreator_forms_id']);
+
+      // Check for any warning/errors while displaying the form
+      ob_start();
+      $form->displayUserForm();
+      ob_end_clean();
    }
 }

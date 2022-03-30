@@ -43,6 +43,10 @@ use Glpi\Application\View\TemplateRenderer;
 
 class FloatField extends PluginFormcreatorAbstractField
 {
+   public static function getInputType(): string {
+      return "text";
+   }
+
    public function isPrerequisites(): bool {
       return true;
    }
@@ -75,7 +79,8 @@ class FloatField extends PluginFormcreatorAbstractField
       $defaultValue = Html::cleanInputText($this->value);
       $html .= Html::input($fieldName, [
          'id'    => $domId,
-         'value' => $defaultValue
+         'value' => $defaultValue,
+         'type'  => static::getInputType(),
       ]);
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeField('$fieldName', '$rand');

@@ -1850,12 +1850,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       /** @var PluginFormcreatorTargetInterface $targetType */
       $this->targetList = [];
       foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
+         if (!$targetType instanceof ITILTargetInterface) {
+            continue;
+         }
+
          $targetItem = new $targetType();
          $generatedType = $targetItem->getTargetItemtypeName();
          $relationType = $targetItem->getItem_Item();
-         if ($relationType === null) {
-            continue;
-         }
          $relationTable = $relationType::getTable();
          $generatedTypeFk = $generatedType::getForeignKeyField();
          $generatedTypeTable = $generatedType::getTable();

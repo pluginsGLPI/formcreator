@@ -59,14 +59,14 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $this->question = $question;
    }
 
-   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {
+   public function setFormAnswer(?PluginFormcreatorFormAnswer $form_answer): void {
       $this->form_answer = $form_answer;
-      if ($this->hasInput($this->form_answer->getAnswers())) {
+      if ($form_answer && $this->hasInput($this->form_answer->getAnswers())) {
          // Parse an HTML input
          $this->parseAnswerValues($this->form_answer->getAnswers());
       } else {
          // Deserialize the default value from DB
-         $this->deserializeValue($this->fields['default_values']);
+         $this->deserializeValue($this->question->fields['default_values']);
       }
    }
 
