@@ -48,7 +48,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testIsFieldVisible':
          case 'testPost_UpdateItem':
          case 'testPrepareInputForAdd':
-         case 'testGetTartgets':
+         case 'testGetTargets':
          case 'testGetGeneratedTargets':
          case 'testGetAggregatedStatus':
             $this->login('glpi', 'glpi');
@@ -605,7 +605,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $this->string($answer->fields['answer'])->isEqualTo('bar');
    }
 
-   public function testGetTartgets() {
+   public function testGetTargets() {
       global $CFG_GLPI;
 
       $CFG_GLPI['use_notifications'] = 0;
