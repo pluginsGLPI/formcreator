@@ -36,9 +36,13 @@ class PluginFormcreatorUpgradeTo2_12_5 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $this->migration = $migration;
+
+      $this->addUserRecipient();
+   }
+
+   public function addUserRecipient(): void {
+      global $DB;
 
       // Add users_id_recipient
       $table = 'glpi_plugin_formcreator_issues';
