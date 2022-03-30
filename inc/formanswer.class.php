@@ -1849,7 +1849,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       /** @var PluginFormcreatorTargetInterface $targetType */
       $this->targetList = [];
-      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
+      foreach ($itemtypes as $targetType) {
          $targetItem = new $targetType();
          $generatedType = $targetItem->getTargetItemtypeName();
          $relationType = $targetItem->getItem_Item();
@@ -1880,10 +1880,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $item = new $generatedType();
             $item->getFromResultSet($row);
             $this->targetList[] = clone $item;
-            // skip not wanted itemtypes
-            if (!in_array($targetType, $itemtypes)) {
-               continue;
-            }
             $targets[] = $item;
          }
       }
