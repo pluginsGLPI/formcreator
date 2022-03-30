@@ -74,7 +74,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function isPrerequisites(): bool {
-      return  (new Plugin())->isActivated('field');
+      return (new Plugin())->isActivated('fields');
    }
 
    public static function getFieldsFromBlock($block_id): array {
@@ -166,8 +166,8 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!(new Plugin())->isActivated('field')) {
-         // Plugin field not available
+      // Plugin field not available
+      if (!(new Plugin())->isActivated('fields')) {
          return '';
       }
 
@@ -527,7 +527,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       return false;
    }
 
-   public function computeValueForComparaison(): mixed {
+   public function computeValueForComparaison(): string {
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $original_fields = new PluginFieldsField();
