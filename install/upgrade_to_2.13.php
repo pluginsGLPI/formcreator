@@ -46,6 +46,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addTargetValidationSetting();
       $this->addFormVisibility();
       $this->addDashboardVisibility();
+      $this->addRequestSourceSeting();
    }
 
    public function addFormAnswerTitle() {
@@ -273,5 +274,19 @@ class PluginFormcreatorUpgradeTo2_13 {
          }
       }
       $this->migration->changeField($table, 'id', 'id', 'int ' . DBConnection::getDefaultPrimaryKeySignOption() . ' not null auto_increment');
+   }
+
+   public function addRequestSourceSeting(): void {
+      global $DB;
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+
+      if (!$DB->fieldExists($table, 'source_rule')) {
+         $this->migration->addField($table, 'source_rule', 'integer', ['after' => 'target_name']);
+         $this->migration->addField($table, 'source_question', 'integer', ['after' => 'source_rule']);
+         $this->migration->migrationOneTable($table);
+         $formcreatorSourceId = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+         $DB->queryOrDie("UPDATE `$table` SET `source_rule` = '1', `source_question` = '$formcreatorSourceId'");
+      }
    }
 }
