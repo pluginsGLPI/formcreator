@@ -288,6 +288,20 @@ PluginFormcreatorTranslatableInterface
          'massiveaction'      => true
       ];
 
+      $tab[] = [
+         'id'                 => '35',
+         'table'              => $this::getTable(),
+         'field'              => 'is_default',
+         'datatype'           => 'specific',
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'name'               => __('Default form', 'formcreator'),
+         'searchtype'         => ['equals'],
+         'massiveaction'      => true
+      ];
+
       return $tab;
    }
 
@@ -314,6 +328,17 @@ PluginFormcreatorTranslatableInterface
             return Dropdown::showFromArray($name, [
                '0' => __('Inactive'),
                '1' => __('Active'),
+            ], [
+               'value'               => $values[$field],
+               'display_emptychoice' => false,
+               'display'             => false
+            ]);
+            break;
+
+         case 'is_default' :
+            return Dropdown::showFromArray($name, [
+               '0' => __('Not default form'),
+               '1' => __('Default form'),
             ], [
                'value'               => $values[$field],
                'display_emptychoice' => false,
@@ -376,6 +401,25 @@ PluginFormcreatorTranslatableInterface
                . $class
                . '" aria-hidden="true" title="' . $title . '"></i>';
                $output = '<div style="text-align: center" onclick="plugin_formcreator.toggleForm(' . $options['raw_data']['id']. ')">' . $output . '</div>';
+            } else {
+               $output = $title;
+            }
+            return $output;
+            break;
+
+         case 'is_default':
+            if ($values[$field] == 0) {
+               $class = "plugin-formcreator-inactive";
+               $title =  __('Not default form', 'formcreator');
+            } else {
+               $class = "plugin-formcreator-active";
+               $title =  __('Default form', 'formcreator');
+            }
+            if (isset($options['raw_data']['id'])) {
+               $output = '<i class="fa fa-circle '
+               . $class
+               . '" aria-hidden="true" title="' . $title . '"></i>';
+               $output = '<div style="text-align: center" onclick="plugin_formcreator.toggleDefaultForm(' . $options['raw_data']['id']. ')">' . $output . '</div>';
             } else {
                $output = $title;
             }
@@ -1054,10 +1098,18 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForUpdate($input) {
       if (isset($input['toggle'])) {
          // Enable / disable form
-         return [
-            'id' => $input['id'],
-            'is_active' => $this->fields['is_active'] == '0' ? '1' : '0',
-         ];
+         if ($input['toggle'] == 'active') {
+            return [
+               'id' => $input['id'],
+               'is_active' => $this->fields['is_active'] == '0' ? '1' : '0',
+            ];
+         }
+         if ($input['toggle'] == 'default') {
+            return [
+               'id' => $input['id'],
+               'is_default' => $this->fields['is_default'] == '0' ? '1' : '0',
+            ];
+         }
       }
 
       if (isset($input['usage_count'])) {
