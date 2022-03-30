@@ -1140,12 +1140,25 @@ var plugin_formcreator = new function() {
       }, 200);
    });
 
-   this.toggleForm = function (id) {
+   this.toggleForm = function(id) {
       $.ajax({
-         url: formcreatorRootDoc + '/ajax/form_toggle.php',
+         url: formcreatorRootDoc + '/ajax/form.php',
          type: 'POST',
          data: {
-            toggle: 'toggle',
+            action: 'toggle_active',
+            id: id
+         }
+      }).success(function () {
+         location.reload();
+      });
+   }
+
+   this.toggleDefaultForm = function(id) {
+      $.ajax({
+         url: formcreatorRootDoc + '/ajax/form.php',
+         type: 'POST',
+         data: {
+            action: 'toggle_default',
             id: id
          }
       }).success(function () {

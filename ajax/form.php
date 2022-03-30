@@ -30,14 +30,38 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+if (!Session::haveRight('entity', UPDATE)) {
+   http_response_code(403);
+   die();
+}
 
 $form = PluginFormcreatorCommon::getForm();
 
-$success = $form->update([
-   'id' => $_POST['id'],
-   'toggle' => 'toggle',
-]);
+if (!isset($_REQUEST['id']) || !isset($_REQUEST['action'])) {
+   http_response_code(400);
+   die();
+}
+
+$success = false;
+switch ($_REQUEST['action']) {
+   case 'toggle_active':
+      $success = $form->update([
+         'id' => $_POST['id'],
+         'toggle' => 'active',
+      ]);
+      break;
+
+   case 'toggle_default':
+      $success = $form->update([
+         'id' => $_POST['id'],
+         'toggle' => 'default',
+      ]);
+      break;
+
+   default:
+      http_response_code(400);
+      die();
+}
 
 if (!$success) {
    http_response_code(500);
