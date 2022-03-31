@@ -564,10 +564,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
          if (isset($input['urgency_rule'])) {
             switch ($input['urgency_rule']) {
-               case PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER:
+               case self::URGENCY_RULE_ANSWER:
                   $input['urgency_question'] = $input['_urgency_question'];
                   break;
-               case PluginFormcreatorAbstractTarget::URGENCY_RULE_SPECIFIC:
+               case self::URGENCY_RULE_SPECIFIC:
                   $input['urgency_question'] = $input['_urgency_specific'];
                   break;
                default:
@@ -577,11 +577,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
          if (isset($input['sla_rule'])) {
             switch ($input['sla_rule']) {
-               case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
+               case self::SLA_RULE_SPECIFIC:
                   $input['sla_question_tto'] = $input['_sla_specific_tto'];
                   $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
                   break;
-               case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
+               case self::SLA_RULE_FROM_ANWSER:
                   $input['sla_question_tto'] = $input['_sla_questions_tto'];
                   $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
                   break;
@@ -590,11 +590,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
          if (isset($input['ola_rule'])) {
             switch ($input['ola_rule']) {
-               case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
+               case self::OLA_RULE_SPECIFIC:
                   $input['ola_question_tto'] = $input['_ola_specific_tto'];
                   $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
                   break;
-               case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
+               case self::OLA_RULE_FROM_ANWSER:
                   $input['ola_question_tto'] = $input['_ola_questions_tto'];
                   $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
                   break;
