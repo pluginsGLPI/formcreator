@@ -2241,8 +2241,8 @@ SCRIPT;
       return $data;
    }
 
-   public function isObjectTarget(): bool {
-      return true;
+   public static function getTargetType(): int {
+      return self::TARGET_TYPE_OBJECT;
    }
 
    /**

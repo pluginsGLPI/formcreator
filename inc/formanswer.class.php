@@ -863,7 +863,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // Generate the target
             $generatedTarget = $targetObject->save($this);
-            if ($targetObject->isObjectTarget()) {
+            if ($targetObject->getTargetType() == PluginFormcreatorAbstractItilTarget::TARGET_TYPE_OBJECT) {
                if ($generatedTarget === null) {
                   // If the target generates an object but none generated
                   $success = false;

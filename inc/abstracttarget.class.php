@@ -88,6 +88,9 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
    const DESTINATION_ENTITY_USER = 8;
    const DESTINATION_ENTITY_ENTITY = 9;
 
+   const TARGET_TYPE_OBJECT = 1;
+   const TARGET_TYPE_ACTION = 2;
+
    public static function getEnumDestinationEntity() {
       return [
          self::DESTINATION_ENTITY_CURRENT   => __('Current active entity', 'formcreator'),
@@ -489,9 +492,5 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       echo '</div>';
       echo '</td>';
       echo '</tr>';
-   }
-
-   public function isActionTarget(): bool {
-      return !$this->isObjectTarget();
    }
 }

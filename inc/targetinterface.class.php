@@ -40,18 +40,11 @@ interface PluginFormcreatorTargetInterface
    public static function getTargetItemtypeName();
 
    /**
-    * Tell if this target does an action and does not generate an object
+    * Tell the type of the target
     *
     * @return boolean true if the target does an action
     */
-   public function isActionTarget(): bool;
-
-   /**
-    * Tell if this target generates an object and does not do an action
-    *
-    * @return boolean true if the target generates an object
-    */
-   public function isObjectTarget(): bool;
+   public static function getTargetType(): int;
 
    /**
     * Find targets linked to a form answer
