@@ -1815,7 +1815,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     *
     * @return array|null
     */
-   public function  getCurrentApprovers(): ?array {
+   public function getCurrentApprovers(): ?array {
       if ($this->fields['status'] =! self::STATUS_WAITING) {
          return null;
       }
