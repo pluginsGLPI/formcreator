@@ -47,7 +47,7 @@ interface PluginFormcreatorTargetInterface
    public function isActionTarget(): bool;
 
    /**
-    * Tell if this target generates an object and does not does an action
+    * Tell if this target generates an object and does not do an action
     *
     * @return boolean true if the target generates an object
     */
