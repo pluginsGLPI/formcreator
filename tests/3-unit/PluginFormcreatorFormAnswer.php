@@ -699,23 +699,16 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $generatedTargets = $instance->targetList;
 
       $output = $instance->getGeneratedTargets();
-      // Check the targetsList is unchanged
       $this->array($instance->targetList)->hasSize(count($generatedTargets));
       $this->array($output)->hasSize(3);
 
       $output = $instance->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
-      // Check the targetsList is unchanged
-      $this->array($instance->targetList)->hasSize(3);
       $this->array($output)->hasSize(1);
 
       $output = $instance->getGeneratedTargets([PluginFormcreatorTargetChange::getType()]);
-      // Check the targetsList is unchanged
-      $this->array($instance->targetList)->hasSize(3);
       $this->array($output)->hasSize(1);
 
       $output = $instance->getGeneratedTargets([PluginFormcreatorTargetProblem::getType()]);
-      // Check the targetsList is unchanged
-      $this->array($instance->targetList)->hasSize(3);
       $this->array($output)->hasSize(1);
    }
 

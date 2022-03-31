@@ -68,11 +68,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       return new Supplier_Ticket();
    }
 
-   public function getItem_Item() {
+   public static function getItem_Item(): CommonDBRelation {
       return new Item_Ticket();
    }
 
-   public function getTargetItemtypeName(): string {
+   public static function getTargetItemtypeName(): string {
       return Ticket::class;
    }
 

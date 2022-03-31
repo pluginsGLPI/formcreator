@@ -37,5 +37,20 @@ interface PluginFormcreatorTargetInterface
 {
    public function save(PluginFormcreatorFormAnswer $formanswer);
 
-   public function getTargetItemtypeName();
+   public static function getTargetItemtypeName();
+
+   /**
+    * Tell the type of the target
+    *
+    * @return boolean true if the target does an action
+    */
+   public static function getTargetType(): int;
+
+   /**
+    * Find targets linked to a form answer
+    *
+    * @param PluginFormcreatorFormAnswer $formAnswer
+    * @return array
+    */
+   public static function findForFormAnswer(PluginFormcreatorFormAnswer $formAnswer): array;
 }

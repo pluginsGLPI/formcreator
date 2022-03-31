@@ -67,7 +67,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     *
     * @return string
     */
-   abstract public function getTargetItemtypeName(): string;
+   abstract public static function getTargetItemtypeName(): string;
 
    /**
     * get fields containing tags for target generation
@@ -87,6 +87,9 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
    const DESTINATION_ENTITY_SPECIFIC = 7;
    const DESTINATION_ENTITY_USER = 8;
    const DESTINATION_ENTITY_ENTITY = 9;
+
+   const TARGET_TYPE_OBJECT = 1;
+   const TARGET_TYPE_ACTION = 2;
 
    public static function getEnumDestinationEntity() {
       return [

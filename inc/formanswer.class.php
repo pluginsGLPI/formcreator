@@ -44,6 +44,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    /**
     * Generated targets after creation of a form answer
+    * Populated only after creation of a FormAnswer in DB with add() method
     *
     * @var array
     */
@@ -862,13 +863,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
             // Generate the target
             $generatedTarget = $targetObject->save($this);
-            if ($generatedTarget === null) {
-               $success = false;
-               break;
+            if ($targetObject->getTargetType() == PluginFormcreatorAbstractItilTarget::TARGET_TYPE_OBJECT) {
+               if ($generatedTarget === null) {
+                  // If the target generates an object but none generated
+                  $success = false;
+               } else {
+                  $this->targetList[] = $generatedTarget;
+                  // Map [itemtype of the target] [item ID of the target] = ID of the generated target
+                  $generatedTargets->addTarget($targetObject, $generatedTarget);
+               }
             }
-            $this->targetList[] = $generatedTarget;
-            // Map [itemtype of the target] [item ID of the target] = ID of the generated target
-            $generatedTargets->addTarget($targetObject, $generatedTarget);
          }
       }
       $generatedTargets->buildCompositeRelations();
@@ -1828,15 +1832,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * get all generated targets by the form answer
     * populates the generated targets associated to the instance
     *
-    * Assumes that the generated target has a relation with the form answer
-    *
     * @param array $itemtypes Get only the targets of the given itemtypes
     *
     * @return array An array of target itemtypes to track
     */
    public function getGeneratedTargets($itemtypes = []): array {
-      global $DB;
-
       $targets = [];
       if ($this->isNewItem()) {
          return [];
@@ -1848,44 +1848,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $itemtypes = array_intersect(PluginFormcreatorForm::getTargetTypes(), $itemtypes);
       }
       /** @var PluginFormcreatorTargetInterface $targetType */
-      $this->targetList = [];
-      foreach (PluginFormcreatorForm::getTargetTypes() as $targetType) {
-         $targetItem = new $targetType();
-         $generatedType = $targetItem->getTargetItemtypeName();
-         $relationType = $targetItem->getItem_Item();
-         if ($relationType === null) {
-            continue;
-         }
-         $relationTable = $relationType::getTable();
-         $generatedTypeFk = $generatedType::getForeignKeyField();
-         $generatedTypeTable = $generatedType::getTable();
-         $iterator = $DB->request([
-            'SELECT' => ["$generatedTypeTable.*"],
-            'FROM' => $generatedTypeTable,
-            'INNER JOIN' => [
-               $relationTable => [
-                  'FKEY' => [
-                     $generatedTypeTable => 'id',
-                     $relationTable => $generatedTypeFk,
-                  ],
-               ],
-            ],
-            'WHERE' => [
-               "$relationTable.itemtype" => self::getType(),
-               "$relationTable.items_id" => $this->getID(),
-            ],
-         ]);
-         foreach ($iterator as $row) {
-            /** @var $item CommonDBTM */
-            $item = new $generatedType();
-            $item->getFromResultSet($row);
-            $this->targetList[] = clone $item;
-            // skip not wanted itemtypes
-            if (!in_array($targetType, $itemtypes)) {
-               continue;
-            }
-            $targets[] = $item;
-         }
+      foreach ($itemtypes as $targetType) {
+         $targets = array_merge($targets, $targetType::findForFormAnswer($this));
       }
 
       return $targets;

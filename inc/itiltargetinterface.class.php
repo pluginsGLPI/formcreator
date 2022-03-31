@@ -39,7 +39,7 @@ interface PluginFormcreatorItilTargetInterface extends PluginFormcreatorTargetIn
 
    public function addAttachedDocument($documentId);
 
-   public function getTargetItemtypeName();
+   public static function getTargetItemtypeName(): string;
 
-   public function getItem_Item();
+   public static function getItem_Item(): CommonDBRelation;
 }

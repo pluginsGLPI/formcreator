@@ -55,11 +55,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       return new Change_Supplier();
    }
 
-   public function getItem_Item() {
+   public static function getItem_Item(): CommonDBRelation {
       return new Change_Item();
    }
 
-   public function getTargetItemtypeName(): string {
+   public static function getTargetItemtypeName(): string {
       return Change::class;
    }
 

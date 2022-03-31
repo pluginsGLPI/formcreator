@@ -54,11 +54,11 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
       return new Problem_Supplier();
    }
 
-   public function getItem_Item() {
+   public static function getItem_Item(): CommonDBRelation {
       return new Item_Problem();
    }
 
-   public function getTargetItemtypeName(): string {
+   public static function getTargetItemtypeName(): string {
       return Problem::class;
    }
 

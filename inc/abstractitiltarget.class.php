@@ -96,9 +96,9 @@ PluginFormcreatorTranslatableInterface
     * Get an instance object for the relation between the target itemtype
     * and an object of any itemtype
     *
-    * @return CommonDBTM
+    * @return CommonDBRelation
     */
-   abstract public function getItem_Item();
+   abstract public static function getItem_Item(): CommonDBRelation;
 
    /**
     * Get the class name of the target itemtype's template class
@@ -2239,5 +2239,50 @@ SCRIPT;
       }
 
       return $data;
+   }
+
+   public static function getTargetType(): int {
+      return self::TARGET_TYPE_OBJECT;
+   }
+
+   /**
+    * Find generated targets for this target and the given form answer
+    *
+    * @param PluginFormcreatorFormAnswer $formAnswer
+    * @return array
+    */
+   public static function findForFormAnswer(PluginFormcreatorFormAnswer $formAnswer): array {
+      global $DB;
+
+      $targets = [];
+      $relationType = static::getItem_Item();
+      $relationTable = $relationType::getTable();
+      $generatedType = static::getTargetItemtypeName();
+      $generatedTypeTable = $generatedType::getTable();
+      $fk = $generatedType::getForeignKeyField();
+      $iterator = $DB->request([
+         'SELECT' => ["$generatedTypeTable.*"],
+         'FROM' => $generatedTypeTable,
+         'INNER JOIN' => [
+            $relationTable => [
+               'FKEY' => [
+                  $generatedTypeTable => 'id',
+                  $relationTable => $fk,
+               ],
+            ],
+         ],
+         'WHERE' => [
+            "$relationTable.itemtype" => PluginFormcreatorFormAnswer::getType(),
+            "$relationTable.items_id" => $formAnswer->getID(),
+         ],
+      ]);
+      foreach ($iterator as $row) {
+         /** @var $item CommonDBTM */
+         $item = new $generatedType();
+         $item->getFromResultSet($row);
+         $targets[] = $item;
+      }
+
+      return $targets;
    }
 }
