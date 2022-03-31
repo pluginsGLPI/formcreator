@@ -67,7 +67,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     *
     * @return string
     */
-   abstract public function getTargetItemtypeName(): string;
+   abstract public static function getTargetItemtypeName(): string;
 
    /**
     * get fields containing tags for target generation
@@ -489,5 +489,9 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       echo '</div>';
       echo '</td>';
       echo '</tr>';
+   }
+
+   public function isActionTarget(): bool {
+      return !$this->isObjectTarget();
    }
 }
