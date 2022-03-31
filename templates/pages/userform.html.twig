@@ -91,7 +91,7 @@
                         {% endif %}
                         {% if not options.public or question.getSubField().isPublicFormCompatible() %}
                             {% set sessionData = session('formcreator') %}
-                            {{ question.getRenderedHtml(options.domain, true, sessionData.data)|raw }}
+                            {{ question.getRenderedHtml(options.domain, true, options.formanswer)|raw }}
                         {% endif %}
                         {% set lastQuestion = question %}
                     {% endfor %}

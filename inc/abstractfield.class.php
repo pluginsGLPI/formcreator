@@ -66,7 +66,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          $this->parseAnswerValues($this->form_answer->getAnswers());
       } else {
          // Deserialize the default value from DB
-         $this->deserializeValue($this->fields['default_values']);
+         $this->deserializeValue($this->question->fields['default_values']);
       }
    }
 

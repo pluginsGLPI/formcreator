@@ -909,6 +909,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->answers = $answers_values;
    }
 
+   /**
+    * Load answers to questoins from session
+    *
+    * @return void
+    */
+   public function loadAnswersFromSession(): void {
+      $this->answers = $_SESSION['formcreator']['data'] ?? [];
+   }
+
    public function getAnswers() {
       return $this->answers;
    }

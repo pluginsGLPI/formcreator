@@ -981,12 +981,15 @@ PluginFormcreatorTranslatableInterface
       if (!isset($_SESSION['formcreator']['data'])) {
          $_SESSION['formcreator']['data'] = [];
       }
+      $formanswer = new PluginFormcreatorFormAnswer();
+      $formanswer->loadAnswersFromSession();
       TemplateRenderer::getInstance()->display('@formcreator/pages/userform.html.twig', [
          'item'    => $this,
          'options' => [
             'columns' => PluginFormcreatorSection::COLUMNS,
             'domain'  => $domain, // For translation
             'public'  => isset($_SESSION['formcreator_public']),
+            'formanswer' => $formanswer,
             'use_captcha' => ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
                               && $this->fields['is_captcha_enabled'] != '0'),
          ]
