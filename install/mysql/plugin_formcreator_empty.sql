@@ -28,15 +28,16 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
-  `id`                   int unsigned NOT NULL AUTO_INCREMENT,
-  `entities_id`          int unsigned NOT NULL DEFAULT '0',
-  `replace_helpdesk`     int(11) NOT NULL DEFAULT '-2',
-  `sort_order`           int(11) NOT NULL DEFAULT '-2',
-  `is_kb_separated`      int(11) NOT NULL DEFAULT '-2',
-  `is_search_visible`    int(11) NOT NULL DEFAULT '-2',
-  `is_dashboard_visible` int(11) NOT NULL DEFAULT '-2',
-  `is_header_visible`    int(11) NOT NULL DEFAULT '-2',
-  `header`               text,
+  `id`                     int unsigned NOT NULL AUTO_INCREMENT,
+  `entities_id`            int unsigned NOT NULL DEFAULT '0',
+  `replace_helpdesk`       int(11) NOT NULL DEFAULT '-2',
+  `default_form_list_mode` int(11) NOT NULL DEFAULT '-2',
+  `sort_order`             int(11) NOT NULL DEFAULT '-2',
+  `is_kb_separated`        int(11) NOT NULL DEFAULT '-2',
+  `is_search_visible`      int(11) NOT NULL DEFAULT '-2',
+  `is_dashboard_visible`   int(11) NOT NULL DEFAULT '-2',
+  `is_header_visible`      int(11) NOT NULL DEFAULT '-2',
+  `header`                 text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`entities_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

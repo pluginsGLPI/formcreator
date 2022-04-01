@@ -117,7 +117,8 @@ $(function() {
          if (searchInput.val().length > 0) {
             searchInput.val('');
             plugin_formcreator.updateWizardFormsView(null);
-            $.when(getFormAndFaqItems(0)).then(
+            $.when(getFormAndFaqItems(0))
+            .then(
                function (response) {
                   tiles = response;
                   showTiles(tiles.forms);
@@ -263,7 +264,7 @@ function sortFormAndFaqItems(items, byName) {
             return -1;
          }
          if (a.name > b.name) {
-            return 1
+            return 1;
          }
          return 0;
       });
@@ -274,7 +275,7 @@ function sortFormAndFaqItems(items, byName) {
             return -1;
          }
          if (a.usage_count < b.usage_count) {
-            return 1
+            return 1;
          }
          return 0;
       });
@@ -1195,7 +1196,8 @@ var plugin_formcreator = new function() {
       if (item) {
          this.activeCategory = item.getAttribute('data-category-id');
       }
-      $.when(getFormAndFaqItems(this.activeCategory)).done(
+      $.when(getFormAndFaqItems(this.activeCategory))
+      .done(
          function (response) {
             tiles = response.forms;
             showTiles(tiles, response.default);

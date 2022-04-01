@@ -45,6 +45,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
    const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
 
+   const CONFIG_DEFAULT_FORM_LIST_ALL = 0;
+   const CONFIG_DEFAULT_FORM_LIST_DEFAULT = 1;
+
    const CONFIG_SORT_POPULARITY   = 0;
    const CONFIG_SORT_ALPHABETICAL = 1;
 
@@ -81,6 +84,14 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          self::CONFIG_GLPI_HELPDSK               => __('GLPi\'s helpdesk', 'formcreator'),
          self::CONFIG_SIMPLIFIED_SERVICE_CATALOG => __('Service catalog simplified', 'formcreator'),
          self::CONFIG_EXTENDED_SERVICE_CATALOG   => __('Service catalog extended', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumDefaultFormList(): array {
+      return [
+         self::CONFIG_PARENT                    => __('Inheritance of the parent entity'),
+         self::CONFIG_DEFAULT_FORM_LIST_ALL     => __('All available forms', 'formcreator'),
+         self::CONFIG_DEFAULT_FORM_LIST_DEFAULT => __('Only default forms', 'formcreator'),
       ];
    }
 
@@ -205,6 +216,20 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Default Form list mode', 'formcreator')."</td>";
+      echo "<td>";
+      $elements = self::getEnumDefaultFormList();
+      $options = ['value' => $this->fields['default_form_list_mode']];
+      $options['no_parent'] = ($ID == 0);
+      self::dropdownDefaultFormList('default_form_list_mode', $options);
+      if (!$options['no_parent'] && $this->fields['default_form_list_mode'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('default_form_list_mode', $ID);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
@@ -426,5 +451,20 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
 
       return $default_value;
+   }
+
+   /**
+    * Show a dropdown to select default form list mode
+    *
+    * @param string $name name if the input field
+    * @param array $options options
+    * @return void
+    */
+   public static function dropdownDefaultFormList(string $name, array $options = []): void {
+      $items = self::getEnumDefaultFormList();
+      if (isset($options['no_parent']) && $options['no_parent']) {
+         unset($items[self::CONFIG_PARENT]);
+      }
+      Dropdown::showFromArray($name, $items, $options);
    }
 }
