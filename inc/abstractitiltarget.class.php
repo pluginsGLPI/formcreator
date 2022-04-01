@@ -1461,6 +1461,8 @@ SCRIPT;
                break;
             }
 
+            break;
+
          case self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP:
             $answers = $DB->request([
                'SELECT' => ['answer'],
@@ -1494,6 +1496,8 @@ SCRIPT;
                $data['users_id_validate'] = $values;
                break;
             }
+
+            break;
       }
 
       return $data;
