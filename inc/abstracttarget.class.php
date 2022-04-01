@@ -204,6 +204,54 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       return $template;
    }
 
+   /**
+    * Append fields data to input
+    *
+    * @param PluginFormcreatorFormanswer $formanswer the source formanswer
+    * @param array $input data of the generated target
+    * @return void
+    */
+   protected function appendFieldsData(PluginFormcreatorFormanswer $formanswer, &$input): void {
+      global $DB;
+
+      //get all PluginFormcreatorAnswer
+      //from PluginFormcreatorFormanswer
+      //where linked PluginFormcreatorquestion have 'fields' type
+      $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+      $result = $DB->request([
+         'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
+         'FROM' => PluginFormcreatorAnswer::getTable(). ' AS answer',
+         'JOIN' => [
+            PluginFormcreatorQuestion::getTable() . ' AS question' => [
+               'ON' => [
+                  'answer' => 'plugin_formcreator_questions_id',
+                  'question' => 'id',
+               ]
+            ]
+         ],
+         'WHERE' => [
+            'answer.'.$formAnswerFk => (int) $formanswer->fields['id'],
+            'question.fieldtype' => 'fields'
+         ],
+      ]);
+
+      foreach ($result as $line) {
+         $formQuestion = PluginFormcreatorQuestion::getById($line['plugin_formcreator_questions_id']);
+         $decodedValues = json_decode($formQuestion->fields['values'], JSON_OBJECT_AS_ARRAY);
+         $field_name = $decodedValues['dropdown_fields_field'] ?? '';
+         $blocks_field = $decodedValues['blocks_field'] ?? '';
+
+         if (strpos($field_name, 'dropdown') !== false) {
+            $dropdownInputName = "plugin_fields_" . $field_name . "dropdowns_id" ?? '';
+            $input[$dropdownInputName] = $line['answer'];
+         } else {
+            $input[$field_name] = $line['answer'];
+         }
+         $input['c_id'] = $blocks_field;
+      }
+   }
+
+
       /**
     * Converts tags in template fields from ID to UUID.
     * Used for export into JSON

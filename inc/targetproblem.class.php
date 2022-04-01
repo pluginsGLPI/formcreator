@@ -221,6 +221,8 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
 
+      $this->appendFieldsData($formanswer, $data);
+
       // Create the target problem
       if (!$problemID = $problem->add($data)) {
          return null;
