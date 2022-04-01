@@ -677,17 +677,17 @@ JAVASCRIPT;
 
    public static function header() {
       switch (self::getInterface()) {
-         case "servicecatalog";
-         case "self-service";
+         case "servicecatalog":
+         case "self-service":
             return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
-         case "central";
+         case "central":
             return Html::header(
                __('Form Creator', 'formcreator'),
                $_SERVER['PHP_SELF'],
                'helpdesk',
                'PluginFormcreatorFormlist'
             );
-         case "public";
+         case "public":
          default:
             Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
             Html::displayMessageAfterRedirect();
