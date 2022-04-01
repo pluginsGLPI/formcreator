@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFieldsContainer;
 use PluginFormcreatorAbstractField;
+use PluginFormcreatorForm;
 use Dropdown;
 use DbUtils;
 use Plugin;
@@ -121,16 +122,20 @@ class FieldsField extends PluginFormcreatorAbstractField
          $entityRestrict = [$entityRestrict];
       }
 
+      $itemtypes = PluginFormcreatorForm::getTargetTypes();
+      $itemtypesCriteria = [];
+      foreach ($itemtypes as $targetType) {
+         $itemtype = $targetType::getTargetItemtypeName();
+         $itemtypesCriteria[] = [
+            'itemtypes' => ['LIKE', '%\"'.$itemtype.'\"%']
+         ];
+      }
       $request = [
          'SELECT' => ['id', 'label'],
          'FROM'   => PluginFieldsContainer::getTable(),
          'WHERE'  => [
             'AND' => [
-               'OR' => [
-                  ['itemtypes' => ['LIKE', '%\"'.Ticket::getType().'\"%']],
-                  ['itemtypes' => ['LIKE', '%\"'.Change::getType().'\"%']],
-                  ['itemtypes' => ['LIKE', '%\"'.Problem::getType().'\"%']],
-               ],
+               'OR' => $itemtypesCriteria,
                'type'      => 'dom',
                'is_active' => true,
                ]
