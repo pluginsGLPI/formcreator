@@ -61,12 +61,4 @@ class PluginFormcreatorFormList extends CommonTestCase {
       $output = $instance->getTypeName($nb);
       $this->string($output)->isEqualTo($expected);
    }
-
-   public function testGetMenuContent() {
-      $output = \PluginFormcreatorFormList::getMenuContent();
-      $plugindir = '/' . basename(dirname(dirname(dirname(__DIR__))));
-      $this->string($output['title'])->isEqualTo('Forms');
-      $this->string($output['page'])->isEqualTo($plugindir . '/formcreator/front/formlist.php');
-      $this->string($output['icon'])->isEqualTo('fas fa-edit');
-   }
 }
