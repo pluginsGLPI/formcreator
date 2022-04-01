@@ -46,12 +46,11 @@ class PluginFormcreatorFormList extends CommonGLPI
       return _n('Form', 'Forms', $nb, 'formcreator');
    }
 
-   public static function getMenuContent() {
-      $menu = parent::getMenuContent();
-      $menu['title'] = static::getTypeName(Session::getPluralNumber());
-      $menu['page'] = PluginFormcreatorFormList::getSearchURL(false);
-      $menu['icon'] = 'fas fa-edit';
+   public static function canView() {
+      return (PluginFormcreatorForm::countAvailableForm() > 0);
+   }
 
-      return $menu;
+   public static function getIcon() {
+      return 'fas fa-edit';
    }
 }

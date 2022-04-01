@@ -355,10 +355,7 @@ function plugin_formcreator_hook() {
       return;
    }
 
-   // If user have acces to one form or more, add link
-   if (PluginFormcreatorForm::countAvailableForm() > 0) {
-      $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
-   }
+   $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
 
    // Massive Action definition
    $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
