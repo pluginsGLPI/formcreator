@@ -254,7 +254,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       $volume = 0;
-      if ($DB->query("TRUNCATE `$table`")) {
+      if ($DB->truncate($table) !== false) {
          $rawQuery = self::getSyncIssuesRequest()->getQuery();
          $DB->query("INSERT INTO `$table` SELECT * FROM $rawQuery");
          $volume = 1;
