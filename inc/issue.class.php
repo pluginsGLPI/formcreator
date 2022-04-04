@@ -211,13 +211,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
       ];
 
       // assistance requests having only one generated ticket (reuse query2)
-      $query3 = $query2;
-      // replace LEFT JOIN with INNER JOIN to exclude tickets not linked to a Formanswer object
-      $query3['INNER JOIN'][$itemTicketTable] = $query3['LEFT JOIN'][$itemTicketTable];
-      unset($query3['LEFT JOIN'][$itemTicketTable]);
-      // Only 1 relation to a Formanswer object
-      $query3['GROUPBY'] = ["$itemTicketTable.items_id"];
-      $query3['HAVING'] = new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) = 1");
+      $query3 = [
+         'SELECT'     => $query2['SELECT'],
+         'FROM'       => $query2['FROM'],
+         'INNER JOIN' => [$itemTicketTable => $query2['LEFT JOIN'][$itemTicketTable]],
+         'LEFT JOIN'  => [
+            $query2['LEFT JOIN'][0], // This is the TABLE => [...] subquery
+            $ticketValidationTable => $query2['LEFT JOIN'][$ticketValidationTable],
+         ],
+         'WHERE'      => $query2['WHERE'],
+         'GROUPBY'    => ["$itemTicketTable.items_id"],
+         // Only 1 relation to a Formanswer object
+         'HAVING'     => new QueryExpression("COUNT(`$itemTicketTable`.`items_id`) = 1"),
+      ];
 
       // Union of the 3 previous queries
       $union = new QueryUnion([
@@ -254,7 +260,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       $volume = 0;
-      if ($DB->query("TRUNCATE `$table`")) {
+      if ($DB->truncate($table) !== false) {
          $rawQuery = self::getSyncIssuesRequest()->getQuery();
          $DB->query("INSERT INTO `$table` SELECT * FROM $rawQuery");
          $volume = 1;
