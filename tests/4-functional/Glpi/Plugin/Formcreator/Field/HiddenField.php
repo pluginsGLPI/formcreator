@@ -32,6 +32,8 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
+use Plugin;
+use PluginFormcreatorForm;
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
@@ -55,5 +57,10 @@ class HiddenField extends CommonFunctionalTestCase
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
 
       $this->_testQuestionCreated($form, __METHOD__);
+   }
+   public function testRenderQuestion() {
+      $this->_testRenderQuestion([
+         'fieldtype' => 'hidden',
+      ]);
    }
 }

@@ -470,7 +470,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    public function prepareQuestionInputForSave($input) {
       if (!isset($input['itemtype']) || empty($input['itemtype'])) {
          Session::addMessageAfterRedirect(
-            sprintf(__('The field value is required: %s', 'formcreator'), $input['name']),
+            sprintf(__('The itemtype field is required: %s', 'formcreator'), $input['name']),
             false,
             ERROR
          );

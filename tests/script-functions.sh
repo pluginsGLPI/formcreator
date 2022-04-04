@@ -51,7 +51,6 @@ init_glpi() {
    mkdir -p ../../$TEST_GLPI_CONFIG_DIR
    mysql -u$2 -p$3 -h$DB_HOST --execute "CREATE DATABASE \`$1\`;"
    php ../../bin/console glpi:database:install --db-host=$DB_HOST --db-user=$2 --db-password=$3 --db-name=$1 --config-dir=../../$TEST_GLPI_CONFIG_DIR --no-interaction --no-plugins --force
-
 }
 
 # Plugin upgrade test

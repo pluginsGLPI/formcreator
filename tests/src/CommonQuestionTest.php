@@ -34,8 +34,30 @@ trait CommonQuestionTest
    }
 
    /**
+    * Undocumented function
+    *
+    * @param array  $input  input data to create the question
+    * @return void
+    */
+   public function _testRenderQuestion(array $input) {
+      // Use a clean entity for the tests
+      $this->login('glpi', 'glpi');
+
+      $question = $this->getQuestion($input);
+      $this->boolean($question->isNewItem())->isFalse();
+
+      // navigate to the form designer
+      $form = \PluginFormcreatorForm::getByItem($question);
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.form.php?id=' . $form->getID());
+      $this->browsing->openTab('Preview');
+
+      $this->client->waitForVisibility('form[name="plugin_formcreator_form"] [gs-x][gs-w][data-itemtype][data-id="' . $question->getID() . '"');
+   }
+
+   /**
     * Submit a questin form then check it is created and displayed
     *
+    * @param PluginFormcreatorForm $form
     * @param string $nameField
     * @return void
     */
