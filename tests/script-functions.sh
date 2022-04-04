@@ -71,8 +71,6 @@ plugin_test() {
 
 plugin_test_functional() {
    if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
-   # symfony requires PHP 7.2+, but the project is still compatible with older versions
-   composer global require --dev symfony/panther
    RESOURCE="tests/4-functional"
    if [ "$1" != "" ]; then
       RESOURCE=$1
