@@ -57,4 +57,10 @@ class DatetimeField extends CommonFunctionalTestCase
 
       $this->_testQuestionCreated($form, __METHOD__);
    }
+
+   public function testRenderQuestion() {
+      $this->_testRenderQuestion([
+         'fieldtype' => 'datetime',
+      ]);
+   }
 }
