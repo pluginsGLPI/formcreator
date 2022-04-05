@@ -100,11 +100,15 @@ class FileField extends PluginFormcreatorAbstractField
    }
 
    public function deserializeValue($value) {
+      $this->uploadData = [];
+      $this->value = __('No attached document', 'formcreator');
+      if ($value === null) {
+         return;
+      }
       $this->uploadData = json_decode($value, true);
       if ($this->uploadData === null) {
          $this->uploadData = [];
       }
-      $this->value = __('No attached document', 'formcreator');;
       if (count($this->uploadData) > 0) {
          $this->value = __('Attached document', 'formcreator');
       }
