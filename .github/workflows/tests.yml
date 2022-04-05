@@ -5,6 +5,7 @@ on:
 
 env:
   GLPI_SOURCE: "https://github.com/glpi-project/glpi"
+  GLPI_PACKAGE_URL: "https://nightly.glpi-project.org/glpi/9.5.tar.gz"
   CS: 7.4
   DB_HOST: 127.0.0.1
   MYSQL_ROOT_USER: root
@@ -110,4 +111,3 @@ jobs:
           composer install --no-interaction --no-progress
           plugin_test_lint
           plugin_test_cs
-
