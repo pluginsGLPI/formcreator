@@ -42,7 +42,7 @@ Session::checkValidSessionId();
 /** @var PluginFormcreatorIssue $issue */
 $issueId = $_REQUEST['id'] ?? null;
 $issue = PluginFormcreatorIssue::getById((int) $issueId);
-if ($issueId !== null || !($issue instanceof PluginFormcreatorIssue)) {
+if ($issueId === null || !($issue instanceof PluginFormcreatorIssue)) {
    $header = __('Item not found');
    if (Session::getCurrentInterface() == "helpdesk") {
       Html::helpHeader($header);
