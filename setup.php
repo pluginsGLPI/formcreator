@@ -412,7 +412,7 @@ function plugin_formcreator_redirect() {
       }
    }
 
-   if (plugin_formcreator_replaceHelpdesk() === false) {
+   if (Session::getCurrentInterface() != 'helpdesk') {
       return;
    }
 

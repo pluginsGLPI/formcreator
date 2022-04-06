@@ -278,14 +278,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
     */
    public function display($options = []) {
       Html::requireJs('tinymce');
-      if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
-         $this->displaySimplified($options);
-      } else {
-         $this->displayExtended($options);
-      }
-   }
-
-   public function displayExtended($options = []) {
       if (!isset($this->fields['itemtype'])) {
          Html::displayNotFoundError();
       }
@@ -297,7 +289,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!$item->getFromDB($this->fields['items_id'])) {
          Html::displayNotFoundError();
       }
+      if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
+         $this->displaySimplified($item, $options);
+      } else {
+         $this->displayExtended($item, $options);
+      }
+   }
 
+   /**
+    * Display an issue in extended service catalog mode
+    *
+    * @see CommonGLPI::display()
+    *
+    * @param CommonDBTM $item actual item to show
+    * @param array $options
+    * @return void
+    */
+   public function displayExtended(CommonDBTM $item, $options = []): void {
       // if ticket(s) exist(s), show it/them
       $options['_item'] = $item;
       if ($item Instanceof PluginFormcreatorFormAnswer) {
@@ -306,19 +314,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       unset($options['_item']);
 
       // Header of the item + link to the list of items
-      switch ($item::getType()) {
-         case self::getType():
-            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
-            break;
-
-         case PluginFormcreatorFormAnswer::getType():
-            Session::initNavigateListItems(self::getType());
-            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
-            break;
-
-         case Ticket::getType():
-            $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
-      }
+      $this->setListUrl($item);
       $this->showNavigationHeader($options);
 
       if (!$item->canViewItem()) {
@@ -329,21 +325,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    /**
+    * Display an issue in simplified service catalog mode
+    *
     * @see CommonGLPI::display()
+    *
+    * @param CommonDBTM $item actual item to show
+    * @param array $options
+    * @return void
     */
-   public function displaySimplified($options = []) {
-      if (!isset($this->fields['itemtype'])) {
-         Html::displayNotFoundError();
-      }
-      $itemtype = $this->fields['itemtype'];
-      if (!class_exists($itemtype)) {
-         Html::displayNotFoundError();
-      }
-      $item = new $itemtype();
-      if (!$item->getFromDB($this->fields['items_id'])) {
-         Html::displayNotFoundError();
-      }
-
+   public function displaySimplified(CommonDBTM $item, $options = []): void {
       // in case of left tab layout, we couldn't see "right error" message
       if ($item->get_item_to_display_tab) {
          if (isset($this->fields['items_id'])
@@ -373,20 +363,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       unset($options['_item']);
 
-      // Header if the item + link to the list of items
-      switch ($item::getType()) {
-         case self::getType():
-            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
-            break;
-
-         case PluginFormcreatorFormAnswer::getType():
-            Session::initNavigateListItems(self::getType());
-            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
-            break;
-
-         case Ticket::getType():
-            $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
-      }
+      // Header of the item + link to the list of items
+      $this->setListUrl($item);
       $this->showNavigationHeader($options);
 
       // retrieve associated tickets
@@ -421,6 +399,46 @@ class PluginFormcreatorIssue extends CommonDBTM {
          echo '<div class"center">';
          $item->showTabsContent($options);
          echo '</div>';
+      }
+   }
+
+   public function setListUrl(CommonDBTM $item) {
+      global $DB;
+
+      switch ($item::getType()) {
+         case self::getType():
+            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            break;
+
+         case PluginFormcreatorFormAnswer::getType():
+            Session::initNavigateListItems(self::getType());
+            $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            break;
+
+         case Ticket::getType():
+            $iterator = $DB->request([
+               'COUNT' => 'count',
+               'FROM' => Item_Ticket::getTable(),
+               'WHERE' => [
+                  'items_id' => new QuerySubQuery([
+                     'SELECT' => 'items_id',
+                     'FROM'   => Item_Ticket::getTable(),
+                     'WHERE'  => [
+                        'itemtype' => PluginFormcreatorFormAnswer::getType(),
+                        'tickets_id' => $item->getID(),
+                     ],
+                  ]),
+               ]
+            ]);
+            $count = 0;
+            if ($iterator->count() == 1) {
+               $count = $iterator->current()['count'];
+            }
+            if ($count > 1) {
+               $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
+            } else {
+               $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            }
       }
    }
 
