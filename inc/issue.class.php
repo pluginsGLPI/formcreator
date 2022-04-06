@@ -403,6 +403,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public function setListUrl(CommonDBTM $item) {
+      global $DB;
+
       switch ($item::getType()) {
          case self::getType():
             $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
@@ -414,7 +416,29 @@ class PluginFormcreatorIssue extends CommonDBTM {
             break;
 
          case Ticket::getType():
-            $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
+            $iterator = $DB->request([
+               'COUNT' => 'count',
+               'FROM' => Item_Ticket::getTable(),
+               'WHERE' => [
+                  'items_id' => new QuerySubQuery([
+                     'SELECT' => 'items_id',
+                     'FROM'   => Item_Ticket::getTable(),
+                     'WHERE'  => [
+                        'itemtype' => PluginFormcreatorFormAnswer::getType(),
+                        'tickets_id' => $item->getID(),
+                     ],
+                  ]),
+               ]
+            ]);
+            $count = 0;
+            if ($iterator->count() == 1) {
+               $count = $iterator->current()['count'];
+            }
+            if ($count > 1) {
+               $_SESSION['glpilisturl'][self::getType()] = $this->getFormURLWithID($this->getID());
+            } else {
+               $_SESSION['glpilisturl'][self::getType()] = $this->getSearchURL();
+            }
       }
    }
 
