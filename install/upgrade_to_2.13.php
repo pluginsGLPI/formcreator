@@ -136,7 +136,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_entityconfigs';
       $this->migration->addField($table, 'is_dashboard_visible', 'integer', ['after' => 'is_search_visible', 'value' => '-2']);
 
-      $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `is_dashboard_visible`=1 WHERE `id`=0");
+      $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `is_dashboard_visible`=1 WHERE `entities_id`=0");
    }
 
    protected function migrateEntityConfig() {
@@ -298,6 +298,6 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->addField($table, 'default_form_list_mode', 'int not null default -2', ['after' => 'replace_helpdesk']);
       $this->migration->migrationOneTable($table);
 
-      $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `default_form_list_mode`=0 WHERE `id`=0");
+      $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `default_form_list_mode`=0 WHERE `entities_id`=0");
    }
 }
