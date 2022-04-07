@@ -373,9 +373,11 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       foreach ($sections as $section) {
          $sectionsList[] = $section->getID();
       }
-      $questionListExclusion[] = [
-         PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
-      ];
+      if (count($sectionsList) > 0) {
+         $questionListExclusion[] = [
+            PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
+         ];
+      }
       $html.= '<div class="div_show_condition_field">';
       $html .= PluginFormcreatorQuestion::dropdownForForm(
          $form->getID(),
