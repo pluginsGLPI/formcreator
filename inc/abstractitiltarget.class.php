@@ -2218,8 +2218,8 @@ SCRIPT;
 
       if ($saved_documents) {
          foreach ($formanswer->getFileFields() as $questionId) {
-            $data["_filename"] = array_merge($data["_filename"], $saved_documents["_filename"][$questionId]);
-            $data["_tag_filename"] = array_merge($data["_tag_filename"], $saved_documents["_tag_filename"][$questionId]);
+            $data["_filename"] = array_merge($data["_filename"], $saved_documents["_filename"][$questionId] ?? []);
+            $data["_tag_filename"] = array_merge($data["_tag_filename"], $saved_documents["_tag_filename"][$questionId] ?? []);
 
             foreach ($saved_documents["_filename"][$questionId] as $key => $filename) {
                $uploaded_filename = $formanswer->getFileName($questionId, $key);
