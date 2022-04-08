@@ -177,24 +177,26 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
 
       $entityConfig->add([
-         'entities_id'       => $entityId,
-         'replace_helpdesk'  => self::CONFIG_PARENT,
-         'is_kb_separated'   => self::CONFIG_PARENT,
-         'is_search_visible' => self::CONFIG_PARENT,
-         'is_header_visible' => self::CONFIG_PARENT,
-         'sort_order'        => self::CONFIG_PARENT,
+         'entities_id'            => $entityId,
+         'replace_helpdesk'       => self::CONFIG_PARENT,
+         'default_form_list_mode' => self::CONFIG_PARENT,
+         'sort_order'             => self::CONFIG_PARENT,
+         'is_kb_separated'        => self::CONFIG_PARENT,
+         'is_search_visible'      => self::CONFIG_PARENT,
+         'is_dashboard_visible'   => self::CONFIG_PARENT,
+         'is_header_visible'      => self::CONFIG_PARENT,
       ]);
 
       return $entityConfig;
    }
 
    public function showFormForEntity(Entity $entity) {
-      $ID = $entity->getID();
-      if (!$entity->can($ID, READ)) {
+      $entityId = $entity->getID();
+      if (!$entity->can($entityId, READ)) {
          return false;
       }
 
-      $this->getFromDB(self::createDefaultsForEntity($ID)->getID());
+      $this->getFromDB(self::createDefaultsForEntity($entityId)->getID());
 
       $canedit = Entity::canUpdate() && $entity->canUpdateItem();
       echo "<div class='spaced'>";
@@ -206,7 +208,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
 
       $elements = self::getEnumHelpdeskMode();
-      if ($ID == 0) {
+      if ($entityId == 0) {
          unset($elements[self::CONFIG_PARENT]);
       }
 
@@ -215,7 +217,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<td>";
       Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('replace_helpdesk', $ID);
+         $tid = self::getUsedConfig('replace_helpdesk', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
@@ -226,26 +228,25 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<td>";
       $elements = self::getEnumDefaultFormList();
       $options = ['value' => $this->fields['default_form_list_mode']];
-      $options['no_parent'] = ($ID == 0);
+      $options['no_parent'] = ($entityId == 0);
       self::dropdownDefaultFormList('default_form_list_mode', $options);
       if (!$options['no_parent'] && $this->fields['default_form_list_mode'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('default_form_list_mode', $ID);
+         $tid = self::getUsedConfig('default_form_list_mode', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
       $elements = self::getEnumSort();
-      if ($ID == 0) {
+      if ($entityId == 0) {
          unset($elements[self::CONFIG_PARENT]);
       }
-
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Sort order', 'formcreator')."</td>";
       echo "<td>";
       Dropdown::showFromArray('sort_order', $elements, ['value' => $this->fields['sort_order']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('sort_order', $ID);
+         $tid = self::getUsedConfig('sort_order', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
@@ -253,7 +254,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
       // Knowledge base settiing : merged with forms (legacy) separated menu on the left
       $elements = self::getEnumKbMode();
-      if ($ID == 0) {
+      if ($entityId == 0) {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
@@ -261,14 +262,14 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<td>";
       Dropdown::showFromArray('is_kb_separated', $elements, ['value' => $this->fields['is_kb_separated']]);
       if ($this->fields['is_kb_separated'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('is_kb_separated', $ID);
+         $tid = self::getUsedConfig('is_kb_separated', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
       echo '</td></tr>';
 
       $elements = self::getEnumSearchVisibility();
-      if ($ID == 0) {
+      if ($entityId == 0) {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
@@ -276,7 +277,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<td>";
       Dropdown::showFromArray('is_search_visible', $elements, ['value' => $this->fields['is_search_visible']]);
       if ($this->fields['is_search_visible'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('is_search_visible', $ID);
+         $tid = self::getUsedConfig('is_search_visible', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
@@ -284,7 +285,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
       // Dashboard visibility
       $elements = self::getEnumDashboardVisibility();
-      if ($ID == 0) {
+      if ($entityId == 0) {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
@@ -292,7 +293,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<td>";
       Dropdown::showFromArray('is_dashboard_visible', $elements, ['value' => $this->fields['is_dashboard_visible']]);
       if ($this->fields['is_dashboard_visible'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('is_dashboard_visible', $ID);
+         $tid = self::getUsedConfig('is_dashboard_visible', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
@@ -300,7 +301,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
       // header visibility
       $elements = self::getEnumHeaderVisibility();
-      if ($ID == 0) {
+      if ($entityId == 0) {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
@@ -308,7 +309,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<td>";
       Dropdown::showFromArray('is_header_visible', $elements, ['value' => $this->fields['is_header_visible']]);
       if ($this->fields['is_header_visible'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('is_header_visible', $ID);
+         $tid = self::getUsedConfig('is_header_visible', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }
