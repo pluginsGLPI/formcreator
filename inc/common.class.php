@@ -756,7 +756,7 @@ JAVASCRIPT;
          $newMenu['seek_assistance'] = [
             'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
             'title'   => __('Seek assistance', 'formcreator'),
-            'icon'    => 'fa-fw ti ti-send',
+            'icon'    => 'fa-fw ti ti-headset',
          ];
          $newMenu['my_assistance_requests'] = [
             'default' => PluginFormcreatorIssue::getSearchURL(false),
