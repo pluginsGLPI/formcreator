@@ -149,16 +149,13 @@ function updateCategoriesView() {
       data: {wizard: 'categories'},
       dataType: "json"
    }).done(function(response) {
-      var html = '<div class="slinky-menu">';
-      html = html + buildCategoryList(response);
-      html = html + '</div>';
+      var html = buildCategoryList(response);
 
       //Display categories
-      $('#plugin_formcreator_wizard_categories .slinky-menu').remove();
-      $('#plugin_formcreator_wizard_categories').append(html);
+      $('#plugin_formcreator_wizard_categories .slinky-menu').html(html);
 
       // Setup slinky
-      slinkyCategories = $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
+      slinkyCategories = $('#plugin_formcreator_wizard_categories .slinky-menu').slinky({
          label: true
       });
 
