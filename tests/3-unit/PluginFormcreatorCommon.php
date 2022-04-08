@@ -494,7 +494,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          [
            'default' => 'plugins/formcreator/front/wizard.php',
            'title' => 'Seek assistance',
-           'icon' => 'fa-fw ti ti-send',
+           'icon' => 'fa-fw ti ti-headset',
          ],
          'my_assistance_requests' =>
          [
