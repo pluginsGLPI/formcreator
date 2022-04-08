@@ -747,6 +747,8 @@ JAVASCRIPT;
    }
 
    public static function hookRedefineMenu($menus) {
+      global $DB;
+
       if (Session::getCurrentInterface() != 'helpdesk') {
          return $menus;
       }
@@ -775,7 +777,19 @@ JAVASCRIPT;
                $newMenu['reservation'] = $menus['reservation'];
             }
          }
-         if (RSSFeed::canView()) {
+         $rssFeedTable = RSSFeed::getTable();
+         $criteria = [
+            'SELECT'   => "$rssFeedTable.*",
+            'DISTINCT' => true,
+            'FROM'     => $rssFeedTable,
+            'ORDER'    => "$rssFeedTable.name"
+         ];
+         $criteria = $criteria + RSSFeed::getVisibilityCriteria();
+         $criteria['WHERE']["$rssFeedTable.users_id"] = ['<>', Session::getLoginUserID()];
+         $iterator = $DB->request($criteria);
+         $hasRssFeeds = $iterator->count() > 0;
+
+         if (RSSFeed::canView() && $hasRssFeeds) {
             $newMenu['feeds'] = [
                'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
                'title'   => __('Consult feeds', 'formcreator'),
