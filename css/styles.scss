@@ -27,10 +27,6 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-html, body {
-    height: 100%;
-}
-
 @-moz-keyframes ripple {
   0%, 100% {
     opacity: 0;
@@ -566,7 +562,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    a {
       background-color: inherit;
-      font-size: 1.2em;
    }
 
    a[data-category-id]:not([data-parent-category-id="0"]) {
@@ -593,14 +588,11 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       z-index: 20;
    }
 
-   a,  h2 {
-      font-size: 1.2em;
-   }
-
    .card-title {
       padding: 0.83em 0;
       margin: 0;
       padding: 14px;
+      font-weight: bolder;
    }
 
    li {
@@ -677,7 +669,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 }
 
 a.plugin_formcreator_formTile_title {
-   font-size: 1.1em;
    padding: 10px 40px 15px 10px;
    display: block;
 }
@@ -740,7 +731,6 @@ a.plugin_formcreator_formTile_title {
       top: 34%;
       text-align: center;
       width: 100%;
-      font-size: 1.2em;
       transition:
          background 0.2s,
          color 0.2s,
@@ -917,105 +907,6 @@ a.plugin_formcreator_formTile_title {
    margin-left: 53px;
 }
 
-.toggle_menu .formcreator_header_top#header_top {
-   margin-left: 53px;
-   width: calc(100vw - 53px);
-}
-
-
-#plugin_formcreator_serviceCatalog #footer {
-   clear: both;
-   position: fixed;
-   bottom: 0;
-   width:  calc(100% - 10px);
-}
-
-.plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {
-   width: 300px;
-   padding-left: 0; /* Overrides CSS from GLPi */
-   padding-top: 20px;
-   height: 100%;
-   position: relative;
-   text-align: left;
-   transition: .3s;
-}
-
-.plugin_formcreator_services li {
-   padding:  5px 0 5px 13px;
-   width: 100%;
-   line-height: 38px;
-   box-sizing: border-box;
-   clear: left;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_services li a {
-   font-size: 1.2em;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem {
-   background-repeat: no-repeat;
-   background-position: top right;
-   background-color: rgba(0, 0, 0, 0.2);
-   position: relative;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem:after {
-   position: absolute;
-   left: calc(100% - 48px);
-   top: 50%;
-   border: solid transparent;
-   content: " ";
-   height: 0;
-   width: 0;
-   border-right-color: #f8f7f3;
-   border-width: 24px;
-   margin-top: -24px;
-   z-index: 20;
-}
-
-#c_menu.plugin_formcreator_leftMenu li a {
-   color: #FFF;
-}
-
-.plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
-   color: #FFF;
-   height: 35px;
-   line-height: 35px;
-}
-
-
-.plugin_formcreator_threadBrowser {
-   margin: 5px;
-   border-top: 1px dashed #3C5874;
-}
-
-.plugin_formcreator_threadBrowser > div {
-   text-align: center;
-}
-
-.plugin_formcreator_first, .plugin_formcreator_left {
-   float: left;
-   width: 16px;
-   margin: 10px 0;
-}
-
-.plugin_formcreator_right, .plugin_formcreator_last {
-   float: right;
-   width: 16px;
-   margin: 10px 0;
-}
-
-span.fc_list_icon {
-   width: 42px;
-   height: 48px;
-   vertical-align: middle;
-   font-size: 1.7em;
-   color: #FFFFFF;
-   float: left;
-   padding-top: 5px;
-   box-sizing: border-box;
-}
-
 .tab_cadre_pager, .navigationheader {
    margin-top: 0;
    padding-top: 15px;
@@ -1112,20 +1003,6 @@ span.fc_list_icon {
       width: 100%;
    }
 
-   .plugin_formcreator_marginRight {
-      margin-right: 0;
-   }
-
-   .plugin_formcreator_container .plugin_formcreator_leftHeader#header {
-      width: 100%;
-      height: 70px;
-      position: relative;
-   }
-
-   .plugin_formcreator_container #footer {
-      display: none;
-   }
-
    #searchcriterias .tab_cadre_fixe td {
       padding: 5px 0;
    }
@@ -1136,10 +1013,10 @@ span.fc_list_icon {
       position: initial;
       float: none;
       min-height: initial;
-   }
 
-   #plugin_formcreator_wizard_categories .slinky-menu,  #plugin_formcreator_kb_categories .slinky-menu {
-      position: static;
+      .slinky-menu {
+         position: static;
+      }
    }
 
    #plugin_formcreator_wizard_right {
