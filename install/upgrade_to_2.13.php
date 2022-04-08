@@ -39,6 +39,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration = $migration;
       $this->migrateEntityConfig();
       $this->addDefaultFormListMode();
+      $this->addDashboardVisibility();
       $this->fixRootEntityConfig();
       $this->migrateFkToUnsignedInt();
       $this->addFormAnswerTitle();
@@ -46,7 +47,6 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migrateItemtypeInQuestion();
       $this->addTargetValidationSetting();
       $this->addFormVisibility();
-      $this->addDashboardVisibility();
       $this->addRequestSourceSetting();
    }
 
@@ -151,8 +151,8 @@ class PluginFormcreatorUpgradeTo2_13 {
 
       $this->migration->addField($table, 'entities_id', 'int unsigned not null default 0', ['after' => 'id']);
       $this->migration->migrationOneTable($table);
-      $this->migration->addKey($table, 'entities_id', 'unicity', 'UNIQUE');
       $DB->queryOrDie("UPDATE `$table` SET `entities_id`=`id`");
+      $this->migration->addKey($table, 'entities_id', 'unicity', 'UNIQUE');
    }
 
    /**
