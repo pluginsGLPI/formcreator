@@ -330,7 +330,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       if ($canedit) {
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
-         echo Html::hidden('entities_id', ['value' => $entity->fields["entities_id"]]);
+         echo Html::hidden('entities_id', ['value' => $this->fields["entities_id"]]);
          echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
          echo "</td></tr>";
          Html::closeForm();
