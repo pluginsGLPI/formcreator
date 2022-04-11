@@ -465,10 +465,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             'fieldtype' => ['glpiselect'],
             'itemtype'  => [Ticket::class],
             'used'      => $excludedQuestionIds,
-            'display'   => false,
          ],
          '_link_plugin_formcreator_questions_id',
-         null
+         null,
+         ['display'   => false]
       );
       echo '</span>';
 
