@@ -241,7 +241,10 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
          $blocks_field = $decodedValues['blocks_field'] ?? '';
 
-         if (strpos($field_name, 'dropdown') !== false) {
+         $field = new PluginFieldsField();
+         $field->getFromDbByCrit(['name' => $field_name]);
+
+         if ($field->fields['type'] == 'dropdown') {
             $dropdownInputName = "plugin_fields_" . $field_name . "dropdowns_id" ?? '';
             $input[$dropdownInputName] = $line['answer'];
          } else {
