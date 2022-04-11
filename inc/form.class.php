@@ -2497,15 +2497,17 @@ PluginFormcreatorTranslatableInterface
       }
 
       // Check plugins restrictions
-      foreach ($PLUGIN_HOOKS['formcreator_restrict_form'] as $plugin => $callable) {
-         // Skip if invalid hook
-         if (!is_callable($callable)) {
-            trigger_error("formcreator_restrict_form[$plugin]: not a callable", E_USER_WARNING);
-            continue;
-         }
+      if (isset($PLUGIN_HOOKS['formcreator_restrict_form'])) {
+         foreach ($PLUGIN_HOOKS['formcreator_restrict_form'] as $plugin => $callable) {
+            // Skip if invalid hook
+            if (!is_callable($callable)) {
+               trigger_error("formcreator_restrict_form[$plugin]: not a callable", E_USER_WARNING);
+               continue;
+            }
 
-         if (!call_user_func($callable, $this)) {
-            return false;
+            if (!call_user_func($callable, $this)) {
+               return false;
+            }
          }
       }
 
