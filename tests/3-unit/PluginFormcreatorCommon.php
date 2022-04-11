@@ -30,11 +30,6 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use ITILFollowup;
-use KnowbaseItem;
-use ReservationItem;
-use Plugin;
-use Session;
 use Ticket;
 
 class PluginFormcreatorCommon extends CommonTestCase {
@@ -454,7 +449,9 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->string($output)->isEqualTo('servicecatalog');
    }
 
-   public function testHookRedefineMenu() {
+   public function providerHookRedefineMenu() {
+      global $DB;
+
       // Create an entity
       $this->login('glpi', 'glpi');
       $entity = new \Entity();
@@ -469,11 +466,12 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->login('glpi', 'glpi');
 
       // Check the menu is left as is
-      $menus = \Html::generateMenuSession(true);
-      $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
-      $this->array($output)->isIdenticalTo($menus);
+      yield [
+         'input'    => \Html::generateMenuSession(true),
+         'expected' => \Html::generateMenuSession(true),
+      ];
 
-      // Check taht service  catalog enabled does not impacts the menu for Central users
+      // Check that service catalog enabled does not impacts the menu for Central users
       $entityConfig = new \PluginFormcreatorEntityConfig();
       $entityConfig->getFromDbByCrit(['entities_id' => $entityId]);
       $this->boolean($entityConfig->isNewItem())->isFalse();
@@ -482,40 +480,92 @@ class PluginFormcreatorCommon extends CommonTestCase {
          'replace_helpdesk' => '1',
       ]);
       $this->login('glpi', 'glpi');
+      \Session::changeActiveEntities($entityId);
 
-      $menus = \Html::generateHelpMenu();
-      $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
-      $this->array($output)->isIdenticalTo($menus);
+      yield [
+         'input'    => \Html::generateHelpMenu(),
+         'expected' => \Html::generateHelpMenu(),
+      ];
 
       $this->login('post-only', 'postonly');
-      $menus = \Html::generateHelpMenu(true);
-      $expected = [
-         'seek_assistance' =>
-         [
-           'default' => 'plugins/formcreator/front/wizard.php',
-           'title' => 'Seek assistance',
-           'icon' => 'fa-fw ti ti-headset',
-         ],
-         'my_assistance_requests' =>
-         [
-           'default' => '/plugins/formcreator/front/issue.php',
-           'title' => 'My requests for assistance',
-           'icon' => 'fa-fw ti ti-list',
-         ],
-         'reservation' =>
-         [
-           'default' => '/front/reservationitem.php',
-           'title' => 'Reservations',
-           'icon' => 'ti ti-calendar-event',
-         ],
-         'feeds' =>
-         [
-           'default' => 'plugins/formcreator/front/wizardfeeds.php',
-           'title' => 'Consult feeds',
-           'icon' => 'fa-fw ti ti-rss',
-         ],
+      \Session::changeActiveEntities($entityId);
+      $DB->truncate(\RSSFeed::getTable());
+      $rssFeeds = (new \RssFeed())->find([1]);
+      $this->integer(count($rssFeeds))->isEqualTo(0);
+      yield [
+         'input' => \Html::generateHelpMenu(),
+         'expected' => [
+             'seek_assistance' =>
+             [
+               'default' => 'plugins/formcreator/front/wizard.php',
+               'title' => 'Seek assistance',
+               'icon' => 'fa-fw ti ti-headset',
+             ],
+             'my_assistance_requests' =>
+             [
+               'default' => '/plugins/formcreator/front/issue.php',
+               'title' => 'My requests for assistance',
+               'icon' => 'fa-fw ti ti-list',
+             ],
+             'reservation' =>
+             [
+               'default' => '/front/reservationitem.php',
+               'title' => 'Reservations',
+               'icon' => 'ti ti-calendar-event',
+             ],
+         ]
       ];
-      $output = \PluginFormcreatorCommon::hookRedefineMenu($menus);
+
+      $rssFeed = new \RSSFeed();
+      $rssFeed->add([
+         'url' => 'https://localhost/feed/',
+         'is_active' => 1,
+      ]);
+      $this->boolean($rssFeed->isNewItem())->isFalse();
+      $entityRssFeed = new \Entity_RSSFeed();
+      $entityRssFeed->add([
+      'entities_id' => $entityId,
+      'rssfeeds_id' => $rssFeed->getID()
+      ]);
+      $this->boolean($entityRssFeed->isNewItem())->isFalse();
+      yield [
+         'input' => \Html::generateHelpMenu(),
+         'expected' => [
+            'seek_assistance' =>
+            [
+              'default' => 'plugins/formcreator/front/wizard.php',
+              'title' => 'Seek assistance',
+              'icon' => 'fa-fw ti ti-headset',
+            ],
+            'my_assistance_requests' =>
+            [
+              'default' => '/plugins/formcreator/front/issue.php',
+              'title' => 'My requests for assistance',
+              'icon' => 'fa-fw ti ti-list',
+            ],
+            'reservation' =>
+            [
+              'default' => '/front/reservationitem.php',
+              'title' => 'Reservations',
+              'icon' => 'ti ti-calendar-event',
+            ],
+            'feeds' =>
+            [
+              'default' => 'plugins/formcreator/front/wizardfeeds.php',
+              'title' => 'Consult feeds',
+              'icon' => 'fa-fw ti ti-rss',
+            ],
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerHookRedefineMenu
+    */
+   public function testHookRedefineMenu($input, $expected) {
+      $output = \PluginFormcreatorCommon::hookRedefineMenu($input);
       $this->array($output)->isIdenticalTo($expected);
+
+      return;
    }
 }
