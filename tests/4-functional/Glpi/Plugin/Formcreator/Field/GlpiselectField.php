@@ -65,4 +65,11 @@ class GlpiselectField extends CommonFunctionalTestCase
 
       $this->_testQuestionCreated($form, __METHOD__);
    }
+
+   public function testRenderQuestion() {
+      $this->_testRenderQuestion([
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => \Entity::getType(),
+      ]);
+   }
 }

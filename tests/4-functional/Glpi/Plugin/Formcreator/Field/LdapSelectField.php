@@ -43,6 +43,7 @@ class LdapSelectField extends CommonFunctionalTestCase
       parent::beforeTestMethod($method);
       switch ($method) {
          case 'testCreateForm':
+         case 'testRenderQuestion':
             $authLdap = new \AuthLDAP();
             $authLdap->add([
                'name' => 'LDAP for Formcreator',
@@ -81,5 +82,15 @@ class LdapSelectField extends CommonFunctionalTestCase
       $this->browsing->selectInDropdown('form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_auth"]', $ldap['id'], $ldap['name']);
 
       $this->_testQuestionCreated($form, __METHOD__);
+   }
+   public function testRenderQuestion() {
+      $authLdap = new \AuthLDAP();
+      $ldaps = $authLdap->find([], [], 1);
+      $this->array($ldaps)->size->isGreaterThan(0);
+      $ldap = array_pop($ldaps);
+      $this->_testRenderQuestion([
+         'fieldtype' => 'ldapselect',
+         'ldap_auth' => $ldap['id']
+      ]);
    }
 }
