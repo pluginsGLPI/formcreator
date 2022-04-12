@@ -139,7 +139,7 @@ function plugin_init_formcreator() {
 
    plugin_formcreator_hook();
 
-   if (isset($_SERVER['REQUEST_URI']) && isset($_SESSION['glpiactiveentities_string'])) {
+   if (isset($_SERVER['REQUEST_URI'])) {
       plugin_formcreator_registerClasses();
 
       $pages = [
