@@ -40,11 +40,11 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       switch ($method) {
          case 'testSetTargetEntity':
          case 'testSetTargetCategory':
+         case 'testSetTargetLocation':
          case 'testSetTargetType':
          case 'testPrepareTemplate':
          case 'testDeleteLinkedTickets':
          case 'testSetTargetAssociatedItem':
-         case 'testSetTargetLocation':
          case 'testSetRequestSource':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
@@ -1442,30 +1442,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
-   public function providerSetTargetLocation() {
-      global $CFG_GLPI;
-
-      // Disable notification to avoid output to console
-      $CFG_GLPI['use_notifications'] = '0';
-
-      return array_merge(
-         $this->providerSetTargetLocation_NotSet(),
-         $this->providerSetTargetLocation_LastItem(),
-      );
-   }
-
-   /**
-    * @dataProvider providerSetTargetLocation
-    */
-   public function testSetTargetLocation($instance, $formanswer, $expected) {
-      $output = $instance->publicSetTargetLocation([], $formanswer);
-      if ($expected !== null) {
-         $this->integer((int) $output['locations_id'])->isIdenticalTo($expected);
-      } else {
-         $this->array($output)->notHasKey('locations_id');
-      }
-   }
-
    public function providerSetRequestSource_none(): array {
       $form = $this->getForm();
       $formanswer = new \PluginFormcreatorFormanswer();
@@ -1538,5 +1514,204 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $data = $dummyInstance->publicGetDefaultData($formanswer);
       $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
+   }
+
+   public function providerSetTargetLocation_nothing() {
+      $form = $this->getForm();
+      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer->isNewItem())->isFalse();
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->add([
+         'name' => 'target ticket no location',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+      ]);
+      $this->boolean($targetTicket->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $targetTicket,
+            'formanswer' => $formanswer,
+            'expected'   => 0
+         ],
+      ];
+   }
+
+   public function providerSetTargetLocation_noTemplate() {
+      $location1 = new \Location();
+      $location1Id = $location1->import([
+         'name' => 'location 1',
+         'entities_id' => 0,
+      ]);
+      $location2 = new \Location();
+      $location2Id = $location2->import([
+         'name' => 'location 2',
+         'entities_id' => 0,
+      ]);
+
+      $question1 = $this->getQuestion([
+         'name'      => 'request type',
+         'fieldtype' => 'requesttype',
+      ]);
+      $this->boolean($question1->isNewItem())->isFalse();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
+      $this->boolean($section->isNewItem())->isFalse();
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'location',
+         'fieldtype'                      => 'dropdown',
+         'itemtype'                       => \Location::class,
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions'                    => [
+            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'                      => ['Incident'],
+         ]
+      ]);
+      $question3 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'other location',
+         'fieldtype'                      => 'dropdown',
+         'itemtype'                       => \Location::class,
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions'                    => [
+            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'                      => ['Request'],
+         ]
+      ]);
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $location1Id,
+         'formcreator_field_' . $question3->getID() => (string) $location2Id,
+      ]);
+
+      $formanswer2 = new \PluginFormcreatorFormAnswer();
+      $formanswer2->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $location1Id,
+         'formcreator_field_' . $question3->getID() => (string) $location2Id,
+      ]);
+
+      $formanswer3 = new \PluginFormcreatorFormAnswer();
+      $formanswer3->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $location1Id,
+         'formcreator_field_' . $question3->getID() => (string) 0,
+      ]);
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket no template',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $formanswer1->getForm()->getID(),
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER,
+      ]);
+
+      return [
+         // Check visibility is taken into account
+         'visibility taken into account' => [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $location1Id,
+         ],
+         // Check location dropdown is ignored
+         '1st ticket location question is ignored' => [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer2,
+            'expected'   => $location2Id,
+         ],
+         // Check zero value is ignored
+         'zero value is ignored' => [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer3,
+            'expected'   => $location1Id,
+         ]
+      ];
+   }
+
+   public function providerSetTargetLocation_FromTemplate() {
+      // When the target ticket uses a ticket template and does not specify a location
+      $location1 = new \Location();
+      $location1Id = $location1->import([
+         'name' => 'location 1',
+         'entities_id' => 0,
+      ]);
+
+      $ticketTemplate = $this->getGlpiCoreItem(
+         \TicketTemplate::getType(), [
+            'name' => 'template with predefined location',
+         ]
+      );
+      $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'num'                => 83, // Location
+         'value'              => $location1Id
+      ]);
+
+      $form = $this->getForm();
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer1->isNewItem())->isFalse();
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket with template',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $location1Id,
+         ],
+      ];
+   }
+
+   public function providerSetTargetLocation() {
+      return array_merge(
+         $this->providerSetTargetLocation_nothing(),
+         $this->providerSetTargetLocation_noTemplate(),
+         $this->providerSetTargetLocation_FromTemplate(),
+      );
+   }
+
+   /**
+    * @dataProvider providerSetTargetLocation
+    *
+    */
+   public function testSetTargetLocation($instance, $formanswer, $expected) {
+      // Substitute a dummy class to access protected / private methods
+      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
+      $dummyInstance = new $dummyItemtype();
+      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
+      $instance->getFromDB($instance->getID());
+      $dummyInstance->fields = $instance->fields;
+
+      \PluginFormcreatorFields::resetVisibilityCache();
+      $data = $dummyInstance->publicGetDefaultData($formanswer);
+      $output = $dummyInstance->publicSetTargetLocation($data, $formanswer);
+
+      $this->integer((int) $output['locations_id'])->isEqualTo($expected);
    }
 }
