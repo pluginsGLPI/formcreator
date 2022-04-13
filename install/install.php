@@ -157,9 +157,26 @@ class PluginFormcreatorInstall {
          return false;
       }
 
-      while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
-         $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
-         $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
+      try {
+         while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
+            $toSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
+            $this->upgradeOneStep($toSchemaVersion);
+            $fromSchemaVersion = $toSchemaVersion;
+         }
+      } catch (\Throwable $e) {
+         Session::addMessageAfterRedirect(
+            sprintf(
+               __(
+                  'A fatal error occured in the upgrade from %s! Upgrade aborted. Please check logs to fix the problem then try again.',
+                  'formcreator'
+               ),
+               $fromSchemaVersion,
+               $toSchemaVersion
+            ),
+            false,
+            ERROR
+         );
+         return false;
       }
 
       $this->migration->executeMigration();
@@ -189,7 +206,9 @@ class PluginFormcreatorInstall {
       if (is_readable($includeFile) && is_file($includeFile)) {
          include_once $includeFile;
          $updateClass = "PluginFormcreatorUpgradeTo$suffix";
-         $this->migration->addNewMessageArea("Upgrade to $toVersion");
+         if (isCommandLine()) {
+            $this->migration->addNewMessageArea("Upgrade to $toVersion");
+         }
          $upgradeStep = new $updateClass();
          $upgradeStep->upgrade($this->migration);
          $this->migration->executeMigration();
