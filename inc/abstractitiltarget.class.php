@@ -1304,7 +1304,7 @@ SCRIPT;
       $validation_dropdown_params = [
          'name' => 'validation_specific'
       ];
-      $validation_data = json_decode($this->fields['commonitil_validation_question'], true);
+      $validation_data = json_decode($this->fields['commonitil_validation_question'] ?? '', true);
       if (isset($validation_data['type'])) {
          $validation_dropdown_params['users_id_validate'] = $validation_data['values'];
       }
