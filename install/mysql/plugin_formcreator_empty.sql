@@ -317,6 +317,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `internal_time_to_own`     timestamp     NULL,
   `internal_time_to_resolve` timestamp     NULL,
   `solvedate`                timestamp     NULL DEFAULT NULL,
+  `date`                     timestamp     NULL DEFAULT NULL,
+  `takeintoaccount_delay_stat` int(11)       NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `item` (`itemtype`, `items_id`),
   INDEX `entities_id` (`entities_id`),
@@ -327,7 +329,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   INDEX `time_to_resolve` (`time_to_resolve`),
   INDEX `internal_time_to_own` (`internal_time_to_own`),
   INDEX `internal_time_to_resolve` (`internal_time_to_resolve`),
-  INDEX `solvedate` (`solvedate`)
+  INDEX `solvedate` (`solvedate`),
+  INDEX `date` (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (

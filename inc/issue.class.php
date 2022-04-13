@@ -108,12 +108,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'comment             as comment',
                'requester_id        as users_id_recipient',
             ],
-            new QueryExpression('NULL                as time_to_own'),
-            new QueryExpression('NULL                as time_to_resolve'),
-            new QueryExpression('NULL                as internal_time_to_own'),
-            new QueryExpression('NULL                as internal_time_to_resolve'),
-            new QueryExpression('NULL                as solvedate'),
-      ],
+            new QueryExpression('NULL                as `time_to_own`'),
+            new QueryExpression('NULL                as `time_to_resolve`'),
+            new QueryExpression('NULL                as `internal_time_to_own`'),
+            new QueryExpression('NULL                as `internal_time_to_resolve`'),
+            new QueryExpression('NULL                as `solvedate`'),
+            new QueryExpression('NULL                as `date`'),
+            new QueryExpression('0                   as `takeintoaccount_delay_stat`'),
+         ],
          'DISTINCT' => true,
          'FROM' => $formAnswerTable,
          'LEFT JOIN' => [
@@ -177,6 +179,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'internal_time_to_own                        as internal_time_to_own',
             'internal_time_to_resolve                    as internal_time_to_resolve',
             'solvedate                                   as solvedate',
+            'date                                        as date',
+            'takeintoaccount_delay_stat                  as takeintoaccount_delay_stat',
          ],
          'DISTINCT' => true,
          'FROM' => $ticketTable,
@@ -798,6 +802,48 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $tab[] = $so;
          }
       }
+
+      $tab[] = [
+         'id'                 => '25',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_own',
+         'name'               => __('Internal time to own'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['date', 'status', 'takeintoaccount_delay_stat'],
+      ];
+
+      $tab[] = [
+         'id'                 => '26',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_own',
+         'name'               => __('Internal time to own + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '27',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_own',
+         'name'               => __('Time to own'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '28',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_own',
+         'name'               => __('Time to own + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
 
       return $tab;
    }
