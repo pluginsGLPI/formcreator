@@ -358,16 +358,21 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
    $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
    $issue = new PluginFormcreatorIssue();
    $issue->add([
-      'items_id'           => $item->getID(),
-      'itemtype'           => 'Ticket',
-      'name'               => $issueName,
-      'status'             => $validationStatus,
-      'date_creation'      => $item->fields['date'],
-      'date_mod'           => $item->fields['date_mod'],
-      'entities_id'        => $item->fields['entities_id'],
-      'is_recursive'       => '0',
-      'requester_id'       => $requester['users_id'],
-      'comment'            => addslashes($item->fields['content']),
+      'items_id'                 => $item->getID(),
+      'itemtype'                 => Ticket::class,
+      'name'                     => $issueName,
+      'status'                   => $validationStatus,
+      'date_creation'            => $item->fields['date'],
+      'date_mod'                 => $item->fields['date_mod'],
+      'entities_id'              => $item->fields['entities_id'],
+      'is_recursive'             => '0',
+      'requester_id'             => $requester['users_id'],
+      'comment'                  => addslashes($item->fields['content']),
+      'time_to_own'              => $item->fields['time_to_own'],
+      'time_to_resolve'          => $item->fields['time_to_resolve'],
+      'internal_time_to_own'     => $item->fields['internal_time_to_own'],
+      'internal_time_to_resolve' => $item->fields['internal_time_to_resolve'],
+      'solvedate'                => $item->fields['solvedate'],
    ]);
 }
 
@@ -405,18 +410,23 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       $requester = $requester['users_id'] ?? 0;
 
       $issue->update([
-         'id'                 => $issue->getID(),
-         'items_id'           => $id,
-         'display_id'         => "t_$id",
-         'itemtype'           => 'Ticket',
-         'name'               => $issueName,
-         'status'             => $validationStatus,
-         'date_creation'      => $item->fields['date'],
-         'date_mod'           => $item->fields['date_mod'],
-         'entities_id'        => $item->fields['entities_id'],
-         'is_recursive'       => '0',
-         'requester_id'       => $requester,
-         'comment'            => addslashes($item->fields['content']),
+         'id'                       => $issue->getID(),
+         'items_id'                 => $id,
+         'display_id'               => "t_$id",
+         'itemtype'                 => Ticket::class,
+         'name'                     => $issueName,
+         'status'                   => $validationStatus,
+         'date_creation'            => $item->fields['date'],
+         'date_mod'                 => $item->fields['date_mod'],
+         'entities_id'              => $item->fields['entities_id'],
+         'is_recursive'             => '0',
+         'requester_id'             => $requester,
+         'comment'                  => addslashes($item->fields['content']),
+         'time_to_own'              => $item->fields['time_to_own'],
+         'time_to_resolve'          => $item->fields['time_to_resolve'],
+         'internal_time_to_own'     => $item->fields['internal_time_to_own'],
+         'internal_time_to_resolve' => $item->fields['internal_time_to_resolve'],
+         'solvedate'                => $item->fields['solvedate'],
       ]);
       return;
    }
