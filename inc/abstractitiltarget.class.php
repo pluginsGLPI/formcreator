@@ -106,7 +106,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return string
     */
-   abstract protected function getTemplateItemtypeName(): string;
+   abstract static protected function getTemplateItemtypeName(): string;
 
    /**
     * Get the class name of the target itemtype's template predefined field class
@@ -725,7 +725,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    protected function showTemplateSettings() {
-      $templateType = $this->getTemplateItemtypeName();
+      $templateType = static::getTemplateItemtypeName();
       $templateFk = $templateType::getForeignKeyField();
 
       echo '<td width="15%">' . $templateType::getTypeName(1) . '</td>';
@@ -1367,7 +1367,7 @@ SCRIPT;
          ];
          $iterator = $DB->request($request);
          if ($iterator->count() > 0) {
-            $iterator->rewind();
+            $iterator->rewind(); // TODO: drop when GLPI 10.1 is out (back compatibility with GLPI 9.5)
             $date   = $iterator->current();
          }
       } else {

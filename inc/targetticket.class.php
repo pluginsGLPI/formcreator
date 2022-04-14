@@ -76,7 +76,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       return Ticket::class;
    }
 
-   protected function getTemplateItemtypeName(): string {
+   protected static function getTemplateItemtypeName(): string {
       return TicketTemplate::class;
    }
 
@@ -793,7 +793,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
    protected function getTargetTemplate(array $data): int {
       global $DB;
 
-      $targetItemtype = $this->getTemplateItemtypeName();
+      // TODO : check if we can replace this implementation by CommonITILObject::getITILTemplateToUse()
+      $targetItemtype = static::getTemplateItemtypeName();
       $targetTemplateFk = $targetItemtype::getForeignKeyField();
       if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([
