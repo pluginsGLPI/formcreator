@@ -134,6 +134,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testGetEnumLocationType() {
       $output = \PluginFormcreatorTargetTicket::getEnumLocationRule();
       $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE        => __('Location from template or none', 'formcreator'),
          \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
          \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
          \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),

@@ -186,9 +186,10 @@ PluginFormcreatorTranslatableInterface
 
    public static function getEnumDueDateRule() {
       return [
+         self::DUE_DATE_RULE_NONE   => __('TTR from template or none', 'formcreator'),
          self::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
          self::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
-         self::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
+         self::DUE_DATE_RULE_CALC   => __('calculated from the answer to the question', 'formcreator'),
       ];
    }
 
@@ -746,7 +747,6 @@ PluginFormcreatorTranslatableInterface
          [
             'value'     => $this->fields['due_date_rule'],
             'on_change' => 'plugin_formcreator_formcreatorChangeDueDate(this.value)',
-            'display_emptychoice' => true
          ]
       );
 
@@ -1391,6 +1391,7 @@ SCRIPT;
       }
       $str    = "+" . $this->fields['due_date_value'] . " $period";
 
+      $due_date = null;
       switch ($this->fields['due_date_rule']) {
          case self::DUE_DATE_RULE_ANSWER:
             $due_date = $date['answer'];
@@ -1400,9 +1401,6 @@ SCRIPT;
             break;
          case self::DUE_DATE_RULE_CALC:
             $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
-            break;
-         default:
-            $due_date = null;
             break;
       }
       if (!is_null($due_date)) {

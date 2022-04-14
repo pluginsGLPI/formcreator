@@ -938,6 +938,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       // Create the target ticket
       $data['_auto_import'] = true;
+      $data['_skip_sla_assign'] = true;
       if (!$ticketID = $ticket->add($data)) {
          return null;
       }
