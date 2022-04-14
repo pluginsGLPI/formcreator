@@ -2166,11 +2166,13 @@ SCRIPT;
       $data = $this->setTargetCategory($data, $formanswer);
 
       $this->fields[$targetTemplateFk] = $this->getTargetTemplate($data);
+      $templateItemtype = static::getTemplateItemtypeName();
+      /** @var CommonITILTemplate $template */
+      $template = new $templateItemtype();
+      $template->getFromDBWithData($this->fields[$targetTemplateFk]);
 
       // Get predefined Fields
-      $predefinedFieldItemtype = $this->getTemplatePredefinedFieldItemtype();
-      $templatePredeinedField  = new $predefinedFieldItemtype();
-      $predefined_fields       = $templatePredeinedField->getPredefinedFields($this->fields[$targetTemplateFk], true);
+      $predefined_fields       = $template->predefined;
 
       if (isset($predefined_fields['_users_id_requester'])) {
          $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_users_id_requester'], true);
