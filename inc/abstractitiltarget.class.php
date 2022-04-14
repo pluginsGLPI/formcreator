@@ -1354,10 +1354,10 @@ SCRIPT;
    protected function setTargetDueDate($data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
-      $answer  = new PluginFormcreatorAnswer();
+      $date = null;
       if ($this->fields['due_date_question'] != 0) {
          $request = [
-            'FROM' => $answer::getTable(),
+            'FROM' => PluginFormcreatorAnswer::getTable(),
             'WHERE' => [
                'AND' => [
                   $formanswer::getForeignKeyField() => $formanswer->fields['id'],
@@ -1368,10 +1368,8 @@ SCRIPT;
          $iterator = $DB->request($request);
          if ($iterator->count() > 0) {
             $iterator->rewind(); // TODO: drop when GLPI 10.1 is out (back compatibility with GLPI 9.5)
-            $date   = $iterator->current();
+            $date = $iterator->current();
          }
-      } else {
-         $date = null;
       }
 
       $period = '';
