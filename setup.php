@@ -259,13 +259,6 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    die($error . "<br><br> Please, check migration log");
 }
 
-function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline) {
-   if (0 === error_reporting()) {
-      return false;
-   }
-   throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-}
-
 function plugin_formcreator_permanent_hook() {
    global $PLUGIN_HOOKS;
 

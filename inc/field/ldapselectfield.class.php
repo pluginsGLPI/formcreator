@@ -38,6 +38,7 @@ use Html;
 use Session;
 use RuleRightParameter;
 use Glpi\Application\View\TemplateRenderer;
+use Toolbox;
 
 class LdapselectField extends SelectField
 {
@@ -74,7 +75,7 @@ class LdapselectField extends SelectField
          return [];
       }
 
-      set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
+      set_error_handler([self::class, 'ldapErrorHandler'], E_WARNING);
 
       try {
          $tab_values = [];
@@ -131,10 +132,12 @@ class LdapselectField extends SelectField
          asort($tab_values);
          return $tab_values;
       } catch (Exception $e) {
-         return [];
+         restore_error_handler();
+         trigger_error($e->getMessage(), E_USER_WARNING);
       }
 
       restore_error_handler();
+      return [];
    }
 
    public static function getName(): string {
@@ -194,7 +197,7 @@ class LdapselectField extends SelectField
          $attribute     = [];
       }
 
-      set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
+      set_error_handler([self::class, 'ldapErrorHandler'], E_WARNING);
 
       try {
          $cookie = '';
@@ -215,6 +218,8 @@ class LdapselectField extends SelectField
          $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
          ldap_get_entries($ds, $result);
       } catch (Exception $e) {
+         restore_error_handler();
+         trigger_error($e->getMessage(), E_USER_WARNING);
          Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
       }
 
@@ -287,5 +292,12 @@ class LdapselectField extends SelectField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public static function ldapErrorHandler($errno, $errstr, $errfile, $errline) {
+      if (0 === error_reporting()) {
+         return false;
+      }
+      throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
    }
 }
