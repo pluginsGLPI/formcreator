@@ -78,9 +78,8 @@ class LdapselectField extends SelectField
 
       set_error_handler([self::class, 'ldapErrorHandler'], E_WARNING);
 
+      $tab_values = [];
       try {
-         $tab_values = [];
-
          $cookie = '';
          $ds = $config_ldap->connect();
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -121,16 +120,14 @@ class LdapselectField extends SelectField
                $id++;
             }
          } while ($cookie !== null && $cookie != '');
-
-         asort($tab_values);
-         return $tab_values;
       } catch (Exception $e) {
          restore_error_handler();
          trigger_error($e->getMessage(), E_USER_WARNING);
       }
 
       restore_error_handler();
-      return [];
+      asort($tab_values);
+      return $$tab_values;
    }
 
    public static function getName(): string {
