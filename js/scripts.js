@@ -1701,7 +1701,8 @@ function plugin_formcreator_changeLDAP(ldap) {
          value: ldap_directory,
       },
    }).done(function(response) {
-      document.getElementById('ldap_filter').value = response;
+         var selector = '$slashSelector';
+      document.querySelector('form[data-itemtype=\"PluginFormcreatorQuestion\"] [name="ldap_filter"]').value = response;
    });
 }
 
