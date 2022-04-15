@@ -157,14 +157,14 @@ class LdapSelectField extends CommonTestCase {
             ]),
             'input' => [
                'ldap_auth'      => $authLdap->getID(),
-               'ldap_filter'    => 'по', // Some cyrillic sample
+               'ldap_filter'    => 'по',
                'ldap_attribute' => '1',
             ],
             'expected' => [
                'values' => json_encode([
                   'ldap_auth'      => $authLdap->getID(),
+                  'ldap_attribute' => '1',
                   'ldap_filter'    => 'по',
-                  'ldap_attribute' => '',
                ], JSON_UNESCAPED_UNICODE),
             ]
          ],
@@ -180,14 +180,6 @@ class LdapSelectField extends CommonTestCase {
     * @return void
     */
    public function testPrepareQuestionInputForSave(\PluginFormcreatorQuestion $question, array $input, array $expected) {
-      // Make the form private
-      $question = $this->getQuestion([
-         'ldap_auth' => $input['ldap_auth'],
-         'fieldtype' => 'ldapselect',
-         'ldap_filter' => '',
-         'ldap_attribute' => '',
-      ]);
-
       $instance = $this->newTestedInstance($question);
 
       $output = $instance->prepareQuestionInputForSave($input);

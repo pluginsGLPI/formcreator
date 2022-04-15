@@ -39,7 +39,6 @@ use Session;
 use RuleRightParameter;
 use Glpi\Application\View\TemplateRenderer;
 use PluginFormcreatorAbstractField;
-use Toolbox;
 
 class LdapselectField extends SelectField
 {
@@ -187,53 +186,17 @@ class LdapselectField extends SelectField
       }
 
       $ldap_values['ldap_attribute'] = $input['ldap_attribute'] ?? ($ldap_values['ldap_attribute'] ?? null);
-      $attribute = [];
       if (isset($ldap_values['ldap_attribute'])) {
          $ldap_dropdown = RuleRightParameter::getById((int) $ldap_values['ldap_attribute']);
          if (!($ldap_dropdown instanceof RuleRightParameter)) {
             return [];
          }
-         $attribute = [$ldap_dropdown->fields['value']];
       }
 
       if (isset($input['ldap_filter'])) {
          $input['ldap_filter'] = html_entity_decode($input['ldap_filter']);
       }
       $ldap_values['ldap_filter'] = $input['ldap_filter'] ?? ($ldap_values['ldap_filter'] ?? '');
-      set_error_handler([self::class, 'ldapErrorHandler'], E_WARNING);
-
-      try {
-         $cookie = '';
-         $ds = $config_ldap->connect();
-         if ($ds === false) {
-            Session::addMessageAfterRedirect(__('Connection to the directory failed.', 'formcreator'), false, ERROR);
-         }
-         ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-         if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
-            $controls = [
-               [
-                  'oid'        => LDAP_CONTROL_PAGEDRESULTS,
-                  'iscritical' => true,
-                  'value'      => [
-                     'size'    => $config_ldap->fields['pagesize'],
-                     'cookie'  => $cookie
-                  ]
-               ]
-            ];
-            $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
-            ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-            $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
-         } else {
-            $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-         }
-         ldap_get_entries($ds, $result);
-      } catch (Exception $e) {
-         restore_error_handler();
-         trigger_error($e->getMessage(), E_USER_WARNING);
-         Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
-      }
-
-      restore_error_handler();
 
       $input['values'] = json_encode($ldap_values, JSON_UNESCAPED_UNICODE);
       unset($input['ldap_auth']);
