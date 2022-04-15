@@ -38,6 +38,7 @@ use Html;
 use Session;
 use RuleRightParameter;
 use Glpi\Application\View\TemplateRenderer;
+use PluginFormcreatorAbstractField;
 use Toolbox;
 
 class LdapselectField extends SelectField
@@ -248,6 +249,20 @@ class LdapselectField extends SelectField
 
       $this->value = $input[$key];
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = PluginFormcreatorAbstractField::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      return $strings;
    }
 
    public function equals($value): bool {
