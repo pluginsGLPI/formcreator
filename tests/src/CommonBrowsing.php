@@ -101,10 +101,11 @@ class CommonBrowsing {
          var exists = $('$slashSelector option[value=\"$htmlValue\"]');
          if (exists.length < 1) {
             var newOption = new Option('$slashName', '$slashValue', true, true);
+            $('$slashSelector').append(newOption)
          } else {
             $('$slashSelector').val('$slashValue');
          }
-         $('$slashSelector').append(newOption).trigger('change');
+         $('$slashSelector').trigger('change');
       ";
       $this->test->client->executeScript($js);
    }
