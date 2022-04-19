@@ -31,6 +31,7 @@
 
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
+use GlpiPlugin\Formcreator\Field\FileField;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -2217,7 +2218,10 @@ SCRIPT;
       $saved_documents = $formanswer->getFileProperties();
 
       if ($saved_documents) {
-         foreach ($formanswer->getFileFields() as $questionId) {
+         foreach ($formanswer->getForm()->getFields() as $questionId => $field) {
+            if (!($field instanceOf FileField)) {
+               continue;
+            }
             $data["_filename"] = array_merge($data["_filename"], $saved_documents["_filename"][$questionId] ?? []);
             $data["_tag_filename"] = array_merge($data["_tag_filename"], $saved_documents["_tag_filename"][$questionId] ?? []);
 
@@ -2229,7 +2233,10 @@ SCRIPT;
             }
          }
       } else {
-         foreach ($formanswer->getFileFields() as $questionId) {
+         foreach ($formanswer->getForm()->getFields() as $questionId => $field) {
+            if (!($field instanceOf FileField)) {
+               continue;
+            }
             $data["_filename"] = array_merge($data["_filename"], $formanswer->input["_formcreator_field_" . $questionId]);
             $data["_prefix_filename"] = array_merge($data["_prefix_filename"], $formanswer->input["_prefix_formcreator_field_" . $questionId]);
             $data["_tag_filename"] = array_merge($data["_tag_filename"], $formanswer->input["_tag_formcreator_field_" . $questionId]);
