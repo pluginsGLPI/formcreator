@@ -2023,8 +2023,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
 
-         foreach ($field->getDocumentsForTarget() as $question_id) {
-            $document = Document::getById($question_id);
+         foreach ($field->getDocumentsForTarget() as $documentId) {
+            $document = Document::getById($documentId);
             if (!is_object($document)) {
                // If the document no longer exists
                continue;
