@@ -1989,26 +1989,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Get ID of questions of type 'file'
-    *
-    * @return int[]
-    */
-   public function getFileFields(): array {
-      $filefields = [];
-
-      $form = $this->getForm();
-      foreach ($this->getQuestionFields($form) as $questionId => $field) {
-         $question = $field->getQuestion();
-         if ($question->fields['fieldtype'] != 'file') {
-            continue;
-         }
-         $filefields[] = $questionId;
-      }
-
-      return $filefields;
-   }
-
-   /**
     * get properties of file uploads
     *
     * @return array
@@ -2023,8 +2003,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
 
-         foreach ($field->getDocumentsForTarget() as $question_id) {
-            $document = Document::getById($question_id);
+         foreach ($field->getDocumentsForTarget() as $documentId) {
+            $document = Document::getById($documentId);
             if (!is_object($document)) {
                // If the document no longer exists
                continue;

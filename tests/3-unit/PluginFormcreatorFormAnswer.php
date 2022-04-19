@@ -860,4 +860,50 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $output = $instance->getAggregatedStatus();
       $this->integer($output)->isEqualTo(CommonITILObject::CLOSED);
    }
+
+   public function testGetFileProperties() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'file',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $fieldKey = 'formcreator_field_' . $question->getID();
+      $filename = '5e5e92ffd9bd91.44444444upload55555555.txt';
+      $tag = '3e29dffe-0237ea21-5e5e7034b1d1a1.33333333';
+      copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         "_${fieldKey}" => [
+            $filename,
+         ],
+         "_prefix_${fieldKey}" => [
+            '5e5e92ffd9bd91.44444444',
+         ],
+         "_tag_${fieldKey}" => [
+            $tag,
+         ],
+      ]);
+
+      $documentItem = new \Document_Item();
+      $documentItem->getFromDBByCrit([
+         'itemtype' => $formAnswer->getType(),
+         'items_id' => $formAnswer->getID(),
+      ]);
+      $this->boolean($documentItem->isNewItem())->isFalse();
+      $document = \Document::getById($documentItem->fields['documents_id']);
+      $output = $formAnswer->getFileProperties();
+      $this->array($output)->isIdenticalTo([
+         '_filename'     => [
+            $question->getID() => [
+               $document->fields['filename'],
+            ],
+         ],
+         '_tag_filename' => [
+            $question->getID() => [
+               $document->fields['tag'],
+            ],
+         ],
+      ]);
+   }
 }
