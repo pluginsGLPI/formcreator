@@ -139,7 +139,7 @@ function plugin_init_formcreator() {
 
    plugin_formcreator_hook();
 
-   if (isset($_SERVER['REQUEST_URI']) && isset($_SESSION['glpiactiveentities_string'])) {
+   if (isset($_SERVER['REQUEST_URI'])) {
       plugin_formcreator_registerClasses();
 
       $pages = [
@@ -257,13 +257,6 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    $error = $DB->error();
    $migration->log($error . "\n" . Toolbox::backtrace(false, '', ['Toolbox::backtrace()']), false);
    die($error . "<br><br> Please, check migration log");
-}
-
-function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline) {
-   if (0 === error_reporting()) {
-      return false;
-   }
-   throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
 function plugin_formcreator_permanent_hook() {

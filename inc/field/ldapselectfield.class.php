@@ -38,6 +38,7 @@ use Html;
 use Session;
 use RuleRightParameter;
 use Glpi\Application\View\TemplateRenderer;
+use PluginFormcreatorAbstractField;
 
 class LdapselectField extends SelectField
 {
@@ -62,23 +63,22 @@ class LdapselectField extends SelectField
          return [];
       }
 
-      $ldap_values   = json_decode($this->question->fields['values']);
+      $ldap_values   = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $ldap_dropdown = new RuleRightParameter();
-      if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
+      if (!$ldap_dropdown->getFromDB($ldap_values['ldap_attribute'])) {
          return [];
       }
       $attribute     = [$ldap_dropdown->fields['value']];
 
       $config_ldap = new AuthLDAP();
-      if (!$config_ldap->getFromDB($ldap_values->ldap_auth)) {
+      if (!$config_ldap->getFromDB($ldap_values['ldap_auth'])) {
          return [];
       }
 
-      set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
+      set_error_handler([self::class, 'ldapErrorHandler'], E_WARNING);
 
+      $tab_values = [];
       try {
-         $tab_values = [];
-
          $cookie = '';
          $ds = $config_ldap->connect();
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -94,24 +94,16 @@ class LdapselectField extends SelectField
                      ]
                   ]
                ];
-               $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
+               $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values['ldap_filter'], $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
                ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
                $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
             } else {
-               $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-            }
-
-            $limitexceeded = false;
-            if (in_array(ldap_errno($ds), [4, 11])) {
-               // openldap return 4 for Size limit exceeded
-               $limitexceeded = true;
+               $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values['ldap_filter'], $attribute);
             }
 
             $entries = ldap_get_entries($ds, $result);
-            if (in_array(ldap_errno($ds), [4, 11])) {
-               // openldap return 4 for Size limit exceeded
-               $limitexceeded = true;
-            }
+            // openldap return 4 for Size limit exceeded
+            $limitexceeded = in_array(ldap_errno($ds), [4, 11]);
 
             if ($limitexceeded) {
                Session::addMessageAfterRedirect(__('LDAP size limit exceeded', 'formcreator'), true, WARNING);
@@ -127,14 +119,14 @@ class LdapselectField extends SelectField
                $id++;
             }
          } while ($cookie !== null && $cookie != '');
-
-         asort($tab_values);
-         return $tab_values;
       } catch (Exception $e) {
-         return [];
+         restore_error_handler();
+         trigger_error($e->getMessage(), E_USER_WARNING);
       }
 
       restore_error_handler();
+      asort($tab_values);
+      return $tab_values;
    }
 
    public static function getName(): string {
@@ -173,58 +165,40 @@ class LdapselectField extends SelectField
    }
 
    public function prepareQuestionInputForSave($input) {
-      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-      if (!isset($input['ldap_auth'])) {
+      // Get values already saved for the question
+      $ldap_values = [];
+      if (isset($this->question) && isset($this->question->fields['values'])) {
+         $ldap_values = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      }
+
+      // Get the directory from the browser then from the DB (if editing a question)
+      $ldap_values['ldap_auth'] = $input['ldap_auth'] ?? ($ldap_values['ldap_auth'] ?? null);
+      if ($ldap_values['ldap_auth'] === null) {
          Session::addMessageAfterRedirect(__('LDAP directory not defined!', 'formcreator'), false, ERROR);
          return [];
       }
-
-      $config_ldap = new AuthLDAP();
-      $config_ldap->getFromDB($input['ldap_auth']);
-      if ($config_ldap->isNewItem()) {
+      // Check the directory exists
+      /** @var LdapAuth $config_ldap */
+      $config_ldap = AuthLDAP::getById($ldap_values['ldap_auth']);
+      if (!($config_ldap instanceof AuthLDAP)) {
          Session::addMessageAfterRedirect(__('LDAP directory not found!', 'formcreator'), false, ERROR);
          return [];
       }
 
-      if (!empty($input['ldap_attribute'])) {
-         $ldap_dropdown = new RuleRightParameter();
-         $ldap_dropdown->getFromDB($input['ldap_attribute']);
-         $attribute     = [$ldap_dropdown->fields['value']];
-      } else {
-         $attribute     = [];
+      $ldap_values['ldap_attribute'] = $input['ldap_attribute'] ?? ($ldap_values['ldap_attribute'] ?? null);
+      if (isset($ldap_values['ldap_attribute'])) {
+         $ldap_dropdown = RuleRightParameter::getById((int) $ldap_values['ldap_attribute']);
+         if (!($ldap_dropdown instanceof RuleRightParameter)) {
+            return [];
+         }
       }
 
-      set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
-
-      try {
-         $cookie = '';
-         $ds = $config_ldap->connect();
-         ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-         $controls = [
-            [
-               'oid'        =>LDAP_CONTROL_PAGEDRESULTS,
-               'iscritical' => false,
-               'value'      => [
-                  'size'    => $config_ldap->fields['pagesize'],
-                  'cookie'  => $cookie
-               ]
-            ]
-         ];
-         $result = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
-         ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-         $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
-         ldap_get_entries($ds, $result);
-      } catch (Exception $e) {
-         Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
+      if (isset($input['ldap_filter'])) {
+         $input['ldap_filter'] = html_entity_decode($input['ldap_filter']);
       }
+      $ldap_values['ldap_filter'] = $input['ldap_filter'] ?? ($ldap_values['ldap_filter'] ?? '');
 
-      restore_error_handler();
-
-      $input['values'] = json_encode([
-         'ldap_auth'      => $input['ldap_auth'],
-         'ldap_filter'    => $input['ldap_filter'],
-         'ldap_attribute' => strtolower($input['ldap_attribute']),
-      ], JSON_UNESCAPED_UNICODE);
+      $input['values'] = json_encode($ldap_values, JSON_UNESCAPED_UNICODE);
       unset($input['ldap_auth']);
       unset($input['ldap_filter']);
       unset($input['ldap_attribute']);
@@ -251,6 +225,20 @@ class LdapselectField extends SelectField
 
       $this->value = $input[$key];
       return true;
+   }
+
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = PluginFormcreatorAbstractField::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      return $strings;
    }
 
    public function equals($value): bool {
@@ -287,5 +275,12 @@ class LdapselectField extends SelectField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public static function ldapErrorHandler($errno, $errstr, $errfile, $errline) {
+      if (0 === error_reporting()) {
+         return false;
+      }
+      throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
    }
 }
