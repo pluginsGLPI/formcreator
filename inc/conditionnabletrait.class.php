@@ -78,7 +78,8 @@ trait PluginFormcreatorConditionnableTrait
 
    public function checkConditionSettings(array $input): bool {
       if (!isset($input['show_rule'])) {
-         return false;
+         // Inconsistency if show_rule set but no condition set
+         return !isset($input['_conditions']);
       }
       $showRule = $input['show_rule'];
       if ($showRule == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
@@ -114,12 +115,23 @@ trait PluginFormcreatorConditionnableTrait
       $itemtype = $this->getType();
       $itemId = $this->getID();
 
-      // Delete all existing conditions for the question
-      $this->deleteConditions();
-      if ($this->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         // No condition ? Exit now !
+      if (!isset($this->input['show_rule']) && isset($this->fields['show_rule']) && $this->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         // rule not changed and is currently "always show"
+         $this->deleteConditions();
          return true;
       }
+      if (!isset($this->input['show_rule']) && isset($this->fields['show_rule']) && $this->fields['show_rule'] != PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         // Rule not changed and is not "always show"
+         return true;
+      }
+      if (isset($this->input['show_rule']) && $this->input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         // rule changed to "always show"
+         $this->deleteConditions();
+         return true;
+      }
+
+      // Delete all existing conditions for the question
+      $this->deleteConditions();
 
       $input = $input['_conditions'];
 
