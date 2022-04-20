@@ -1580,10 +1580,6 @@ SCRIPT;
          }
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-      }
-
       return $input;
    }
 
