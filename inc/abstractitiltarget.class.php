@@ -1611,11 +1611,7 @@ SCRIPT;
       ]);
    }
 
-   protected function getDeleteImage($id) {
-      $formUrl = static::getFormURL();
-      // $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '&id=' . $this->getID() . '">';
-      // $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
-      // $link .= '</a>';
+   protected function getDeleteImage() {
       $link = '<a onclick="plugin_formcreator.deleteActor(this)">';
       $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
       $link .= '</a>';
@@ -2097,7 +2093,7 @@ SCRIPT;
                break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
-         echo $this->getDeleteImage($id);
+         echo $this->getDeleteImage();
          echo '</div>';
       }
 

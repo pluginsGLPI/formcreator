@@ -38,15 +38,11 @@ use PluginFormcreatorForm;
 use Dropdown;
 use DbUtils;
 use Plugin;
-use Ticket;
-use Change;
-use Problem;
 use Session;
 use Html;
 use OperatingSystem;
 use PluginFieldsDropdown;
 use PluginFieldsField;
-use PluginFormcreatorQuestion;
 use Toolbox;
 use User;
 
@@ -59,19 +55,20 @@ class FieldsField extends PluginFormcreatorAbstractField
    public $field = null;
 
    /**
+    * Get the additional field object lined to this formcreator field
     *
-    * @param array $question PluginFormcreatorQuestion instance
+    * @return null|PluginFieldsField
     */
-   public function __construct(PluginFormcreatorQuestion $question) {
-      $this->question  = $question;
-      if (isset($this->question->fields['values'])) {
+   public function getField(): ?PluginFieldsField {
+      if ($this->field === null && isset($this->question->fields['values'])) {
          $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
          $field_name = $decodedValues['dropdown_fields_field'] ?? '';
          $fieldObj = new PluginFieldsField();
          if ($fieldObj->getFromDBByCrit(['name' => $field_name])) {
-            $this->field  = $fieldObj;
+            $this->field = $fieldObj;
          }
       }
+      return $this->field;
    }
 
    public function isPrerequisites(): bool {
@@ -152,16 +149,24 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function showForm(array $options): void {
+      if (!\Plugin::isPluginActive('fields')) {
+         $options['error'] = __('Warning: Additional Fields plugin is disabled or missing', 'formcreator');
+         $template = '@formcreator/field/undefinedfield.html.twig';
+         TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+         ]);
+         return;
+      }
 
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $this->question->fields['_block_id'] = $decodedValues['blocks_field'] ?? 0;
       $this->question->fields['_block_list'] = $this->getBlocks();
       $this->question->fields['_drodpdown_block_label'] = __("Block", "fields");
 
-      $this->question->fields['_field_name'] =  $decodedValues['dropdown_fields_field'] ?? '';
-      $this->question->fields['_field_list'] =  FieldsField::getFieldsFromBlock($this->question->fields['_block_id']);
+      $this->question->fields['_field_name'] = $decodedValues['dropdown_fields_field'] ?? '';
+      $this->question->fields['_field_list'] = FieldsField::getFieldsFromBlock($this->question->fields['_block_id']);
       $this->question->fields['_drodpdown_field_label'] =  __("Field", "fields");
 
       TemplateRenderer::getInstance()->display($template, [
@@ -190,7 +195,7 @@ class FieldsField extends PluginFormcreatorAbstractField
 
    public function prepareHtmlField($fieldName, $canedit = true, $value = '') {
 
-      if (empty($this->field->fields)) {
+      if ($this->getField() === null || empty($this->getField()->fields)) {
          return false;
       }
 
@@ -201,10 +206,10 @@ class FieldsField extends PluginFormcreatorAbstractField
          $field['value'] = $value;
       } else {
          //get default value
-         if ($this->field->fields['default_value'] !== "") {
-            $value = $this->field->fields['default_value'];
+         if ($this->getField()->fields['default_value'] !== "") {
+            $value = $this->getField()->fields['default_value'];
             // shortcut for date/datetime
-            if (in_array($this->field->fields['type'], ['date', 'datetime'])
+            if (in_array($this->getField()->fields['type'], ['date', 'datetime'])
                   && $value == 'now') {
                $value = $_SESSION["glpi_currenttime"];
             }
@@ -213,10 +218,10 @@ class FieldsField extends PluginFormcreatorAbstractField
       }
 
       $html = "";
-      $readonly = ($this->field->fields['is_readonly'] || !$canedit);
-      $this->question->fields['required'] = $this->field->fields['mandatory'];
+      $readonly = ($this->getField()->fields['is_readonly'] || !$canedit);
+      $this->question->fields['required'] = $this->getField()->fields['mandatory'];
 
-      switch ($this->field->fields['type']) {
+      switch ($this->getField()->fields['type']) {
          case 'number':
          case 'text':
             $value = Html::cleanInputText($value);
@@ -263,11 +268,11 @@ class FieldsField extends PluginFormcreatorAbstractField
             break;
          case 'dropdown':
             if ($canedit && !$readonly) {
-               if (strpos($this->field->fields['name'], "dropdowns_id") !== false) {
+               if (strpos($this->getField()->fields['name'], "dropdowns_id") !== false) {
                   $dropdown_itemtype = getItemTypeForTable(
-                                       getTableNameForForeignKeyField($this->field->fields['name']));
+                                       getTableNameForForeignKeyField($this->getField()->fields['name']));
                } else {
-                  $dropdown_itemtype = PluginFieldsDropdown::getClassname($this->field->fields['name']);
+                  $dropdown_itemtype = PluginFieldsDropdown::getClassname($this->getField()->fields['name']);
                }
                $html.= Dropdown::show($dropdown_itemtype,
                                        ['value'   => $value,
@@ -275,7 +280,7 @@ class FieldsField extends PluginFormcreatorAbstractField
                                        'entity'  => $_SESSION['glpiactiveentities'],
                                        'display' => false]);
             } else {
-               $dropdown_table = "glpi_plugin_fields_".$this->field->fields['name']."dropdowns";
+               $dropdown_table = "glpi_plugin_fields_".$this->getField()->fields['name']."dropdowns";
                $html.= Dropdown::getDropdownName($dropdown_table, $value);
             }
 
@@ -417,18 +422,18 @@ class FieldsField extends PluginFormcreatorAbstractField
 
    public function isValidValue($value): bool {
 
-      if (is_null($this->field)) {
+      if (is_null($this->getField())) {
          return false;
       }
 
       //check data type for input number / url
       $valid = true;
-      if ($this->field->fields['type'] == 'number' && !empty($this->value) && !is_numeric($this->value)) {
-         $number_errors[] = $this->field->fields['label'];
+      if ($this->getField()->fields['type'] == 'number' && !empty($this->value) && !is_numeric($this->value)) {
+         $number_errors[] = $this->getField()->fields['label'];
          $valid = false;
-      } else if ($this->field->fields['type'] == 'url' && !empty($this->value)) {
+      } else if ($this->getField()->fields['type'] == 'url' && !empty($this->value)) {
          if (filter_var($this->value, FILTER_VALIDATE_URL) === false) {
-            $url_errors[] = $this->field->fields['label'];
+            $url_errors[] = $this->getField()->fields['label'];
             $valid = false;
          }
       }
@@ -452,9 +457,9 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function isValid(): bool {
-      if (!is_null($this->field)) {
+      if (!is_null($this->getField())) {
          // If the field is required it can't be empty
-         if ($this->field->fields['mandatory'] && $this->value == '') {
+         if ($this->getField()->fields['mandatory'] && $this->value == '') {
             Session::addMessageAfterRedirect(
                __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
                false,

@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use GlpiPlugin\Formcreator\Field\UndefinedField;
 use Xylemical\Expressions\Math\BcMath;
 use Xylemical\Expressions\Context;
 use Xylemical\Expressions\ExpressionFactory;
@@ -107,7 +108,7 @@ class PluginFormcreatorFields
       // Get localized names of field types
       foreach (PluginFormcreatorFields::getClasses() as $field_type => $classname) {
          $classname = self::getFieldClassname($field_type);
-         if ($classname == PluginFormcreatorTagField::class && !$plugin->isActivated('tag')) {
+         if ($classname == UndefinedField::class) {
             continue;
          }
 
