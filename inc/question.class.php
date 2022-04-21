@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use GlpiPlugin\Formcreator\Field\UndefinedField;
 use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
@@ -205,6 +206,7 @@ PluginFormcreatorTranslatableInterface
       $questionId = $this->getID();
       $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
       $fieldType = PluginFormcreatorFields::getFieldClassname($this->fields['fieldtype']);
+      /** @var PluginFormcreatorFieldInterface $field */
       $field = new $fieldType($this);
 
       $html .= '<div class="grid-stack-item"'
@@ -725,7 +727,7 @@ PluginFormcreatorTranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
-      $template = '@formcreator/field/undefined.html.twig';
+      $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [
             'item' => $this,
@@ -1186,7 +1188,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * load instance if field associated to the question
+    * load instance of field associated to the question
     *
     * @return bool true on sucess, false otherwise
     */

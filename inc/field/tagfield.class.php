@@ -46,6 +46,16 @@ class TagField extends DropdownField
    }
 
    public function showForm(array $options): void {
+      if (!\Plugin::isPluginActive('tag')) {
+         $options['error'] = __('Warning: Tag plugin is disabled or missing', 'formcreator');
+         $template = '@formcreator/field/undefinedfield.html.twig';
+         TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+         ]);
+         return;
+      }
+
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
       $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
