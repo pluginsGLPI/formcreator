@@ -1294,7 +1294,7 @@ PluginFormcreatorTranslatableInterface
 
                /** @var PluginFormcreatorDropdownField */
                $field = PluginFormcreatorFields::getFieldInstance(
-                  $question['fieldtype'],
+                  $question->fields['fieldtype'],
                   $question
                );
 
