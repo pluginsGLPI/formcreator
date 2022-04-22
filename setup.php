@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Hooks;
+
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
 define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-alpha.4');
@@ -268,37 +270,40 @@ function plugin_formcreator_permanent_hook(): void {
    global $PLUGIN_HOOKS;
 
    // Set the plugin CSRF compliance (required since GLPI 0.84)
-   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
+   $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['formcreator'] = true;
 
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
 
    // hook to update issues when an operation occurs on a ticket
-   $PLUGIN_HOOKS['item_add']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_ADD]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_add_ticket',
       ITILFollowup::class => 'plugin_formcreator_hook_update_itilFollowup',
    ];
-   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['formcreator'] = [
+      User::class  => 'plugin_formcreator_hook_update_user',
+   ];
+   $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
       Profile::class => 'plugin_formcreator_hook_update_profile',
    ];
-   $PLUGIN_HOOKS['item_delete']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_DELETE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
    ];
-   $PLUGIN_HOOKS['item_restore']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_RESTORE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_restore_ticket'
    ];
-   $PLUGIN_HOOKS['item_purge']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_PURGE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_purge_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
    ];
-   $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['formcreator'] = [
       PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
       PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
    ];
    // hook to add custom actions on a ticket in service catalog
-   $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
+   $PLUGIN_HOOKS[Hooks::TIMELINE_ACTIONS]['formcreator'] = 'plugin_formcreator_timelineActions';
 }
 
 /**
