@@ -315,12 +315,12 @@ function plugin_formcreator_hook(): void {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
-   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
+   $PLUGIN_HOOKS[Hooks::ADD_CSS]['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
 
-   $PLUGIN_HOOKS['pre_show_tab']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['formcreator'] = [
       PluginFormcreatorCommon::class, 'hookPreShowTab',
    ];
-   $PLUGIN_HOOKS['post_show_tab']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['formcreator'] = [
       PluginFormcreatorCommon::class, 'hookPostShowTab',
    ];
 
@@ -341,8 +341,8 @@ function plugin_formcreator_hook(): void {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
             $CFG_GLPI['javascript']['self-service']['none'] = [
                'dashboard',
                'gridstack'
@@ -371,7 +371,7 @@ function plugin_formcreator_hook(): void {
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
+   $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS]['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
 
    // Config page
    if (Session::haveRight('entity', UPDATE)) {
