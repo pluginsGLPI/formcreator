@@ -552,6 +552,7 @@ class PluginFormcreatorInstall {
       $this->deleteTicketRelation();
       $this->deleteTables();
       $this->deleteNotifications();
+      $this->deleteMiniDashboard();
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
@@ -641,5 +642,24 @@ class PluginFormcreatorInstall {
             'items_id'                => $helpdeskProfile['id'],
          ]);
       }
+   }
+
+   public function deleteMiniDashboard(): bool {
+      $dashboard = new Dashboard();
+
+      if ($dashboard->getFromDB('plugin_formcreator_issue_counters') === false) {
+         // The dashboard does not exists, nothing to delete
+         return true;
+      }
+
+      $dashboard->delete([
+         'key' => 'plugin_formcreator_issue_counters'
+      ]);
+      if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
+         // Failed to delete the dashboard
+         return false;
+      }
+
+      return true;
    }
 }
