@@ -369,7 +369,6 @@ function plugin_formcreator_hook(): void {
    $PLUGIN_HOOKS['redefine_menus']['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
 
    // Config page
-   $links  = [];
    if (Session::haveRight('entity', UPDATE)) {
       $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = PluginFormcreatorForm::class;
    }
