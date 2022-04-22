@@ -572,6 +572,50 @@ class PluginFormcreatorInstall {
    }
 
    protected function createMiniDashboard() {
+      $this->createMiniDashboardBigNumbers();
+      // $this->createMiniDashboardSummary();
+   }
+
+   protected function createMiniDashboardSummary() {
+      $dashboard = new Dashboard();
+
+      if ($dashboard->getFromDB('plugin_formcreator_issue_summary') !== false) {
+         // The dashboard already exists, nothing to create
+         return;
+      }
+
+      $dashboard->add([
+         'key'     => 'plugin_formcreator_issue_summary',
+         'name'    => 'Assistance requests summary',
+         'context' => 'mini_core',
+      ]);
+
+      if ($dashboard->isNewItem()) {
+         // Failed to create the dashboard
+         return;
+      };
+
+      $item = new Dashboard_Item();
+      $item->addForDashboard($dashboard->fields['id'], [[
+         'card_id' => 'plugin_formcreator_issues_summary',
+         'gridstack_id' => 'plugin_formcreator_issues_summary_' . Uuid::uuid4(),
+         'x'       => 10,
+         'y'       => 0,
+         'width'   => 12,
+         'height'  => 2,
+         'card_options' => [
+            'color'        => '#FAFAFA',
+            'widgettype'   => 'summaryNumbers',
+            'use_gradient' => '0',
+            'point_labels' => '0',
+            'limit'        => '7',
+         ],
+      ]]);
+
+      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+   }
+
+   protected function createMiniDashboardBigNumbers() {
       $dashboard = new Dashboard();
 
       if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
@@ -591,29 +635,39 @@ class PluginFormcreatorInstall {
       };
 
       $commonOptions = [
-         'color'        => '#FAFAFA',
          'widgettype'   => 'bigNumber',
          'use_gradient' => '0',
          'point_labels' => '0',
-         'limit'        => '7',
       ];
       $cards = [
-         'plugin_formcreator_processing' => [
-            'color' => '#49bf4d'
+         'plugin_formcreator_all_issues'      => [
+            'color' => '#fafafa'
          ],
-         'plugin_formcreator_waiting'    => [
-            'color' => '#FFA500'
+         'plugin_formcreator_incoming_issues' => [
+            'color' => '#3bc519'
          ],
-         'plugin_formcreator_validate'   => [
-            'color' => '#8CABDB'
+         'plugin_formcreator_assigned_issues' => [
+            'color' => '#f1cd29'
          ],
-         'plugin_formcreator_solved'     => [
-            'color' => '#000000'
+         'plugin_formcreator_waiting_issues'   => [
+            'color' => '#f1a129'
+         ],
+         'plugin_formcreator_validate_issues'  => [
+            'color' => '#266ae9'
+         ],
+         'plugin_formcreator_solved_issues'    => [
+            'color' => '#edc949'
+         ],
+         'plugin_formcreator_closed_issues'    => [
+            'color' => '#555555'
          ],
       ];
-      $x = 0;
-      $w = 2; // Width
-      $h = 2; // Height
+
+      // With counters
+      $x = 2;
+      $w = 3; // Width
+      $h = 1; // Height
+      $s = 1; // space between widgets
       $y = 0;
       foreach ($cards as $key => $options) {
          $item = new Dashboard_Item();
@@ -626,9 +680,13 @@ class PluginFormcreatorInstall {
             'height'  => $h,
             'card_options' => array_merge($commonOptions, $options),
          ]]);
-         $x += $w;
+         $x += ($w + $s);
       }
 
+      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+   }
+
+   protected function adRightsToMiniDashboard(int $dashboardId) {
       // Give rights to all self service profiles
       $profile = new Profile();
       $helpdeskProfiles = $profile->find([
@@ -637,7 +695,7 @@ class PluginFormcreatorInstall {
       foreach ($helpdeskProfiles as $helpdeskProfile) {
          $dashboardRight = new Dashboard_Right();
          $dashboardRight->add([
-            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'dashboards_dashboards_id' => $dashboardId,
             'itemtype'                 => Profile::getType(),
             'items_id'                => $helpdeskProfile['id'],
          ]);

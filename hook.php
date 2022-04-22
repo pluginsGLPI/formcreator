@@ -656,13 +656,18 @@ function plugin_formcreator_hook_dashboard_cards() {
    $cards = [];
 
    $counters = [
-      'processing' => __('processing issues', 'formcreator'),
-      'waiting'    => __('waiting issues', 'formcreator'),
-      'validate'   => __('issues to validate', 'formcreator'),
-      'solved'     => __('solved issues', 'formcreator'),
+      'all'        => __('All issues', 'formcreator'),
+      'incoming'   => __('New issues', 'formcreator'),
+      'assigned'   => __('Assigned issues', 'formcreator'),
+      'waiting'    => __('Waiting issues', 'formcreator'),
+      'validate'   => __('Issues to validate', 'formcreator'),
+      'solved'     => __('Solved issues', 'formcreator'),
+      'closed'     => __('Closed issues', 'formcreator'),
+      // Aggregaterd statuses
+      'old'        => __('Old issues', 'formcreator'), // Solved + closed
    ];
    foreach ($counters as $key => $label) {
-      $cards['plugin_formcreator_' . $key] = [
+      $cards['plugin_formcreator_' . $key . '_issues'] = [
          'widgettype' => ['bigNumber'],
          'itemtype'   => PluginFormcreatorIssue::getType(),
          'group'      => __('Assistance'),
@@ -671,13 +676,23 @@ function plugin_formcreator_hook_dashboard_cards() {
          'args'       => [
             'params' => [
                'status' => $key,
-               'label'  => $label
+               'label'  => "", //$label
             ]
          ],
          'cache'      => false,
          'filters'    => []
       ];
    }
+
+   $cards['plugin_formcreator_issues_summary'] = [
+      'widgettype' => ['summaryNumbers'],
+      'itemtype'   => PluginFormcreatorIssue::getType(),
+      'group'      => __('Assistance'),
+      'label'      => __('Issues summary', 'formcreator'),
+      'provider'   => 'PluginFormcreatorIssue::getIssuesSummary',
+      'cache'      => false,
+      'filters'    => []
+   ];
 
    return $cards;
 }
@@ -708,8 +723,11 @@ function plugin_formcreator_hook_update_user(CommonDBTM $item) {
       return;
    }
 
-   if (isset($item->input['default_dashboard_mini_ticket']) && $item->input['default_dashboard_mini_ticket'] == 'plugin_formcreator_issue_counters') {
-      Session::addMessageAfterRedirect(__('Formcreator\'s mini dashboard not usable as default. This Setting has been ignored.', 'formcreator'), false, WARNING);
-      unset($item->input['default_dashboard_mini_ticket']);
+   if (isset($item->input['default_dashboard_mini_ticket'])) {
+
+      if (in_array($item->input['default_dashboard_mini_ticket'], ['plugin_formcreator_issue_counters', 'plugin_formcreator_issue_summary'])) {
+         Session::addMessageAfterRedirect(__('Formcreator\'s mini dashboard not usable as default. This Setting has been ignored.', 'formcreator'), false, WARNING);
+         unset($item->input['default_dashboard_mini_ticket']);
+      }
    }
 }

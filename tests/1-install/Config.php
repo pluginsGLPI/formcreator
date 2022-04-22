@@ -313,6 +313,6 @@ class Config extends CommonTestCase {
       $rows = $dashboardItem->find([
          'dashboards_dashboards_id' => $dashboard->fields['id'],
       ]);
-      $this->array($rows)->hasSize(4);
+      $this->array($rows)->hasSize(7);
    }
 }
