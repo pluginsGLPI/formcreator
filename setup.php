@@ -259,7 +259,12 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    die($error . "<br><br> Please, check migration log");
 }
 
-function plugin_formcreator_permanent_hook() {
+/**
+ * Permanent hooks, must be set even when the plugin is disabled
+ *
+ * @return void
+ */
+function plugin_formcreator_permanent_hook(): void {
    global $PLUGIN_HOOKS;
 
    // Set the plugin CSRF compliance (required since GLPI 0.84)
@@ -296,7 +301,12 @@ function plugin_formcreator_permanent_hook() {
    $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
 }
 
-function plugin_formcreator_hook() {
+/**
+ * Hooks to run when the plugin is active
+ *
+ * @return void
+ */
+function plugin_formcreator_hook(): void {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
