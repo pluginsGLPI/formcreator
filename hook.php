@@ -702,3 +702,14 @@ function plugin_formcreator_hook_update_profile(CommonDBTM $item) {
       ], 1);
    }
 }
+
+function plugin_formcreator_hook_update_user(CommonDBTM $item) {
+   if ($item::getType() != User::getType()) {
+      return;
+   }
+
+   if (isset($item->input['default_dashboard_mini_ticket']) && $item->input['default_dashboard_mini_ticket'] == 'plugin_formcreator_issue_counters') {
+      Session::addMessageAfterRedirect(__('Formcreator\'s mini dashboard not usable as default. This Setting has been ignored.', 'formcreator'), false, WARNING);
+      unset($item->input['default_dashboard_mini_ticket']);
+   }
+}

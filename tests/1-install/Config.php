@@ -33,7 +33,9 @@ namespace tests\units;
 
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item;
+use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Profile;
 
 /**
  * @engine inline
@@ -290,6 +292,21 @@ class Config extends CommonTestCase {
       $dashboard = new Dashboard();
       $dashboard->getFromDB('plugin_formcreator_issue_counters');
       $this->boolean($dashboard->isNewItem())->isFalse();
+
+      // Check rights on the dashboard
+      $right = new Right();
+      $profile = new Profile();
+      $helpdeskProfiles = $profile->find([
+         'interface' => 'helpdesk',
+      ]);
+      foreach ($helpdeskProfiles as $helpdeskProfile) {
+         $rows = $right->find([
+            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'itemtype'                 => Profile::getType(),
+            'items_id'                 => $helpdeskProfile['id']
+         ]);
+         $this->array($rows)->hasSize(1);
+      }
 
       // Check there is widgets in the dashboard
       $dashboardItem = new Item();
