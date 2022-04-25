@@ -55,9 +55,6 @@ Features
    <issues>https://github.com/pluginsGLPI/formcreator/issues</issues>
    <readme>https://glpi-plugins.readthedocs.io/en/latest/formcreator/index.html</readme>
    <authors>
-      <author>Jérémy Moreau</author>
-      <author>Thierry Bugier</author>
-      <author>Alexandre Delaunay</author>
       <author>Teclib'</author>
    </authors>
    <versions>
