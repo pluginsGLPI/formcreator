@@ -29,28 +29,39 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
+class PluginFormcreatorProfile extends Profile {
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+        return self::createTabEntry(PluginFormcreatorForm::getTypeName(Session::getPluralNumber()));
+    }
 
-if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
-   http_response_code(400);
-   die();
-}
-if (!isset($_POST['id'])) {
-   http_response_code(400);
-   die();
-}
-if (!isset($_POST['value'])) {
-   http_response_code(400);
-   die();
-}
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+        $formcreatorprofile = new self();
+        $formcreatorprofile->showForm($item->getID());
+        return true;
+    }
 
-if (!(new PluginFormcreatorTranslation())->add($_POST)) {
-   http_response_code(400);
-   die();
+    function showForm($ID, $options = []) {
+        if (!self::canView()) {
+            return false;
+        }
+
+        echo "<div class='spaced'>";
+        $profile = new Profile();
+        $profile->getFromDB($ID);
+        echo "<form method='post' action='".$profile->getFormURL()."'>";
+
+        $rights = [['itemtype'  => 'PluginFormcreatorForm',
+                    'label'     => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
+                    'field'     => 'plugin_formcreator']];
+        $matrix_options['title'] = PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
+        $profile->displayRightsChoiceMatrix($rights, $matrix_options);
+
+        echo "<div class='center'>";
+        echo Html::hidden('id', ['value' => $ID]);
+        echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+        echo "</div>\n";
+        Html::closeForm();
+        echo "</div>";
+    }
 }

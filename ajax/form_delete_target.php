@@ -42,7 +42,7 @@ if (!isset($_REQUEST['itemtype']) || !isset($_REQUEST['items_id']) || !isset($_R
     die();
 }
 
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 if (!PluginFormcreatorCommon::getForm()->deleteTarget($_REQUEST)) {
     http_response_code(500);
 }

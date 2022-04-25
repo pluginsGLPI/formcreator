@@ -32,7 +32,7 @@
 require_once ('../../../inc/includes.php');
 
 // Check if current user have config right
-Session::checkRight("entity", UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {

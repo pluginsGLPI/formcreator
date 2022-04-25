@@ -30,7 +30,7 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if ($_REQUEST['way'] !== 'up' && $_REQUEST['way'] !== 'down') {
     http_response_code(400);

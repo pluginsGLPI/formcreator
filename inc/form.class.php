@@ -47,7 +47,7 @@ PluginFormcreatorTranslatableInterface
    use PluginFormcreatorExportableTrait;
    use PluginFormcreatorTranslatable;
 
-   static $rightname = 'entity';
+   static $rightname = 'plugin_formcreator';
 
    public $dohistory = true;
 
@@ -74,19 +74,19 @@ PluginFormcreatorTranslatableInterface
    }
 
    public static function canCreate() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, CREATE);
    }
 
    public static function canView() {
-      return true;
+      return Session::haveRight(self::$rightname, READ);
    }
 
    public static function canDelete() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, DELETE);
    }
 
    public static function canPurge() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, PURGE);
    }
 
    public function canPurgeItem() {
@@ -98,7 +98,7 @@ PluginFormcreatorTranslatableInterface
       if ($DbUtil->countElementsInTable(PluginFormcreatorFormAnswer::getTable(), $criteria) > 0) {
          return false;
       }
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, UPDATE);
    }
 
    /**

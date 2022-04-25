@@ -374,7 +374,7 @@ function plugin_formcreator_hook(): void {
    $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS]['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
 
    // Config page
-   if (Session::haveRight('entity', UPDATE)) {
+   if (Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
       $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = PluginFormcreatorForm::class;
    }
 }
@@ -396,6 +396,8 @@ function plugin_formcreator_registerClasses() {
    ]);
 
    Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+
+   Plugin::registerClass(PluginFormcreatorProfile::class, ['addtabon' => Profile::class]);
 }
 
 function plugin_formcreator_redirect() {
