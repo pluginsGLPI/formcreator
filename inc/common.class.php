@@ -30,6 +30,7 @@
  */
 
 use Gregwar\Captcha\CaptchaBuilder;
+use Glpi\Plugin\Hooks;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -833,6 +834,9 @@ JAVASCRIPT;
     * @return void
     */
    public static function showMiniDashboard(): void {
+
+      Plugin::doHook(Hooks::DISPLAY_CENTRAL);
+
       if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
          $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
          $dashboard->show(true);
