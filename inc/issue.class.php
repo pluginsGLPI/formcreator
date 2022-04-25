@@ -882,7 +882,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $all_status;
    }
 
-   static function getProcessingCriteria() {
+   static function getAllCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'all'],
+                           ],
+              'reset'    => 'reset'];
+   }
+
+   static function getNewCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => Ticket::INCOMING],
+                           ],
+              'reset'    => 'reset'];
+   }
+
+   static function getAssignedCriteria() {
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process'],
@@ -909,6 +925,32 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getSolvedCriteria() {
+      return ['criteria' => [
+         [
+         'criteria' => [[
+            'link'       => 'OR',
+            'field' => 4,
+            'searchtype' => 'equals',
+            'value'      => Ticket::SOLVED, // see Ticket::getAllStatusArray()
+         ],
+         ['field' => 4,
+            'searchtype' => 'equals',
+            'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
+            'link'       => 'OR']
+         ]],
+      ],
+      'reset'    => 'reset'];
+   }
+
+   static function getClosedCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => Ticket::CLOSED],
+                           ],
+              'reset'    => 'reset'];
+   }
+
+   static function getOldCriteria() {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [
          ['link'       => 'AND',
@@ -923,68 +965,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
             'link'       => 'OR']
          ]],
-         ['link'       => 'OR',
-         'criteria' => [[
-            'link'       => 'AND',
-            'field'      => 9,
-            'searchtype' => 'equals',
-            'value'      => $currentUser,
-         ],
-         ['link'       => 'OR',
-            'field'      => 16,
-            'searchtype' => 'equals',
-            'value'      => 'mygroups',
-         ],
-         ]],
-         ['link'       => 'AND',
-            'field' => 4,
-            'searchtype' => 'equals',
-            'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-         ]],
+      ],
       'reset'    => 'reset'];
-   }
-
-   static function getTicketSummary(?string $counter = null) {
-      $status = [
-         Ticket::INCOMING => NOT_AVAILABLE,
-         Ticket::WAITING  => NOT_AVAILABLE,
-         'to_validate'    => NOT_AVAILABLE,
-         Ticket::SOLVED   => NOT_AVAILABLE
-      ];
-
-      if ($counter === null || $counter == 'incoming') {
-         $searchIncoming = Search::getDatas(PluginFormcreatorIssue::class,
-                                          self::getProcessingCriteria());
-         if (isset($searchIncoming['data']['totalcount'])) {
-            $status[Ticket::INCOMING] = $searchIncoming['data']['totalcount'];
-         }
-      }
-
-      if ($counter === null || $counter == 'waiting') {
-         $searchWaiting = Search::getDatas(PluginFormcreatorIssue::class,
-                                          self::getWaitingCriteria());
-         if (isset($searchWaiting['data']['totalcount'])) {
-            $status[Ticket::WAITING] = $searchWaiting['data']['totalcount'];
-         }
-      }
-
-      if ($counter === null || $counter == 'to_validate') {
-         $searchValidate = Search::getDatas(PluginFormcreatorIssue::class,
-                                          self::getValidateCriteria());
-         if (isset($searchValidate['data']['totalcount'])) {
-            $status['to_validate'] = $searchValidate['data']['totalcount'];
-         }
-      }
-
-      if ($counter === null || $counter == 'solved') {
-         $searchSolved = Search::getDatas(PluginFormcreatorIssue::class,
-                                          self::getSolvedCriteria());
-         if (isset($searchSolved['data']['totalcount'])) {
-            $status[Ticket::SOLVED] = $searchSolved['data']['totalcount'];
-         }
-      }
-
-      return $status;
    }
 
    /**
@@ -1025,25 +1007,52 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function nbIssues(array $params): array {
+      $default_params = [
+         'label'                 => "",
+         'icon'                  => Ticket::getIcon(),
+         'apply_filters'         => [],
+      ];
+      $params = array_merge($default_params, $params);
+
       switch ($params['status']) {
-         case 'processing':
-            $searchCriteria = PluginFormcreatorIssue::getProcessingCriteria();
-            $icon = '';
+         case 'all':
+            $searchCriteria = PluginFormcreatorIssue::getAllCriteria();
+            $params['icon']  = "";
+            break;
+
+         case 'incoming':
+            $searchCriteria = PluginFormcreatorIssue::getNewCriteria();
+            $params['icon']  = Ticket::getIcon();
             break;
 
          case 'waiting':
             $searchCriteria = PluginFormcreatorIssue::getWaitingCriteria();
-            $icon = 'far fa-clock';
+            $params['icon']  = "fas fa-pause-circle";
+            break;
+
+         case 'assigned':
+            $searchCriteria = PluginFormcreatorIssue::getAssignedCriteria();
+            $params['icon']  = "fas fa-users";
             break;
 
          case 'validate':
+            $params['icon']  = "far fa-eye";
             $searchCriteria = PluginFormcreatorIssue::getValidateCriteria();
-            $icon = '';
             break;
 
          case 'solved':
+            $params['icon']  = "far fa-check-square";
             $searchCriteria = PluginFormcreatorIssue::getSolvedCriteria();
-            $icon = '';
+            break;
+
+         case 'closed':
+            $params['icon']  = "fas fa-archive";
+            $searchCriteria = PluginFormcreatorIssue::getClosedCriteria();
+            break;
+
+         case 'old':
+            $params['icon']  = "fas fa-archive";
+            $searchCriteria = PluginFormcreatorIssue::getOldCriteria();
             break;
       }
       $searchWaiting = Search::getDatas(
@@ -1057,14 +1066,79 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $url = self::getSearchURL();
       $url .= '?' . Toolbox::append_params($searchCriteria);
-      $label = $params['label'];
       return [
          'number'     => $count,
          'url'        => $url,
-         'label'      => $label,
-         'icon'       => $icon,
+         'label'      => $params['label'],
+         'icon'       => $params['icon'],
          's_criteria' => $searchCriteria,
          'itemtype'   => 'Ticket',
+      ];
+   }
+
+   public static function getIssuesSummary(array $params = []) {
+      $default_params = [
+         'label'         => "",
+         'icon'          => "",
+         'apply_filters' => [],
+      ];
+      $params = array_merge($default_params, $params);
+
+      $all      = self::nbIssues($params + ['status' => 'all']);
+      $new      = self::nbIssues($params + ['status' => 'incoming']);
+      $waiting  = self::nbIssues($params + ['status' => 'waiting']);
+      $incoming = self::nbIssues($params + ['status' => 'assigned']);
+      $validate = self::nbIssues($params + ['status' => 'validate']);
+      $solved   = self::nbIssues($params + ['status' => 'solved']);
+      $closed   = self::nbIssues($params + ['status' => 'closed']);
+
+      return [
+         'data' => [
+            [
+               'number' => $all['number'],
+               'label'  => __("All", 'formcreator'),
+               'url'    => $all['url'],
+               // 'color'  => '#3bc519',
+            ],
+            [
+               'number' => $new['number'],
+               'label'  => __("New"),
+               'url'    => $new['url'],
+               'color'  => '#3bc519',
+            ],
+            [
+               'number' => $incoming['number'],
+               'label'  => __("Assigned"),
+               'url'    => $incoming['url'],
+               'color'  => '#f1cd29',
+            ],
+            [
+               'number' => $waiting['number'],
+               'label'  => __("Waiting"),
+               'url'    => $waiting['url'],
+               'color'  => '#f1a129',
+            ],
+            [
+               'number' => $validate['number'],
+               'label'  => __("To validate"),
+               'url'    => $validate['url'],
+               'color'  => '#266ae9',
+            ],
+            [
+               'number' => $solved['number'],
+               'label'  => __("Solved"),
+               'url'    => $solved['url'],
+               'color'  => '#edc949',
+            ],
+            [
+               'number' => $closed['number'],
+               'label'  => __("Closed"),
+               'url'    => $closed['url'],
+               'color'  => '#555555',
+            ],
+         ],
+         // 'label' => '$params['label']',
+         'icon'  => $params['icon'],
       ];
    }
 }
