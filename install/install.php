@@ -100,6 +100,31 @@ class PluginFormcreatorInstall {
       $task = new CronTask();
       PluginFormcreatorIssue::cronSyncIssues($task);
 
+      // Add rights
+      global $DB;
+      $profiles = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Profile::getTable(),
+      ]);
+      foreach ($profiles AS $profile) {
+         $rights = \ProfileRight::getProfileRights(
+            $profile['id'],
+            [
+               \Entity::$rightname,
+               \PluginFormcreatorForm::$rightname,
+            ]
+         );
+         if ($rights[\Entity::$rightname] >= UPDATE) {
+            \ProfileRight::updateProfileRights($profile['id'], [
+               \PluginFormcreatorForm::$rightname => READ + UPDATE + CREATE + DELETE + PURGE,
+            ]);
+         } else {
+            \ProfileRight::updateProfileRights($profile['id'], [
+               \PluginFormcreatorForm::$rightname => READ,
+            ]);
+         }
+      }
+
       return true;
    }
 

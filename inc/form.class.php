@@ -78,7 +78,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    public static function canView() {
-      return Session::haveRight(self::$rightname, READ);
+      return true;
    }
 
    public static function canDelete() {

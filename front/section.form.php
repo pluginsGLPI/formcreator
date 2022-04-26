@@ -41,13 +41,11 @@ $section = new PluginFormcreatorSection();
 
 if (isset($_POST['add'])) {
    // Add a new Section
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $section->add($_POST);
    Html::back();
 
 } else if (isset($_POST['update'])) {
    // Edit an existing section
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $section->update($_POST);
    Html::back();
 

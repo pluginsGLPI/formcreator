@@ -40,7 +40,7 @@ $form = PluginFormcreatorCommon::getForm();
 
 if (isset($_POST['add'])) {
    // Add a new Form
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
    $_POST['_create_empty_section'] = true;
    if ($newID = $form->add($_POST)) {
       if ($_SESSION['glpibackcreated']) {
@@ -97,6 +97,7 @@ if (isset($_POST['add'])) {
 } else if (isset($_GET['import_form'])) {
    // Import form
    Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    Html::header(
       PluginFormcreatorForm::getTypeName(2),
       $_SERVER['PHP_SELF'],
@@ -121,6 +122,7 @@ if (isset($_POST['add'])) {
 
    // Import form
    Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $form->importJson($_REQUEST);
    Html::back();
 
