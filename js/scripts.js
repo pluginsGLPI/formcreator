@@ -37,6 +37,15 @@ var slinkyCategories;
 var timers = [];
 var formcreatorRootDoc = rootDoc + '/' + GLPI_PLUGINS_PATH.formcreator;
 
+
+// @see https://www.tiny.cloud/docs/integrations/bootstrap/
+// Prevent Bootstrap dialog from blocking focusin
+document.addEventListener('focusin', (e) => {
+   if (e.target.closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+     e.stopImmediatePropagation();
+   }
+ });
+
 // === COMMON ===
 
 function getTimer(object) {
