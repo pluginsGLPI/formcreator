@@ -15,7 +15,7 @@ env:
   OLD_DB_NAME: glpiupgradetest
   PLUGINNAME: formcreator
   PLUGIN_FIELDS_REF: 1.14.0
-  PLUGIIN_TAG_REF: 2.9.0-rc4
+  PLUGIIN_TAG_REF: 2.9.0
   AFTER_SUCCESS_BRANCH: master
   ATOUM_ARG: --force-terminal --use-dot-report
   NOCOVERAGE: -ncc
