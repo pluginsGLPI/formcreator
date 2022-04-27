@@ -690,34 +690,37 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      $tab[] = [
-         'id'                 => '15',
-         'table'              => Group::getTable(),
-         'field'              => 'name',
-         'name'               => __('Technician group'),
-         'datatype'           => 'dropdown',
-         'forcegroupby'       => true,
-         'massiveaction'      => false,
-         'nodisplay'          => $hide_technician,
-         'nosearch'           => $hide_technician,
-         'condition'          => ['is_assign' => 1],
-         'joinparams'         => [
-            'beforejoin'         => [
-               'table'              => Group_Ticket::getTable(),
-               'joinparams'         => [
-                  'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
-                  'jointype'           => 'child',
-                  'beforejoin'         => [
-                     'table'              => Ticket::getTable(),
-                     'joinparams'         => [
-                        'jointype'           => 'itemtype_item_revert',
-                        'specific_itemtype'  => Ticket::class,
-                     ],
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() != 'helpdesk') {
+         $tab[] = [
+            'id'                 => '15',
+            'table'              => Group::getTable(),
+            'field'              => 'name',
+            'name'               => __('Technician group'),
+            'datatype'           => 'dropdown',
+            'forcegroupby'       => true,
+            'massiveaction'      => false,
+            'nodisplay'          => $hide_technician,
+            'nosearch'           => $hide_technician,
+            'condition'          => ['is_assign' => 1],
+            'joinparams'         => [
+               'beforejoin'         => [
+                  'table'              => Group_Ticket::getTable(),
+                  'joinparams'         => [
+                     'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
+                     'jointype'           => 'child',
+                     'beforejoin'         => [
+                        'table'              => Ticket::getTable(),
+                        'joinparams'         => [
+                           'jointype'           => 'itemtype_item_revert',
+                           'specific_itemtype'  => Ticket::class,
+                        ],
+                     ]
                   ]
                ]
             ]
-         ]
-      ];
+         ];
+      }
 
       if (Plugin::isPluginActive('advform')) {
          $tab[] = PluginAdvformIssue::rawSearchOptionFormApproverGroup();
