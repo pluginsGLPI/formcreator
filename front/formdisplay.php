@@ -53,10 +53,10 @@ if (isset($_REQUEST['id'])
    }
 
 	//If the form has restriced access and user is not logged in, send to login form
-	 if (($form->fields['access_rights'] == PluginFormcreatorForm:: ACCESS_RESTRICTED)   && (!isset($_SESSION['glpiID']))){
-	  Session::redirectIfNotLoggedIn();
-	  exit();
-	 }
+   if (($form->fields['access_rights'] == PluginFormcreatorForm:: ACCESS_RESTRICTED)   && (!isset($_SESSION['glpiID']))){
+      Session::redirectIfNotLoggedIn();
+      exit();
+   }
    
    if (!$form->canViewForRequest()) {
       Html::displayRightError();
