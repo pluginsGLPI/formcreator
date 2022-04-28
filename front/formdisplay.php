@@ -52,7 +52,7 @@ if (isset($_REQUEST['id'])
       Html::displayNotFoundError();
    }
 
-	//If the form has restriced access and user is not logged in, send to login form
+   // If the form has restriced access and user is not logged in, send to login form
    if (($form->fields['access_rights'] == PluginFormcreatorForm:: ACCESS_RESTRICTED)   && (!isset($_SESSION['glpiID']))){
       Session::redirectIfNotLoggedIn();
       exit();
