@@ -52,6 +52,12 @@ if (isset($_REQUEST['id'])
       Html::displayNotFoundError();
    }
 
+   // If the form has restriced access and user is not logged in, send to login form
+   if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED && Session::getLoginUserID() === false) {
+      Session::redirectIfNotLoggedIn();
+      exit();
+   }
+
    if (!$form->canViewForRequest()) {
       Html::displayRightError();
       exit();
