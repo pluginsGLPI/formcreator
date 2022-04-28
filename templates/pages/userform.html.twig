@@ -50,7 +50,7 @@
 		        {{ __(item.fields['name'], options.domain) }}
 			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
 		</h1>
-        {% if item.fields['content'] != '' %}
+        {% if item.fields['content'] != '' or item.getExtraHeader() != "" %}
             <div class="form_header">
             {{ __(item.fields['content'], options.domain)|safe_html }}
             {{ item.getExtraHeader()|safe_html }}
