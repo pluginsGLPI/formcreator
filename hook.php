@@ -652,8 +652,10 @@ function plugin_formcreator_timelineActions($options) {
    echo "</li>";
 }
 
-function plugin_formcreator_hook_dashboard_cards() {
-   $cards = [];
+function plugin_formcreator_hook_dashboard_cards($cards) {
+   if ($cards === null) {
+      $cards = [];
+   }
 
    $counters = [
       'all'        => __('All issues', 'formcreator'),
