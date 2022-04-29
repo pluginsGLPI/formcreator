@@ -111,7 +111,7 @@ class HostnameField extends PluginFormcreatorAbstractField
    }
 
    public static function getName(): string {
-      return _n('Hostname', 'Hostname', 1);
+      return _n('Hostname', 'Hostnames', 1);
    }
 
    public static function canRequire(): bool {
