@@ -1,3 +1,47 @@
+<a name="2.13.0-beta.1"></a>
+## [HEAD](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-alpha.4..2.13.0-beta.1) (2022-04-26)
+
+
+### Bug Fixes
+
+*  build css command ([4b29c0f3](https://github.com/pluginsGLPI/formcreator/commit/4b29c0f3))
+*  change assistance request menu icon ([180a29ec](https://github.com/pluginsGLPI/formcreator/commit/180a29ec))
+*  fix typo in plugin.xml ([1f11bc02](https://github.com/pluginsGLPI/formcreator/commit/1f11bc02))
+*  restore compatibility with plugin News (alerts) ([d421971f](https://github.com/pluginsGLPI/formcreator/commit/d421971f))
+* **abstacttarget:** plugin fields dropdowns not saved on ITIL object ([2050c61e](https://github.com/pluginsGLPI/formcreator/commit/2050c61e))
+* **abstractitiltarget:** json_decode deprecated null support ([a2761ce6](https://github.com/pluginsGLPI/formcreator/commit/a2761ce6))
+* **entityconfig:** bad ID when editing config ([7ee43b8c](https://github.com/pluginsGLPI/formcreator/commit/7ee43b8c))
+* **fieldsfield:** instanciation error when fields plugin disabled ([404111bd](https://github.com/pluginsGLPI/formcreator/commit/404111bd))
+* **filefield:** null passed to json_decode deprecated ([6f56484e](https://github.com/pluginsGLPI/formcreator/commit/6f56484e))
+* **form:** anonymous form with textarea fields ([a1e71718](https://github.com/pluginsGLPI/formcreator/commit/a1e71718))
+* **form:** check hook before using it ([d0d4beff](https://github.com/pluginsGLPI/formcreator/commit/d0d4beff))
+* **formanswer:** bad id in list of uploaded files ([b5a39cf0](https://github.com/pluginsGLPI/formcreator/commit/b5a39cf0))
+* **formlist:** prevent php deprecation ([6bc86419](https://github.com/pluginsGLPI/formcreator/commit/6bc86419))
+* **install:** bad FK in query ([6515c843](https://github.com/pluginsGLPI/formcreator/commit/6515c843))
+* **install:** explicit default value, just in case ([f27ddbc2](https://github.com/pluginsGLPI/formcreator/commit/f27ddbc2))
+* **issue:** bad test ([8cb1bc3b](https://github.com/pluginsGLPI/formcreator/commit/8cb1bc3b))
+* **issue:** performance problem in sync issue query ([c81d71ad](https://github.com/pluginsGLPI/formcreator/commit/c81d71ad))
+* **issue:** redirections when browsing tickets on helpdesk ([c4f30322](https://github.com/pluginsGLPI/formcreator/commit/c4f30322))
+* **ldapselectfield:** do not translate items ([0ede18d8](https://github.com/pluginsGLPI/formcreator/commit/0ede18d8))
+* **ldapselectfield:** dynamic field update ([2c4ffb86](https://github.com/pluginsGLPI/formcreator/commit/2c4ffb86))
+* **ldapselectfield:** use of uninitialized var ([376e2104](https://github.com/pluginsGLPI/formcreator/commit/376e2104))
+* **question,section:** rich text features in modals ([7c8d7f7a](https://github.com/pluginsGLPI/formcreator/commit/7c8d7f7a))
+* **targetticket:** composite ticket settings ([b194a602](https://github.com/pluginsGLPI/formcreator/commit/b194a602))
+* **targetticket:** prevent array_merge with null value ([a4dc685e](https://github.com/pluginsGLPI/formcreator/commit/a4dc685e))
+
+
+### Features
+
+*  prevent using formcreator's dashboard as default ([26f2b17b](https://github.com/pluginsGLPI/formcreator/commit/26f2b17b))
+*  redo dashboard with summary ([fd3ac826](https://github.com/pluginsGLPI/formcreator/commit/fd3ac826))
+* **issue:** drop obsolete code for legacy counters ([802851ff](https://github.com/pluginsGLPI/formcreator/commit/802851ff))
+* **ldapselectfield:** remove ldap connection test when saving question ([536edbf5](https://github.com/pluginsGLPI/formcreator/commit/536edbf5))
+* **targetticket:** support location from template ([4a142bd9](https://github.com/pluginsGLPI/formcreator/commit/4a142bd9))
+* **wizard:** replace home pictogram with text and move below category tree ([bd79fc53](https://github.com/pluginsGLPI/formcreator/commit/bd79fc53))
+* **wizard:** show rss menu entry only if rss is avaiable ([352ea544](https://github.com/pluginsGLPI/formcreator/commit/352ea544))
+
+
+
 <a name="2.13.0-alpha.4"></a>
 ## [2.13.0-alpha.4](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-alpha.3..2.13.0-alpha.4) (2022-04-01)
 

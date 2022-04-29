@@ -37,6 +37,15 @@ var slinkyCategories;
 var timers = [];
 var formcreatorRootDoc = rootDoc + '/' + GLPI_PLUGINS_PATH.formcreator;
 
+
+// @see https://www.tiny.cloud/docs/integrations/bootstrap/
+// Prevent Bootstrap dialog from blocking focusin
+document.addEventListener('focusin', (e) => {
+   if (e.target.closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+     e.stopImmediatePropagation();
+   }
+ });
+
 // === COMMON ===
 
 function getTimer(object) {
@@ -90,7 +99,7 @@ $(function() {
    } else if ($('#plugin_formcreator_kb_categories').length > 0) {
       updateKbCategoriesView();
 
-      $('#plugin_formcreator_kb_categories #kb_seeall').on('click', function (event) {
+      $('#plugin_formcreator_kb_categories #wizard_seeall').on('click', function (event) {
          slinkyCategories.home();
          plugin_formcreator.updateKbitemsView(event.target);
          $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
@@ -201,9 +210,9 @@ function updateKbCategoriesView() {
       });
       $('#plugin_formcreator_kb_categories a.back').on('click',
          function(event) {
-            parentItem = $(event.target).parentsUntil('#plugin_formcreator_kb_categories > div', 'li')[1];
-            parentAnchor = $(parentItem).children('a')[0];
-            updateKbitemsView(parentAnchor.getAttribute('data-parent-category-id'));
+            var parentItem = $(event.target).parentsUntil('#plugin_formcreator_kb_categories .slinky-menu > ul', 'li')[1];
+            var parentAnchor = $(parentItem).children('a')[0];
+            plugin_formcreator.updateKbitemsView(parentAnchor);
          }
       );
 
@@ -305,7 +314,7 @@ function buildKbCategoryList(tree) {
    if (tree.id != 0) {
       html += '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="plugin_formcreator.updateWizardFormsView(this)">'
+         + ' onclick="plugin_formcreator.updateKbitemsView(this)">'
          + tree.name
          + '</a>';
    }

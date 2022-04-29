@@ -118,7 +118,7 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public static function getName(): string {
-      return _n('IP address', 'Adresses IP', 1);
+      return _n('IP address', 'IP addresses', 1);
    }
 
    public static function canRequire(): bool {

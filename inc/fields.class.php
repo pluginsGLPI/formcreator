@@ -410,7 +410,7 @@ class PluginFormcreatorFields
     * @param string $type type of field to test for existence
     * @return boolean
     */
-   public static function fieldTypeExists($type) {
+   public static function fieldTypeExists(string $type): bool {
       $className = self::getFieldClassname($type);
       return is_subclass_of($className, PluginFormcreatorAbstractField::class, true);
    }
@@ -420,10 +420,9 @@ class PluginFormcreatorFields
     *
     * @param string $type type of field to get
     * @param PluginFormcreatorQuestion $question question representing the field
-    * @param array $data additional data
     * @return null|PluginFormcreatorAbstractField
     */
-   public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
+   public static function getFieldInstance(string $type, PluginFormcreatorQuestion $question): ?PluginFormcreatorAbstractField {
       if (!self::fieldTypeExists($type)) {
          return null;
       }

@@ -55,12 +55,14 @@ Features
    <issues>https://github.com/pluginsGLPI/formcreator/issues</issues>
    <readme>https://glpi-plugins.readthedocs.io/en/latest/formcreator/index.html</readme>
    <authors>
-      <author>Jérémy Moreau</author>
-      <author>Thierry Bugier</author>
-      <author>Alexandre Delaunay</author>
       <author>Teclib'</author>
    </authors>
    <versions>
+      <version>
+         <num>2.13.0-beta.1</num>
+         <compatibility>~10.0</compatibility>
+         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-beta.1/glpi-formcreator-2.13.0-beta.1.tar.bz2</download_url>
+      </version>
       <version>
          <num>2.13.0-alpha.4</num>
          <compatibility>~10.0</compatibility>
