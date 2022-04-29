@@ -53,7 +53,7 @@ if (isset($_REQUEST['id'])
    }
 
    // If the form has restriced access and user is not logged in, send to login form
-   if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED && Session::getLoginUserID() === false) {
+   if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC && Session::getLoginUserID() === false) {
       Session::redirectIfNotLoggedIn();
       exit();
    }
