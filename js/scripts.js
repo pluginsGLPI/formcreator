@@ -1285,7 +1285,7 @@ var plugin_formcreator = new function() {
          }
       ).fail(
          function () {
-            html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
+            var html = '<p>' + i18n.textdomain('formcreator').__('An error occured while querying forms', 'formcreator') + '</p>'
             $('#plugin_formcreator_wizard_forms').empty();
             $('#plugin_formcreator_wizard_forms').prepend(html);
             $('#plugin_formcreator_formlist').masonry({
