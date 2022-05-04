@@ -28,7 +28,7 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_12_5 {
+class PluginFormcreatorUpgradeTo2_14 {
    /** @var Migration */
    protected $migration;
 
@@ -36,23 +36,26 @@ class PluginFormcreatorUpgradeTo2_12_5 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      $this->migration = $migration;
+       $this->migration = $migration;
 
-      $this->addUserRecipient();
+       $this->addTtoToIssues();
    }
 
-   public function addUserRecipient(): void {
-      global $DB;
+   public function addTtoToIssues() {
+        $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
+        $this->migration->addField($table, 'time_to_own', 'timestamp', ['after' => 'users_id_recipient']);
+        $this->migration->addField($table, 'time_to_resolve', 'timestamp', ['after' => 'time_to_own']);
+        $this->migration->addField($table, 'internal_time_to_own', 'timestamp', ['after' => 'time_to_resolve']);
+        $this->migration->addField($table, 'internal_time_to_resolve', 'timestamp', ['after' => 'internal_time_to_own']);
+        $this->migration->addField($table, 'solvedate', 'timestamp', ['after' => 'internal_time_to_resolve']);
+        $this->migration->addField($table, 'date', 'timestamp', ['after' => 'solvedate']);
+        $this->migration->addField($table, 'takeintoaccount_delay_stat', 'int', ['after' => 'date']);
 
-      // Add users_id_recipient
-      $table = 'glpi_plugin_formcreator_issues';
-      $this->migration->addField($table, 'users_id_recipient', 'integer');
-
-      // Update issues
-      $this->migration->migrationOneTable($table);
-      $DB->query("TRUNCATE `$table`");
-      PluginFormcreatorIssue::syncIssues();
-
+        $this->migration->addKey($table, 'time_to_own');
+        $this->migration->addKey($table, 'time_to_resolve');
+        $this->migration->addKey($table, 'internal_time_to_own');
+        $this->migration->addKey($table, 'internal_time_to_resolve');
+        $this->migration->addKey($table, 'solvedate');
+        $this->migration->addKey($table, 'date');
    }
-
 }

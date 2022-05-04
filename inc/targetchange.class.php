@@ -63,7 +63,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
       return Change::class;
    }
 
-   protected function getTemplateItemtypeName(): string {
+   protected static function getTemplateItemtypeName(): string {
       return ChangeTemplate::class;
    }
 
@@ -630,7 +630,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
    protected function getTargetTemplate(array $data): int {
       global $DB;
 
-      $targetItemtype = $this->getTemplateItemtypeName();
+      $targetItemtype = static::getTemplateItemtypeName();
       $targetTemplateFk = $targetItemtype::getForeignKeyField();
       if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([

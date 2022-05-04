@@ -121,12 +121,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
    }
 
-   public function testGetEnumDateType() {
+   public function testGetEnumDueDateType() {
       $output = \PluginFormcreatorTargetTicket::getEnumDueDateRule();
       $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_NONE   => __('TTR from template or none', 'formcreator'),
          \PluginFormcreatorTargetTicket::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
          \PluginFormcreatorTargetTicket::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
+         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_CALC   => __('calculated from the answer to the question', 'formcreator'),
       ]);
    }
 
