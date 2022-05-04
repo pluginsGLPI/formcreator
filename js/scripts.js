@@ -357,7 +357,7 @@ function buildTiles(list) {
    var html = '';
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + i18n.textdomain('formcreator').__('No form yet in this category', 'formcreator')
+      + i18n.textdomain('formcreator').__('No item yet in this category', 'formcreator')
       + '</p>'
       +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
