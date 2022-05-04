@@ -2056,9 +2056,8 @@ PluginFormcreatorTranslatableInterface
          return $fields;
       }
 
-      $question = new PluginFormcreatorQuestion();
-      $found_questions = $question->getQuestionsFromForm($this->getID());
-      foreach ($found_questions as $id => $question) {
+      $foundQuestions = PluginFormcreatorQuestion::getQuestionsFromForm($this->getID());
+      foreach ($foundQuestions as $id => $question) {
          $fields[$id] = $question->getSubField();
       }
 

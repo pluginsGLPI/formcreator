@@ -78,7 +78,7 @@ trait CommonQuestionTest
       }
 
       // test the question is created in DB
-      $questions = (new \PluginFormcreatorQuestion())->getQuestionsFromForm($form->getID());
+      $questions = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
       $question = array_pop($questions);
       $this->variable($question)->isNotNull();
 

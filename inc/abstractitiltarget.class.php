@@ -751,7 +751,7 @@ PluginFormcreatorTranslatableInterface
       );
 
       $questionTable = PluginFormcreatorQuestion::getTable();
-      $questions = (new PluginFormcreatorQuestion)->getQuestionsFromForm(
+      $questions = PluginFormcreatorQuestion::getQuestionsFromForm(
          $this->getForm()->getID(),
          [
             "$questionTable.fieldtype" => ['date', 'datetime'],

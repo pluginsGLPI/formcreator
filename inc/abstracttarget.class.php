@@ -263,8 +263,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     * @return array all fields of the object wih converted template fields
     */
    protected function convertTags($input) {
-      $question = new PluginFormcreatorQuestion();
-      $questions = $question->getQuestionsFromForm($this->getForm()->getID());
+      $questions = PluginFormcreatorQuestion::getQuestionsFromForm($this->getForm()->getID());
 
       $taggableFields = $this->getTaggableFields();
 
