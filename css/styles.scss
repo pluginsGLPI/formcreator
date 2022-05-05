@@ -668,6 +668,11 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    background-color: #CCC;
 }
 
+.plugin_formcreator_formTile.tile_template_fix {
+   min-height: 150px;
+   display: inline-block;
+}
+
 a.plugin_formcreator_formTile_title {
    padding: 10px 40px 15px 10px;
    display: block;

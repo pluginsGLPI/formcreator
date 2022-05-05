@@ -783,7 +783,8 @@ PluginFormcreatorTranslatableInterface
             'description'      => __($form['description'], $domain),
             'type'             => 'form',
             'usage_count'      => $form['usage_count'],
-            'is_default'       => $form['is_default'] ? "true" : "false"
+            'is_default'       => $form['is_default'] ? "true" : "false",
+            'tile_template'         => 'fix'
          ];
       }
 
@@ -821,7 +822,8 @@ PluginFormcreatorTranslatableInterface
                'description'      => '',
                'type'             => 'faq',
                'usage_count'      => $faq['view'],
-               'is_default'       => false
+               'is_default'       => false,
+               'tile_template'         => 'fix'
             ];
          }
       }
@@ -851,6 +853,7 @@ PluginFormcreatorTranslatableInterface
                'type'             => 'form',
                'usage_count'      => $form['usage_count'],
                'is_default'       => true,
+               'tile_template'    => 'fix'
             ];
          }
       }
