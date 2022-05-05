@@ -347,12 +347,17 @@ function plugin_formcreator_hook(): void {
                'dashboard',
                'gridstack'
             ];
+
+            if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
+               $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/searchissue.js';
+            }
          }
          if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
             $CFG_GLPI['javascript']['self-service']['none'] = [
                'dashboard',
                'gridstack'
             ];
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/searchissue.js';
          }
       }
    }
