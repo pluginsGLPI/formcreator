@@ -53,6 +53,12 @@ if (Session::getCurrentInterface() == "helpdesk") {
 if (Session::getCurrentInterface() == 'helpdesk') {
    PluginFormcreatorCommon::showMiniDashboard();
 }
+
+//hide search if need
+if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
+   $_SESSION['glpifold_search'] = true;
+}
+
 Search::show('PluginFormcreatorIssue');
 
 if (Session::getCurrentInterface() == "helpdesk") {
