@@ -751,14 +751,14 @@ PluginFormcreatorTranslatableInterface
       );
 
       $questionTable = PluginFormcreatorQuestion::getTable();
-      $questions = PluginFormcreatorQuestion::getQuestionsFromForm(
+      $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm(
          $this->getForm()->getID(),
          [
             "$questionTable.fieldtype" => ['date', 'datetime'],
          ]
       );
       $questions_list = [];
-      foreach ($questions as $question) {
+      foreach ($questionsGenerator as $question) {
          $questions_list[$question->getID()] = $question->fields['name'];
       }
       // List questions

@@ -848,19 +848,23 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->string($new_form->getField('uuid'))->isNotEqualTo($form->getField('uuid'));
 
       // check sections
-      $all_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($form->getID());
-      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
-      $all_new_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($new_form->getID());
-      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+      $all_sections = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $all_new_sections = \PluginFormcreatorSection::getSectionsFromForm($new_form->getID());
 
       // check that all sections uuid are new
       $uuids = $new_uuids = [];
+      $count = 0;
       foreach ($all_sections as $section) {
+         $count++;
          $uuids[] = $section->fields['uuid'];
       }
+      $this->integer($count)->isEqualTo(count($section_ids));
+      $count = 0;
       foreach ($all_new_sections as $section) {
+         $count++;
          $new_uuids[] = $section->fields['uuid'];
       }
+      $this->integer($count)->isEqualTo(count($section_ids));
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target tickets

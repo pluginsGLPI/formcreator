@@ -319,10 +319,10 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
          case PluginFormcreatorSection::class:
             if ($item->isNewItem()) {
                $formFk = PluginFormcreatorForm::getForeignKeyField();
-               $sections = (new PluginFormcreatorSection())->getSectionsFromForm($item->fields[$formFk]);
+               $sectionsGenerator = PluginFormcreatorSection::getSectionsFromForm($item->fields[$formFk]);
                $sectionsList = [];
-               foreach ($sections as $section) {
-                  $sectionsList[] = $section->getID();
+               foreach ($sectionsGenerator as $sectionId => $section) {
+                  $sectionsList[] = $sectionId;
                }
                $questionListExclusion = [];
                if (count($sectionsList) > 0) {

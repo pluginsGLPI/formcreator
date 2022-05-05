@@ -916,9 +916,9 @@ PluginFormcreatorTranslatableInterface
     * return array of question objects belonging to a form
     * @param int $formId
     * @param array $crit array for the WHERE clause
-    * @return PluginFormcreatorQuestion[]
+    * @return \Generator
     */
-   public static function getQuestionsFromForm($formId, $crit = []) {
+   public static function getQuestionsFromForm($formId, $crit = []): \Generator {
       global $DB;
 
       $table_question = PluginFormcreatorQuestion::getTable();
@@ -946,14 +946,11 @@ PluginFormcreatorTranslatableInterface
          ]
       ]);
 
-      $questions = [];
       foreach ($result as $row) {
          $question = new self();
          $question->getFromDB($row['id']);
-         $questions[$row['id']] = $question;
+         yield $row['id'] => $question;
       }
-
-      return $questions;
    }
 
    /**

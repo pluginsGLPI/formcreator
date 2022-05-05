@@ -277,10 +277,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       if ($display_for_form) {
          $optindex = self::SOPTION_ANSWER;
-         $questions = PluginFormcreatorQuestion::getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
+         $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
 
-         foreach ($questions as $question) {
-            $questionId = $question->getID();
+         foreach ($questionsGenerator as $questionId => $question) {
             $tab[] = [
                'id'            => $optindex,
                'table'         => PluginFormcreatorAnswer::getTable(),
@@ -561,10 +560,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->answers['plugin_formcreator_forms_id'] = $form->getID();
       $visibility = PluginFormcreatorFields::updateVisibility($this->answers);
 
-      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
-      foreach ($sections as $section) {
-         $sectionId = $section->getID();
-
+      $sectionsGenerator = PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      foreach ($sectionsGenerator as $sectionId => $section) {
          // Section header
          $hiddenAttribute = $visibility[$section->getType()][$sectionId] ? '' : 'hidden=""';
          echo '<li'

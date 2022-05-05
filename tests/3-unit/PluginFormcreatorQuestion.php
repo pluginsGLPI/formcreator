@@ -1116,13 +1116,15 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $sectionFk => $section2->getID(),
       ]);
 
-      $questions = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
-      $this->array($questions)->hasSize(2);
-
+      $questionsGenerator = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
       $questionIds = [];
-      foreach ($questions as $item) {
+      $count = 0;
+      foreach ($questionsGenerator as $itemId => $item) {
+         $count++;
          $questionIds[] = $item->getID();
+         $this->integer((int) $itemId)->isEqualTo($item->getID());
       }
+      $this->integer($count)->isEqualTo(2);
       $expectedQuestionIds = [
          $question1->getID(),
          $question2->getID(),

@@ -2056,8 +2056,8 @@ PluginFormcreatorTranslatableInterface
          return $fields;
       }
 
-      $foundQuestions = PluginFormcreatorQuestion::getQuestionsFromForm($this->getID());
-      foreach ($foundQuestions as $id => $question) {
+      $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm($this->getID());
+      foreach ($questionsGenerator as $id => $question) {
          $fields[$id] = $question->getSubField();
       }
 
@@ -2310,7 +2310,7 @@ PluginFormcreatorTranslatableInterface
 
       $strings = $this->getMyTranslatableStrings($options);
 
-      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($this->getID()) as $section) {
+      foreach (PluginFormcreatorSection::getSectionsFromForm($this->getID()) as $section) {
          foreach ($section->getTranslatableStrings($options) as $type => $subStrings) {
             $strings[$type] = array_merge($strings[$type], $subStrings);
          }
