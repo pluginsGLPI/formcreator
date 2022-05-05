@@ -48,6 +48,17 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addTargetValidationSetting();
       $this->addFormVisibility();
       $this->addRequestSourceSetting();
+      $this->addEntityOption();
+   }
+
+   public function addEntityOption() {
+      global $DB;
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+
+      if (!$DB->fieldExists($table, 'is_search_issue_visible')) {
+         $this->migration->addField($table, 'is_search_issue_visible', 'integer', ['after' => 'is_header_visible', 'value' => '-2']);
+         $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `is_search_issue_visible`= 1 WHERE `entities_id` = 0");
+      }
    }
 
    public function addFormAnswerTitle() {
