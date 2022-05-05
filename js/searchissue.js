@@ -32,6 +32,6 @@
  */
 
 $(function() {
-   $('form[name="searchformpluginformcreatorissue"]').hide();
-   $("input.fold-search").parent().hide();
+   $('div.search-form').hide();
+   $('input.fold-search').prop('checked', false);
 });
