@@ -308,37 +308,37 @@ function showTiles(tiles, defaultForms) {
       horizontalOrder: true
    });
 
-   $(document).ready(function(){
-      var length = 100;
-      $(".plugin_formcreator_formTile_description").each(function( index ) {
-         var parent_title = $(this).parent().find('.plugin_formcreator_formTile_title').text();
-         if (parent_title.length + $(this).text().length > length) {
 
-            var cHtml = $(this).html();
-            var cText = $(this).text().substr(0, length).trim();
+   var length = 100;
+   $(".plugin_formcreator_formTile_description.tile_template_fix").each(function( index ) {
+      var parent_title = $(this).parent().find('.plugin_formcreator_formTile_title').text();
+      if (parent_title.length + $(this).text().length > length) {
 
-            $(this).addClass("compressed").html(cText + "... <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See more', 'formcreator')+"</a>");
-            window.handler = function($element, cHtml, cText)
-            {
-               $('.exp').click(function(){
-                  if ($element.hasClass("compressed")) {
-                     $element.html(cHtml + " <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See less', 'formcreator')+"</a>");
-                     $element.removeClass("compressed");
-                     handler($element, cHtml, cText);
-                     return true;
-                  } else {
-                     $element.html(cText + "... <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See more', 'formcreator')+"</a>");
-                     $element.addClass("compressed");
-                     handler($element, cHtml, cText);
-                     return false;
-                  }
-               });
-            }
-            handler($(this), cHtml, cText);
+         var cHtml = $(this).html();
+         var cText = $(this).text().substr(0, length).trim();
+
+         $(this).addClass("compressed").html(cText + "... <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See more', 'formcreator')+"</a>");
+         window.handler = function($element, cHtml, cText)
+         {
+            $('.exp').click(function(){
+               if ($element.hasClass("compressed")) {
+                  $element.html(cHtml + " <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See less', 'formcreator')+"</a>");
+                  $element.removeClass("compressed");
+                  handler($element, cHtml, cText);
+                  return true;
+               } else {
+                  $element.html(cText + "... <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See more', 'formcreator')+"</a>");
+                  $element.addClass("compressed");
+                  handler($element, cHtml, cText);
+                  return false;
+               }
+            });
          }
-      });
+         handler($(this), cHtml, cText);
+      }
    });
-  
+
+
 }
 
 function buildKbCategoryList(tree) {
@@ -402,9 +402,14 @@ function buildTiles(list) {
             url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
          }
 
+         var fix_design = "";
+         if(item.tile_template == "fix"){
+            fix_design = "tile_template_fix";
+         }
+
          var description = '';
          if (item.description) {
-            description = '<div class="plugin_formcreator_formTile_description">'
+            description = '<div class="plugin_formcreator_formTile_description '+ fix_design +'">'
                           +item.description
                           +'</div>';
          }
@@ -428,16 +433,6 @@ function buildTiles(list) {
 
          if (item.background_color == '') {
             item.background_color = '#e7e7e7';
-         }
-
-         var fix_design = "";
-         if(item.tile_template = "fix"){
-            fix_design = "tile_template_fix";
-         }
-
-         var need_read_more = "";
-         if(item.description.length > 120) {
-            need_read_more = "Read more";
          }
 
          if (item.type == 'form') {

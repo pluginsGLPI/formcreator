@@ -59,6 +59,11 @@ class PluginFormcreatorUpgradeTo2_13 {
          $this->migration->addField($table, 'is_search_issue_visible', 'integer', ['after' => 'is_header_visible', 'value' => '-2']);
          $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `is_search_issue_visible`= 1 WHERE `entities_id` = 0");
       }
+
+      if (!$DB->fieldExists($table, 'form_design')) {
+         $this->migration->addField($table, 'form_design', 'string', ['after' => 'is_search_issue_visible', 'value' => 'legacy']);
+         $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `form_design`= 'legacy' WHERE `entities_id` = 0");
+      }
    }
 
    public function addFormAnswerTitle() {

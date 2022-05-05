@@ -690,6 +690,11 @@ PluginFormcreatorTranslatableInterface
    public static function getFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false): array {
       global $DB, $TRANSLATE;
 
+      $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_LEGACY;
+      if (PluginFormcreatorEntityconfig::getUsedConfig('form_design', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX) {
+         $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX;
+      }
+
       $table_cat      = getTableForItemType(PluginFormcreatorCategory::class);
       $table_form     = getTableForItemType(PluginFormcreatorForm::class);
       $table_section  = getTableForItemType(PluginFormcreatorSections::class);
@@ -784,7 +789,7 @@ PluginFormcreatorTranslatableInterface
             'type'             => 'form',
             'usage_count'      => $form['usage_count'],
             'is_default'       => $form['is_default'] ? "true" : "false",
-            'tile_template'         => 'fix'
+            'tile_template'    => $display_format,
          ];
       }
 
@@ -853,7 +858,7 @@ PluginFormcreatorTranslatableInterface
                'type'             => 'form',
                'usage_count'      => $form['usage_count'],
                'is_default'       => true,
-               'tile_template'    => 'fix'
+               'tile_template'    => $display_format,
             ];
          }
       }
