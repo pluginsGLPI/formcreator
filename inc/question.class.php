@@ -958,12 +958,11 @@ PluginFormcreatorTranslatableInterface
     *
     * @param int $sectionId
     *
-    * @return PluginFormcreatorQuestion[]
+    * @return \Generator
     */
-   public static function getQuestionsFromSection($sectionId) {
+   public static function getQuestionsFromSection($sectionId): \Generator {
       global $DB;
 
-      $questions = [];
       $rows = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
@@ -973,12 +972,10 @@ PluginFormcreatorTranslatableInterface
          'ORDER'  => ['row ASC', 'col ASC']
       ]);
       foreach ($rows as $row) {
-            $question = new self();
-            $question->getFromDB($row['id']);
-            $questions[$row['id']] = $question;
+         $question = new self();
+         $question->getFromDB($row['id']);
+         yield $row['id'] => $question;
       }
-
-      return $questions;
    }
 
    /**

@@ -1133,7 +1133,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->array(array_intersect($questionIds, $expectedQuestionIds))->hasSize(2);
    }
 
-   public function testGetQuestionsBySection() {
+   public function testGetQuestionsFromSection() {
       $section = $this->getSection();
       $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
       $question1 = $this->getQuestion([
@@ -1143,10 +1143,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $sectionFk => $section->getID(),
       ]);
 
-      $questions = \PluginFormcreatorQuestion::getQuestionsFromSection($section->getID());
+      $questionsGenerator = \PluginFormcreatorQuestion::getQuestionsFromSection($section->getID());
       $questionIds = [];
-      foreach ($questions as $item) {
-         $questionIds[] = $item->getID();
+      foreach ($questionsGenerator as $itemId => $item) {
+         $questionIds[] = $itemId;
       }
       $expectedQuestionIds = [
          $question1->getID(),

@@ -581,8 +581,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Display all fields of the section
          $lastQuestion = null;
-         $questions = (new PluginFormcreatorQuestion)->getQuestionsFromSection($sectionId);
-         foreach ($questions as $question) {
+         foreach (PluginFormcreatorQuestion::getQuestionsFromSection($sectionId) as $question) {
             if ($lastQuestion !== null) {
                if ($lastQuestion->fields['row'] < $question->fields['row']) {
                   // the question begins a new line
