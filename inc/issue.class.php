@@ -106,8 +106,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'users_id_validator  as users_id_validator',
                'groups_id_validator as groups_id_validator',
                'comment             as comment',
-               'requester_id        as users_id_recipient'
+               'requester_id        as users_id_recipient',
             ],
+            new QueryExpression('NULL                as `time_to_own`'),
+            new QueryExpression('NULL                as `time_to_resolve`'),
+            new QueryExpression('NULL                as `internal_time_to_own`'),
+            new QueryExpression('NULL                as `internal_time_to_resolve`'),
+            new QueryExpression('NULL                as `solvedate`'),
+            new QueryExpression('NULL                as `date`'),
+            new QueryExpression('0                   as `takeintoaccount_delay_stat`'),
          ],
          'DISTINCT' => true,
          'FROM' => $formAnswerTable,
@@ -166,7 +173,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("COALESCE(`$ticketValidationTable`.`users_id_validate`, 0) as `users_id_validator`"),
             new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
-            'users_id_recipient                          as users_id_recipient'
+            'users_id_recipient                          as users_id_recipient',
+            'time_to_own                                 as time_to_own',
+            'time_to_resolve                             as time_to_resolve',
+            'internal_time_to_own                        as internal_time_to_own',
+            'internal_time_to_resolve                    as internal_time_to_resolve',
+            'solvedate                                   as solvedate',
+            'date                                        as date',
+            'takeintoaccount_delay_stat                  as takeintoaccount_delay_stat',
          ],
          'DISTINCT' => true,
          'FROM' => $ticketTable,
@@ -732,11 +746,104 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ];
       }
 
+      $tab[] = [
+         'id'                 => '20',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_resolve',
+         'name'               => __('Time to resolve'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['solvedate', 'status']
+      ];
+
+      $tab[] = [
+         'id'                 => '21',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_resolve',
+         'name'               => __('Time to resolve + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status'],
+      ];
+
+      $tab[] = [
+         'id'                 => '22',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_resolve',
+         'name'               => __('Internal time to resolve'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['solvedate', 'status']
+      ];
+
+      $tab[] = [
+         'id'                 => '23',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_resolve',
+         'name'               => __('Internal time to resolve + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '24',
+         'table'              => $this->getTable(),
+         'field'              => 'solvedate',
+         'name'               => __('Resolution date'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+
       if (Plugin::isPluginActive('advform')) {
          foreach (PluginAdvformIssue::rawSearchOptions() as $so) {
             $tab[] = $so;
          }
       }
+
+      $tab[] = [
+         'id'                 => '25',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_own',
+         'name'               => __('Internal time to own'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['date', 'status', 'takeintoaccount_delay_stat'],
+      ];
+
+      $tab[] = [
+         'id'                 => '26',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_own',
+         'name'               => __('Internal time to own + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '27',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_own',
+         'name'               => __('Time to own'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '28',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_own',
+         'name'               => __('Time to own + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
 
       return $tab;
    }
