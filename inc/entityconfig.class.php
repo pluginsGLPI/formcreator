@@ -332,7 +332,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Search issue')."</td>";
+      echo "<td>".__('Search issue', 'formcreator')."</td>";
       echo "<td>";
       Dropdown::showFromArray('is_search_issue_visible', $elements, ['value' => $this->fields['is_search_issue_visible']]);
       if ($this->fields['is_search_issue_visible'] == self::CONFIG_PARENT) {
