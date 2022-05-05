@@ -278,7 +278,7 @@ class DropdownField extends CommonTestCase {
       return [
          [
             'fields'    => $this->getQuestion([
-               'values'    => json_encode(['itemtype' => \Location::class])
+               'itemtype'  => \Location::class,
             ]),
             'value'     => $location1->fields['completename'],
             'answer'    => (string) $location1Id,
@@ -286,7 +286,7 @@ class DropdownField extends CommonTestCase {
          ],
          [
             'fields'    => $this->getQuestion([
-               'values'    => json_encode(['itemtype' => \Location::class])
+               'itemtype'  => \Location::class,
             ]),
             'value'     => $location2->fields['completename'],
             'answer'    => (string) $location1Id,
@@ -317,7 +317,7 @@ class DropdownField extends CommonTestCase {
       return [
          [
             'fields'    => $this->getQuestion([
-               'values'    => json_encode(['itemtype' => \Location::class])
+               'itemtype'  => \Location::class,
             ]),
             'value'     => $location1->fields['completename'],
             'answer'    => (string) $location1Id,
@@ -325,7 +325,7 @@ class DropdownField extends CommonTestCase {
          ],
          [
             'fields'    => $this->getQuestion([
-               'values'    => json_encode(['itemtype' => \Location::class])
+               'itemtype'  => \Location::class,
             ]),
             'value'     => $location2->fields['completename'],
             'answer'    => (string) $location1Id,

@@ -591,8 +591,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
    public function equals($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = json_decode($this->question->fields['values'], true);
-      $itemtype = $itemtype['itemtype'];
+      $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if ($dropdown->isNewId($this->value)) {
          return ($value === '');
@@ -614,7 +613,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
    public function greaterThan($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->question->fields['values'];
+      $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
          throw new ComparisonException('Item not found for comparison');
@@ -633,7 +632,7 @@ class DropdownField extends PluginFormcreatorAbstractField
 
    public function regex($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtype($this->question->fields['values']);
+      $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
          throw new ComparisonException('Item not found for comparison');
