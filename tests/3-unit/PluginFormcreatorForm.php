@@ -853,48 +853,58 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       // check that all sections uuid are new
       $uuids = $new_uuids = [];
-      $count = 0;
+      $all_sections_count = 0;
+      $all_new_sections_count = 0;
       foreach ($all_sections as $section) {
-         $count++;
+         $all_sections_count++;
          $uuids[] = $section->fields['uuid'];
       }
-      $this->integer($count)->isEqualTo(count($section_ids));
-      $count = 0;
       foreach ($all_new_sections as $section) {
-         $count++;
+         $all_new_sections_count++;
          $new_uuids[] = $section->fields['uuid'];
       }
-      $this->integer($count)->isEqualTo(count($section_ids));
+      $this->integer($all_sections_count)->isEqualTo(count($section_ids));
+      $this->integer($all_new_sections_count)->isEqualTo(count($section_ids));
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target tickets
       $all_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($form->getID());
-      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
       $all_new_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetsForForm($new_form->getID());
-      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
-      // check that all sections uuid are new
+      // check that all target tickets uuid are new
+      $uuids = $new_uuids = [];
+      $all_targetTickets_count = 0;
+      $all_new_targetTickets_count = 0;
       foreach ($all_targetTickets as $targetTicket) {
+         $all_targetTickets_count++;
          $uuids[] = $targetTicket->fields['uuid'];
       }
       foreach ($all_new_targetTickets as $targetTicket) {
+         $all_new_targetTickets_count++;
          $new_uuids[] = $targetTicket->fields['uuid'];
       }
+      $this->integer($all_targetTickets_count)->isEqualTo(count($targetTicket_ids));
+      $this->integer($all_new_targetTickets_count)->isEqualTo(count($targetTicket_ids));
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
 
       // check target changes
       $all_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetsForForm($form->getID());
-      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
       $all_new_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetsForForm($new_form->getID());
-      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
 
-      // check that all sections uuid are new
+      // check that all target changes uuid are new
+      $all_target_changes_count = 0;
+      $all_new_target_changes_count = 0;
+      $uuids = $new_uuids = [];
       foreach ($all_targetChanges as $targetChange) {
+         $all_target_changes_count++;
          $uuids[] = $targetChange->fields['uuid'];
       }
       foreach ($all_new_targetChanges as $targetChange) {
+         $all_new_target_changes_count++;
          $new_uuids[] = $targetChange->fields['uuid'];
       }
+      $this->integer($all_target_changes_count)->isEqualTo(count($targetChange_ids));
+      $this->integer($all_new_target_changes_count)->isEqualTo(count($targetChange_ids));
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
    }
 

@@ -530,6 +530,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       }
       $this->integer($count)->isEqualTo(2);
 
+      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
       $found = 0;
       foreach ($output as $section) {
          foreach ($sections as $search) {
