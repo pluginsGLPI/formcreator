@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `is_search_visible`       int(11) NOT NULL DEFAULT '-2',
   `is_dashboard_visible`    int(11) NOT NULL DEFAULT '-2',
   `is_header_visible`       int(11) NOT NULL DEFAULT '-2',
-  `form_design`             varchar(255) NOT NULL DEFAULT 'legacy',
+  `is_search_issue_visible` int(11) NOT NULL DEFAULT '-2',
+  `tile_design`             varchar(255) NOT NULL DEFAULT 'legacy',
   `header`                  text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`entities_id`)
