@@ -309,32 +309,16 @@ function showTiles(tiles, defaultForms) {
    });
 
 
-   var length = 100;
-   $(".plugin_formcreator_formTile_description.tile_template_fix").each(function( index ) {
+   var length = 150;
+   $(".plugin_formcreator_formTile_description.tile_design_uniform_height").each(function( index ) {
       var parent_title = $(this).parent().find('.plugin_formcreator_formTile_title').text();
       if (parent_title.length + $(this).text().length > length) {
-
-         var cHtml = $(this).html();
-         var cText = $(this).text().substr(0, length).trim();
-
-         $(this).addClass("compressed").html(cText + "... <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See more', 'formcreator')+"</a>");
-         window.handler = function($element, cHtml, cText)
-         {
-            $('.exp').click(function(){
-               if ($element.hasClass("compressed")) {
-                  $element.html(cHtml + " <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See less', 'formcreator')+"</a>");
-                  $element.removeClass("compressed");
-                  handler($element, cHtml, cText);
-                  return true;
-               } else {
-                  $element.html(cText + "... <a href='#' class='exp'>"+i18n.textdomain('formcreator').__('See more', 'formcreator')+"</a>");
-                  $element.addClass("compressed");
-                  handler($element, cHtml, cText);
-                  return false;
-               }
-            });
-         }
-         handler($(this), cHtml, cText);
+         var short = jQuery.trim($(this).text())
+                  .substring(0, length)
+                  .split(" ")
+                  .slice(0, -1)
+                  .join(" ") + "...";
+         $(this).html(short);
       }
    });
 
@@ -402,14 +386,15 @@ function buildTiles(list) {
             url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
          }
 
-         var fix_design = "";
+         var tiles_design = "";
+         console.log(item.tile_template);
          if(item.tile_template == "uniform_height"){
-            fix_design = "tile_design_uniform_height";
+            tiles_design = "tile_design_uniform_height";
          }
 
          var description = '';
          if (item.description) {
-            description = '<div class="plugin_formcreator_formTile_description '+ fix_design +'">'
+            description = '<div class="plugin_formcreator_formTile_description '+ tiles_design +'">'
                           +item.description
                           +'</div>';
          }
@@ -437,7 +422,7 @@ function buildTiles(list) {
 
          if (item.type == 'form') {
             forms.push(
-               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+fix_design+' '+default_class+'" title="'+item.description+'">'
+               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
                + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name
@@ -447,7 +432,7 @@ function buildTiles(list) {
             );
          } else {
             faqs.push(
-               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+fix_design+' '+default_class+'" title="'+item.description+'">'
+               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
                + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name
