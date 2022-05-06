@@ -47,7 +47,7 @@ PluginFormcreatorTranslatableInterface
    use PluginFormcreatorExportableTrait;
    use PluginFormcreatorTranslatable;
 
-   static $rightname = 'plugin_formcreator';
+   static $rightname = 'plugin_formcreator_form';
 
    public $dohistory = true;
 

@@ -106,23 +106,21 @@ class PluginFormcreatorInstall {
          'SELECT' => ['id'],
          'FROM'   => Profile::getTable(),
       ]);
-      foreach ($profiles AS $profile) {
-         $rights = \ProfileRight::getProfileRights(
+      foreach ($profiles as $profile) {
+         $rights = ProfileRight::getProfileRights(
             $profile['id'],
             [
-               \Entity::$rightname,
-               \PluginFormcreatorForm::$rightname,
+               Entity::$rightname,
+               PluginFormcreatorForm::$rightname,
             ]
          );
-         if ($rights[\Entity::$rightname] >= UPDATE) {
-            \ProfileRight::updateProfileRights($profile['id'], [
-               \PluginFormcreatorForm::$rightname => READ + UPDATE + CREATE + DELETE + PURGE,
-            ]);
-         } else {
-            \ProfileRight::updateProfileRights($profile['id'], [
-               \PluginFormcreatorForm::$rightname => READ,
-            ]);
+         $right = READ;
+         if ($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) {
+            $right = READ + UPDATE + CREATE + DELETE + PURGE;
          }
+         ProfileRight::updateProfileRights($profile['id'], [
+            PluginFormcreatorForm::$rightname => $right,
+         ]);
       }
 
       return true;
