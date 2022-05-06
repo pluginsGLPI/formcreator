@@ -526,9 +526,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       echo '</h1>';
 
       // Form Header
-      if (!empty($this->fields['content'] || !empty($form->getExtraHeader()))) {
+      if (!empty($form->fields['content']) || !empty($form->getExtraHeader())) {
          echo '<div class="form_header">';
-         echo html_entity_decode($this->fields['content']);
+         echo html_entity_decode($form->fields['content']);
          echo html_entity_decode($form->getExtraHeader());
          echo '</div>';
       }
