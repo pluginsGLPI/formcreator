@@ -690,9 +690,9 @@ PluginFormcreatorTranslatableInterface
    public static function getFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false): array {
       global $DB, $TRANSLATE;
 
-      $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_LEGACY;
-      if (PluginFormcreatorEntityconfig::getUsedConfig('tile_design', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX) {
-         $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX;
+      $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_MASONRY;
+      if (PluginFormcreatorEntityconfig::getUsedConfig('tile_design', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_UI_FORM_UNIFORM_HEIGHT) {
+         $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_UNIFORM_HEIGHT;
       }
 
       $table_cat      = getTableForItemType(PluginFormcreatorCategory::class);
