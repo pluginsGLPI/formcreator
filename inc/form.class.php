@@ -691,7 +691,7 @@ PluginFormcreatorTranslatableInterface
       global $DB, $TRANSLATE;
 
       $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_LEGACY;
-      if (PluginFormcreatorEntityconfig::getUsedConfig('form_design', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX) {
+      if (PluginFormcreatorEntityconfig::getUsedConfig('tile_design', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX) {
          $display_format = PluginFormcreatorEntityconfig::CONFIG_UI_FORM_FIX;
       }
 

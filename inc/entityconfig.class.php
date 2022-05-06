@@ -66,8 +66,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SEARCH_ISSUE_HIDDEN = 0;
    const CONFIG_SEARCH_ISSUE_VISIBLE = 1;
 
-   const CONFIG_UI_FORM_LEGACY = 'legacy';
-   const CONFIG_UI_FORM_FIX = 'fix';
+   const CONFIG_UI_FORM_MASONRY = 'masonry';
+   const CONFIG_UI_FORM_UNIFORM_HEIGHT = 'uniform_height';
 
 
    /**
@@ -152,9 +152,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public static function getEnumUIForm() : array {
       return [
-         self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
-         self::CONFIG_UI_FORM_LEGACY    => __('Standart', 'formcreator'),
-         self::CONFIG_UI_FORM_FIX       => __('Fix tile', 'formcreator'),
+         self::CONFIG_PARENT                 => __('Inheritance of the parent entity'),
+         self::CONFIG_UI_FORM_MASONRY        => __('Standart', 'formcreator'),
+         self::CONFIG_UI_FORM_UNIFORM_HEIGHT => __('Fix tile', 'formcreator'),
       ];
    }
 
@@ -360,11 +360,11 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Form display', 'formcreator')."</td>";
+      echo "<td>".__('Tile design', 'formcreator')."</td>";
       echo "<td>";
-      Dropdown::showFromArray('form_design', $elements, ['value' => $this->fields['form_design']]);
-      if ($this->fields['form_design'] == self::CONFIG_PARENT) {
-         $tid = self::getUsedConfig('form_design', $entityId);
+      Dropdown::showFromArray('tile_design', $elements, ['value' => $this->fields['tile_design']]);
+      if ($this->fields['tile_design'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('tile_design', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }

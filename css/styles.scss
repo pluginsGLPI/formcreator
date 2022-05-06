@@ -96,7 +96,7 @@
 }
 
 /* Sections */
-#plugin_formcreator_form.plugin_formcreator_form_design {
+#plugin_formcreator_form.plugin_formcreator_tile_design {
    ol {
       list-style-type: none;
       text-align: left;
@@ -668,7 +668,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    background-color: #CCC;
 }
 
-.plugin_formcreator_formTile.tile_template_fix {
+.plugin_formcreator_formTile.tile_design_uniform_height {
    min-height: 150px;
    display: inline-block;
 }

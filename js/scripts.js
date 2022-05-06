@@ -403,8 +403,8 @@ function buildTiles(list) {
          }
 
          var fix_design = "";
-         if(item.tile_template == "fix"){
-            fix_design = "tile_template_fix";
+         if(item.tile_template == "uniform_height"){
+            fix_design = "tile_design_uniform_height";
          }
 
          var description = '';
