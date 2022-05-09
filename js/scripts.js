@@ -398,11 +398,13 @@ function buildTiles(list) {
             item.background_color = '#e7e7e7';
          }
 
+         var background_title = LightenDarkenColor(item.background_color,-0.15);
+
          if (item.type == 'form') {
             forms.push(
                '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
                + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+               + '<a href="' + url + '" style="background-color: ' + background_title + '"    class="plugin_formcreator_formTile_title">'
                + item.name
                + '</a>'
                + description
@@ -412,7 +414,7 @@ function buildTiles(list) {
             faqs.push(
                '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
                + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+               + '<a href="' + url + '" style="background-color: ' + background_title + '" class="plugin_formcreator_formTile_title">'
                + item.name
                + '</a>'
                + description
@@ -430,6 +432,23 @@ function buildTiles(list) {
    }
 
    return html;
+}
+
+function LightenDarkenColor(hex, lum) {
+   // validate hex string
+   hex = String(hex).replace(/[^0-9a-f]/gi, '');
+   if (hex.length < 6) {
+       hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+   }
+   lum = lum || 0;
+   // convert to decimal and change luminosity
+   var rgb = "#", c, i;
+   for (i = 0; i < 3; i++) {
+       c = parseInt(hex.substr(i*2,2), 16);
+       c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+       rgb += ("00"+c).substr(c.length);
+   }
+   return rgb;
 }
 
 var plugin_formcreator = new function() {
