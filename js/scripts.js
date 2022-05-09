@@ -309,7 +309,7 @@ function showTiles(tiles, defaultForms) {
    });
 
 
-   var length = 150;
+   var length = 180;
    $(".plugin_formcreator_formTile_description.tile_design_uniform_height").each(function( index ) {
       var parent_title = $(this).parent().find('.plugin_formcreator_formTile_title').text();
       if (parent_title.length + $(this).text().length > length) {
