@@ -692,7 +692,7 @@ function plugin_formcreator_hook_dashboard_cards($cards) {
          'args'       => [
             'params' => [
                'status' => $key,
-               'label'  => "", //$label
+               'label'  => $label,
             ]
          ],
          'cache'      => false,
