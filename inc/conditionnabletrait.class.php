@@ -46,7 +46,7 @@ trait PluginFormcreatorConditionnableTrait
       // All arrays of condition exists
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
-         return  false;
+         return false;
       }
 
       if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
