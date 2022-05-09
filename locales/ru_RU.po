@@ -6,9 +6,9 @@
 # Translators:
 # Thierry Bugier <tbugier@teclib.com>, 2021
 # Kirill Smyshkov <rzd10let@gmail.com>, 2021
-# Ilya Pavlov <spirkaa@gmail.com>, 2022
 # Alexey Petukhov <lexx015@gmail.com>, 2022
 # Nikolai Petrov <techobsl@yandex.ru>, 2022
+# Ilya Pavlov <spirkaa@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 09:30+0200\n"
 "PO-Revision-Date: 2021-08-30 07:21+0000\n"
-"Last-Translator: Nikolai Petrov <techobsl@yandex.ru>, 2022\n"
+"Last-Translator: Ilya Pavlov <spirkaa@gmail.com>, 2022\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/teclib/teams/28042/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +93,7 @@ msgstr "Не удалось удалить раздел"
 
 #: ajax/question_add.php:45
 msgid "Could not add the question"
-msgstr ""
+msgstr "Не удалось добавить вопрос"
 
 #: ajax/section_move.php:66
 msgid "Could not move the section"
@@ -101,11 +101,11 @@ msgstr "Не удалось переместить раздел"
 
 #: ajax/target_actor.php:52
 msgid "Failed to add the actor"
-msgstr ""
+msgstr "Не удалось добавить участника"
 
 #: ajax/target_actor.php:63
 msgid "Failed to delete the actor"
-msgstr ""
+msgstr "Не удалось удалить участника"
 
 #: ajax/section_duplicate.php:56
 msgid "Could not duplicate the section"
@@ -138,7 +138,7 @@ msgstr ""
 
 #: front/targetticket.form.php:75
 msgid "Bad request while deleting an actor."
-msgstr ""
+msgstr "Ошибочный запрос при удалении участника"
 
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
@@ -346,7 +346,7 @@ msgstr[3] ""
 
 #: inc/field/urgencyfield.class.php:84 inc/abstractitiltarget.class.php:994
 msgid "Urgency"
-msgstr ""
+msgstr "Срочность"
 
 #: inc/field/urgencyfield.class.php:118
 msgctxt "urgency"
@@ -923,7 +923,7 @@ msgstr[3] "Участники цели"
 #: inc/target_actor.class.php:97 inc/target_actor.class.php:113
 #: inc/target_actor.class.php:122
 msgid "Bad request while adding an actor."
-msgstr ""
+msgstr "Ошибочный запрос при добавлении участника"
 
 #: inc/target_actor.class.php:179
 #, php-format

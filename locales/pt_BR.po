@@ -16,9 +16,10 @@
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2022
 # Rafael Viana <rafaelvian@gmail.com>, 2022
 # Jean Vergaças <jvergacas@gmail.com>, 2022
-# Eduardo Spinola <eduardo.spinola@gmail.com>, 2022
 # Manoel Ramon, 2022
 # Arthur Ramos Schaefer <arthur.r.schaefer@gmail.com>, 2022
+# Eduardo Spinola <eduardo.spinola@gmail.com>, 2022
+# Diego Nobre <diego@koruma.com.br>, 2022
 # 
 #, fuzzy
 msgid ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 09:30+0200\n"
 "PO-Revision-Date: 2021-08-30 07:21+0000\n"
-"Last-Translator: Arthur Ramos Schaefer <arthur.r.schaefer@gmail.com>, 2022\n"
+"Last-Translator: Diego Nobre <diego@koruma.com.br>, 2022\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +160,7 @@ msgstr "Form Creator"
 #: front/targetproblem.form.php:90
 #, php-format
 msgid "%1$s = %2$s"
-msgstr ""
+msgstr "%1$s = %2$s"
 
 #: front/formlist.php:45 front/formlist.php:48 inc/common.class.php:683
 msgid "Form list"
@@ -174,12 +175,12 @@ msgstr "Formulário salvo com sucesso!"
 #: front/reservation.form.php:71
 #, php-format
 msgid "%1$s purges the reservation for item %2$s"
-msgstr ""
+msgstr "%1$s limpa a reserva do item %2$s"
 
 #: front/reservation.form.php:124
 #, php-format
 msgid "%1$s adds the reservation %2$s for item %3$s"
-msgstr ""
+msgstr "%1$s adiciona a reserva %2$s para o item %3$s"
 
 #: inc/knowbase.class.php:60 inc/form.class.php:641
 #: inc/abstractitiltarget.class.php:952 inc/abstractitiltarget.class.php:966
@@ -353,12 +354,12 @@ msgstr "Urgência"
 #: inc/field/urgencyfield.class.php:118
 msgctxt "urgency"
 msgid "Very high"
-msgstr ""
+msgstr "Muito alto"
 
 #: inc/field/urgencyfield.class.php:119
 msgctxt "urgency"
 msgid "High"
-msgstr ""
+msgstr "Alto"
 
 #: inc/field/urgencyfield.class.php:120
 msgctxt "urgency"
@@ -368,12 +369,12 @@ msgstr "Médio"
 #: inc/field/urgencyfield.class.php:121
 msgctxt "urgency"
 msgid "Low"
-msgstr ""
+msgstr "Baixo"
 
 #: inc/field/urgencyfield.class.php:122
 msgctxt "urgency"
 msgid "Very low"
-msgstr ""
+msgstr "Muito baixo"
 
 #: inc/field/tagfield.class.php:50
 msgid "Warning: Tag plugin is disabled or missing"
@@ -623,7 +624,7 @@ msgstr "Atualizar dados de emissão de chamados e respostas de formulário"
 
 #: inc/issue.class.php:389
 msgid "Satisfaction survey expired"
-msgstr ""
+msgstr "Pesquisa de satisfação expirada"
 
 #: inc/issue.class.php:509 inc/form_language.class.php:213
 #: inc/form.class.php:156 inc/form.class.php:2111 entrée standard:52
@@ -637,7 +638,7 @@ msgstr "Nome"
 #: inc/section.class.php:95 inc/question.class.php:156
 #: inc/targetticket.class.php:179
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: inc/issue.class.php:531 inc/form.class.php:2120 entrée standard:65
 msgid "Type"
@@ -651,7 +652,7 @@ msgstr "Status"
 
 #: inc/issue.class.php:556
 msgid "Opening date"
-msgstr ""
+msgstr "Data de abertura"
 
 #: inc/issue.class.php:565
 msgid "Last update"
@@ -688,11 +689,11 @@ msgstr "Aprovador do Chamado"
 
 #: inc/issue.class.php:664
 msgid "Technician"
-msgstr ""
+msgstr "Técnico"
 
 #: inc/issue.class.php:697
 msgid "Technician group"
-msgstr ""
+msgstr "Grupo do técnico"
 
 #: inc/issue.class.php:728 inc/formanswer.class.php:248
 msgid "Form approver group"
@@ -700,7 +701,7 @@ msgstr "Grupo aprovador da requisição"
 
 #: inc/issue.class.php:761
 msgid "Ticket"
-msgstr ""
+msgstr "Chamado"
 
 #: inc/issue.class.php:762 inc/formanswer.class.php:183
 msgid "Form answer"
@@ -720,11 +721,11 @@ msgstr "Rejeitado"
 #: inc/issue.class.php:836
 #, php-format
 msgid "%1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s"
 
 #: inc/issue.class.php:1099 inc/filter/itilcategoryfilter.class.php:56
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: inc/issue.class.php:1105
 msgid "New"
@@ -763,7 +764,7 @@ msgstr "Categoria da base de conhecimento"
 
 #: inc/category.class.php:78
 msgid "As child of"
-msgstr ""
+msgstr "Como filho de"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -1092,7 +1093,7 @@ msgstr "Nenhum"
 
 #: inc/form_validator.class.php:122
 msgid "Need validaton?"
-msgstr ""
+msgstr "Precisa de validação?"
 
 #: inc/form_validator.class.php:126 inc/abstractitiltarget.class.php:2029
 msgid "No"
@@ -1143,7 +1144,7 @@ msgstr "Atores"
 
 #: inc/targetproblem.class.php:631 entrée standard:48
 msgid "Problem title"
-msgstr ""
+msgstr "Título do problema"
 
 #: inc/targetproblem.class.php:641 inc/targetchange.class.php:353
 #: inc/targetticket.class.php:198
@@ -1156,18 +1157,18 @@ msgstr "Impacto"
 
 #: inc/targetproblem.class.php:661 entrée standard:56
 msgid "Cause"
-msgstr ""
+msgstr "Causa"
 
 #: inc/targetproblem.class.php:671 entrée standard:58
 msgid "Symptom"
-msgstr ""
+msgstr "Sintoma"
 
 #: inc/entityconfig.class.php:83 inc/entityconfig.class.php:92
 #: inc/entityconfig.class.php:100 inc/entityconfig.class.php:108
 #: inc/entityconfig.class.php:116 inc/entityconfig.class.php:124
 #: inc/entityconfig.class.php:132
 msgid "Inheritance of the parent entity"
-msgstr ""
+msgstr "Herança da entidade pai"
 
 #: inc/entityconfig.class.php:84
 msgid "GLPi's helpdesk"
@@ -1303,7 +1304,7 @@ msgstr "Características"
 
 #: inc/form.class.php:183
 msgid "Recursive"
-msgstr ""
+msgstr "Recursivo"
 
 #: inc/form.class.php:204
 msgid "Homepage"
@@ -1652,7 +1653,7 @@ msgstr "OLA"
 #: inc/question.class.php:1292 inc/question.class.php:1332
 #: inc/question.class.php:1335
 msgid "Assets"
-msgstr ""
+msgstr "Bens"
 
 #: inc/question.class.php:1306 hook.php:675 hook.php:692
 msgid "Assistance"
@@ -1672,7 +1673,7 @@ msgstr "Notas"
 
 #: inc/question.class.php:1322
 msgid "RSS feed"
-msgstr ""
+msgstr "Feed RSS"
 
 #: inc/question.class.php:1324
 msgid "Administration"
@@ -1730,15 +1731,15 @@ msgstr "De um objeto do GLPI > Entidade tipo pergunta resposta"
 
 #: inc/abstracttarget.class.php:115
 msgid "Always generated"
-msgstr ""
+msgstr "Sempre gerado"
 
 #: inc/abstracttarget.class.php:116
 msgid "Disabled unless"
-msgstr ""
+msgstr "Desativado, a menos que"
 
 #: inc/abstracttarget.class.php:117
 msgid "Generated unless"
-msgstr ""
+msgstr "Gerado a menos que"
 
 #: inc/abstracttarget.class.php:128
 msgid "A target must be associated to a form."
@@ -1875,12 +1876,12 @@ msgstr "Um chamado existente"
 
 #: inc/targetticket.class.php:401
 msgid "A ticket from an answer to a question"
-msgstr ""
+msgstr "Um chamado de uma resposta para uma pergunta"
 
 #: inc/targetticket.class.php:482
 msgctxt "button"
 msgid "Delete permanently"
-msgstr ""
+msgstr "Apagar permanentemente"
 
 #: inc/targetticket.class.php:741
 msgid "Invalid link type"
@@ -1912,7 +1913,7 @@ msgstr "Tipo "
 
 #: inc/targetticket.class.php:1161
 msgid "Associated elements"
-msgstr ""
+msgstr "Elementos associados"
 
 #: inc/targetticket.class.php:1172
 msgid "Item "
@@ -2004,7 +2005,7 @@ msgstr "Localização específica"
 
 #: inc/abstractitiltarget.class.php:239
 msgid "No validation"
-msgstr ""
+msgstr "Sem validação"
 
 #: inc/abstractitiltarget.class.php:240
 msgid "Specific user or group"
@@ -2012,7 +2013,7 @@ msgstr "Usuário ou grupo especifico"
 
 #: inc/abstractitiltarget.class.php:241
 msgid "User from question answer"
-msgstr ""
+msgstr "Usuário da resposta da pergunta"
 
 #: inc/abstractitiltarget.class.php:242
 msgid "Group from question answer"
@@ -2095,15 +2096,15 @@ msgstr "Cancelar"
 #: inc/abstractitiltarget.class.php:2012 inc/abstractitiltarget.class.php:2028
 #: inc/abstractitiltarget.class.php:2029
 msgid "Email followup"
-msgstr ""
+msgstr "Acompanhamento de e-mail"
 
 #: inc/abstractitiltarget.class.php:2026 inc/abstractitiltarget.class.php:2054
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: inc/abstractitiltarget.class.php:2027 inc/abstractitiltarget.class.php:2083
 msgid "Supplier"
-msgstr ""
+msgstr "Fornecedor"
 
 #: inc/abstractitiltarget.class.php:2028
 msgid "Yes"
@@ -2122,6 +2123,8 @@ msgid ""
 "Upgrade tables to innoDB; run php bin/console "
 "glpi:migration:myisam_to_innodb"
 msgstr ""
+"Atualizar tabelas para innoDB; execute php bin/console "
+"glpi:migration:myisam_to_innodb"
 
 #: install/install.php:315
 msgid "A form has been created"
@@ -2248,7 +2251,7 @@ msgstr ""
 #: hook.php:676
 #, php-format
 msgid "Number of %s"
-msgstr ""
+msgstr "Número de %s"
 
 #: hook.php:693
 msgid "Issues summary"
@@ -2353,11 +2356,11 @@ msgstr "Condições de exibição da questão"
 
 #: entrée standard:54
 msgid "Impacts"
-msgstr ""
+msgstr "Impactos"
 
 #: entrée standard:62
 msgid "Checklist"
-msgstr ""
+msgstr "Lista de controle"
 
 #: entrée standard:45
 msgid "Add a section"
@@ -2365,7 +2368,7 @@ msgstr "Adicionar uma seção"
 
 #: entrée standard:55
 msgid "Condition to show the submit button"
-msgstr ""
+msgstr "Condição para mostrar o botão de enviar"
 
 #: entrée standard:83
 msgid "Add a question"
@@ -2373,7 +2376,7 @@ msgstr "Adicionar uma questão"
 
 #: entrée standard:39
 msgid "List of available tags"
-msgstr ""
+msgstr "Lista de tags disponíveis"
 
 #: entrée standard:42
 msgid "Title"
