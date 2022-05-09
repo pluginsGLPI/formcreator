@@ -154,7 +154,6 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
       return $input;
    }
 
-
    public function prepareInputForUpdate($input) {
       if (!$this->skipChecks) {
          if (isset($input['name'])
