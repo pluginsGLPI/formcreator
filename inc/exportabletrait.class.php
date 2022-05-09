@@ -82,8 +82,9 @@ trait PluginFormcreatorExportableTrait
      * @param array $input
      * @return void
      */
-   public function importChildrenObjects(PluginFormcreatorExportableInterface $item, PluginFormcreatorLinker $linker, array $subItems, array $input) : void {
-      $itemId = $item->getID();
+   public function importChildrenObjects(PluginFormcreatorExportableInterface $parent, PluginFormcreatorLinker $linker, array $subItems, array $input) : void {
+      /** @var CommonDBTM $parent */
+      $itemId = $parent->getID();
       foreach ($subItems as $key => $itemtypes) {
          if (!is_array($itemtypes)) {
             if (!isset($input[$key])) {
@@ -111,7 +112,7 @@ trait PluginFormcreatorExportableTrait
             }
             // Delete all other restrictions
             $subItem = new $itemtype();
-            $subItem->deleteObsoleteItems($item, $importedItems);
+            $subItem->deleteObsoleteItems($parent, $importedItems);
          }
       }
    }
