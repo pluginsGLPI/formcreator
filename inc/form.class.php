@@ -501,20 +501,26 @@ PluginFormcreatorTranslatableInterface
    public function showTargets($ID, $options = []) {
       echo '<table class="tab_cadrehov">';
       echo '<tr>';
-      echo '<th colspan="3">'._n('Target', 'Targets', 2, 'formcreator').'</th>';
+      echo '<th>'._n('Target', 'Targets', 2, 'formcreator').'</th>';
+      echo '<th>'.__('Type', 'formcreator').'</th>';
+      echo '<th class="right">'.__('Actions', 'formcreator').'</th>';
       echo '</tr>';
 
       $allTargets = $this->getTargetsFromForm();
       $i = 0;
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
+            /** @var PluginFormcreatorAbstractTarget $target  */
             $i++;
             echo '<tr class="tab_bg_'.($i % 2).'">';
             $targetItemUrl = $targetType::getFormURLWithID($targetId);
             echo '<td><a href="' . $targetItemUrl . '">';
-
             echo $target->fields['name'];
             echo '</a></td>';
+
+            echo '<td>';
+            echo $target->getTypeName();
+            echo '</td>';
 
             echo '<td align="center" width="32">';
             echo '<i
