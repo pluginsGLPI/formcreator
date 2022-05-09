@@ -1319,7 +1319,13 @@ SCRIPT;
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm(),
          [
-            new QueryExpression("`fieldtype` = 'actor' OR (`fieldtype` = 'glpiselect' AND `itemtype`='User')"),
+            'OR' => [
+               'fieldtype' => 'actor',
+               'AND' => [
+                  'fieldtype' => 'glpiselect',
+                  'itemtype'  => 'User',
+               ]
+            ]
          ],
          '_validation_from_user_question',
          $this->fields['commonitil_validation_question'],
