@@ -828,7 +828,7 @@ PluginFormcreatorTranslatableInterface
                'type'             => 'faq',
                'usage_count'      => $faq['view'],
                'is_default'       => false,
-               'tile_template'         => 'fix'
+               'tile_template'    => 'fix'
             ];
          }
       }
