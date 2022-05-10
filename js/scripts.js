@@ -388,7 +388,7 @@ function buildTiles(list) {
 
          var tiles_design = "";
          console.log(item.tile_template);
-         if(item.tile_template == "uniform_height"){
+         if (item.tile_template == "1") { // @see PluginFormcreatorEntityConfig::CONFIG_UI_FORM_UNIFORM_HEIGHT
             tiles_design = "tile_design_uniform_height";
          }
 
