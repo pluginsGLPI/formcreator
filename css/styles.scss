@@ -646,14 +646,14 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 }
 
 .plugin_formcreator_formTile {
-   margin: 0 3px 6px 3px;
+   margin: 0 3px 17px 3px;
    width: 300px;
    display: inline-block;
    vertical-align: top;
    text-align: left;
    overflow: hidden;
    cursor: pointer;
-   border-radius: 0;
+   border-radius: 5px;
    box-sizing: border-box;
    animation-name: fadeInUp ;
    animation-iteration-count: 1;
