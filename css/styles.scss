@@ -496,7 +496,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    ul,
    li {
       list-style: none;
-      margin: 0;
+      padding-bottom: 10px;
    }
 
    ul {
@@ -597,7 +597,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    li {
       background-color: inherit;
-      height: 51px;
+      height: 40px;
    }
 }
 
@@ -1043,4 +1043,15 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_sort .fa {
    padding-left: 5px;
    color: #717171;
+}
+
+.category-divider {
+   height: 0;
+   margin-bottom: 0.5rem;
+   overflow: hidden;
+   border-top: 1px solid rgba(98, 105, 118, 0.16);
+}
+
+a.category_active span {
+   font-weight: bold;
 }
