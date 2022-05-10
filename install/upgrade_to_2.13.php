@@ -61,7 +61,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       }
 
       if (!$DB->fieldExists($table, 'tile_design')) {
-         $this->migration->addField($table, 'tile_design', 'string', ['after' => 'is_search_issue_visible', 'value' => '-2']);
+         $this->migration->addField($table, 'tile_design', 'integer', ['after' => 'is_search_issue_visible', 'value' => '-2']);
          $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `tile_design`= '0' WHERE `entities_id` = 0");
       }
    }
