@@ -302,10 +302,12 @@ function showTiles(tiles, defaultForms) {
    $('#plugin_formcreator_wizard_forms').empty();
    $('#plugin_formcreator_wizard_forms').prepend(html);
    $('#plugin_formcreator_formlist').masonry({
-      horizontalOrder: true
+      horizontalOrder: true,
+      gutter: 10
    });
    $('#plugin_formcreator_faqlist').masonry({
-      horizontalOrder: true
+      horizontalOrder: true,
+      gutter: 10
    });
 }
 
