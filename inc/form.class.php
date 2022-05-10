@@ -663,7 +663,7 @@ PluginFormcreatorTranslatableInterface
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_mostPopular">';
-      echo '<a><i class="fa fa-star" aria-hidden="true"></i></a>';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '"><i class="fa fa-star" aria-hidden="true"></i></a>';
       echo '</label>';
       echo '</span>';
       echo '&nbsp;';
