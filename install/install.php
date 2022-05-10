@@ -642,25 +642,25 @@ class PluginFormcreatorInstall {
       ];
       $cards = [
          'plugin_formcreator_all_issues'      => [
-            'color' => '#fafafa'
+            'color' => '#ffd957'
          ],
          'plugin_formcreator_incoming_issues' => [
-            'color' => '#3bc519'
+            'color' => '#6fd169'
          ],
          'plugin_formcreator_assigned_issues' => [
-            'color' => '#f1cd29'
+            'color' => '#eaf4f7'
          ],
          'plugin_formcreator_waiting_issues'   => [
-            'color' => '#f1a129'
+            'color' => '#ffcb7d'
          ],
          'plugin_formcreator_validate_issues'  => [
-            'color' => '#266ae9'
+            'color' => '#6298d5'
          ],
          'plugin_formcreator_solved_issues'    => [
-            'color' => '#edc949'
+            'color' => '#d7d7d7'
          ],
          'plugin_formcreator_closed_issues'    => [
-            'color' => '#555555'
+            'color' => '#515151'
          ],
       ];
 
