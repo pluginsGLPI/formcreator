@@ -309,15 +309,20 @@ function showTiles(tiles, defaultForms) {
    });
 
 
-   var length = 180;
    $(".plugin_formcreator_formTile_description.tile_design_uniform_height").each(function( index ) {
+      var length = 150;
+      //decrease length if contain icon
+      if ($(this).parent().find(".fa").length > 0) {
+         length = length - 35;
+      }
+
       var parent_title = $(this).parent().find('.plugin_formcreator_formTile_title').text();
       if (parent_title.length + $(this).text().length > length) {
          var short = jQuery.trim($(this).text())
                   .substring(0, length)
                   .split(" ")
                   .slice(0, -1)
-                  .join(" ") + "...";
+                  .join(" ") + " ...";
          $(this).html(short);
       }
    });
