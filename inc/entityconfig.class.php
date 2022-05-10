@@ -153,7 +153,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    public static function getEnumUIForm() : array {
       return [
          self::CONFIG_PARENT                 => __('Inheritance of the parent entity'),
-         self::CONFIG_UI_FORM_MASONRY        => __('Standart', 'formcreator'),
+         self::CONFIG_UI_FORM_MASONRY        => __('Variable height', 'formcreator'),
          self::CONFIG_UI_FORM_UNIFORM_HEIGHT => __('Fix tile', 'formcreator'),
       ];
    }
