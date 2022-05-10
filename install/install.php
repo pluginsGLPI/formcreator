@@ -273,7 +273,7 @@ class PluginFormcreatorInstall {
                   IF(ent.id = 0, 1, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 1, -2),
-                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2)
                 FROM glpi_entities ent
                 LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
                   ON ent.id = conf.entities_id
