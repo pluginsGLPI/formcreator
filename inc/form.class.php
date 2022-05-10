@@ -501,20 +501,26 @@ PluginFormcreatorTranslatableInterface
    public function showTargets($ID, $options = []) {
       echo '<table class="tab_cadrehov">';
       echo '<tr>';
-      echo '<th colspan="3">'._n('Target', 'Targets', 2, 'formcreator').'</th>';
+      echo '<th>'._n('Target', 'Targets', 2, 'formcreator').'</th>';
+      echo '<th>'.__('Type', 'formcreator').'</th>';
+      echo '<th class="right">'.__('Actions', 'formcreator').'</th>';
       echo '</tr>';
 
       $allTargets = $this->getTargetsFromForm();
       $i = 0;
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
+            /** @var PluginFormcreatorAbstractTarget $target  */
             $i++;
             echo '<tr class="tab_bg_'.($i % 2).'">';
             $targetItemUrl = $targetType::getFormURLWithID($targetId);
             echo '<td><a href="' . $targetItemUrl . '">';
-
             echo $target->fields['name'];
             echo '</a></td>';
+
+            echo '<td>';
+            echo $target->getTypeName();
+            echo '</td>';
 
             echo '<td align="center" width="32">';
             echo '<i
@@ -662,13 +668,17 @@ PluginFormcreatorTranslatableInterface
       $sort_order = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', Session::getActiveEntity());
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
-      echo '<label for="plugin_formcreator_mostPopular">&nbsp;'.$sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] .'</label>';
+      echo '<label for="plugin_formcreator_mostPopular">';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '"><i class="fa fa-star" aria-hidden="true"></i></a>';
+      echo '</label>';
       echo '</span>';
       echo '&nbsp;';
       echo '<span class="radios">';
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.' onclick="showTiles(tiles)"/>';
-      echo '<label for="plugin_formcreator_alphabetic">&nbsp;'.$sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL].'</label>';
+      echo '<label for="plugin_formcreator_alphabetic">';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL] . '"><i class="fa fa-arrow-down-a-z"></i></a>';
+      echo '</label>';
       echo '</span>';
       echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
