@@ -66,8 +66,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_SEARCH_ISSUE_HIDDEN = 0;
    const CONFIG_SEARCH_ISSUE_VISIBLE = 1;
 
-   const CONFIG_UI_FORM_MASONRY = 'masonry';
-   const CONFIG_UI_FORM_UNIFORM_HEIGHT = 'uniform_height';
+   const CONFIG_UI_FORM_MASONRY = 0;
+   const CONFIG_UI_FORM_UNIFORM_HEIGHT = 1;
 
 
    /**
