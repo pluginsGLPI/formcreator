@@ -672,15 +672,15 @@ function plugin_formcreator_hook_dashboard_cards($cards) {
    }
 
    $counters = [
-      'all'        => __('All issues', 'formcreator'),
-      'incoming'   => __('New issues', 'formcreator'),
-      'assigned'   => __('Assigned issues', 'formcreator'),
-      'waiting'    => __('Waiting issues', 'formcreator'),
-      'validate'   => __('Issues to validate', 'formcreator'),
-      'solved'     => __('Solved issues', 'formcreator'),
-      'closed'     => __('Closed issues', 'formcreator'),
+      'all'        => __('All', 'formcreator'),
+      'incoming'   => __('New', 'formcreator'),
+      'assigned'   => __('Assigned', 'formcreator'),
+      'waiting'    => __('Waiting', 'formcreator'),
+      'validate'   => __('To validate', 'formcreator'),
+      'solved'     => __('Solved', 'formcreator'),
+      'closed'     => __('Closed', 'formcreator'),
       // Aggregaterd statuses
-      'old'        => __('Old issues', 'formcreator'), // Solved + closed
+      'old'        => __('Old', 'formcreator'), // Solved + closed
    ];
    foreach ($counters as $key => $label) {
       $cards['plugin_formcreator_' . $key . '_issues'] = [
