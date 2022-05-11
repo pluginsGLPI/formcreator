@@ -7,8 +7,8 @@
 # Alessandro Carloni <kaya84@gmail.com>, 2021
 # Thierry Bugier <tbugier@teclib.com>, 2021
 # Roberto <rizrob@gmail.com>, 2021
-# Davide <spam@habilitas.it>, 2021
 # Pierfrancesco Passerini <p.passerini@gmail.com>, 2021
+# Davide <spam@habilitas.it>, 2022
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-23 08:44+0100\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Pierfrancesco Passerini <p.passerini@gmail.com>, 2021\n"
+"Last-Translator: Davide <spam@habilitas.it>, 2022\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/teclib/teams/28042/it_IT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1414,7 +1414,7 @@ msgstr "Utente"
 
 #: inc/field/dropdownfield.class.php:73
 msgid "User and form"
-msgstr ""
+msgstr "Utente e modulo"
 
 #: inc/field/dropdownfield.class.php:104
 msgid "SLA"
@@ -1438,7 +1438,7 @@ msgstr "Categorie di incidenti"
 
 #: inc/field/dropdownfield.class.php:146
 msgid "Change categories"
-msgstr ""
+msgstr "Modifica le categorie"
 
 #: inc/field/dropdownfield.class.php:177
 msgid "Type"
@@ -1446,11 +1446,11 @@ msgstr "Tipo"
 
 #: inc/field/dropdownfield.class.php:182
 msgid "Time to own"
-msgstr ""
+msgstr "Tempo di presa in carico"
 
 #: inc/field/dropdownfield.class.php:183
 msgid "Time to resolve"
-msgstr ""
+msgstr "Tempo di risoluzione"
 
 #: inc/field/dropdownfield.class.php:554
 #: inc/field/ldapselectfield.class.php:239
@@ -1462,21 +1462,21 @@ msgstr "Un campo obbligatorio risulta non compilato:"
 
 #: inc/field/dropdownfield.class.php:581
 msgid "Invalid value for "
-msgstr ""
+msgstr "Valore non valido per"
 
 #: inc/field/dropdownfield.class.php:593
 #, php-format
 msgid "The field value is required: %s"
-msgstr ""
+msgstr "Il valore del campo è richiesto: %s"
 
 #: inc/field/dropdownfield.class.php:609
 #, php-format
 msgid "Invalid dropdown type: %s"
-msgstr ""
+msgstr "Tipo menù a discesa non valido: %s"
 
 #: inc/field/dropdownfield.class.php:965
 msgid "Entity restriction"
-msgstr ""
+msgstr "Limite dell'entità"
 
 #: inc/field/emailfield.class.php:108
 #, php-format
