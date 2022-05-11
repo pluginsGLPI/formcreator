@@ -53,7 +53,7 @@ class PluginFormcreatorProfile extends Profile {
 
       $rights = [['itemtype'  => PluginFormcreatorForm::getType(),
                   'label'     => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
-                  'field'     => 'plugin_formcreator']];
+                  'field'     => PluginFormcreatorForm::$rightname]];
       $matrix_options['title'] = PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
       $profile->displayRightsChoiceMatrix($rights, $matrix_options);
 
