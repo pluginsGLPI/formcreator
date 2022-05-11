@@ -700,6 +700,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
+         'condition'          => ['is_assign' => 1],
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Group_Ticket::getTable(),
