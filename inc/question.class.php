@@ -399,6 +399,10 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForAdd($input) {
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
+
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
       if (count($input) === 0) {
          return [];
@@ -456,10 +460,6 @@ PluginFormcreatorTranslatableInterface
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-      }
-
       return $input;
    }
 
@@ -478,7 +478,12 @@ PluginFormcreatorTranslatableInterface
          if (!isset($input['plugin_formcreator_sections_id'])) {
             $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];
          }
+
          $input = $this->checkBeforeSave($input);
+
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
 
       if (!is_array($input) || count($input) == 0) {
@@ -508,10 +513,6 @@ PluginFormcreatorTranslatableInterface
          if (!isset($this->fields['uuid']) && $this->fields['uuid'] != $input['uuid']) {
             $input['uuid'] = plugin_formcreator_getUuid();
          }
-      }
-
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
       }
 
       return $input;
