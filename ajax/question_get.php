@@ -31,7 +31,7 @@
 
 include ('../../../inc/includes.php');
 Session::checkLoginUser();
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
    http_response_code(400);

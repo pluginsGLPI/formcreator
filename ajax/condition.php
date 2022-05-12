@@ -30,7 +30,7 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // integrity check
 if (!isset($_POST['itemtype']) || !isset($_POST['items_id'])) {

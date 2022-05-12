@@ -40,7 +40,7 @@ $form = PluginFormcreatorCommon::getForm();
 
 if (isset($_POST['add'])) {
    // Add a new Form
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
    $_POST['_create_empty_section'] = true;
    if ($newID = $form->add($_POST)) {
       if ($_SESSION['glpibackcreated']) {
@@ -51,30 +51,30 @@ if (isset($_POST['add'])) {
 
 } else if (isset($_POST['update'])) {
    // Edit an existing form
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $form->update($_POST);
    Html::back();
 
 } else if (isset($_POST['delete'])) {
    // Delete a form (is_deleted = true)
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
    $form->delete($_POST);
    $form->redirectToList();
 
 } else if (isset($_POST['restore'])) {
    // Restore a deleteted form (is_deleted = false)
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $form->restore($_POST);
    $form->redirectToList();
 
 } else if (isset($_POST['purge'])) {
    // Delete defenitively a form from DB and all its datas
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, PURGE);
    $form->delete($_POST, 1);
    $form->redirectToList();
 
 } else if (isset($_POST['add_target'])) {
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $form->addTarget($_POST);
    Html::back();
 
@@ -96,7 +96,8 @@ if (isset($_POST['add'])) {
 
 } else if (isset($_GET['import_form'])) {
    // Import form
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    Html::header(
       PluginFormcreatorForm::getTypeName(2),
       $_SERVER['PHP_SELF'],
@@ -120,7 +121,8 @@ if (isset($_POST['add'])) {
    );
 
    // Import form
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $form->importJson($_REQUEST);
    Html::back();
 
@@ -172,7 +174,7 @@ if (isset($_POST['add'])) {
 
 } else {
    // Show forms form
-   Session::checkRight('entity', UPDATE);
+   Session::checkRight(PluginFormcreatorForm::$rightname, READ);
 
    Html::header(
       PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),

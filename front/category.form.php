@@ -31,7 +31,7 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkRight("entity", UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 Plugin::load('formcreator', true);
 

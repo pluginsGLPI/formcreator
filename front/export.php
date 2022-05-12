@@ -36,7 +36,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 $form = PluginFormcreatorCommon::getForm();
 $export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION, 'forms' => []];

@@ -30,7 +30,7 @@
  */
 
 include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 $question = new PluginFormcreatorQuestion();
 if (!$question->canCreate()) {
