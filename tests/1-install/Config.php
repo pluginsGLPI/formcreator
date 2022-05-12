@@ -36,6 +36,7 @@ use Glpi\Dashboard\Item;
 use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Profile;
+use ProfileRight;
 
 /**
  * @engine inline
@@ -120,6 +121,7 @@ class Config extends CommonTestCase {
       $this->checkPluginName();
       $this->checkAutomaticAction();
       $this->checkDashboard();
+      $this->checkRights();
    }
 
    public function testUpgradedPlugin() {
@@ -157,6 +159,7 @@ class Config extends CommonTestCase {
       $this->checkPluginName();
       $this->checkAutomaticAction();
       $this->checkDashboard();
+      $this->checkRights();
    }
 
    public function checkPluginName() {
@@ -314,5 +317,25 @@ class Config extends CommonTestCase {
          'dashboards_dashboards_id' => $dashboard->fields['id'],
       ]);
       $this->array($rows)->hasSize(7);
+   }
+
+   public function checkRights() {
+      $profileRight = new ProfileRight();
+      $rows = $profileRight->find([
+         'name' => 'plugin_formcreator_form',
+         'profiles_id' => 4, // Super admin profile
+      ]);
+      $superAdminRightFound = false;
+      foreach ($rows as $rowId => $row) {
+         if ($row['profiles_id'] == 4) {
+            // Super admin have UPDATE on entity
+            $expected = READ + CREATE + UPDATE + DELETE + PURGE;
+            $superAdminRightFound = true;
+         } else {
+            $expected = READ;
+         }
+         $this->integer((int) $row['rights'])->isEqualTo($expected);
+      }
+      $this->boolean($superAdminRightFound)->istrue();
    }
 }
