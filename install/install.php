@@ -95,33 +95,12 @@ class PluginFormcreatorInstall {
       $this->createCronTasks();
       $this->createNotifications();
       $this->createMiniDashboard();
+      $this->addRightsToAdministrateForms();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       $task = new CronTask();
       PluginFormcreatorIssue::cronSyncIssues($task);
 
-      // Add rights
-      global $DB;
-      $profiles = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => Profile::getTable(),
-      ]);
-      foreach ($profiles as $profile) {
-         $rights = ProfileRight::getProfileRights(
-            $profile['id'],
-            [
-               Entity::$rightname,
-               PluginFormcreatorForm::$rightname,
-            ]
-         );
-         $right = READ;
-         if ($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) {
-            $right = READ + UPDATE + CREATE + DELETE + PURGE;
-         }
-         ProfileRight::updateProfileRights($profile['id'], [
-            PluginFormcreatorForm::$rightname => $right,
-         ]);
-      }
 
       return true;
    }
@@ -742,6 +721,31 @@ class PluginFormcreatorInstall {
             'dashboards_dashboards_id' => $dashboardId,
             'itemtype'                 => Profile::getType(),
             'items_id'                => $helpdeskProfile['id'],
+         ]);
+      }
+   }
+
+   protected function addRightsToAdministrateForms() {
+      global $DB;
+
+      $profiles = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Profile::getTable(),
+      ]);
+      foreach ($profiles as $profile) {
+         $rights = ProfileRight::getProfileRights(
+            $profile['id'],
+            [
+               Entity::$rightname,
+               PluginFormcreatorForm::$rightname,
+            ]
+         );
+         if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
+            continue;
+         }
+         $right = READ + UPDATE + CREATE + DELETE + PURGE;
+         ProfileRight::updateProfileRights($profile['id'], [
+            PluginFormcreatorForm::$rightname => $right,
          ]);
       }
    }

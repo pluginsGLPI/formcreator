@@ -75,10 +75,10 @@ class PluginFormcreatorUpgradeTo2_14 {
                PluginFormcreatorForm::$rightname,
             ]
          );
-         $right = READ;
-         if ($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) {
-            $right = READ + UPDATE + CREATE + DELETE + PURGE;
+         if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
+            continue;
          }
+         $right = READ + UPDATE + CREATE + DELETE + PURGE;
          ProfileRight::updateProfileRights($profile['id'], [
             PluginFormcreatorForm::$rightname => $right,
          ]);

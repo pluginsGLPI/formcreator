@@ -1434,6 +1434,11 @@ PluginFormcreatorTranslatableInterface
    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
       switch ($ma->getAction()) {
          case 'Duplicate' :
+            if (!Session::haveRight(PluginFormcreatorForm::$rightname, CREATE)) {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               return;
+            }
             foreach ($ids as $id) {
                if ($item->getFromDB($id) && $item->duplicate() !== false) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
@@ -1445,6 +1450,11 @@ PluginFormcreatorTranslatableInterface
             }
             return;
          case 'Transfert' :
+            if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               return;
+            }
             foreach ($ids as $id) {
                if ($item->getFromDB($id) && $item->transfer($ma->POST['entities_id'])) {
                   Session::addMessageAfterRedirect(sprintf(__('Form Transfered: %s', 'formcreator'), $item->getName()));
@@ -1456,6 +1466,11 @@ PluginFormcreatorTranslatableInterface
             }
             return;
          case 'Export' :
+            if (!Session::haveRight(PluginFormcreatorForm::$rightname, READ)) {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               return;
+            }
             foreach ($ids as $id) {
                if ($item->getFromDB($id)) {
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
