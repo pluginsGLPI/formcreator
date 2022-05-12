@@ -46,7 +46,7 @@ trait PluginFormcreatorConditionnableTrait
       // All arrays of condition exists
       if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
-         return  false;
+         return false;
       }
 
       if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
@@ -138,7 +138,7 @@ trait PluginFormcreatorConditionnableTrait
       // Arrays all have the same count and have at least one item
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
       $order = 0;
-      while (count($input[$questionFk]) > 0) {
+      while (isset($input[$questionFk]) && count($input[$questionFk]) > 0) {
          $order++;
          $value            = array_shift($input['show_value']);
          $questionID       = (int) array_shift($input[$questionFk]);
