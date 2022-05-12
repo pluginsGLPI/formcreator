@@ -101,7 +101,6 @@ class PluginFormcreatorInstall {
       $task = new CronTask();
       PluginFormcreatorIssue::cronSyncIssues($task);
 
-
       return true;
    }
 
