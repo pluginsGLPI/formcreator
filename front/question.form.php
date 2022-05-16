@@ -31,7 +31,7 @@
 
 include ("../../../inc/includes.php");
 
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {

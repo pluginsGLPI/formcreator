@@ -111,7 +111,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      if (Session::haveRight('entity', UPDATE)) {
+      if (Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
          return true;
       }
 
@@ -170,7 +170,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function canPurgeItem() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE);
    }
 
    /**
