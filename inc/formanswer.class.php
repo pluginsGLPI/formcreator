@@ -1055,6 +1055,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function post_addItem() {
+      global $PLUGIN_HOOKS;
+
       // Save questions answers
       $formAnswerId = $this->getID();
       $formId = $this->input[PluginFormcreatorForm::getForeignKeyField()];
@@ -1081,6 +1083,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
+
+         foreach ($PLUGIN_HOOKS['formcreator_before_generate_target'] ?? [] as $plugin => $callable) {
+            // Skip if invalid hook
+            if (!is_callable($callable)) {
+               trigger_error("formcreator_before_generate_target[$plugin]: not a callable", E_USER_WARNING);
+               continue;
+            }
+
+            call_user_func($callable, $this);
+         }
+
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
