@@ -1081,6 +1081,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
+         Plugin::doHookFunction('formcreator_before_generate_target', $this);
+
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
