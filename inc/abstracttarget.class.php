@@ -197,6 +197,15 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
          $template = str_replace('##FULLFORM##', $formAnswer->getFullForm($richText), $template);
       }
 
+      $extra_tags_values = Plugin::doHookFunction('formcreator_prepare_extra_tags', [
+         'formanswer' => $formAnswer,
+         'values' => [],
+         'richtext' => $richText,
+      ]);
+      foreach ($extra_tags_values['values'] as $tag => $value) {
+         $template = str_replace($tag, $value, $template);
+      }
+
       if ($richText) {
          $template = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $template);
          $template = Sanitizer::sanitize($template);

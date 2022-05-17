@@ -1223,7 +1223,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = Sanitizer::sanitize($content);
       }
 
-      return $content;
+      $hook_data = Plugin::doHookFunction('formcreator_parse_extra_tags', [
+         'formanswer' => $this,
+         'content'    => $content,
+         'target'     => $target,
+         'richtext'   => $richText,
+      ]);
+
+      return $hook_data['content'];
    }
 
    /**
