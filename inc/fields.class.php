@@ -382,9 +382,10 @@ class PluginFormcreatorFields
 
       // Get the visibility result of sections
       $sectionToShow = [];
-      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
-      foreach ($sections as $section) {
-         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);
+      $sectionsGenerator = PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      /** @var PluginFormcreatorSection $section */
+      foreach ($sectionsGenerator as $sectionId => $section) {
+         $sectionToShow[$sectionId] = PluginFormcreatorFields::isVisible($section, $fields);
       }
 
       return [

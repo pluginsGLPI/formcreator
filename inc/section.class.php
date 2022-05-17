@@ -429,12 +429,11 @@ PluginFormcreatorTranslatableInterface
    /**
     * gets all sections in a form
     * @param int $formId ID of a form
-    * @return self[] sections in a form
+    * @return \Generator Generator of sections in a form
     */
-   public static function getSectionsFromForm($formId) {
+   public static function getSectionsFromForm($formId): \Generator {
       global $DB;
 
-      $sections = [];
       $rows = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
@@ -446,10 +445,8 @@ PluginFormcreatorTranslatableInterface
       foreach ($rows as $row) {
          $section = new self();
          $section->getFromDB($row['id']);
-         $sections[$row['id']] = $section;
+         yield $row['id'] => $section;
       }
-
-      return $sections;
    }
 
    public function showForm($ID, $options = []) {
@@ -580,7 +577,7 @@ PluginFormcreatorTranslatableInterface
 
       $strings = $this->getMyTranslatableStrings($options);
 
-      foreach ((new PluginFormcreatorQuestion())->getQuestionsFromSection($this->getID()) as $question) {
+      foreach (PluginFormcreatorQuestion::getQuestionsFromSection($this->getID()) as $question) {
          foreach ($question->getTranslatableStrings($options) as $type => $subStrings) {
             $strings[$type] = array_merge($strings[$type], $subStrings);
          }

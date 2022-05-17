@@ -1116,13 +1116,15 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $sectionFk => $section2->getID(),
       ]);
 
-      $questions = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
-      $this->array($questions)->hasSize(2);
-
+      $questionsGenerator = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
       $questionIds = [];
-      foreach ($questions as $item) {
+      $count = 0;
+      foreach ($questionsGenerator as $itemId => $item) {
+         $count++;
          $questionIds[] = $item->getID();
+         $this->integer((int) $itemId)->isEqualTo($item->getID());
       }
+      $this->integer($count)->isEqualTo(2);
       $expectedQuestionIds = [
          $question1->getID(),
          $question2->getID(),
@@ -1131,7 +1133,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->array(array_intersect($questionIds, $expectedQuestionIds))->hasSize(2);
    }
 
-   public function testGetQuestionsBySection() {
+   public function testGetQuestionsFromSection() {
       $section = $this->getSection();
       $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
       $question1 = $this->getQuestion([
@@ -1141,10 +1143,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          $sectionFk => $section->getID(),
       ]);
 
-      $questions = \PluginFormcreatorQuestion::getQuestionsFromSection($section->getID());
+      $questionsGenerator = \PluginFormcreatorQuestion::getQuestionsFromSection($section->getID());
       $questionIds = [];
-      foreach ($questions as $item) {
-         $questionIds[] = $item->getID();
+      foreach ($questionsGenerator as $itemId => $item) {
+         $questionIds[] = $itemId;
       }
       $expectedQuestionIds = [
          $question1->getID(),

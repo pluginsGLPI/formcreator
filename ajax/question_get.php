@@ -38,10 +38,9 @@ if (!isset($_REQUEST['id'])) {
    exit();
 }
 $sectionId = (int) $_REQUEST['id'];
-$questions = PluginFormcreatorQuestion::getQuestionsFromSection($sectionId);
 
 $json = [];
-foreach ($questions as $question) {
+foreach (PluginFormcreatorQuestion::getQuestionsFromSection($sectionId) as $question) {
     $json[$question->getID()] = [
         'y'      => $question->fields['row'],
         'x'      => $question->fields['col'],
