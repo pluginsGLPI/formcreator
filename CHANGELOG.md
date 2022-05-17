@@ -1,3 +1,45 @@
+<a name="2.13.0-beta.2"></a>
+## [2.13.0-beta.2](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-beta.1..2.13.0-beta.2) (2022-05-17)
+
+
+### Bug Fixes
+
+*  do not overwrite dashboards from other plugins ([d0f49e19](https://github.com/pluginsGLPI/formcreator/commit/d0f49e19))
+*  remove tech group search option from service catalog ([c473076f](https://github.com/pluginsGLPI/formcreator/commit/c473076f))
+* **condition:** condition loss if itil target edited ([aaae0344](https://github.com/pluginsGLPI/formcreator/commit/aaae0344))
+* **condition:** fail to import conditions ([cb4dceb3](https://github.com/pluginsGLPI/formcreator/commit/cb4dceb3))
+* **conditionnabletrait:** php warning ([bdfabf8e](https://github.com/pluginsGLPI/formcreator/commit/bdfabf8e))
+* **form:** Form with restricted acces: redirect to login form if not logged in ([fe1eadd6](https://github.com/pluginsGLPI/formcreator/commit/fe1eadd6))
+* **form:** allow redirect to login for private forms as well ([bdae85a0](https://github.com/pluginsGLPI/formcreator/commit/bdae85a0))
+* **form:** design css broken ([d8c76692](https://github.com/pluginsGLPI/formcreator/commit/d8c76692))
+* **formanswer:** bad parenthesis nest and bad oject used ([70b77d32](https://github.com/pluginsGLPI/formcreator/commit/70b77d32))
+* **glpiselectfield:** generic objects support lost in TWIG conversion ([d18852c0](https://github.com/pluginsGLPI/formcreator/commit/d18852c0))
+* **glpiselectfield,dropdownfield:** comparisons methods for conditions ([f41dafce](https://github.com/pluginsGLPI/formcreator/commit/f41dafce))
+* **install:** index overflow (#2775) ([cec857b8](https://github.com/pluginsGLPI/formcreator/commit/cec857b8))
+* **issue:** restrict tech group search option to assignable groups ([230b33ef](https://github.com/pluginsGLPI/formcreator/commit/230b33ef))
+* **targetticket:** associated elements from question ([0a62b976](https://github.com/pluginsGLPI/formcreator/commit/0a62b976))
+* **targetticket:** select questions outside form ([c38e1d9c](https://github.com/pluginsGLPI/formcreator/commit/c38e1d9c))
+* **wizard:** bad label when searching KB items ([1fc81bc8](https://github.com/pluginsGLPI/formcreator/commit/1fc81bc8))
+* **wizard:** fix KB only browsing ([de78b9ed](https://github.com/pluginsGLPI/formcreator/commit/de78b9ed))
+
+
+### Features
+
+* **dashboard:** enable label ([6309aa37](https://github.com/pluginsGLPI/formcreator/commit/6309aa37))
+* **dashboard:** harmonize with GLPI color ([529395a4](https://github.com/pluginsGLPI/formcreator/commit/529395a4))
+* **dashboard:** shorter card labels ([3e29a467](https://github.com/pluginsGLPI/formcreator/commit/3e29a467))
+* **form:** better target list presentation ([343e5261](https://github.com/pluginsGLPI/formcreator/commit/343e5261))
+* **form:** default language for new form unset ([a57e4a61](https://github.com/pluginsGLPI/formcreator/commit/a57e4a61))
+* **formanswer:** hook before generating targets ([8542adc4](https://github.com/pluginsGLPI/formcreator/commit/8542adc4))
+* **issue:** add option to hide search Issue if needed ([b37e1c02](https://github.com/pluginsGLPI/formcreator/commit/b37e1c02))
+* **tile:** radius and margin ([b5ce782f](https://github.com/pluginsGLPI/formcreator/commit/b5ce782f))
+* **tile:** title of tiles in bold ([425c71d4](https://github.com/pluginsGLPI/formcreator/commit/425c71d4))
+* **ui:** rework category list ([2bbbe735](https://github.com/pluginsGLPI/formcreator/commit/2bbbe735))
+* **wizard:** new tile design, optional ([aeb040c6](https://github.com/pluginsGLPI/formcreator/commit/aeb040c6))
+* **wizard:** replace sort label by icon ([f7320a5c](https://github.com/pluginsGLPI/formcreator/commit/f7320a5c))
+
+
+
 <a name="2.13.0-beta.1"></a>
 ## [HEAD](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-alpha.4..2.13.0-beta.1) (2022-04-26)
 
