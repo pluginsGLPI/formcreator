@@ -2533,7 +2533,13 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showTagsList() {
+      $extra_tags = Plugin::doHookFunction('formcreator_add_extra_tags', [
+         'tags' => [],
+         'form' => $this,
+      ]);
+
       TemplateRenderer::getInstance()->display('@formcreator/components/form/form_taglist.html.twig', [
+         'extra_tags' => $extra_tags['tags'],
          'item'   => $this,
       ]);
 
