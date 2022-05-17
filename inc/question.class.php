@@ -916,9 +916,9 @@ PluginFormcreatorTranslatableInterface
     * return array of question objects belonging to a form
     * @param int $formId
     * @param array $crit array for the WHERE clause
-    * @return PluginFormcreatorQuestion[]
+    * @return \Generator
     */
-   public static function getQuestionsFromForm($formId, $crit = []) {
+   public static function getQuestionsFromForm($formId, $crit = []): \Generator {
       global $DB;
 
       $table_question = PluginFormcreatorQuestion::getTable();
@@ -946,14 +946,11 @@ PluginFormcreatorTranslatableInterface
          ]
       ]);
 
-      $questions = [];
       foreach ($result as $row) {
          $question = new self();
          $question->getFromDB($row['id']);
-         $questions[$row['id']] = $question;
+         yield $row['id'] => $question;
       }
-
-      return $questions;
    }
 
    /**
@@ -961,12 +958,11 @@ PluginFormcreatorTranslatableInterface
     *
     * @param int $sectionId
     *
-    * @return PluginFormcreatorQuestion[]
+    * @return \Generator
     */
-   public static function getQuestionsFromSection($sectionId) {
+   public static function getQuestionsFromSection($sectionId): \Generator {
       global $DB;
 
-      $questions = [];
       $rows = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
@@ -976,12 +972,10 @@ PluginFormcreatorTranslatableInterface
          'ORDER'  => ['row ASC', 'col ASC']
       ]);
       foreach ($rows as $row) {
-            $question = new self();
-            $question->getFromDB($row['id']);
-            $questions[$row['id']] = $question;
+         $question = new self();
+         $question->getFromDB($row['id']);
+         yield $row['id'] => $question;
       }
-
-      return $questions;
    }
 
    /**

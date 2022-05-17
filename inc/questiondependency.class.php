@@ -76,7 +76,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       // get questions of type text in the form
       $eligibleQuestions = [];
       $criteria = ['fieldtype' => $this->fieldtype];
-      foreach ($question->getQuestionsFromForm($form->getID(), $criteria) as $item) {
+      foreach (PluginFormcreatorQuestion::getQuestionsFromForm($form->getID(), $criteria) as $item) {
          $eligibleQuestions[$item->getID()] = $item->getField('name');
       }
 

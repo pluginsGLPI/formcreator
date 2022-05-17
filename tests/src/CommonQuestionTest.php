@@ -3,6 +3,8 @@
 namespace GlpiPlugin\Formcreator\Tests;
 
 use Plugin;
+use PluginFormcreatorQuestion;
+
 trait CommonQuestionTest
 {
 
@@ -78,8 +80,9 @@ trait CommonQuestionTest
       }
 
       // test the question is created in DB
-      $questions = (new \PluginFormcreatorQuestion())->getQuestionsFromForm($form->getID());
-      $question = array_pop($questions);
+      $questionsGenerator = \PluginFormcreatorQuestion::getQuestionsFromForm($form->getID());
+      /** @var PluginFormcreatorQuestion $question */
+      $question = $questionsGenerator->current(); // Get the 1st item
       $this->variable($question)->isNotNull();
 
       // test the question is displayed
