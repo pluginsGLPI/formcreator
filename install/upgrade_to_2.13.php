@@ -520,6 +520,12 @@ class PluginFormcreatorUpgradeTo2_13 {
       }
    }
 
+   /**
+    * It is possible to have inconsistencies in DB where several identical parameters exist for a single question
+    * Removing all duplicates, and add unicity in the tables
+    *
+    * @return void
+    */
    public function questionParameterUnicity() {
       global $DB;
 
@@ -574,17 +580,25 @@ class PluginFormcreatorUpgradeTo2_13 {
             WHERE dr.plugin_formcreator_questions_id = j.question_id AND dr.id <> j.qrid
       ");
 
-
       $tables = [
          'glpi_plugin_formcreator_questionranges',
          'glpi_plugin_formcreator_questionregexes',
       ];
 
       foreach ($tables as $table) {
+         $DB->delete($table, [
+            'plugin_formcreator_questions_id' => '0'
+         ]);
          $this->migration->addKey($table, ['plugin_formcreator_questions_id', 'fieldname'], 'unicity', 'UNIQUE');
       }
    }
 
+   /**
+    * It is possible to have questions using parameters, but none exist in the DB
+    * ading empty parameters where needed
+    *
+    * @return void
+    */
    public function questionParameterRepair() {
       global $DB;
 
