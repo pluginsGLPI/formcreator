@@ -159,7 +159,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       $item = $field->getEmptyParameters();
       $item = $item[$input['fieldname']];
 
-      // Find an existing condition to update, only if an UUID is available
+      // Find an existing question range to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
       $idKey = 'id';
