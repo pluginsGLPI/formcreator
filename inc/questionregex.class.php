@@ -77,13 +77,11 @@ extends PluginFormcreatorAbstractQuestionParameter
       $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
       // get the selected value in the dropdown
-      $selected = '';
-      $this->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $question->getID(),
-         'fieldname' => $this->fieldName,
-      ]);
-      if (!$this->isNewItem()) {
-         $selected = $this->fields['regex'];
+      if (!$question->isNewItem()) {
+         $this->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $question->getID(),
+            'fieldname' => $this->fieldName,
+         ]);
       }
 
       // build HTML code

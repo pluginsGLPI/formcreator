@@ -85,15 +85,11 @@ extends PluginFormcreatorAbstractQuestionParameter
       $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
       // get the selected value in the dropdown
-      $rangeMin = '';
-      $rangeMax = '';
-      $this->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $question->getID(),
-         'fieldname' => $this->fieldName,
-      ]);
-      if (!$this->isNewItem()) {
-         $rangeMin = $this->fields['range_min'];
-         $rangeMax = $this->fields['range_max'];
+      if (!$question->isNewItem()) {
+         $this->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $question->getID(),
+            'fieldname' => $this->fieldName,
+         ]);
       }
 
       $out = TemplateRenderer::getInstance()->render(
