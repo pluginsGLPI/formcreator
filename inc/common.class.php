@@ -796,6 +796,15 @@ JAVASCRIPT;
                'icon'    => 'fa-fw ti ti-rss',
             ];
          }
+
+         // Add plugins menus
+          $plugin_menus = $menus['plugins']['content'] ?? [];
+          foreach ($plugin_menus as $menu_name => $menu_data) {
+             $menu_data['default'] = $menu_data['page'] ?? '#';
+             $newMenu[$menu_name] = $menu_data;
+          }
+
+
          return $newMenu;
       }
 
