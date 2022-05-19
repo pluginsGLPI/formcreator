@@ -409,7 +409,7 @@ class DropdownField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      $DbUtil = new DbUtils();
+      $DbUtil = new DBUtils();
       $itemtype = $this->getSubItemtype();
       if ($itemtype == User::class) {
          $value = $DbUtil->getUserName($this->value);
@@ -552,7 +552,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       global $DB;
 
       // from Item_Ticket::dropdownMyDevices()
-      $dbUtil = new DbUtils();
+      $dbUtil = new DBUtils();
       $groupUserTable = Group_User::getTable();
       $groupTable = Group::getTable();
       $groupFk = Group::getForeignKeyField();
