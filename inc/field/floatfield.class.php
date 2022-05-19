@@ -43,251 +43,277 @@ use Toolbox;
 
 class FloatField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
 
-      $parameters = $this->getParameters();
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'question_params' => $parameters,
-         'params' => $options,
-      ]);
+        $parameters = $this->getParameters();
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'question_params' => $parameters,
+            'params' => $options,
+        ]);
+    }
 
-   }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return $this->value;
+        }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return $this->value;
-      }
-
-      $html         = '';
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->value);
-      $html .= Html::input($fieldName, [
-         'id'    => $domId,
-         'value' => $defaultValue
-      ]);
-      $html .= Html::scriptBlock("$(function() {
+        $html         = '';
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $domId        = $fieldName . '_' . $rand;
+        $defaultValue = Html::cleanInputText($this->value);
+        $html .= Html::input($fieldName, [
+            'id'    => $domId,
+            'value' => $defaultValue
+        ]);
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeField('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '';
+        }
 
-      return strval((float) $this->value);
-   }
+        return strval((float) $this->value);
+    }
 
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+    public function deserializeValue($value)
+    {
+        $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
-   }
+    }
 
-   public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
+    public function getValueForDesign(): string
+    {
+        if ($this->value === null) {
+            return '';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      return $this->value;
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        return $this->value;
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isValid(): bool {
-      if ($this->isRequired() && $this->value == '') {
-         Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+        if ($this->isRequired() && $this->value == '') {
+            Session::addMessageAfterRedirect(
+                sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      return $this->isValidValue($this->value);
-   }
+        return $this->isValidValue($this->value);
+    }
 
-   public function isValidValue($value): bool {
-      if (strlen($value) == 0) {
-         return true;
-      }
+    public function isValidValue($value): bool
+    {
+        if (strlen($value) == 0) {
+            return true;
+        }
 
-      if (!empty($value) && !is_numeric($value)) {
-         Session::addMessageAfterRedirect(
-            sprintf(__('This is not a number: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR
-         );
-         return false;
-      }
+        if (!empty($value) && !is_numeric($value)) {
+            Session::addMessageAfterRedirect(
+                sprintf(__('This is not a number: %s', 'formcreator'), $this->getLabel()),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      $parameters = $this->getParameters();
+        $parameters = $this->getParameters();
 
-      // Check the field matches the format regex
-      if (!$parameters['regex']->isNewItem()) {
-         $regex = $parameters['regex']->fields['regex'];
-         if ($regex !== null && strlen($regex) > 0) {
-            if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
-               return false;
+       // Check the field matches the format regex
+        if (!$parameters['regex']->isNewItem()) {
+            $regex = $parameters['regex']->fields['regex'];
+            if ($regex !== null && strlen($regex) > 0) {
+                if (!preg_match($regex, $value)) {
+                    Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
+                    return false;
+                }
             }
-         }
-      }
+        }
 
-      // Check the field is in the range
-      if (!$parameters['range']->isNewItem()) {
-         $rangeMin = $parameters['range']->fields['range_min'];
-         $rangeMax = $parameters['range']->fields['range_max'];
-         if ($rangeMin > 0 && $value < $rangeMin) {
-            $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->question->fields['name']);
-            Session::addMessageAfterRedirect($message, false, ERROR);
+       // Check the field is in the range
+        if (!$parameters['range']->isNewItem()) {
+            $rangeMin = $parameters['range']->fields['range_min'];
+            $rangeMax = $parameters['range']->fields['range_max'];
+            if ($rangeMin > 0 && $value < $rangeMin) {
+                $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->question->fields['name']);
+                Session::addMessageAfterRedirect($message, false, ERROR);
+                return false;
+            }
+
+            if ($rangeMax > 0 && $value > $rangeMax) {
+                $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->question->fields['name']);
+                Session::addMessageAfterRedirect($message, false, ERROR);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function getName(): string
+    {
+        return __('Float', 'formcreator');
+    }
+
+    public function prepareQuestionInputForSave($input)
+    {
+        $success = true;
+        $fieldType = $this->getFieldTypeName();
+       // Add leading and trailing regex marker automaticaly
+        if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
+            $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
+            $success = PluginFormcreatorCommon::checkRegex($regex);
+            if (!$success) {
+                Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+            }
+        }
+        if (!$success) {
             return false;
-         }
+        }
 
-         if ($rangeMax > 0 && $value > $rangeMax) {
-            $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->question->fields['name']);
-            Session::addMessageAfterRedirect($message, false, ERROR);
-            return false;
-         }
-      }
+        if (isset($input['default_values'])) {
+            if ($input['default_values'] != '') {
+                $this->value = (float) str_replace(',', '.', $input['default_values']);
+            } else {
+                $this->value = '';
+            }
+        }
+        $input['values'] = '';
 
-      return true;
-   }
+        return $input;
+    }
 
-   public static function getName(): string {
-      return __('Float', 'formcreator');
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      $success = true;
-      $fieldType = $this->getFieldTypeName();
-      // Add leading and trailing regex marker automaticaly
-      if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
-         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
-         $success = PluginFormcreatorCommon::checkRegex($regex);
-         if (!$success) {
-            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
-         }
-      }
-      if (!$success) {
-         return false;
-      }
-
-      if (isset($input['default_values'])) {
-         if ($input['default_values'] != '') {
-            $this->value = (float) str_replace(',', '.', $input['default_values']);
-         } else {
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!is_string($input[$key])) {
             $this->value = '';
-         }
-      }
-      $input['values'] = '';
+        }
+       // $input[$key] = (float) str_replace(',', '.', $input[$key]);
 
-      return $input;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!is_string($input[$key])) {
-         $this->value = '';
-      }
-      // $input[$key] = (float) str_replace(',', '.', $input[$key]);
-
-      $this->value = $input[$key];
-      return true;
-   }
-
-   public static function canRequire(): bool {
-      return true;
-   }
-
-   public function getEmptyParameters(): array {
-      $regexDoc = '<small>';
-      $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
-      $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
-      $regexDoc .= '</small>';
-      $range = new PluginFormcreatorQuestionRange();
-      $range->setField($this, [
-         'fieldName' => 'range',
-         'label'     => __('Range', 'formcreator'),
-         'fieldType' => ['text'],
-      ]);
-      $regex = new PluginFormcreatorQuestionRegex();
-      $regex->setField($this, [
-         'fieldName' => 'regex',
-         'label'     => __('Additional validation', 'formcreator') . $regexDoc,
-         'fieldType' => ['text'],
-      ]);
-      return [
-         'regex' => $regex,
-         'range' => $range,
-      ];
-   }
+    public function getEmptyParameters(): array
+    {
+        $regexDoc = '<small>';
+        $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
+        $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
+        $regexDoc .= '</small>';
+        $range = new PluginFormcreatorQuestionRange();
+        $range->setField($this, [
+            'fieldName' => 'range',
+            'label'     => __('Range', 'formcreator'),
+            'fieldType' => ['text'],
+        ]);
+        $regex = new PluginFormcreatorQuestionRegex();
+        $regex->setField($this, [
+            'fieldName' => 'regex',
+            'label'     => __('Additional validation', 'formcreator') . $regexDoc,
+            'fieldType' => ['text'],
+        ]);
+        return [
+            'regex' => $regex,
+            'range' => $range,
+        ];
+    }
 
 
-   public function equals($value): bool {
-      return ((float) $this->value) === ((float) $value);
-   }
+    public function equals($value): bool
+    {
+        return ((float) $this->value) === ((float) $value);
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      return ((float) $this->value) > ((float) $value);
-   }
+    public function greaterThan($value): bool
+    {
+        return ((float) $this->value) > ((float) $value);
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return (preg_grep($value, $this->value)) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon() {
-      return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon()
+    {
+        return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

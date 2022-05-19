@@ -39,140 +39,161 @@ use Session;
 
 class EmailField extends TextField
 {
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return $this->value;
-      }
-      $html = '';
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->value);
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return $this->value;
+        }
+        $html = '';
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $domId        = $fieldName . '_' . $rand;
+        $defaultValue = Html::cleanInputText($this->value);
 
-      $html .= Html::input($fieldName, [
+        $html .= Html::input($fieldName, [
          //'type'  => 'email',
-         'id'    => $domId,
-         'value' => $defaultValue,
-      ]);
-      $html .= Html::scriptBlock("$(function() {
+            'id'    => $domId,
+            'value' => $defaultValue,
+        ]);
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeEmail('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function isValidValue($value): bool {
-      if ($value === '') {
-         return true;
-      }
+    public function isValidValue($value): bool
+    {
+        if ($value === '') {
+            return true;
+        }
 
-      if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-         Session::addMessageAfterRedirect(
-            sprintf(__('This is not a valid e-mail: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR
-         );
-         return false;
-      }
+        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            Session::addMessageAfterRedirect(
+                sprintf(__('This is not a valid e-mail: %s', 'formcreator'), $this->getLabel()),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      return true;
-   }
+        return true;
+    }
 
-   public static function getName(): string {
-      return _n('Email', 'Emails', 1);
-   }
+    public static function getName(): string
+    {
+        return _n('Email', 'Emails', 1);
+    }
 
-   public static function canRequire(): bool {
-      return true;
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      $input['values'] = '';
-      $this->value = $input['default_values'];
-      return $input;
-   }
+    public function prepareQuestionInputForSave($input)
+    {
+        $input['values'] = '';
+        $this->value = $input['default_values'];
+        return $input;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!isset($input[$key])) {
-         return false;
-      }
-      if (!isset($input[$key])) {
-         $input[$key] = '';
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!isset($input[$key])) {
+            return false;
+        }
+        if (!isset($input[$key])) {
+            $input[$key] = '';
+        }
 
-      if (!is_string($input[$key])) {
-         return false;
-      }
+        if (!is_string($input[$key])) {
+            return false;
+        }
 
-      $this->value = $input[$key];
-      return true;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public function getEmptyParameters(): array {
-      return [];
-   }
+    public function getEmptyParameters(): array
+    {
+        return [];
+    }
 
-   public function equals($value): bool {
-      return $this->value == $value;
-   }
+    public function equals($value): bool
+    {
+        return $this->value == $value;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function greaterThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function lessThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function lessThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return (preg_grep($value, $this->value)) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fa fa-envelope" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fa fa-envelope" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function getTranslatableStrings(array $options = []) : array {
-      return PluginFormcreatorAbstractField::getTranslatableStrings($options);
-   }
+    public function getTranslatableStrings(array $options = []): array
+    {
+        return PluginFormcreatorAbstractField::getTranslatableStrings($options);
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

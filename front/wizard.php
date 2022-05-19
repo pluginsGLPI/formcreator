@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,32 +30,32 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
+    Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
 }
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+    Html::header(__('Service catalog', 'formcreator'));
 }
 
 if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-   PluginFormcreatorCommon::showMiniDashboard();
+    PluginFormcreatorCommon::showMiniDashboard();
 }
 
 $form = PluginFormcreatorCommon::getForm();
 $form->showServiceCatalog();
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

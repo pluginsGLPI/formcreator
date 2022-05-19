@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,320 +34,330 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class FloatField extends CommonTestCase {
+class FloatField extends CommonTestCase
+{
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Float');
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Float');
-   }
+    public function provider()
+    {
+        $dataset = [
+            'empty value' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '',
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => '',
+                                'range_max'       => '',
+                            ],
+                            'regex' => ['regex' => ''],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
+            ],
+            'integer value' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '2',
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => '',
+                                'range_max'       => '',
+                            ],
+                            'regex' => ['regex' => ''],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '2',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
+            ],
+            'too low value' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "2",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => 3,
+                                'range_max'       => 4,
+                            ],
+                            'regex' => ['regex' => ''],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '2',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'The following number must be greater than 3: question',
+            ],
+            'too high value' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "5",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => 3,
+                                'range_max'       => 4,
+                            ],
+                            'regex' => ['regex' => ''],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '5',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'The following number must be lower than 4: question',
+            ],
+            'float iin range' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "3.141592",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => 3,
+                                'range_max'       => 4,
+                            ],
+                            'regex' => ['regex' => ''],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '3.141592',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
+            ],
+            'empty value and regex with backslash' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => '',
+                                'range_max'       => '',
+                            ],
+                            'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
+            ],
+            'value not matching regex' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "1.234",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => '',
+                                'range_max'       => '',
+                            ],
+                            'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'Specific format does not match: question',
+            ],
+            'value matching regex' => [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "12.345",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => '',
+                                'range_max'       => '',
+                            ],
+                            'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'float',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => '0',
+                    'values'          => '',
+                    '_parameters'     => [
+                        'float' => [
+                            'range' => [
+                                'range_min'       => '',
+                                'range_max'       => '',
+                            ],
+                            'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'],
+                        ]
+                    ]
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
+            ],
+        ];
 
-   public function provider() {
-      $dataset = [
-         'empty value' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
-                     ],
-                     'regex' => ['regex' => ''],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-         'integer value' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '2',
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
-                     ],
-                     'regex' => ['regex' => ''],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '2',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-         'too low value' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "2",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                     ],
-                     'regex' => ['regex' => ''],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '2',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'The following number must be greater than 3: question',
-          ],
-         'too high value' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "5",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                     ],
-                     'regex' => ['regex' => ''],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '5',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'The following number must be lower than 4: question',
-         ],
-         'float iin range' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "3.141592",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                     ],
-                     'regex' => ['regex' => ''],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '3.141592',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-         'empty value and regex with backslash' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
-                     ],
-                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-         'value not matching regex' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "1.234",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
-                     ],
-                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'Specific format does not match: question',
-         ],
-         'value matching regex' => [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "12.345",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
-                     ],
-                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => '0',
-               'values'          => '',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
-                     ],
-                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'],
-                  ]
-               ]
-            ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-      ];
-
-      return $dataset;
-   }
+        return $dataset;
+    }
 
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage) {
-      $section = $this->getSection();
-      $fields[$section::getForeignKeyField()] = $section->getID();
+    public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage)
+    {
+        $section = $this->getSection();
+        $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+        $question = new \PluginFormcreatorQuestion();
+        $question->add($fields);
+        $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($fields['default_values']);
-      $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($fields['default_values']);
+        $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
 
-      $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
+        $isValid = $instance->isValid();
+        $this->boolean((bool) $isValid)->isEqualTo($expectedValidity);
 
-      // Check error message
-      if (!$isValid) {
-         $this->sessionHasMessage($expectedMessage, ERROR);
-      } else {
-         $this->sessionHasNoMessage();
-      }
-   }
+       // Check error message
+        if (!$isValid) {
+            $this->sessionHasMessage($expectedMessage, ERROR);
+        } else {
+            $this->sessionHasNoMessage();
+        }
+    }
 
-   public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getEmptyParameters();
-      $this->array($output)
+    public function testGetEmptyParameters()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->getEmptyParameters();
+        $this->array($output)
          ->hasKey('range')
          ->hasKey('regex')
          ->array($output)->size->isEqualTo(2);
-      $this->object($output['range'])
+        $this->object($output['range'])
          ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
-      $this->object($output['regex'])
+        $this->object($output['regex'])
          ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
-   }
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isTrue();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
+    public function testIsPrerequisites()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(true);
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function providerGetValueForApi() {
-      return [
-         [
-            'input'    => '3.14',
-            'expected' => '3.14',
-         ],
-      ];
-   }
+    public function providerGetValueForApi()
+    {
+        return [
+            [
+                'input'    => '3.14',
+                'expected' => '3.14',
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion([
-      ]);
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion([
+        ]);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->string($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->string($output)->isEqualTo($expected);
+    }
 }

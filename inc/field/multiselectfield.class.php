@@ -37,56 +37,61 @@ use Html;
 
 class MultiSelectField extends CheckboxesField
 {
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      $html         = '';
-      $translatedValues = [];
-      if (!$canEdit) {
-         if (count($this->value)) {
-            foreach ($this->value as $value) {
-               $translatedValues[] = __($value, $domain);
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        $html         = '';
+        $translatedValues = [];
+        if (!$canEdit) {
+            if (count($this->value)) {
+                foreach ($this->value as $value) {
+                    $translatedValues[] = __($value, $domain);
+                }
+                $html .= implode('<br />', $translatedValues);
             }
-            $html .= implode('<br />', $translatedValues);
-         }
-         return $html;
-      }
+            return $html;
+        }
 
-      $id        = $this->question->getID();
-      $rand      = mt_rand();
-      $fieldName = 'formcreator_field_' . $id;
-      $values    = $this->getAvailableValues();
-      $translatedValues = [];
-      foreach ($values as $key => $value) {
-         $translatedValues[$key] = __($value, $domain);
-      }
-      if (!empty($values)) {
-         $html .= Dropdown::showFromArray($fieldName, $translatedValues, [
-            'display_emptychoice' => $this->question->fields['show_empty'] == 1,
-            'values'    => $this->value,
-            'rand'      => $rand,
-            'multiple'  => true,
-            'display'   => false,
-         ]);
-      }
-      $html .= PHP_EOL;
-      $html .= Html::scriptBlock("$(function() {
+        $id        = $this->question->getID();
+        $rand      = mt_rand();
+        $fieldName = 'formcreator_field_' . $id;
+        $values    = $this->getAvailableValues();
+        $translatedValues = [];
+        foreach ($values as $key => $value) {
+            $translatedValues[$key] = __($value, $domain);
+        }
+        if (!empty($values)) {
+            $html .= Dropdown::showFromArray($fieldName, $translatedValues, [
+                'display_emptychoice' => $this->question->fields['show_empty'] == 1,
+                'values'    => $this->value,
+                'rand'      => $rand,
+                'multiple'  => true,
+                'display'   => false,
+            ]);
+        }
+        $html .= PHP_EOL;
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public static function getName(): string {
-      return __('Multiselect', 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return __('Multiselect', 'formcreator');
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fas fa-check-double" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fas fa-check-double" aria-hidden="true"></i>';
+    }
 }

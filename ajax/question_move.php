@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,46 +30,46 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_REQUEST['move']) || !is_array($_REQUEST['move'])) {
-   http_response_code(400);
-   exit();
+    http_response_code(400);
+    exit();
 }
 
 $questions = [];
 foreach ($_REQUEST['move'] as $id => $item) {
-   $question = new PluginFormcreatorQuestion();
-   if (!$question->getFromDB((int) $id)) {
-      http_response_code(404);
-      echo __('Question not found', 'formcreator');
-      exit;
-   }
-   if (!$question->canUpdate()) {
-      http_response_code(403);
-      echo __('You don\'t have right for this action', 'formcreator');
-      exit;
-   }
-   $questions[$id] = $question;
+    $question = new PluginFormcreatorQuestion();
+    if (!$question->getFromDB((int) $id)) {
+        http_response_code(404);
+        echo __('Question not found', 'formcreator');
+        exit;
+    }
+    if (!$question->canUpdate()) {
+        http_response_code(403);
+        echo __('You don\'t have right for this action', 'formcreator');
+        exit;
+    }
+    $questions[$id] = $question;
 }
 
 $error = false;
 foreach ($questions as $id => $item) {
-   $question = $questions[$id];
-   $question->fields['row'] = (int) $_REQUEST['move'][$id]['y'];
-   $question->fields['col'] = (int) $_REQUEST['move'][$id]['x'];
-   $question->fields['width'] = (int) $_REQUEST['move'][$id]['width'];
-   if (isset($_REQUEST['move'][$id]['plugin_formcreator_sections_id'])) {
-      $question->fields['plugin_formcreator_sections_id'] = (int) $_REQUEST['move'][$id]['plugin_formcreator_sections_id'];
-   }
-   $success = $question->change($question->fields);
-   if (!$success) {
-      $error = true;
-   }
+    $question = $questions[$id];
+    $question->fields['row'] = (int) $_REQUEST['move'][$id]['y'];
+    $question->fields['col'] = (int) $_REQUEST['move'][$id]['x'];
+    $question->fields['width'] = (int) $_REQUEST['move'][$id]['width'];
+    if (isset($_REQUEST['move'][$id]['plugin_formcreator_sections_id'])) {
+        $question->fields['plugin_formcreator_sections_id'] = (int) $_REQUEST['move'][$id]['plugin_formcreator_sections_id'];
+    }
+    $success = $question->change($question->fields);
+    if (!$success) {
+        $error = true;
+    }
 }
 
 if ($error) {
-   http_response_code(500);
-   echo __('Could not move some questions', 'formcreator');
+    http_response_code(500);
+    echo __('Could not move some questions', 'formcreator');
 }

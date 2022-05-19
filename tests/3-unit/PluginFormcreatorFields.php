@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,303 +34,309 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorFields extends CommonTestCase {
-
-   public function answersProvider() {
-      return [
-         'no condition' => [
-           \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-            [
-               'show_logic' => [],
-               'plugin_formcreator_questions_id'   => [],
-               'show_condition'  => [],
-               'show_value' => [],
+class PluginFormcreatorFields extends CommonTestCase
+{
+    public function answersProvider()
+    {
+        return [
+            'no condition' => [
+                \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                [
+                    'show_logic' => [],
+                    'plugin_formcreator_questions_id'   => [],
+                    'show_condition'  => [],
+                    'show_value' => [],
+                ],
+                [],
+                true,
             ],
-            [],
-            true,
-         ],
-         'simple condition' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'foo',
-               ],
+            'simple condition' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'foo',
+                    ],
+                ],
+                [
+                    0 => 'foo',
+                ],
+                true,
             ],
-            [
-               0 => 'foo',
+            'failed condition' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'bar',
+                    ],
+                ],
+                [
+                    0 => 'foo',
+                ],
+                false,
             ],
-            true,
-         ],
-         'failed condition' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'bar',
-               ],
+            'multiple condition OR' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                        1,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'val1',
+                        'val2',
+                    ],
+                ],
+                [
+                    0 => 'val1',
+                    1 => 'val2',
+                ],
+                true,
             ],
-            [
-                  0 => 'foo',
+            'failed multiple condition OR' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                        1,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'val1',
+                        'val2',
+                    ],
+                ],
+                [
+                    0 => 'val1',
+                    1 => 'not val2',
+                ],
+                true,
             ],
-            false,
-         ],
-         'multiple condition OR' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-                  1,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'val1',
-                  'val2',
-               ],
+            'multiple condition AND' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                        1,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'val1',
+                        'val2',
+                    ],
+                ],
+                [
+                    0 => 'val1',
+                    1 => 'val2',
+                ],
+                true,
             ],
-            [
-                  0 => 'val1',
-                  1 => 'val2',
+            'failed multiple condition AND' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                        1,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'val1',
+                        'val2',
+                    ],
+                ],
+                [
+                    0 => 'val1',
+                    1 => 'not val2',
+                ],
+                false,
             ],
-            true,
-         ],
-         'failed multiple condition OR' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-                  1,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'val1',
-                  'val2',
-               ],
+            'operator priority' => [
+                \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+                [
+                    'show_logic' => [
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                        \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+                    ],
+                    'plugin_formcreator_questions_id'   => [
+                        0,
+                        1,
+                        2,
+                        3,
+                    ],
+                    'show_condition'  => [
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                        \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                    ],
+                    'show_value' => [
+                        'val1',
+                        'val2',
+                        'val3',
+                        'val4',
+                    ],
+                ],
+                [
+                    0 => 'val1',
+                    1 => 'val2',
+                    2 => 'val8',
+                    3 => 'val9',
+                ],
+                true,
             ],
-            [
-               0 => 'val1',
-               1 => 'not val2',
-            ],
-            true,
-         ],
-         'multiple condition AND' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-                  1,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'val1',
-                  'val2',
-               ],
-            ],
-            [
-               0 => 'val1',
-               1 => 'val2',
-            ],
-            true,
-         ],
-         'failed multiple condition AND' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-                  1,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'val1',
-                  'val2',
-               ],
-            ],
-            [
-               0 => 'val1',
-               1 => 'not val2',
-            ],
-            false,
-         ],
-         'operator priority' => [
-           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-            [
-               'show_logic' => [
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
-               ],
-               'plugin_formcreator_questions_id'   => [
-                  0,
-                  1,
-                  2,
-                  3,
-               ],
-               'show_condition'  => [
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-               ],
-               'show_value' => [
-                  'val1',
-                  'val2',
-                  'val3',
-                  'val4',
-               ],
-            ],
-            [
-               0 => 'val1',
-               1 => 'val2',
-               2 => 'val8',
-               3 => 'val9',
-            ],
-            true,
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider answersProvider
     */
-   public function testIsVisible($show_rule, $conditions, $answers, $expectedVisibility) {
-      // Create section
-      $section = $this->getSection();
-      $this->boolean($section->isNewItem())->isFalse();
+    public function testIsVisible($show_rule, $conditions, $answers, $expectedVisibility)
+    {
+       // Create section
+        $section = $this->getSection();
+        $this->boolean($section->isNewItem())->isFalse();
 
-      // Create a question
-      $question = $this->getQuestion([
-         'name'                           => 'text question',
-         'fieldtype'                      => 'text',
-         'plugin_formcreator_sections_id' => $section->getID(),
-      ]);
-      $this->boolean($question->isNewItem())->isFalse();
-
-      $questionPool = [];
-      for ($i = 0; $i < 4; $i++) {
-         $item = $this->getQuestion([
+       // Create a question
+        $question = $this->getQuestion([
+            'name'                           => 'text question',
             'fieldtype'                      => 'text',
-            'name'                           => "question $i",
             'plugin_formcreator_sections_id' => $section->getID(),
-         ]);
-         $questionPool[$i] = $item;
-      }
+        ]);
+        $this->boolean($question->isNewItem())->isFalse();
 
-      foreach ($conditions['plugin_formcreator_questions_id'] as $id => &$showField) {
-         $showField = $questionPool[$showField]->getID();
-      }
-      $realAnswers = [];
-      foreach ($answers as $id => $answer) {
-         $realAnswers[$questionPool[$id]->getID()] = \PluginFormcreatorFields::getFieldInstance(
-            $questionPool[$id]->fields['fieldtype'], $questionPool[$id]
-         );
-         $realAnswers[$questionPool[$id]->getID()]->deserializeValue($answer);
-      }
-      $input = [
-         'id'        => $question->getID(),
-         'fieldtype' => 'text',
-         'show_rule' => $show_rule,
-         'default_values' => '',
-         '_parameters'     => [
-            'text' => [
-               'range' => [
-                  'range_min' => '',
-                  'range_max' => '',
-               ],
-               'regex' => [
-                  'regex' => ''
-               ]
-            ]
-         ],
-         '_conditions' => $conditions,
-      ];
-      $question->update($input);
-      $question->updateConditions($input);
-      $isVisible = \PluginFormcreatorFields::isVisible($question, $realAnswers);
-      $this->boolean((boolean) $isVisible)->isEqualTo($expectedVisibility);
-   }
+        $questionPool = [];
+        for ($i = 0; $i < 4; $i++) {
+            $item = $this->getQuestion([
+                'fieldtype'                      => 'text',
+                'name'                           => "question $i",
+                'plugin_formcreator_sections_id' => $section->getID(),
+            ]);
+            $questionPool[$i] = $item;
+        }
 
-   public function testGetFieldClassname() {
-      $output = \PluginFormcreatorFields::getFieldClassname('dummy');
-      $this->string($output)->isEqualTo('GlpiPlugin\Formcreator\Field\DummyField');
-   }
+        foreach ($conditions['plugin_formcreator_questions_id'] as $id => &$showField) {
+            $showField = $questionPool[$showField]->getID();
+        }
+        $realAnswers = [];
+        foreach ($answers as $id => $answer) {
+            $realAnswers[$questionPool[$id]->getID()] = \PluginFormcreatorFields::getFieldInstance(
+                $questionPool[$id]->fields['fieldtype'],
+                $questionPool[$id]
+            );
+            $realAnswers[$questionPool[$id]->getID()]->deserializeValue($answer);
+        }
+        $input = [
+            'id'        => $question->getID(),
+            'fieldtype' => 'text',
+            'show_rule' => $show_rule,
+            'default_values' => '',
+            '_parameters'     => [
+                'text' => [
+                    'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                    ],
+                    'regex' => [
+                        'regex' => ''
+                    ]
+                ]
+            ],
+            '_conditions' => $conditions,
+        ];
+        $question->update($input);
+        $question->updateConditions($input);
+        $isVisible = \PluginFormcreatorFields::isVisible($question, $realAnswers);
+        $this->boolean((bool) $isVisible)->isEqualTo($expectedVisibility);
+    }
 
-   public function testFieldTypeExists() {
-      $output = \PluginFormcreatorFields::fieldTypeExists('dummy');
-      $this->boolean($output)->isFalse();
-      $output = \PluginFormcreatorFields::fieldTypeExists('textarea');
-      $this->boolean($output)->isTrue();
-   }
+    public function testGetFieldClassname()
+    {
+        $output = \PluginFormcreatorFields::getFieldClassname('dummy');
+        $this->string($output)->isEqualTo('GlpiPlugin\Formcreator\Field\DummyField');
+    }
 
-   public function testUpdateVisibility() {
-      $question1 = $this->getQuestion();
-      $question2 = $this->getQuestion([
-         'plugin_formcreator_sections_id' => $question1->fields['plugin_formcreator_sections_id'],
-      ]);
+    public function testFieldTypeExists()
+    {
+        $output = \PluginFormcreatorFields::fieldTypeExists('dummy');
+        $this->boolean($output)->isFalse();
+        $output = \PluginFormcreatorFields::fieldTypeExists('textarea');
+        $this->boolean($output)->isTrue();
+    }
 
-      $form = new \PluginFormcreatorForm();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
-      $form = \PluginFormcreatorForm::getByItem($section);
-      $input = [
-         'plugin_formcreator_forms_id' => $form->getID(),
-         $question1->getID() => '',
-         $question2->getID() => '',
-      ];
-      $output = \PluginFormcreatorFields::updateVisibility($input);
-      $this->array($output)->isIdenticalTo([
-         \PluginFormcreatorQuestion::class => [
-            $question1->getID() => true,
-            $question2->getID() => true,
-         ],
-         \PluginFormcreatorSection::class => [
-            $section->getID() => true,
-         ],
-         \PluginFormcreatorForm::class => true,
-      ]);
-   }
+    public function testUpdateVisibility()
+    {
+        $question1 = $this->getQuestion();
+        $question2 = $this->getQuestion([
+            'plugin_formcreator_sections_id' => $question1->fields['plugin_formcreator_sections_id'],
+        ]);
+
+        $form = new \PluginFormcreatorForm();
+        $section = new \PluginFormcreatorSection();
+        $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
+        $form = \PluginFormcreatorForm::getByItem($section);
+        $input = [
+            'plugin_formcreator_forms_id' => $form->getID(),
+            $question1->getID() => '',
+            $question2->getID() => '',
+        ];
+        $output = \PluginFormcreatorFields::updateVisibility($input);
+        $this->array($output)->isIdenticalTo([
+            \PluginFormcreatorQuestion::class => [
+                $question1->getID() => true,
+                $question2->getID() => true,
+            ],
+            \PluginFormcreatorSection::class => [
+                $section->getID() => true,
+            ],
+            \PluginFormcreatorForm::class => true,
+        ]);
+    }
 }

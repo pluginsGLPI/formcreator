@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,10 +30,10 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 echo '<li id="menu5">";
-      <a href="'.FORMCREATOR_ROOTDOC.'/front/formlist.php" class="itemP">'.
-      _n('Form', 'Forms', 2, 'formcreator').
+      <a href="' . FORMCREATOR_ROOTDOC . '/front/formlist.php" class="itemP">' .
+      _n('Form', 'Forms', 2, 'formcreator') .
       '</a>
       </li>';

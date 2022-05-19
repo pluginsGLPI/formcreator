@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,12 +29,14 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_8_1 {
+class PluginFormcreatorUpgradeTo2_8_1
+{
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-      $table = 'glpi_plugin_formcreator_issues';
-      $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
-   }
+    public function upgrade(Migration $migration)
+    {
+        $table = 'glpi_plugin_formcreator_issues';
+        $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
+    }
 }

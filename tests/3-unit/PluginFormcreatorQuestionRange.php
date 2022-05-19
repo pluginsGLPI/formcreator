@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,125 +34,129 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorQuestionRange extends CommonTestCase {
+class PluginFormcreatorQuestionRange extends CommonTestCase
+{
+    public function testGetParameterFormSize()
+    {
+        $question = $this->getQuestion();
+        $fieldType = 'text';
+        $instance = $this->newTestedInstance(
+            \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
+            [
+                'fieldName' => '',
+                'label' => 'range',
+            ]
+        );
+        $output = $instance->getParameterFormSize();
+        $this->integer($output)->isEqualTo(0);
+    }
 
-   public function testGetParameterFormSize() {
-      $question = $this->getQuestion();
-      $fieldType = 'text';
-      $instance = $this->newTestedInstance(
-         \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
-         [
-            'fieldName' => '',
-            'label' => 'range',
-         ]
-      );
-      $output = $instance->getParameterFormSize();
-      $this->integer($output)->isEqualTo(0);
-   }
-
-   public function testPost_getEmpty() {
-      $question = $this->getQuestion();
-      $fieldType = 'text';
-      $instance = $this->newTestedInstance(
-         \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
-         [
-            'fieldName' => '',
-            'label' => 'range',
-         ]
-      );
-      $instance->post_getEmpty();
-      $this->array($instance->fields)
+    public function testPost_getEmpty()
+    {
+        $question = $this->getQuestion();
+        $fieldType = 'text';
+        $instance = $this->newTestedInstance(
+            \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
+            [
+                'fieldName' => '',
+                'label' => 'range',
+            ]
+        );
+        $instance->post_getEmpty();
+        $this->array($instance->fields)
          ->hasKeys([
-            'range_min',
-            'range_max'
+             'range_min',
+             'range_max'
          ])
          ->hasSize(2);
 
-      $this->integer((int) $instance->fields['range_min'])->isEqualTo(0);
-      $this->integer((int) $instance->fields['range_max'])->isEqualTo(0);
-   }
+        $this->integer((int) $instance->fields['range_min'])->isEqualTo(0);
+        $this->integer((int) $instance->fields['range_max'])->isEqualTo(0);
+    }
 
-   public function testExport() {
-      $question = $this->getQuestion();
-      $fieldType = 'text';
-      $instance = $this->newTestedInstance(
-         \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
-         [
-            'fieldName' => '',
-            'label' => 'range',
-         ]
-      );
-
-      // Try to export an empty item
-      $this->exception(function () use ($instance) {
-         $instance->export();
-      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
-
-      // Prepare an item to export
-      $question->updateParameters([
-         'fieldtype' => $fieldType,
-         '_parameters' => [
-            $fieldType => [
-               'range' => [
-                  'range_min' => '1',
-                  'range_max' => '5',
-               ],
+    public function testExport()
+    {
+        $question = $this->getQuestion();
+        $fieldType = 'text';
+        $instance = $this->newTestedInstance(
+            \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
+            [
+                'fieldName' => '',
+                'label' => 'range',
             ]
-         ]
-      ]);
-      $instance->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $question->getID(),
-         'fieldname' => 'range',
-      ]);
+        );
 
-      // Export the item without the ID and with UUID
-      $output = $instance->export(false);
+       // Try to export an empty item
+        $this->exception(function () use ($instance) {
+            $instance->export();
+        })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
-      // Test the exported data
-      $fieldsWithoutID = [
-         'range_min',
-         'range_max',
-         'fieldname',
-      ];
-      $extraFields = [
-      ];
-      $this->array($output)
+       // Prepare an item to export
+        $question->updateParameters([
+            'fieldtype' => $fieldType,
+            '_parameters' => [
+                $fieldType => [
+                    'range' => [
+                        'range_min' => '1',
+                        'range_max' => '5',
+                    ],
+                ]
+            ]
+        ]);
+        $instance->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $question->getID(),
+            'fieldname' => 'range',
+        ]);
+
+       // Export the item without the ID and with UUID
+        $output = $instance->export(false);
+
+       // Test the exported data
+        $fieldsWithoutID = [
+            'range_min',
+            'range_max',
+            'fieldname',
+        ];
+        $extraFields = [
+        ];
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
 
-      // Export the item without the UUID and with ID
-      $output = $instance->export(true);
-      $this->array($output)
+       // Export the item without the UUID and with ID
+        $output = $instance->export(true);
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
-   }
+    }
 
-   public function testImport() {
-      $question = $this->getQuestion();
+    public function testImport()
+    {
+        $question = $this->getQuestion();
 
-      $input = [
-         'range_min' => '1',
-         'range_max' => '5',
-         'fieldname' => 'range',
-         'uuid' => plugin_formcreator_getUuid(),
-      ];
+        $input = [
+            'range_min' => '1',
+            'range_max' => '5',
+            'fieldname' => 'range',
+            'uuid' => plugin_formcreator_getUuid(),
+        ];
 
-      $linker = new \PluginFormcreatorLinker();
-      $parameterId = \PluginFormcreatorQuestionRange::import($linker, $input, $question->getID());
-      $this->integer($parameterId)->isGreaterThan(0);
+        $linker = new \PluginFormcreatorLinker();
+        $parameterId = \PluginFormcreatorQuestionRange::import($linker, $input, $question->getID());
+        $this->integer($parameterId)->isGreaterThan(0);
 
-      unset($input['uuid']);
+        unset($input['uuid']);
 
-      $this->exception(
-         function() use($linker, $input) {
-            \PluginFormcreatorQuestionRange::import($linker, $input);
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory for Question range');
+        $this->exception(
+            function () use ($linker, $input) {
+                \PluginFormcreatorQuestionRange::import($linker, $input);
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+        ->hasMessage('UUID or ID is mandatory for Question range');
 
-      $input['id'] = $parameterId;
-      $parameterId2 = \PluginFormcreatorQuestionRange::import($linker, $input, $question->getID());
-      $this->variable($parameterId2)->isNotFalse();
-      $this->integer((int) $parameterId2)->isNotEqualTo($parameterId);
-   }
+        $input['id'] = $parameterId;
+        $parameterId2 = \PluginFormcreatorQuestionRange::import($linker, $input, $question->getID());
+        $this->variable($parameterId2)->isNotFalse();
+        $this->integer((int) $parameterId2)->isNotEqualTo($parameterId);
+    }
 }

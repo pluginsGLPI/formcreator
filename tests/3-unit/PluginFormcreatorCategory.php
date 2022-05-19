@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,23 +34,25 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorCategory extends CommonTestCase {
-   public function providerGetTypeName() {
-      return [
-         [
-            0,
-            'Form categories'
-         ],
-         [
-            1,
-            'Form category'
-         ],
-         [
-            2,
-            'Form categories'
-         ],
-      ];
-   }
+class PluginFormcreatorCategory extends CommonTestCase
+{
+    public function providerGetTypeName()
+    {
+        return [
+            [
+                0,
+                'Form categories'
+            ],
+            [
+                1,
+                'Form category'
+            ],
+            [
+                2,
+                'Form categories'
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetTypeName
@@ -58,82 +61,85 @@ class PluginFormcreatorCategory extends CommonTestCase {
     * @param string $expected
     * @return void
     */
-   public function testGetTypeName($nb, $expected) {
-      $instance = new $this->newTestedInstance();
-      $output = $instance->getTypeName($nb);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetTypeName($nb, $expected)
+    {
+        $instance = new $this->newTestedInstance();
+        $output = $instance->getTypeName($nb);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function testDefineTabs() {
-      $instance = $this->newTestedInstance();
-      $output = $instance->defineTabs();
-      $expected = [
-         'PluginFormcreatorCategory$main' => "Form category",
-         'PluginFormcreatorCategory$1' => 'Form categories',
-         'Log$1' => "Historical",
-      ];
-      $this->array($output)
+    public function testDefineTabs()
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->defineTabs();
+        $expected = [
+            'PluginFormcreatorCategory$main' => "Form category",
+            'PluginFormcreatorCategory$1' => 'Form categories',
+            'Log$1' => "Historical",
+        ];
+        $this->array($output)
          ->isEqualTo($expected)
          ->hasSize(count($expected));
-   }
+    }
 
-   public function testGetCategoryTree() {
-      $this->login('glpi', 'glpi');
+    public function testGetCategoryTree()
+    {
+        $this->login('glpi', 'glpi');
 
-      // create a sub entity which will take in the forms and cateory for this test
-      // and not conflict with previous data
-      $entity      = new \Entity();
-      $rand        = mt_rand();
-      $entities_id = $entity->add([
-         'name'        => "test formcreator sub entity $rand",
-         'entities_id' => 0
-      ]);
+       // create a sub entity which will take in the forms and cateory for this test
+       // and not conflict with previous data
+        $entity      = new \Entity();
+        $rand        = mt_rand();
+        $entities_id = $entity->add([
+            'name'        => "test formcreator sub entity $rand",
+            'entities_id' => 0
+        ]);
 
-      // create some categories for forms
-      $category   = new \PluginFormcreatorCategory;
-      $categories = [];
-      for ($i = 0; $i < 5; $i++) {
-         $root_cat = $category->add([
-            'name' => "test category root $i",
-         ]);
-         $categories[] = $root_cat;
+       // create some categories for forms
+        $category   = new \PluginFormcreatorCategory();
+        $categories = [];
+        for ($i = 0; $i < 5; $i++) {
+            $root_cat = $category->add([
+                'name' => "test category root $i",
+            ]);
+            $categories[] = $root_cat;
 
-         $sub_cat = $category->add([
-            'name'                             => "test sub category $i",
-            'plugin_formcreator_categories_id' => $root_cat
-         ]);
-         $categories[] = $sub_cat;
-      }
+            $sub_cat = $category->add([
+                'name'                             => "test sub category $i",
+                'plugin_formcreator_categories_id' => $root_cat
+            ]);
+            $categories[] = $sub_cat;
+        }
 
-      // create some forms
-      $form = new \PluginFormcreatorForm;
-      for ($i = 0; $i < 10; $i++) {
-         $form->add([
-            'name'                             => "testgetCategoryTree form $i",
-            'entities_id'                      => $entities_id,
-            'is_active'                        => 1,
-            'helpdesk_home'                    => 1,
-            'plugin_formcreator_categories_id' => $categories[$i]
-         ]);
-      }
+       // create some forms
+        $form = new \PluginFormcreatorForm();
+        for ($i = 0; $i < 10; $i++) {
+            $form->add([
+                'name'                             => "testgetCategoryTree form $i",
+                'entities_id'                      => $entities_id,
+                'is_active'                        => 1,
+                'helpdesk_home'                    => 1,
+                'plugin_formcreator_categories_id' => $categories[$i]
+            ]);
+        }
 
-      // Set active entity
-      \Session::changeActiveEntities($entities_id, true);
+       // Set active entity
+        \Session::changeActiveEntities($entities_id, true);
 
-      //test method
-      $tree = \PluginFormcreatorCategory::getCategoryTree();
-      $this->array($tree)
+       //test method
+        $tree = \PluginFormcreatorCategory::getCategoryTree();
+        $this->array($tree)
          ->isNotEmpty()
-         ->child['subcategories'](function($child) {
+         ->child['subcategories'](function ($child) {
             $child->size->isGreaterThanOrEqualTo(5);
          });
 
-      foreach ($tree['subcategories'] as $subcategory) {
-         $this->array($subcategory)
+        foreach ($tree['subcategories'] as $subcategory) {
+            $this->array($subcategory)
             ->hasKeys(['name', 'parent', 'id', 'subcategories']);
-      }
+        }
 
-      // return to root entity
-      \Session::changeActiveEntities(0, true);
-   }
+       // return to root entity
+        \Session::changeActiveEntities(0, true);
+    }
 }

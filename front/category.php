@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,9 +30,9 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Plugin::load('formcreator', true);
 
 $dropdown = new PluginFormcreatorCategory();
-include (GLPI_ROOT . "/front/dropdown.common.php");
+include(GLPI_ROOT . "/front/dropdown.common.php");

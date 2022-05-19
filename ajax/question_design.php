@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,23 +30,23 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
-   http_response_code(400);
-   exit();
+    http_response_code(400);
+    exit();
 }
 if (!isset($_REQUEST['fieldtype'])) {
-   http_response_code(400);
-   exit();
+    http_response_code(400);
+    exit();
 }
 
 $question = new PluginFormcreatorQuestion();
 $question->getEmpty();
 if (!$question->isNewID((int) $_REQUEST['id']) && !$question->getFromDB((int) $_REQUEST['id'])) {
-   http_response_code(400);
-   exit();
+    http_response_code(400);
+    exit();
 }
 
 // Modify the question to reflect changes in the form
@@ -54,22 +55,22 @@ $values = [];
 //compute question->fields from $_REQUEST (by comparing key)
 //add other keys to 'values' key
 foreach ($_REQUEST as $request_key => $request_value) {
-   foreach (array_keys($question->fields) as $key) {
-      if ($key == $request_key) {
-         $question->fields[$key] = $_REQUEST[$key];
-      } else {
-         $values[$request_key] = $request_value;
-      }
-   }
+    foreach (array_keys($question->fields) as $key) {
+        if ($key == $request_key) {
+            $question->fields[$key] = $_REQUEST[$key];
+        } else {
+            $values[$request_key] = $request_value;
+        }
+    }
 }
 
 $question->fields['values'] = json_encode($values);
 $field = PluginFormcreatorFields::getFieldInstance(
-   $_REQUEST['fieldtype'],
-   $question
+    $_REQUEST['fieldtype'],
+    $question
 );
 $question->fields['fieldtype'] = '';
 if ($field !== null) {
-   $question->fields['fieldtype'] = $_REQUEST['fieldtype'];
+    $question->fields['fieldtype'] = $_REQUEST['fieldtype'];
 }
 $question->showForm($question->getID());

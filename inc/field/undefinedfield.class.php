@@ -38,101 +38,125 @@ use PluginFormcreatorAbstractField;
 
 class UndefinedField extends PluginFormcreatorAbstractField
 {
-   public static function getName(): string {
-      return __('Undefined', 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return __('Undefined', 'formcreator');
+    }
 
-   public static function canRequire(): bool {
-      return false;
-   }
+    public static function canRequire(): bool
+    {
+        return false;
+    }
 
-   public function serializeValue(): string {
-      return '';
-   }
+    public function serializeValue(): string
+    {
+        return '';
+    }
 
-   public function deserializeValue($value) {
-   }
+    public function deserializeValue($value)
+    {
+    }
 
-   public function getValueForDesign(): string {
-      return '';
-   }
+    public function getValueForDesign(): string
+    {
+        return '';
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      return null;
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        return null;
+    }
 
-   public function getValueForApi() {
-      return '';
-   }
+    public function getValueForApi()
+    {
+        return '';
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isPrerequisites(): bool {
-       return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/undefinedfield.html.twig';
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
-   public function isValid(): bool {
-       return true;
-   }
-   public function isValidValue($value): bool {
-       return true;
-   }
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/undefinedfield.html.twig';
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
+    public function isValid(): bool
+    {
+        return true;
+    }
+    public function isValidValue($value): bool
+    {
+        return true;
+    }
 
-   public function hasInput($input): bool {
-      return false;
-   }
+    public function hasInput($input): bool
+    {
+        return false;
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      return true;
-   }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fa fa-question" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fa fa-question" aria-hidden="true"></i>';
+    }
 
-   public function equals($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function equals($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function notEquals($value): bool {
-       throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function notEquals($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function greaterThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function greaterThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function lessThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function lessThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function regex($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function regex($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function isVisibleField(): bool {
-      return false;
-   }
+    public function isVisibleField(): bool
+    {
+        return false;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,55 +31,59 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorKnowbase {
-
+class PluginFormcreatorKnowbase
+{
    /**
     * Show the list of forms to be displayed to the end-user
     */
-   public function showList() {
-      echo '<div class="center" id="plugin_formcreator_wizard">';
+    public function showList()
+    {
+        echo '<div class="center" id="plugin_formcreator_wizard">';
 
-      echo '<div class="plugin_formcreator_card">';
-      $this->showWizard();
-      echo '</div>';
+        echo '<div class="plugin_formcreator_card">';
+        $this->showWizard();
+        echo '</div>';
 
-      echo '</div>';
-   }
+        echo '</div>';
+    }
 
-   public function showServiceCatalog() {
-      // show wizard
-      echo '<div id="plugin_formcreator_wizard" class="card-group">';
-      $this->showWizard();
-      echo '</div>';
-   }
+    public function showServiceCatalog()
+    {
+       // show wizard
+        echo '<div id="plugin_formcreator_wizard" class="card-group">';
+        $this->showWizard();
+        echo '</div>';
+    }
 
-   public function showWizard() {
-      echo '<div id="plugin_formcreator_kb_categories" class="card">';
-      echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div class="slinky-menu"></div>';
-      echo '<div><a href="#" id="wizard_seeall">' . __('See all', 'formcreator') . '</a></div>';
-      echo '</div>';
+    public function showWizard()
+    {
+        echo '<div id="plugin_formcreator_kb_categories" class="card">';
+        echo '<div><h2 class="card-title">' . _n("Category", "Categories", 2, 'formcreator') . '</h2></div>';
+        echo '<div class="slinky-menu"></div>';
+        echo '<div><a href="#" id="wizard_seeall">' . __('See all', 'formcreator') . '</a></div>';
+        echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard_right" class="card">';
+        echo '<div id="plugin_formcreator_wizard_right" class="card">';
 
-      echo '<div id="plugin_formcreator_searchBar">';
-      $this->showSearchBar();
-      echo '</div>';
-      echo '<div id="plugin_formcreator_wizard_forms">';
-      echo '</div>';
-      echo '</div>';
-   }
+        echo '<div id="plugin_formcreator_searchBar">';
+        $this->showSearchBar();
+        echo '</div>';
+        echo '<div id="plugin_formcreator_wizard_forms">';
+        echo '</div>';
+        echo '</div>';
+    }
 
-   protected function showSearchBar() {
-      echo '<form name="plugin_formcreator_search" onsubmit="javascript: return false;" >';
-      echo '<input type="text" name="words" id="plugin_formcreator_search_input" required  class="form-control"/>';
-      echo '<span id="plugin_formcreator_search_input_bar"></span>';
-      echo '<label for="plugin_formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
-      echo '</form>';
-   }
+    protected function showSearchBar()
+    {
+        echo '<form name="plugin_formcreator_search" onsubmit="javascript: return false;" >';
+        echo '<input type="text" name="words" id="plugin_formcreator_search_input" required  class="form-control"/>';
+        echo '<span id="plugin_formcreator_search_input_bar"></span>';
+        echo '<label for="plugin_formcreator_search_input">' . __('Please, describe your need here', 'formcreator') . '</label>';
+        echo '</form>';
+    }
 
    /**
     * @see Knowbase::getJstreeCategoryList()
@@ -88,139 +93,141 @@ class PluginFormcreatorKnowbase {
     *
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree() {
-      global $DB;
+    public static function getCategoryTree()
+    {
+        global $DB;
 
-      $cat_table = KnowbaseItemCategory::getTable();
-      $cat_fk  = KnowbaseItemCategory::getForeignKeyField();
+        $cat_table = KnowbaseItemCategory::getTable();
+        $cat_fk  = KnowbaseItemCategory::getForeignKeyField();
 
-      $kbitem_visibility_crit = KnowbaseItem::getVisibilityCriteria(true);
+        $kbitem_visibility_crit = KnowbaseItem::getVisibilityCriteria(true);
 
-      $items_subquery = new QuerySubQuery(
-         array_merge_recursive(
-            [
-               'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
-               'FROM'   => KnowbaseItem::getTable(),
-               'LEFT JOIN' => [
-                  KnowbaseItem_KnowbaseItemCategory::getTable() => [
-                     'FKEY' => [
-                           KnowbaseItem::getTable() => 'id',
-                           KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItem::getForeignKeyField(),
-                     ],
-                  ],
-                  KnowbaseItemCategory::getTable() => [
-                     'FKEY' => [
-                        KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItemCategory::getForeignKeyField(),
-                        KnowbaseItemCategory::getTable() => 'id',
-                     ],
-                  ],
-               ],
+        $items_subquery = new QuerySubQuery(
+            array_merge_recursive(
+                [
+                    'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
+                    'FROM'   => KnowbaseItem::getTable(),
+                    'LEFT JOIN' => [
+                        KnowbaseItem_KnowbaseItemCategory::getTable() => [
+                            'FKEY' => [
+                                KnowbaseItem::getTable() => 'id',
+                                KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItem::getForeignKeyField(),
+                            ],
+                        ],
+                        KnowbaseItemCategory::getTable() => [
+                            'FKEY' => [
+                                KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItemCategory::getForeignKeyField(),
+                                KnowbaseItemCategory::getTable() => 'id',
+                            ],
+                        ],
+                    ],
+                ],
+                $kbitem_visibility_crit
+            ),
+            'items_count'
+        );
+
+        $cat_iterator = $DB->request([
+            'SELECT' => [
+                KnowbaseItemCategory::getTableField('id'),
+                KnowbaseItemCategory::getTableField('name'),
+                KnowbaseItemCategory::getTableField($cat_fk),
+                $items_subquery,
             ],
-            $kbitem_visibility_crit
-         ),
-         'items_count'
-      );
+            'FROM' => $cat_table,
+            'ORDER' => [
+                KnowbaseItemCategory::getTableField('level') . ' DESC',
+                KnowbaseItemCategory::getTableField('name'),
+            ]
+        ]);
 
-      $cat_iterator = $DB->request([
-         'SELECT' => [
-            KnowbaseItemCategory::getTableField('id'),
-            KnowbaseItemCategory::getTableField('name'),
-            KnowbaseItemCategory::getTableField($cat_fk),
-            $items_subquery,
-         ],
-         'FROM' => $cat_table,
-         'ORDER' => [
-            KnowbaseItemCategory::getTableField('level') . ' DESC',
-            KnowbaseItemCategory::getTableField('name'),
-         ]
-      ]);
+        $inst = new KnowbaseItemCategory();
+        $categories = [];
+        foreach ($cat_iterator as $category) {
+            if (DropdownTranslation::canBeTranslated($inst)) {
+                $tname = DropdownTranslation::getTranslatedValue(
+                    $category['id'],
+                    $inst->getType()
+                );
+                if (!empty($tname)) {
+                     $category['name'] = $tname;
+                }
+            }
+            $categories[] = $category;
+        }
 
-      $inst = new KnowbaseItemCategory;
-      $categories = [];
-      foreach ($cat_iterator as $category) {
-         if (DropdownTranslation::canBeTranslated($inst)) {
-            $tname = DropdownTranslation::getTranslatedValue(
-               $category['id'],
-               $inst->getType()
+       // Remove categories that have no items and no children
+       // Requires category list to be sorted by level DESC
+        foreach ($categories as $index => $category) {
+            $children = array_filter(
+                $categories,
+                function ($element) use ($category, $cat_fk) {
+                    return $category['id'] == $element[$cat_fk];
+                }
             );
-            if (!empty($tname)) {
-               $category['name'] = $tname;
+
+            if (empty($children) && 0 == $category['items_count']) {
+                unset($categories[$index]);
+                continue;
             }
-         }
-         $categories[] = $category;
-      }
+            $categories[$index]['subcategories'] = [];
+        }
 
-      // Remove categories that have no items and no children
-      // Requires category list to be sorted by level DESC
-      foreach ($categories as $index => $category) {
-         $children = array_filter(
-            $categories,
-            function ($element) use ($category, $cat_fk) {
-               return $category['id'] == $element[$cat_fk];
-            }
-         );
+       // Create root node
+        $nodes = [
+            'name'            => '',
+            'id'              => 0,
+            'parent'          => 0,
+            'subcategories'   => [],
+        ];
+        $flat = [
+            0 => &$nodes,
+        ];
 
-         if (empty($children) && 0 == $category['items_count']) {
-            unset($categories[$index]);
-            continue;
-         }
-         $categories[$index]['subcategories'] = [];
-      }
+       // Build from root node to leaves
+        $categories = array_reverse($categories);
+        foreach ($categories as $item) {
+            $flat[$item['id']] = $item;
+            $flat[$item[$cat_fk]]['subcategories'][] = &$flat[$item['id']];
+        }
 
-      // Create root node
-      $nodes = [
-         'name'            => '',
-         'id'              => 0,
-         'parent'          => 0,
-         'subcategories'   => [],
-      ];
-      $flat = [
-         0 => &$nodes,
-      ];
+        return $nodes;
+    }
 
-      // Build from root node to leaves
-      $categories = array_reverse($categories);
-      foreach ($categories as $item) {
-         $flat[$item['id']] = $item;
-         $flat[$item[$cat_fk]]['subcategories'][] = &$flat[$item['id']];
-      }
+    public static function getFaqItems($rootCategory = 0, $keywords = '')
+    {
+        global $DB;
 
-      return $nodes;
-   }
+        $table_cat          = getTableForItemType('KnowbaseItemCategory');
+        $selectedCategories = [];
+        $selectedCategories = getSonsOf($table_cat, $rootCategory);
+        $selectedCategories[$rootCategory] = $rootCategory;
 
-   public static function getFaqItems($rootCategory = 0, $keywords = '') {
-      global $DB;
+        $params = [
+            'faq'      => '1',
+            'contains' => $keywords
+        ];
+        if (count($selectedCategories) > 0) {
+            $params['knowbaseitemcategories_id'] = $selectedCategories;
+        }
+        $query_faqs = KnowbaseItem::getListRequest($params, 'search');
 
-      $table_cat          = getTableForItemType('KnowbaseItemCategory');
-      $selectedCategories = [];
-      $selectedCategories = getSonsOf($table_cat, $rootCategory);
-      $selectedCategories[$rootCategory] = $rootCategory;
+        $formList = [];
+        $result_faqs = $DB->request($query_faqs);
+        foreach ($result_faqs as $faq) {
+            $formList[] = [
+                'id'           => $faq['id'],
+                'name'         => $faq['name'],
+                'icon'         => '',
+                'icon_color'   => '',
+                'background_color'   => '',
+                'description'  => '',
+                'type'         => 'faq',
+                'usage_count'  => $faq['view'],
+                'is_default'   => false
+            ];
+        }
 
-      $params = [
-         'faq'      => '1',
-         'contains' => $keywords
-      ];
-      if (count($selectedCategories) > 0) {
-         $params['knowbaseitemcategories_id'] = $selectedCategories;
-      }
-      $query_faqs = KnowbaseItem::getListRequest($params, 'search');
-
-      $formList = [];
-      $result_faqs = $DB->request($query_faqs);
-      foreach ($result_faqs as $faq) {
-         $formList[] = [
-            'id'           => $faq['id'],
-            'name'         => $faq['name'],
-            'icon'         => '',
-            'icon_color'   => '',
-            'background_color'   => '',
-            'description'  => '',
-            'type'         => 'faq',
-            'usage_count'  => $faq['view'],
-            'is_default'   => false
-         ];
-      }
-
-      return ['default' => [], 'forms' => $formList];
-   }
+        return ['default' => [], 'forms' => $formList];
+    }
 }

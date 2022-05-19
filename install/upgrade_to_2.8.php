@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,37 +29,38 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_8 {
-
-   protected $migration;
+class PluginFormcreatorUpgradeTo2_8
+{
+    protected $migration;
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-      $this->migration = $migration;
+    public function upgrade(Migration $migration)
+    {
+        $this->migration = $migration;
 
-      // Rename the plugin
-      $plugin = new Plugin();
-      $plugin->getFromDBbyDir('formcreator');
-      $plugin->update([
-         'id' => $plugin->getID(),
-         'name' => 'Form Creator',
-      ]);
+       // Rename the plugin
+        $plugin = new Plugin();
+        $plugin->getFromDBbyDir('formcreator');
+        $plugin->update([
+            'id' => $plugin->getID(),
+            'name' => 'Form Creator',
+        ]);
 
-      $migration->changeField(
-         'glpi_plugin_formcreator_targetchanges_actors',
-         'actor_type',
-         'actor_type',
-         "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
-      );
+        $migration->changeField(
+            'glpi_plugin_formcreator_targetchanges_actors',
+            'actor_type',
+            'actor_type',
+            "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
+        );
 
-      // Rename the plugin
-      $plugin = new Plugin();
-      $plugin->getFromDBbyDir('formcreator');
-      $plugin->update([
-         'id' => $plugin->getID(),
-         'name' => 'Form Creator',
-      ]);
-   }
+       // Rename the plugin
+        $plugin = new Plugin();
+        $plugin->getFromDBbyDir('formcreator');
+        $plugin->update([
+            'id' => $plugin->getID(),
+            'name' => 'Form Creator',
+        ]);
+    }
 }

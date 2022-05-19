@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,120 +34,124 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorQuestionRegex extends CommonTestCase {
+class PluginFormcreatorQuestionRegex extends CommonTestCase
+{
+    public function testGetParameterFormSize()
+    {
+        $question = $this->getQuestion();
+        $fieldType = 'text';
+        $instance = $this->newTestedInstance(
+            \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
+            [
+                'fieldName' => '',
+                'label' => 'regex',
+            ]
+        );
+        $output = $instance->getParameterFormSize();
+        $this->integer($output)->isEqualTo(1);
+    }
 
-   public function testGetParameterFormSize() {
-      $question = $this->getQuestion();
-      $fieldType = 'text';
-      $instance = $this->newTestedInstance(
-         \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
-         [
-            'fieldName' => '',
-            'label' => 'regex',
-         ]
-      );
-       $output = $instance->getParameterFormSize();
-      $this->integer($output)->isEqualTo(1);
-   }
-
-   public function testPost_getEmpty() {
-      $question = $this->getQuestion();
-      $fieldType = 'text';
-      $instance = $this->newTestedInstance(
-         \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
-         [
-            'fieldName' => '',
-            'label' => 'regex',
-         ]
-      );
-      $instance->post_getEmpty();
-      $this->array($instance->fields)
+    public function testPost_getEmpty()
+    {
+        $question = $this->getQuestion();
+        $fieldType = 'text';
+        $instance = $this->newTestedInstance(
+            \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
+            [
+                'fieldName' => '',
+                'label' => 'regex',
+            ]
+        );
+        $instance->post_getEmpty();
+        $this->array($instance->fields)
          ->hasKeys([
-            'regex',
+             'regex',
          ])
          ->hasSize(1);
 
-      $this->variable($instance->fields['regex'])->isNull();
-   }
+        $this->variable($instance->fields['regex'])->isNull();
+    }
 
-   public function testExport() {
-      $question = $this->getQuestion();
-      $fieldType = 'text';
-      $instance = $this->newTestedInstance(
-         \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
-         [
-            'fieldName' => '',
-            'label' => 'regex',
-         ]
-      );
-
-      // Try to export an empty item
-      $this->exception(function () use ($instance) {
-         $instance->export();
-      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
-
-      // Prepare an item to export
-      $question->updateParameters([
-         'fieldtype' => $fieldType,
-         '_parameters' => [
-            $fieldType => [
-               'regex' => [
-                  'regex' => '/a-zA-Z/',
-               ],
+    public function testExport()
+    {
+        $question = $this->getQuestion();
+        $fieldType = 'text';
+        $instance = $this->newTestedInstance(
+            \PluginFormcreatorFields::getFieldInstance($fieldType, $question),
+            [
+                'fieldName' => '',
+                'label' => 'regex',
             ]
-         ]
-      ]);
-      $instance->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $question->getID(),
-         'fieldname' => 'regex',
-      ]);
+        );
 
-      // Export the item without the ID and with UUID
-      $output = $instance->export(false);
+       // Try to export an empty item
+        $this->exception(function () use ($instance) {
+            $instance->export();
+        })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
-      // Test the exported data
-      $fieldsWithoutID = [
-         'regex',
-         'fieldname',
-      ];
-      $extraFields = [
-      ];
-      $this->array($output)
+       // Prepare an item to export
+        $question->updateParameters([
+            'fieldtype' => $fieldType,
+            '_parameters' => [
+                $fieldType => [
+                    'regex' => [
+                        'regex' => '/a-zA-Z/',
+                    ],
+                ]
+            ]
+        ]);
+        $instance->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $question->getID(),
+            'fieldname' => 'regex',
+        ]);
+
+       // Export the item without the ID and with UUID
+        $output = $instance->export(false);
+
+       // Test the exported data
+        $fieldsWithoutID = [
+            'regex',
+            'fieldname',
+        ];
+        $extraFields = [
+        ];
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
 
-      // Export the item without the UUID and with ID
-      $output = $instance->export(true);
-      $this->array($output)
+       // Export the item without the UUID and with ID
+        $output = $instance->export(true);
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
-   }
+    }
 
-   public function testImport() {
-      $question = $this->getQuestion();
+    public function testImport()
+    {
+        $question = $this->getQuestion();
 
-      $input = [
-         'regex' => '/[a-zA-Z]/',
-         'fieldname' => 'regex',
-         'uuid' => plugin_formcreator_getUuid(),
-      ];
+        $input = [
+            'regex' => '/[a-zA-Z]/',
+            'fieldname' => 'regex',
+            'uuid' => plugin_formcreator_getUuid(),
+        ];
 
-      $linker = new \PluginFormcreatorLinker();
-      $parameterId = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());
-      $this->integer($parameterId)->isGreaterThan(0);
+        $linker = new \PluginFormcreatorLinker();
+        $parameterId = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());
+        $this->integer($parameterId)->isGreaterThan(0);
 
-      unset($input['uuid']);
+        unset($input['uuid']);
 
-      $this->exception(
-         function() use($linker, $input) {
-            \PluginFormcreatorQuestionRegex::import($linker, $input);
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory for Question regular expression');
+        $this->exception(
+            function () use ($linker, $input) {
+                \PluginFormcreatorQuestionRegex::import($linker, $input);
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+        ->hasMessage('UUID or ID is mandatory for Question regular expression');
 
-      $input['id'] = $parameterId;
-      $parameterId2 = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());
-      $this->variable($parameterId2)->isNotFalse();
-      $this->integer((int) $parameterId2)->isNotEqualTo($parameterId);
-   }
+        $input['id'] = $parameterId;
+        $parameterId2 = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());
+        $this->variable($parameterId2)->isNotFalse();
+        $this->integer((int) $parameterId2)->isNotEqualTo($parameterId);
+    }
 }

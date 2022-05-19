@@ -37,30 +37,32 @@ use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class TextareaField extends CommonFunctionalTestCase
 {
-   use CommonQuestionTest;
+    use CommonQuestionTest;
 
-   public function testCreateForm() {
-      // Use a clean entity for the tests
-      $this->login('glpi', 'glpi');
+    public function testCreateForm()
+    {
+       // Use a clean entity for the tests
+        $this->login('glpi', 'glpi');
 
-      $form = $this->showCreateQuestionForm();
+        $form = $this->showCreateQuestionForm();
 
-      // set question type
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("textarea")
+       // set question type
+        $this->client->executeScript(
+            '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("textarea")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
          '
-      );
+        );
 
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitFor('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="default_values"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
+        $this->client->waitFor('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="default_values"]');
 
-      $this->_testQuestionCreated($form, __METHOD__);
-   }
+        $this->_testQuestionCreated($form, __METHOD__);
+    }
 
-   public function testRenderQuestion() {
-      $this->_testRenderQuestion([
-         'fieldtype' => 'textarea',
-      ]);
-   }
+    public function testRenderQuestion()
+    {
+        $this->_testRenderQuestion([
+            'fieldtype' => 'textarea',
+        ]);
+    }
 }

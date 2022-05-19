@@ -40,224 +40,247 @@ use Session;
 
 class TagField extends DropdownField
 {
-   public function isPrerequisites(): bool {
-      return class_exists(PluginTagTag::class);
-   }
+    public function isPrerequisites(): bool
+    {
+        return class_exists(PluginTagTag::class);
+    }
 
-   public function showForm(array $options): void {
-      if (!\Plugin::isPluginActive('tag')) {
-         $options['error'] = __('Warning: Tag plugin is disabled or missing', 'formcreator');
-         $template = '@formcreator/field/undefinedfield.html.twig';
-         TemplateRenderer::getInstance()->display($template, [
+    public function showForm(array $options): void
+    {
+        if (!\Plugin::isPluginActive('tag')) {
+            $options['error'] = __('Warning: Tag plugin is disabled or missing', 'formcreator');
+            $template = '@formcreator/field/undefinedfield.html.twig';
+            TemplateRenderer::getInstance()->display($template, [
+                'item' => $this->question,
+                'params' => $options,
+            ]);
+            return;
+        }
+
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
             'item' => $this->question,
             'params' => $options,
-         ]);
-         return;
-      }
+        ]);
+    }
 
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        global $DB;
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      global $DB;
-
-      $html         = '';
-      if (!$canEdit) {
-         $html .= '<div class="form_field">';
-         $tagNames = [];
-         if (count($this->value) > 0) {
-            foreach ($this->value as $tagId) {
-               $tag = new PluginTagTag();
-               if (!$tag->getFromDB($tagId)) {
-                  continue;
-               }
-               $tagNames[] = $tag->fields['name'];
+        $html         = '';
+        if (!$canEdit) {
+            $html .= '<div class="form_field">';
+            $tagNames = [];
+            if (count($this->value) > 0) {
+                foreach ($this->value as $tagId) {
+                    $tag = new PluginTagTag();
+                    if (!$tag->getFromDB($tagId)) {
+                        continue;
+                    }
+                    $tagNames[] = $tag->fields['name'];
+                }
             }
-         }
-         $html .= implode(', ', $tagNames);
-         $html .= '</div>';
-         return $html;
-      }
+            $html .= implode(', ', $tagNames);
+            $html .= '</div>';
+            return $html;
+        }
 
-      if (!class_exists(PluginTagTag::class)) {
-         // Plugin Tag not available
-         return '';
-      }
+        if (!class_exists(PluginTagTag::class)) {
+           // Plugin Tag not available
+            return '';
+        }
 
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $result = $DB->request([
-         'SELECT' => ['id', 'name'],
-         'FROM'   => PluginTagTag::getTable(),
-         'WHERE'  => [
-            'OR' => [
-               ['type_menu' => ['LIKE', '%\"Ticket\"%']],
-               ['type_menu' => ['LIKE', '%\"Change\"%']],
-               ['type_menu' => ['LIKE', '0']],
-               ['type_menu' => ''],
-               ['type_menu' => 'NULL'],
-            ]
-         ] + getEntitiesRestrictCriteria(PluginTagTag::getTable(), '', '', true),
-         'ORDER'  => 'name'
-      ]);
-      $values = [];
-      foreach ($result as $id => $data) {
-         $values[$id] = $data['name'];
-      }
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $result = $DB->request([
+            'SELECT' => ['id', 'name'],
+            'FROM'   => PluginTagTag::getTable(),
+            'WHERE'  => [
+                'OR' => [
+                    ['type_menu' => ['LIKE', '%\"Ticket\"%']],
+                    ['type_menu' => ['LIKE', '%\"Change\"%']],
+                    ['type_menu' => ['LIKE', '0']],
+                    ['type_menu' => ''],
+                    ['type_menu' => 'NULL'],
+                ]
+            ] + getEntitiesRestrictCriteria(PluginTagTag::getTable(), '', '', true),
+            'ORDER'  => 'name'
+        ]);
+        $values = [];
+        foreach ($result as $id => $data) {
+            $values[$id] = $data['name'];
+        }
 
-      $html .= Dropdown::showFromArray($fieldName, $values, [
-         'values'              => $this->value,
-         'comments'            => false,
-         'rand'                => $rand,
-         'multiple'            => true,
-         'display'             => false,
-      ]);
-      $html .= PHP_EOL;
-      $html .= Html::scriptBlock("$(function() {
+        $html .= Dropdown::showFromArray($fieldName, $values, [
+            'values'              => $this->value,
+            'comments'            => false,
+            'rand'                => $rand,
+            'multiple'            => true,
+            'display'             => false,
+        ]);
+        $html .= PHP_EOL;
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTag('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '';
+        }
 
-      return implode("\r\n", $this->value);
-   }
+        return implode("\r\n", $this->value);
+    }
 
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+    public function deserializeValue($value)
+    {
+        $this->value = ($value !== null && $value !== '')
          ? explode("\r\n", $value)
          : [];
-   }
+    }
 
-   public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
+    public function getValueForDesign(): string
+    {
+        if ($this->value === null) {
+            return '';
+        }
 
-      return implode("\r\n", $this->value);
-   }
+        return implode("\r\n", $this->value);
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
-      return $value;
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
+        return $value;
+    }
 
-   public function isValid(): bool {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '') {
-         Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR
-         );
-         return false;
-      }
-
-      // All is OK
-      return true;
-   }
-
-   public function prepareQuestionInputForSave($input) {
-      return $input;
-   }
-
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
-
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!isset($input[$key])) {
-         $input[$key] = [];
-      } else {
-         if (!is_array($input[$key])) {
+    public function isValid(): bool
+    {
+       // If the field is required it can't be empty
+        if ($this->isRequired() && $this->value == '') {
+            Session::addMessageAfterRedirect(
+                __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+                false,
+                ERROR
+            );
             return false;
-         }
-      }
+        }
 
-      $this->value = $input[$key];
-      return true;
-   }
+       // All is OK
+        return true;
+    }
 
-   public static function getName(): string {
-      return _n('Tag', 'Tags', 2, 'tag');
-   }
+    public function prepareQuestionInputForSave($input)
+    {
+        return $input;
+    }
 
-   public static function canRequire(): bool {
-      return false;
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function equals($value): bool {
-      if (!class_exists(PluginTagTag::class)) {
-         // Plugin Tag not available
-         return false;
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!isset($input[$key])) {
+            $input[$key] = [];
+        } else {
+            if (!is_array($input[$key])) {
+                return false;
+            }
+        }
 
-      // find the tag to check for existence
-      $tag = new PluginTagTag();
-      $tag->getFromDBByRequest([
-         'name' => $value
-      ]);
-      if ($tag->isNewItem()) {
-         return false;
-      }
+        $this->value = $input[$key];
+        return true;
+    }
 
-      // Check it is available for the target itemtypes
-      $types = json_decode($tag->fields['type_menu'], true);
-      if (!isset($types[Ticket::class])
-         && !isset($types[Change::class])
-         && !isset($types['0'])
-      ) {
-         // Tag must be available for tickets, changes or all types
-         // Do 0 means all ?
-         return false;
-      }
+    public static function getName(): string
+    {
+        return _n('Tag', 'Tags', 2, 'tag');
+    }
 
-      // check it is in the tags if this question
-      return (in_array($tag->getID(), $this->value));
-   }
+    public static function canRequire(): bool
+    {
+        return false;
+    }
 
-   public function notEquals($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function equals($value): bool
+    {
+        if (!class_exists(PluginTagTag::class)) {
+           // Plugin Tag not available
+            return false;
+        }
 
-   public function greaterThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+       // find the tag to check for existence
+        $tag = new PluginTagTag();
+        $tag->getFromDBByRequest([
+            'name' => $value
+        ]);
+        if ($tag->isNewItem()) {
+            return false;
+        }
 
-   public function lessThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+       // Check it is available for the target itemtypes
+        $types = json_decode($tag->fields['type_menu'], true);
+        if (
+            !isset($types[Ticket::class])
+            && !isset($types[Change::class])
+            && !isset($types['0'])
+        ) {
+           // Tag must be available for tickets, changes or all types
+           // Do 0 means all ?
+            return false;
+        }
 
-   public function regex($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+       // check it is in the tags if this question
+        return (in_array($tag->getID(), $this->value));
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return false;
-   }
+    public function notEquals($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function getHtmlIcon() {
-      return '<i class="fas fa-tag" aria-hidden="true"></i>';
-   }
+    public function greaterThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function lessThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function regex($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
+
+    public function isPublicFormCompatible(): bool
+    {
+        return false;
+    }
+
+    public function getHtmlIcon()
+    {
+        return '<i class="fas fa-tag" aria-hidden="true"></i>';
+    }
+
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
+
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 }

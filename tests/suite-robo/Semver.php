@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,37 +37,40 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 // No autoload for the tested file
 require_once __DIR__ . '/../../RoboFile.php';
 
-class Semver extends CommonTestCase {
-   public  function providerIsSemver() {
-       return [
-           [
-               'foo',
-               false
-           ],
-           [
-               '0.0.1',
-               true
-           ],
-           [
-               '1.0.0-dev',
-               true
-           ],
-           [
-               '1.0.0-nightly',
-               true
-           ],
-           [
-               '1.0.0-beta.1',
-               true
-           ],
-       ];
-   }
+class Semver extends CommonTestCase
+{
+    public function providerIsSemver()
+    {
+        return [
+            [
+                'foo',
+                false
+            ],
+            [
+                '0.0.1',
+                true
+            ],
+            [
+                '1.0.0-dev',
+                true
+            ],
+            [
+                '1.0.0-nightly',
+                true
+            ],
+            [
+                '1.0.0-beta.1',
+                true
+            ],
+        ];
+    }
 
     /**
      * @dataProvider providerIsSemver
      */
-   public function testIsSemver($version, $expected) {
-       $output = \Semver::isSemver($version);
-       $this->boolean($output)->isEqualTo($expected);
-   }
+    public function testIsSemver($version, $expected)
+    {
+        $output = \Semver::isSemver($version);
+        $this->boolean($output)->isEqualTo($expected);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -32,7 +33,9 @@
 namespace GlpiPlugin\Formcreator\Exception;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-class ImportFailureException extends \RuntimeException {}
+class ImportFailureException extends \RuntimeException
+{
+}

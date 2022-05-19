@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,13 +31,13 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorForm_Group extends PluginFormcreatorRestrictedFormCriteria
 {
-   public static $itemtype_2 = Group::class;
-   public static $items_id_2 = 'groups_id';
+    public static $itemtype_2 = Group::class;
+    public static $items_id_2 = 'groups_id';
 
    /**
     * Check if the current logged user is a member of any groups is in the
@@ -46,20 +47,21 @@ class PluginFormcreatorForm_Group extends PluginFormcreatorRestrictedFormCriteri
     *
     * @return bool True if there is a match, the user is whitelisted
     */
-   public static function getListCriteriaSubQuery(): QuerySubQuery {
-      // Allow only groups of the current user.
-      return new QuerySubQuery([
-         'SELECT' => static::$items_id_1,
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            static::$items_id_2 => new QuerySubQuery([
-               'SELECT' => static::$items_id_2,
-               'FROM'   => Group_User::getTable(),
-               'WHERE'  => [
-                  User::getForeignKeyField() => Session::getLoginUserID(),
-               ]
-            ])
-         ]
-      ]);
-   }
+    public static function getListCriteriaSubQuery(): QuerySubQuery
+    {
+       // Allow only groups of the current user.
+        return new QuerySubQuery([
+            'SELECT' => static::$items_id_1,
+            'FROM'   => self::getTable(),
+            'WHERE'  => [
+                static::$items_id_2 => new QuerySubQuery([
+                    'SELECT' => static::$items_id_2,
+                    'FROM'   => Group_User::getTable(),
+                    'WHERE'  => [
+                        User::getForeignKeyField() => Session::getLoginUserID(),
+                    ]
+                ])
+            ]
+        ]);
+    }
 }

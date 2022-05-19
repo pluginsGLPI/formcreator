@@ -37,32 +37,34 @@ use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class TextField extends CommonFunctionalTestCase
 {
-   use CommonQuestionTest;
+    use CommonQuestionTest;
 
-   public function testCreateForm() {
-      // Use a clean entity for the tests
-      $this->login('glpi', 'glpi');
+    public function testCreateForm()
+    {
+       // Use a clean entity for the tests
+        $this->login('glpi', 'glpi');
 
-      $form = $this->showCreateQuestionForm();
+        $form = $this->showCreateQuestionForm();
 
-      // set question type
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("text")
+       // set question type
+        $this->client->executeScript(
+            '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("text")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
          '
-      );
+        );
 
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitFor('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[text][range][range_min]"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[text][range][range_max]"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
+        $this->client->waitFor('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[text][range][range_min]"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[text][range][range_max]"]');
 
-      $this->_testQuestionCreated($form, __METHOD__);
-   }
+        $this->_testQuestionCreated($form, __METHOD__);
+    }
 
-   public function testRenderQuestion() {
-      $this->_testRenderQuestion([
-         'fieldtype' => 'text',
-      ]);
-   }
+    public function testRenderQuestion()
+    {
+        $this->_testRenderQuestion([
+            'fieldtype' => 'text',
+        ]);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,34 +31,32 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorAbstractQuestionParameter
-extends CommonDBChild
-implements
-PluginFormcreatorQuestionParameterInterface,
-PluginFormcreatorExportableInterface,
-PluginFormcreatorTranslatableInterface
+abstract class PluginFormcreatorAbstractQuestionParameter extends CommonDBChild implements
+    PluginFormcreatorQuestionParameterInterface,
+    PluginFormcreatorExportableInterface,
+    PluginFormcreatorTranslatableInterface
 {
-   use PluginFormcreatorExportableTrait;
-   use PluginFormcreatorTranslatable;
+    use PluginFormcreatorExportableTrait;
+    use PluginFormcreatorTranslatable;
 
    // From CommonDBRelation
-   static public $itemtype       = PluginFormcreatorQuestion::class;
-   static public $items_id       = 'plugin_formcreator_questions_id';
+    public static $itemtype       = PluginFormcreatorQuestion::class;
+    public static $items_id       = 'plugin_formcreator_questions_id';
 
-   static public $disableAutoEntityForwarding   = true;
+    public static $disableAutoEntityForwarding   = true;
 
    /** @var string $fieldName the name of the field representing the parameter when editing the question */
-   protected $fieldName = null;
+    protected $fieldName = null;
 
-   protected $label = null;
+    protected $label = null;
 
-   protected $field;
+    protected $field;
 
    /** @var $domId string the first part of the DOM Id representing the parameter */
-   protected $domId = '';
+    protected $domId = '';
 
    /**
     * @param PluginFormcreatorFieldInterface $field Field
@@ -65,74 +64,81 @@ PluginFormcreatorTranslatableInterface
     *                - fieldName: name of the HTML input tag
     *                - label    : label for the parameter
     */
-   public function setField(PluginFormcreatorFieldInterface $field, array $options) {
-      $fieldType = $field->getFieldTypeName();
-      $fieldName = $options['fieldName'];
-      $this->domId = $this->domId . "_{$fieldType}_{$fieldName}";
-      $this->field = $field;
-      $this->label = $options['label'];
-      $this->fieldName = $options['fieldName'];
-   }
+    public function setField(PluginFormcreatorFieldInterface $field, array $options)
+    {
+        $fieldType = $field->getFieldTypeName();
+        $fieldName = $options['fieldName'];
+        $this->domId = $this->domId . "_{$fieldType}_{$fieldName}";
+        $this->field = $field;
+        $this->label = $options['label'];
+        $this->fieldName = $options['fieldName'];
+    }
 
-   public function prepareInputforAdd($input) {
-      $input = parent::prepareInputForAdd($input);
-      // generate a uniq id
-      if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
+    public function prepareInputforAdd($input)
+    {
+        $input = parent::prepareInputForAdd($input);
+       // generate a uniq id
+        if (
+            !isset($input['uuid'])
+            || empty($input['uuid'])
+        ) {
+            $input['uuid'] = plugin_formcreator_getUuid();
+        }
 
-      return $input;
-   }
+        return $input;
+    }
 
-   public function rawSearchOptions() {
-      $tab = [];
-      $tab[] = [
-         'id'                 => 'common',
-         'name'               => __('Parameter', 'formcreator')
-      ];
+    public function rawSearchOptions()
+    {
+        $tab = [];
+        $tab[] = [
+            'id'                 => 'common',
+            'name'               => __('Parameter', 'formcreator')
+        ];
 
-      $tab[] = [
-         'id'                 => '3',
-         'table'              => $this::getTable(),
-         'field'              => 'fieldname',
-         'name'               => __('Field name', 'formcreator'),
-         'datatype'           => 'itemlink',
-         'massiveaction'      => false,
-      ];
+        $tab[] = [
+            'id'                 => '3',
+            'table'              => $this::getTable(),
+            'field'              => 'fieldname',
+            'name'               => __('Field name', 'formcreator'),
+            'datatype'           => 'itemlink',
+            'massiveaction'      => false,
+        ];
 
-      return $tab;
-   }
+        return $tab;
+    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool {
-      $keepCriteria = [
-         static::$items_id => $container->getID(),
-      ];
-      if (count($exclude) > 0) {
-         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
-      }
-      return $this->deleteByCriteria($keepCriteria);
-   }
+    public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool
+    {
+        $keepCriteria = [
+            static::$items_id => $container->getID(),
+        ];
+        if (count($exclude) > 0) {
+            $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+        }
+        return $this->deleteByCriteria($keepCriteria);
+    }
 
-   public function getTranslatableStrings(array $options = []) : array {
-      $strings = [
-         'itemlink' => [],
-         'string'   => [],
-         'text'     => [],
-      ];
+    public function getTranslatableStrings(array $options = []): array
+    {
+        $strings = [
+            'itemlink' => [],
+            'string'   => [],
+            'text'     => [],
+        ];
 
-      $params = [
-         'searchText'      => '',
-         'id'              => '',
-         'is_translated'   => null,
-         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
-      ];
-      $options = array_merge($params, $options);
+        $params = [
+            'searchText'      => '',
+            'id'              => '',
+            'is_translated'   => null,
+            'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+        ];
+        $options = array_merge($params, $options);
 
-      $strings = $this->getMyTranslatableStrings($options);
+        $strings = $this->getMyTranslatableStrings($options);
 
-      $strings = $this->deduplicateTranslatable($strings);
+        $strings = $this->deduplicateTranslatable($strings);
 
-      return $strings;
-   }
+        return $strings;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,42 +31,42 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 trait PluginFormcreatorTranslatable
 {
-
    /**
     * Find search options of translatable fields
     *
     * @return array
     */
-   public function getTranslatableSearchOptions() : array {
-      $searchOptions = $this->searchOptions();
-      $translatable = [];
-      $table = $this::getTable();
-      foreach ($searchOptions as $id => $searchOption) {
-         if (!isset($searchOption['field'])) {
-            continue;
-         }
-         if ($searchOption['table'] != $table) {
-            continue;
-         }
-         if (!isset($searchOption['datatype'])) {
-            continue;
-         }
-         if (!in_array($searchOption['datatype'], ['itemlink', 'text', 'string'])) {
-            continue;
-         }
-         if ($searchOption['datatype'] == 'itemlink' && $id != '1') {
-            continue;
-         }
-         $translatable[] = $searchOption;
-      }
+    public function getTranslatableSearchOptions(): array
+    {
+        $searchOptions = $this->searchOptions();
+        $translatable = [];
+        $table = $this::getTable();
+        foreach ($searchOptions as $id => $searchOption) {
+            if (!isset($searchOption['field'])) {
+                continue;
+            }
+            if ($searchOption['table'] != $table) {
+                continue;
+            }
+            if (!isset($searchOption['datatype'])) {
+                continue;
+            }
+            if (!in_array($searchOption['datatype'], ['itemlink', 'text', 'string'])) {
+                continue;
+            }
+            if ($searchOption['datatype'] == 'itemlink' && $id != '1') {
+                continue;
+            }
+            $translatable[] = $searchOption;
+        }
 
-      return $translatable;
-   }
+        return $translatable;
+    }
 
    /**
     * get translatable strings of the item
@@ -73,49 +74,51 @@ trait PluginFormcreatorTranslatable
     * @param array $options
     * @return array
     */
-   public function getMyTranslatableStrings(array $options) : array {
-      $strings = [
-         'itemlink' => [],
-         'string'   => [],
-         'text'     => [],
-         'id'       => []
-      ];
-      $params = [
-         'searchText'      => '',
-         'id'              => '',
-         'is_translated'   => null,
-         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
-      ];
-      $options = array_merge($params, $options);
+    public function getMyTranslatableStrings(array $options): array
+    {
+        $strings = [
+            'itemlink' => [],
+            'string'   => [],
+            'text'     => [],
+            'id'       => []
+        ];
+        $params = [
+            'searchText'      => '',
+            'id'              => '',
+            'is_translated'   => null,
+            'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+        ];
+        $options = array_merge($params, $options);
 
-      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+        $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
 
-      foreach ($this->getTranslatableSearchOptions() as $searchOption) {
-         if ($searchString != '' && stripos($this->fields[$searchOption['field']], $searchString) === false) {
-            continue;
-         }
-         $id = PluginFormcreatorTranslation::getTranslatableStringId($this->fields[$searchOption['field']]);
-         if ($options['id'] != '' && $id != $options['id']) {
-            continue;
-         }
-         if ($this->fields[$searchOption['field']] != '') {
-            $strings[$searchOption['datatype']][$id] = $this->fields[$searchOption['field']];
-            $strings['id'][$id] = $searchOption['datatype'];
-         }
-      }
+        foreach ($this->getTranslatableSearchOptions() as $searchOption) {
+            if ($searchString != '' && stripos($this->fields[$searchOption['field']], $searchString) === false) {
+                continue;
+            }
+            $id = PluginFormcreatorTranslation::getTranslatableStringId($this->fields[$searchOption['field']]);
+            if ($options['id'] != '' && $id != $options['id']) {
+                continue;
+            }
+            if ($this->fields[$searchOption['field']] != '') {
+                $strings[$searchOption['datatype']][$id] = $this->fields[$searchOption['field']];
+                $strings['id'][$id] = $searchOption['datatype'];
+            }
+        }
 
-      return $strings;
-   }
+        return $strings;
+    }
 
-   protected function deduplicateTranslatable(array $strings) : array {
-      foreach (array_keys($strings) as $type) {
-         if ($type == 'id') {
-            continue;
-         }
-         $strings[$type] = array_unique($strings[$type]);
-         $strings[$type] = array_filter($strings[$type]);
-      }
+    protected function deduplicateTranslatable(array $strings): array
+    {
+        foreach (array_keys($strings) as $type) {
+            if ($type == 'id') {
+                continue;
+            }
+            $strings[$type] = array_unique($strings[$type]);
+            $strings[$type] = array_filter($strings[$type]);
+        }
 
-      return $strings;
-   }
+        return $strings;
+    }
 }

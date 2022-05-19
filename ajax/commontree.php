@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,12 +29,13 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+
+include('../../../inc/includes.php');
 
 // Check required parameters
 if (ctype_digit($_REQUEST['itemtype']) || !isset($_REQUEST['itemtype']) || !isset($_REQUEST['root']) || !isset($_REQUEST['maxDepth'])) {
-   http_response_code(400);
-   die;
+    http_response_code(400);
+    die;
 }
 
 // Load parameters
@@ -44,46 +46,47 @@ $selectableRoot = $_REQUEST['selectableRoot'];
 
 // This should only be used for dropdowns
 if (!is_a($itemtype, CommonTreeDropdown::class, true)) {
-   http_response_code(400);
-   die;
+    http_response_code(400);
+    die;
 }
 
 // Build the row content
 $rand = mt_rand();
 $additions = '<td>';
-$additions .= '<label for="dropdown_show_tree_root'.$rand.'" id="label_show_tree_root">';
+$additions .= '<label for="dropdown_show_tree_root' . $rand . '" id="label_show_tree_root">';
 $additions .= __('Subtree root', 'formcreator');
 $additions .= '</label>';
 $additions .= '<br>';
-$additions .= '<label for="dropdown_selectable_tree_root'.$rand.'" id="label_selectable_tree_root">';
+$additions .= '<label for="dropdown_selectable_tree_root' . $rand . '" id="label_selectable_tree_root">';
 $additions .= __('Selectable', 'formcreator');
 $additions .= '</label>';
 $additions .= '</td>';
 $additions .= '<td>';
 $additions .= Dropdown::show($itemtype, [
-   'name'  => 'show_tree_root',
-   'value' => $root,
-   'rand'  => $rand,
-   'display' => false,
+    'name'  => 'show_tree_root',
+    'value' => $root,
+    'rand'  => $rand,
+    'display' => false,
 ]);
 $additions .= '<br>';
 $additions .= Dropdown::showYesNo('selectable_tree_root', $selectableRoot, -1, ['display' => false]);
 $additions .= '</td>';
 $additions .= '<td>';
-$additions .= '<label for="dropdown_show_tree_depth'.$rand.'" id="label_show_tree_depth">';
+$additions .= '<label for="dropdown_show_tree_depth' . $rand . '" id="label_show_tree_depth">';
 $additions .= __('Limit subtree depth', 'formcreator');
 $additions .= '</label>';
 $additions .= '</td>';
 $additions .= '<td>';
 $additions .= dropdown::showNumber(
-   'show_tree_depth', [
-      'rand'  => $rand,
-      'value' => $depth,
-      'min' => 1,
-      'max' => 16,
-      'toadd' => [0 => __('No limit', 'formcreator')],
-      'display' => false,
-   ]
+    'show_tree_depth',
+    [
+        'rand'  => $rand,
+        'value' => $depth,
+        'min' => 1,
+        'max' => 16,
+        'toadd' => [0 => __('No limit', 'formcreator')],
+        'display' => false,
+    ]
 );
 $additions .= '</td>';
 

@@ -40,107 +40,117 @@ use Toolbox;
 
 class SelectField extends RadiosField
 {
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->question->fields['values'] =  json_decode($this->question->fields['values']);
-      $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
-      $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+        $this->question->fields['values'] =  json_decode($this->question->fields['values']);
+        $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
+        $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function getDesignSpecializationField(): string {
-      $specialization = parent::getDesignSpecializationField();
-      $specialization['may_be_empty'] = true;
+    public function getDesignSpecializationField(): string
+    {
+        $specialization = parent::getDesignSpecializationField();
+        $specialization['may_be_empty'] = true;
 
-      return $specialization;
-   }
+        return $specialization;
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return nl2br(__($this->value, $domain)) . PHP_EOL;
-      }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return nl2br(__($this->value, $domain)) . PHP_EOL;
+        }
 
-      $html         = '';
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $values       = $this->getAvailableValues();
-      $translatedValues   = [];
+        $html         = '';
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $values       = $this->getAvailableValues();
+        $translatedValues   = [];
 
-      if (!empty($this->question->fields['values'])) {
-         foreach ($values as $value) {
-            if ((trim($value) != '')) {
-               $translatedValues[$value] = __($value, $domain);
+        if (!empty($this->question->fields['values'])) {
+            foreach ($values as $value) {
+                if ((trim($value) != '')) {
+                    $translatedValues[$value] = __($value, $domain);
+                }
             }
-         }
 
-         $html .= Dropdown::showFromArray($fieldName, $translatedValues, [
-            'display_emptychoice' => $this->question->fields['show_empty'] == 1,
-            'value'     => $this->value,
-            'values'    => [],
-            'rand'      => $rand,
-            'multiple'  => false,
-            'display'   => false,
-         ]);
-      }
-      $html .=  PHP_EOL;
-      $html .=  Html::scriptBlock("$(function() {
+            $html .= Dropdown::showFromArray($fieldName, $translatedValues, [
+                'display_emptychoice' => $this->question->fields['show_empty'] == 1,
+                'value'     => $this->value,
+                'values'    => [],
+                'rand'      => $rand,
+                'multiple'  => false,
+                'display'   => false,
+            ]);
+        }
+        $html .=  PHP_EOL;
+        $html .=  Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeSelect('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public static function getName(): string {
-      return __('Select', 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return __('Select', 'formcreator');
+    }
 
-   public function isValid(): bool {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '0') {
-         Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+       // If the field is required it can't be empty
+        if ($this->isRequired() && $this->value == '0') {
+            Session::addMessageAfterRedirect(
+                sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      // All is OK
-      return $this->isValidValue($this->value);
-   }
+       // All is OK
+        return $this->isValidValue($this->value);
+    }
 
-   public function isValidValue($value): bool {
-      if ($value == '0') {
-         return true;
-      }
-      $value = Toolbox::stripslashes_deep($value);
-      $value = trim($value);
-      return in_array($value, $this->getAvailableValues());
-   }
+    public function isValidValue($value): bool
+    {
+        if ($value == '0') {
+            return true;
+        }
+        $value = Toolbox::stripslashes_deep($value);
+        $value = trim($value);
+        return in_array($value, $this->getAvailableValues());
+    }
 
-   public function equals($value): bool {
-      if ($value == '') {
-         // empty string means no selection
-         $value = '0';
-      }
-      return $this->value == $value;
-   }
+    public function equals($value): bool
+    {
+        if ($value == '') {
+           // empty string means no selection
+            $value = '0';
+        }
+        return $this->value == $value;
+    }
 
-   public function regex($value): bool {
-      return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';
+    }
 }

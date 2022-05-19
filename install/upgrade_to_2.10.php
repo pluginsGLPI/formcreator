@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,48 +29,49 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_10 {
-
-   protected $migration;
+class PluginFormcreatorUpgradeTo2_10
+{
+    protected $migration;
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-      $this->migration = $migration;
+    public function upgrade(Migration $migration)
+    {
+        $this->migration = $migration;
 
-      // Add conditions on the submit button for a form
-      $table = 'glpi_plugin_formcreator_forms';
-      $migration->addField(
-         $table,
-         'show_rule',
-         'integer',
-         [
-            'value'   => '1',
-            'after'   => 'is_default',
-            'comment' => 'Conditions setting to show the submit button'
-         ]
-      );
+       // Add conditions on the submit button for a form
+        $table = 'glpi_plugin_formcreator_forms';
+        $migration->addField(
+            $table,
+            'show_rule',
+            'integer',
+            [
+                'value'   => '1',
+                'after'   => 'is_default',
+                'comment' => 'Conditions setting to show the submit button'
+            ]
+        );
 
-      // Add request type specific question
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->changeField($table, 'type', 'type_question', 'integer', ['after' => 'target_name', 'value' => '0']);
-      $migration->migrationOneTable($table);
-      $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '0']);
+       // Add request type specific question
+        $table = 'glpi_plugin_formcreator_targettickets';
+        $migration->changeField($table, 'type', 'type_question', 'integer', ['after' => 'target_name', 'value' => '0']);
+        $migration->migrationOneTable($table);
+        $migration->addField($table, 'type_rule', 'integer', ['after' => 'target_name', 'value' => '0']);
 
-      // conditions on targets
-      $table = 'glpi_plugin_formcreator_targetchanges';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
+       // conditions on targets
+        $table = 'glpi_plugin_formcreator_targetchanges';
+        $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'category_question']);
+        $table = 'glpi_plugin_formcreator_targettickets';
+        $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'location_question']);
 
-      // support for validator group in issues
-      $table = 'glpi_plugin_formcreator_issues';
-      $migration->changeField($table, 'validator_id', 'users_id_validator', 'integer');
-      $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
-      $migration->migrationOneTable($table);
-      $migration->dropKey($table, 'validator_id');
-      $migration->addKey($table, 'users_id_validator');
-      $migration->addKey($table, 'groups_id_validator');
-   }
+       // support for validator group in issues
+        $table = 'glpi_plugin_formcreator_issues';
+        $migration->changeField($table, 'validator_id', 'users_id_validator', 'integer');
+        $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
+        $migration->migrationOneTable($table);
+        $migration->dropKey($table, 'validator_id');
+        $migration->addKey($table, 'users_id_validator');
+        $migration->addKey($table, 'groups_id_validator');
+    }
 }

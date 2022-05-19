@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,36 +29,39 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+
+include('../../../inc/includes.php');
 
 if (!isset($_SESSION['glpiactiveprofile']['id'])) {
    // Session is not valid then exit
-   exit;
+    exit;
 }
 
 if ($_REQUEST['wizard'] == 'categories') {
-   plugin_formcreator_showWizardCategories();
+    plugin_formcreator_showWizardCategories();
 } else if ($_REQUEST['wizard'] == 'forms') {
-   if (isset($_REQUEST['categoriesId'])) {
-      $categoriesId = (int) $_REQUEST['categoriesId'];
-   } else {
-      $categoriesId = 0;
-   }
-   $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
-   $helpdeskHome = isset($_REQUEST['helpdeskHome']) ? $_REQUEST['helpdeskHome'] != '0' : false;
-   plugin_formcreator_showWizardForms($categoriesId, $keywords, $helpdeskHome);
+    if (isset($_REQUEST['categoriesId'])) {
+        $categoriesId = (int) $_REQUEST['categoriesId'];
+    } else {
+        $categoriesId = 0;
+    }
+    $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
+    $helpdeskHome = isset($_REQUEST['helpdeskHome']) ? $_REQUEST['helpdeskHome'] != '0' : false;
+    plugin_formcreator_showWizardForms($categoriesId, $keywords, $helpdeskHome);
 } else if ($_REQUEST['wizard'] == 'toggle_menu') {
-   $_SESSION['plugin_formcreator_toggle_menu'] = isset($_SESSION['plugin_formcreator_toggle_menu'])
+    $_SESSION['plugin_formcreator_toggle_menu'] = isset($_SESSION['plugin_formcreator_toggle_menu'])
                                                    ? !$_SESSION['plugin_formcreator_toggle_menu']
                                                    : true;
 }
 
-function plugin_formcreator_showWizardCategories() {
-   $tree = PluginFormcreatorCategory::getCategoryTree();
-   echo json_encode($tree, JSON_UNESCAPED_SLASHES);
+function plugin_formcreator_showWizardCategories()
+{
+    $tree = PluginFormcreatorCategory::getCategoryTree();
+    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
-function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
-   $formList = PluginFormcreatorForm::getFormList($rootCategory, $keywords, $helpdeskHome);
-   echo json_encode($formList, JSON_UNESCAPED_SLASHES);
+function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false)
+{
+    $formList = PluginFormcreatorForm::getFormList($rootCategory, $keywords, $helpdeskHome);
+    echo json_encode($formList, JSON_UNESCAPED_SLASHES);
 }

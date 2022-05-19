@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,11 +29,13 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-interface PluginFormcreatorQuestionParameterInterface {
+interface PluginFormcreatorQuestionParameterInterface
+{
    /**
     * set field and options related to this question parameter
     *
@@ -40,26 +43,25 @@ interface PluginFormcreatorQuestionParameterInterface {
     * @param array $options
     * @return void
     */
-   public function setField(PluginFormcreatorFieldInterface $field, array $options);
+    public function setField(PluginFormcreatorFieldInterface $field, array $options);
 
    /**
     * Gets the HTML form part for the parameters
     * @param PluginFormcreatorQuestion $question question associated to the field, itself associated to the parameter
     * @return string HTML
     */
-   public function getParameterForm(PluginFormcreatorQuestion $question);
+    public function getParameterForm(PluginFormcreatorQuestion $question);
 
    /**
     * Gets the name of the parameter
     * @return string
     */
-   public function getFieldName();
+    public function getFieldName();
 
    /**
     * Gets the size of the parameter
     * Possible values are 0 for 2 table columns, or 1 for 4 table columns
     * @return integer
     */
-   public function getParameterFormSize();
-
+    public function getParameterFormSize();
 }

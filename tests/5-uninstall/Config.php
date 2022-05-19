@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,79 +37,82 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class Config extends CommonTestCase
 {
+    public function beforeTestMethod($method)
+    {
+        parent::beforeTestMethod($method);
+        $this->setupGLPIFramework();
+    }
 
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
-      $this->setupGLPIFramework();
-   }
+    public function testUninstallPlugin()
+    {
+        global $DB;
 
-   public function testUninstallPlugin() {
-      global $DB;
+        $pluginName = TEST_PLUGIN_NAME;
 
-      $pluginName = TEST_PLUGIN_NAME;
+        $plugin = new \Plugin();
+        $plugin->getFromDBbyDir($pluginName);
 
-      $plugin = new \Plugin();
-      $plugin->getFromDBbyDir($pluginName);
+       // Uninstall the plugin
+        $log = '';
+        ob_start(function ($in) use (&$log) {
+            $log .= $in;
+            return '';
+        });
+        $plugin->uninstall($plugin->getID());
+        ob_end_clean();
 
-      // Uninstall the plugin
-      $log = '';
-      ob_start(function($in) use (&$log) {
-         $log .= $in;
-         return '';
-      });
-      $plugin->uninstall($plugin->getID());
-      ob_end_clean();
+       // Check the plugin is not installed
+        $plugin->getFromDBbyDir(strtolower($pluginName));
+        $this->integer((int) $plugin->fields['state'])->isEqualTo(\Plugin::NOTINSTALLED);
 
-      // Check the plugin is not installed
-      $plugin->getFromDBbyDir(strtolower($pluginName));
-      $this->integer((int) $plugin->fields['state'])->isEqualTo(\Plugin::NOTINSTALLED);
+       // Check all plugin's tables are dropped
+        $tables = [];
+        $result = $DB->query("SHOW TABLES LIKE 'glpi_plugin_" . $pluginName . "_%'");
+        while ($row = $DB->fetchAssoc($result)) {
+            $tables[] = array_pop($row);
+        }
+        $this->integer(count($tables))->isEqualTo(0, "not deleted tables \n" . json_encode($tables, JSON_PRETTY_PRINT));
 
-      // Check all plugin's tables are dropped
-      $tables = [];
-      $result = $DB->query("SHOW TABLES LIKE 'glpi_plugin_" . $pluginName . "_%'");
-      while ($row = $DB->fetchAssoc($result)) {
-         $tables[] = array_pop($row);
-      }
-      $this->integer(count($tables))->isEqualTo(0, "not deleted tables \n" . json_encode($tables, JSON_PRETTY_PRINT));
+       // Check the notifications of the plugin no longer exist
+        $rows = $DB->request([
+            'COUNT' => 'cpt',
+            'FROM'  => \Notification::getTable(),
+            'WHERE' => [
+                'itemtype' => 'PluginFormcreatorFormAnswer',
+            ]
+        ])->current();
+        $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
-      // Check the notifications of the plugin no longer exist
-      $rows = $DB->request([
-         'COUNT' => 'cpt',
-         'FROM'  => \Notification::getTable(),
-         'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
-         ]
-      ])->current();
-      $this->integer((int)$rows['cpt'])->isEqualTo(0);
+        $rows = $DB->request([
+            'COUNT' => 'cpt',
+            'FROM'  => \NotificationTemplate::getTable(),
+            'WHERE' => [
+                'itemtype' => 'PluginFormcreatorFormAnswer',
+            ]
+        ])->current();
+        $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
-      $rows = $DB->request([
-         'COUNT' => 'cpt',
-         'FROM'  => \NotificationTemplate::getTable(),
-         'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
-         ]
-      ])->current();
-      $this->integer((int)$rows['cpt'])->isEqualTo(0);
+        $this->checkRequestType();
+        $this->checkDashboard();
 
-      $this->checkRequestType();
-      $this->checkDashboard();
+       // TODO: need to find a reliable way to detect not clenaed
+       // - NotificationTemplateTranslation
+       // - Notification_NotificationTemplate
+    }
 
-      // TODO: need to find a reliable way to detect not clenaed
-      // - NotificationTemplateTranslation
-      // - Notification_NotificationTemplate
-   }
+    public function checkDashboard()
+    {
+       // Check the dashboard does not exists
+        $dashboard = new Dashboard();
+        $dashboard->getFromDB('plugin_formcreator_issue_counters');
+        $this->boolean($dashboard->isNewItem())->isTrue();
+    }
 
-   public function checkDashboard() {
-      // Check the dashboard does not exists
-      $dashboard = new Dashboard();
-      $dashboard->getFromDB('plugin_formcreator_issue_counters');
-      $this->boolean($dashboard->isNewItem())->isTrue();
-   }
-
-   public function checkRequestType() {
-      // request type must persist after uninstall
-      $requestType = new \RequestType();
-      $requestType->getFromDBByCrit(['name' => 'Formcreator']);
-      $this->boolean($requestType->isNewItem())->isFalse();
-   }
+    public function checkRequestType()
+    {
+       // request type must persist after uninstall
+        $requestType = new \RequestType();
+        $requestType->getFromDBByCrit(['name' => 'Formcreator']);
+        $this->boolean($requestType->isNewItem())->isFalse();
+    }
 }

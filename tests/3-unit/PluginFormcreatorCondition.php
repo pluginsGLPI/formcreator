@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,168 +34,175 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorCondition extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
+class PluginFormcreatorCondition extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        parent::beforeTestMethod($method);
 
-      $this->login('glpi', 'glpi');
-   }
+        $this->login('glpi', 'glpi');
+    }
 
-   public function testGetEnumShowLogic() {
-      $output = \PluginFormcreatorCondition::getEnumShowLogic();
-      $this->array($output)
+    public function testGetEnumShowLogic()
+    {
+        $output = \PluginFormcreatorCondition::getEnumShowLogic();
+        $this->array($output)
          ->isIdenticalTo([
-            '1' => 'AND',
-            '2' => 'OR'
+             '1' => 'AND',
+             '2' => 'OR'
          ]);
-   }
+    }
 
-   public function testGetEnumShowCondition() {
-      $output = \PluginFormcreatorCondition::getEnumShowCondition();
-      $this->array($output)
+    public function testGetEnumShowCondition()
+    {
+        $output = \PluginFormcreatorCondition::getEnumShowCondition();
+        $this->array($output)
          ->isIdenticalTo([
-            '1' => '=',
-            '2' => '≠',
-            '3' => '<',
-            '4' => '>',
-            '5' => '≤',
-            '6' => '≥',
-            '7' => 'is visible',
-            '8' => 'is not visible',
-            '9' => 'regular expression matches'
+             '1' => '=',
+             '2' => '≠',
+             '3' => '<',
+             '4' => '>',
+             '5' => '≤',
+             '6' => '≥',
+             '7' => 'is visible',
+             '8' => 'is not visible',
+             '9' => 'regular expression matches'
          ]);
-   }
+    }
 
-   public function testGetConditionsFromItem() {
-      // crete a question with some conditions
-      $question = $this->getQuestion();
+    public function testGetConditionsFromItem()
+    {
+       // crete a question with some conditions
+        $question = $this->getQuestion();
 
-      $condition = $this->newTestedInstance();
-      $condition->add([
-         'itemtype'  => \PluginFormcreatorQuestion::class,
-         'items_id' => $question->getID(),
-      ]);
-      $this->boolean($condition->isNewItem())->isFalse();
+        $condition = $this->newTestedInstance();
+        $condition->add([
+            'itemtype'  => \PluginFormcreatorQuestion::class,
+            'items_id' => $question->getID(),
+        ]);
+        $this->boolean($condition->isNewItem())->isFalse();
 
-      $condition = $this->newTestedInstance();
-      $condition->add([
-         'itemtype'  => \PluginFormcreatorQuestion::class,
-         'items_id' => $question->getID(),
-      ]);
-      $this->boolean($condition->isNewItem())->isFalse();
+        $condition = $this->newTestedInstance();
+        $condition->add([
+            'itemtype'  => \PluginFormcreatorQuestion::class,
+            'items_id' => $question->getID(),
+        ]);
+        $this->boolean($condition->isNewItem())->isFalse();
 
-      // Check that all conditions are retrieved
-      $output = \PluginFormcreatorCondition::getConditionsFromItem($question);
-      $this->array($output)->hasSize(2);
-   }
+       // Check that all conditions are retrieved
+        $output = \PluginFormcreatorCondition::getConditionsFromItem($question);
+        $this->array($output)->hasSize(2);
+    }
 
-   public function testImport() {
-      $question = $this->getQuestion();
-      $form = new \PluginFormcreatorForm();
-      $form = \PluginFormcreatorForm::getByItem($question);
-      $question2 = $this->getQuestion([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
+    public function testImport()
+    {
+        $question = $this->getQuestion();
+        $form = new \PluginFormcreatorForm();
+        $form = \PluginFormcreatorForm::getByItem($question);
+        $question2 = $this->getQuestion([
+            'plugin_formcreator_forms_id' => $form->getID(),
+        ]);
 
-      $input = [
-         'plugin_formcreator_questions_id' => $question2->fields['uuid'],
-         'show_value'                      => 'foo',
-         'show_condition'                  => \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-         'show_logic'                      => '1',
-         'order'                           => '1',
-         'itemtype'                        => \PluginFormcreatorQuestion::class,
-         'uuid'                            => plugin_formcreator_getUuid(),
-      ];
+        $input = [
+            'plugin_formcreator_questions_id' => $question2->fields['uuid'],
+            'show_value'                      => 'foo',
+            'show_condition'                  => \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+            'show_logic'                      => '1',
+            'order'                           => '1',
+            'itemtype'                        => \PluginFormcreatorQuestion::class,
+            'uuid'                            => plugin_formcreator_getUuid(),
+        ];
 
-      // Check the import is successful
-      $linker = new \PluginFormcreatorLinker();
-      $linker->addObject($question2->fields['uuid'], $question2);
-      $conditionId = \PluginFormcreatorCondition::import($linker, $input, $question->getID());
-      $this->integer($conditionId)->isGreaterThan(0);
+       // Check the import is successful
+        $linker = new \PluginFormcreatorLinker();
+        $linker->addObject($question2->fields['uuid'], $question2);
+        $conditionId = \PluginFormcreatorCondition::import($linker, $input, $question->getID());
+        $this->integer($conditionId)->isGreaterThan(0);
 
-      // Check the import fails if uuid is missing
-      unset($input['uuid']);
-      $this->exception(
-         function() use($linker, $input) {
-            \PluginFormcreatorCondition::import($linker, $input);
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory for Condition');
+       // Check the import fails if uuid is missing
+        unset($input['uuid']);
+        $this->exception(
+            function () use ($linker, $input) {
+                \PluginFormcreatorCondition::import($linker, $input);
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+        ->hasMessage('UUID or ID is mandatory for Condition');
 
-      // Check a new item is created when id is not an uuid (duplication use case)
-      $linker = new \PluginFormcreatorLinker();
-      $linker->addObject($question2->getID(), $question2);
-      $input['id'] = $conditionId;
-      $input['plugin_formcreator_questions_id'] = $question2->getID();
-      $conditionId2 = \PluginFormcreatorCondition::import($linker, $input, $question->getID());
-      $this->variable($conditionId2)->isNotFalse();
-      $this->integer((int) $conditionId)->isNotEqualTo($conditionId2);
-   }
+       // Check a new item is created when id is not an uuid (duplication use case)
+        $linker = new \PluginFormcreatorLinker();
+        $linker->addObject($question2->getID(), $question2);
+        $input['id'] = $conditionId;
+        $input['plugin_formcreator_questions_id'] = $question2->getID();
+        $conditionId2 = \PluginFormcreatorCondition::import($linker, $input, $question->getID());
+        $this->variable($conditionId2)->isNotFalse();
+        $this->integer((int) $conditionId)->isNotEqualTo($conditionId2);
+    }
 
-   public function testExport() {
-      $instance = $this->newTestedInstance();
+    public function testExport()
+    {
+        $instance = $this->newTestedInstance();
 
-      // Try to export an empty item
-      $this->exception(function () use ($instance) {
-         $instance->export();
-      })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
+       // Try to export an empty item
+        $this->exception(function () use ($instance) {
+            $instance->export();
+        })->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ExportFailureException::class);
 
-      // Prepare an item to export
-      $form = $this->getForm();
-      $question1 = $this->getQuestion([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $question2 = $this->getQuestion([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
-         '_conditions' => [
+       // Prepare an item to export
+        $form = $this->getForm();
+        $question1 = $this->getQuestion([
+            'plugin_formcreator_forms_id' => $form->getID(),
+        ]);
+        $question2 = $this->getQuestion([
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+            '_conditions' => [
             // 'id' => $question2->getID(),
-            'plugin_formcreator_questions_id' => [
-               $question1->getID(),
+                'plugin_formcreator_questions_id' => [
+                    $question1->getID(),
+                ],
+                'show_condition' => [
+                    \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                ],
+                'show_value' => [
+                    'foo',
+                ],
+                'show_logic' => [
+                    \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+                ]
             ],
-            'show_condition' =>[
-               \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
-            ],
-            'show_value' => [
-               'foo',
-            ],
-            'show_logic' => [
-               \PluginFormcreatorCondition::SHOW_LOGIC_AND,
-            ]
-         ],
-      ]);
-      $instance = $this->getTargetTicket();
-      $instance->getFromDB($instance->getID());
+        ]);
+        $instance = $this->getTargetTicket();
+        $instance->getFromDB($instance->getID());
 
-      $instance = $this->newTestedInstance();
-      $instance->getFromDBByCrit([
-         'itemtype' => \PluginFormcreatorQuestion::class,
-         'items_id' => $question2->getID(),
-         'order' => '1',
-      ]);
+        $instance = $this->newTestedInstance();
+        $instance->getFromDBByCrit([
+            'itemtype' => \PluginFormcreatorQuestion::class,
+            'items_id' => $question2->getID(),
+            'order' => '1',
+        ]);
 
-      // Export the item without the ID and with UUID
-      $output = $instance->export(false);
+       // Export the item without the ID and with UUID
+        $output = $instance->export(false);
 
-      // Test the exported data
-      $fieldsWithoutID = [
-         'itemtype',
-         'plugin_formcreator_questions_id',
-         'show_condition',
-         'show_value',
-         'show_logic',
-         'order',
-      ];
-      $extraFields = [];
+       // Test the exported data
+        $fieldsWithoutID = [
+            'itemtype',
+            'plugin_formcreator_questions_id',
+            'show_condition',
+            'show_value',
+            'show_logic',
+            'order',
+        ];
+        $extraFields = [];
 
-      $this->array($output)
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
 
-      // Export the item without the UUID and with ID
-      $output = $instance->export(true);
-      $this->array($output)
+       // Export the item without the UUID and with ID
+        $output = $instance->export(true);
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
-   }
+    }
 }

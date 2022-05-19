@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -34,441 +35,466 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use User;
 
-class ActorField extends CommonTestCase {
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Actor');
-   }
+class ActorField extends CommonTestCase
+{
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Actor');
+    }
 
-   public function providerGetValue() {
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $userId = $user->getID();
-      $dataset = [
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode([]),
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+    public function providerGetValue()
+    {
+        $user = new \User();
+        $user->getFromDBbyName('glpi');
+        $userId = $user->getID();
+        $dataset = [
+            [
+                'fields'          => [
+                    'fieldtype'       => 'actor',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => json_encode([]),
+                    'values'          => '',
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                ],
+                'expectedValue'   => [''],
+                'expectedIsValid' => true
             ],
-            'expectedValue'   => [''],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode([]),
-               'values'          => 'glpi',
-               'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            [
+                'fields'          => [
+                    'fieldtype'       => 'actor',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => json_encode([]),
+                    'values'          => 'glpi',
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                ],
+                'expectedValue'   => [''],
+                'expectedIsValid' => true
             ],
-            'expectedValue'   => [''],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode(['email@something.com']),
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            [
+                'fields'          => [
+                    'fieldtype'       => 'actor',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => json_encode(['email@something.com']),
+                    'values'          => '',
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                ],
+                'expectedValue'   => ['email@something.com'],
+                'expectedIsValid' => true
             ],
-            'expectedValue'   => ['email@something.com'],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => json_encode([$userId, 'email@something.com']),
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+            [
+                'fields'          => [
+                    'fieldtype'       => 'actor',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => json_encode([$userId, 'email@something.com']),
+                    'values'          => '',
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                ],
+                'expectedValue'   => ['glpi', 'email@something.com'],
+                'expectedIsValid' => true
             ],
-            'expectedValue'   => ['glpi', 'email@something.com'],
-            'expectedIsValid' => true
-         ],
-      ];
+        ];
 
-      return $dataset;
-   }
+        return $dataset;
+    }
 
-   public function providerIsValid() {
-      return $this->providerGetValue();
-   }
+    public function providerIsValid()
+    {
+        return $this->providerGetValue();
+    }
 
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity) {
-      $question = $this->getQuestion($fields);
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($fields['default_values']);
+    public function testIsValid($fields, $expectedValue, $expectedValidity)
+    {
+        $question = $this->getQuestion($fields);
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
-   }
+        $isValid = $instance->isValid();
+        $this->boolean((bool) $isValid)->isEqualTo($expectedValidity);
+    }
 
-   public function providerSerializeValue() {
-      return [
-         [
-            'value'     => null,
-            'expected'  => json_encode([]),
-         ],
-         [
-            'value'     => [],
-            'expected'  => json_encode([]),
-         ],
-         [
-            'value'     => ['2'],
-            'expected'  => json_encode(['2']),
-         ],
-         [
-            'value'     => ['2', '5'],
-            'expected'  => json_encode(['2','5']),
-         ],
-         [
-            'value'     => ['2', '5', 'user@localhost.local'],
-            'expected'  => json_encode(['2','5','user@localhost.local']),
-         ],
-         [
-            'value'     => ['user@localhost.local'],
-            'expected'  => json_encode(['user@localhost.local']),
-         ],
-      ];
-   }
+    public function providerSerializeValue()
+    {
+        return [
+            [
+                'value'     => null,
+                'expected'  => json_encode([]),
+            ],
+            [
+                'value'     => [],
+                'expected'  => json_encode([]),
+            ],
+            [
+                'value'     => ['2'],
+                'expected'  => json_encode(['2']),
+            ],
+            [
+                'value'     => ['2', '5'],
+                'expected'  => json_encode(['2','5']),
+            ],
+            [
+                'value'     => ['2', '5', 'user@localhost.local'],
+                'expected'  => json_encode(['2','5','user@localhost.local']),
+            ],
+            [
+                'value'     => ['user@localhost.local'],
+                'expected'  => json_encode(['user@localhost.local']),
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerSerializeValue
     */
-   public function testSerializeValue($value, $expected) {
-      $question = $this->getQuestion([
-         'fieldtype' => 'actor'
-      ]);
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testSerializeValue($value, $expected)
+    {
+        $question = $this->getQuestion([
+            'fieldtype' => 'actor'
+        ]);
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
+        $output = $instance->serializeValue();
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerDeserializeValue() {
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $glpiId = $user->getID();
-      $user->getFromDBbyName('normal');
-      $normalId = $user->getID();
-      return [
-         [
-            'value'     => null,
-            'expected'  => [],
-         ],
-         [
-            'value'     => '',
-            'expected'  => [],
-         ],
-         [
-            'value'     => json_encode(["$glpiId"]),
-            'expected'  => ['glpi'],
-         ],
-         [
-            'value'     => json_encode(["$glpiId","$normalId"]),
-            'expected'  => ['glpi', 'normal'],
-         ],
-         [
-            'value'     => json_encode(["$glpiId","$normalId","user@localhost.local"]),
-            'expected'  => ['glpi', 'normal', 'user@localhost.local'],
-         ],
-         [
-            'value'     => json_encode(["user@localhost.local"]),
-            'expected'  => ['user@localhost.local'],
-         ],
-      ];
-   }
+    public function providerDeserializeValue()
+    {
+        $user = new \User();
+        $user->getFromDBbyName('glpi');
+        $glpiId = $user->getID();
+        $user->getFromDBbyName('normal');
+        $normalId = $user->getID();
+        return [
+            [
+                'value'     => null,
+                'expected'  => [],
+            ],
+            [
+                'value'     => '',
+                'expected'  => [],
+            ],
+            [
+                'value'     => json_encode(["$glpiId"]),
+                'expected'  => ['glpi'],
+            ],
+            [
+                'value'     => json_encode(["$glpiId","$normalId"]),
+                'expected'  => ['glpi', 'normal'],
+            ],
+            [
+                'value'     => json_encode(["$glpiId","$normalId","user@localhost.local"]),
+                'expected'  => ['glpi', 'normal', 'user@localhost.local'],
+            ],
+            [
+                'value'     => json_encode(["user@localhost.local"]),
+                'expected'  => ['user@localhost.local'],
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerDeserializeValue
     */
-   public function testDeserializeValue($value, $expected) {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetText('', false);
-      $this->string($output)->isEqualTo(implode(', ', $expected));
-   }
+    public function testDeserializeValue($value, $expected)
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $instance->deserializeValue($value);
+        $output = $instance->getValueForTargetText('', false);
+        $this->string($output)->isEqualTo(implode(', ', $expected));
+    }
 
-   public function providerGetValueForDesign() {
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $glpiId = $user->getID();
-      $user->getFromDBbyName('normal');
-      $normalId = $user->getID();
-      return [
-         [
-            'value' => '',
-            'expected' => '',
-         ],
-         [
-            'value'     => json_encode(["$glpiId"]),
-            'expected'  => "glpi",
-         ],
-         [
-            'value'     => json_encode(["$glpiId", "$normalId"]),
-            'expected'  => "glpi\r\nnormal",
-         ],
-         [
-            'value'     => json_encode(["$glpiId", "$normalId", "user@localhost.local"]),
-            'expected'  => "glpi\r\nnormal\r\nuser@localhost.local",
-         ],
-         [
-            'value'     => json_encode(["user@localhost.local"]),
-            'expected'  => "user@localhost.local",
-         ],
-      ];
-   }
+    public function providerGetValueForDesign()
+    {
+        $user = new \User();
+        $user->getFromDBbyName('glpi');
+        $glpiId = $user->getID();
+        $user->getFromDBbyName('normal');
+        $normalId = $user->getID();
+        return [
+            [
+                'value' => '',
+                'expected' => '',
+            ],
+            [
+                'value'     => json_encode(["$glpiId"]),
+                'expected'  => "glpi",
+            ],
+            [
+                'value'     => json_encode(["$glpiId", "$normalId"]),
+                'expected'  => "glpi\r\nnormal",
+            ],
+            [
+                'value'     => json_encode(["$glpiId", "$normalId", "user@localhost.local"]),
+                'expected'  => "glpi\r\nnormal\r\nuser@localhost.local",
+            ],
+            [
+                'value'     => json_encode(["user@localhost.local"]),
+                'expected'  => "user@localhost.local",
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForDesign
     */
-   public function testGetValueForDesign($value, $expected) {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $instance->deserializeValue($value);
-      $output = $instance->getValueForDesign();
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetValueForDesign($value, $expected)
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $instance->deserializeValue($value);
+        $output = $instance->getValueForDesign();
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerEquals() {
-      $glpiUser = new \User();
-      $normalUser = new \User();
-      $glpiUser->getFromDBByName('glpi');
-      $normalUser->getFromDBByName('normal');
+    public function providerEquals()
+    {
+        $glpiUser = new \User();
+        $normalUser = new \User();
+        $glpiUser->getFromDBByName('glpi');
+        $normalUser->getFromDBByName('normal');
 
-      $dataset = [
-         [
-            'value' => 'glpi',
-            'answer' => '',
-            'expected' => false,
-         ],
-         [
-            'value' => 'glpi',
-            'answer' => [$glpiUser->getID()],
-            'expected' => true,
-         ],
-         [
-            'value' => 'glpi',
-            'answer' => [$glpiUser->getID(), $normalUser->getID()],
-            'expected' => true,
-         ],
-         [
-            'value' => 'glpi',
-            'answer' => [$normalUser->getID()],
-            'expected' => false,
-         ],
-         [
-            'value' => 'nonexisting',
-            'answer' => [$normalUser->getID()],
-            'expected' => false,
-         ],
-         [
-            'value' => 'nonexisting',
-            'answer' => '',
-            'expected' => false,
-         ],
-      ];
+        $dataset = [
+            [
+                'value' => 'glpi',
+                'answer' => '',
+                'expected' => false,
+            ],
+            [
+                'value' => 'glpi',
+                'answer' => [$glpiUser->getID()],
+                'expected' => true,
+            ],
+            [
+                'value' => 'glpi',
+                'answer' => [$glpiUser->getID(), $normalUser->getID()],
+                'expected' => true,
+            ],
+            [
+                'value' => 'glpi',
+                'answer' => [$normalUser->getID()],
+                'expected' => false,
+            ],
+            [
+                'value' => 'nonexisting',
+                'answer' => [$normalUser->getID()],
+                'expected' => false,
+            ],
+            [
+                'value' => 'nonexisting',
+                'answer' => '',
+                'expected' => false,
+            ],
+        ];
 
-      return $dataset;
-   }
+        return $dataset;
+    }
 
    /**
     * @dataProvider providerEquals
     */
-   public function testEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->equals($value))->isEqualTo($expected);
-   }
+    public function testEquals($value, $answer, $expected)
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+        $this->boolean($instance->equals($value))->isEqualTo($expected);
+    }
 
-   public function providerNotEquals() {
-      $glpiUser = new \User();
-      $normalUser = new \User();
-      $glpiUser->getFromDBByName('glpi');
-      $normalUser->getFromDBByName('normal');
+    public function providerNotEquals()
+    {
+        $glpiUser = new \User();
+        $normalUser = new \User();
+        $glpiUser->getFromDBByName('glpi');
+        $normalUser->getFromDBByName('normal');
 
-      $dataset = [
-         [
-            'value' => 'glpi',
-            'answer' => '',
-            'expected' => true,
-         ],
-         [
-            'value' => 'glpi',
-            'answer' => [$glpiUser->getID()],
-            'expected' => false,
-         ],
-         [
-            'value' => 'glpi',
-            'answer' => [$glpiUser->getID(), $normalUser->getID()],
-            'expected' => false,
-         ],
-         [
-            'value' => 'glpi',
-            'answer' => [$normalUser->getID()],
-            'expected' => true,
-         ],
-         [
-            'value' => 'nonexisting',
-            'answer' => [$normalUser->getID()],
-            'expected' => true,
-         ],
-         [
-            'value' => 'nonexisting',
-            'answer' => '',
-            'expected' => true,
-         ],
-      ];
+        $dataset = [
+            [
+                'value' => 'glpi',
+                'answer' => '',
+                'expected' => true,
+            ],
+            [
+                'value' => 'glpi',
+                'answer' => [$glpiUser->getID()],
+                'expected' => false,
+            ],
+            [
+                'value' => 'glpi',
+                'answer' => [$glpiUser->getID(), $normalUser->getID()],
+                'expected' => false,
+            ],
+            [
+                'value' => 'glpi',
+                'answer' => [$normalUser->getID()],
+                'expected' => true,
+            ],
+            [
+                'value' => 'nonexisting',
+                'answer' => [$normalUser->getID()],
+                'expected' => true,
+            ],
+            [
+                'value' => 'nonexisting',
+                'answer' => '',
+                'expected' => true,
+            ],
+        ];
 
-      return $dataset;
-   }
+        return $dataset;
+    }
 
    /**
     * @dataProvider providerNotEquals
     */
-   public function testNotEquals($value, $answer, $expected) {
-      $question = $this->getQuestion(['fieldtype' => 'actor']);
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
-   }
+    public function testNotEquals($value, $answer, $expected)
+    {
+        $question = $this->getQuestion(['fieldtype' => 'actor']);
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+        $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+    }
 
-   public function testGreaterThan() {
-      $this->exception(
-         function() {
-            $instance = $this->newTestedInstance($this->getQuestion());
-            $instance->greaterThan('');
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
-   }
+    public function testGreaterThan()
+    {
+        $this->exception(
+            function () {
+                $instance = $this->newTestedInstance($this->getQuestion());
+                $instance->greaterThan('');
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
+    }
 
-   public function testLessThan() {
-      $this->exception(
-         function() {
-            $instance = $this->newTestedInstance($this->getQuestion());
-            $instance->lessThan('');
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
-   }
+    public function testLessThan()
+    {
+        $this->exception(
+            function () {
+                $instance = $this->newTestedInstance($this->getQuestion());
+                $instance->lessThan('');
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isFalse();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isFalse();
+    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
+    public function testIsPrerequisites()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(true);
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function providerIsValidValue() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $missingUserId = (new \User())->add([
-         'name' => $this->getUniqueString(),
-      ]);
-      (new \User())->delete([
-         'id' => $missingUserId,
-      ]);
-      return [
-         'empty string' => [
-            'instance' => $instance,
-            'value' => '',
-            'expected' => true,
-         ],
-         'empty array' => [
-            'instance' => $instance,
-            'value' => [],
-            'expected' => true,
-         ],
-         'user ID' => [
-            'instance' => $instance,
-            'value' => ['4'],
-            'expected' => true,
-         ],
-         'email' => [
-            'instance' => $instance,
-            'value' => ['test@foo.com'],
-            'expected' => true,
-         ],
-         'ID and email' => [
-            'instance' => $instance,
-            'value' => ['4', 'test@foo.com'],
-            'expected' => true,
-         ],
-         'invalid email' => [
-            'instance' => $instance,
-            'value' => ['foo'],
-            'expected' => false,
-         ],
-         'invalid user' => [
-            'instance' => $instance,
-            'value' => ["$missingUserId"],
-            'expected' => true,
-         ],
-      ];
-   }
+    public function providerIsValidValue()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $missingUserId = (new \User())->add([
+            'name' => $this->getUniqueString(),
+        ]);
+        (new \User())->delete([
+            'id' => $missingUserId,
+        ]);
+        return [
+            'empty string' => [
+                'instance' => $instance,
+                'value' => '',
+                'expected' => true,
+            ],
+            'empty array' => [
+                'instance' => $instance,
+                'value' => [],
+                'expected' => true,
+            ],
+            'user ID' => [
+                'instance' => $instance,
+                'value' => ['4'],
+                'expected' => true,
+            ],
+            'email' => [
+                'instance' => $instance,
+                'value' => ['test@foo.com'],
+                'expected' => true,
+            ],
+            'ID and email' => [
+                'instance' => $instance,
+                'value' => ['4', 'test@foo.com'],
+                'expected' => true,
+            ],
+            'invalid email' => [
+                'instance' => $instance,
+                'value' => ['foo'],
+                'expected' => false,
+            ],
+            'invalid user' => [
+                'instance' => $instance,
+                'value' => ["$missingUserId"],
+                'expected' => true,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerIsValidValue
     */
-   public function testIsValidValue($instance, $value, $expected) {
-      $output = $instance->isValidValue($value);
-      $this->boolean($output)->isEqualTo($expected);
-   }
+    public function testIsValidValue($instance, $value, $expected)
+    {
+        $output = $instance->isValidValue($value);
+        $this->boolean($output)->isEqualTo($expected);
+    }
 
-   public function providerGetValueForApi() {
-      return [
-         [
-            'input'    => json_encode([2, 'email@example.com']),
-            'expected' => [
-               [User::class, 2],
-               'email@example.com',
+    public function providerGetValueForApi()
+    {
+        return [
+            [
+                'input'    => json_encode([2, 'email@example.com']),
+                'expected' => [
+                    [User::class, 2],
+                    'email@example.com',
+                ]
             ]
-         ]
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion();
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion();
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->array($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->array($output)->isEqualTo($expected);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,38 +30,38 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   http_response_code(404);
-   exit();
+    http_response_code(404);
+    exit();
 }
 
 if (!isset($_POST['action'])) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }
 
 switch ($_POST['action']) {
-   case 'add':
-      $id = (int) $_POST['id'];
-      $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? 0;
-      $target_actor = new PluginFormcreatorTarget_Actor();
-      if ($target_actor->add($_POST) === false) {
-         http_response_code(500);
-         Session::addMessageAfterRedirect(__('Failed to add the actor', 'formcreator'), false, ERROR, true);
-      }
-      break;
+    case 'add':
+        $id = (int) $_POST['id'];
+        $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? 0;
+        $target_actor = new PluginFormcreatorTarget_Actor();
+        if ($target_actor->add($_POST) === false) {
+            http_response_code(500);
+            Session::addMessageAfterRedirect(__('Failed to add the actor', 'formcreator'), false, ERROR, true);
+        }
+        break;
 
-   case 'delete':
-      $target_actor = new PluginFormcreatorTarget_Actor();
-      $success = $target_actor->delete([
-         'id' => (int) $_POST['id']
-      ]);
-      if (!$success) {
-         http_response_code(400);
-         Session::addMessageAfterRedirect(__('Failed to delete the actor', 'formcreator'), false, ERROR, true);
-      }
-      break;
+    case 'delete':
+        $target_actor = new PluginFormcreatorTarget_Actor();
+        $success = $target_actor->delete([
+            'id' => (int) $_POST['id']
+        ]);
+        if (!$success) {
+            http_response_code(400);
+            Session::addMessageAfterRedirect(__('Failed to delete the actor', 'formcreator'), false, ERROR, true);
+        }
+        break;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -47,89 +48,92 @@ class CompileScssCommand extends Command
     *
     * @var integer
     */
-   const ERROR_UNABLE_TO_WRITE_COMPILED_FILE = 1;
+    const ERROR_UNABLE_TO_WRITE_COMPILED_FILE = 1;
 
-   protected function configure() {
+    protected function configure()
+    {
 
-      $this
+        $this
          ->setName('glpi:plugins:formcreator:scss')
          ->setDescription("Compile SCSS");
-   }
+    }
 
-   protected function initialize(InputInterface $input, OutputInterface $output) {
-      $compile_directory = Plugin::getPhpDir('formcreator') . '/css_compiled';
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $compile_directory = Plugin::getPhpDir('formcreator') . '/css_compiled';
 
-      if (!@is_dir($compile_directory) && !@mkdir($compile_directory)) {
-         throw new \RuntimeException(
-            sprintf(
-               'Destination directory "%s" cannot be accessed.',
-               $compile_directory
-            )
-         );
-      }
+        if (!@is_dir($compile_directory) && !@mkdir($compile_directory)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Destination directory "%s" cannot be accessed.',
+                    $compile_directory
+                )
+            );
+        }
 
-      $this->addOption(
-         'file',
-         'f',
-         InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-         'File to compile (compile main style by default)'
-      );
-   }
+        $this->addOption(
+            'file',
+            'f',
+            InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            'File to compile (compile main style by default)'
+        );
+    }
 
-   protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
 
-      $files = $input->getOption('file');
+        $files = $input->getOption('file');
 
-      if (empty($files)) {
-         $root_path = realpath(Plugin::getPhpDir('formcreator'));
+        if (empty($files)) {
+            $root_path = realpath(Plugin::getPhpDir('formcreator'));
 
-         $css_dir_iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($root_path . '/css'),
-            RecursiveIteratorIterator::SELF_FIRST
-         );
-         /** @var SplFileInfo $file */
-         foreach ($css_dir_iterator as $file) {
-            if (!$file->isReadable() || !$file->isFile() || $file->getExtension() !== 'scss') {
-               continue;
+            $css_dir_iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($root_path . '/css'),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+           /** @var SplFileInfo $file */
+            foreach ($css_dir_iterator as $file) {
+                if (!$file->isReadable() || !$file->isFile() || $file->getExtension() !== 'scss') {
+                    continue;
+                }
+
+                 $files[] = str_replace($root_path . '/', '', dirname($file->getRealPath()))
+                 . '/'
+                 . preg_replace('/^_?(.*)\.scss$/', '$1', $file->getBasename());
             }
+        }
 
-            $files[] = str_replace($root_path . '/', '', dirname($file->getRealPath()))
-               . '/'
-               . preg_replace('/^_?(.*)\.scss$/', '$1', $file->getBasename());
-         }
-      }
-
-      foreach ($files as $file) {
-         $output->writeln(
-            '<comment>' . sprintf('Processing "%s".', $file) . '</comment>',
-            OutputInterface::VERBOSITY_VERBOSE
-         );
-
-         $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($file) . ".min.css";
-         $css = Html::compileScss(
-            [
-               'file'    => Plugin::getPhpDir('formcreator', false) . '/' . $file,
-               'nocache' => true,
-               'debug'   => true,
-            ]
-         );
-
-         if (strlen($css) === @file_put_contents($compiled_path, $css)) {
-            $message = sprintf('"%s" compiled successfully in "%s".', $file, $compiled_path);
+        foreach ($files as $file) {
             $output->writeln(
-               '<info>' . $message . '</info>',
-               OutputInterface::VERBOSITY_NORMAL
+                '<comment>' . sprintf('Processing "%s".', $file) . '</comment>',
+                OutputInterface::VERBOSITY_VERBOSE
             );
-         } else {
-            $message = sprintf('Unable to write compiled CSS in "%s".', $compiled_path);
-            $output->writeln(
-               '<error>' . $message . '</error>',
-               OutputInterface::VERBOSITY_QUIET
-            );
-            return self::ERROR_UNABLE_TO_WRITE_COMPILED_FILE;
-         }
-      }
 
-      return 0; // Success
-   }
+            $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($file) . ".min.css";
+            $css = Html::compileScss(
+                [
+                    'file'    => Plugin::getPhpDir('formcreator', false) . '/' . $file,
+                    'nocache' => true,
+                    'debug'   => true,
+                ]
+            );
+
+            if (strlen($css) === @file_put_contents($compiled_path, $css)) {
+                $message = sprintf('"%s" compiled successfully in "%s".', $file, $compiled_path);
+                $output->writeln(
+                    '<info>' . $message . '</info>',
+                    OutputInterface::VERBOSITY_NORMAL
+                );
+            } else {
+                $message = sprintf('Unable to write compiled CSS in "%s".', $compiled_path);
+                $output->writeln(
+                    '<error>' . $message . '</error>',
+                    OutputInterface::VERBOSITY_QUIET
+                );
+                return self::ERROR_UNABLE_TO_WRITE_COMPILED_FILE;
+            }
+        }
+
+        return 0; // Success
+    }
 }

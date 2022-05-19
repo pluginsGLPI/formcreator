@@ -41,132 +41,158 @@ use Toolbox;
 
 class DescriptionField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      $value = Toolbox::convertTagToImage(__($this->question->fields['description'], $domain), $this->getQuestion());
-      $value = Sanitizer::unsanitize($value);
-      return nl2br(html_entity_decode($value));
-   }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        $value = Toolbox::convertTagToImage(__($this->question->fields['description'], $domain), $this->getQuestion());
+        $value = Sanitizer::unsanitize($value);
+        return nl2br(html_entity_decode($value));
+    }
 
-   public function serializeValue(): string {
-      return '';
-   }
+    public function serializeValue(): string
+    {
+        return '';
+    }
 
-   public function deserializeValue($value) {
-      $this->value = '';
-   }
+    public function deserializeValue($value)
+    {
+        $this->value = '';
+    }
 
-   public function getValueForDesign(): string {
-      return '';
-   }
+    public function getValueForDesign(): string
+    {
+        return '';
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      $text = $this->question->fields['description'];
-      if (!$richText) {
-         $text = nl2br(strip_tags(html_entity_decode(__($text, $domain))));
-      }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        $text = $this->question->fields['description'];
+        if (!$richText) {
+            $text = nl2br(strip_tags(html_entity_decode(__($text, $domain))));
+        }
 
-      return $text;
-   }
+        return $text;
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isValid(): bool {
-      return true;
-   }
+    public function isValid(): bool
+    {
+        return true;
+    }
 
-   public function isValidValue($value): bool {
-      return true;
-   }
+    public function isValidValue($value): bool
+    {
+        return true;
+    }
 
-   public static function getName(): string {
-      return __('Description');
-   }
+    public static function getName(): string
+    {
+        return __('Description');
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      if (isset($input['description'])) {
-         if (strlen($input['description']) < 1) {
-            Session::addMessageAfterRedirect(
-               __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR
-            );
-            return [];
-         }
-      }
-      $this->value = '';
+    public function prepareQuestionInputForSave($input)
+    {
+        if (isset($input['description'])) {
+            if (strlen($input['description']) < 1) {
+                Session::addMessageAfterRedirect(
+                    __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
+                    false,
+                    ERROR
+                );
+                return [];
+            }
+        }
+        $this->value = '';
 
-      return $input;
-   }
+        return $input;
+    }
 
-   public function hasInput($input): bool {
-      return false;
-   }
+    public function hasInput($input): bool
+    {
+        return false;
+    }
 
-   public static function canRequire(): bool {
-      return false;
-   }
+    public static function canRequire(): bool
+    {
+        return false;
+    }
 
-   public function equals($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function equals($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function notEquals($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function notEquals($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function greaterThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function greaterThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function lessThan($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function lessThan($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function regex($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function regex($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      return true;
-   }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        return true;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon() {
-      return '<i class="fas fa-align-left" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon()
+    {
+        return '<i class="fas fa-align-left" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return false;
-   }
+    public function isEditableField(): bool
+    {
+        return false;
+    }
 
-   public function getValueForApi() {
-      return $this->question->fields['description'];
-   }
+    public function getValueForApi()
+    {
+        return $this->question->fields['description'];
+    }
 }

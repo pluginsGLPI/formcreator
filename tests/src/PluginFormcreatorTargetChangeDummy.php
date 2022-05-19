@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,47 +34,58 @@ namespace GlpiPlugin\Formcreator\Tests;
 
 class PluginFormcreatorTargetChangeDummy extends \PluginFormcreatorTargetChange
 {
-   public static function getTable($classname = null) {
-      return \PluginFormcreatorTargetChange::getTable();
-   }
+    public static function getTable($classname = null)
+    {
+        return \PluginFormcreatorTargetChange::getTable();
+    }
 
-   public function publicSetTargetEntity($data, \PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
-      return $this->setTargetEntity($data, $formanswer, $requesters_id);
-   }
+    public function publicSetTargetEntity($data, \PluginFormcreatorFormAnswer $formanswer, $requesters_id)
+    {
+        return $this->setTargetEntity($data, $formanswer, $requesters_id);
+    }
 
-   public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false) {
-      return $this->prepareTemplate($template, $formAnswer, $disableRichText);
-   }
+    public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false)
+    {
+        return $this->prepareTemplate($template, $formAnswer, $disableRichText);
+    }
 
-   public function publicGetItem_User() {
-      return $this->getItem_User();
-   }
+    public function publicGetItem_User()
+    {
+        return $this->getItem_User();
+    }
 
-   public function publicGetItem_Group() {
-      return $this->getItem_Group();
-   }
+    public function publicGetItem_Group()
+    {
+        return $this->getItem_Group();
+    }
 
-   public function publicGetItem_Supplier() {
-      return $this->getItem_Supplier();
-   }
+    public function publicGetItem_Supplier()
+    {
+        return $this->getItem_Supplier();
+    }
 
-   public function publicGetItem_Item() {
-      return $this->getItem_Item();
-   }
+    public function publicGetItem_Item()
+    {
+        return $this->getItem_Item();
+    }
 
-   public function publicGetItem_Actor() {
-      return $this->getItem_Actor();
-   }
+    public function publicGetItem_Actor()
+    {
+        return $this->getItem_Actor();
+    }
 
-   public function publicGetCategoryFilter() {
-      return $this->getCategoryFilter();
-   }
+    public function publicGetCategoryFilter()
+    {
+        return $this->getCategoryFilter();
+    }
 
-   public function publicGetTaggableFields() {
-      return $this->getTaggableFields();
-   }
+    public function publicGetTaggableFields()
+    {
+        return $this->getTaggableFields();
+    }
 
-   public function publicGetTargetItemtypeName() {
-      return $this->getTargetItemtypeName();
-   }
+    public function publicGetTargetItemtypeName()
+    {
+        return $this->getTargetItemtypeName();
+    }
 }

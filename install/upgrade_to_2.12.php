@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,47 +29,49 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_12 {
+class PluginFormcreatorUpgradeTo2_12
+{
    /** @var Migration */
-   protected $migration;
+    protected $migration;
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-      global $DB;
+    public function upgrade(Migration $migration)
+    {
+        global $DB;
 
-      $this->migration = $migration;
+        $this->migration = $migration;
 
-      // Convert datetime to timestamp
-      $table = 'glpi_plugin_formcreator_formanswers';
-      $migration->changeField($table, 'request_date', 'request_date', 'timestamp');
+       // Convert datetime to timestamp
+        $table = 'glpi_plugin_formcreator_formanswers';
+        $migration->changeField($table, 'request_date', 'request_date', 'timestamp');
 
-      $table = 'glpi_plugin_formcreator_issues';
-      $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp');
-      $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp');
+        $table = 'glpi_plugin_formcreator_issues';
+        $migration->changeField($table, 'date_creation', 'date_creation', 'timestamp');
+        $migration->changeField($table, 'date_mod', 'date_mod', 'timestamp');
 
-      $this->changeDropdownTreeSettings();
+        $this->changeDropdownTreeSettings();
 
-      $table = 'glpi_plugin_formcreator_entityconfigs';
-      $this->migration->addField($table, 'is_search_visible', 'integer', ['after' => 'is_kb_separated']);
-      $this->migration->addField($table, 'is_header_visible', 'integer', ['after' => 'is_search_visible']);
-      $this->migration->addField($table, 'header', 'text', ['after' => 'is_header_visible']);
+        $table = 'glpi_plugin_formcreator_entityconfigs';
+        $this->migration->addField($table, 'is_search_visible', 'integer', ['after' => 'is_kb_separated']);
+        $this->migration->addField($table, 'is_header_visible', 'integer', ['after' => 'is_search_visible']);
+        $this->migration->addField($table, 'header', 'text', ['after' => 'is_header_visible']);
 
-      $this->migrateReferenceEntity();
+        $this->migrateReferenceEntity();
 
-      $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->changeField($table, 'language', 'language', 'string', ['value' => '', 'after' => 'is_active']);
+        $table = 'glpi_plugin_formcreator_forms';
+        $this->migration->changeField($table, 'language', 'language', 'string', ['value' => '', 'after' => 'is_active']);
 
-      $this->normalizeIssues();
+        $this->normalizeIssues();
 
-      $table = 'glpi_plugin_formcreator_targetchanges';
-      $this->migration->addField($table, 'changetemplates_id', 'integer', ['value' => '0', 'after' => 'target_name']);
+        $table = 'glpi_plugin_formcreator_targetchanges';
+        $this->migration->addField($table, 'changetemplates_id', 'integer', ['value' => '0', 'after' => 'target_name']);
 
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $DB->query("UPDATE `$table` SET `tickettemplates_id`='0' WHERE `tickettemplates_id` IS NULL");
-      $this->migration->changeField($table, 'tickettemplates_id', 'tickettemplates_id', 'integer', ['value' => '0', 'after' => 'type_question']);
-   }
+        $table = 'glpi_plugin_formcreator_targettickets';
+        $DB->query("UPDATE `$table` SET `tickettemplates_id`='0' WHERE `tickettemplates_id` IS NULL");
+        $this->migration->changeField($table, 'tickettemplates_id', 'tickettemplates_id', 'integer', ['value' => '0', 'after' => 'type_question']);
+    }
 
    /**
     * Convert values field of question from form
@@ -78,73 +81,76 @@ class PluginFormcreatorUpgradeTo2_12 {
     *
     * @return void
     */
-   public function changeDropdownTreeSettings() {
-      global $DB;
+    public function changeDropdownTreeSettings()
+    {
+        global $DB;
 
-      $table = 'glpi_plugin_formcreator_questions';
+        $table = 'glpi_plugin_formcreator_questions';
 
-      $request = [
-         'SELECT' => ['id', 'values'],
-         'FROM' => $table,
-         'WHERE' => ['fieldtype' => ['dropdown']],
-      ];
-      foreach ($DB->request($request) as $row) {
-         $newValues = $row['values'];
-         $values = json_decode($row['values'], JSON_OBJECT_AS_ARRAY);
-         if ($values === null) {
-            continue;
-         }
-         $newValues = $values;
-         unset($newValues['show_ticket_categories_root']);
-         unset($newValues['show_ticket_categories_depth']);
-         $newValues['show_tree_root'] = $values['show_ticket_categories_root'] ?? '';
-         $newValues['show_tree_depth'] = $values['show_ticket_categories_depth'] ?? '-1';
-         $newValues = json_encode($newValues);
-         $DB->update($table, ['values' => $newValues], ['id' => $row['id']]);
-      }
-   }
-
-   public function migrateReferenceEntity() {
-      global $DB;
-
-      $questionTable = 'glpi_plugin_formcreator_questions';
-      $request = [
-         'SELECT' => ['id', 'default_values', 'values'],
-         'FROM' => $questionTable,
-         'WHERE' => ['fieldtype' => ['droprown']],
-      ];
-      foreach ($DB->request($request) as $row) {
-         $newAnswer = json_decode($row['values']);
-         if ($newAnswer === null) {
-            $newAnswer = ['itemtype' => $row['answer']];
-            $newAnswer['entity_restrict'] = 2;
-         } else {
-            if (!isset($newAnswer['entity_restrict'])) {
-               $newAnswer['entity_restrict'] = 'form';
+        $request = [
+            'SELECT' => ['id', 'values'],
+            'FROM' => $table,
+            'WHERE' => ['fieldtype' => ['dropdown']],
+        ];
+        foreach ($DB->request($request) as $row) {
+            $newValues = $row['values'];
+            $values = json_decode($row['values'], JSON_OBJECT_AS_ARRAY);
+            if ($values === null) {
+                continue;
             }
-            switch ($newAnswer['entity_restrict']) {
-               case 'user':
-                  $newAnswer['entity_restrict'] = 1;
-                  break;
-               case 'both':
-                  $newAnswer['entity_restrict'] = 3;
-                  break;
-               default:
-                  $newAnswer['entity_restrict'] = 2;
-                  break;
-            }
-         }
-         $newAnswer = json_encode($newAnswer, JSON_OBJECT_AS_ARRAY);
-         $newAnswer = Toolbox::addslashes_deep($newAnswer);
-         $DB->update($questionTable, ['values' => $newAnswer], ['id' => $row['id']]);
-      }
-   }
+            $newValues = $values;
+            unset($newValues['show_ticket_categories_root']);
+            unset($newValues['show_ticket_categories_depth']);
+            $newValues['show_tree_root'] = $values['show_ticket_categories_root'] ?? '';
+            $newValues['show_tree_depth'] = $values['show_ticket_categories_depth'] ?? '-1';
+            $newValues = json_encode($newValues);
+            $DB->update($table, ['values' => $newValues], ['id' => $row['id']]);
+        }
+    }
 
-   public function normalizeIssues() {
-      $table = 'glpi_plugin_formcreator_issues';
-      $this->migration->changeField($table, 'original_id', 'items_id', 'integer');
-      $this->migration->changeField($table, 'sub_itemtype', 'itemtype', 'string', ['value' => '']);
-      $this->migration->dropKey($table, 'original_id_sub_itemtype');
-      $this->migration->addKey($table, ['itemtype', 'items_id'], 'item');
-   }
+    public function migrateReferenceEntity()
+    {
+        global $DB;
+
+        $questionTable = 'glpi_plugin_formcreator_questions';
+        $request = [
+            'SELECT' => ['id', 'default_values', 'values'],
+            'FROM' => $questionTable,
+            'WHERE' => ['fieldtype' => ['droprown']],
+        ];
+        foreach ($DB->request($request) as $row) {
+            $newAnswer = json_decode($row['values']);
+            if ($newAnswer === null) {
+                $newAnswer = ['itemtype' => $row['answer']];
+                $newAnswer['entity_restrict'] = 2;
+            } else {
+                if (!isset($newAnswer['entity_restrict'])) {
+                    $newAnswer['entity_restrict'] = 'form';
+                }
+                switch ($newAnswer['entity_restrict']) {
+                    case 'user':
+                        $newAnswer['entity_restrict'] = 1;
+                        break;
+                    case 'both':
+                        $newAnswer['entity_restrict'] = 3;
+                        break;
+                    default:
+                        $newAnswer['entity_restrict'] = 2;
+                        break;
+                }
+            }
+            $newAnswer = json_encode($newAnswer, JSON_OBJECT_AS_ARRAY);
+            $newAnswer = Toolbox::addslashes_deep($newAnswer);
+            $DB->update($questionTable, ['values' => $newAnswer], ['id' => $row['id']]);
+        }
+    }
+
+    public function normalizeIssues()
+    {
+        $table = 'glpi_plugin_formcreator_issues';
+        $this->migration->changeField($table, 'original_id', 'items_id', 'integer');
+        $this->migration->changeField($table, 'sub_itemtype', 'itemtype', 'string', ['value' => '']);
+        $this->migration->dropKey($table, 'original_id_sub_itemtype');
+        $this->migration->addKey($table, ['itemtype', 'items_id'], 'item');
+    }
 }

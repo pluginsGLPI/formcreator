@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,46 +30,46 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 $formLanguage = new PluginFormcreatorForm_Language();
 
 if (isset($_POST['add'])) {
-   $formLanguage->add($_POST);
-   Html::back();
+    $formLanguage->add($_POST);
+    Html::back();
 } else if (isset($_POST['update'])) {
-   $formLanguage->update($_POST);
-   Html::back();
+    $formLanguage->update($_POST);
+    Html::back();
 } else if (isset($_POST['delete'])) {
-   if ($formLanguage->getFromDB((int) $_POST['id'])) {
-      $formLanguage->massDeleteTranslations($_POST);
-   }
-   Html::back();
+    if ($formLanguage->getFromDB((int) $_POST['id'])) {
+        $formLanguage->massDeleteTranslations($_POST);
+    }
+    Html::back();
 } else {
-   Html::header(
-      PluginFormcreatorForm_Language::getTypeName(2),
-      $_SERVER['PHP_SELF'],
-      'admin',
-      'PluginFormcreatorForm_Language',
-      'option'
-   );
+    Html::header(
+        PluginFormcreatorForm_Language::getTypeName(2),
+        $_SERVER['PHP_SELF'],
+        'admin',
+        'PluginFormcreatorForm_Language',
+        'option'
+    );
 
-   $_GET['id'] = (int) ($_GET['id'] ?? -1);
-   if (!$formLanguage->getFromDB($_GET['id'])) {
-      $_SESSION['glpilisturl'][$formLanguage::getType()] = Html::getBackUrl();
-   } else {
-      $_SESSION['glpilisturl'][$formLanguage::getType()] = PluginFormcreatorForm::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
-   }
-   $formLanguage->display([
-      'ids' => $_GET['id'],
-      'id'  => $_GET['id'],
-   ]);
+    $_GET['id'] = (int) ($_GET['id'] ?? -1);
+    if (!$formLanguage->getFromDB($_GET['id'])) {
+        $_SESSION['glpilisturl'][$formLanguage::getType()] = Html::getBackUrl();
+    } else {
+        $_SESSION['glpilisturl'][$formLanguage::getType()] = PluginFormcreatorForm::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
+    }
+    $formLanguage->display([
+        'ids' => $_GET['id'],
+        'id'  => $_GET['id'],
+    ]);
 
-   Html::footer();
+    Html::footer();
 }

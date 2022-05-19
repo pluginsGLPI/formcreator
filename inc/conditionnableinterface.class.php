@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -40,12 +41,12 @@ interface PluginFormcreatorConditionnableInterface
     * @param  array $input
     * @return boolean true if success, false otherwise
     */
-   public function updateConditions($input) : bool;
+    public function updateConditions($input): bool;
 
    /**
     * get rules for conditions
     *
     * @return array
     */
-   public static function getEnumShowRule(): array;
+    public static function getEnumShowRule(): array;
 }

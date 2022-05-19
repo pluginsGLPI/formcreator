@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,18 +30,18 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 // Check if plugin is activated...
 $plugin = new Plugin();
 if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+    Html::header(__('Service catalog', 'formcreator'));
 }
 
 PluginFormcreatorCommon::showMiniDashboard();
@@ -49,7 +50,7 @@ $kb = new PluginFormcreatorKnowbase();
 $kb->showServiceCatalog();
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,297 +34,310 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class TextField extends CommonTestCase {
-
-   public function provider() {
-      $dataset = [
-         [
-            'fields'          => [
-               'fieldtype'       => 'text',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => '',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'text' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ],
-                     'regex' => [
-                        'regex' => ''
-                     ]
-                  ]
-               ],
+class TextField extends CommonTestCase
+{
+    public function provider()
+    {
+        $dataset = [
+            [
+                'fields'          => [
+                    'fieldtype'       => 'text',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => '',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'text' => [
+                            'range' => [
+                                'range_min' => '',
+                                'range_max' => '',
+                            ],
+                            'regex' => [
+                                'regex' => ''
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => '1',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'text',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => 'a',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'text' => [
-                     'range' => [
-                        'range_min' => '5',
-                        'range_max' => '8',
-                     ],
-                     'regex' => [
-                        'regex' => ''
-                     ]
-                  ]
-               ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'text',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => 'a',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'text' => [
+                            'range' => [
+                                'range_min' => '5',
+                                'range_max' => '8',
+                            ],
+                            'regex' => [
+                                'regex' => ''
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => '1',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'The text is too short (minimum 5 characters): question',
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'The text is too short (minimum 5 characters): question',
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'text',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => 'short',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'text' => [
-                     'range' => [
-                        'range_min' => '6',
-                        'range_max' => '8',
-                     ],
-                     'regex' => [
-                        'regex' => ''
-                     ]
-                  ]
-               ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'text',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => 'short',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'text' => [
+                            'range' => [
+                                'range_min' => '6',
+                                'range_max' => '8',
+                            ],
+                            'regex' => [
+                                'regex' => ''
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => '1',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'The text is too short (minimum 6 characters): question',
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'The text is too short (minimum 6 characters): question',
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'text',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => 'very very long',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'text' => [
-                     'range' => [
-                        'range_min' => '6',
-                        'range_max' => '8',
-                     ],
-                     'regex' => [
-                        'regex' => ''
-                     ]
-                  ]
-               ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'text',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => 'very very long',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'text' => [
+                            'range' => [
+                                'range_min' => '6',
+                                'range_max' => '8',
+                            ],
+                            'regex' => [
+                                'regex' => ''
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => '1',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'The text is too long (maximum 8 characters): question',
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'The text is too long (maximum 8 characters): question',
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'text',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => 'very very long',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'text' => [
-                     'range' => [
-                        'range_min' => '3',
-                        'range_max' => '8',
-                     ],
-                     'regex' => [
-                        'regex' => ''
-                     ]
-                  ]
-               ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'text',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => 'very very long',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'text' => [
+                            'range' => [
+                                'range_min' => '3',
+                                'range_max' => '8',
+                            ],
+                            'regex' => [
+                                'regex' => ''
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => '1',
+                'expectedIsValid' => false,
+                'expectedMessage' => 'The text is too long (maximum 8 characters): question',
             ],
-            'expectedValue'   => '1',
-            'expectedIsValid' => false,
-            'expectedMessage' => 'The text is too long (maximum 8 characters): question',
-         ],
-         'regex with escaped chars' => [
-            'fields'          => [
-               'fieldtype'       => 'text',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => '',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'text' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ],
-                     'regex' => [
-                        'regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'
-                     ]
-                  ]
-               ],
+            'regex with escaped chars' => [
+                'fields'          => [
+                    'fieldtype'       => 'text',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => '',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'text' => [
+                            'range' => [
+                                'range_min' => '',
+                                'range_max' => '',
+                            ],
+                            'regex' => [
+                                'regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => true,
+                'expectedMessage' => '',
             ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true,
-            'expectedMessage' => '',
-         ],
-      ];
-      return $dataset;
-   }
+        ];
+        return $dataset;
+    }
 
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage) {
-      $section = $this->getSection();
-      $fields[$section::getForeignKeyField()] = $section->getID();
+    public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage)
+    {
+        $section = $this->getSection();
+        $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = $this->getQuestion($fields);
+        $question = $this->getQuestion($fields);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($fields['default_values']);
-      $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($fields['default_values']);
+        $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
 
-      $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+        $isValid = $instance->isValid();
+        $this->boolean((bool) $isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
-      // Check error message
-      if (!$isValid) {
-         $this->sessionHasMessage($expectedMessage, ERROR);
-      } else {
-         $this->sessionHasNoMessage();
-      }
-   }
+       // Check error message
+        if (!$isValid) {
+            $this->sessionHasMessage($expectedMessage, ERROR);
+        } else {
+            $this->sessionHasNoMessage();
+        }
+    }
 
-   public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getEmptyParameters();
-      $this->array($output)
+    public function testGetEmptyParameters()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->getEmptyParameters();
+        $this->array($output)
          ->hasKey('range')
          ->hasKey('regex')
          ->array($output)->size->isEqualTo(2);
-      $this->object($output['range'])
+        $this->object($output['range'])
          ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
-      $this->object($output['regex'])
+        $this->object($output['regex'])
          ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
-   }
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Text');
-   }
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Text');
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isTrue();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function providerSerializeValue() {
-      return [
-         [
-            'value' => '',
-            'expected' => '',
-         ],
-         [
-            'value' => "quote ' test",
-            'expected' => "quote ' test",
-         ],
-      ];
-   }
+    public function providerSerializeValue()
+    {
+        return [
+            [
+                'value' => '',
+                'expected' => '',
+            ],
+            [
+                'value' => "quote ' test",
+                'expected' => "quote ' test",
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerSerializeValue
     */
-   public function testSerializeValue($value, $expected) {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testSerializeValue($value, $expected)
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
+        $output = $instance->serializeValue();
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerDeserializeValue() {
-      return [
-         [
-            'value'     => '',
-            'expected'  => '',
-         ],
-         [
-            'value'     => 'foo',
-            'expected'  => 'foo' ,
-         ],
-      ];
-   }
+    public function providerDeserializeValue()
+    {
+        return [
+            [
+                'value'     => '',
+                'expected'  => '',
+            ],
+            [
+                'value'     => 'foo',
+                'expected'  => 'foo' ,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerDeserializeValue
     */
-   public function testDeserializeValue($value, $expected) {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetText('', false);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testDeserializeValue($value, $expected)
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $instance->deserializeValue($value);
+        $output = $instance->getValueForTargetText('', false);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function providerGetValueForApi() {
-      return [
-         [
-            'input'    => 'this is a text',
-            'expected' => 'this is a text',
-         ],
-      ];
-   }
+    public function providerGetValueForApi()
+    {
+        return [
+            [
+                'input'    => 'this is a text',
+                'expected' => 'this is a text',
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion([]);
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion([]);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->string($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->string($output)->isEqualTo($expected);
+    }
 }

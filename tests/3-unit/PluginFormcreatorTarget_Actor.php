@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,63 +34,69 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorTarget_Actor extends CommonTestCase {
-   public function testGetEnumActorType() {
-      $output = \PluginFormcreatorTarget_Actor::getEnumActorType();
-      $this->array($output)->isEqualTo([
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP                  => __('Specific group', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP         => __('Group from the question', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT      => __('Group from an object', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT => __('Tech group from an object', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
-         \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR     => __('Form author\'s supervisor', 'formcreator'),
-      ]);
-   }
+class PluginFormcreatorTarget_Actor extends CommonTestCase
+{
+    public function testGetEnumActorType()
+    {
+        $output = \PluginFormcreatorTarget_Actor::getEnumActorType();
+        $this->array($output)->isEqualTo([
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP                  => __('Specific group', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP         => __('Group from the question', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT      => __('Group from an object', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT => __('Tech group from an object', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
+            \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR     => __('Form author\'s supervisor', 'formcreator'),
+        ]);
+    }
 
-   public function testGetEnumRole() {
-      $output = \PluginFormcreatorTarget_Actor::getEnumRole();
-      $this->array($output)->isEqualTo([
-         \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER => __('Requester'),
-         \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER  => __('Observer'),
-         \PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED  => __('Assigned to'),
-      ]);
-   }
+    public function testGetEnumRole()
+    {
+        $output = \PluginFormcreatorTarget_Actor::getEnumRole();
+        $this->array($output)->isEqualTo([
+            \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER => __('Requester'),
+            \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER  => __('Observer'),
+            \PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED  => __('Assigned to'),
+        ]);
+    }
 
-   public function providerGetTypeName() {
-      return [
-         [
-            'input' => 0,
-            'expected' => 'Target actors',
-         ],
-         [
-            'input' => 1,
-            'expected' => 'Target actor',
-         ],
-         [
-            'input' => 2,
-            'expected' => 'Target actors',
-         ],
-      ];
-   }
+    public function providerGetTypeName()
+    {
+        return [
+            [
+                'input' => 0,
+                'expected' => 'Target actors',
+            ],
+            [
+                'input' => 1,
+                'expected' => 'Target actor',
+            ],
+            [
+                'input' => 2,
+                'expected' => 'Target actors',
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetTypeName
     * @param integer $number
     * @param string $expected
     */
-   public function testGetTypeName($number, $expected) {
-      $output = \PluginFormcreatorTarget_Actor::getTypeName($number);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetTypeName($number, $expected)
+    {
+        $output = \PluginFormcreatorTarget_Actor::getTypeName($number);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function testCountItemsToImport() {
-      $output = \PluginFormcreatorTarget_Actor::countItemsToImport([]);
-      $this->integer($output)->isEqualTo(1);
-   }
+    public function testCountItemsToImport()
+    {
+        $output = \PluginFormcreatorTarget_Actor::countItemsToImport([]);
+        $this->integer($output)->isEqualTo(1);
+    }
 }

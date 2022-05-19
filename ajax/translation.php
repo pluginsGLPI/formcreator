@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,28 +30,28 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }
 if (!isset($_POST['id'])) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }
 if (!isset($_POST['value'])) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }
 
 if (!(new PluginFormcreatorTranslation())->add($_POST)) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }

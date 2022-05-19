@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,23 +34,25 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorFormList extends CommonTestCase {
-   public function providerGetTypeName() {
-      return [
-         [
-            0,
-            'Forms'
-         ],
-         [
-            1,
-            'Form'
-         ],
-         [
-            2,
-            'Forms'
-         ],
-      ];
-   }
+class PluginFormcreatorFormList extends CommonTestCase
+{
+    public function providerGetTypeName()
+    {
+        return [
+            [
+                0,
+                'Forms'
+            ],
+            [
+                1,
+                'Form'
+            ],
+            [
+                2,
+                'Forms'
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetTypeName
@@ -58,9 +61,10 @@ class PluginFormcreatorFormList extends CommonTestCase {
     * @param string $expected
     * @return void
     */
-   public function testGetTypeName($nb, $expected) {
-      $instance = new $this->newTestedInstance();
-      $output = $instance->getTypeName($nb);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetTypeName($nb, $expected)
+    {
+        $instance = new $this->newTestedInstance();
+        $output = $instance->getTypeName($nb);
+        $this->string($output)->isEqualTo($expected);
+    }
 }

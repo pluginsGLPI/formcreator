@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -37,141 +38,146 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
  * The methods conflict when running in parallel
  * @engine inline
  */
-class PluginFormcreatorFormAnswer extends CommonTestCase {
+class PluginFormcreatorFormAnswer extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        switch ($method) {
+            case 'testNotificationFormAnswerCreated':
+            case 'testOtherUserValidates':
+                $this->boolean($this->login('glpi', 'glpi', true))->isTrue();
+                break;
+        }
+    }
 
-   public function beforeTestMethod($method) {
-      switch ($method) {
-         case 'testNotificationFormAnswerCreated':
-         case 'testOtherUserValidates':
-            $this->boolean($this->login('glpi', 'glpi', true))->isTrue();
-            break;
-      }
-   }
+    public function afterTestMethod($method)
+    {
+        parent::afterTestMethod($method);
+        switch ($method) {
+            case 'testNotificationFormAnswerCreated':
+                $user = new \User();
+                $user->getFromDBbyName('glpi');
+                $userEmail = new \Useremail();
+                $userEmail->deleteByCriteria([
+                    'users_id' => $user->getID(),
+                ]);
+                break;
+        }
+    }
 
-   public function afterTestMethod($method) {
-      parent::afterTestMethod($method);
-      switch ($method) {
-         case 'testNotificationFormAnswerCreated':
-            $user = new \User();
-            $user->getFromDBbyName('glpi');
-            $userEmail = new \Useremail();
-            $userEmail->deleteByCriteria([
-               'users_id' => $user->getID(),
-            ]);
-            break;
-      }
-   }
+    public function testNotificationFormAnswerCreated()
+    {
+        global $DB, $CFG_GLPI;
 
-   public function testNotificationFormAnswerCreated() {
-      global $DB, $CFG_GLPI;
+        $user = new \User();
+        $user->getFromDBbyName('glpi');
+        $user->update([
+            'id' => $user->getID(),
+            '_useremails' => [$this->getUniqueEmail()],
+        ]);
 
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $user->update([
-         'id' => $user->getID(),
-         '_useremails' => [$this->getUniqueEmail()],
-      ]);
+        $CFG_GLPI['use_notifications'] = '1';
+        $CFG_GLPI['notifications_mailing'] = '1';
 
-      $CFG_GLPI['use_notifications'] = '1';
-      $CFG_GLPI['notifications_mailing'] = '1';
+        $form = $this->getForm();
 
-      $form = $this->getForm();
+       // Answer the form
+        $formAnswer = $this->newTestedInstance();
+        $formAnswer->add([
+            'plugin_formcreator_forms_id' => $form->getID()
+        ]);
 
-      // Answer the form
-      $formAnswer = $this->newTestedInstance();
-      $formAnswer->add([
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-
-      // Check a notification was created with the expected template
-      $result = $DB->request([
-         'SELECT' => \Notification_NotificationTemplate::getTable() . '.' . \NotificationTemplate::getForeignKeyField(),
-         'FROM' => \Notification_NotificationTemplate::getTable(),
-         'INNER JOIN' => [
-            \Notification::getTable() => [
-               'FKEY' => [
-                  \Notification::getTable() => 'id',
-                  \Notification_NotificationTemplate::getTable() => \Notification::getForeignKeyField()
-               ]
+       // Check a notification was created with the expected template
+        $result = $DB->request([
+            'SELECT' => \Notification_NotificationTemplate::getTable() . '.' . \NotificationTemplate::getForeignKeyField(),
+            'FROM' => \Notification_NotificationTemplate::getTable(),
+            'INNER JOIN' => [
+                \Notification::getTable() => [
+                    'FKEY' => [
+                        \Notification::getTable() => 'id',
+                        \Notification_NotificationTemplate::getTable() => \Notification::getForeignKeyField()
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                'itemtype'  => \PluginFormcreatorFormAnswer::class,
+                'event'     => 'plugin_formcreator_form_created',
             ]
-         ],
-         'WHERE' => [
+        ]);
+        $this->integer($result->count())->isEqualTo(1);
+        $row = $result->current();
+
+        $formAnswer = new \PluginFormcreatorFormAnswer();
+        $formAnswer->getFromDBByCrit([
+            'plugin_formcreator_forms_id' => $form->getID(),
+        ]);
+        $this->boolean($formAnswer->isNewItem())->isFalse();
+        $queued = new \QueuedNotification();
+        $queued->getFromDBByCrit([
+            \NotificationTemplate::getForeignKeyField() => $row[\NotificationTemplate::getForeignKeyField()],
             'itemtype'  => \PluginFormcreatorFormAnswer::class,
-            'event'     => 'plugin_formcreator_form_created',
-         ]
-      ]);
-      $this->integer($result->count())->isEqualTo(1);
-      $row = $result->current();
+            'items_id'  => $formAnswer->getID(),
+        ]);
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->getFromDBByCrit([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $this->boolean($formAnswer->isNewItem())->isFalse();
-      $queued = new \QueuedNotification();
-      $queued->getFromDBByCrit([
-         \NotificationTemplate::getForeignKeyField() => $row[\NotificationTemplate::getForeignKeyField()],
-         'itemtype'  => \PluginFormcreatorFormAnswer::class,
-         'items_id'  => $formAnswer->getID(),
-      ]);
+       // Check the notification is linked to the expected itemtype
+        $this->boolean($queued->isNewItem())->isFalse();
+    }
 
-      // Check the notification is linked to the expected itemtype
-      $this->boolean($queued->isNewItem())->isFalse();
-   }
+    public function testOtherUserValidates()
+    {
+        $form = $this->getForm([
+            'entities_id'         => $_SESSION['glpiactive_entity'],
+            'name'                => __METHOD__,
+            'description'         => 'form description',
+            'content'             => 'a content',
+            'is_active'           => 1,
+            'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+            '_validator_users'    => '2', // user is glpi
+        ]);
 
-   public function testOtherUserValidates() {
-      $form = $this->getForm([
-         'entities_id'         => $_SESSION['glpiactive_entity'],
-         'name'                => __METHOD__,
-         'description'         => 'form description',
-         'content'             => 'a content',
-         'is_active'           => 1,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'    => '2', // user is glpi
-      ]);
+        $section = $this->getSection([
+            'name'                        => 'a section',
+            'plugin_formcreator_forms_id' => $form->getID()
+        ]);
+        $this->boolean($section->isNewItem())->isFalse();
 
-      $section = $this->getSection([
-         'name'                        => 'a section',
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-      $this->boolean($section->isNewItem())->isFalse();
+        $formAnswer = new \PluginFormcreatorFormAnswer();
+        $formAnswer->add([
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'status'                      => 'waiting',
+            'formcreator_validator'       => $_SESSION['glpiID'],
+        ]);
+        $this->boolean($formAnswer->isNewItem())->isFalse();
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'status'                      => 'waiting',
-         'formcreator_validator'       => $_SESSION['glpiID'],
-      ]);
-      $this->boolean($formAnswer->isNewItem())->isFalse();
+       // Reload the item
+        $formAnswer->getFromDB($formAnswer->getID());
 
-      // Reload the item
-      $formAnswer->getFromDB($formAnswer->getID());
-
-      $login = $this->getUniqueString();
-      $user = new \User();
-      $user->add([
-         'name'                  => $login,
-         'password'              => 'superadmin',
-         'password2'             => 'superadmin',
-         '_profiles_id'          => '4', // super admin profile
-         '_entities_id'          => 0,
-         '_is_recursive'         => 1,
-      ]);
-      $this->boolean($user->isNewItem())
+        $login = $this->getUniqueString();
+        $user = new \User();
+        $user->add([
+            'name'                  => $login,
+            'password'              => 'superadmin',
+            'password2'             => 'superadmin',
+            '_profiles_id'          => '4', // super admin profile
+            '_entities_id'          => 0,
+            '_is_recursive'         => 1,
+        ]);
+        $this->boolean($user->isNewItem())
          ->isFalse(json_encode(
-            $_SESSION['MESSAGE_AFTER_REDIRECT'],
-            JSON_PRETTY_PRINT));
+             $_SESSION['MESSAGE_AFTER_REDIRECT'],
+             JSON_PRETTY_PRINT
+         ));
 
-      // Login as other user
-      $this->boolean($this->login($login, 'superadmin', true))->isTrue();
-      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
+       // Login as other user
+        $this->boolean($this->login($login, 'superadmin', true))->isTrue();
+        $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
 
-      // Login as glpi
-      $this->boolean($this->login('glpi', 'glpi', true))->istrue();
-      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
+       // Login as glpi
+        $this->boolean($this->login('glpi', 'glpi', true))->istrue();
+        $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
 
-      // Login as normal
-      $this->boolean($this->login('normal', 'normal', true))->istrue();
-      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
-   }
+       // Login as normal
+        $this->boolean($this->login('normal', 'normal', true))->istrue();
+        $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,86 +37,90 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 // No autoload for the tested file
 require_once __DIR__ . '/../../RoboFile.php';
 
-class Git extends CommonTestCase {
-
-   public function providerGetLastTag() {
-       return [
-           [
-               'tags' => [
-                   '2.4.0',
-                   '2.4.1',
-               ],
-               'expected' => '2.4.1'
-           ],
-           [
-               'tags' => [
-                   '0.90-1.3.3',
-                   '0.90-1.3.4',
-               ],
-               'expected' => '0.90-1.3.4'
-           ],
-           [
-               'tags' => [
-                   '0.90-1.3.3',
-                   '0.90-1.3.4',
-                   '2.4.0',
-                   '2.4.1',
-               ],
-               'expected' => '2.4.1'
-           ],
-       ];
-   }
+class Git extends CommonTestCase
+{
+    public function providerGetLastTag()
+    {
+        return [
+            [
+                'tags' => [
+                    '2.4.0',
+                    '2.4.1',
+                ],
+                'expected' => '2.4.1'
+            ],
+            [
+                'tags' => [
+                    '0.90-1.3.3',
+                    '0.90-1.3.4',
+                ],
+                'expected' => '0.90-1.3.4'
+            ],
+            [
+                'tags' => [
+                    '0.90-1.3.3',
+                    '0.90-1.3.4',
+                    '2.4.0',
+                    '2.4.1',
+                ],
+                'expected' => '2.4.1'
+            ],
+        ];
+    }
 
     /**
      * @dataProvider providerGetLastTag
      */
-   public function testgetLastTag($tags, $expected) {
-       $output = \Git::getLastTag($tags);
-       $this->string($output)->isEqualTo($expected);
-   }
+    public function testgetLastTag($tags, $expected)
+    {
+        $output = \Git::getLastTag($tags);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerCreateCommitList() {
-       $commits = [];
-       $i = 0;
+    public function providerCreateCommitList()
+    {
+        $commits = [];
+        $i = 0;
 
-       $commit = new \StdClass();
-       $commit->hash = '582d37c8';
-       $commit->message = 'fix(form): typo in var name';
-       $commits[$i++] = $commit;
+        $commit = new \StdClass();
+        $commit->hash = '582d37c8';
+        $commit->message = 'fix(form): typo in var name';
+        $commits[$i++] = $commit;
 
-       $commit = new \StdClass();
-       $commit->hash = '812c76d3';
-       $commit->message = 'fix: useless escaping';
-       $commits[$i++] = $commit;
+        $commit = new \StdClass();
+        $commit->hash = '812c76d3';
+        $commit->message = 'fix: useless escaping';
+        $commits[$i++] = $commit;
 
-       $commit = new \StdClass();
-       $commit->hash = '7d296f21';
-       $commit->message = 'docs: bump version in package.json';
-       $commits[$i++] = $commit;
+        $commit = new \StdClass();
+        $commit->hash = '7d296f21';
+        $commit->message = 'docs: bump version in package.json';
+        $commits[$i++] = $commit;
 
-       $commit = new \StdClass();
-       $commit->hash = '9247a88a';
-       $commit->message = 'refactor(targetticket,formanswer): optimize getForm() methods';
-       $commits[$i++] = $commit;
+        $commit = new \StdClass();
+        $commit->hash = '9247a88a';
+        $commit->message = 'refactor(targetticket,formanswer): optimize getForm() methods';
+        $commits[$i++] = $commit;
 
-       return [
-           [
-               [
-                   '582d37c8 fix(form): typo in var name',
-                   '812c76d3 fix: useless escaping',
-                   '7d296f21 docs: bump version in package.json',
-                   '9247a88a refactor(targetticket,formanswer): optimize getForm() methods'
-               ],
-               'expected' => $commits,
-           ]
-       ];
-   }
+        return [
+            [
+                [
+                    '582d37c8 fix(form): typo in var name',
+                    '812c76d3 fix: useless escaping',
+                    '7d296f21 docs: bump version in package.json',
+                    '9247a88a refactor(targetticket,formanswer): optimize getForm() methods'
+                ],
+                'expected' => $commits,
+            ]
+        ];
+    }
 
     /**
      * @dataProvider providerCreateCommitList
      */
-   public function testCreateCommitList($commits, $expected) {
-       $output = \Git::createCommitList($commits);
-       $this->array($output)->isEqualTo($expected);
-   }
+    public function testCreateCommitList($commits, $expected)
+    {
+        $output = \Git::createCommitList($commits);
+        $this->array($output)->isEqualTo($expected);
+    }
 }

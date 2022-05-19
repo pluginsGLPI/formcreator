@@ -41,176 +41,202 @@ use Session;
 class DatetimeField extends PluginFormcreatorAbstractField
 {
    /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
-   protected $fields = null;
+    protected $fields = null;
 
-   const DATE_FORMAT = 'Y-m-d H:i:s';
+    const DATE_FORMAT = 'Y-m-d H:i:s';
 
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return $this->value;
-      }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return $this->value;
+        }
 
-      $html = '';
-      $id        = $this->question->getID();
-      $rand      = mt_rand();
-      $fieldName = 'formcreator_field_' . $id;
+        $html = '';
+        $id        = $this->question->getID();
+        $rand      = mt_rand();
+        $fieldName = 'formcreator_field_' . $id;
 
-      $html .= Html::showDateTimeField($fieldName, [
-         'value'   => strtotime($this->value) != '' ? $this->value : '',
-         'rand'    => $rand,
-         'display' => false,
-      ]);
-      $html .= Html::scriptBlock("$(function() {
+        $html .= Html::showDateTimeField($fieldName, [
+            'value'   => strtotime($this->value) != '' ? $this->value : '',
+            'rand'    => $rand,
+            'display' => false,
+        ]);
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeDate('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public function serializeValue(): string {
-      return $this->value;
-   }
+    public function serializeValue(): string
+    {
+        return $this->value;
+    }
 
-   public function deserializeValue($value) {
-      $this->value = $value;
-   }
+    public function deserializeValue($value)
+    {
+        $this->value = $value;
+    }
 
-   public function getValueForDesign(): string {
-      return $this->value;
-   }
+    public function getValueForDesign(): string
+    {
+        return $this->value;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      return Html::convDateTime($this->value);
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        return Html::convDateTime($this->value);
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isValid(): bool {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && (strtotime($this->value) == '')) {
-         Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+       // If the field is required it can't be empty
+        if ($this->isRequired() && (strtotime($this->value) == '')) {
+            Session::addMessageAfterRedirect(
+                sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      // All is OK
-      return $this->isValidValue($this->value);
-   }
+       // All is OK
+        return $this->isValidValue($this->value);
+    }
 
-   public function isValidValue($value): bool {
-      if (!$this->isRequired() && empty($value)) {
-         return true;
-      }
+    public function isValidValue($value): bool
+    {
+        if (!$this->isRequired() && empty($value)) {
+            return true;
+        }
 
-      $check = DateTime::createFromFormat(self::DATE_FORMAT, $value);
-      return $check !== false;
-   }
+        $check = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+        return $check !== false;
+    }
 
-   public static function getName(): string {
-      return __('Date & time', 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return __('Date & time', 'formcreator');
+    }
 
-   public static function canRequire(): bool {
-      return true;
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public function equals($value): bool {
-      if ($this->value === '') {
-         $answer = '0000-00-00 00:00:00';
-      } else {
-         $answer = $this->value;
-      }
-      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
-      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
-      return $answerDatetime == $compareDatetime;
-   }
+    public function equals($value): bool
+    {
+        if ($this->value === '') {
+            $answer = '0000-00-00 00:00:00';
+        } else {
+            $answer = $this->value;
+        }
+        $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+        $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+        return $answerDatetime == $compareDatetime;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      if (empty($this->value)) {
-         $answer = '0000-00-00 00:00:00';
-      } else {
-         $answer = $this->value;
-      }
-      $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
-      $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
-      return $answerDatetime > $compareDatetime;
-   }
+    public function greaterThan($value): bool
+    {
+        if (empty($this->value)) {
+            $answer = '0000-00-00 00:00:00';
+        } else {
+            $answer = $this->value;
+        }
+        $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+        $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+        return $answerDatetime > $compareDatetime;
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function regex($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!isset($input[$key])) {
-         $input[$key] = '';
-      }
-      if (!is_string($input[$key])) {
-         return false;
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!isset($input[$key])) {
+            $input[$key] = '';
+        }
+        if (!is_string($input[$key])) {
+            return false;
+        }
 
-      if ($input[$key] != ''
-         && DateTime::createFromFormat(self::DATE_FORMAT, $input[$key]) === false
-      ) {
-         return false;
-      }
+        if (
+            $input[$key] != ''
+            && DateTime::createFromFormat(self::DATE_FORMAT, $input[$key]) === false
+        ) {
+            return false;
+        }
 
-      $this->value = $input[$key];
-      return true;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fa fa-calendar" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fa fa-calendar" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

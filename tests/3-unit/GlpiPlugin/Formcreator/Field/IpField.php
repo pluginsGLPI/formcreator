@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,142 +34,156 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class IpField extends CommonTestCase {
+class IpField extends CommonTestCase
+{
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('IP address');
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('IP address');
-   }
+    public function testIsValid()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isValid('');
+        $this->boolean($output)->isTrue();
+    }
 
-   public function testIsValid() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isValid('');
-      $this->boolean($output)->isTrue();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isTrue();
-   }
+    public function testIsPrerequisites()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(true);
+    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isFalse();
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isFalse();
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
-
-   public function providerEquals() {
-      return [
-         [
-            'value'     => '',
-            'answer'    => '',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '127.0.1.1',
-            'answer'    => '127.0.0.1',
-            'expected'  => false,
-         ],
-         [
-            'value'     => '127.0.0.1',
-            'answer'    => '127.0.0.1',
-            'expected'  => true,
-         ],
-      ];
-   }
+    public function providerEquals()
+    {
+        return [
+            [
+                'value'     => '',
+                'answer'    => '',
+                'expected'  => true,
+            ],
+            [
+                'value'     => '127.0.1.1',
+                'answer'    => '127.0.0.1',
+                'expected'  => false,
+            ],
+            [
+                'value'     => '127.0.0.1',
+                'answer'    => '127.0.0.1',
+                'expected'  => true,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerEquals
     */
-   public function testEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->equals($value))->isEqualTo($expected);
-   }
+    public function testEquals($value, $answer, $expected)
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+        $this->boolean($instance->equals($value))->isEqualTo($expected);
+    }
 
-   public function providerNotEquals() {
-      return [
-         [
-            'value'     => '',
-            'answer'    => '',
-            'expected'  => false,
-         ],
-         [
-            'value'     => '127.0.1.1',
-            'answer'    => '127.0.0.1',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '127.0.0.1',
-            'answer'    => '127.0.0.1',
-            'expected'  => false,
-         ],
-      ];
-   }
+    public function providerNotEquals()
+    {
+        return [
+            [
+                'value'     => '',
+                'answer'    => '',
+                'expected'  => false,
+            ],
+            [
+                'value'     => '127.0.1.1',
+                'answer'    => '127.0.0.1',
+                'expected'  => true,
+            ],
+            [
+                'value'     => '127.0.0.1',
+                'answer'    => '127.0.0.1',
+                'expected'  => false,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerNotEquals
     */
-   public function testNotEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
-   }
+    public function testNotEquals($value, $answer, $expected)
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+        $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+    }
 
-   public function testGreaterThan() {
-      $this->exception(
-         function() {
-            $instance = $this->newTestedInstance($this->getQuestion());
-            $instance->greaterThan('');
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
-   }
+    public function testGreaterThan()
+    {
+        $this->exception(
+            function () {
+                $instance = $this->newTestedInstance($this->getQuestion());
+                $instance->greaterThan('');
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
+    }
 
-   public function testLessThan() {
-      $this->exception(
-         function() {
-            $instance = $this->newTestedInstance($this->getQuestion());
-            $instance->lessThan('');
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
-   }
+    public function testLessThan()
+    {
+        $this->exception(
+            function () {
+                $instance = $this->newTestedInstance($this->getQuestion());
+                $instance->lessThan('');
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
+    }
 
-   public function providerGetValueForApi() {
-      return [
-         [
-            'input'    => '127.0.0.1',
-            'expected' => '127.0.0.1',
-         ],
-      ];
-   }
+    public function providerGetValueForApi()
+    {
+        return [
+            [
+                'input'    => '127.0.0.1',
+                'expected' => '127.0.0.1',
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion([
-      ]);
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion([
+        ]);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->string($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->string($output)->isEqualTo($expected);
+    }
 }

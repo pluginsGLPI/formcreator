@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,198 +30,202 @@
  * ---------------------------------------------------------------------
  */
 
-
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportableTrait;
+    use PluginFormcreatorExportableTrait;
 
-   static public $itemtype = 'itemtype';
-   static public $items_id = 'items_id';
+    public static $itemtype = 'itemtype';
+    public static $items_id = 'items_id';
 
-   const ACTOR_TYPE_AUTHOR = 1;
-   const ACTOR_TYPE_VALIDATOR = 2;
-   const ACTOR_TYPE_PERSON = 3;
-   const ACTOR_TYPE_QUESTION_PERSON = 4;
-   const ACTOR_TYPE_GROUP = 5;
-   const ACTOR_TYPE_QUESTION_GROUP = 6;
-   const ACTOR_TYPE_SUPPLIER = 7;
-   const ACTOR_TYPE_QUESTION_SUPPLIER = 8;
-   const ACTOR_TYPE_QUESTION_ACTORS = 9;
-   const ACTOR_TYPE_GROUP_FROM_OBJECT = 10;
-   const ACTOR_TYPE_TECH_GROUP_FROM_OBJECT = 11;
-   CONST ACTOR_TYPE_AUTHORS_SUPERVISOR = 12;
+    const ACTOR_TYPE_AUTHOR = 1;
+    const ACTOR_TYPE_VALIDATOR = 2;
+    const ACTOR_TYPE_PERSON = 3;
+    const ACTOR_TYPE_QUESTION_PERSON = 4;
+    const ACTOR_TYPE_GROUP = 5;
+    const ACTOR_TYPE_QUESTION_GROUP = 6;
+    const ACTOR_TYPE_SUPPLIER = 7;
+    const ACTOR_TYPE_QUESTION_SUPPLIER = 8;
+    const ACTOR_TYPE_QUESTION_ACTORS = 9;
+    const ACTOR_TYPE_GROUP_FROM_OBJECT = 10;
+    const ACTOR_TYPE_TECH_GROUP_FROM_OBJECT = 11;
+    const ACTOR_TYPE_AUTHORS_SUPERVISOR = 12;
 
-   const ACTOR_ROLE_REQUESTER = 1;
-   const ACTOR_ROLE_OBSERVER = 2;
-   const ACTOR_ROLE_ASSIGNED = 3;
-   const ACTOR_ROLE_SUPPLIER = 4;
+    const ACTOR_ROLE_REQUESTER = 1;
+    const ACTOR_ROLE_OBSERVER = 2;
+    const ACTOR_ROLE_ASSIGNED = 3;
+    const ACTOR_ROLE_SUPPLIER = 4;
 
-   static function getEnumActorType() {
-      return [
-         self::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
-         self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
-         self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
-         self::ACTOR_TYPE_GROUP                  => __('Specific group', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_GROUP         => __('Group from the question', 'formcreator'),
-         self::ACTOR_TYPE_GROUP_FROM_OBJECT      => __('Group from an object', 'formcreator'),
-         self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT => __('Tech group from an object', 'formcreator'),
-         self::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
-         self::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
-         self::ACTOR_TYPE_AUTHORS_SUPERVISOR     => __('Form author\'s supervisor', 'formcreator'),
-      ];
-   }
+    static function getEnumActorType()
+    {
+        return [
+            self::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
+            self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
+            self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
+            self::ACTOR_TYPE_QUESTION_PERSON        => __('Person from the question', 'formcreator'),
+            self::ACTOR_TYPE_GROUP                  => __('Specific group', 'formcreator'),
+            self::ACTOR_TYPE_QUESTION_GROUP         => __('Group from the question', 'formcreator'),
+            self::ACTOR_TYPE_GROUP_FROM_OBJECT      => __('Group from an object', 'formcreator'),
+            self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT => __('Tech group from an object', 'formcreator'),
+            self::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
+            self::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
+            self::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
+            self::ACTOR_TYPE_AUTHORS_SUPERVISOR     => __('Form author\'s supervisor', 'formcreator'),
+        ];
+    }
 
-   static function getEnumRole() {
-      return [
-         self::ACTOR_ROLE_REQUESTER => __('Requester'),
-         self::ACTOR_ROLE_OBSERVER  => __('Observer'),
-         self::ACTOR_ROLE_ASSIGNED  => __('Assigned to'),
+    static function getEnumRole()
+    {
+        return [
+            self::ACTOR_ROLE_REQUESTER => __('Requester'),
+            self::ACTOR_ROLE_OBSERVER  => __('Observer'),
+            self::ACTOR_ROLE_ASSIGNED  => __('Assigned to'),
          // TODO : support ACTOR_ROLE_SUPPLIER
-      ];
-   }
+        ];
+    }
 
-   public static function getTypeName($nb = 0) {
-      return _n('Target actor', 'Target actors', $nb, 'formcreator');
-   }
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Target actor', 'Target actors', $nb, 'formcreator');
+    }
 
-   public function prepareInputForAdd($input) {
-      $requiredKeys = ['itemtype', 'items_id', 'actor_role', 'actor_type'];
-      if (count(array_intersect(array_keys($input), $requiredKeys)) < count($requiredKeys)) {
-         Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
-         return false;
-      }
+    public function prepareInputForAdd($input)
+    {
+        $requiredKeys = ['itemtype', 'items_id', 'actor_role', 'actor_type'];
+        if (count(array_intersect(array_keys($input), $requiredKeys)) < count($requiredKeys)) {
+            Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+            return false;
+        }
 
-      $input['actor_value'] = $input['actor_value_' . $input['actor_type']] ?? 0;
+        $input['actor_value'] = $input['actor_value_' . $input['actor_type']] ?? 0;
 
-      if (isset($input['use_notification'])) {
-         $input['use_notification'] = ($input['use_notification'] == 0) ? 0 : 1;
-      } else {
-         $input['use_notification'] = 0;
-      }
+        if (isset($input['use_notification'])) {
+            $input['use_notification'] = ($input['use_notification'] == 0) ? 0 : 1;
+        } else {
+            $input['use_notification'] = 0;
+        }
 
-      switch ($input['actor_type']) {
-         case self::ACTOR_TYPE_PERSON:
-         case self::ACTOR_TYPE_GROUP:
-            if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
-               Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
-               return false;
-            }
-            break;
-
-         case self::ACTOR_TYPE_QUESTION_PERSON:
-         case self::ACTOR_TYPE_QUESTION_GROUP:
-         case self::ACTOR_TYPE_QUESTION_ACTORS:
-            if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
-               Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
-               return false;
-            }
-            break;
-
-      }
-
-      // generate a unique id
-      if (!isset($input['uuid']) || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
-
-      return $input;
-   }
-
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
-      if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
-      }
-
-      $input[static::$items_id] = $containerId;
-
-      $item = new static();
-      // Find an existing condition to update, only if an UUID is available
-      $itemId = false;
-      /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id';
-      if (isset($input['uuid'])) {
-         // Try to find an existing item to update
-         $idKey = 'uuid';
-         $itemId = plugin_formcreator_getFromDBByField(
-            $item,
-            'uuid',
-            $input['uuid']
-         );
-         // Convert UUIDs or names into IDs
-         switch ($input['actor_type']) {
-            case self::ACTOR_TYPE_QUESTION_PERSON :
-            case self::ACTOR_TYPE_QUESTION_GROUP :
-            case self::ACTOR_TYPE_QUESTION_SUPPLIER :
-            case self::ACTOR_TYPE_QUESTION_ACTORS :
-            case self::ACTOR_TYPE_GROUP_FROM_OBJECT :
-            case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
-               /** @var PluginFormcreatorQuestion $question */
-               $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
-               if ($question === false) {
-                  $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-                  return false;
-               }
-               $input['actor_value'] = $question->getID();
-               break;
-
+        switch ($input['actor_type']) {
             case self::ACTOR_TYPE_PERSON:
-            case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
-               $user = new User;
-               $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
-               if ($users_id === false) {
-                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a user: %1$s'), $input['actor_value']));
-               }
-               $input['actor_value'] = $users_id;
-               break;
-
             case self::ACTOR_TYPE_GROUP:
-               $group = new Group;
-               $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
-               if ($groups_id === false) {
-                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a group: %1$s'), $input['actor_value']));
-               }
-               $input['actor_value'] = $groups_id;
-               break;
+                if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
+                    Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+                    return false;
+                }
+                break;
 
-            case self::ACTOR_TYPE_SUPPLIER:
-               $supplier = new Supplier;
-               $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
-               if ($suppliers_id === false) {
-                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a supplier: %1$s'), $input['actor_value']));
-               }
-               $input['actor_value'] = $suppliers_id;
-               break;
-         }
-      }
+            case self::ACTOR_TYPE_QUESTION_PERSON:
+            case self::ACTOR_TYPE_QUESTION_GROUP:
+            case self::ACTOR_TYPE_QUESTION_ACTORS:
+                if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
+                    Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+                    return false;
+                }
+                break;
+        }
 
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+       // generate a unique id
+        if (!isset($input['uuid']) || empty($input['uuid'])) {
+            $input['uuid'] = plugin_formcreator_getUuid();
+        }
 
-      // add the question to the linker
-      $linker->addObject($originalId, $item);
+        return $input;
+    }
 
-      return $itemId;
-   }
+    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0)
+    {
+        if (!isset($input['uuid']) && !isset($input['id'])) {
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+        }
 
-   public static function countItemsToImport($input) : int {
-      return 1;
-   }
+        $input[static::$items_id] = $containerId;
+
+        $item = new static();
+       // Find an existing condition to update, only if an UUID is available
+        $itemId = false;
+       /** @var string $idKey key to use as ID (id or uuid) */
+        $idKey = 'id';
+        if (isset($input['uuid'])) {
+           // Try to find an existing item to update
+            $idKey = 'uuid';
+            $itemId = plugin_formcreator_getFromDBByField(
+                $item,
+                'uuid',
+                $input['uuid']
+            );
+           // Convert UUIDs or names into IDs
+            switch ($input['actor_type']) {
+                case self::ACTOR_TYPE_QUESTION_PERSON:
+                case self::ACTOR_TYPE_QUESTION_GROUP:
+                case self::ACTOR_TYPE_QUESTION_SUPPLIER:
+                case self::ACTOR_TYPE_QUESTION_ACTORS:
+                case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
+                case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT:
+                  /** @var PluginFormcreatorQuestion $question */
+                    $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
+                    if ($question === false) {
+                        $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+                        return false;
+                    }
+                    $input['actor_value'] = $question->getID();
+                    break;
+
+                case self::ACTOR_TYPE_PERSON:
+                case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+                    $user = new User();
+                    $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
+                    if ($users_id === false) {
+                        throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a user: %1$s'), $input['actor_value']));
+                    }
+                    $input['actor_value'] = $users_id;
+                    break;
+
+                case self::ACTOR_TYPE_GROUP:
+                     $group = new Group();
+                     $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
+                    if ($groups_id === false) {
+                        throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a group: %1$s'), $input['actor_value']));
+                    }
+                    $input['actor_value'] = $groups_id;
+                    break;
+
+                case self::ACTOR_TYPE_SUPPLIER:
+                    $supplier = new Supplier();
+                    $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
+                    if ($suppliers_id === false) {
+                        throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a supplier: %1$s'), $input['actor_value']));
+                    }
+                    $input['actor_value'] = $suppliers_id;
+                    break;
+            }
+        }
+
+        $originalId = $input[$idKey];
+        if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+        } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+        }
+        if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+        }
+
+       // add the question to the linker
+        $linker->addObject($originalId, $item);
+
+        return $itemId;
+    }
+
+    public static function countItemsToImport($input): int
+    {
+        return 1;
+    }
 
    /**
     * Export in an array all the data of the current instanciated actor
@@ -228,68 +233,70 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) : array {
-      if ($this->isNewItem()) {
-         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
-      }
+    public function export(bool $remove_uuid = false): array
+    {
+        if ($this->isNewItem()) {
+            throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+        }
 
-      $target_actor = $this->fields;
+        $target_actor = $this->fields;
 
-      // remove key and fk
-      unset($target_actor[static::$items_id]);
+       // remove key and fk
+        unset($target_actor[static::$items_id]);
 
-      // remove ID or UUID
-      $idToRemove = 'id';
-      if ($remove_uuid) {
-         $idToRemove = 'uuid';
-      } else {
-         // Convert IDs into UUIDs or names
-         switch ($target_actor['actor_type']) {
-            case self::ACTOR_TYPE_QUESTION_PERSON:
-            case self::ACTOR_TYPE_QUESTION_GROUP:
-            case self::ACTOR_TYPE_QUESTION_SUPPLIER:
-            case self::ACTOR_TYPE_QUESTION_ACTORS:
-            case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
-            case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
-               $question = new PluginFormcreatorQuestion;
-               if ($question->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $question->fields['uuid'];
-               }
-               break;
-            case self::ACTOR_TYPE_PERSON:
-            case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
-               $user = new User;
-               if ($user->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $user->fields['name'];
-               }
-               break;
-            case self::ACTOR_TYPE_GROUP:
-               $group = new Group;
-               if ($group->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $group->fields['completename'];
-               }
-               break;
-            case self::ACTOR_TYPE_SUPPLIER:
-               $supplier = new Supplier;
-               if ($supplier->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['actor_value'] = $supplier->fields['name'];
-               }
-               break;
-         }
-      }
-      unset($target_actor[$idToRemove]);
+       // remove ID or UUID
+        $idToRemove = 'id';
+        if ($remove_uuid) {
+            $idToRemove = 'uuid';
+        } else {
+           // Convert IDs into UUIDs or names
+            switch ($target_actor['actor_type']) {
+                case self::ACTOR_TYPE_QUESTION_PERSON:
+                case self::ACTOR_TYPE_QUESTION_GROUP:
+                case self::ACTOR_TYPE_QUESTION_SUPPLIER:
+                case self::ACTOR_TYPE_QUESTION_ACTORS:
+                case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
+                case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT:
+                    $question = new PluginFormcreatorQuestion();
+                    if ($question->getFromDB($target_actor['actor_value'])) {
+                        $target_actor['actor_value'] = $question->fields['uuid'];
+                    }
+                    break;
+                case self::ACTOR_TYPE_PERSON:
+                case self::ACTOR_TYPE_AUTHORS_SUPERVISOR:
+                    $user = new User();
+                    if ($user->getFromDB($target_actor['actor_value'])) {
+                        $target_actor['actor_value'] = $user->fields['name'];
+                    }
+                    break;
+                case self::ACTOR_TYPE_GROUP:
+                    $group = new Group();
+                    if ($group->getFromDB($target_actor['actor_value'])) {
+                        $target_actor['actor_value'] = $group->fields['completename'];
+                    }
+                    break;
+                case self::ACTOR_TYPE_SUPPLIER:
+                    $supplier = new Supplier();
+                    if ($supplier->getFromDB($target_actor['actor_value'])) {
+                        $target_actor['actor_value'] = $supplier->fields['name'];
+                    }
+                    break;
+            }
+        }
+        unset($target_actor[$idToRemove]);
 
-      return $target_actor;
-   }
+        return $target_actor;
+    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
-      $keepCriteria = [
-         static::$itemtype => $container->getType(),
-         static::$items_id => $container->getID(),
-      ];
-      if (count($exclude) > 0) {
-         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
-      }
-      return $this->deleteByCriteria($keepCriteria);
-   }
+    public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool
+    {
+        $keepCriteria = [
+            static::$itemtype => $container->getType(),
+            static::$items_id => $container->getID(),
+        ];
+        if (count($exclude) > 0) {
+            $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+        }
+        return $this->deleteByCriteria($keepCriteria);
+    }
 }

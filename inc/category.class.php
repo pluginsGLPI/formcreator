@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,165 +31,171 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorCategory extends CommonTreeDropdown
 {
    // Activate translation on GLPI 0.85
-   var $can_be_translated = true;
+    var $can_be_translated = true;
 
-   static function canView() {
-      if (isAPI()) {
-         return true;
-      }
+    static function canView()
+    {
+        if (isAPI()) {
+            return true;
+        }
 
-      return parent::canView();
-   }
+        return parent::canView();
+    }
 
-   public static function getTypeName($nb = 1) {
-      return _n('Form category', 'Form categories', $nb, 'formcreator');
-   }
+    public static function getTypeName($nb = 1)
+    {
+        return _n('Form category', 'Form categories', $nb, 'formcreator');
+    }
 
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      $env       = new self;
-      $found_env = $env->find([static::getForeignKeyField() => $item->getID()]);
-      $nb        = count($found_env);
-      return self::createTabEntry(self::getTypeName($nb), $nb);
-   }
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        $env       = new self();
+        $found_env = $env->find([static::getForeignKeyField() => $item->getID()]);
+        $nb        = count($found_env);
+        return self::createTabEntry(self::getTypeName($nb), $nb);
+    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      if ($item->getType() != __CLASS__) {
-         return;
-      }
-      $item->showChildren();
-   }
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() != __CLASS__) {
+            return;
+        }
+        $item->showChildren();
+    }
 
-   public function getAdditionalFields() {
-      return [
-         [
-            'name'      => KnowbaseItemCategory::getForeignKeyField(),
-            'type'      => 'dropdownValue',
-            'label'     => __('Knowbase category', 'formcreator'),
-            'list'      => false
-         ],
-         [
-            'name'      => $this->getForeignKeyField(),
-            'type'      => 'parent',
-            'label'     => __('As child of'),
-            'list'      => false
-         ]
-      ];
-   }
+    public function getAdditionalFields()
+    {
+        return [
+            [
+                'name'      => KnowbaseItemCategory::getForeignKeyField(),
+                'type'      => 'dropdownValue',
+                'label'     => __('Knowbase category', 'formcreator'),
+                'list'      => false
+            ],
+            [
+                'name'      => $this->getForeignKeyField(),
+                'type'      => 'parent',
+                'label'     => __('As child of'),
+                'list'      => false
+            ]
+        ];
+    }
 
    /**
     * Get the tree of categories
     *
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree(): array {
-      global $DB;
+    public static function getCategoryTree(): array
+    {
+        global $DB;
 
-      $cat_table  = PluginFormcreatorCategory::getTable();
-      $form_table = PluginFormcreatorForm::getTable();
-      $table_fp   = PluginFormcreatorForm_Profile::getTable();
+        $cat_table  = PluginFormcreatorCategory::getTable();
+        $form_table = PluginFormcreatorForm::getTable();
+        $table_fp   = PluginFormcreatorForm_Profile::getTable();
 
-      $query_faqs = KnowbaseItem::getListRequest([
-         'faq'      => '1',
-         'contains' => '',
-         'knowbaseitemcategories_id' => 0,
-      ]);
-      // GLPI 9.5 returns an array
-      $subQuery = new DBMysqlIterator($DB);
-      $subQuery->buildQuery($query_faqs);
+        $query_faqs = KnowbaseItem::getListRequest([
+            'faq'      => '1',
+            'contains' => '',
+            'knowbaseitemcategories_id' => 0,
+        ]);
+       // GLPI 9.5 returns an array
+        $subQuery = new DBMysqlIterator($DB);
+        $subQuery->buildQuery($query_faqs);
 
-      $dbUtils = new DbUtils();
-      $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);
-      if (count($entityRestrict)) {
-         $entityRestrict = [$entityRestrict];
-      }
+        $dbUtils = new DbUtils();
+        $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);
+        if (count($entityRestrict)) {
+            $entityRestrict = [$entityRestrict];
+        }
 
-      // Selects categories containing forms or sub-categories
-      $categoryFk = PluginFormcreatorCategory::getForeignKeyField();
+       // Selects categories containing forms or sub-categories
+        $categoryFk = PluginFormcreatorCategory::getForeignKeyField();
 
-      // Get base query, add count and category condition
-      $count_forms_criteria = PluginFormcreatorForm::getFormListQuery();
-      $count_forms_criteria['COUNT'] = 'count';
-      $count_forms_criteria['WHERE']["$form_table.$categoryFk"] = new QueryExpression("$cat_table.id");
+       // Get base query, add count and category condition
+        $count_forms_criteria = PluginFormcreatorForm::getFormListQuery();
+        $count_forms_criteria['COUNT'] = 'count';
+        $count_forms_criteria['WHERE']["$form_table.$categoryFk"] = new QueryExpression("$cat_table.id");
 
-      $count1 = new QuerySubQuery($count_forms_criteria);
-      $count2 = new QuerySubQuery([
-         'COUNT' => 'count',
-         'FROM' => 'glpi_knowbaseitems_knowbaseitemcategories',
-         'WHERE' => [
-            'knowbaseitems_id' => new QuerySubQuery([
-               'SELECT' => 'faqs.id',
-               'FROM' => (new QuerySubQuery($query_faqs, 'faqs'))
-            ]),
-            [(new QueryExpression("knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
-         ]
-      ]);
-      $request = [
-         'SELECT' => [
-            'id',
-            'name',
-            "$categoryFk as parent",
-            'level',
-            new QueryExpression(
-               $count1->getQuery() . " + " . $count2->getQuery() . " as items_count"
-            ),
-         ],
-         'FROM' => $cat_table,
-         'ORDER' => ["level DESC", "name DESC"],
-      ];
-      $result = $DB->request($request);
+        $count1 = new QuerySubQuery($count_forms_criteria);
+        $count2 = new QuerySubQuery([
+            'COUNT' => 'count',
+            'FROM' => 'glpi_knowbaseitems_knowbaseitemcategories',
+            'WHERE' => [
+                'knowbaseitems_id' => new QuerySubQuery([
+                    'SELECT' => 'faqs.id',
+                    'FROM' => (new QuerySubQuery($query_faqs, 'faqs'))
+                ]),
+                [(new QueryExpression("knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
+            ]
+        ]);
+        $request = [
+            'SELECT' => [
+                'id',
+                'name',
+                "$categoryFk as parent",
+                'level',
+                new QueryExpression(
+                    $count1->getQuery() . " + " . $count2->getQuery() . " as items_count"
+                ),
+            ],
+            'FROM' => $cat_table,
+            'ORDER' => ["level DESC", "name DESC"],
+        ];
+        $result = $DB->request($request);
 
-      $categories = [];
-      foreach ($result as $category) {
-         $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
-         // Keep the short name only
-         // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
-         $split = explode(' &#62; ', $category['name']);
-         $category['name'] = array_pop($split);
-         $categories[$category['id']] = $category;
-      }
+        $categories = [];
+        foreach ($result as $category) {
+            $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
+           // Keep the short name only
+           // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
+            $split = explode(' &#62; ', $category['name']);
+            $category['name'] = array_pop($split);
+            $categories[$category['id']] = $category;
+        }
 
-      // Remove categories that have no items and no children
-      // Requires category list to be sorted by level DESC
-      foreach ($categories as $index => $category) {
-         $children = array_filter(
-            $categories,
-            function ($element) use ($category) {
-               return $category['id'] == $element['parent'];
+       // Remove categories that have no items and no children
+       // Requires category list to be sorted by level DESC
+        foreach ($categories as $index => $category) {
+            $children = array_filter(
+                $categories,
+                function ($element) use ($category) {
+                    return $category['id'] == $element['parent'];
+                }
+            );
+            if (empty($children) && 0 == $category['items_count']) {
+                unset($categories[$index]);
+                continue;
             }
-         );
-         if (empty($children) && 0 == $category['items_count']) {
-            unset($categories[$index]);
-            continue;
-         }
-         $categories[$index]['subcategories'] = [];
-      }
+            $categories[$index]['subcategories'] = [];
+        }
 
-      // Create root node
-      $nodes = [
-         'name'            => '',
-         'id'              => 0,
-         'parent'          => 0,
-         'subcategories'   => [],
-      ];
-      $flat = [
-         0 => &$nodes,
-      ];
+       // Create root node
+        $nodes = [
+            'name'            => '',
+            'id'              => 0,
+            'parent'          => 0,
+            'subcategories'   => [],
+        ];
+        $flat = [
+            0 => &$nodes,
+        ];
 
-      // Build from root node to leaves
-      $categories = array_reverse($categories);
-      foreach ($categories as $item) {
-         $flat[$item['id']] = $item;
-         $flat[$item['parent']]['subcategories'][] = &$flat[$item['id']];
-      }
+       // Build from root node to leaves
+        $categories = array_reverse($categories);
+        foreach ($categories as $item) {
+            $flat[$item['id']] = $item;
+            $flat[$item['parent']]['subcategories'][] = &$flat[$item['id']];
+        }
 
-      return $nodes;
-   }
+        return $nodes;
+    }
 
    /**
     * Get available categories
@@ -196,13 +203,14 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @param int $helpdeskHome
     * @return DBmysqlIterator
     */
-   public static function getAvailableCategories($helpdeskHome = 1) : DBmysqlIterator {
-      global $DB;
+    public static function getAvailableCategories($helpdeskHome = 1): DBmysqlIterator
+    {
+        global $DB;
 
-      $result = $DB->request(self::getAvailableCategoriesCriterias($helpdeskHome));
+        $result = $DB->request(self::getAvailableCategoriesCriterias($helpdeskHome));
 
-      return $result;
-   }
+        return $result;
+    }
 
    /**
     * Get available categories
@@ -210,31 +218,32 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @param int $helpdeskHome
     * @return array
     */
-   public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {
-      $cat_table   = PluginFormcreatorCategory::getTable();
-      $category_fk = PluginFormcreatorCategory::getForeignKeyField();
-      $form_table  = PluginFormcreatorForm::getTable();
-      $form_ids    = PluginFormcreatorForm::getFormRestrictionSubQuery($helpdeskHome);
+    public static function getAvailableCategoriesCriterias($helpdeskHome = 1): array
+    {
+        $cat_table   = PluginFormcreatorCategory::getTable();
+        $category_fk = PluginFormcreatorCategory::getForeignKeyField();
+        $form_table  = PluginFormcreatorForm::getTable();
+        $form_ids    = PluginFormcreatorForm::getFormRestrictionSubQuery($helpdeskHome);
 
-      return [
-         'SELECT' => [
-            $cat_table => [
-              'name', 'id'
+        return [
+            'SELECT' => [
+                $cat_table => [
+                    'name', 'id'
+                ]
+            ],
+            'FROM' => $cat_table,
+            'INNER JOIN' => [
+                $form_table => [
+                    'FKEY' => [
+                        $cat_table => 'id',
+                        $form_table => $category_fk
+                    ]
+                ]
+            ],
+            'WHERE' => ["$form_table.id" => $form_ids],
+            'GROUPBY' => [
+                "$cat_table.id"
             ]
-         ],
-         'FROM' => $cat_table,
-         'INNER JOIN' => [
-            $form_table => [
-               'FKEY' => [
-                  $cat_table => 'id',
-                  $form_table => $category_fk
-               ]
-            ]
-         ],
-         'WHERE' => ["$form_table.id" => $form_ids],
-         'GROUPBY' => [
-            "$cat_table.id"
-         ]
-      ];
-   }
+        ];
+    }
 }

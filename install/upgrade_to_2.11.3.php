@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,24 +29,26 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_11_3 {
+class PluginFormcreatorUpgradeTo2_11_3
+{
    /** @var Migration */
-   protected $migration;
+    protected $migration;
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-      global $DB;
+    public function upgrade(Migration $migration)
+    {
+        global $DB;
 
-      $this->migration = $migration;
+        $this->migration = $migration;
 
-      // Convert datetime to timestamp
-      $table = 'glpi_plugin_formcreator_formanswers';
-      $migration->changeField($table, 'request_date', 'request_date', 'datetime'. ' NOT NULL');
+       // Convert datetime to timestamp
+        $table = 'glpi_plugin_formcreator_formanswers';
+        $migration->changeField($table, 'request_date', 'request_date', 'datetime' . ' NOT NULL');
 
-      $table = 'glpi_plugin_formcreator_issues';
-      $migration->changeField($table, 'date_creation', 'date_creation', 'datetime'. ' NOT NULL');
-      $migration->changeField($table, 'date_mod', 'date_mod', 'datetime'. ' NOT NULL');
-   }
+        $table = 'glpi_plugin_formcreator_issues';
+        $migration->changeField($table, 'date_creation', 'date_creation', 'datetime' . ' NOT NULL');
+        $migration->changeField($table, 'date_mod', 'date_mod', 'datetime' . ' NOT NULL');
+    }
 }

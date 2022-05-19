@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -32,7 +33,7 @@
 namespace GlpiPlugin\Formcreator\Filter;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 use Dropdown;
@@ -40,21 +41,22 @@ use Dropdown;
 class ItilCategoryFilter
 {
    // Not numeric because it is serialized with other values as JSON
-   const ITIL_CATEGORY_FILTER_REQUEST = 'request';
-   const ITIL_CATEGORY_FILTER_INCIDENT = 'incident';
-   const ITIL_CATEGORY_FILTER_BOTH = 'both';
-   const ITIL_CATEGORY_FILTER_CHANGE = 'change';
-   const ITIL_CATEGORY_FILTER_ALL = 'all';
+    const ITIL_CATEGORY_FILTER_REQUEST = 'request';
+    const ITIL_CATEGORY_FILTER_INCIDENT = 'incident';
+    const ITIL_CATEGORY_FILTER_BOTH = 'both';
+    const ITIL_CATEGORY_FILTER_CHANGE = 'change';
+    const ITIL_CATEGORY_FILTER_ALL = 'all';
 
-   public static function getEnumItilCategoryFilterRule() {
-      return [
-         self::ITIL_CATEGORY_FILTER_REQUEST   => __('Request categories', 'formcreator'),
-         self::ITIL_CATEGORY_FILTER_INCIDENT  => __('Incident categories', 'formcreator'),
-         self::ITIL_CATEGORY_FILTER_BOTH      => __('Request categories', 'formcreator') . " + " . __('Incident categories', 'formcreator'),
-         self::ITIL_CATEGORY_FILTER_CHANGE    => __('Change categories', 'formcreator'),
-         self::ITIL_CATEGORY_FILTER_ALL       => __('All', 'formcreator'),
-      ];
-   }
+    public static function getEnumItilCategoryFilterRule()
+    {
+        return [
+            self::ITIL_CATEGORY_FILTER_REQUEST   => __('Request categories', 'formcreator'),
+            self::ITIL_CATEGORY_FILTER_INCIDENT  => __('Incident categories', 'formcreator'),
+            self::ITIL_CATEGORY_FILTER_BOTH      => __('Request categories', 'formcreator') . " + " . __('Incident categories', 'formcreator'),
+            self::ITIL_CATEGORY_FILTER_CHANGE    => __('Change categories', 'formcreator'),
+            self::ITIL_CATEGORY_FILTER_ALL       => __('All', 'formcreator'),
+        ];
+    }
 
    /**
     * Show or return a dropdown of itil categories filter
@@ -66,11 +68,12 @@ class ItilCategoryFilter
     *
     * @return string random ID or HTML
     */
-   public static function dropdown(string $name, array $options = []): string {
-      return Dropdown::showFromArray(
-         $name,
-         self::getEnumItilCategoryFilterRule(),
-         $options
-      );
-   }
+    public static function dropdown(string $name, array $options = []): string
+    {
+        return Dropdown::showFromArray(
+            $name,
+            self::getEnumItilCategoryFilterRule(),
+            $options
+        );
+    }
 }

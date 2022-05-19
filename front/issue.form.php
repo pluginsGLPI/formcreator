@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,11 +31,11 @@
  */
 
 global $CFG_GLPI;
-require_once ('../../../inc/includes.php');
+require_once('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 Session::checkValidSessionId();
@@ -43,25 +44,25 @@ Session::checkValidSessionId();
 $issueId = $_REQUEST['id'] ?? null;
 $issue = PluginFormcreatorIssue::getById((int) $issueId);
 if ($issueId === null || !($issue instanceof PluginFormcreatorIssue)) {
-   $header = __('Item not found');
-   if (Session::getCurrentInterface() == "helpdesk") {
-      Html::helpHeader($header);
-   } else {
-      Html::header($header);
-   }
-   Html::displayNotFoundError();
-   if (Session::getCurrentInterface() == "helpdesk") {
-      Html::helpFooter();
-   } else {
-      Html::footer();
-   }
+    $header = __('Item not found');
+    if (Session::getCurrentInterface() == "helpdesk") {
+        Html::helpHeader($header);
+    } else {
+        Html::header($header);
+    }
+    Html::displayNotFoundError();
+    if (Session::getCurrentInterface() == "helpdesk") {
+        Html::helpFooter();
+    } else {
+        Html::footer();
+    }
 }
 
 // Accessing an issue from a tech profile, redirect to ticket or formanswer page
 if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
-   $id = $issue->fields['items_id'];
-   $itemtype = $issue->fields['itemtype'];
-   Html::redirect($itemtype::getFormURLWithID($id));
+    $id = $issue->fields['items_id'];
+    $itemtype = $issue->fields['itemtype'];
+    Html::redirect($itemtype::getFormURLWithID($id));
 }
 
 $itemtype = $issue->fields['itemtype'];
@@ -72,15 +73,15 @@ $_GET['id'] = $issue->fields['display_id'];
 
 // Specific case, viewing a ticket from a formanswer result
 if ($itemtype == PluginFormcreatorFormAnswer::class && isset($_GET['tickets_id'])) {
-   $itemtype = Ticket::class;
-   $_GET['id'] = "f_$_GET[tickets_id]";
+    $itemtype = Ticket::class;
+    $_GET['id'] = "f_$_GET[tickets_id]";
 }
 
 $header = $itemtype::getTypeName(1);
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader($header);
+    Html::helpHeader($header);
 } else {
-   Html::header($header);
+    Html::header($header);
 }
 
 // Reset request param in case some other code depends on it
@@ -89,7 +90,7 @@ $_GET['id'] = $old_id;
 $issue->display($_REQUEST);
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

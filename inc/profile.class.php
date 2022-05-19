@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,39 +30,44 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorProfile extends Profile {
+class PluginFormcreatorProfile extends Profile
+{
+    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        return self::createTabEntry(PluginFormcreatorForm::getTypeName(Session::getPluralNumber()));
+    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      return self::createTabEntry(PluginFormcreatorForm::getTypeName(Session::getPluralNumber()));
-   }
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        $formcreatorprofile = new self();
+        $formcreatorprofile->showForm($item->getID());
+        return true;
+    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      $formcreatorprofile = new self();
-      $formcreatorprofile->showForm($item->getID());
-      return true;
-   }
+    function showForm($ID, $options = [])
+    {
+        if (!self::canView()) {
+            return false;
+        }
 
-   function showForm($ID, $options = []) {
-      if (!self::canView()) {
-         return false;
-      }
+        echo "<div class='spaced'>";
+        $profile = new Profile();
+        $profile->getFromDB($ID);
+        echo "<form method='post' action='" . $profile->getFormURL() . "'>";
 
-      echo "<div class='spaced'>";
-      $profile = new Profile();
-      $profile->getFromDB($ID);
-      echo "<form method='post' action='".$profile->getFormURL()."'>";
+        $rights = [['itemtype'  => PluginFormcreatorForm::getType(),
+            'label'     => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
+            'field'     => PluginFormcreatorForm::$rightname
+        ]
+        ];
+        $matrix_options['title'] = PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
+        $profile->displayRightsChoiceMatrix($rights, $matrix_options);
 
-      $rights = [['itemtype'  => PluginFormcreatorForm::getType(),
-                  'label'     => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
-                  'field'     => PluginFormcreatorForm::$rightname]];
-      $matrix_options['title'] = PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
-      $profile->displayRightsChoiceMatrix($rights, $matrix_options);
-
-      echo "<div class='center'>";
-      echo Html::hidden('id', ['value' => $ID]);
-      echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
-      echo "</div>\n";
-      Html::closeForm();
-      echo "</div>";
-   }
+        echo "<div class='center'>";
+        echo Html::hidden('id', ['value' => $ID]);
+        echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+        echo "</div>\n";
+        Html::closeForm();
+        echo "</div>";
+    }
 }

@@ -37,63 +37,65 @@ use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class LdapSelectField extends CommonFunctionalTestCase
 {
-   use CommonQuestionTest;
+    use CommonQuestionTest;
 
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
-      switch ($method) {
-         case 'testCreateForm':
-         case 'testRenderQuestion':
-            break;
-      }
-   }
+    public function beforeTestMethod($method)
+    {
+        parent::beforeTestMethod($method);
+        switch ($method) {
+            case 'testCreateForm':
+            case 'testRenderQuestion':
+                break;
+        }
+    }
 
-   public function testCreateForm() {
-      // Use a clean entity for the tests
-      $this->login('glpi', 'glpi');
+    public function testCreateForm()
+    {
+       // Use a clean entity for the tests
+        $this->login('glpi', 'glpi');
 
-      $form = $this->showCreateQuestionForm();
+        $form = $this->showCreateQuestionForm();
 
-      $authLdap = new \AuthLDAP();
-      $authLdap->add([
-         'name' => 'LDAP for Formcreator',
-         'condition'   => '(&(objectClass=user)(objectCategory=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))',
-         'login_field' => 'samaccountname',
-         'sync_field'  => 'objectguid',
-      ]);
-      $this->boolean($authLdap->isNewItem())->isFalse();
+        $authLdap = new \AuthLDAP();
+        $authLdap->add([
+            'name' => 'LDAP for Formcreator',
+            'condition'   => '(&(objectClass=user)(objectCategory=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))',
+            'login_field' => 'samaccountname',
+            'sync_field'  => 'objectguid',
+        ]);
+        $this->boolean($authLdap->isNewItem())->isFalse();
 
-      // set question type
-      $this->client->executeScript('
+       // set question type
+        $this->client->executeScript('
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("ldapselect")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
-         '
-      );
+         ');
 
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="ldap_filter"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="ldap_attribute"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="ldap_auth"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="ldap_filter"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="ldap_attribute"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="ldap_auth"]');
 
-      $this->browsing->selectInDropdown('form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_auth"]', $authLdap->getID(), $authLdap->fields['name']);
-      $this->browsing->selectInDropdown('form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_attribute"]', 12, '(AD)User ID');
+        $this->browsing->selectInDropdown('form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_auth"]', $authLdap->getID(), $authLdap->fields['name']);
+        $this->browsing->selectInDropdown('form[data-itemtype="PluginFormcreatorQuestion"] [name="ldap_attribute"]', 12, '(AD)User ID');
 
-      $this->_testQuestionCreated($form, __METHOD__);
-   }
-   public function testRenderQuestion() {
-      $authLdap = new \AuthLDAP();
-      $authLdap->add([
-         'name' => 'LDAP for Formcreator',
-         'condition'   => '(&(objectClass=user)(objectCategory=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))',
-         'login_field' => 'samaccountname',
-         'sync_field'  => 'objectguid',
-      ]);
-      $this->boolean($authLdap->isNewItem())->isFalse();
+        $this->_testQuestionCreated($form, __METHOD__);
+    }
+    public function testRenderQuestion()
+    {
+        $authLdap = new \AuthLDAP();
+        $authLdap->add([
+            'name' => 'LDAP for Formcreator',
+            'condition'   => '(&(objectClass=user)(objectCategory=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))',
+            'login_field' => 'samaccountname',
+            'sync_field'  => 'objectguid',
+        ]);
+        $this->boolean($authLdap->isNewItem())->isFalse();
 
-      $this->_testRenderQuestion([
-         'fieldtype' => 'ldapselect',
-         'ldap_auth' => $authLdap->getID()
-      ]);
-   }
+        $this->_testRenderQuestion([
+            'fieldtype' => 'ldapselect',
+            'ldap_auth' => $authLdap->getID()
+        ]);
+    }
 }

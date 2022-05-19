@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,12 +29,13 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+
+include('../../../inc/includes.php');
 
 if (!Session::getLoginUserID()) {
    // Session is not valid then exit
-   http_response_code(500);
-   exit;
+    http_response_code(500);
+    exit;
 }
 
 $tree = PluginFormcreatorKnowbase::getCategoryTree();

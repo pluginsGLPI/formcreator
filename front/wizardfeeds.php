@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,31 +31,31 @@
  */
 
 global $CFG_GLPI;
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (! plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
+    Html::redirect($CFG_GLPI['root_doc'] . "/front/helpdesk.public.php");
 }
 
 if (!RSSFeed::canView()) {
-   Html::displayRightError();
+    Html::displayRightError();
 }
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+    Html::header(__('Service catalog', 'formcreator'));
 }
 
 RSSFeed::showListForCentral(false);
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

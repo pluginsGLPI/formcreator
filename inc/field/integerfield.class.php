@@ -38,123 +38,134 @@ use Toolbox;
 
 class IntegerField extends FloatField
 {
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '';
+        }
 
-      return strval((int) $this->value);
-   }
+        return strval((int) $this->value);
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function isValidValue($value): bool {
-      if (strlen($value) == 0) {
-         return true;
-      }
+    public function isValidValue($value): bool
+    {
+        if (strlen($value) == 0) {
+            return true;
+        }
 
-      if (!empty($value) && !ctype_digit((string) $value)) {
-         Session::addMessageAfterRedirect(sprintf(__('This is not an integer: %s', 'formcreator'), $this->getLabel()), false, ERROR);
-         return false;
-      }
+        if (!empty($value) && !ctype_digit((string) $value)) {
+            Session::addMessageAfterRedirect(sprintf(__('This is not an integer: %s', 'formcreator'), $this->getLabel()), false, ERROR);
+            return false;
+        }
 
-      $parameters = $this->getParameters();
+        $parameters = $this->getParameters();
 
-      // Check the field matches the format regex
-      if (!$parameters['regex']->isNewItem()) {
-         $regex = $parameters['regex']->fields['regex'];
-         if ($regex !== null && strlen($regex) > 0) {
-            if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(
-                  sprintf(__('Specific format does not match: %s', 'formcreator'), $this->getLabel()),
-                  false,
-                  ERROR
-               );
-               return false;
+       // Check the field matches the format regex
+        if (!$parameters['regex']->isNewItem()) {
+            $regex = $parameters['regex']->fields['regex'];
+            if ($regex !== null && strlen($regex) > 0) {
+                if (!preg_match($regex, $value)) {
+                    Session::addMessageAfterRedirect(
+                        sprintf(__('Specific format does not match: %s', 'formcreator'), $this->getLabel()),
+                        false,
+                        ERROR
+                    );
+                     return false;
+                }
             }
-         }
-      }
+        }
 
-      // Check the field is in the range
-      if (!$parameters['range']->isNewItem()) {
-         $rangeMin = $parameters['range']->fields['range_min'];
-         $rangeMax = $parameters['range']->fields['range_max'];
-         if ($rangeMin > 0 && $value < $rangeMin) {
-            $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->getLabel());
-            Session::addMessageAfterRedirect($message, false, ERROR);
+       // Check the field is in the range
+        if (!$parameters['range']->isNewItem()) {
+            $rangeMin = $parameters['range']->fields['range_min'];
+            $rangeMax = $parameters['range']->fields['range_max'];
+            if ($rangeMin > 0 && $value < $rangeMin) {
+                $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->getLabel());
+                Session::addMessageAfterRedirect($message, false, ERROR);
+                return false;
+            }
+
+            if ($rangeMax > 0 && $value > $rangeMax) {
+                $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->getLabel());
+                Session::addMessageAfterRedirect($message, false, ERROR);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function getName(): string
+    {
+        return __('Integer', 'formcreator');
+    }
+
+    public function prepareQuestionInputForSave($input)
+    {
+        $success = true;
+        $fieldType = $this->getFieldTypeName();
+       // Add leading and trailing regex marker automaticaly
+        if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
+            $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
+            $success = PluginFormcreatorCommon::checkRegex($regex);
+            if (!$success) {
+                Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+            }
+        }
+        if (!$success) {
             return false;
-         }
+        }
 
-         if ($rangeMax > 0 && $value > $rangeMax) {
-            $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->getLabel());
-            Session::addMessageAfterRedirect($message, false, ERROR);
-            return false;
-         }
-      }
+        if (isset($input['default_values'])) {
+            if ($input['default_values'] != '') {
+                $this->value = (int) $input['default_values'];
+            } else {
+                $this->value = '';
+            }
+        }
+        $input['values'] = '';
 
-      return true;
-   }
+        return $input;
+    }
 
-   public static function getName(): string {
-      return __('Integer', 'formcreator');
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      $success = true;
-      $fieldType = $this->getFieldTypeName();
-      // Add leading and trailing regex marker automaticaly
-      if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
-         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
-         $success = PluginFormcreatorCommon::checkRegex($regex);
-         if (!$success) {
-            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
-         }
-      }
-      if (!$success) {
-         return false;
-      }
-
-      if (isset($input['default_values'])) {
-         if ($input['default_values'] != '') {
-            $this->value = (int) $input['default_values'];
-         } else {
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!is_string($input[$key])) {
             $this->value = '';
-         }
-      }
-      $input['values'] = '';
+        }
+       // $input[$key] = (int) $input[$key];
 
-      return $input;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function equals($value): bool
+    {
+        return ((int) $this->value) === ((int) $value);
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!is_string($input[$key])) {
-         $this->value = '';
-      }
-      // $input[$key] = (int) $input[$key];
+    public function greaterThan($value): bool
+    {
+        return ((int) $this->value) > ((int) $value);
+    }
 
-      $this->value = $input[$key];
-      return true;
-   }
+    public function regex($value): bool
+    {
+        return (preg_grep($value, (int) $this->value)) ? true : false;
+    }
 
-   public function equals($value): bool {
-      return ((int) $this->value) === ((int) $value);
-   }
-
-   public function greaterThan($value): bool {
-      return ((int) $this->value) > ((int) $value);
-   }
-
-   public function regex($value): bool {
-      return (preg_grep($value, (int) $this->value)) ? true : false;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon()
+    {
+        return '<i class="fas fa-square-root-alt" aria-hidden="true"></i>';
+    }
 }

@@ -37,33 +37,35 @@ use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class FloatField extends CommonFunctionalTestCase
 {
-   use CommonQuestionTest;
+    use CommonQuestionTest;
 
-   public function testCreateForm() {
-      // Use a clean entity for the tests
-      $this->login('glpi', 'glpi');
+    public function testCreateForm()
+    {
+       // Use a clean entity for the tests
+        $this->login('glpi', 'glpi');
 
-      $form = $this->showCreateQuestionForm();
+        $form = $this->showCreateQuestionForm();
 
-      // set question type
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("float")
+       // set question type
+        $this->client->executeScript(
+            '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("float")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
          '
-      );
+        );
 
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[float][regex][regex]"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[float][range][range_min]"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[float][range][range_max]"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[float][regex][regex]"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[float][range][range_min]"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="_parameters[float][range][range_max]"]');
 
-      $this->_testQuestionCreated($form, __METHOD__);
-   }
+        $this->_testQuestionCreated($form, __METHOD__);
+    }
 
-   public function testRenderQuestion() {
-      $this->_testRenderQuestion([
-         'fieldtype' => 'float',
-      ]);
-   }
+    public function testRenderQuestion()
+    {
+        $this->_testRenderQuestion([
+            'fieldtype' => 'float',
+        ]);
+    }
 }

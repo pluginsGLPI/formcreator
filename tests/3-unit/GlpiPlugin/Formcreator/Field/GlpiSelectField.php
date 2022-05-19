@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -34,300 +35,311 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 use Computer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class GlpiselectField extends CommonTestCase {
+class GlpiselectField extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        switch ($method) {
+            case 'testIsValid':
+                $this->login('glpi', 'glpi');
+                break;
+        }
+    }
 
-   public function beforeTestMethod($method) {
-      switch ($method) {
-         case 'testIsValid':
-            $this->login('glpi', 'glpi');
-            break;
-      }
-   }
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('GLPI object');
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('GLPI object');
-   }
+    public function providerGetAnswer()
+    {
+        $user = new \User();
+        $user->add([
+            'name' => $this->getUniqueString(),
+            'realname' => 'John',
+            'firstname' => 'Doe',
+        ]);
+        $this->boolean($user->isNewItem())->isFalse();
 
-   public function providerGetAnswer() {
-      $user = new \User();
-      $user->add([
-         'name' => $this->getUniqueString(),
-         'realname' => 'John',
-         'firstname' => 'Doe',
-      ]);
-      $this->boolean($user->isNewItem())->isFalse();
+        $computer = new \Computer();
+        $computer->add([
+            'name' => $this->getUniqueString(),
+            \Entity::getForeignKeyField() => 0,
+        ]);
+        $this->boolean($computer->isNewItem())->isFalse();
 
-      $computer = new \Computer();
-      $computer->add([
-         'name' => $this->getUniqueString(),
-         \Entity::getForeignKeyField() => 0,
-      ]);
-      $this->boolean($computer->isNewItem())->isFalse();
+        $dataset = [
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => $user->getID(),
+                    'itemtype'        => \User::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => true,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
+                'expectedIsValid' => true
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '1',
+                    'default_values'  => '',
+                    'itemtype'        => \User::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => true,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => false
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '1',
+                    'default_values'  => $user->getID(),
+                    'itemtype'        => \User::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => false,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
+                'expectedIsValid' => true
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '0',
+                    'itemtype'        => \User::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => false,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => '',
+                'expectedIsValid' => true
+            ],
 
-      $dataset = [
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $user->getID(),
-               'itemtype'        => \User::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => true,
-               '_parameters'     => [],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => $computer->getID(),
+                    'itemtype'        => \Computer::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => true,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => $computer->getName(),
+                'expectedIsValid' => true
             ],
-            'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '1',
-               'default_values'  => '',
-               'itemtype'        => \User::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => true,
-               '_parameters'     => [],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '',
+                    'itemtype'        => \Computer::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => true,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => '&nbsp;',
+                'expectedIsValid' => false
             ],
-            'expectedValue'   => '',
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '1',
-               'default_values'  => $user->getID(),
-               'itemtype'        => \User::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => false,
-               '_parameters'     => [],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => $computer->getID(),
+                    'itemtype'        => \Computer::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => false,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => $computer->getName(),
+                'expectedIsValid' => true
             ],
-            'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '0',
-               'itemtype'        => \User::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => false,
-               '_parameters'     => [],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '',
+                    'itemtype'        => \Computer::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => false,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => '&nbsp;',
+                'expectedIsValid' => false
             ],
-            'expectedValue'   => '',
-            'expectedIsValid' => true
-         ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '0',
+                    'itemtype'         => \Entity::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => true,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => (new \Entity())->getFromDB(0),
+                'expectedIsValid' => true
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'glpiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '-1',
+                    'itemtype'        => \Entity::class,
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    'show_empty'      => true,
+                    '_parameters'     => [],
+                ],
+                'expectedValue'   => '&nbsp;',
+                'expectedIsValid' => true
+            ],
+        ];
 
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $computer->getID(),
-               'itemtype'        => \Computer::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => true,
-               '_parameters'     => [],
-            ],
-            'expectedValue'   => $computer->getName(),
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'itemtype'        => \Computer::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => true,
-               '_parameters'     => [],
-            ],
-            'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $computer->getID(),
-               'itemtype'        => \Computer::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => false,
-               '_parameters'     => [],
-            ],
-            'expectedValue'   => $computer->getName(),
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'itemtype'        => \Computer::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => false,
-               '_parameters'     => [],
-            ],
-            'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '0',
-               'itemtype'         => \Entity::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => true,
-               '_parameters'     => [],
-            ],
-            'expectedValue'   => (new \Entity())->getFromDB(0),
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'glpiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '-1',
-               'itemtype'        => \Entity::class,
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               'show_empty'      => true,
-               '_parameters'     => [],
-            ],
-            'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => true
-         ],
-      ];
+        return $dataset;
+    }
 
-      return $dataset;
-   }
-
-   public function providerIsValid() {
-      return $this->providerGetAnswer();
-   }
+    public function providerIsValid()
+    {
+        return $this->providerGetAnswer();
+    }
 
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity) {
-      $question = $this->getQuestion($fields);
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($fields['default_values']);
+    public function testIsValid($fields, $expectedValue, $expectedValidity)
+    {
+        $question = $this->getQuestion($fields);
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($fields['default_values']);
 
-      $output = $instance->isValid();
-      $this->boolean($output)->isEqualTo($expectedValidity);
-   }
+        $output = $instance->isValid();
+        $this->boolean($output)->isEqualTo($expectedValidity);
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isFalse();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isFalse();
+    }
 
-   public function testGetValueForTargetText() {
-      $computer = new \Computer();
-      $computer->add([
-         'name' => 'computer foo',
-         'entities_id' => 0,
-      ]);
+    public function testGetValueForTargetText()
+    {
+        $computer = new \Computer();
+        $computer->add([
+            'name' => 'computer foo',
+            'entities_id' => 0,
+        ]);
 
-      // Create a question glpi Object / computer
-      $question = $this->getQuestion([
-         'fieldtype' => 'glpiselect',
-         'itemtype'  => \Computer::class,
-      ]);
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($computer->getID());
+       // Create a question glpi Object / computer
+        $question = $this->getQuestion([
+            'fieldtype' => 'glpiselect',
+            'itemtype'  => \Computer::class,
+        ]);
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($computer->getID());
 
-      // test for the target text
-      $output = $instance->getValueForTargetText('', true);
-      $this->string($output)->isEqualTo('computer foo');
+       // test for the target text
+        $output = $instance->getValueForTargetText('', true);
+        $this->string($output)->isEqualTo('computer foo');
 
-      // Create a user with first and last name
-      $user = new \User();
-      $user->add([
-         'name'       => 'foobar' . $this->getUniqueString(),
-         'firstname'  => 'foo',
-         'realname'   => 'bar',
-      ]);
-      $this->boolean($user->isNewItem())->isFalse();
+       // Create a user with first and last name
+        $user = new \User();
+        $user->add([
+            'name'       => 'foobar' . $this->getUniqueString(),
+            'firstname'  => 'foo',
+            'realname'   => 'bar',
+        ]);
+        $this->boolean($user->isNewItem())->isFalse();
 
-      // Create a question glpi Object / User
-      $question = $this->getQuestion([
-         'fieldtype' => 'glpiselect',
-         'itemtype'  => \User::class,
-      ]);
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($user->getID());
+       // Create a question glpi Object / User
+        $question = $this->getQuestion([
+            'fieldtype' => 'glpiselect',
+            'itemtype'  => \User::class,
+        ]);
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($user->getID());
 
-      // test the text for target
-      $output = $instance->getValueForTargetText('', true);
-      $this->string($output)->isEqualTo('bar foo');
-   }
+       // test the text for target
+        $output = $instance->getValueForTargetText('', true);
+        $this->string($output)->isEqualTo('bar foo');
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function providerGetValueForApi() {
-      $computer = new Computer();
-      $computer->add([
-         'name' => $this->getUniqueString(),
-         'entities_id' => 0,
-      ]);
-      return [
-         [
-            'input'    => $computer->getID(),
-            'expected' => [
-               Computer::class,
-               $computer->getID()
+    public function providerGetValueForApi()
+    {
+        $computer = new Computer();
+        $computer->add([
+            'name' => $this->getUniqueString(),
+            'entities_id' => 0,
+        ]);
+        return [
+            [
+                'input'    => $computer->getID(),
+                'expected' => [
+                    Computer::class,
+                    $computer->getID()
+                ],
             ],
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion([
-         'itemtype' => Computer::class,
-         'values' => '{"entity_restrict":"2"}'
-      ]);
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion([
+            'itemtype' => Computer::class,
+            'values' => '{"entity_restrict":"2"}'
+        ]);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->array($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->array($output)->isEqualTo($expected);
+    }
 }

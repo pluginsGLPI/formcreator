@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,20 +31,22 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorRestrictedFormDropdown extends AbstractRightsDropdown
 {
-   protected static function getAjaxUrl(): string {
-      return Plugin::getWebDir('formcreator') . "/ajax/getRestrictedFormDropdownValue.php";
-   }
+    protected static function getAjaxUrl(): string
+    {
+        return Plugin::getWebDir('formcreator') . "/ajax/getRestrictedFormDropdownValue.php";
+    }
 
-   protected static function getTypes(): array {
-      return [
-         User::getType(),
-         Group::getType(),
-         Profile::getType(),
-      ];
-   }
+    protected static function getTypes(): array
+    {
+        return [
+            User::getType(),
+            Group::getType(),
+            Profile::getType(),
+        ];
+    }
 }

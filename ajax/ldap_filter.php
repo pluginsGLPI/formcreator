@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,12 +30,12 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 $authldap = new AuthLdap();
 $authldap->getFromDB($_POST['value']);
-$filter = "(".$authldap->getField("login_field")."=*)";
+$filter = "(" . $authldap->getField("login_field") . "=*)";
 $ldap_condition = $authldap->getField('condition');
 echo "(& $filter $ldap_condition)";

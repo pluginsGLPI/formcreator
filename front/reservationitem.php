@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,37 +30,37 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkRightsOr('reservation', [READ, ReservationItem::RESERVEANITEM]);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+    Html::header(__('Service catalog', 'formcreator'));
 }
 
 $res = new ReservationItem();
 $res->display($_GET);
 
 if (isset($_GET['reset'])) {
-   unset($_SESSION['plugin_formcreator']['redirected']);
+    unset($_SESSION['plugin_formcreator']['redirected']);
 }
 $_POST = $_SESSION['plugin_formcreator']['redirected']['POST'] ?? [];
 unset($_SESSION['plugin_formcreator']['redirected']);
 if (isset($_POST['submit'])) {
-   $_SESSION['glpi_saved']['ReservationItem'] = $_POST;
+    $_SESSION['glpi_saved']['ReservationItem'] = $_POST;
 } else {
-   unset($_SESSION['glpi_saved']['ReservationItem']);
+    unset($_SESSION['glpi_saved']['ReservationItem']);
 }
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

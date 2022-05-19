@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,27 +30,25 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 $section = new PluginFormcreatorSection();
 
 if (isset($_POST['add'])) {
    // Add a new Section
-   $section->add($_POST);
-   Html::back();
-
+    $section->add($_POST);
+    Html::back();
 } else if (isset($_POST['update'])) {
    // Edit an existing section
-   $section->update($_POST);
-   Html::back();
-
+    $section->update($_POST);
+    Html::back();
 } else {
    // Return to form list
-   Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
+    Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
 }

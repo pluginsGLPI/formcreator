@@ -1,4 +1,5 @@
 <?php
+
 // fix empty CFG_GLPI on boostrap; see https://github.com/sebastianbergmann/phpunit/issues/325
 global $CFG_GLPI, $GLPI_CACHE, $CHROME_CLIENT;
 
@@ -16,15 +17,15 @@ define('TEST_SCREENSHOTS_DIR', __DIR__ . '/logs/screenshots');
 define('TU_USER', '_test_user');
 
 if (!$glpiConfigDir = getenv('TEST_GLPI_CONFIG_DIR')) {
-   echo "Environment var TEST_GLPI_CONFIG_DIR is not set" . PHP_EOL;
-   exit(1);
+    echo "Environment var TEST_GLPI_CONFIG_DIR is not set" . PHP_EOL;
+    exit(1);
 }
 
 define('GLPI_ROOT', realpath(__DIR__ . '/../../../'));
 define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");
 if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
-   echo GLPI_ROOT . "/$glpiConfigDir/config_db.php missing. Did GLPI successfully initialized ?\n";
-   exit(1);
+    echo GLPI_ROOT . "/$glpiConfigDir/config_db.php missing. Did GLPI successfully initialized ?\n";
+    exit(1);
 }
 unset($glpiConfigDir);
 
@@ -36,12 +37,12 @@ define('GLPI_LOG_DIR', __DIR__ . '/logs');
 
 // Terminate the webdriver on fatal error or it will continue to run and prevent
 // subsequent execution because the listening port is still in use
-register_shutdown_function(function() {
-   global $CHROME_CLIENT;
+register_shutdown_function(function () {
+    global $CHROME_CLIENT;
 
-   if ($CHROME_CLIENT) {
-      $CHROME_CLIENT->quit();
-   }
+    if ($CHROME_CLIENT) {
+        $CHROME_CLIENT->quit();
+    }
 });
 
 
@@ -54,7 +55,7 @@ register_shutdown_function(function() {
    //unset($_SERVER['argv'][$key]);
 // }
 
-include (GLPI_ROOT . "/inc/includes.php");
+include(GLPI_ROOT . "/inc/includes.php");
 
 //init cache
 //$GLPI_CACHE = Config::getCache('cache_db');

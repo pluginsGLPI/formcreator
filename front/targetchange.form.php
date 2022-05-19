@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,70 +30,69 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 $targetChange = new PluginFormcreatorTargetChange();
 
 // Edit an existing target change
 if (isset($_POST["update"])) {
-   $targetChange->getFromDB((int) $_POST['id']);
-   if (!$targetChange->canUpdateItem()) {
-      Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
-   } else {
-      $targetChange->update($_POST);
-   }
-   Html::back();
-
+    $targetChange->getFromDB((int) $_POST['id']);
+    if (!$targetChange->canUpdateItem()) {
+        Session::addMessageAfterRedirect(__('No right to update this item.', 'formcreator'), false, ERROR);
+    } else {
+        $targetChange->update($_POST);
+    }
+    Html::back();
 } else if (isset($_POST['actor_role'])) {
-   $id          = (int) $_POST['id'];
-   $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
+    $id          = (int) $_POST['id'];
+    $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
                   ? $_POST['actor_value_' . $_POST['actor_type']]
                   : '';
-   $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
-   $targetChange_actor = new PluginFormcreatorTarget_Actor();
-   $targetChange_actor->add([
-      'itemtype'         => $targetChange->getType(),
-      'items_id'         => $id,
-      'actor_role'       => $_POST['actor_role'],
-      'actor_type'       => $_POST['actor_type'],
-      'actor_value'      => $actor_value,
-      'use_notification' => $use_notification
-   ]);
-   Html::back();
-
+    $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
+    $targetChange_actor = new PluginFormcreatorTarget_Actor();
+    $targetChange_actor->add([
+        'itemtype'         => $targetChange->getType(),
+        'items_id'         => $id,
+        'actor_role'       => $_POST['actor_role'],
+        'actor_type'       => $_POST['actor_type'],
+        'actor_value'      => $actor_value,
+        'use_notification' => $use_notification
+    ]);
+    Html::back();
 } else if (isset($_GET['delete_actor'])) {
-   $targetChange_actor = new PluginFormcreatorTarget_Actor();
-   $targetChange_actor->delete([
-      'itemtype'  => $targetChange->getType(),
-      'items_id'  => $id,
-      'id'        => (int) $_GET['delete_actor']
-   ]);
-   Html::back();
+    $targetChange_actor = new PluginFormcreatorTarget_Actor();
+    $targetChange_actor->delete([
+        'itemtype'  => $targetChange->getType(),
+        'items_id'  => $id,
+        'id'        => (int) $_GET['delete_actor']
+    ]);
+    Html::back();
 
    // Show target ticket form
 } else {
-   Html::header(
-      __('Form Creator', 'formcreator'),
-      $_SERVER['PHP_SELF'],
-      'admin',
-      'PluginFormcreatorForm'
-   );
+    Html::header(
+        __('Form Creator', 'formcreator'),
+        $_SERVER['PHP_SELF'],
+        'admin',
+        'PluginFormcreatorForm'
+    );
 
-   $targetChange->getFromDB((int) $_REQUEST['id']);
-   $form = PluginFormcreatorForm::getByItem($targetChange);
-   $_SESSION['glpilisttitle'][$targetChange::getType()] = sprintf(
-      __('%1$s = %2$s'),
-      $form->getTypeName(1), $form->getName()
-   );
-   $_SESSION['glpilisturl'][$targetChange::getType()]   = $form->getFormURL()."?id=".$form->getID();
+    $targetChange->getFromDB((int) $_REQUEST['id']);
+    $form = PluginFormcreatorForm::getByItem($targetChange);
+    $_SESSION['glpilisttitle'][$targetChange::getType()] = sprintf(
+        __('%1$s = %2$s'),
+        $form->getTypeName(1),
+        $form->getName()
+    );
+    $_SESSION['glpilisturl'][$targetChange::getType()]   = $form->getFormURL() . "?id=" . $form->getID();
 
-   $targetChange->display($_REQUEST);
+    $targetChange->display($_REQUEST);
 
-   Html::footer();
+    Html::footer();
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,7 +29,8 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-include ('../../../inc/includes.php');
+
+include('../../../inc/includes.php');
 
 $form = PluginFormcreatorCommon::getForm();
 $form->showForCentral();

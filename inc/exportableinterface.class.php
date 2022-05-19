@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,7 +31,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 interface PluginFormcreatorExportableInterface
@@ -41,7 +42,7 @@ interface PluginFormcreatorExportableInterface
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) : array;
+    public function export(bool $remove_uuid = false): array;
 
    /**
     * Import an itemtype into the db
@@ -52,7 +53,7 @@ interface PluginFormcreatorExportableInterface
     * @param  array   $input the target data (match the target table)
     * @return integer|false the id of the imported item or false on error
     */
-   public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0);
+    public static function import(PluginFormcreatorLinker $linker, array $input = [], int $containerId = 0);
 
    /**
     * Delete all items belonging to a container and not in the list of items to keep
@@ -63,7 +64,7 @@ interface PluginFormcreatorExportableInterface
     *
     * @return boolean
     */
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool;
+    public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool;
 
    /**
     * get the count of inner objects to import
@@ -71,5 +72,5 @@ interface PluginFormcreatorExportableInterface
     *
     * return integer
     */
-   public static function countItemsToImport(array $input) : int;
+    public static function countItemsToImport(array $input): int;
 }

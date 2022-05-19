@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,12 +31,12 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 interface PluginFormcreatorTranslatableInterface
 {
-   public function getTranslatableSearchOptions() : array;
+    public function getTranslatableSearchOptions(): array;
 
    /**
     * Get all translatable strings from the item and subitems
@@ -48,5 +49,5 @@ interface PluginFormcreatorTranslatableInterface
     *                                                          'string'   => 'string to translate'
     *                                                         ]
     */
-   public function getTranslatableStrings(array $options = []) : array;
+    public function getTranslatableStrings(array $options = []): array;
 }

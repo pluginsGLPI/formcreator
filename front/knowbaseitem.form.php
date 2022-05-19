@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,39 +30,39 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 $kb = new KnowbaseItem();
 
 if (!isset($_GET["id"])) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 $kb->check($_GET["id"], READ);
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(__('Service catalog', 'formcreator'));
+    Html::header(__('Service catalog', 'formcreator'));
 }
 
 $available_options = ['item_itemtype', 'item_items_id', 'id'];
 $options           = [];
 foreach ($available_options as $key) {
-   if (isset($_GET[$key])) {
-      $options[$key] = $_GET[$key];
-   }
+    if (isset($_GET[$key])) {
+        $options[$key] = $_GET[$key];
+    }
 }
 $_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
 $kb->showFull($options);
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

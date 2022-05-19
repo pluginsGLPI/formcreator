@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,180 +34,186 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class MultiSelectField extends CommonTestCase {
+class MultiSelectField extends CommonTestCase
+{
+    public function provider()
+    {
+        $dataset = [
+            [
+                'fields'          => [
+                    'fieldtype'       => 'multiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => '[]',
+                    'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'multiselect' => [
+                            'range' => [
+                                'range_min' => '',
+                                'range_max' => '',
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => [],
+                'expectedIsValid' => true
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'multiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => '["3"]',
+                    'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'multiselect' => [
+                            'range' => [
+                                'range_min' => '',
+                                'range_max' => '',
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => ['3'],
+                'expectedIsValid' => true
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'multiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => '[3]',
+                    'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'multiselect' => [
+                            'range' => [
+                                'range_min' => '2',
+                                'range_max' => '4',
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => ['3'],
+                'expectedIsValid' => false
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'multiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => json_encode(['3', '4']),
+                    'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'multiselect' => [
+                            'range' => [
+                                'range_min' => '2',
+                                'range_max' => '4',
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => ['3', '4'],
+                'expectedIsValid' => true
+            ],
+            [
+                'fields'          => [
+                    'fieldtype'       => 'multiselect',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'show_empty'      => '0',
+                    'default_values'  => json_encode(['3', '4', '2', '1', '6']),
+                    'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [
+                        'multiselect' => [
+                            'range' => [
+                                'range_min' => '2',
+                                'range_max' => '4',
+                            ]
+                        ]
+                    ],
+                ],
+                'expectedValue'   => ['3', '4', '2', '1', '6'],
+                'expectedIsValid' => false
+            ],
+        ];
 
-   public function provider() {
-      $dataset = [
-         [
-            'fields'          => [
-               'fieldtype'       => 'multiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => '[]',
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'multiselect' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => [],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'multiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => '["3"]',
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'multiselect' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3'],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'multiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => '[3]',
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'multiselect' => [
-                     'range' => [
-                        'range_min' => '2',
-                        'range_max' => '4',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3'],
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'multiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => json_encode(['3', '4']),
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'multiselect' => [
-                     'range' => [
-                        'range_min' => '2',
-                        'range_max' => '4',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3', '4'],
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'multiselect',
-               'name'            => 'question',
-               'required'        => '0',
-               'show_empty'      => '0',
-               'default_values'  => json_encode(['3', '4', '2', '1', '6']),
-               'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [
-                  'multiselect' => [
-                     'range' => [
-                        'range_min' => '2',
-                        'range_max' => '4',
-                     ]
-                  ]
-               ],
-            ],
-            'expectedValue'   => ['3', '4', '2', '1', '6'],
-            'expectedIsValid' => false
-         ],
-      ];
-
-      return $dataset;
-   }
+        return $dataset;
+    }
 
    /**
     * @dataProvider provider
     */
-   public function testGetAvailableValues($fields, $expectedValue, $expectedValidity) {
-      $question = $this->getQuestion($fields);
-      $fieldInstance = $this->newTestedInstance($question);
+    public function testGetAvailableValues($fields, $expectedValue, $expectedValidity)
+    {
+        $question = $this->getQuestion($fields);
+        $fieldInstance = $this->newTestedInstance($question);
 
-      $availableValues = $fieldInstance->getAvailableValues();
-      $expectedAvaliableValues = explode("\r\n", $fields['values']);
+        $availableValues = $fieldInstance->getAvailableValues();
+        $expectedAvaliableValues = explode("\r\n", $fields['values']);
 
-      $this->integer(count($availableValues))->isEqualTo(count($expectedAvaliableValues));
-      foreach ($expectedAvaliableValues as $expectedValue) {
-         $this->array($availableValues)->contains($expectedValue);
-      }
-   }
+        $this->integer(count($availableValues))->isEqualTo(count($expectedAvaliableValues));
+        foreach ($expectedAvaliableValues as $expectedValue) {
+            $this->array($availableValues)->contains($expectedValue);
+        }
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Multiselect');
-   }
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Multiselect');
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function providerGetValueForApi() {
-      return [
-         [
-            'input'    => json_encode([
-               'a (multiselect)',
-               'b (multiselect)'
-            ]),
-            'expected' => [
-               'a (multiselect)',
-               'b (multiselect)'
+    public function providerGetValueForApi()
+    {
+        return [
+            [
+                'input'    => json_encode([
+                    'a (multiselect)',
+                    'b (multiselect)'
+                ]),
+                'expected' => [
+                    'a (multiselect)',
+                    'b (multiselect)'
+                ],
             ],
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion([
-         'values' => '["a (multiselect)","b (multiselect)","c (multiselect)"]'
-      ]);
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion([
+            'values' => '["a (multiselect)","b (multiselect)","c (multiselect)"]'
+        ]);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->array($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->array($output)->isEqualTo($expected);
+    }
 }

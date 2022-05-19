@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,19 +34,22 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class TagField extends CommonTestCase {
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Tags');
-   }
+class TagField extends CommonTestCase
+{
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Tags');
+    }
 
-   public function testIsPrerequisites() {
-      // $instance = $this->newTestedInstance([]);
-      // $output = $instance->isPrerequisites();
-      // $this->boolean($output)->isEqualTo(false);
+    public function testIsPrerequisites()
+    {
+       // $instance = $this->newTestedInstance([]);
+       // $output = $instance->isPrerequisites();
+       // $this->boolean($output)->isEqualTo(false);
 
-      // TODO : emulate plugin tags loaded and check
-      // that the method retures true
-   }
+       // TODO : emulate plugin tags loaded and check
+       // that the method retures true
+    }
 }

@@ -30,12 +30,13 @@
  * along with GLPI. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  */
+
 include(__DIR__ . '/../../../ajax/getAbstractRightDropdownValue.php');
 
 // Only users who can update forms are allowed to use this dropdown
 if (!PluginFormcreatorForm::canUpdate()) {
-   http_response_code(403);
-   Html::displayRightError();
+    http_response_code(403);
+    Html::displayRightError();
 }
 
 show_rights_dropdown(PluginFormcreatorRestrictedFormDropdown::class);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,18 +30,18 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (isset($_POST['purge'])) {
-   $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
-   $item_targetTicket->delete($_POST, 1);
-   Html::back();
+    $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
+    $item_targetTicket->delete($_POST, 1);
+    Html::back();
 }
 Html::displayErrorAndDie("lost");

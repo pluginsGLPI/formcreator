@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,16 +30,16 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 $question_id = $_REQUEST['id'] ?? 0;
 $question = new PluginFormcreatorQuestion();
 if ($question_id == 0) {
-   $question->getEmpty();
-   $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
+    $question->getEmpty();
+    $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+    $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
 } else {
-   $question->getFromDB($question_id);
+    $question->getFromDB($question_id);
 }
 $question->showForm($question_id);

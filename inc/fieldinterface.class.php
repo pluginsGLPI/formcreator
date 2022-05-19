@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,7 +31,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 interface PluginFormcreatorFieldInterface
@@ -40,35 +41,35 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public static function getName(): string;
+    public static function getName(): string;
 
    /**
     * Can the fild be required ?
     *
     * @return boolean true if yes, false otherwise
     */
-   public static function canRequire(): bool;
+    public static function canRequire(): bool;
 
    /**
     * Are the prerequisites met to use this field ?
     *
     * @return boolean true if prerequisites met, false otherwise
     */
-   public function isPrerequisites(): bool;
+    public function isPrerequisites(): bool;
 
    /**
     * Show HTML to design a question
     *
     * @return array
     */
-   public function showForm(array $options): void;
+    public function showForm(array $options): void;
 
    /**
     * Is the field valid for the given value?
     *
     * @return boolean True if the field has a valid value, false otherwise
     */
-   public function isValid(): bool;
+    public function isValid(): bool;
 
    /**
     * Check if a value is valid for the field type
@@ -76,14 +77,14 @@ interface PluginFormcreatorFieldInterface
     * @param string|array $value
     * @return boolean true if valid, false otherwise
     */
-   public function isValidValue($value): bool;
+    public function isValidValue($value): bool;
 
    /**
     * Is the field required?
     *
     * @return boolean
     */
-   public function isRequired(): bool;
+    public function isRequired(): bool;
 
    /**
     * Serialize a value for save in the database
@@ -91,7 +92,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string JSON encoded string
     */
-   public function serializeValue(): string;
+    public function serializeValue(): string;
 
    /**
     * Deserialize a JSON encoded value or default value
@@ -100,14 +101,14 @@ interface PluginFormcreatorFieldInterface
     *
     * @param string $value
     */
-   public function deserializeValue($value);
+    public function deserializeValue($value);
 
    /**
     * Get the value of the field for display in the form designer
     *
     * @return string
     */
-   public function getValueForDesign(): string;
+    public function getValueForDesign(): string;
 
    /**
     * Get the value of the field for display in a target
@@ -117,26 +118,26 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string
     */
-   public function getValueForTargetText($domain, $richText): ?string;
+    public function getValueForTargetText($domain, $richText): ?string;
 
    /**
     * Get the valoe of the field for output via the API
     *
     * @return string|array
     */
-   public function getValueForApi();
+    public function getValueForApi();
 
    /**
     * Move uploaded files and make Document items
     */
-   public function moveUploads();
+    public function moveUploads();
 
    /**
     * Gets the documents IDs
     *
     * @return integer[]
     */
-   public function getDocumentsForTarget(): array;
+    public function getDocumentsForTarget(): array;
 
    /**
     * Transform input to properly save it in the database
@@ -144,7 +145,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return array|false input data to save or false if data is rejected
     */
-   public function prepareQuestionInputForSave($input);
+    public function prepareQuestionInputForSave($input);
 
    /**
     * Do the argument has an user input ?
@@ -152,7 +153,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function hasInput($input): bool;
+    public function hasInput($input): bool;
 
    /**
     * Read the value of the field from answers
@@ -161,7 +162,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true on sucess, false otherwise
     */
-   public function parseAnswerValues($input, $nonDestructive = false): bool;
+    public function parseAnswerValues($input, $nonDestructive = false): bool;
 
    /**
     * Prepares an answer value for output in a target object
@@ -176,35 +177,35 @@ interface PluginFormcreatorFieldInterface
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public function getEmptyParameters(): array;
+    public function getEmptyParameters(): array;
 
    /**
     * Gets parameters of the field with their settings
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public function getParameters(): array;
+    public function getParameters(): array;
 
    /**
     * Gets the name of the field type
     *
     * @return string
     */
-   public function getFieldTypeName(): string;
+    public function getFieldTypeName(): string;
 
    /**
     * Adds parameters of the field into the database
     * @param PluginFormcreatorQuestion $question question of the field
     * @param array $input data of parameters
     */
-   public function addParameters(PluginFormcreatorQuestion $question, array $input);
+    public function addParameters(PluginFormcreatorQuestion $question, array $input);
 
    /**
     * Updates parameters of the field into the database
     * @param PluginFormcreatorQuestion $question question of the field
     * @param array $input data of parameters
     */
-   public function updateParameters(PluginFormcreatorQuestion $question, array $input);
+    public function updateParameters(PluginFormcreatorQuestion $question, array $input);
 
    /**
     * Deletes all parameters of the field applied to the question
@@ -212,54 +213,54 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean true if success, false otherwise
     */
-   public function deleteParameters(PluginFormcreatorQuestion $question): bool;
+    public function deleteParameters(PluginFormcreatorQuestion $question): bool;
 
    /**
     * Tests if the given value equals the field value
     *
     * @return boolean True if the value equals the field value
     */
-   public function equals($value): bool;
+    public function equals($value): bool;
 
    /**
     * Tests if the given value is not equal to field value
     *
     * @return boolean True if the value is not equal to the field value
     */
-   public function notEquals($value): bool;
+    public function notEquals($value): bool;
 
    /**
     * Tests if the given value is greater than the field value
     *
     * @return boolean True if the value is greater than the field value
     */
-   public function greaterThan($value): bool;
+    public function greaterThan($value): bool;
 
    /**
     * Tests if the given value is less than the field value
     *
     * @return boolean True if the value is less than the field value
     */
-   public function LessThan($value): bool;
+    public function LessThan($value): bool;
 
    /**
     * Tests if the given value is match with regex
     *
     * @return boolean True if the value is match with regex
     */
-   public function regex($value): bool;
+    public function regex($value): bool;
 
    /**
     * Is the field compatible with anonymous form ?
     *
     * @return boolean true if the field can work with public forms
     */
-   public function isPublicFormCompatible(): bool;
+    public function isPublicFormCompatible(): bool;
 
    /**
     * Gets HTML code for the icon of a field
     */
-   public function getHtmlIcon();
+    public function getHtmlIcon();
 
    /**
     * get HTML code of rendered question for service catalog
@@ -267,7 +268,7 @@ interface PluginFormcreatorFieldInterface
     * @param boolean $canEdit true if the user can edit the answer
     * @return string HTML code
     */
-   public function getRenderedHtml($domain, $canEdit = true): string;
+    public function getRenderedHtml($domain, $canEdit = true): string;
 
    /**
     * Is the field editable ?
@@ -276,7 +277,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function isEditableField(): bool;
+    public function isEditableField(): bool;
 
    /**
     * Is the field visible ?
@@ -285,15 +286,15 @@ interface PluginFormcreatorFieldInterface
     *
     * @return boolean
     */
-   public function isVisibleField(): bool;
+    public function isVisibleField(): bool;
 
    /**
     * Get all translatable strings
     * @return array translatable strings under keys 'string' and 'text'
     */
-   public function getTranslatableStrings(array $options = []): array;
+    public function getTranslatableStrings(array $options = []): array;
 
-   public function getQuestion();
+    public function getQuestion();
 
    /**
     * get the HTML to show the field
@@ -302,7 +303,7 @@ interface PluginFormcreatorFieldInterface
     * @param boolean $canEdit true if the field is editable
     * @return string HTML of the field
     */
-   public function show(string $domain, bool $canEdit = true): string;
+    public function show(string $domain, bool $canEdit = true): string;
 
    /**
     * Set the form answer containing the value of the field
@@ -310,5 +311,5 @@ interface PluginFormcreatorFieldInterface
     * @param PluginFormcreatorFormAnswer $form_answer
     * @return void
     */
-   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void;
+    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void;
 }

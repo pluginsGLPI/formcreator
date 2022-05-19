@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,13 +31,13 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorForm_Profile extends PluginFormcreatorRestrictedFormCriteria
 {
-   public static $itemtype_2 = Profile::class;
-   public static $items_id_2 = 'profiles_id';
+    public static $itemtype_2 = Profile::class;
+    public static $items_id_2 = 'profiles_id';
 
    /**
     * Check if the current logged user's active profile is in the "whitelisted"
@@ -46,14 +47,15 @@ class PluginFormcreatorForm_Profile extends PluginFormcreatorRestrictedFormCrite
     *
     * @return bool True if there is a match, the user is whitelisted
     */
-   public static function getListCriteriaSubQuery(): QuerySubQuery {
-      // Allow only the current user active profile
-      return new QuerySubQuery([
-         'SELECT' => static::$items_id_1,
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            static::$items_id_2 => $_SESSION['glpiactiveprofile']['id']
-         ]
-      ]);
-   }
+    public static function getListCriteriaSubQuery(): QuerySubQuery
+    {
+       // Allow only the current user active profile
+        return new QuerySubQuery([
+            'SELECT' => static::$items_id_1,
+            'FROM'   => self::getTable(),
+            'WHERE'  => [
+                static::$items_id_2 => $_SESSION['glpiactiveprofile']['id']
+            ]
+        ]);
+    }
 }

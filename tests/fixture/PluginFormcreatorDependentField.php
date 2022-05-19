@@ -41,94 +41,103 @@ use Toolbox;
 
 class DependentField extends PluginFormcreatorAbstractField
 {
+    use PluginFormcreatorTranslatable;
 
-   use PluginFormcreatorTranslatable;
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public static function getName(): string
+    {
+        return _n('User ID', 'User IDs', 1, 'formcreator');
+    }
 
-   public static function getName(): string {
-      return _n('User ID', 'User IDs', 1, 'formcreator');
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public static function canRequire(): bool {
-      return true;
-   }
+    public function showForm(array $options): void
+    {
+    }
 
-   public function showForm(array $options): void {
-   }
+    public function getEmptyParameters(): array
+    {
+        $firstname = new PluginFormcreatorQuestionDependency();
+        $firstname->setField($this, [
+            'fieldName' => 'firstname',
+            'label'     => __('First name field', 'formcreator'),
+            'fieldType' => ['text'],
+        ]);
+        $lastname = new PluginFormcreatorQuestionDependency();
+        $lastname->setField($this, [
+            'fieldName' => 'lastname',
+            'label'     => __('Last name field', 'formcreator'),
+            'fieldType' => ['text'],
+        ]);
 
-   public function getEmptyParameters(): array {
-      $firstname = new PluginFormcreatorQuestionDependency();
-      $firstname->setField($this, [
-         'fieldName' => 'firstname',
-         'label'     => __('First name field', 'formcreator'),
-         'fieldType' => ['text'],
-      ]);
-      $lastname = new PluginFormcreatorQuestionDependency();
-      $lastname->setField($this, [
-         'fieldName' => 'lastname',
-         'label'     => __('Last name field', 'formcreator'),
-         'fieldType' => ['text'],
-      ]);
+        return [
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+        ];
+    }
 
-      return [
-         'firstname' => $firstname,
-         'lastname' => $lastname,
-      ];
-   }
+    public function prepareQuestionInputForSave($input)
+    {
+        $success = true;
+        $fieldType = $this->getFieldTypeName();
+        if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
+            Session::addMessageAfterRedirect(__('No text field selected for firstname', 'formcreator'), false, ERROR);
+            $success =  false;
+        }
+        if ($input['_parameters'][$fieldType]['lastname']['plugin_formcreator_questions_id_2'] === '0') {
+            Session::addMessageAfterRedirect(__('No text field selected for lastname', 'formcreator'), false, ERROR);
+            $success =  false;
+        }
+        if (!$success) {
+            return false;
+        }
 
-   public function prepareQuestionInputForSave($input) {
-      $success = true;
-      $fieldType = $this->getFieldTypeName();
-      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
-         Session::addMessageAfterRedirect(__('No text field selected for firstname', 'formcreator'), false, ERROR);
-         $success =  false;
-      }
-      if ($input['_parameters'][$fieldType]['lastname']['plugin_formcreator_questions_id_2'] === '0') {
-         Session::addMessageAfterRedirect(__('No text field selected for lastname', 'formcreator'), false, ERROR);
-         $success =  false;
-      }
-      if (!$success) {
-         return false;
-      }
+        return $input;
+    }
 
-      return $input;
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '';
+        }
 
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
+        return strval((int) $this->value);
+    }
 
-      return strval((int) $this->value);
-   }
-
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+    public function deserializeValue($value)
+    {
+        $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
-   }
+    }
 
-   function show(string $domain, bool $canEdit = true): string {
-      parent::show($canEdit);
-      $questionId = $this->fields['id'];
-      $domId = "input[name=\"formcreator_field_$questionId\"]";
-      $parameters = $this->getEmptyParameters();
-      foreach ($parameters as $fieldName => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id'   => $this->fields['id'],
-            'fieldname'                         => $fieldName,
-         ]);
-      }
-      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
-      $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
-      return Html::scriptBlock("$(function() {
+    function show(string $domain, bool $canEdit = true): string
+    {
+        parent::show($canEdit);
+        $questionId = $this->fields['id'];
+        $domId = "input[name=\"formcreator_field_$questionId\"]";
+        $parameters = $this->getEmptyParameters();
+        foreach ($parameters as $fieldName => $parameter) {
+            $parameter->getFromDBByCrit([
+                'plugin_formcreator_questions_id'   => $this->fields['id'],
+                'fieldname'                         => $fieldName,
+            ]);
+        }
+        $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
+        $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
+        return Html::scriptBlock("$(function() {
          plugin_formcreator_field_$questionId()
          $('input[name=\"formcreator_field_$firstnameQuestionId\"]').on('input', plugin_formcreator_field_$questionId)
          $('input[name=\"formcreator_field_$lastnameQuestionId\"]').on('input', plugin_formcreator_field_$questionId)
@@ -142,136 +151,154 @@ class DependentField extends PluginFormcreatorAbstractField
          }
          $('$domId').val(lastname.substring(0, 2) + firstname.substring(0, 2))
       }");
-   }
+    }
 
-   public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      if ($canEdit) {
-         echo '<input type="text" class="form-control" readonly="readonly"
+    public function displayField($canEdit = true)
+    {
+        $id           = $this->fields['id'];
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $domId        = $fieldName . '_' . $rand;
+        if ($canEdit) {
+            echo '<input type="text" class="form-control" readonly="readonly"
                   name="' . $fieldName . '"
                   id="' . $domId . '"
                   value="' . $this->value . '" />';
-      } else {
-         echo $this->value;
-      }
-   }
+        } else {
+            echo $this->value;
+        }
+    }
 
-   public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
+    public function getValueForDesign(): string
+    {
+        if ($this->value === null) {
+            return '';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      return Toolbox::addslashes_deep($this->value);
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        return Toolbox::addslashes_deep($this->value);
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function isValid(): bool {
-      if ($this->isRequired() && $this->value === '') {
-         Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR
-         );
-         return false;
-      }
-      if (!$this->isValidValue($this->value)) {
-         Session::addMessageAfterRedirect(
-            __('A field does not match the expected format:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+        if ($this->isRequired() && $this->value === '') {
+            Session::addMessageAfterRedirect(
+                __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+                false,
+                ERROR
+            );
+            return false;
+        }
+        if (!$this->isValidValue($this->value)) {
+            Session::addMessageAfterRedirect(
+                __('A field does not match the expected format:', 'formcreator') . ' ' . $this->getLabel(),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      // All is OK
-      return true;
-   }
+       // All is OK
+        return true;
+    }
 
    /**
     * Checks the value of the field is in the expected form
     * @param string $value the value of the field
     */
-   public function isValidValue($value): bool {
-      // TODO: use all fields of the form to check the scheme of the string
-      $parameters = $this->getEmptyParameters();
-      foreach ($parameters as $fieldname => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id'   => $this->fields['id'],
-            'fieldname'                         => $fieldname,
-         ]);
-      }
-      $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
-      $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
+    public function isValidValue($value): bool
+    {
+       // TODO: use all fields of the form to check the scheme of the string
+        $parameters = $this->getEmptyParameters();
+        foreach ($parameters as $fieldname => $parameter) {
+            $parameter->getFromDBByCrit([
+                'plugin_formcreator_questions_id'   => $this->fields['id'],
+                'fieldname'                         => $fieldname,
+            ]);
+        }
+        $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
+        $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
 
-      $firstname = strtoupper($this->fields['answer']["formcreator_field_$firstnameQuestionId"]);
-      $lastname = strtoupper($this->fields['answer']["formcreator_field_$lastnameQuestionId"]);
-      if (strlen($firstname) < 2 || strlen($lastname) < 2) {
-         return false;
-      }
-      $expected = substr($lastname, 0, 2) . substr($firstname, 0, 2);
-      return ($value === $expected);
-   }
+        $firstname = strtoupper($this->fields['answer']["formcreator_field_$firstnameQuestionId"]);
+        $lastname = strtoupper($this->fields['answer']["formcreator_field_$lastnameQuestionId"]);
+        if (strlen($firstname) < 2 || strlen($lastname) < 2) {
+            return false;
+        }
+        $expected = substr($lastname, 0, 2) . substr($firstname, 0, 2);
+        return ($value === $expected);
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->fields['id'];
-      if (!is_string($input[$key])) {
-         return false;
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->fields['id'];
+        if (!is_string($input[$key])) {
+            return false;
+        }
 
-      $this->value = $input[$key];
-      return true;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public function equals($value): bool {
-      return ($this->value) === ($value);
-   }
+    public function equals($value): bool
+    {
+        return ($this->value) === ($value);
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      return ($this->value) > ($value);
-   }
+    public function greaterThan($value): bool
+    {
+        return ($this->value) > ($value);
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      return preg_match($value, $this->value) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return preg_match($value, $this->value) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '';
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

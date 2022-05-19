@@ -39,132 +39,158 @@ use Toolbox;
 
 class HostnameField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      return $input;
-   }
+    public function prepareQuestionInputForSave($input)
+    {
+        return $input;
+    }
 
-   public function show(string $domain, bool $canEdit = true): string {
-      if (!$canEdit) {
-         return parent::show($canEdit);
-      }
+    public function show(string $domain, bool $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return parent::show($canEdit);
+        }
 
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $hostname = gethostbyaddr(Toolbox::getRemoteIpAddress());
-      $hostname = Html::cleanInputText($hostname);
-      return Html::hidden($fieldName, [
-         'id'    => $domId,
-         'value' => $hostname
-      ]);
-   }
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $domId        = $fieldName . '_' . $rand;
+        $hostname = gethostbyaddr(Toolbox::getRemoteIpAddress());
+        $hostname = Html::cleanInputText($hostname);
+        return Html::hidden($fieldName, [
+            'id'    => $domId,
+            'value' => $hostname
+        ]);
+    }
 
-   public function serializeValue(): string {
-      return $this->value;
-   }
+    public function serializeValue(): string
+    {
+        return $this->value;
+    }
 
-   public function deserializeValue($value) {
-      $this->value = $value;
-   }
+    public function deserializeValue($value)
+    {
+        $this->value = $value;
+    }
 
-   public function getValueForDesign(): string {
-      return '';
-   }
+    public function getValueForDesign(): string
+    {
+        return '';
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      return $this->value;
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        return $this->value;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isValid(): bool {
-      return true;
-   }
+    public function isValid(): bool
+    {
+        return true;
+    }
 
-   public function isValidValue($value): bool {
-      return true;
-   }
+    public function isValidValue($value): bool
+    {
+        return true;
+    }
 
-   public static function getName(): string {
-      return _n('Hostname', 'Hostnames', 1);
-   }
+    public static function getName(): string
+    {
+        return _n('Hostname', 'Hostnames', 1);
+    }
 
-   public static function canRequire(): bool {
-      return false;
-   }
+    public static function canRequire(): bool
+    {
+        return false;
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!is_string($input[$key])) {
-         return false;
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!is_string($input[$key])) {
+            return false;
+        }
 
-      $this->value = $input[$key];
-      return true;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public function equals($value): bool {
-      return $this->value == $value;
-   }
+    public function equals($value): bool
+    {
+        return $this->value == $value;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      return $this->value > $value;
-   }
+    public function greaterThan($value): bool
+    {
+        return $this->value > $value;
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return (preg_grep($value, $this->value)) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon() {
-      return '<i class="fa fa-desktop" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon()
+    {
+        return '<i class="fa fa-desktop" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return false;
-   }
+    public function isVisibleField(): bool
+    {
+        return false;
+    }
 
-   public function isEditableField(): bool {
-      return false;
-   }
+    public function isEditableField(): bool
+    {
+        return false;
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

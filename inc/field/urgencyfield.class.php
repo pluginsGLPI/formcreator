@@ -40,180 +40,207 @@ use Ticket;
 
 class UrgencyField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return Ticket::getPriorityName($this->value);
-      }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return Ticket::getPriorityName($this->value);
+        }
 
-      $html         = '';
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $html .= Ticket::dropdownUrgency([
-         'name'                => $fieldName,
-         'value'               => $this->value,
-         'comments'            => false,
-         'rand'                => $rand,
-         'display'             => false,
-         'display_emptychoice' => $this->question->fields['show_empty'] == 1,
-      ]);
-      $html .= PHP_EOL;
-      $html .= Html::scriptBlock("$(function() {
+        $html         = '';
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $html .= Ticket::dropdownUrgency([
+            'name'                => $fieldName,
+            'value'               => $this->value,
+            'comments'            => false,
+            'rand'                => $rand,
+            'display'             => false,
+            'display_emptychoice' => $this->question->fields['show_empty'] == 1,
+        ]);
+        $html .= PHP_EOL;
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public static function getName(): string {
-      return __('Urgency');
-   }
+    public static function getName(): string
+    {
+        return __('Urgency');
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      $this->value = $input['default_values'] != ''
+    public function prepareQuestionInputForSave($input)
+    {
+        $this->value = $input['default_values'] != ''
          ? (int) $input['default_values']
          : '3';
-      return $input;
-   }
+        return $input;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!isset($input[$key])) {
-         $input[$key] = '3';
-      } else {
-         if (!is_string($input[$key])) {
-            return false;
-         }
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (!isset($input[$key])) {
+            $input[$key] = '3';
+        } else {
+            if (!is_string($input[$key])) {
+                return false;
+            }
+        }
 
-      $this->value = $input[$key];
-      return true;
-   }
+        $this->value = $input[$key];
+        return true;
+    }
 
-   public static function canRequire(): bool {
-      return true;
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public function getAvailableValues() {
-      return [
-         5 => _x('urgency', 'Very high'),
-         4 => _x('urgency', 'High'),
-         3 => _x('urgency', 'Medium'),
-         2 => _x('urgency', 'Low'),
-         1 => _x('urgency', 'Very low'),
-      ];
-   }
+    public function getAvailableValues()
+    {
+        return [
+            5 => _x('urgency', 'Very high'),
+            4 => _x('urgency', 'High'),
+            3 => _x('urgency', 'Medium'),
+            2 => _x('urgency', 'Low'),
+            1 => _x('urgency', 'Very low'),
+        ];
+    }
 
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '3';
-      }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '3';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+    public function deserializeValue($value)
+    {
+        $this->value = ($value !== null && $value !== '')
          ? $value
          : '3';
-   }
+    }
 
-   public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
+    public function getValueForDesign(): string
+    {
+        if ($this->value === null) {
+            return '';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      $available = $this->getAvailableValues();
-      return $available[$this->value];
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        $available = $this->getAvailableValues();
+        return $available[$this->value];
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isValid(): bool {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '0') {
-         Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+       // If the field is required it can't be empty
+        if ($this->isRequired() && $this->value == '0') {
+            Session::addMessageAfterRedirect(
+                __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      // All is OK
-      return true;
-   }
+       // All is OK
+        return true;
+    }
 
-   public function isValidValue($value): bool {
-      return in_array($value, array_keys($this->getAvailableValues()));
-   }
+    public function isValidValue($value): bool
+    {
+        return in_array($value, array_keys($this->getAvailableValues()));
+    }
 
-   public function equals($value): bool {
-      $available = $this->getAvailableValues();
-      return strcasecmp($available[$this->value], $value) === 0;
-   }
+    public function equals($value): bool
+    {
+        $available = $this->getAvailableValues();
+        return strcasecmp($available[$this->value], $value) === 0;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      $available = $this->getAvailableValues();
-      return strcasecmp($available[$this->value], $value) > 0;
-   }
+    public function greaterThan($value): bool
+    {
+        $available = $this->getAvailableValues();
+        return strcasecmp($available[$this->value], $value) > 0;
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
-   }
+    public function regex($value): bool
+    {
+        throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

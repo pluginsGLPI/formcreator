@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,27 +31,29 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorFormList extends CommonGLPI
 {
-
    /**
     * Returns the type name with consideration of plural
     *
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0) {
-      return _n('Form', 'Forms', $nb, 'formcreator');
-   }
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Form', 'Forms', $nb, 'formcreator');
+    }
 
-   public static function canView() {
-      return (PluginFormcreatorForm::countAvailableForm() > 0);
-   }
+    public static function canView()
+    {
+        return (PluginFormcreatorForm::countAvailableForm() > 0);
+    }
 
-   public static function getIcon() {
-      return 'fas fa-edit';
-   }
+    public static function getIcon()
+    {
+        return 'fas fa-edit';
+    }
 }

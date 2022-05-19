@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,38 +34,42 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorAnswer extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      switch ($method) {
-         case 'testpost_getFromDB':
-            $this->login('glpi', 'glpi');
-      }
-   }
+class PluginFormcreatorAnswer extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        switch ($method) {
+            case 'testpost_getFromDB':
+                $this->login('glpi', 'glpi');
+        }
+    }
 
-   public function providerGetTypeName() {
-      return [
-         [
-            'input' => 0,
-            'expected' => 'Answers',
-         ],
-         [
-            'input' => 1,
-            'expected' => 'Answer',
-         ],
-         [
-            'input' => 2,
-            'expected' => 'Answers',
-         ],
-      ];
-   }
+    public function providerGetTypeName()
+    {
+        return [
+            [
+                'input' => 0,
+                'expected' => 'Answers',
+            ],
+            [
+                'input' => 1,
+                'expected' => 'Answer',
+            ],
+            [
+                'input' => 2,
+                'expected' => 'Answers',
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerGetTypeName
     * @param integer $number
     * @param string $expected
     */
-   public function testGetTypeName($number, $expected) {
-      $output = \PluginFormcreatorAnswer::getTypeName($number);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetTypeName($number, $expected)
+    {
+        $output = \PluginFormcreatorAnswer::getTypeName($number);
+        $this->string($output)->isEqualTo($expected);
+    }
 }

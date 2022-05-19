@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,21 +31,21 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 interface PluginFormcreatorTargetInterface
 {
-   public function save(PluginFormcreatorFormAnswer $formanswer);
+    public function save(PluginFormcreatorFormAnswer $formanswer);
 
-   public static function getTargetItemtypeName();
+    public static function getTargetItemtypeName();
 
    /**
     * Tell the type of the target
     *
     * @return boolean true if the target does an action
     */
-   public static function getTargetType(): int;
+    public static function getTargetType(): int;
 
    /**
     * Find targets linked to a form answer
@@ -52,5 +53,5 @@ interface PluginFormcreatorTargetInterface
     * @param PluginFormcreatorFormAnswer $formAnswer
     * @return array
     */
-   public static function findForFormAnswer(PluginFormcreatorFormAnswer $formAnswer): array;
+    public static function findForFormAnswer(PluginFormcreatorFormAnswer $formAnswer): array;
 }

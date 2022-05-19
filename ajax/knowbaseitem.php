@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,22 +30,22 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 // Check if plugin is activated...
 $plugin = new Plugin();
 if (!$plugin->isActivated("formcreator")) {
-   http_response_code(404);
-   die();
+    http_response_code(404);
+    die();
 }
 
 if (Session::getLoginUserID() === false) {
    // Session is not valid then exit
-   exit;
+    exit;
 }
 
 $categoriesId = 0;
 if (isset($_REQUEST['categoriesId'])) {
-   $categoriesId = (int) $_REQUEST['categoriesId'];
+    $categoriesId = (int) $_REQUEST['categoriesId'];
 }
 $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
 

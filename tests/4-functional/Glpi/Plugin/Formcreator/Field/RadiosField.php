@@ -37,34 +37,36 @@ use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class RadiosField extends CommonFunctionalTestCase
 {
-   use CommonQuestionTest;
+    use CommonQuestionTest;
 
-   public function testCreateForm() {
-      // Use a clean entity for the tests
-      $this->login('glpi', 'glpi');
+    public function testCreateForm()
+    {
+       // Use a clean entity for the tests
+        $this->login('glpi', 'glpi');
 
-      $form = $this->showCreateQuestionForm();
+        $form = $this->showCreateQuestionForm();
 
-      // set question type
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("radios")
+       // set question type
+        $this->client->executeScript(
+            '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("radios")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
          '
-      );
+        );
 
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="values"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] input[name="default_values"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] textarea[name="values"]');
 
-      $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
-      $browserForm['values'] = "a\r\nb\r\nc";
+        $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
+        $browserForm['values'] = "a\r\nb\r\nc";
 
-      $this->_testQuestionCreated($form, __METHOD__);
-   }
-   public function testRenderQuestion() {
-      $this->_testRenderQuestion([
-         'fieldtype' => 'radios',
-         'values'    => implode('\r\n', ["foo", "bar"]),
-      ]);
-   }
+        $this->_testQuestionCreated($form, __METHOD__);
+    }
+    public function testRenderQuestion()
+    {
+        $this->_testRenderQuestion([
+            'fieldtype' => 'radios',
+            'values'    => implode('\r\n', ["foo", "bar"]),
+        ]);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,14 +31,15 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-interface PluginFormcreatorDuplicatableInterface {
+interface PluginFormcreatorDuplicatableInterface
+{
    /**
     * Duplicate a form. Execute duplicate action for massive action.
     *
     * @return int|bool true if success, false otherwise.
     */
-   public function duplicate(array $options = []);
+    public function duplicate(array $options = []);
 }

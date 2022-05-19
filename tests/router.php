@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,7 +31,7 @@
  */
 
 if (!$glpiConfigDir = getenv('TEST_GLPI_CONFIG_DIR')) {
-   $glpiConfigDir = 'tests';
+    $glpiConfigDir = 'tests';
 }
 define('GLPI_ROOT', realpath(__DIR__ . '/../../../'));
 define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");

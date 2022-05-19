@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -34,355 +35,375 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Location;
 
-class DropdownField extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      switch ($method) {
-         case 'testPrepareQuestionInputForSave':
-         case 'testIsValid':
-            $this->login('glpi', 'glpi');
-      }
-   }
+class DropdownField extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        switch ($method) {
+            case 'testPrepareQuestionInputForSave':
+            case 'testIsValid':
+                $this->login('glpi', 'glpi');
+        }
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Dropdown');
-   }
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Dropdown');
+    }
 
-   public function providerPrepareQuestionInputForSave() {
-      $name = $this->getUniqueString();
-      return [
-         [
-            'input' => [
-               'name' => $name,
-               'itemtype' => \Location::class,
-               'show_tree_depth' => '5',
-               'show_tree_root' => '0',
-               'selectable_tree_root' => '0',
+    public function providerPrepareQuestionInputForSave()
+    {
+        $name = $this->getUniqueString();
+        return [
+            [
+                'input' => [
+                    'name' => $name,
+                    'itemtype' => \Location::class,
+                    'show_tree_depth' => '5',
+                    'show_tree_root' => '0',
+                    'selectable_tree_root' => '0',
+                ],
+                'expected' => [
+                    'name' => $name,
+                    'itemtype' => \Location::class,
+                    'values' => json_encode([
+                        'show_tree_depth' => '5',
+                        'show_tree_root' => '0',
+                        'selectable_tree_root' => '0',
+                        'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
+                    ]),
+                ]
             ],
-            'expected' => [
-               'name' => $name,
-               'itemtype' => \Location::class,
-               'values' => json_encode([
-                  'show_tree_depth' => '5',
-                  'show_tree_root' => '0',
-                  'selectable_tree_root' => '0',
-                  'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
-               ]),
-            ]
-         ],
-         [
-            'input' => [
-               'name' => $name,
-               'itemtype' => \ITILCategory::class,
-               'show_ticket_categories' => '2',
-               'show_tree_depth' => '3',
-               'default_values'  => '',
+            [
+                'input' => [
+                    'name' => $name,
+                    'itemtype' => \ITILCategory::class,
+                    'show_ticket_categories' => '2',
+                    'show_tree_depth' => '3',
+                    'default_values'  => '',
+                ],
+                'expected' => [
+                    'name' => $name,
+                    'itemtype' => \ITILCategory::class,
+                    'values' => json_encode([
+                        'show_ticket_categories' => '2',
+                        'show_tree_depth' => '3',
+                        'show_tree_root'  => '',
+                        'selectable_tree_root' => '0',
+                        'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
+                    ]),
+                    'default_values'  => '',
+                ]
             ],
-            'expected' => [
-               'name' => $name,
-               'itemtype' => \ITILCategory::class,
-               'values' => json_encode([
-                  'show_ticket_categories' => '2',
-                  'show_tree_depth' => '3',
-                  'show_tree_root'  => '',
-                  'selectable_tree_root' => '0',
-                  'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
-               ]),
-               'default_values'  => '',
-            ]
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerPrepareQuestionInputForSave
     */
-   public function testPrepareQuestionInputForSave($input, $expected) {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->prepareQuestionInputForSave($input);
-      $this->array($output)->hasSize(count($expected));
-      foreach ($expected as $key => $value) {
-         $this->variable($output[$key])->isIdenticalTo($value);
-      }
-   }
+    public function testPrepareQuestionInputForSave($input, $expected)
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->prepareQuestionInputForSave($input);
+        $this->array($output)->hasSize(count($expected));
+        foreach ($expected as $key => $value) {
+            $this->variable($output[$key])->isIdenticalTo($value);
+        }
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isFalse();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isFalse();
+    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion([
-         'itemtype' => \Computer::class
-      ]));
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
+    public function testIsPrerequisites()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion([
+            'itemtype' => \Computer::class
+        ]));
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(true);
 
-      $instance = $this->newTestedInstance($this->getQuestion([
-         'itemtype' => \UndefinedItemtype::class
-      ]));
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(false);
-   }
+        $instance = $this->newTestedInstance($this->getQuestion([
+            'itemtype' => \UndefinedItemtype::class
+        ]));
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(false);
+    }
 
-   public function testGetValueForDesign() {
-      $value = $expected = 'foo';
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $instance->deserializeValue($value);
-      $output = $instance->getValueForDesign();
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetValueForDesign()
+    {
+        $value = $expected = 'foo';
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $instance->deserializeValue($value);
+        $output = $instance->getValueForDesign();
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function providerIsValid() {
-      $location = new \Location();
-      $locationId = $location->import([
-         'completename' => 'foo',
-         'entities_id'  => $_SESSION['glpiactive_entity']
-      ]);
+    public function providerIsValid()
+    {
+        $location = new \Location();
+        $locationId = $location->import([
+            'completename' => 'foo',
+            'entities_id'  => $_SESSION['glpiactive_entity']
+        ]);
 
-      return [
-         [
-            'question' => $this->getQuestion([
-               'name' =>  'fieldname',
-               'itemtype' => \Location::class,
-               'values' => '',
-               'required' => '0',
-               'default_values' => '0',
-            ]),
-            'input' => [
-               'dropdown_values' => \Location::class,
-               'dropdown_default_value' => '0',
-               'show_tree_depth' => '5',
-               'show_tree_root' => '0',
+        return [
+            [
+                'question' => $this->getQuestion([
+                    'name' =>  'fieldname',
+                    'itemtype' => \Location::class,
+                    'values' => '',
+                    'required' => '0',
+                    'default_values' => '0',
+                ]),
+                'input' => [
+                    'dropdown_values' => \Location::class,
+                    'dropdown_default_value' => '0',
+                    'show_tree_depth' => '5',
+                    'show_tree_root' => '0',
+                ],
+                'expected' => true,
             ],
-            'expected' => true,
-         ],
-         [
-            'question' => $this->getQuestion([
-               'name' =>  'fieldname',
-               'itemtype' => \Location::class,
-               'values' => '',
-               'required' => '1',
-            ]),
-            'input' => [
-               'dropdown_values' => \Location::class,
-               'dropdown_default_value' => '0',
-               'show_tree_depth' => '5',
-               'show_tree_root' => '0',
+            [
+                'question' => $this->getQuestion([
+                    'name' =>  'fieldname',
+                    'itemtype' => \Location::class,
+                    'values' => '',
+                    'required' => '1',
+                ]),
+                'input' => [
+                    'dropdown_values' => \Location::class,
+                    'dropdown_default_value' => '0',
+                    'show_tree_depth' => '5',
+                    'show_tree_root' => '0',
+                ],
+                'expected' => false,
             ],
-            'expected' => false,
-         ],
-         [
-            'question' => $this->getQuestion([
-               'name' =>  'fieldname',
-               'itemtype' => \Location::class,
-               'values' => '',
-               'required' => '1',
-               'default_values' => '',
-            ]),
-            'input' => [
-               'dropdown_values' => \Location::class,
-               'dropdown_default_value' => '42',
-               'show_tree_depth' => '5',
-               'show_tree_root' => '0',
+            [
+                'question' => $this->getQuestion([
+                    'name' =>  'fieldname',
+                    'itemtype' => \Location::class,
+                    'values' => '',
+                    'required' => '1',
+                    'default_values' => '',
+                ]),
+                'input' => [
+                    'dropdown_values' => \Location::class,
+                    'dropdown_default_value' => '42',
+                    'show_tree_depth' => '5',
+                    'show_tree_root' => '0',
+                ],
+                'expected' => false,
             ],
-            'expected' => false,
-         ],
-         [
-            'question' => $this->getQuestion([
-               'name' =>  'fieldname',
-               'itemtype' => \Location::class,
-               'values' => '',
-               'required' => '1',
-               'default_values' => $locationId,
-            ]),
-            'input' => [
-               'dropdown_values' => \Location::class,
-               'dropdown_default_value' => '42',
-               'show_tree_depth' => '5',
-               'show_tree_root' => '0',
+            [
+                'question' => $this->getQuestion([
+                    'name' =>  'fieldname',
+                    'itemtype' => \Location::class,
+                    'values' => '',
+                    'required' => '1',
+                    'default_values' => $locationId,
+                ]),
+                'input' => [
+                    'dropdown_values' => \Location::class,
+                    'dropdown_default_value' => '42',
+                    'show_tree_depth' => '5',
+                    'show_tree_root' => '0',
+                ],
+                'expected' => true,
             ],
-            'expected' => true,
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($question, $input, $expected) {
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($question->fields['default_values']);
-      $output = $instance->isValid();
-      $this->boolean($output)->isEqualTo($expected);
-   }
+    public function testIsValid($question, $input, $expected)
+    {
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($question->fields['default_values']);
+        $output = $instance->isValid();
+        $this->boolean($output)->isEqualTo($expected);
+    }
 
-   public function providerGetValueForTargetText() {
-      $location = new \Location();
-      $location->add([
-         'name' => $this->getUniqueString(),
-      ]);
-      return [
-         [
-            'fields' => $this->getQuestion([
-               'name' =>  'fieldname',
-               'itemtype' => \Location::class,
-               'values' => '',
-               'required' => '1',
-               'dropdown_values' => \Location::class,
-               'dropdown_default_value' => '42',
-            ]),
-            'value' => "",
-            'expected' => '&nbsp;'
-         ],
-         [
-            'fields' => $this->getQuestion([
-               'name' =>  'fieldname',
-               'itemtype' =>\Location::class,
-               'values' =>'',
-               'required' => '1',
-               'dropdown_values' => \Location::class,
-               'dropdown_default_value' => '',
-            ]),
-            'value' => $location->getID(),
-            'expected' => $location->fields['completename']
-         ],
-      ];
-   }
+    public function providerGetValueForTargetText()
+    {
+        $location = new \Location();
+        $location->add([
+            'name' => $this->getUniqueString(),
+        ]);
+        return [
+            [
+                'fields' => $this->getQuestion([
+                    'name' =>  'fieldname',
+                    'itemtype' => \Location::class,
+                    'values' => '',
+                    'required' => '1',
+                    'dropdown_values' => \Location::class,
+                    'dropdown_default_value' => '42',
+                ]),
+                'value' => "",
+                'expected' => '&nbsp;'
+            ],
+            [
+                'fields' => $this->getQuestion([
+                    'name' =>  'fieldname',
+                    'itemtype' => \Location::class,
+                    'values' => '',
+                    'required' => '1',
+                    'dropdown_values' => \Location::class,
+                    'dropdown_default_value' => '',
+                ]),
+                'value' => $location->getID(),
+                'expected' => $location->fields['completename']
+            ],
+        ];
+    }
 
    /**
     * @dataprovider providerGetValueForTargetText
     */
-   public function testGetValueForTargetText($fields, $value, $expected) {
-      $instance = $this->newTestedInstance($fields);
-      $instance->deserializeValue($value);
+    public function testGetValueForTargetText($fields, $value, $expected)
+    {
+        $instance = $this->newTestedInstance($fields);
+        $instance->deserializeValue($value);
 
-      $output = $instance->getValueForTargetText('', true);
-      $this->string($output)->isEqualTo($expected);
-   }
+        $output = $instance->getValueForTargetText('', true);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerEquals() {
-      $location1 = new \Location();
-      $location2 = new \Location();
-      $location1Id = $location1->add([
-         'name' => $this->getUniqueString()
-      ]);
-      $location2->add([
-         'name' => $this->getUniqueString()
-      ]);
+    public function providerEquals()
+    {
+        $location1 = new \Location();
+        $location2 = new \Location();
+        $location1Id = $location1->add([
+            'name' => $this->getUniqueString()
+        ]);
+        $location2->add([
+            'name' => $this->getUniqueString()
+        ]);
 
-      return [
-         [
-            'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
-            ]),
-            'value'     => $location1->fields['completename'],
-            'answer'    => (string) $location1Id,
-            'expected'  => true,
-         ],
-         [
-            'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
-            ]),
-            'value'     => $location2->fields['completename'],
-            'answer'    => (string) $location1Id,
-            'expected'  => false,
-         ],
-      ];
-   }
+        return [
+            [
+                'fields'    => $this->getQuestion([
+                    'itemtype'  => \Location::class,
+                ]),
+                'value'     => $location1->fields['completename'],
+                'answer'    => (string) $location1Id,
+                'expected'  => true,
+            ],
+            [
+                'fields'    => $this->getQuestion([
+                    'itemtype'  => \Location::class,
+                ]),
+                'value'     => $location2->fields['completename'],
+                'answer'    => (string) $location1Id,
+                'expected'  => false,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerEquals
     */
-   public function testEquals($fields, $value, $answer, $expected) {
-      $instance = $this->newTestedInstance($fields);
-      $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
-      $this->boolean($instance->equals($value))->isEqualTo($expected);
-   }
+    public function testEquals($fields, $value, $answer, $expected)
+    {
+        $instance = $this->newTestedInstance($fields);
+        $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
+        $this->boolean($instance->equals($value))->isEqualTo($expected);
+    }
 
-   public function providerNotEquals() {
-      $location1 = new \Location();
-      $location2 = new \Location();
-      $location1Id = $location1->add([
-         'name' => $this->getUniqueString()
-      ]);
-      $location2->add([
-         'name' => $this->getUniqueString()
-      ]);
+    public function providerNotEquals()
+    {
+        $location1 = new \Location();
+        $location2 = new \Location();
+        $location1Id = $location1->add([
+            'name' => $this->getUniqueString()
+        ]);
+        $location2->add([
+            'name' => $this->getUniqueString()
+        ]);
 
-      return [
-         [
-            'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
-            ]),
-            'value'     => $location1->fields['completename'],
-            'answer'    => (string) $location1Id,
-            'expected'  => false,
-         ],
-         [
-            'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
-            ]),
-            'value'     => $location2->fields['completename'],
-            'answer'    => (string) $location1Id,
-            'expected'  => true,
-         ],
-      ];
-   }
+        return [
+            [
+                'fields'    => $this->getQuestion([
+                    'itemtype'  => \Location::class,
+                ]),
+                'value'     => $location1->fields['completename'],
+                'answer'    => (string) $location1Id,
+                'expected'  => false,
+            ],
+            [
+                'fields'    => $this->getQuestion([
+                    'itemtype'  => \Location::class,
+                ]),
+                'value'     => $location2->fields['completename'],
+                'answer'    => (string) $location1Id,
+                'expected'  => true,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerNotEquals
     */
-   public function testNotEquals($fields, $value, $answer, $expected) {
-      $instance = $this->newTestedInstance($fields);
-      $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
-      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
-   }
+    public function testNotEquals($fields, $value, $answer, $expected)
+    {
+        $instance = $this->newTestedInstance($fields);
+        $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
+        $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+    }
 
-   public function testCanRequire() {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function providerGetValueForApi() {
-      $location = new Location();
-      $location->add([
-         'name' => $this->getUniqueString(),
-      ]);
+    public function providerGetValueForApi()
+    {
+        $location = new Location();
+        $location->add([
+            'name' => $this->getUniqueString(),
+        ]);
 
-      return [
-         [
-            'input'    => $location->getID(),
-            'expected' => [
-               Location::class,
-               $location->getID(),
+        return [
+            [
+                'input'    => $location->getID(),
+                'expected' => [
+                    Location::class,
+                    $location->getID(),
+                ],
             ],
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion([
-         'itemtype' => Location::class
-      ]);
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion([
+            'itemtype' => Location::class
+        ]);
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->array($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->array($output)->isEqualTo($expected);
+    }
 }

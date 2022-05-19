@@ -41,122 +41,134 @@ use Session;
 
 class GlpiselectField extends DropdownField
 {
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+        $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
 
-      $this->question->fields['_is_tree'] = '0';
-      $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
-      $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
-      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
-      $this->question->fields['_is_entity_restrict'] = '0';
-      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
-         $this->question->fields['_is_tree'] = '1';
-         $item = new $this->question->fields['itemtype'];
-         $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
-      }
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
+        $this->question->fields['_is_tree'] = '0';
+        $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
+        $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
+        $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+        $this->question->fields['_is_entity_restrict'] = '0';
+        if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
+            $this->question->fields['_is_tree'] = '1';
+            $item = new $this->question->fields['itemtype']();
+            $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+        }
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
 
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public static function getName(): string {
-      return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
+    }
 
-   public function isValidValue($value): bool {
-      $itemtype = $this->getSubItemtype();
-      if ($itemtype == Entity::getType() && $value == '-1') {
-         return true;
-      }
+    public function isValidValue($value): bool
+    {
+        $itemtype = $this->getSubItemtype();
+        if ($itemtype == Entity::getType() && $value == '-1') {
+            return true;
+        }
 
-      return parent::isValidValue($value);
-   }
+        return parent::isValidValue($value);
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      if (!isset($input['itemtype']) || empty($input['itemtype'])) {
-         Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR
-         );
-         return [];
-      }
+    public function prepareQuestionInputForSave($input)
+    {
+        if (!isset($input['itemtype']) || empty($input['itemtype'])) {
+            Session::addMessageAfterRedirect(
+                __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                false,
+                ERROR
+            );
+            return [];
+        }
 
-      $itemtype = $input['itemtype'];
-      $input['itemtype'] = $itemtype;
-      $input['values'] = [];
-      // Params for entity restrictables itemtypes
-      $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
-      unset($input['entity_restrict']);
+        $itemtype = $input['itemtype'];
+        $input['itemtype'] = $itemtype;
+        $input['values'] = [];
+       // Params for entity restrictables itemtypes
+        $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
+        unset($input['entity_restrict']);
 
-      $input['default_values'] = $input['default_values'] ?? '';
+        $input['default_values'] = $input['default_values'] ?? '';
 
-      // Params for CommonTreeDropdown fields
-      if (is_a($itemtype, CommonTreeDropdown::class, true)) {
-         // Set default for depth setting
-         $input['values']['show_tree_depth'] = (int) ($input['show_tree_depth'] ?? '-1');
-         $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
-         $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
-      }
-      unset($input['show_tree_root']);
-      unset($input['show_tree_depth']);
-      unset($input['selectable_tree_root']);
+       // Params for CommonTreeDropdown fields
+        if (is_a($itemtype, CommonTreeDropdown::class, true)) {
+           // Set default for depth setting
+            $input['values']['show_tree_depth'] = (int) ($input['show_tree_depth'] ?? '-1');
+            $input['values']['show_tree_root'] = ($input['show_tree_root'] ?? '');
+            $input['values']['selectable_tree_root'] = ($input['selectable_tree_root'] ?? '0');
+        }
+        unset($input['show_tree_root']);
+        unset($input['show_tree_depth']);
+        unset($input['selectable_tree_root']);
 
-      $input['values'] = json_encode($input['values']);
+        $input['values'] = json_encode($input['values']);
 
-      return $input;
-   }
+        return $input;
+    }
 
-   public static function canRequire(): bool {
-      return true;
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public function getAvailableValues(): array {
-      return [];
-   }
+    public function getAvailableValues(): array
+    {
+        return [];
+    }
 
-   public function equals($value): bool {
-      $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtype();
-      $item = new $itemtype();
-      if ($item->isNewId($this->value)) {
-         return ($value === '');
-      }
-      if (!$item->getFromDB($this->value)) {
-         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
-      }
-      return $item->getField($item->getNameField()) == $value;
-   }
+    public function equals($value): bool
+    {
+        $value = html_entity_decode($value);
+        $itemtype = $this->getSubItemtype();
+        $item = new $itemtype();
+        if ($item->isNewId($this->value)) {
+            return ($value === '');
+        }
+        if (!$item->getFromDB($this->value)) {
+            throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
+        }
+        return $item->getField($item->getNameField()) == $value;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtype();
-      $item = new $itemtype();
-      if (!$item->getFromDB($this->value)) {
-         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
-      }
-      return $item->getField($item->getNameField()) > $value;
-   }
+    public function greaterThan($value): bool
+    {
+        $value = html_entity_decode($value);
+        $itemtype = $this->getSubItemtype();
+        $item = new $itemtype();
+        if (!$item->getFromDB($this->value)) {
+            throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
+        }
+        return $item->getField($item->getNameField()) > $value;
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return (preg_grep($value, $this->value)) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return false;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return false;
+    }
 }

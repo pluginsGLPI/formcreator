@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,71 +34,88 @@ namespace GlpiPlugin\Formcreator\Tests;
 
 class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
 {
-   public static function getTable($classname = null) {
-      return \PluginFormcreatorTargetTicket::getTable();
-   }
+    public static function getTable($classname = null)
+    {
+        return \PluginFormcreatorTargetTicket::getTable();
+    }
 
-   public function publicSetTargetEntity($data, \PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
-      return $this->SetTargetEntity($data, $formanswer, $requesters_id);
-   }
+    public function publicSetTargetEntity($data, \PluginFormcreatorFormAnswer $formanswer, $requesters_id)
+    {
+        return $this->SetTargetEntity($data, $formanswer, $requesters_id);
+    }
 
-   public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false) {
-      return $this->prepareTemplate($template, $formAnswer, $disableRichText);
-   }
+    public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false)
+    {
+        return $this->prepareTemplate($template, $formAnswer, $disableRichText);
+    }
 
-   public function publicGetItem_User() {
-      return $this->getItem_User();
-   }
+    public function publicGetItem_User()
+    {
+        return $this->getItem_User();
+    }
 
-   public function publicGetItem_Group() {
-      return $this->getItem_Group();
-   }
+    public function publicGetItem_Group()
+    {
+        return $this->getItem_Group();
+    }
 
-   public function publicGetItem_Supplier() {
-      return $this->getItem_Supplier();
-   }
+    public function publicGetItem_Supplier()
+    {
+        return $this->getItem_Supplier();
+    }
 
-   public function publicGetItem_Item() {
-      return $this->getItem_Item();
-   }
+    public function publicGetItem_Item()
+    {
+        return $this->getItem_Item();
+    }
 
-   public function publicGetItem_Actor() {
-      return $this->getItem_Actor();
-   }
+    public function publicGetItem_Actor()
+    {
+        return $this->getItem_Actor();
+    }
 
-   public function publicGetCategoryFilter() {
-      return $this->getCategoryFilter();
-   }
+    public function publicGetCategoryFilter()
+    {
+        return $this->getCategoryFilter();
+    }
 
-   public function publicGetTaggableFields() {
-      return $this->getTaggableFields();
-   }
+    public function publicGetTaggableFields()
+    {
+        return $this->getTaggableFields();
+    }
 
-   public function publicGetTargetItemtypeName() {
-      return $this->getTargetItemtypeName();
-   }
+    public function publicGetTargetItemtypeName()
+    {
+        return $this->getTargetItemtypeName();
+    }
 
-   public function publicSetTargetCategory($data, $formanswer) {
-      return $this->setTargetCategory($data, $formanswer);
-   }
+    public function publicSetTargetCategory($data, $formanswer)
+    {
+        return $this->setTargetCategory($data, $formanswer);
+    }
 
-   public function publicSetTargetAssociatedItem($data, $formanswer) {
-      return $this->setTargetAssociatedItem($data, $formanswer);
-   }
+    public function publicSetTargetAssociatedItem($data, $formanswer)
+    {
+        return $this->setTargetAssociatedItem($data, $formanswer);
+    }
 
-   public function publicSetTargetType($data, $formanswer) {
-      return $this->setTargetType($data, $formanswer);
-   }
+    public function publicSetTargetType($data, $formanswer)
+    {
+        return $this->setTargetType($data, $formanswer);
+    }
 
-   public function publicGetDefaultData($formanswer) {
-      return $this->getDefaultData($formanswer);
-   }
+    public function publicGetDefaultData($formanswer)
+    {
+        return $this->getDefaultData($formanswer);
+    }
 
-   public function publicSetTargetLocation($data, $formanswer) {
-      return $this->setTargetLocation($data, $formanswer);
-   }
+    public function publicSetTargetLocation($data, $formanswer)
+    {
+        return $this->setTargetLocation($data, $formanswer);
+    }
 
-   public function publicSetTargetSource($data, $formanswer): array {
-      return $this->setTargetSource($data, $formanswer);
-   }
+    public function publicSetTargetSource($data, $formanswer): array
+    {
+        return $this->setTargetSource($data, $formanswer);
+    }
 }

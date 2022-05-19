@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,12 +30,12 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
-   http_response_code(400);
-   exit();
+    http_response_code(400);
+    exit();
 }
 $questionId = (int) $_REQUEST['id'];
 $question = new PluginFormcreatorQuestion();
@@ -51,9 +52,11 @@ if (!$question->canCreate()) {
 }
 
 $newRow = 1 + PluginFormcreatorCommon::getMax(
-    $question, [
+    $question,
+    [
         'plugin_formcreator_sections_id' => $question->fields['plugin_formcreator_sections_id']
-    ], 'row'
+    ],
+    'row'
 );
 if (($newId = $question->duplicate(['progress' => false, 'fields' => ['row' => $newRow]])) === false) {
     http_response_code(500);

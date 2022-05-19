@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,32 +30,32 @@
  * ---------------------------------------------------------------------
  */
 
-require_once ('../../../inc/includes.php');
+require_once('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (!PluginFormcreatorFormAnswer::canView()) {
-   Html::displayRightError();
+    Html::displayRightError();
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(
-      __('Form Creator', 'formcreator'),
-      '',
-      'admin',
-      PluginFormcreatorForm::class
-   );
+    Html::header(
+        __('Form Creator', 'formcreator'),
+        '',
+        'admin',
+        PluginFormcreatorForm::class
+    );
 }
 
 Search::show(PluginFormcreatorCommon::getFormanswerItemtype());
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

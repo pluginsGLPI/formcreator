@@ -40,244 +40,272 @@ use Toolbox;
 
 class RadiosField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
-      return true;
-   }
+    public function isPrerequisites(): bool
+    {
+        return true;
+    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['values'] =  json_decode($this->question->fields['values']);
-      $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
-      $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
+        $this->question->fields['values'] =  json_decode($this->question->fields['values']);
+        $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
+        $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
+        $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+        $this->deserializeValue($this->question->fields['default_values']);
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+        ]);
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return __($this->value, $domain);
-      }
-      $html         = '';
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return __($this->value, $domain);
+        }
+        $html         = '';
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $domId        = $fieldName . '_' . $rand;
 
-      $values = $this->getAvailableValues();
-      if (!empty($values)) {
-         $html .= '<div class="radios">';
-         $i = 0;
-         foreach ($values as $value) {
-            if ((trim($value) != '')) {
-               $i++;
-               $checked = ($this->value == $value) ? ['checked' => ''] : [];
-               $html .= '<div class="radio">';
-               $html .= '<span class="form-group-radio">';
-               $html .= Html::input($fieldName, [
-                  'type'    => 'radio',
-                  'class'   => 'form-check-input',
-                  'id'      => $domId . '_' . $i,
-                  'value'   => $value
-               ] + $checked);
-               $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
-               $html .= '<span class="box"></span>';
-               $html .= '<span class="check"></span>';
-               $html .= '</label>';
-               $html .= '</span>';
-               $html .= '<label for="' . $domId . '_' . $i . '">';
-               $html .= '&nbsp;' . __($value, $domain);
-               $html .= '</label>';
-               $html .= '</div>';
+        $values = $this->getAvailableValues();
+        if (!empty($values)) {
+            $html .= '<div class="radios">';
+            $i = 0;
+            foreach ($values as $value) {
+                if ((trim($value) != '')) {
+                    $i++;
+                    $checked = ($this->value == $value) ? ['checked' => ''] : [];
+                    $html .= '<div class="radio">';
+                    $html .= '<span class="form-group-radio">';
+                    $html .= Html::input($fieldName, [
+                        'type'    => 'radio',
+                        'class'   => 'form-check-input',
+                        'id'      => $domId . '_' . $i,
+                        'value'   => $value
+                    ] + $checked);
+                     $html .= '<label class="label-radio" title="' . $value . '" for="' . $domId . '_' . $i . '">';
+                     $html .= '<span class="box"></span>';
+                     $html .= '<span class="check"></span>';
+                     $html .= '</label>';
+                     $html .= '</span>';
+                     $html .= '<label for="' . $domId . '_' . $i . '">';
+                     $html .= '&nbsp;' . __($value, $domain);
+                     $html .= '</label>';
+                     $html .= '</div>';
+                }
             }
-         }
-         $html .= '</div>';
-      }
-      $html .= Html::scriptBlock("$(function() {
+            $html .= '</div>';
+        }
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeRadios('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public static function getName(): string {
-      return __('Radios', 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return __('Radios', 'formcreator');
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      if (!isset($input['values']) || empty($input['values'])) {
-         Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR
-         );
-         return [];
-      }
+    public function prepareQuestionInputForSave($input)
+    {
+        if (!isset($input['values']) || empty($input['values'])) {
+            Session::addMessageAfterRedirect(
+                __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                false,
+                ERROR
+            );
+            return [];
+        }
 
-      // trim values
-      $input['values'] = $this->trimValue($input['values']);
-      $input['default_values'] = trim($input['default_values']);
+       // trim values
+        $input['values'] = $this->trimValue($input['values']);
+        $input['default_values'] = trim($input['default_values']);
 
-      return $input;
-   }
+        return $input;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (isset($input[$key])) {
-         if (!is_string($input[$key])) {
-            return false;
-         }
-      } else {
-         $this->value = '';
-         return true;
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (isset($input[$key])) {
+            if (!is_string($input[$key])) {
+                return false;
+            }
+        } else {
+            $this->value = '';
+            return true;
+        }
 
-      $this->value = Toolbox::stripslashes_deep($input[$key]);
-      return true;
-   }
+        $this->value = Toolbox::stripslashes_deep($input[$key]);
+        return true;
+    }
 
-   public function parseDefaultValue($defaultValue) {
-      $this->value = explode('\r\n', $defaultValue);
-      $this->value = array_filter($this->value, function ($value) {
-         return ($value !== '');
-      });
-      $this->value = array_shift($this->value);
-   }
+    public function parseDefaultValue($defaultValue)
+    {
+        $this->value = explode('\r\n', $defaultValue);
+        $this->value = array_filter($this->value, function ($value) {
+            return ($value !== '');
+        });
+        $this->value = array_shift($this->value);
+    }
 
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+    public function deserializeValue($value)
+    {
+        $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
-   }
+    }
 
-   public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
+    public function getValueForDesign(): string
+    {
+        if ($this->value === null) {
+            return '';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      return __($this->value, $domain);
-   }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        return __($this->value, $domain);
+    }
 
-   public function moveUploads() {
-   }
+    public function moveUploads()
+    {
+    }
 
-   public function getDocumentsForTarget(): array {
-      return [];
-   }
+    public function getDocumentsForTarget(): array
+    {
+        return [];
+    }
 
-   public function isValid(): bool {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '') {
-         Session::addMessageAfterRedirect(
-            sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+       // If the field is required it can't be empty
+        if ($this->isRequired() && $this->value == '') {
+            Session::addMessageAfterRedirect(
+                sprintf(__('A required field is empty: %s', 'formcreator'), $this->getLabel()),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      // All is OK
-      return $this->isValidValue($this->value);
-   }
+       // All is OK
+        return $this->isValidValue($this->value);
+    }
 
-   public function isValidValue($value): bool {
-      if ($value == '') {
-         return true;
-      }
-      $value = Toolbox::stripslashes_deep($value);
-      $value = trim($value);
-      return in_array($value, $this->getAvailableValues());
-   }
+    public function isValidValue($value): bool
+    {
+        if ($value == '') {
+            return true;
+        }
+        $value = Toolbox::stripslashes_deep($value);
+        $value = trim($value);
+        return in_array($value, $this->getAvailableValues());
+    }
 
-   public static function canRequire(): bool {
-      return true;
-   }
+    public static function canRequire(): bool
+    {
+        return true;
+    }
 
-   public function equals($value): bool {
-      return $this->value == $value;
-   }
+    public function equals($value): bool
+    {
+        return $this->value == $value;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      return $this->value > $value;
-   }
+    public function greaterThan($value): bool
+    {
+        return $this->value > $value;
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      return preg_match($value, $this->value) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return preg_match($value, $this->value) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="fa fa-check-circle" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="fa fa-check-circle" aria-hidden="true"></i>';
+    }
 
-   public function isVisibleField(): bool {
-      return true;
-   }
+    public function isVisibleField(): bool
+    {
+        return true;
+    }
 
-   public function isEditableField(): bool {
-      return true;
-   }
+    public function isEditableField(): bool
+    {
+        return true;
+    }
 
-   public function getTranslatableStrings(array $options = []) : array {
-      $strings = parent::getTranslatableStrings($options);
+    public function getTranslatableStrings(array $options = []): array
+    {
+        $strings = parent::getTranslatableStrings($options);
 
-      $params = [
-         'searchText'      => '',
-         'id'              => '',
-         'is_translated'   => null,
-         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
-      ];
-      $options = array_merge($params, $options);
+        $params = [
+            'searchText'      => '',
+            'id'              => '',
+            'is_translated'   => null,
+            'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+        ];
+        $options = array_merge($params, $options);
 
-      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+        $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
 
-      foreach ($this->getAvailableValues() as $value) {
-         if ($searchString != '' && stripos($value, $searchString) === false) {
-            continue;
-         }
-         $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
-         if ($options['id'] != '' && $id != $options['id']) {
-            continue;
-         }
-         $strings['string'][$id] = $value;
-         $strings['id'][$id] = 'string';
-      }
+        foreach ($this->getAvailableValues() as $value) {
+            if ($searchString != '' && stripos($value, $searchString) === false) {
+                continue;
+            }
+            $id = \PluginFormcreatorTranslation::getTranslatableStringId($value);
+            if ($options['id'] != '' && $id != $options['id']) {
+                continue;
+            }
+            $strings['string'][$id] = $value;
+            $strings['id'][$id] = 'string';
+        }
 
-      return $strings;
-   }
+        return $strings;
+    }
 
-   public function getValueForApi() {
-      return $this->value;
-   }
+    public function getValueForApi()
+    {
+        return $this->value;
+    }
 }

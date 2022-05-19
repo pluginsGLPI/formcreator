@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -36,141 +37,144 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 /**
  * @engine inline
  */
-class PluginFormcreatorTargetTicket extends CommonTestCase {
+class PluginFormcreatorTargetTicket extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        parent::beforeTestMethod($method);
 
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
+        $this->login('glpi', 'glpi');
+    }
 
-      $this->login('glpi', 'glpi');
-   }
+    public function testTargetTicketActors()
+    {
+       // Create a form with a target ticket
+        $form = $this->getForm();
 
-   public function testTargetTicketActors() {
-      // Create a form with a target ticket
-      $form = $this->getForm();
+        $instance = new \PluginFormcreatorTargetTicket();
+        $instance->add([
+            'name'                        => 'a target',
+            'plugin_formcreator_forms_id' => $form->getID()
+        ]);
+        $instance->getFromDB($instance->getID());
+        $this->boolean($instance->isNewItem())->isFalse();
 
-      $instance = new \PluginFormcreatorTargetTicket();
-      $instance->add([
-         'name'                        => 'a target',
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-      $instance->getFromDB($instance->getID());
-      $this->boolean($instance->isNewItem())->isFalse();
+       // find the actors created by default
+        $requesterActor = new \PluginFormcreatorTarget_Actor();
+        $observerActor = new \PluginFormcreatorTarget_Actor();
+        $instanceId = $instance->getID();
 
-      // find the actors created by default
-      $requesterActor = new \PluginFormcreatorTarget_Actor();
-      $observerActor = new \PluginFormcreatorTarget_Actor();
-      $instanceId = $instance->getID();
+        $requesterActor->getFromDBByCrit([
+            'AND' => [
+                'itemtype'   => $instance->getType(),
+                'items_id'   => $instanceId,
+                'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+                'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
+            ]
+        ]);
+        $observerActor->getFromDBByCrit([
+            'AND' => [
+                'itemtype'   => $instance->getType(),
+                'items_id'   => $instanceId,
+                'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+                'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
+            ]
+        ]);
+        $this->boolean($requesterActor->isNewItem())->isFalse();
+        $this->boolean($observerActor->isNewItem())->isFalse();
 
-      $requesterActor->getFromDBByCrit([
-         'AND' => [
-            'itemtype'   => $instance->getType(),
-            'items_id'   => $instanceId,
-            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
-            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
-         ]
-      ]);
-      $observerActor->getFromDBByCrit([
-         'AND' => [
-            'itemtype'   => $instance->getType(),
-            'items_id'   => $instanceId,
-            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
-            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
-         ]
-      ]);
-      $this->boolean($requesterActor->isNewItem())->isFalse();
-      $this->boolean($observerActor->isNewItem())->isFalse();
-
-      // check the settings of the default actors
-      $this->integer((int) $requesterActor->getField('use_notification'))
+       // check the settings of the default actors
+        $this->integer((int) $requesterActor->getField('use_notification'))
          ->isEqualTo(1);
-      $this->integer((int) $observerActor->getField('use_notification'))
+        $this->integer((int) $observerActor->getField('use_notification'))
          ->isEqualTo(1);
-   }
+    }
 
-   public function testUrgency() {
-      global $DB;
+    public function testUrgency()
+    {
+        global $DB;
 
-      // Create a form with a urgency question and 2 target tickets
-      $form = $this->getForm([
-         'entities_id'           => $_SESSION['glpiactive_entity'],
-         'name'                  => __METHOD__,
-         'description'           => 'form description',
-         'content'               => 'a content',
-         'is_active'             => 1,
-         'validation_required'   => 0
-      ]);
-      $this->boolean($form->isNewItem())->isFalse();
+       // Create a form with a urgency question and 2 target tickets
+        $form = $this->getForm([
+            'entities_id'           => $_SESSION['glpiactive_entity'],
+            'name'                  => __METHOD__,
+            'description'           => 'form description',
+            'content'               => 'a content',
+            'is_active'             => 1,
+            'validation_required'   => 0
+        ]);
+        $this->boolean($form->isNewItem())->isFalse();
 
-      $section = $this->getSection([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'name'                        => 'a section',
-      ]);
-      $this->boolean($section->isNewItem())->isFalse();
+        $section = $this->getSection([
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'name'                        => 'a section',
+        ]);
+        $this->boolean($section->isNewItem())->isFalse();
 
-      $question = $this->getQuestion([
-         'plugin_formcreator_sections_id' => $section->getID(),
-         'name'                           => 'custom urgency',
-         'fieldtype'                      => 'urgency',
-         'default_values'                 => '3',
-      ]);
-      $this->boolean($question->isNewItem())->isFalse();
+        $question = $this->getQuestion([
+            'plugin_formcreator_sections_id' => $section->getID(),
+            'name'                           => 'custom urgency',
+            'fieldtype'                      => 'urgency',
+            'default_values'                 => '3',
+        ]);
+        $this->boolean($question->isNewItem())->isFalse();
 
-      $targetTicket1 = $this->getTargetTicket([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'name'                  => 'urgency from answer',
-         'target_name'           => 'urgency from answer',
-         'content'               => '##FULLFORM##',
-         'itemtype'              => \PluginFormcreatorTargetTicket::class,
-         'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_ANSWER,
-         'urgency_question'      => $question->getID(),
-      ]);
-      $this->boolean($targetTicket1->isNewItem())->isFalse();
+        $targetTicket1 = $this->getTargetTicket([
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'name'                  => 'urgency from answer',
+            'target_name'           => 'urgency from answer',
+            'content'               => '##FULLFORM##',
+            'itemtype'              => \PluginFormcreatorTargetTicket::class,
+            'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_ANSWER,
+            'urgency_question'      => $question->getID(),
+        ]);
+        $this->boolean($targetTicket1->isNewItem())->isFalse();
 
-      $targetTicket2 = $this->getTargetTicket([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'name'                  => 'default urgency',
-         'target_name'           => 'default urgency',
-         'content'               => '##FULLFORM##',
-         'itemtype'              => \PluginFormcreatorTargetTicket::class,
-         'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_NONE,
-         'urgency_question'      => '0',
-      ]);
-      $this->boolean($targetTicket2->isNewItem())->isFalse();
+        $targetTicket2 = $this->getTargetTicket([
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'name'                  => 'default urgency',
+            'target_name'           => 'default urgency',
+            'content'               => '##FULLFORM##',
+            'itemtype'              => \PluginFormcreatorTargetTicket::class,
+            'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_NONE,
+            'urgency_question'      => '0',
+        ]);
+        $this->boolean($targetTicket2->isNewItem())->isFalse();
 
-      // create a formanswer
-      $saveFormData = [
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_field_' . $question->getID() => '5',
-      ];
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $form->getFromDB($form->getID());
-      $formAnswer->add($saveFormData);
-      // Let's assume thre are no previous formanswers for this foreign key
-      $formAnswer->getFromDbByCrit([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
+       // create a formanswer
+        $saveFormData = [
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'formcreator_field_' . $question->getID() => '5',
+        ];
+        $formAnswer = new \PluginFormcreatorFormAnswer();
+        $form->getFromDB($form->getID());
+        $formAnswer->add($saveFormData);
+       // Let's assume thre are no previous formanswers for this foreign key
+        $formAnswer->getFromDbByCrit([
+            'plugin_formcreator_forms_id' => $form->getID(),
+        ]);
 
-      $rows = $DB->request([
-         'SELECT' => ['tickets_id'],
-         'FROM'   => \Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype' => \PluginFormcreatorFormAnswer::class,
-            'items_id' => $formAnswer->getID(),
-         ]
-      ]);
-      $this->variable($rows)->isNotNull();
-      foreach ($rows as $row) {
-         $ticket = new \Ticket();
-         $ticket->getFromDB($row['tickets_id']);
-         $this->boolean($ticket->isNewItem())->isFalse();
-         if ($ticket->fields['name'] == 'urgency from answer') {
-            $this->integer((int) $ticket->fields['urgency'])->isEqualTo(5);
-         } else if ($ticket->fields['name'] == 'default urgency') {
-            // expected medium urgency
-            $this->integer((int) $ticket->fields['urgency'])->isEqualTo(3);
-         } else {
-            throw new \RuntimeException('Unexpected ticket');
-         }
-      }
-   }
+        $rows = $DB->request([
+            'SELECT' => ['tickets_id'],
+            'FROM'   => \Item_Ticket::getTable(),
+            'WHERE'  => [
+                'itemtype' => \PluginFormcreatorFormAnswer::class,
+                'items_id' => $formAnswer->getID(),
+            ]
+        ]);
+        $this->variable($rows)->isNotNull();
+        foreach ($rows as $row) {
+            $ticket = new \Ticket();
+            $ticket->getFromDB($row['tickets_id']);
+            $this->boolean($ticket->isNewItem())->isFalse();
+            if ($ticket->fields['name'] == 'urgency from answer') {
+                $this->integer((int) $ticket->fields['urgency'])->isEqualTo(5);
+            } else if ($ticket->fields['name'] == 'default urgency') {
+               // expected medium urgency
+                $this->integer((int) $ticket->fields['urgency'])->isEqualTo(3);
+            } else {
+                throw new \RuntimeException('Unexpected ticket');
+            }
+        }
+    }
 }

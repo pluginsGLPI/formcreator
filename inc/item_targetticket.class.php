@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,26 +30,25 @@
  * ---------------------------------------------------------------------
  */
 
-
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
-implements PluginFormcreatorExportableInterface
+class PluginFormcreatorItem_TargetTicket extends CommonDBRelation implements PluginFormcreatorExportableInterface
 {
-   use PluginFormcreatorExportableTrait;
+    use PluginFormcreatorExportableTrait;
 
-   static public $itemtype_1           = 'itemtype';
-   static public $items_id_1           = 'items_id';
-   static public $itemtype_2           = PluginFormcreatorTargetTicket::class;
-   static public $items_id_2           = 'plugin_formcreator_targettickets_id';
+    public static $itemtype_1           = 'itemtype';
+    public static $items_id_1           = 'items_id';
+    public static $itemtype_2           = PluginFormcreatorTargetTicket::class;
+    public static $items_id_2           = 'plugin_formcreator_targettickets_id';
 
-   static public $logs_for_item_1      = false;
+    public static $logs_for_item_1      = false;
 
-   public static function getTypeName($nb = 0) {
-      return _n('Composite ticket relation', 'Composite ticket relations', $nb, 'formcreator');
-   }
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Composite ticket relation', 'Composite ticket relations', $nb, 'formcreator');
+    }
 
    /**
     * Export in an array all the data of the current instanciated form
@@ -57,143 +57,156 @@ implements PluginFormcreatorExportableInterface
     *
     * @return array the array with all data (with sub tables)
     */
-   public function export(bool $remove_uuid = false) : array {
-      if ($this->isNewItem()) {
-         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
-      }
+    public function export(bool $remove_uuid = false): array
+    {
+        if ($this->isNewItem()) {
+            throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+        }
 
-      $item_targetTicket = $this->fields;
+        $item_targetTicket = $this->fields;
 
-      // remove non needed keys
-      $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
-      $this->convertIds($item_targetTicket);
-      unset($item_targetTicket[$targetTicketFk]);
+       // remove non needed keys
+        $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
+        $this->convertIds($item_targetTicket);
+        unset($item_targetTicket[$targetTicketFk]);
 
-      // remove ID or UUID
-      $idToRemove = 'id';
-      if ($remove_uuid) {
-         $idToRemove = 'uuid';
-      }
-      unset($item_targetTicket[$idToRemove]);
+       // remove ID or UUID
+        $idToRemove = 'id';
+        if ($remove_uuid) {
+            $idToRemove = 'uuid';
+        }
+        unset($item_targetTicket[$idToRemove]);
 
-      $linkedItemtype = $item_targetTicket['itemtype'];
-      $linkedItem = new $linkedItemtype();
-      $linkedItemId = $item_targetTicket['items_id'];
-      $identifierColumn = 'id';
-      if (strpos($item_targetTicket['itemtype'], 'PluginFormcreator') === 0) {
-         $identifierColumn = 'uuid';
-      }
-      $linkedItem->getFromDBByCrit([
-         $identifierColumn => $linkedItemId
-      ]);
-      // if ($linkedItem->isNewItem()) {
-      //    TODO: error linked item not found
-      // }
-      $item_targetTicket['items_id'] = $linkedItem->fields[$identifierColumn];
+        $linkedItemtype = $item_targetTicket['itemtype'];
+        $linkedItem = new $linkedItemtype();
+        $linkedItemId = $item_targetTicket['items_id'];
+        $identifierColumn = 'id';
+        if (strpos($item_targetTicket['itemtype'], 'PluginFormcreator') === 0) {
+            $identifierColumn = 'uuid';
+        }
+        $linkedItem->getFromDBByCrit([
+            $identifierColumn => $linkedItemId
+        ]);
+       // if ($linkedItem->isNewItem()) {
+       //    TODO: error linked item not found
+       // }
+        $item_targetTicket['items_id'] = $linkedItem->fields[$identifierColumn];
 
-      return $item_targetTicket;
-   }
+        return $item_targetTicket;
+    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
-      if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
-      }
+    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false)
+    {
+        if (!isset($input['uuid']) && !isset($input['id'])) {
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+        }
 
-      $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
-      $input[$targetTicketFk] = $containerId;
+        $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
+        $input[$targetTicketFk] = $containerId;
 
-      $item = new self;
-      // Find an existing target to update, only if an UUID is available
-      $itemId = false;
-      /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id';
-      if (isset($input['uuid'])) {
-         $idKey = 'uuid';
-         $itemId = plugin_formcreator_getFromDBByField(
-            $item,
-            'uuid',
-            $input['uuid']
-         );
-      }
+        $item = new self();
+       // Find an existing target to update, only if an UUID is available
+        $itemId = false;
+       /** @var string $idKey key to use as ID (id or uuid) */
+        $idKey = 'id';
+        if (isset($input['uuid'])) {
+            $idKey = 'uuid';
+            $itemId = plugin_formcreator_getFromDBByField(
+                $item,
+                'uuid',
+                $input['uuid']
+            );
+        }
 
-      // set ID for linked objects
-      if (!$dryRun) {
-         $linkedItemtype = $input['itemtype'];
-         $linkedItemId = $input['items_id'];
-         $linkedItem = $linker->findObject($linkedItemtype, $linkedItemId, $idKey);
-         if ($linkedItem->isNewItem()) {
-            if (strpos($linkedItemtype, 'PluginFormcreator') === 0) {
-               // the linnked object belongs to the plugin, maybe the item will be imported later
-               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-               return false;
+       // set ID for linked objects
+        if (!$dryRun) {
+            $linkedItemtype = $input['itemtype'];
+            $linkedItemId = $input['items_id'];
+            $linkedItem = $linker->findObject($linkedItemtype, $linkedItemId, $idKey);
+            if ($linkedItem->isNewItem()) {
+                if (strpos($linkedItemtype, 'PluginFormcreator') === 0) {
+                    // the linnked object belongs to the plugin, maybe the item will be imported later
+                    $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+                    return false;
+                }
+               // linked item is not an object of Formcreator, it will not be imported
+                throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException('Failed to find a linked object to a target ticket');
             }
-            // linked item is not an object of Formcreator, it will not be imported
-            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException('Failed to find a linked object to a target ticket');
-         }
-      }
+        }
 
-      // Add or update
-      $originalId = $input[$idKey];
-      $item->skipChecks = true;
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      $item->skipChecks = false;
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+       // Add or update
+        $originalId = $input[$idKey];
+        $item->skipChecks = true;
+        if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+        } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+        }
+        $item->skipChecks = false;
+        if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+        }
 
-      // add the target to the linker
-      $linker->addObject($originalId, $item);
+       // add the target to the linker
+        $linker->addObject($originalId, $item);
 
-      return $itemId;
-   }
+        return $itemId;
+    }
 
-   public static function countItemsToImport($input) : int {
-      return 1;
-   }
+    public static function countItemsToImport($input): int
+    {
+        return 1;
+    }
 
-   public function prepareInputForAdd($input) {
-      // generate a unique id
-      if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
+    public function prepareInputForAdd($input)
+    {
+       // generate a unique id
+        if (
+            !isset($input['uuid'])
+            || empty($input['uuid'])
+        ) {
+            $input['uuid'] = plugin_formcreator_getUuid();
+        }
 
-      return $input;
-   }
+        return $input;
+    }
 
-   protected function convertIds(&$parameter) {
-      if ($parameter['itemtype'] == PluginFormcreatorTargetTicket::getType()) {
-         $targetTicket = new PluginFormcreatorTargetTicket();
-         $targetTicket->getFromDB($parameter['items_id']);
-         $parameter['items_id'] = $targetTicket->fields['uuid'];
-      }
-   }
+    protected function convertIds(&$parameter)
+    {
+        if ($parameter['itemtype'] == PluginFormcreatorTargetTicket::getType()) {
+            $targetTicket = new PluginFormcreatorTargetTicket();
+            $targetTicket->getFromDB($parameter['items_id']);
+            $parameter['items_id'] = $targetTicket->fields['uuid'];
+        }
+    }
 
-   protected function convertUuids(&$parameter) {
-      if ($questionId2
-          = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
-                                                  'uuid',
-                                                  $parameter['plugin_formcreator_questions_id_2'])) {
-         $parameter['plugin_formcreator_questions_id_2'] = $questionId2;
-         return true;
-      }
-      return false;
-   }
+    protected function convertUuids(&$parameter)
+    {
+        if (
+            $questionId2
+            = plugin_formcreator_getFromDBByField(
+                new PluginFormcreatorQuestion(),
+                'uuid',
+                $parameter['plugin_formcreator_questions_id_2']
+            )
+        ) {
+            $parameter['plugin_formcreator_questions_id_2'] = $questionId2;
+            return true;
+        }
+        return false;
+    }
 
-   public function deleteObsoleteItems(CommonDBTM $container, array $exclude) : bool {
-      $keepCriteria = [
-         self::$items_id_2 => $container->getID(),
-      ];
-      if (count($exclude) > 0) {
-         $keepCriteria[] = ['NOT' => ['id' => $exclude]];
-      }
-      return $this->deleteByCriteria($keepCriteria);
-   }
+    public function deleteObsoleteItems(CommonDBTM $container, array $exclude): bool
+    {
+        $keepCriteria = [
+            self::$items_id_2 => $container->getID(),
+        ];
+        if (count($exclude) > 0) {
+            $keepCriteria[] = ['NOT' => ['id' => $exclude]];
+        }
+        return $this->deleteByCriteria($keepCriteria);
+    }
 }

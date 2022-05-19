@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -35,17 +36,18 @@ use Dropdown;
 
 class EntityFilter
 {
-   const ENTITY_RESTRICT_USER = 1;
-   const ENTITY_RESTRICT_FORM = 2;
-   const ENTITY_RESTRICT_BOTH = 3;
+    const ENTITY_RESTRICT_USER = 1;
+    const ENTITY_RESTRICT_FORM = 2;
+    const ENTITY_RESTRICT_BOTH = 3;
 
-   public static function getEnumEntityRestriction() {
-      return [
-         self::ENTITY_RESTRICT_USER =>  __('User', 'formcreator'),
-         self::ENTITY_RESTRICT_FORM =>  __('Form', 'formcreator'),
-         self::ENTITY_RESTRICT_BOTH =>  __('User and form', 'formcreator'),
-      ];
-   }
+    public static function getEnumEntityRestriction()
+    {
+        return [
+            self::ENTITY_RESTRICT_USER =>  __('User', 'formcreator'),
+            self::ENTITY_RESTRICT_FORM =>  __('Form', 'formcreator'),
+            self::ENTITY_RESTRICT_BOTH =>  __('User and form', 'formcreator'),
+        ];
+    }
 
    /**
     * Show or return a dropdown of entity restriction settings
@@ -54,11 +56,12 @@ class EntityFilter
     * @param array $options
     * @return string
     */
-   public static function dropdown(string $name, array $options = []): ?string {
-      return Dropdown::showFromArray(
-         $name,
-         self::getEnumEntityRestriction(),
-         $options
-      );
-   }
+    public static function dropdown(string $name, array $options = []): ?string
+    {
+        return Dropdown::showFromArray(
+            $name,
+            self::getEnumEntityRestriction(),
+            $options
+        );
+    }
 }

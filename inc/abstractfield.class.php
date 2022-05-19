@@ -31,7 +31,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 require_once(realpath(dirname(__FILE__) . '/../../../inc/includes.php'));
@@ -39,288 +39,307 @@ require_once(realpath(dirname(__FILE__) . '/../../../inc/includes.php'));
 abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldInterface
 {
    /** @var PluginFormcreatorQuestion $question */
-   protected $question = null;
+    protected $question = null;
 
    /** @var mixed $answer Value of the field */
-   protected $value = null;
+    protected $value = null;
 
    /**
     * the form answer to source the values from
     *
     * @var PluginFormcreatorFormAnswer|null
     */
-   protected ?PluginFormcreatorFormAnswer $form_answer = null;
+    protected ?PluginFormcreatorFormAnswer $form_answer = null;
 
    /**
     *
     * @param array $question PluginFormcreatorQuestion instance
     */
-   public function __construct(PluginFormcreatorQuestion $question) {
-      $this->question = $question;
-   }
+    public function __construct(PluginFormcreatorQuestion $question)
+    {
+        $this->question = $question;
+    }
 
-   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {
-      $this->form_answer = $form_answer;
-      if ($this->hasInput($this->form_answer->getAnswers())) {
-         // Parse an HTML input
-         $this->parseAnswerValues($this->form_answer->getAnswers());
-      } else {
-         // Deserialize the default value from DB
-         $this->deserializeValue($this->question->fields['default_values']);
-      }
-   }
+    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void
+    {
+        $this->form_answer = $form_answer;
+        if ($this->hasInput($this->form_answer->getAnswers())) {
+           // Parse an HTML input
+            $this->parseAnswerValues($this->form_answer->getAnswers());
+        } else {
+           // Deserialize the default value from DB
+            $this->deserializeValue($this->question->fields['default_values']);
+        }
+    }
 
-   public function prepareQuestionInputForSave($input) {
-      $this->value = $input['default_values'];
-      return $input;
-   }
+    public function prepareQuestionInputForSave($input)
+    {
+        $this->value = $input['default_values'];
+        return $input;
+    }
 
-   public function getRawValue() {
-      return $this->value;
-   }
+    public function getRawValue()
+    {
+        return $this->value;
+    }
 
    /**
     * Output HTML to display the field
     * @param string  $domain  Translation domain of the form
     * @param boolean $canEdit is the field editable ?
     */
-   public function show(string $domain, bool $canEdit = true): string {
-      $html = '';
+    public function show(string $domain, bool $canEdit = true): string
+    {
+        $html = '';
 
-      if ($this->isEditableField() && !empty($this->question->fields['description'])) {
-         $description = $this->question->fields['description'];
-         foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
-            $prefix = uniqid('', true);
-            $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
-            if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
-               continue;
+        if ($this->isEditableField() && !empty($this->question->fields['description'])) {
+            $description = $this->question->fields['description'];
+            foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
+                $prefix = uniqid('', true);
+                $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
+                if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+                    continue;
+                }
             }
-         }
-         $html .= '<div class="help-block">' . html_entity_decode(__($description, $domain)) . '</div>';
-      }
-      $html .= '<div class="form_field">';
-      $html .= $this->getRenderedHtml($domain, $canEdit);
-      $html .= '</div>';
+            $html .= '<div class="help-block">' . html_entity_decode(__($description, $domain)) . '</div>';
+        }
+        $html .= '<div class="form_field">';
+        $html .= $this->getRenderedHtml($domain, $canEdit);
+        $html .= '</div>';
 
-      // Determine if field is mandatory after generating it's HTML
-      // useful for fields plugin
-      // because fields plugin manage it's own mandatory system and can overload $this->question->fields['required']
-      // when HTML is generated (see $this->getRenderedHtml)
-      $label = '';
-      if ($this->isVisibleField()) {
-         $label .= '<label for="formcreator_field_' . $this->question->getID() . '">';
-         $label .= __($this->getLabel(), $domain);
-         if ($canEdit && $this->question->fields['required']) {
-            $label .= ' <span class="red">*</span>';
-         }
-         $label .= '</label>';
-      }
+       // Determine if field is mandatory after generating it's HTML
+       // useful for fields plugin
+       // because fields plugin manage it's own mandatory system and can overload $this->question->fields['required']
+       // when HTML is generated (see $this->getRenderedHtml)
+        $label = '';
+        if ($this->isVisibleField()) {
+            $label .= '<label for="formcreator_field_' . $this->question->getID() . '">';
+            $label .= __($this->getLabel(), $domain);
+            if ($canEdit && $this->question->fields['required']) {
+                $label .= ' <span class="red">*</span>';
+            }
+            $label .= '</label>';
+        }
 
-      return $label.$html;
-   }
+        return $label . $html;
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         return $this->value;
-      }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            return $this->value;
+        }
 
-      $html         = '';
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->value);
-      $html .= Html::input($fieldName, [
-         'id'    => $domId,
-         'value' => $defaultValue
-      ]);
-      $html .= Html::scriptBlock("$(function() {
+        $html         = '';
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $domId        = $fieldName . '_' . $rand;
+        $defaultValue = Html::cleanInputText($this->value);
+        $html .= Html::input($fieldName, [
+            'id'    => $domId,
+            'value' => $defaultValue
+        ]);
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeField('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
    /**
     * Gets the label of the field
     *
     * @return string
     */
-   public function getLabel() {
-      return $this->question->fields['name'];
-   }
+    public function getLabel()
+    {
+        return $this->question->fields['name'];
+    }
 
    /**
     * Gets the available values for the field
     * @return array available values
     */
-   public function getAvailableValues() {
-      $values = json_decode($this->question->fields['values']);
-      $tab_values = [];
-      foreach ($values as $value) {
-         if ((trim($value) != '')) {
-            $tab_values[$value] = $value;
-         }
-      }
-      return $tab_values;
-   }
+    public function getAvailableValues()
+    {
+        $values = json_decode($this->question->fields['values']);
+        $tab_values = [];
+        foreach ($values as $value) {
+            if ((trim($value) != '')) {
+                $tab_values[$value] = $value;
+            }
+        }
+        return $tab_values;
+    }
 
-   public function isRequired(): bool {
-      return ($this->question->fields['required'] != '0');
-   }
+    public function isRequired(): bool
+    {
+        return ($this->question->fields['required'] != '0');
+    }
 
    /**
     * trim values separated by \r\n
     * @param string $value a value or default value
     * @return string
     */
-   protected function trimValue($value) {
-      global $DB;
+    protected function trimValue($value)
+    {
+        global $DB;
 
-      $value = explode('\r\n', $value);
-      // input has escpaed single quotes
-      $value = Toolbox::stripslashes_deep($value);
-      $value = array_filter($value, function ($value) {
-         return ($value !== '');
-      });
-      $value = array_map(
-         function ($value) {
-            return trim($value);
-         },
-         $value
-      );
+        $value = explode('\r\n', $value);
+       // input has escpaed single quotes
+        $value = Toolbox::stripslashes_deep($value);
+        $value = array_filter($value, function ($value) {
+            return ($value !== '');
+        });
+        $value = array_map(
+            function ($value) {
+                return trim($value);
+            },
+            $value
+        );
 
-      return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
-   }
+        return $DB->escape(json_encode($value, JSON_UNESCAPED_UNICODE));
+    }
 
-   public function getFieldTypeName(): string {
-      $classname = explode('\\', get_called_class());
-      $classname = array_pop($classname);
-      $matches = null;
+    public function getFieldTypeName(): string
+    {
+        $classname = explode('\\', get_called_class());
+        $classname = array_pop($classname);
+        $matches = null;
 
-      preg_match("#^(.+)Field$#", $classname, $matches);
-      return strtolower($matches[1]);
-   }
+        preg_match("#^(.+)Field$#", $classname, $matches);
+        return strtolower($matches[1]);
+    }
 
-   public function getEmptyParameters(): array {
-      return [];
-   }
+    public function getEmptyParameters(): array
+    {
+        return [];
+    }
 
    /**
     * Undocumented function
     *
     * @return PluginFormcreatorAbstractQuestionParameter[]
     */
-   public final function getParameters(): array {
-      $parameters = $this->getEmptyParameters();
-      foreach ($parameters as $fieldname => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id'   => $this->question->getID(),
-            'fieldname'                         => $fieldname,
-         ]);
-         if ($parameter->isNewItem()) {
-            $parameter->getEmpty();
-         }
-      }
+    final public function getParameters(): array
+    {
+        $parameters = $this->getEmptyParameters();
+        foreach ($parameters as $fieldname => $parameter) {
+            $parameter->getFromDBByCrit([
+                'plugin_formcreator_questions_id'   => $this->question->getID(),
+                'fieldname'                         => $fieldname,
+            ]);
+            if ($parameter->isNewItem()) {
+                 $parameter->getEmpty();
+            }
+        }
 
-      return $parameters;
-   }
+        return $parameters;
+    }
 
-   public final function addParameters(PluginFormcreatorQuestion $question, array $input) {
-      $fieldTypeName = $this->getFieldTypeName();
-      if (!isset($input['_parameters'][$fieldTypeName])) {
-         return;
-      }
+    final public function addParameters(PluginFormcreatorQuestion $question, array $input)
+    {
+        $fieldTypeName = $this->getFieldTypeName();
+        if (!isset($input['_parameters'][$fieldTypeName])) {
+            return;
+        }
 
-      foreach ($this->getEmptyParameters() as $fieldName => $parameter) {
-         $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $this->question->getID();
-         $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
-      }
-   }
+        foreach ($this->getEmptyParameters() as $fieldName => $parameter) {
+            $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $this->question->getID();
+            $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
+        }
+    }
 
-   public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {
-      $fieldTypeName = $this->getFieldTypeName();
-      if (!isset($input['_parameters'][$fieldTypeName])) {
-         return;
-      }
+    final public function updateParameters(PluginFormcreatorQuestion $question, array $input)
+    {
+        $fieldTypeName = $this->getFieldTypeName();
+        if (!isset($input['_parameters'][$fieldTypeName])) {
+            return;
+        }
 
-      foreach ($this->getParameters() as $fieldName => $parameter) {
-         if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
-            continue;
-         }
-         $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
-         $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
-         if ($parameter->isNewItem()) {
-            // In case of the parameter vanished in DB, just recreate it
-            unset($parameterInput['id']);
-            $parameter->add($parameterInput);
-         } else {
-            $parameterInput['id'] = $parameter->getID();
-            $parameter->update($parameterInput);
-         }
-      }
-   }
+        foreach ($this->getParameters() as $fieldName => $parameter) {
+            if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
+                continue;
+            }
+            $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
+            $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
+            if ($parameter->isNewItem()) {
+               // In case of the parameter vanished in DB, just recreate it
+                unset($parameterInput['id']);
+                $parameter->add($parameterInput);
+            } else {
+                $parameterInput['id'] = $parameter->getID();
+                $parameter->update($parameterInput);
+            }
+        }
+    }
 
-   public final function deleteParameters(PluginFormcreatorQuestion $question): bool {
-      foreach ($this->getEmptyParameters() as $parameter) {
-         if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
-            // Don't make  this error fatal, but log it anyway
-            Toolbox::logInFile('php-errors', 'Failed to delete parameter for question ' . $question->getID() . PHP_EOL);
-         }
-      }
-      return true;
-   }
+    final public function deleteParameters(PluginFormcreatorQuestion $question): bool
+    {
+        foreach ($this->getEmptyParameters() as $parameter) {
+            if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
+                // Don't make  this error fatal, but log it anyway
+                Toolbox::logInFile('php-errors', 'Failed to delete parameter for question ' . $question->getID() . PHP_EOL);
+            }
+        }
+        return true;
+    }
 
    /**
     * get HTML of parameters for question design
     *
     * @return string
     */
-   protected function getParametersHtmlForDesign() {
-      $parameters = $this->getParameters();
-      if (count($parameters) == 0) {
-         return '';
-      }
+    protected function getParametersHtmlForDesign()
+    {
+        $parameters = $this->getParameters();
+        if (count($parameters) == 0) {
+            return '';
+        }
 
-      $additions = '';
-      foreach ($parameters as $parameter) {
-         $additions .= $parameter->getParameterForm($this->question);
-      }
+        $additions = '';
+        foreach ($parameters as $parameter) {
+            $additions .= $parameter->getParameterForm($this->question);
+        }
 
-      return $additions;
-   }
+        return $additions;
+    }
 
    /**
     * get the question matching the  field
     *
     * @return PluginFormcreatorQuestion
     */
-   public function getQuestion() {
-      return $this->question;
-   }
+    public function getQuestion()
+    {
+        return $this->question;
+    }
 
-   public function getTranslatableStrings(array $options = []) : array {
-      $strings = [
-         'itemlink' => [],
-         'string'   => [],
-         'text'     => [],
-         'id'       => [],
-      ];
+    public function getTranslatableStrings(array $options = []): array
+    {
+        $strings = [
+            'itemlink' => [],
+            'string'   => [],
+            'text'     => [],
+            'id'       => [],
+        ];
 
-      $params = [
-         'searchText'      => '',
-         'id'              => '',
-         'is_translated'   => null,
-         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
-      ];
-      $options = array_merge($params, $options);
+        $params = [
+            'searchText'      => '',
+            'id'              => '',
+            'is_translated'   => null,
+            'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+        ];
+        $options = array_merge($params, $options);
 
-      foreach ($this->getParameters() as $parameter) {
-         foreach ($parameter->getTranslatableStrings($options) as $type => $subStrings) {
-            $strings[$type] = array_merge($strings[$type], $subStrings);
-         }
-      }
+        foreach ($this->getParameters() as $parameter) {
+            foreach ($parameter->getTranslatableStrings($options) as $type => $subStrings) {
+                $strings[$type] = array_merge($strings[$type], $subStrings);
+            }
+        }
 
-      return $strings;
-   }
+        return $strings;
+    }
 }

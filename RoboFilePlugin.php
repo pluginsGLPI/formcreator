@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -31,86 +32,90 @@
 
 class RoboFilePlugin extends \Robo\Tasks
 {
-
-   protected $csignore = [
-      '/vendor/',
-      '/node_modules/',
-      '/lib/',
-      '/development/',
-      '/output/',
-   ];
-   protected $csfiles  = ['./'];
+    protected $csignore = [
+        '/vendor/',
+        '/node_modules/',
+        '/lib/',
+        '/development/',
+        '/output/',
+    ];
+    protected $csfiles  = ['./'];
 
    /**
     * Minify all
     *
     * @return void
     */
-   public function minify() {
-      $this->minifyCSS()
+    public function minify()
+    {
+        $this->minifyCSS()
          ->minifyJS();
-   }
+    }
 
    /**
     * Minify CSS stylesheets
     *
     * @return RoboFilePlugin
     */
-   public function minifyCSS(): RoboFilePlugin {
-      $css_dir = __DIR__ . '/css';
-      if (is_dir($css_dir)) {
-         foreach (glob("$css_dir/*.scss") as $css_file) {
-            $outfile = dirname(dirname($css_file)) . '/css_compiled/' . basename($css_file, '.scss').'.css';
-            if (!$this->endsWith($css_file, 'min.css')) {
-               $this->taskScss([
-                  $css_file => $outfile,
-               ])->run();
-               $this->taskMinify($outfile)->run();
+    public function minifyCSS(): RoboFilePlugin
+    {
+        $css_dir = __DIR__ . '/css';
+        if (is_dir($css_dir)) {
+            foreach (glob("$css_dir/*.scss") as $css_file) {
+                $outfile = dirname(dirname($css_file)) . '/css_compiled/' . basename($css_file, '.scss') . '.css';
+                if (!$this->endsWith($css_file, 'min.css')) {
+                    $this->taskScss([
+                        $css_file => $outfile,
+                    ])->run();
+                    $this->taskMinify($outfile)->run();
+                }
             }
-         }
-      }
-      return $this;
-   }
+        }
+        return $this;
+    }
 
    /**
     * Minify JavaScript files stylesheets
     *
     * @return void
     */
-   public function minifyJS() {
-      $js_dir = __DIR__ . '/js';
-      if (is_dir($js_dir)) {
-         foreach (glob("$js_dir/*.js") as $js_file) {
-            if (!$this->endsWith($js_file, 'min.js')) {
-               $this->taskMinify($js_file)
-                  ->to(str_replace('.js', '.min.js', $js_file))
-                  ->type('js')
-                  ->run();
+    public function minifyJS()
+    {
+        $js_dir = __DIR__ . '/js';
+        if (is_dir($js_dir)) {
+            foreach (glob("$js_dir/*.js") as $js_file) {
+                if (!$this->endsWith($js_file, 'min.js')) {
+                    $this->taskMinify($js_file)
+                    ->to(str_replace('.js', '.min.js', $js_file))
+                    ->type('js')
+                    ->run();
+                }
             }
-         }
-      }
-      return $this;
-   }
+        }
+        return $this;
+    }
 
    /**
     * Extract translatable strings
     *
     * @return void
     */
-   public function localesExtract() {
-      $this->_exec('tools/extract_template.sh');
-      return $this;
-   }
+    public function localesExtract()
+    {
+        $this->_exec('tools/extract_template.sh');
+        return $this;
+    }
 
    /**
     * Push locales to transifex
     *
     * @return void
     */
-   public function localesPush() {
-      $this->_exec('python3 `which tx` push -s');
-      return $this;
-   }
+    public function localesPush()
+    {
+        $this->_exec('python3 `which tx` push -s');
+        return $this;
+    }
 
    /**
     * Pull locales from transifex.
@@ -119,31 +124,34 @@ class RoboFilePlugin extends \Robo\Tasks
     *
     * @return void
     */
-   public function localesPull($percent = 70) {
-      $this->_exec('tx pull --debug -f -a --minimum-perc=' .$percent);
-      return $this;
-   }
+    public function localesPull($percent = 70)
+    {
+        $this->_exec('tx pull --debug -f -a --minimum-perc=' . $percent);
+        return $this;
+    }
 
    /**
     * Build MO files
     *
     * @return void
     */
-   public function localesMo() {
-      $this->_exec('./tools/release --compile-mo');
-      return $this;
-   }
+    public function localesMo()
+    {
+        $this->_exec('./tools/release --compile-mo');
+        return $this;
+    }
 
    /**
     * Extract and send locales
     *
     * @return void
     */
-   public function localesSend() {
-      $this->localesExtract()
+    public function localesSend()
+    {
+        $this->localesExtract()
            ->localesPush();
-      return $this;
-   }
+        return $this;
+    }
 
    /**
     * Retrieve locales and generate mo files
@@ -152,11 +160,12 @@ class RoboFilePlugin extends \Robo\Tasks
     *
     * @return void
     */
-   public function localesGenerate($percent = 70) {
-      $this->localesPull($percent)
+    public function localesGenerate($percent = 70)
+    {
+        $this->localesPull($percent)
            ->localesMo();
-      return $this;
-   }
+        return $this;
+    }
 
    /**
     * Checks if a string ends with another string
@@ -167,14 +176,15 @@ class RoboFilePlugin extends \Robo\Tasks
     * @return boolean
     * @see http://stackoverflow.com/a/834355
     */
-   private function endsWith($haystack, $needle) {
-      $length = strlen($needle);
-      if ($length == 0) {
-         return true;
-      }
+    private function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
 
-      return (substr($haystack, -$length) === $needle);
-   }
+        return (substr($haystack, -$length) === $needle);
+    }
 
    /**
     * Code sniffer.
@@ -189,37 +199,36 @@ class RoboFilePlugin extends \Robo\Tasks
     *
     *    @return void
     */
-   public function codeCs(
-      $file = null,
-      $options = [
-         'autofix'   => false,
-         'strict'    => false,
-      ]
-   ) {
-      if ($file === null) {
-         $file = implode(' ', $this->csfiles);
-      }
+    public function codeCs(
+        $file = null,
+        $options = [
+            'autofix'   => false,
+            'strict'    => false,
+        ]
+    ) {
+        if ($file === null) {
+            $file = implode(' ', $this->csfiles);
+        }
 
-      $csignore = '';
-      if (count($this->csignore)) {
-         $csignore .= '--ignore=';
-         $csignore .= implode(',', $this->csignore);
-      }
+        $csignore = '';
+        if (count($this->csignore)) {
+            $csignore .= '--ignore=';
+            $csignore .= implode(',', $this->csignore);
+        }
 
-      $strict = $options['strict'] ? '' : '-n';
+        $strict = $options['strict'] ? '' : '-n';
 
-      $result = $this->taskExec("./vendor/bin/phpcs $csignore --standard=vendor/glpi-project/coding-standard/GlpiStandard/ --standard=tests/rulest.xml {$strict} {$file}")->run();
+        $result = $this->taskExec("./vendor/bin/phpcs $csignore --standard=vendor/glpi-project/coding-standard/GlpiStandard/ --standard=tests/rulest.xml {$strict} {$file}")->run();
 
-      if (!$result->wasSuccessful()) {
-         if (!$options['autofix'] && !$options['no-interaction']) {
-            $options['autofix'] = $this->confirm('Would you like to run phpcbf to fix the reported errors?');
-         }
-         if ($options['autofix']) {
-            $result = $this->taskExec("./vendor/bin/phpcbf $csignore --standard=vendor/glpi-project/coding-standard/GlpiStandard/ {$file}")->run();
-         }
-      }
+        if (!$result->wasSuccessful()) {
+            if (!$options['autofix'] && !$options['no-interaction']) {
+                $options['autofix'] = $this->confirm('Would you like to run phpcbf to fix the reported errors?');
+            }
+            if ($options['autofix']) {
+                $result = $this->taskExec("./vendor/bin/phpcbf $csignore --standard=vendor/glpi-project/coding-standard/GlpiStandard/ {$file}")->run();
+            }
+        }
 
-      return $result;
-   }
-
+        return $result;
+    }
 }

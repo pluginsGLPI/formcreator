@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,32 +30,32 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
-   Session::addMessageAfterRedirect(__('Bad request', 'formcreator'), false, ERROR);
-   http_response_code(400);
-   exit();
+    Session::addMessageAfterRedirect(__('Bad request', 'formcreator'), false, ERROR);
+    http_response_code(400);
+    exit();
 }
 $questionId = (int) $_REQUEST['id'];
 
 $question = new PluginFormcreatorQuestion();
 if (!$question->getFromDB($questionId)) {
-   http_response_code(404);
-   Session::addMessageAfterRedirect(__('Question not found', 'formcreator'), false, ERROR);
-   exit;
+    http_response_code(404);
+    Session::addMessageAfterRedirect(__('Question not found', 'formcreator'), false, ERROR);
+    exit;
 }
 
 if (!$question->canUpdate()) {
-   http_response_code(403);
-   Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);
-   exit;
+    http_response_code(403);
+    Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);
+    exit;
 }
 
 $success = $question->update($_REQUEST);
 if (!$success) {
-   http_response_code(500);
-   exit();
+    http_response_code(500);
+    exit();
 }
 echo json_encode(['name' => $question->fields['name']], JSON_UNESCAPED_UNICODE);

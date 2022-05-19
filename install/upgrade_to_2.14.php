@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,21 +29,24 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_14 {
+class PluginFormcreatorUpgradeTo2_14
+{
    /** @var Migration */
-   protected $migration;
+    protected $migration;
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-       $this->migration = $migration;
+    public function upgrade(Migration $migration)
+    {
+        $this->migration = $migration;
 
-       $this->addTtoToIssues();
-       $this->addRights();
-   }
+        $this->addTtoToIssues();
+        $this->addRights();
+    }
 
-   public function addTtoToIssues() {
+    public function addTtoToIssues()
+    {
         $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
         $this->migration->addField($table, 'time_to_own', 'timestamp', ['after' => 'users_id_recipient']);
         $this->migration->addField($table, 'time_to_resolve', 'timestamp', ['after' => 'time_to_own']);
@@ -58,30 +62,31 @@ class PluginFormcreatorUpgradeTo2_14 {
         $this->migration->addKey($table, 'internal_time_to_resolve');
         $this->migration->addKey($table, 'solvedate');
         $this->migration->addKey($table, 'date');
-   }
+    }
 
-   public function addRights() {
-      // Add rights
-      global $DB;
-      $profiles = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => Profile::getTable(),
-      ]);
-      foreach ($profiles as $profile) {
-         $rights = ProfileRight::getProfileRights(
-            $profile['id'],
-            [
-               Entity::$rightname,
-               PluginFormcreatorForm::$rightname,
-            ]
-         );
-         if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
-            continue;
-         }
-         $right = READ + UPDATE + CREATE + DELETE + PURGE;
-         ProfileRight::updateProfileRights($profile['id'], [
-            PluginFormcreatorForm::$rightname => $right,
-         ]);
-      }
-   }
+    public function addRights()
+    {
+       // Add rights
+        global $DB;
+        $profiles = $DB->request([
+            'SELECT' => ['id'],
+            'FROM'   => Profile::getTable(),
+        ]);
+        foreach ($profiles as $profile) {
+            $rights = ProfileRight::getProfileRights(
+                $profile['id'],
+                [
+                    Entity::$rightname,
+                    PluginFormcreatorForm::$rightname,
+                ]
+            );
+            if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
+                 continue;
+            }
+            $right = READ + UPDATE + CREATE + DELETE + PURGE;
+            ProfileRight::updateProfileRights($profile['id'], [
+                PluginFormcreatorForm::$rightname => $right,
+            ]);
+        }
+    }
 }

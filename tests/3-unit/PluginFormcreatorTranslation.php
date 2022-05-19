@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -35,8 +36,9 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorTranslation extends CommonTestCase
 {
-   public function testGetTranslatableStringId() {
-      $output = \PluginFormcreatorTranslation::getTranslatableStringId('foo');
-      $this->string($output)->isEqualTo(md5('foo'));
-   }
+    public function testGetTranslatableStringId()
+    {
+        $output = \PluginFormcreatorTranslation::getTranslatableStringId('foo');
+        $this->string($output)->isEqualTo(md5('foo'));
+    }
 }

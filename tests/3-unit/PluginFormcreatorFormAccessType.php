@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -35,22 +36,23 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorFormAccessType extends CommonTestCase
 {
-   public function providerGetTypeName() {
-      return [
-         [
-            0,
-            'Access types'
-         ],
-         [
-            1,
-            'Access type'
-         ],
-         [
-            2,
-            'Access types'
-         ],
-      ];
-   }
+    public function providerGetTypeName()
+    {
+        return [
+            [
+                0,
+                'Access types'
+            ],
+            [
+                1,
+                'Access type'
+            ],
+            [
+                2,
+                'Access types'
+            ],
+        ];
+    }
 
    /**
    * @dataProvider providerGetTypeName
@@ -59,17 +61,19 @@ class PluginFormcreatorFormAccessType extends CommonTestCase
    * @param string $expected
    * @return void
    */
-   public function testGetTypeName($nb, $expected) {
-      $instance = $this->newTestedInstance();
-      $output = $instance->getTypeName($nb);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetTypeName($nb, $expected)
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->getTypeName($nb);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function testGetTabNameForItem() {
-      $instance = $this->newTestedInstance();
-      $item = new \Computer();
-      $output = $instance->getTabNameForItem($item);
+    public function testGetTabNameForItem()
+    {
+        $instance = $this->newTestedInstance();
+        $item = new \Computer();
+        $output = $instance->getTabNameForItem($item);
 
-      $this->string($output)->isEqualTo('Access types');
-   }
+        $this->string($output)->isEqualTo('Access types');
+    }
 }

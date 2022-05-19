@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -30,31 +31,33 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorAnswer extends CommonDBChild
 {
-   static public $itemtype = PluginFormcreatorFormAnswer::class;
-   static public $items_id = "plugin_formcreator_formanswers_id";
+    public static $itemtype = PluginFormcreatorFormAnswer::class;
+    public static $items_id = "plugin_formcreator_formanswers_id";
 
    /**
     * Check if current user have the right to create and modify requests
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate() {
-      return true;
-   }
+    public static function canCreate()
+    {
+        return true;
+    }
 
    /**
     * Check if current user have the right to read requests
     *
     * @return boolean True if he can read requests
     */
-   public static function canView() {
-      return true;
-   }
+    public static function canView()
+    {
+        return true;
+    }
 
    /**
     * Returns the type name with consideration of plural
@@ -62,20 +65,22 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0) {
-      return _n('Answer', 'Answers', $nb, 'formcreator');
-   }
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Answer', 'Answers', $nb, 'formcreator');
+    }
 
-   public function post_getFromDB() {
-      if (!isAPI()) {
-         return;
-      }
+    public function post_getFromDB()
+    {
+        if (!isAPI()) {
+            return;
+        }
 
-      /** @var PluginFormcreatorQuestion $question */
-      $question = PluginFormcreatorQuestion::getById($this->fields[PluginFormcreatorQuestion::getForeignKeyField()]);
-      $field = $question->getSubField();
-      $field->deserializeValue($this->fields['answer']);
+       /** @var PluginFormcreatorQuestion $question */
+        $question = PluginFormcreatorQuestion::getById($this->fields[PluginFormcreatorQuestion::getForeignKeyField()]);
+        $field = $question->getSubField();
+        $field->deserializeValue($this->fields['answer']);
 
-      $this->fields['answer'] = $field->getValueForApi();
-   }
+        $this->fields['answer'] = $field->getValueForApi();
+    }
 }

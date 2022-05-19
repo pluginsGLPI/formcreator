@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,36 +30,36 @@
  * ---------------------------------------------------------------------
  */
 
-require_once ('../../../inc/includes.php');
+require_once('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (!PluginFormcreatorIssue::canView()) {
-   Html::displayRightError();
+    Html::displayRightError();
 }
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(
-      __('Service catalog', 'formcreator'),
-      '',
-      'admin',
-      PluginFormcreatorForm::class
-   );
+    Html::header(
+        __('Service catalog', 'formcreator'),
+        '',
+        'admin',
+        PluginFormcreatorForm::class
+    );
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   PluginFormcreatorCommon::showMiniDashboard();
+    PluginFormcreatorCommon::showMiniDashboard();
 }
 
 //backup session value
 $save_session_fold_search = $_SESSION['glpifold_search'];
 //hide search if need
 if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
-   $_SESSION['glpifold_search'] = true;
+    $_SESSION['glpifold_search'] = true;
 }
 
 Search::show('PluginFormcreatorIssue');
@@ -67,7 +68,7 @@ Search::show('PluginFormcreatorIssue');
 $_SESSION['glpifold_search'] = $save_session_fold_search;
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

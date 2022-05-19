@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,10 +34,11 @@ use Glpi\Plugin\Hooks;
 use Gregwar\Captcha\CaptchaBuilder;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorCommon {
+class PluginFormcreatorCommon
+{
    /**
     * Get enum values for a field in the DB
     *
@@ -44,35 +46,37 @@ class PluginFormcreatorCommon {
     * @param string $field field name
     * @return array enum values extracted from the CREATE TABLE statement
     */
-   public static function getEnumValues(string $table, string $field) : array {
-      global $DB;
+    public static function getEnumValues(string $table, string $field): array
+    {
+        global $DB;
 
-      $enum = [];
-      if ($res = $DB->query( "SHOW COLUMNS FROM `$table` WHERE Field = '$field'" )) {
-         $data = $DB->fetchArray($res);
-         $type = $data['Type'];
-         $matches = null;
-         preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
-         if (!isset($matches[1])) {
-            return [];
-         }
-         $enum = explode("','", $matches[1]);
-      }
+        $enum = [];
+        if ($res = $DB->query("SHOW COLUMNS FROM `$table` WHERE Field = '$field'")) {
+            $data = $DB->fetchArray($res);
+            $type = $data['Type'];
+            $matches = null;
+            preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
+            if (!isset($matches[1])) {
+                return [];
+            }
+            $enum = explode("','", $matches[1]);
+        }
 
-      return $enum;
-   }
+        return $enum;
+    }
 
    /**
     * Get status of notifications
     *
     * @return boolean
     */
-   public static function isNotificationEnabled() : bool {
-      global $CFG_GLPI;
-      $notification = $CFG_GLPI['use_notifications'];
+    public static function isNotificationEnabled(): bool
+    {
+        global $CFG_GLPI;
+        $notification = $CFG_GLPI['use_notifications'];
 
-      return ($notification == '1');
-   }
+        return ($notification == '1');
+    }
 
    /**
     * Enable or disable notifications
@@ -80,32 +84,34 @@ class PluginFormcreatorCommon {
     * @param bool $enable
     * @return void
     */
-   public static function setNotification(bool $enable) {
-      global $CFG_GLPI;
+    public static function setNotification(bool $enable)
+    {
+        global $CFG_GLPI;
 
-      $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
-   }
+        $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
+    }
 
    /**
     * Gets the ID of Formcreator request type
     *
     * @return int
     */
-   public static function getFormcreatorRequestTypeId() : int {
-      global $DB;
+    public static function getFormcreatorRequestTypeId(): int
+    {
+        global $DB;
 
-      $requesttypes_id = 0;
-      $request = $DB->request(
-         RequestType::getTable(),
-         ['name' => ['LIKE', 'Formcreator']]
-      );
-      if (count($request) === 1) {
-         $row = $request->current();
-         $requesttypes_id = $row['id'];
-      }
+        $requesttypes_id = 0;
+        $request = $DB->request(
+            RequestType::getTable(),
+            ['name' => ['LIKE', 'Formcreator']]
+        );
+        if (count($request) === 1) {
+            $row = $request->current();
+            $requesttypes_id = $row['id'];
+        }
 
-      return $requesttypes_id;
-   }
+        return $requesttypes_id;
+    }
 
    /**
     * Get the maximum value of a column for a given itemtype
@@ -114,22 +120,23 @@ class PluginFormcreatorCommon {
     * @param string $fieldName
     * @return null|integer
     */
-   public static function getMax(CommonDBTM $item, array $condition, string $fieldName) {
-      global $DB;
+    public static function getMax(CommonDBTM $item, array $condition, string $fieldName)
+    {
+        global $DB;
 
-      $line = $DB->request([
-         'SELECT' => [$fieldName],
-         'FROM'   => $item::getTable(),
-         'WHERE'  => $condition,
-         'ORDER'  => "$fieldName DESC",
-         'LIMIT'  => 1
-      ])->current();
+        $line = $DB->request([
+            'SELECT' => [$fieldName],
+            'FROM'   => $item::getTable(),
+            'WHERE'  => $condition,
+            'ORDER'  => "$fieldName DESC",
+            'LIMIT'  => 1
+        ])->current();
 
-      if (!isset($line[$fieldName])) {
-         return null;
-      }
-      return (int) $line[$fieldName];
-   }
+        if (!isset($line[$fieldName])) {
+            return null;
+        }
+        return (int) $line[$fieldName];
+    }
 
    /**
     * Prepare keywords for a fulltext search in boolean mode
@@ -138,32 +145,34 @@ class PluginFormcreatorCommon {
     * @param string $keywords
     * @return string
     */
-   public static function prepareBooleanKeywords(string $keywords) : string {
-      // @see https://stackoverflow.com/questions/2202435/php-explode-the-string-but-treat-words-in-quotes-as-a-single-word
-      preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $keywords, $matches);
-      $matches = $matches[0];
-      foreach ($matches as &$keyword) {
-         if (strpos($keyword, '"') !== 0) {
-            // keyword does not begins with a double quote (assume it does not ends with this char)
-            $keyword = rtrim($keyword, '*');
-            $keyword .= '*';
-         }
-      }
+    public static function prepareBooleanKeywords(string $keywords): string
+    {
+       // @see https://stackoverflow.com/questions/2202435/php-explode-the-string-but-treat-words-in-quotes-as-a-single-word
+        preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $keywords, $matches);
+        $matches = $matches[0];
+        foreach ($matches as &$keyword) {
+            if (strpos($keyword, '"') !== 0) {
+                // keyword does not begins with a double quote (assume it does not ends with this char)
+                $keyword = rtrim($keyword, '*');
+                $keyword .= '*';
+            }
+        }
 
-      return implode(' ', $matches);
-   }
+        return implode(' ', $matches);
+    }
 
    /**
     * Get the list of pictograms available for the current version of GLPI
     *
     * @return array
     */
-   public static function getFontAwesomePictoNames(): array {
-      static $list = null;
+    public static function getFontAwesomePictoNames(): array
+    {
+        static $list = null;
 
-      $list = $list ?? require_once(Plugin::getPhpDir('formcreator') . '/data/' . self::getPictoFilename());
-      return $list;
-   }
+        $list = $list ?? require_once(Plugin::getPhpDir('formcreator') . '/data/' . self::getPictoFilename());
+        return $list;
+    }
 
    /**
     * get the name of the php file containing the pictogram list depending on the version of GLPI
@@ -171,9 +180,10 @@ class PluginFormcreatorCommon {
     * @param $version string GLPI version
     * @return string
     */
-   public static function getPictoFilename() : string {
-      return 'font-awesome.php';
-   }
+    public static function getPictoFilename(): string
+    {
+        return 'font-awesome.php';
+    }
 
    /**
     * Show a dropdown with Font Awesome pictograms
@@ -182,19 +192,20 @@ class PluginFormcreatorCommon {
     * @param array $options
     * @return string
     */
-   public static function showFontAwesomeDropdown(string $name, array $options = []) {
-      $items = static::getFontAwesomePictoNames();
+    public static function showFontAwesomeDropdown(string $name, array $options = [])
+    {
+        $items = static::getFontAwesomePictoNames();
 
-      $options = [
-         'noselect2'           => true, // we will instanciate it later
-         'display_emptychoice' => true,
-         'rand'                => mt_rand(),
-      ] + $options;
-      $options['value'] ?? '';
-      Dropdown::showFromArray($name, $items, $options);
+        $options = [
+            'noselect2'           => true, // we will instanciate it later
+            'display_emptychoice' => true,
+            'rand'                => mt_rand(),
+        ] + $options;
+        $options['value'] ?? '';
+        Dropdown::showFromArray($name, $items, $options);
 
-      // templates for select2 dropdown
-      $js = <<<JAVASCRIPT
+       // templates for select2 dropdown
+        $js = <<<JAVASCRIPT
       $(function() {
          formatFormIcon{$options['rand']} = function(icon) {
             if (!icon.id) {
@@ -211,8 +222,8 @@ class PluginFormcreatorCommon {
          });
       });
 JAVASCRIPT;
-      echo Html::scriptBlock($js);
-   }
+        echo Html::scriptBlock($js);
+    }
 
    /**
     * Cancel a new ticketn while it is still allowed
@@ -222,21 +233,22 @@ JAVASCRIPT;
     * @param int $id
     * @return boolean true on success, false otherwise
     */
-   public static function cancelMyTicket(int $id) : bool {
-      $ticket = new Ticket();
-      $ticket->getFromDB($id);
-      if (!$ticket->canRequesterUpdateItem()) {
-         Session::addMessageAfterRedirect(__('You cannot delete this issue. Maybe it is taken into account.', 'formcreator'), true, ERROR);
-         return false;
-      }
+    public static function cancelMyTicket(int $id): bool
+    {
+        $ticket = new Ticket();
+        $ticket->getFromDB($id);
+        if (!$ticket->canRequesterUpdateItem()) {
+            Session::addMessageAfterRedirect(__('You cannot delete this issue. Maybe it is taken into account.', 'formcreator'), true, ERROR);
+            return false;
+        }
 
-      if (!$ticket->delete($ticket->fields)) {
-         Session::addMessageAfterRedirect(__('Failed to delete this issue. An internal error occured.', 'formcreator'), true, ERROR);
-         return false;
-      }
+        if (!$ticket->delete($ticket->fields)) {
+            Session::addMessageAfterRedirect(__('Failed to delete this issue. An internal error occured.', 'formcreator'), true, ERROR);
+            return false;
+        }
 
-      return true;
-   }
+        return true;
+    }
 
    /**
     * Get the status to set for an issue matching a ticket
@@ -261,42 +273,44 @@ JAVASCRIPT;
     * @param Ticket $item
     * @return int
     */
-   public static function getTicketStatusForIssue(Ticket $item) : int {
-      $ticketValidations = (new TicketValidation())->find([
-         'tickets_id' => $item->getID(),
-      ], [
-         'timeline_position ASC'
-      ], 1);
-      $ticketValidationCount = count($ticketValidations);
+    public static function getTicketStatusForIssue(Ticket $item): int
+    {
+        $ticketValidations = (new TicketValidation())->find([
+            'tickets_id' => $item->getID(),
+        ], [
+            'timeline_position ASC'
+        ], 1);
+        $ticketValidationCount = count($ticketValidations);
 
-      $status = $item->fields['status'];
-      if ($ticketValidationCount > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
-         switch ($item->fields['global_validation']) {
-            case CommonITILValidation::WAITING:
-               if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
-                  $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
-               }
-               break;
-            case CommonITILValidation::REFUSED:
-               if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
-                  $status = PluginFormcreatorFormAnswer::STATUS_REFUSED;
-               }
-               break;
-         }
-      }
+        $status = $item->fields['status'];
+        if ($ticketValidationCount > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
+            switch ($item->fields['global_validation']) {
+                case CommonITILValidation::WAITING:
+                    if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
+                        $status = PluginFormcreatorFormAnswer::STATUS_WAITING;
+                    }
+                    break;
+                case CommonITILValidation::REFUSED:
+                    if (!in_array($item->fields['status'], [Ticket::SOLVED, Ticket::CLOSED])) {
+                        $status = PluginFormcreatorFormAnswer::STATUS_REFUSED;
+                    }
+                    break;
+            }
+        }
 
-      return (int) $status;
-   }
+        return (int) $status;
+    }
 
    /**
     * Undocumented function
     *
     * @return boolean
     */
-   public static function canValidate() : bool {
-      return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+    public static function canValidate(): bool
+    {
+        return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
-   }
+    }
 
    /*
     * Create Ajax dropdown to clean JS
@@ -319,84 +333,85 @@ JAVASCRIPT;
     *
     * @return String
    **/
-   public static function jsAjaxDropdown($name, $field_id, $url, $params = []) {
-      global $CFG_GLPI;
+    public static function jsAjaxDropdown($name, $field_id, $url, $params = [])
+    {
+        global $CFG_GLPI;
 
-      $default_options = [
-         'value'               => 0,
-         'valuename'           => Dropdown::EMPTY_VALUE,
-         'multiple'            => false,
-         'values'              => [],
-         'valuesnames'         => [],
-         'on_change'           => '',
-         'width'               => '80%',
-         'placeholder'         => '',
-         'display_emptychoice' => false,
-         'specific_tags'       => [],
-         'parent_id_field'     => null,
-         'multiple'            => false,
-      ];
-      $params = array_merge($default_options, $params);
+        $default_options = [
+            'value'               => 0,
+            'valuename'           => Dropdown::EMPTY_VALUE,
+            'multiple'            => false,
+            'values'              => [],
+            'valuesnames'         => [],
+            'on_change'           => '',
+            'width'               => '80%',
+            'placeholder'         => '',
+            'display_emptychoice' => false,
+            'specific_tags'       => [],
+            'parent_id_field'     => null,
+            'multiple'            => false,
+        ];
+        $params = array_merge($default_options, $params);
 
-      $value = $params['value'];
-      $width = $params["width"];
-      $valuename = $params['valuename'];
-      $on_change = $params["on_change"];
-      $placeholder = $params['placeholder'] ?? '';
-      $multiple = $params['multiple'];
-      unset($params["on_change"]);
-      unset($params["width"]);
+        $value = $params['value'];
+        $width = $params["width"];
+        $valuename = $params['valuename'];
+        $on_change = $params["on_change"];
+        $placeholder = $params['placeholder'] ?? '';
+        $multiple = $params['multiple'];
+        unset($params["on_change"]);
+        unset($params["width"]);
 
-      $allowclear =  "false";
-      if (strlen($placeholder) > 0 && !$params['display_emptychoice']) {
-         $allowclear = "true";
-      }
+        $allowclear =  "false";
+        if (strlen($placeholder) > 0 && !$params['display_emptychoice']) {
+            $allowclear = "true";
+        }
 
-      $options = [
-         'id'        => $field_id,
-         'selected'  => $value
-      ];
+        $options = [
+            'id'        => $field_id,
+            'selected'  => $value
+        ];
 
        // manage multiple select (with multiple values)
-      if ($params['multiple']) {
-         $values = array_combine($params['values'], $params['valuesnames']);
-         $options['multiple'] = 'multiple';
-         $options['selected'] = $params['values'];
-      } else {
-         $values = [];
+        if ($params['multiple']) {
+            $values = array_combine($params['values'], $params['valuesnames']);
+            $options['multiple'] = 'multiple';
+            $options['selected'] = $params['values'];
+        } else {
+            $values = [];
 
-         // simple select (multiple = no)
-         if ($value !== null) {
-               $values = ["$value" => $valuename];
-         }
-      }
-      $parent_id_field = $params['parent_id_field'];
+           // simple select (multiple = no)
+            if ($value !== null) {
+                $values = ["$value" => $valuename];
+            }
+        }
+        $parent_id_field = $params['parent_id_field'];
 
-      unset($params['placeholder']);
-      unset($params['value']);
-      unset($params['valuename']);
+        unset($params['placeholder']);
+        unset($params['value']);
+        unset($params['valuename']);
 
-      foreach ($params['specific_tags'] as $tag => $val) {
-         if (is_array($val)) {
-            $val = implode(' ', $val);
-         }
-         $options[$tag] = $val;
-      }
+        foreach ($params['specific_tags'] as $tag => $val) {
+            if (is_array($val)) {
+                $val = implode(' ', $val);
+            }
+            $options[$tag] = $val;
+        }
 
-      // display select tag
-      $output = '';
+       // display select tag
+        $output = '';
 
-      $js = "
+        $js = "
          var params_$field_id = {";
-      foreach ($params as $key => $val) {
-         // Specific boolean case
-         if (is_bool($val)) {
-            $js .= "$key: ".($val?1:0).",\n";
-         } else {
-            $js .= "$key: ".json_encode($val).",\n";
-         }
-      }
-      $js.= "};
+        foreach ($params as $key => $val) {
+           // Specific boolean case
+            if (is_bool($val)) {
+                $js .= "$key: " . ($val ? 1 : 0) . ",\n";
+            } else {
+                $js .= "$key: " . json_encode($val) . ",\n";
+            }
+        }
+        $js .= "};
 
          $('#$field_id').select2({
             width: '$width',
@@ -406,7 +421,7 @@ JAVASCRIPT;
             minimumInputLength: 0,
             quietMillis: 100,
             dropdownAutoWidth: true,
-            minimumResultsForSearch: ".$CFG_GLPI['ajax_limit_count'].",
+            minimumResultsForSearch: " . $CFG_GLPI['ajax_limit_count'] . ",
             tokenSeparators: [',', ';'],
             tags: true,
             ajax: {
@@ -417,18 +432,18 @@ JAVASCRIPT;
                   query = params;
                   return $.extend({}, params_$field_id, {
                      searchText: params.term,";
-      if ($parent_id_field !== null) {
-         $js .= "
+        if ($parent_id_field !== null) {
+            $js .= "
                      parent_id : document.getElementById('" . $parent_id_field . "').value,";
-      }
-      $js .= "
-                     page_limit: ".$CFG_GLPI['dropdown_max'].", // page size
+        }
+        $js .= "
+                     page_limit: " . $CFG_GLPI['dropdown_max'] . ", // page size
                      page: params.page || 1, // page number
                   });
                },
                processResults: function (data, params) {
                   params.page = params.page || 1;
-                  var more = (data.count >= ".$CFG_GLPI['dropdown_max'].");
+                  var more = (data.count >= " . $CFG_GLPI['dropdown_max'] . ");
 
                   return {
                      results: data.results,
@@ -475,98 +490,102 @@ JAVASCRIPT;
             });
          });
          ";
-      if (!empty($on_change)) {
-         $js .= " $('#$field_id').on('change', function(e) {".
-                  stripslashes($on_change)."});";
-      }
+        if (!empty($on_change)) {
+            $js .= " $('#$field_id').on('change', function(e) {" .
+                  stripslashes($on_change) . "});";
+        }
 
-      $js .= " $('label[for=$field_id]').on('click', function(){ $('#$field_id').select2('open'); });";
-      $js .= " $('#$field_id').on('select2:open', function(e){";
-      $js .= "    const search_input = document.querySelector(`.select2-search__field[aria-controls='select2-\${e.target.id}-results']`);";
-      $js .= "    if (search_input) {";
-      $js .= "       search_input.focus();";
-      $js .= "    }";
-      $js .= " });";
+        $js .= " $('label[for=$field_id]').on('click', function(){ $('#$field_id').select2('open'); });";
+        $js .= " $('#$field_id').on('select2:open', function(e){";
+        $js .= "    const search_input = document.querySelector(`.select2-search__field[aria-controls='select2-\${e.target.id}-results']`);";
+        $js .= "    if (search_input) {";
+        $js .= "       search_input.focus();";
+        $js .= "    }";
+        $js .= " });";
 
-      $output .= Html::scriptBlock('$(function() {' . $js . '});');
+        $output .= Html::scriptBlock('$(function() {' . $js . '});');
 
-      // display select tag
-      $options['class'] = $params['class'] ?? 'form-select';
-      $output .= Html::select($name, $values, $options);
+       // display select tag
+        $options['class'] = $params['class'] ?? 'form-select';
+        $output .= Html::select($name, $values, $options);
 
-      return $output;
-   }
+        return $output;
+    }
 
-   public static function getCaptcha($captchaId = null) {
-      $captchaBuilder = new CaptchaBuilder();
-      $captchaBuilder->build();
-      $inlineImg = 'data:image/png;base64,' . base64_encode($captchaBuilder->get());
+    public static function getCaptcha($captchaId = null)
+    {
+        $captchaBuilder = new CaptchaBuilder();
+        $captchaBuilder->build();
+        $inlineImg = 'data:image/png;base64,' . base64_encode($captchaBuilder->get());
 
-      $_SESSION['plugin_formcreator']['captcha'][$captchaId] = [
-         'time'   => time(),
-         'phrase' => $captchaBuilder->getPhrase()
-      ];
+        $_SESSION['plugin_formcreator']['captcha'][$captchaId] = [
+            'time'   => time(),
+            'phrase' => $captchaBuilder->getPhrase()
+        ];
 
-      return ['img' => $inlineImg, 'phrase' => $captchaBuilder->getPhrase()];
-   }
+        return ['img' => $inlineImg, 'phrase' => $captchaBuilder->getPhrase()];
+    }
 
-   public static function checkCaptcha($captchaId, $challenge, $expiration = 600) {
-      self::cleanOldCaptchas($expiration);
-      if (!isset($_SESSION['plugin_formcreator']['captcha'][$captchaId])) {
-         return false;
-      }
+    public static function checkCaptcha($captchaId, $challenge, $expiration = 600)
+    {
+        self::cleanOldCaptchas($expiration);
+        if (!isset($_SESSION['plugin_formcreator']['captcha'][$captchaId])) {
+            return false;
+        }
 
-      if ($_SESSION['plugin_formcreator']['captcha'][$captchaId]['time'] + $expiration < time()) {
-         unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
-         return false;
-      }
+        if ($_SESSION['plugin_formcreator']['captcha'][$captchaId]['time'] + $expiration < time()) {
+            unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
+            return false;
+        }
 
-      $result = strtolower($_SESSION['plugin_formcreator']['captcha'][$captchaId]['phrase']) == strtolower((string) $challenge);
-      unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
+        $result = strtolower($_SESSION['plugin_formcreator']['captcha'][$captchaId]['phrase']) == strtolower((string) $challenge);
+        unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
 
-      return $result;
-   }
+        return $result;
+    }
 
-   public static function cleanOldCaptchas($expiration = 600) {
-      // cleanup expired captchas
-      $now = time();
-      $count = 10; // Cleanup at most 10 captchas
-      foreach ($_SESSION['plugin_formcreator']['captcha'] as &$captcha) {
-         if ($captcha['time'] + $expiration < $now) {
-            unset($captcha);
-            $count--;
-            if ($count <= 0) {
-               break;
+    public static function cleanOldCaptchas($expiration = 600)
+    {
+       // cleanup expired captchas
+        $now = time();
+        $count = 10; // Cleanup at most 10 captchas
+        foreach ($_SESSION['plugin_formcreator']['captcha'] as &$captcha) {
+            if ($captcha['time'] + $expiration < $now) {
+                unset($captcha);
+                $count--;
+                if ($count <= 0) {
+                    break;
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
    /**
     * get path to CSS file
     *
     * @return string
     */
-   public static function getCssFilename() : string {
-      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-         return 'css/styles.scss';
-      }
-      $scssFile = Plugin::getPhpDir('formcreator', false) . '/css/styles.scss';
-      $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($scssFile, '.scss') . ".min.css";
-      if (!file_exists($compiled_path)) {
-         $css = Html::compileScss(
-            [
-               'file'    => $scssFile,
-               'nocache' => true,
-               'debug'   => true,
-            ]
-         );
-         if (strlen($css) === @file_put_contents($compiled_path, $css)) {
+    public static function getCssFilename(): string
+    {
+        if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
             return 'css/styles.scss';
-         }
-      }
-      return 'css_compiled/styles.min.css';
-   }
+        }
+        $scssFile = Plugin::getPhpDir('formcreator', false) . '/css/styles.scss';
+        $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($scssFile, '.scss') . ".min.css";
+        if (!file_exists($compiled_path)) {
+            $css = Html::compileScss(
+                [
+                    'file'    => $scssFile,
+                    'nocache' => true,
+                    'debug'   => true,
+                ]
+            );
+            if (strlen($css) === @file_put_contents($compiled_path, $css)) {
+                return 'css/styles.scss';
+            }
+        }
+        return 'css_compiled/styles.min.css';
+    }
 
    /**
     * Validate a regular expression
@@ -574,15 +593,16 @@ JAVASCRIPT;
     * @param string $regex
     * @return boolean true if the regex is valid, false otherwise
     */
-   public static function checkRegex($regex) {
-      // Avoid php notice when validating the regular expression
-      set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
-      });
-      $isValid = !(preg_match($regex, null) === false);
-      restore_error_handler();
+    public static function checkRegex($regex)
+    {
+       // Avoid php notice when validating the regular expression
+        set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
+        });
+        $isValid = !(preg_match($regex, null) === false);
+        restore_error_handler();
 
-      return $isValid;
-   }
+        return $isValid;
+    }
 
    /**
     * Find documents data matching the tags found in the string
@@ -592,16 +612,21 @@ JAVASCRIPT;
     *
     * @return array data from documents having tags found
     */
-   public static function getDocumentsFromTag(string $content_text): array {
-      preg_match_all('/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/', $content_text,
-                     $matches, PREG_PATTERN_ORDER);
-      if (!isset($matches[1]) || count($matches[1]) == 0) {
-         return [];
-      }
+    public static function getDocumentsFromTag(string $content_text): array
+    {
+        preg_match_all(
+            '/' . Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)') . '/',
+            $content_text,
+            $matches,
+            PREG_PATTERN_ORDER
+        );
+        if (!isset($matches[1]) || count($matches[1]) == 0) {
+            return [];
+        }
 
-      $document = new Document();
-      return $document->find(['tag' => array_unique($matches[1])]);
-   }
+        $document = new Document();
+        return $document->find(['tag' => array_unique($matches[1])]);
+    }
 
    /**
     * find a document with a file attached, with respect of blacklisting
@@ -611,18 +636,19 @@ JAVASCRIPT;
     *
     * @return false|Document
     */
-   public static function getDuplicateOf(int $entities_id, string $filename) {
-      $document = new Document();
-      if (!$document->getFromDBbyContent($entities_id, $filename)) {
-         return false;
-      }
+    public static function getDuplicateOf(int $entities_id, string $filename)
+    {
+        $document = new Document();
+        if (!$document->getFromDBbyContent($entities_id, $filename)) {
+            return false;
+        }
 
-      if ($document->fields['is_blacklisted']) {
-         return false;
-      }
+        if ($document->fields['is_blacklisted']) {
+            return false;
+        }
 
-      return $document;
-   }
+        return $document;
+    }
 
    /**
     * Get an empty form answer object from Formcreator or Advanced Formcreator
@@ -633,86 +659,92 @@ JAVASCRIPT;
     *
     * @return PluginFormcreatorFormAnswer
     */
-   public static function getFormAnswer(): PluginFormcreatorFormAnswer {
-      if (Plugin::isPluginActive('advform')) {
-         return new PluginAdvformFormAnswer();
-      }
+    public static function getFormAnswer(): PluginFormcreatorFormAnswer
+    {
+        if (Plugin::isPluginActive('advform')) {
+            return new PluginAdvformFormAnswer();
+        }
 
-      return new PluginFormcreatorFormAnswer();
-   }
+        return new PluginFormcreatorFormAnswer();
+    }
 
    /**
     * Get the real itemtype for form answer implementation, depending on the availability of Advanced Formcreator
     *
     * @return string
     */
-   public static function getFormanswerItemtype() {
-      if (Plugin::isPluginActive('advform')) {
-         return PluginAdvformFormAnswer::class;
-      }
+    public static function getFormanswerItemtype()
+    {
+        if (Plugin::isPluginActive('advform')) {
+            return PluginAdvformFormAnswer::class;
+        }
 
-      return PluginFormcreatorFormAnswer::class;
-   }
+        return PluginFormcreatorFormAnswer::class;
+    }
 
-   public static function getForm() {
-      if (Plugin::isPluginActive('advform')) {
-         return new PluginAdvformForm();
-      }
+    public static function getForm()
+    {
+        if (Plugin::isPluginActive('advform')) {
+            return new PluginAdvformForm();
+        }
 
-      return new PluginFormcreatorForm();
-   }
+        return new PluginFormcreatorForm();
+    }
 
-   public static function getInterface() {
-      if (Session::getCurrentInterface() == 'helpdesk') {
-         if (plugin_formcreator_replaceHelpdesk()) {
-            return 'servicecatalog';
-         }
-         return 'self-service';
-      }
-      if (!empty($_SESSION['glpiactiveprofile'])) {
-         return 'central';
-      }
+    public static function getInterface()
+    {
+        if (Session::getCurrentInterface() == 'helpdesk') {
+            if (plugin_formcreator_replaceHelpdesk()) {
+                return 'servicecatalog';
+            }
+            return 'self-service';
+        }
+        if (!empty($_SESSION['glpiactiveprofile'])) {
+            return 'central';
+        }
 
-      return 'public';
-   }
+        return 'public';
+    }
 
-   public static function header() {
-      switch (self::getInterface()) {
-         case "servicecatalog":
-         case "self-service":
-            return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
-         case "central":
-            return Html::header(
-               __('Form Creator', 'formcreator'),
-               $_SERVER['PHP_SELF'],
-               'helpdesk',
-               'PluginFormcreatorFormlist'
-            );
-         case "public":
-         default:
-            Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
-            Html::displayMessageAfterRedirect();
-            return true;
-      }
-   }
+    public static function header()
+    {
+        switch (self::getInterface()) {
+            case "servicecatalog":
+            case "self-service":
+                return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
+            case "central":
+                return Html::header(
+                    __('Form Creator', 'formcreator'),
+                    $_SERVER['PHP_SELF'],
+                    'helpdesk',
+                    'PluginFormcreatorFormlist'
+                );
+            case "public":
+            default:
+                 Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
+                 Html::displayMessageAfterRedirect();
+                return true;
+        }
+    }
 
    /**
     * Gets the footer HTML
     *
     * @return string HTML to show a footer
     */
-   public static function footer() {
-      switch (self::getInterface()) {
-         case "servicecatalog";
-         case "self-service";
-            return Html::helpFooter();
-         case "central";
-            return Html::footer();
-         case "public";
-         default:
-            return Html::nullFooter();
-      }
-   }
+    public static function footer()
+    {
+        switch (self::getInterface()) {
+            case "servicecatalog";
+            case "self-service";
+              return Html::helpFooter();
+            case "central";
+              return Html::footer();
+            case "public";
+            default:
+              return Html::nullFooter();
+        }
+    }
 
    /**
     * remove form answer from associatable items to tickets when viewing a form answer
@@ -721,17 +753,18 @@ JAVASCRIPT;
     * @param array $options
     * @return void
     */
-   public static function hookPreShowTab(array $options) {
-      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
-         return;
-      }
+    public static function hookPreShowTab(array $options)
+    {
+        if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+            return;
+        }
 
-      $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
-      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
-         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
-         [PluginFormcreatorFormAnswer::getType()]
-      );
-   }
+        $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
+        $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
+            $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
+            [PluginFormcreatorFormAnswer::getType()]
+        );
+    }
 
    /**
    * Restore the associatable items to tickets into the session
@@ -739,117 +772,121 @@ JAVASCRIPT;
    * @param array $options
    * @return void
    */
-   public static function hookPostShowTab(array $options) {
-      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
-         return;
-      }
+    public static function hookPostShowTab(array $options)
+    {
+        if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+            return;
+        }
 
-      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
-   }
+        $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
+    }
 
-   public static function hookRedefineMenu($menus) {
-      global $DB;
+    public static function hookRedefineMenu($menus)
+    {
+        global $DB;
 
-      if (Session::getCurrentInterface() != 'helpdesk') {
-         return $menus;
-      }
+        if (Session::getCurrentInterface() != 'helpdesk') {
+            return $menus;
+        }
 
-      if (plugin_formcreator_replaceHelpdesk() !== false) {
-         $newMenu = [];
-         $newMenu['seek_assistance'] = [
-            'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
-            'title'   => __('Seek assistance', 'formcreator'),
-            'icon'    => 'fa-fw ti ti-headset',
-         ];
-         $newMenu['my_assistance_requests'] = [
-            'default' => PluginFormcreatorIssue::getSearchURL(false),
-            'title'   => __('My requests for assistance', 'formcreator'),
-            'icon'    => 'fa-fw ti ti-list',
-         ];
-
-         if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
-            && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
-         ) {
-            $newMenu['faq'] = $menus['faq'];
-            $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
-         }
-         if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
-            if (isset($menus['reservation'])) {
-               $newMenu['reservation'] = $menus['reservation'];
-            }
-         }
-         $rssFeedTable = RSSFeed::getTable();
-         $criteria = [
-            'SELECT'   => "$rssFeedTable.*",
-            'DISTINCT' => true,
-            'FROM'     => $rssFeedTable,
-            'ORDER'    => "$rssFeedTable.name"
-         ];
-         $criteria = $criteria + RSSFeed::getVisibilityCriteria();
-         $criteria['WHERE']["$rssFeedTable.users_id"] = ['<>', Session::getLoginUserID()];
-         $iterator = $DB->request($criteria);
-         $hasRssFeeds = $iterator->count() > 0;
-
-         if (RSSFeed::canView() && $hasRssFeeds) {
-            $newMenu['feeds'] = [
-               'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
-               'title'   => __('Consult feeds', 'formcreator'),
-               'icon'    => 'fa-fw ti ti-rss',
+        if (plugin_formcreator_replaceHelpdesk() !== false) {
+            $newMenu = [];
+            $newMenu['seek_assistance'] = [
+                'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
+                'title'   => __('Seek assistance', 'formcreator'),
+                'icon'    => 'fa-fw ti ti-headset',
             ];
-         }
+            $newMenu['my_assistance_requests'] = [
+                'default' => PluginFormcreatorIssue::getSearchURL(false),
+                'title'   => __('My requests for assistance', 'formcreator'),
+                'icon'    => 'fa-fw ti ti-list',
+            ];
 
-         // Add plugins menus
-         $plugin_menus = $menus['plugins']['content'] ?? [];
-         foreach ($plugin_menus as $menu_name => $menu_data) {
-            $menu_data['default'] = $menu_data['page'] ?? '#';
-            $newMenu[$menu_name] = $menu_data;
-         }
+            if (
+                PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
+                && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+            ) {
+                $newMenu['faq'] = $menus['faq'];
+                $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
+            }
+            if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+                if (isset($menus['reservation'])) {
+                    $newMenu['reservation'] = $menus['reservation'];
+                }
+            }
+            $rssFeedTable = RSSFeed::getTable();
+            $criteria = [
+                'SELECT'   => "$rssFeedTable.*",
+                'DISTINCT' => true,
+                'FROM'     => $rssFeedTable,
+                'ORDER'    => "$rssFeedTable.name"
+            ];
+            $criteria = $criteria + RSSFeed::getVisibilityCriteria();
+            $criteria['WHERE']["$rssFeedTable.users_id"] = ['<>', Session::getLoginUserID()];
+            $iterator = $DB->request($criteria);
+            $hasRssFeeds = $iterator->count() > 0;
 
-         return $newMenu;
-      }
+            if (RSSFeed::canView() && $hasRssFeeds) {
+                $newMenu['feeds'] = [
+                    'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
+                    'title'   => __('Consult feeds', 'formcreator'),
+                    'icon'    => 'fa-fw ti ti-rss',
+                ];
+            }
 
-      // Using GLPI's helpdesk interface; then just modify the menu
-      $newMenus = [];
-      foreach ($menus as $key => $menu) {
-         switch ($key) {
-            case 'create_ticket':
-               $newMenus['forms'] = [
-                  'default' => '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php',
-                  'title'   => _n('Form', 'Forms', 2, 'formcreator'),
-                  'icon' => 'fas fa-edit',
-               ];
-               break;
+           // Add plugins menus
+            $plugin_menus = $menus['plugins']['content'] ?? [];
+            foreach ($plugin_menus as $menu_name => $menu_data) {
+                $menu_data['default'] = $menu_data['page'] ?? '#';
+                $newMenu[$menu_name] = $menu_data;
+            }
 
-            case 'tickets':
-               $newMenus['tickets'] = [
-                  'default' => PluginFormcreatorIssue::getSearchURL(false),
-                  'title'   => PluginFormcreatorIssue::getTypeName(Session::getPluralNumber()),
-                  'icon' => 'fas fa-exclamation-circle',
-               ];
-               break;
+            return $newMenu;
+        }
 
-            default:
-               $newMenus[$key] = $menu;
-         }
-      }
+       // Using GLPI's helpdesk interface; then just modify the menu
+        $newMenus = [];
+        foreach ($menus as $key => $menu) {
+            switch ($key) {
+                case 'create_ticket':
+                    $newMenus['forms'] = [
+                        'default' => '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php',
+                        'title'   => _n('Form', 'Forms', 2, 'formcreator'),
+                        'icon' => 'fas fa-edit',
+                    ];
+                    break;
 
-      return $newMenus;
-   }
+                case 'tickets':
+                    $newMenus['tickets'] = [
+                        'default' => PluginFormcreatorIssue::getSearchURL(false),
+                        'title'   => PluginFormcreatorIssue::getTypeName(Session::getPluralNumber()),
+                        'icon' => 'fas fa-exclamation-circle',
+                    ];
+                    break;
+
+                default:
+                    $newMenus[$key] = $menu;
+            }
+        }
+
+        return $newMenus;
+    }
 
    /**
     * Show a mini dashboard
     *
     * @return void
     */
-   public static function showMiniDashboard(): void {
+    public static function showMiniDashboard(): void
+    {
 
-      Plugin::doHook(Hooks::DISPLAY_CENTRAL);
+        Plugin::doHook(Hooks::DISPLAY_CENTRAL);
 
-      if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-         $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
-         echo "<div class='formcreator_dashboard_container'>";
-         $dashboard->show(true);
-         echo "</div>";
-      }
-   }
+        if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
+            $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+            echo "<div class='formcreator_dashboard_container'>";
+            $dashboard->show(true);
+            echo "</div>";
+        }
+    }
 }

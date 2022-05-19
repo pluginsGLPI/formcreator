@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -38,28 +39,30 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SyncIssuesCommand extends Command
 {
-   protected function configure() {
-      $table = PluginFormcreatorIssue::getTable();
+    protected function configure()
+    {
+        $table = PluginFormcreatorIssue::getTable();
 
-      $this
+        $this
          ->setName('glpi:plugins:formcreator:syncissues')
          ->setDescription("Rebuild `$table` table.");
-   }
+    }
 
-   protected function execute(InputInterface $input, OutputInterface $output) {
-      global $DB;
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        global $DB;
 
-      $output->write("<info>-> Step 1/2...</info>");
-      $DB->delete(PluginFormcreatorIssue::getTable(), [1]);
-      $output->write('<info> OK.</info>');
-      $output->writeln("");
+        $output->write("<info>-> Step 1/2...</info>");
+        $DB->delete(PluginFormcreatorIssue::getTable(), [1]);
+        $output->write('<info> OK.</info>');
+        $output->writeln("");
 
-      $output->write("<info>-> Step 2/2...</info>");
-      PluginFormcreatorIssue::syncIssues();
-      $output->write('<info> OK.</info>');
-      $output->writeln("");
+        $output->write("<info>-> Step 2/2...</info>");
+        PluginFormcreatorIssue::syncIssues();
+        $output->write('<info> OK.</info>');
+        $output->writeln("");
 
-      $output->writeln('<info>Done.</info>');
-      return 0;
-   }
+        $output->writeln('<info>Done.</info>');
+        return 0;
+    }
 }

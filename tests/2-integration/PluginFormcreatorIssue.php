@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,134 +34,138 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorIssue extends CommonTestCase {
+class PluginFormcreatorIssue extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        switch ($method) {
+            case 'testAddTicket':
+            case 'testUpdateTicket':
+                $this->login('post-only', 'postonly');
+                break;
 
-   public function beforeTestMethod($method) {
-      switch ($method) {
-         case 'testAddTicket':
-         case 'testUpdateTicket':
-            $this->login('post-only', 'postonly');
-            break;
+            case 'testDeleteTicket':
+                $this->login('glpi', 'glpi');
+                break;
+        }
+    }
 
-         case 'testDeleteTicket':
-            $this->login('glpi', 'glpi');
-            break;
-      }
-   }
+    public function testAddTicket()
+    {
+        global $CFG_GLPI;
 
-   public function testAddTicket() {
-      global $CFG_GLPI;
+        $CFG_GLPI['use_notifications'] = '0';
 
-      $CFG_GLPI['use_notifications'] = '0';
+       // Create a form with a target ticket
+        $form = $this->getForm();
+        $this->getTargetTicket([
+            \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+        ]);
 
-      // Create a form with a target ticket
-      $form = $this->getForm();
-      $this->getTargetTicket([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-      ]);
+       // answer the form
+        $formAnswer = new \PluginFormcreatorFormAnswer();
+        $formAnswer->add([
+            \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
+        ]);
 
-      // answer the form
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
-      ]);
+       // Get the generated ticket
+        $ticket = array_pop($formAnswer->targetList);
+        $this->object($ticket);
+        $this->boolean($ticket->isNewItem())->isFalse();
+        $this->integer((int) $ticket->fields['status'])->isEqualTo(\CommonITILObject::INCOMING);
 
-      // Get the generated ticket
-      $ticket = array_pop($formAnswer->targetList);
-      $this->object($ticket);
-      $this->boolean($ticket->isNewItem())->isFalse();
-      $this->integer((int) $ticket->fields['status'])->isEqualTo(\CommonITILObject::INCOMING);
+       // find the issue for the ticket
+        $issue = $this->newTestedInstance();
+        $issue->getFromDBByCrit([
+            'itemtype' => \Ticket::getType(),
+            'items_id'  => $ticket->getID(),
+        ]);
+        $this->boolean($issue->isNewItem())->isFalse();
 
-      // find the issue for the ticket
-      $issue = $this->newTestedInstance();
-      $issue->getFromDBByCrit([
-         'itemtype' => \Ticket::getType(),
-         'items_id'  => $ticket->getID(),
-      ]);
-      $this->boolean($issue->isNewItem())->isFalse();
+       // Check the status has been updated
+        $this->integer((int) $issue->fields['status'])->isEqualTo(\CommonITILObject::INCOMING);
+    }
 
-      // Check the status has been updated
-      $this->integer((int) $issue->fields['status'])->isEqualTo(\CommonITILObject::INCOMING);
-   }
+    public function testUpdateTicket()
+    {
+        global $CFG_GLPI;
 
-   public function testUpdateTicket() {
-      global $CFG_GLPI;
+        $CFG_GLPI['use_notifications'] = '0';
 
-      $CFG_GLPI['use_notifications'] = '0';
+       // Create a form with a target ticket
+        $form = $this->getForm();
+        $this->getTargetTicket([
+            \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+        ]);
 
-      // Create a form with a target ticket
-      $form = $this->getForm();
-      $this->getTargetTicket([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-      ]);
+       //Aanswer the form
+        $formAnswer = new \PluginFormcreatorFormAnswer();
+        $formAnswer->add([\PluginFormcreatorForm::getForeignKeyField() => $form->getID()]);
 
-      //Aanswer the form
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([\PluginFormcreatorForm::getForeignKeyField() => $form->getID()]);
+       // Get the generated ticket
+        $ticket = array_pop($formAnswer->targetList);
+        $this->object($ticket);
+        $this->boolean($ticket->isNewItem())->isFalse();
+        $this->integer((int) $ticket->fields['status'])->isEqualTo(\CommonITILObject::INCOMING);
 
-      // Get the generated ticket
-      $ticket = array_pop($formAnswer->targetList);
-      $this->object($ticket);
-      $this->boolean($ticket->isNewItem())->isFalse();
-      $this->integer((int) $ticket->fields['status'])->isEqualTo(\CommonITILObject::INCOMING);
+        $this->login('glpi', 'glpi');
+        $success = $ticket->update([
+            'id' => $ticket->getID(),
+            '_itil_assign' => [
+                '_type' => strtolower(\User::getType()),
+                \User::getForeignKeyField() => 2, // glpi
+                'use_notification'  => 1,
+            ],
+        ]);
+        $this->boolean($success)->isTrue();
 
-      $this->login('glpi', 'glpi');
-      $success = $ticket->update([
-         'id' => $ticket->getID(),
-         '_itil_assign' => [
-            '_type' => strtolower(\User::getType()),
-            \User::getForeignKeyField() => 2, // glpi
-            'use_notification'  => 1,
-         ],
-      ]);
-      $this->boolean($success)->isTrue();
+       // find the issue for the ticket
+        $issue = $this->newTestedInstance();
+        $issue->getFromDBByCrit([
+            'itemtype' => \Ticket::getType(),
+            'items_id'  => $ticket->getID(),
+        ]);
+        $this->boolean($issue->isNewItem())->isFalse();
 
-      // find the issue for the ticket
-      $issue = $this->newTestedInstance();
-      $issue->getFromDBByCrit([
-         'itemtype' => \Ticket::getType(),
-         'items_id'  => $ticket->getID(),
-      ]);
-      $this->boolean($issue->isNewItem())->isFalse();
+       // Check the status has been updated
+        $this->integer((int) $issue->fields['status'])->isEqualTo(\CommonITILObject::ASSIGNED);
+    }
 
-      // Check the status has been updated
-      $this->integer((int) $issue->fields['status'])->isEqualTo(\CommonITILObject::ASSIGNED);
-   }
+    public function testDeleteTicket()
+    {
+        global $CFG_GLPI;
 
-   public function testDeleteTicket() {
-      global $CFG_GLPI;
+        $CFG_GLPI['use_notifications'] = '0';
 
-      $CFG_GLPI['use_notifications'] = '0';
+        $form = $this->getForm();
+        $this->getTargetTicket([
+            \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+        ]);
 
-      $form = $this->getForm();
-      $this->getTargetTicket([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-      ]);
+       // answer the form
+        $formAnswer = new \PluginFormcreatorFormAnswer();
+        $formAnswer->add([
+            \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
+        ]);
+       // Get the generated ticket
+        $ticket = array_pop($formAnswer->targetList);
+        $this->object($ticket);
+        $this->boolean($ticket->isNewItem())->isFalse();
 
-      // answer the form
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([
-         \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
-      ]);
-      // Get the generated ticket
-      $ticket = array_pop($formAnswer->targetList);
-      $this->object($ticket);
-      $this->boolean($ticket->isNewItem())->isFalse();
+       // find the issue for the ticket
+        $issue = $this->newTestedInstance();
+        $issue->getFromDBByCrit([
+            'itemtype' => \Ticket::getType(),
+            'items_id'  => $ticket->getID(),
+        ]);
+        $this->boolean($issue->isNewItem())->isFalse();
 
-      // find the issue for the ticket
-      $issue = $this->newTestedInstance();
-      $issue->getFromDBByCrit([
-         'itemtype' => \Ticket::getType(),
-         'items_id'  => $ticket->getID(),
-      ]);
-      $this->boolean($issue->isNewItem())->isFalse();
+        $ticket->delete([
+            'id' => $ticket->getID()
+        ], 1);
 
-      $ticket->delete([
-         'id' => $ticket->getID()
-      ], 1);
-
-      // Check the issue has been deleted
-      $success = $issue->getFromDB($issue->getID());
-      $this->boolean($success)->isFalse();
-   }
+       // Check the issue has been deleted
+        $success = $issue->getFromDB($issue->getID());
+        $this->boolean($success)->isFalse();
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,165 +30,154 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 $form = PluginFormcreatorCommon::getForm();
 
 if (isset($_POST['add'])) {
    // Add a new Form
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   $_POST['_create_empty_section'] = true;
-   if ($newID = $form->add($_POST)) {
-      if ($_SESSION['glpibackcreated']) {
-         Html::redirect($form->getLinkURL());
-      }
-   }
-   Html::back();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+    $_POST['_create_empty_section'] = true;
+    if ($newID = $form->add($_POST)) {
+        if ($_SESSION['glpibackcreated']) {
+            Html::redirect($form->getLinkURL());
+        }
+    }
+    Html::back();
 } else if (isset($_POST['update'])) {
    // Edit an existing form
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-   $form->update($_POST);
-   Html::back();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+    $form->update($_POST);
+    Html::back();
 } else if (isset($_POST['delete'])) {
    // Delete a form (is_deleted = true)
-   Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
-   $form->delete($_POST);
-   $form->redirectToList();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
+    $form->delete($_POST);
+    $form->redirectToList();
 } else if (isset($_POST['restore'])) {
    // Restore a deleteted form (is_deleted = false)
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-   $form->restore($_POST);
-   $form->redirectToList();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+    $form->restore($_POST);
+    $form->redirectToList();
 } else if (isset($_POST['purge'])) {
    // Delete defenitively a form from DB and all its datas
-   Session::checkRight(PluginFormcreatorForm::$rightname, PURGE);
-   $form->delete($_POST, 1);
-   $form->redirectToList();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, PURGE);
+    $form->delete($_POST, 1);
+    $form->redirectToList();
 } else if (isset($_POST['add_target'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-   $form->addTarget($_POST);
-   Html::back();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+    $form->addTarget($_POST);
+    Html::back();
 } else if (isset($_POST['filetype_create'])) {
-   $documentType = new DocumentType();
-   $canAddType = $documentType->canCreate();
-   if ($canAddType) {
-      $form->createDocumentType();
-   }
-   Html::back();
+    $documentType = new DocumentType();
+    $canAddType = $documentType->canCreate();
+    if ($canAddType) {
+        $form->createDocumentType();
+    }
+    Html::back();
 } else if (isset($_POST['filetype_enable'])) {
-
-   $documentType = new DocumentType();
-   $canUpdateType = $documentType->canUpdate();
-   if ($canUpdateType) {
-      $form->enableDocumentType();
-   }
-   Html::back();
-
+    $documentType = new DocumentType();
+    $canUpdateType = $documentType->canUpdate();
+    if ($canUpdateType) {
+        $form->enableDocumentType();
+    }
+    Html::back();
 } else if (isset($_GET['import_form'])) {
    // Import form
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-   Html::header(
-      PluginFormcreatorForm::getTypeName(2),
-      $_SERVER['PHP_SELF'],
-      'admin',
-      'PluginFormcreatorForm',
-      'option'
-   );
+    Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+    Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+    Html::header(
+        PluginFormcreatorForm::getTypeName(2),
+        $_SERVER['PHP_SELF'],
+        'admin',
+        'PluginFormcreatorForm',
+        'option'
+    );
 
-   Html::requireJs('fileupload');
+    Html::requireJs('fileupload');
 
-   $form->showImportForm();
-   Html::footer();
-
+    $form->showImportForm();
+    Html::footer();
 } else if (isset($_POST['import_send'])) {
-   Html::header(
-      PluginFormcreatorForm::getTypeName(2),
-      $_SERVER['PHP_SELF'],
-      'admin',
-      'PluginFormcreatorForm',
-      'option'
-   );
+    Html::header(
+        PluginFormcreatorForm::getTypeName(2),
+        $_SERVER['PHP_SELF'],
+        'admin',
+        'PluginFormcreatorForm',
+        'option'
+    );
 
    // Import form
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-   $form->importJson($_REQUEST);
-   Html::back();
-
+    Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+    Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+    $form->importJson($_REQUEST);
+    Html::back();
 } else if (isset($_POST['submit_formcreator'])) {
    // Save form to target
-   if (!$form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
-      Html::back();
-   }
+    if (!$form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
+        Html::back();
+    }
 
    // If user is not authenticated, create temporary user
-   if (!isset($_SESSION['glpiname'])) {
-      $_SESSION['glpiname'] = 'formcreator_temp_user';
-   }
+    if (!isset($_SESSION['glpiname'])) {
+        $_SESSION['glpiname'] = 'formcreator_temp_user';
+    }
 
    // Save form
-   $formAnswer = PluginFormcreatorCommon::getFormAnswer();
-   if ($formAnswer->add($_POST) === false) {
-      Html::back();
-   }
-   $form->increaseUsageCount();
+    $formAnswer = PluginFormcreatorCommon::getFormAnswer();
+    if ($formAnswer->add($_POST) === false) {
+        Html::back();
+    }
+    $form->increaseUsageCount();
 
-   if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
-      // Form was saved by an annymous user
-      unset($_SESSION['glpiname']);
-      // don't show notifications
-      unset($_SESSION['MESSAGE_AFTER_REDIRECT']);
-      Html::redirect('formdisplay.php?answer_saved');
-   }
+    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
+       // Form was saved by an annymous user
+        unset($_SESSION['glpiname']);
+       // don't show notifications
+        unset($_SESSION['MESSAGE_AFTER_REDIRECT']);
+        Html::redirect('formdisplay.php?answer_saved');
+    }
 
    // redirect to created item
-   if ($_SESSION['glpibackcreated']) {
-      if (count($formAnswer->targetList) == 1) {
-         $target = current($formAnswer->targetList);
-         Html::redirect($target->getFormURLWithID($target->getID()));
-      }
-      Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
-   }
+    if ($_SESSION['glpibackcreated']) {
+        if (count($formAnswer->targetList) == 1) {
+            $target = current($formAnswer->targetList);
+            Html::redirect($target->getFormURLWithID($target->getID()));
+        }
+        Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
+    }
 
-   if (plugin_formcreator_replaceHelpdesk()) {
-      // Form was saved from the service catalog
-      Html::redirect('issue.php');
-   }
-   if (strpos($_SERVER['HTTP_REFERER'], 'formdisplay.php') !== false) {
-      // Form was saved from helpdesk (assistance > forms)
-      Html::redirect('formlist.php');
-   }
+    if (plugin_formcreator_replaceHelpdesk()) {
+       // Form was saved from the service catalog
+        Html::redirect('issue.php');
+    }
+    if (strpos($_SERVER['HTTP_REFERER'], 'formdisplay.php') !== false) {
+       // Form was saved from helpdesk (assistance > forms)
+        Html::redirect('formlist.php');
+    }
    // Form was saved from preview tab, go back to the preview
-   Html::back();
-
+    Html::back();
 } else {
    // Show forms form
-   Session::checkRight(PluginFormcreatorForm::$rightname, READ);
+    Session::checkRight(PluginFormcreatorForm::$rightname, READ);
 
-   Html::header(
-      PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
-      $_SERVER['PHP_SELF'],
-      'admin',
-      'PluginFormcreatorForm',
-      'option'
-   );
+    Html::header(
+        PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
+        $_SERVER['PHP_SELF'],
+        'admin',
+        'PluginFormcreatorForm',
+        'option'
+    );
 
-   Html::requireJs('tinymce');
+    Html::requireJs('tinymce');
 
-   $_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : -1;
-   $form->display($_GET);
+    $_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : -1;
+    $form->display($_GET);
 
-   Html::footer();
+    Html::footer();
 }

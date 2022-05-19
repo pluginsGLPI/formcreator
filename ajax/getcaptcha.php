@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,17 +30,17 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 // Check if plugin is activated...
 $plugin = new Plugin();
 if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 if (!isset($_POST['captcha_id']) || !isset($_SESSION['plugin_formcreator']['captcha'][$_POST['captcha_id']])) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }
 
 $captcha = PluginFormcreatorCommon::getCaptcha($_POST['captcha_id']);

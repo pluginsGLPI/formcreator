@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,57 +30,61 @@
  * ---------------------------------------------------------------------
  */
 
-
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 class PluginFormcreatorLinker
 {
-   private $imported = [];
+    private $imported = [];
 
-   private $postponed = [];
+    private $postponed = [];
 
-   private $progress = 0;
+    private $progress = 0;
 
-   private $totalCount = 0;
+    private $totalCount = 0;
 
-   private $options = [];
+    private $options = [];
 
-   public function __construct($options = []) {
-      $params              = [];
-      $params['progress']  = true;
+    public function __construct($options = [])
+    {
+        $params              = [];
+        $params['progress']  = true;
 
-      if (is_array($options) && count($options)) {
-         foreach ($options as $key => $val) {
-            $params[$key] = $val;
-         }
-      }
-      $this->options = $params;
-   }
+        if (is_array($options) && count($options)) {
+            foreach ($options as $key => $val) {
+                $params[$key] = $val;
+            }
+        }
+        $this->options = $params;
+    }
 
-   public function countItems($input, $itemtype) {
-      // Get the total count of objects to import, for the progressbar
-      $this->totalCount += $itemtype::countItemsToImport($input);
-   }
+    public function countItems($input, $itemtype)
+    {
+       // Get the total count of objects to import, for the progressbar
+        $this->totalCount += $itemtype::countItemsToImport($input);
+    }
 
-   public function getProgress() {
-      return $this->progress;
-   }
+    public function getProgress()
+    {
+        return $this->progress;
+    }
 
-   public  function getTotalCount() {
-      return $this->totalCount;
-   }
+    public function getTotalCount()
+    {
+        return $this->totalCount;
+    }
 
-   public function initProgressBar() {
-      if (!isCommandLine() && !isAPI() && $this->options['progress']) {
-         echo "<div class='center'>";
-         echo "<table class='tab_cadrehov'><tr><th>".__('Importing', 'formcreator')."</th></tr>";
-         echo "<tr class='tab_bg_2'><td>";
-         Html::createProgressBar(__('Import in progress'));
-         echo "</td></tr></table></div>\n";
-      }
-   }
+    public function initProgressBar()
+    {
+        if (!isCommandLine() && !isAPI() && $this->options['progress']) {
+            echo "<div class='center'>";
+            echo "<table class='tab_cadrehov'><tr><th>" . __('Importing', 'formcreator') . "</th></tr>";
+            echo "<tr class='tab_bg_2'><td>";
+            Html::createProgressBar(__('Import in progress'));
+            echo "</td></tr></table></div>\n";
+        }
+    }
 
    /**
     * Store an object added in the DB
@@ -88,19 +93,20 @@ class PluginFormcreatorLinker
     * @param PluginFormcreatorExportableInterface $object
     * @return void
     */
-   public function addObject($originalId, PluginFormcreatorExportableInterface $object) {
-      if (!isset($this->imported[$object->getType()])) {
-         $this->imported[$object->getType()] = [];
-      }
-      if (isset($this->imported[$object->getType()][$originalId])) {
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
-      }
-      $this->imported[$object->getType()][$originalId] = $object;
-      $this->progress++;
-      if (!isCommandLine() && !isAPI() && $this->options['progress']) {
-         Html::changeProgressBarPosition($this->getProgress(), $this->getTotalCount(), $this->getProgress() . ' / ' . $this->getTotalCount());
-      }
-   }
+    public function addObject($originalId, PluginFormcreatorExportableInterface $object)
+    {
+        if (!isset($this->imported[$object->getType()])) {
+            $this->imported[$object->getType()] = [];
+        }
+        if (isset($this->imported[$object->getType()][$originalId])) {
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
+        }
+        $this->imported[$object->getType()][$originalId] = $object;
+        $this->progress++;
+        if (!isCommandLine() && !isAPI() && $this->options['progress']) {
+            Html::changeProgressBarPosition($this->getProgress(), $this->getTotalCount(), $this->getProgress() . ' / ' . $this->getTotalCount());
+        }
+    }
 
    /**
     * Get a previously imported object
@@ -109,19 +115,21 @@ class PluginFormcreatorLinker
     * @param string $itemtype
     * @return PluginFormcreatorExportableInterface|false
     */
-   public function getObject($originalId, $itemtype) {
-      if (!isset($this->imported[$itemtype][$originalId])) {
-         return false;
-      }
-      return $this->imported[$itemtype][$originalId];
-   }
+    public function getObject($originalId, $itemtype)
+    {
+        if (!isset($this->imported[$itemtype][$originalId])) {
+            return false;
+        }
+        return $this->imported[$itemtype][$originalId];
+    }
 
-   public function getObjectsByType($itemtype) {
-      if (!isset($this->imported[$itemtype])) {
-         return false;
-      }
-      return $this->imported[$itemtype];
-   }
+    public function getObjectsByType($itemtype)
+    {
+        if (!isset($this->imported[$itemtype])) {
+            return false;
+        }
+        return $this->imported[$itemtype];
+    }
 
    /**
     * Find an object in the DB
@@ -133,17 +141,18 @@ class PluginFormcreatorLinker
     * @param string $idField fieldname where the ID is searched for
     * @return CommonDBTM
     */
-   public function findObject($itemtype, $id, $idField) {
-      if (!strpos($itemtype, 'PluginFormcreator') === 0) {
-         // The itemtype is not part of Formcreator
-         // Cannot use uuid column
-         $idField = 'id';
-      }
-      $item = new $itemtype();
-      plugin_formcreator_getFromDBByField($item, $idField, $id);
+    public function findObject($itemtype, $id, $idField)
+    {
+        if (!strpos($itemtype, 'PluginFormcreator') === 0) {
+           // The itemtype is not part of Formcreator
+           // Cannot use uuid column
+            $idField = 'id';
+        }
+        $item = new $itemtype();
+        plugin_formcreator_getFromDBByField($item, $idField, $id);
 
-      return $item;
-   }
+        return $item;
+    }
 
    /**
     * Store input data of an object to add it later
@@ -153,46 +162,49 @@ class PluginFormcreatorLinker
     * @param array $input
     * @return void
     */
-   public function postpone($originalId, $itemtype, array $input, $relationId) {
-      if (!isset($this->postponed[$itemtype])) {
-         $this->postponed[$itemtype] = [];
-      }
-      $this->postponed[$itemtype][$originalId] = ['input' => $input, 'relationId' => $relationId];
-   }
+    public function postpone($originalId, $itemtype, array $input, $relationId)
+    {
+        if (!isset($this->postponed[$itemtype])) {
+            $this->postponed[$itemtype] = [];
+        }
+        $this->postponed[$itemtype][$originalId] = ['input' => $input, 'relationId' => $relationId];
+    }
 
    /**
     * Add in DB all postponed objects
     *
     * @return boolean true on success, false otherwise
     */
-   public function linkPostponed() {
-      do {
-         $postponedCount = 0;
-         $postponedAgainCount = 0;
-         foreach ($this->postponed as $itemtype => &$postponedItemtypeList) {
-            $postponedCount += count($postponedItemtypeList);
-            $newList = [];
-            foreach ($postponedItemtypeList as $originalId => $postponedItem) {
-               if ($itemtype::import($this, $postponedItem['input'], $postponedItem['relationId']) === false) {
-                  $newList[$originalId] = $postponedItem;
-                  $postponedAgainCount++;
-               }
+    public function linkPostponed()
+    {
+        do {
+            $postponedCount = 0;
+            $postponedAgainCount = 0;
+            foreach ($this->postponed as $itemtype => &$postponedItemtypeList) {
+                $postponedCount += count($postponedItemtypeList);
+                $newList = [];
+                foreach ($postponedItemtypeList as $originalId => $postponedItem) {
+                    if ($itemtype::import($this, $postponedItem['input'], $postponedItem['relationId']) === false) {
+                        $newList[$originalId] = $postponedItem;
+                        $postponedAgainCount++;
+                    }
+                }
+                $postponedItemtypeList = $newList;
             }
-            $postponedItemtypeList = $newList;
-         }
-         unset($postponedItemtypeList);
+            unset($postponedItemtypeList);
 
-         // If no item was successfully imported,  then the import is in a deadlock and fails
-         if ($postponedAgainCount > 0 && $postponedCount == $postponedAgainCount) {
-            return false;
-         }
-      } while ($postponedCount > 0);
+           // If no item was successfully imported,  then the import is in a deadlock and fails
+            if ($postponedAgainCount > 0 && $postponedCount == $postponedAgainCount) {
+                return false;
+            }
+        } while ($postponedCount > 0);
 
-      return true;
-   }
+        return true;
+    }
 
-   public function reset() {
-      $this->imported = [];
-      $this->postponed = [];
-   }
+    public function reset()
+    {
+        $this->imported = [];
+        $this->postponed = [];
+    }
 }

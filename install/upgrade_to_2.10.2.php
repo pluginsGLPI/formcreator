@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,23 +29,24 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_10_2 {
-
-   protected $migration;
+class PluginFormcreatorUpgradeTo2_10_2
+{
+    protected $migration;
 
    /**
     * @param Migration $migration
     */
-   public function upgrade(Migration $migration) {
-      global $DB;
+    public function upgrade(Migration $migration)
+    {
+        global $DB;
 
-      $this->migration = $migration;
+        $this->migration = $migration;
 
-      // Versioin 2.10.2 contains fixes on counters requiring repopulation of issues table
-      $table = 'glpi_plugin_formcreator_issues';
-      $DB->query("TRUNCATE `$table`");
-      $this->syncIssues(new CronTask());
-   }
+       // Versioin 2.10.2 contains fixes on counters requiring repopulation of issues table
+        $table = 'glpi_plugin_formcreator_issues';
+        $DB->query("TRUNCATE `$table`");
+        $this->syncIssues(new CronTask());
+    }
 
    /**
     * This is a copy of PluginFormcreatorIssue::cronSyncIssues as it is in 2.10.2
@@ -52,18 +54,19 @@ class PluginFormcreatorUpgradeTo2_10_2 {
     * @param CronTask $task
     * @return void
     */
-   public function syncIssues(CronTask $task) {
-      global $DB;
+    public function syncIssues(CronTask $task)
+    {
+        global $DB;
 
-      $task->log("Sync issues from forms answers and tickets");
-      $volume = 0;
+        $task->log("Sync issues from forms answers and tickets");
+        $volume = 0;
 
-      // Request which merges tickets and formanswers
-      // 1 ticket not linked to a formanswer => 1 issue which is the ticket sub_itemtype
-      // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
-      // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
-      // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
-      $query = "SELECT DISTINCT
+       // Request which merges tickets and formanswers
+       // 1 ticket not linked to a formanswer => 1 issue which is the ticket sub_itemtype
+       // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
+       // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
+       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
+        $query = "SELECT DISTINCT
                   NULL                            AS `id`,
                   `f`.`name`                      AS `name`,
                   CONCAT('f_',`fanswer`.`id`)     AS `display_id`,
@@ -118,25 +121,25 @@ class PluginFormcreatorUpgradeTo2_10_2 {
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`items_id`) <= 1";
 
-      $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
-      $result = $DB->query($countQuery);
-      if ($result !== false) {
-         if (version_compare(GLPI_VERSION, '9.5') < 0) {
-            $fa = 'fetch_assoc';
-         } else {
-            $fa = 'fetchAssoc';
-         }
-         $count = $DB->$fa($result);
-         $table = 'glpi_plugin_formcreator_issues';
-         if (countElementsInTable($table) != $count['cpt']) {
-            if ($DB->query("TRUNCATE `$table`")) {
-               $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
-               $volume = 1;
+        $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
+        $result = $DB->query($countQuery);
+        if ($result !== false) {
+            if (version_compare(GLPI_VERSION, '9.5') < 0) {
+                $fa = 'fetch_assoc';
+            } else {
+                $fa = 'fetchAssoc';
             }
-         }
-      }
-      $task->setVolume($volume);
+            $count = $DB->$fa($result);
+            $table = 'glpi_plugin_formcreator_issues';
+            if (countElementsInTable($table) != $count['cpt']) {
+                if ($DB->query("TRUNCATE `$table`")) {
+                    $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
+                    $volume = 1;
+                }
+            }
+        }
+        $task->setVolume($volume);
 
-      return 1;
-   }
+        return 1;
+    }
 }

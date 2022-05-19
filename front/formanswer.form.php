@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,64 +30,60 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::redirectIfNotLoggedIn();
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 $formanswer = PluginFormcreatorCommon::getFormAnswer();
 
 if (isset($_POST['update'])) {
    // Edit an existing target ticket
-   $formanswer->update($_POST);
-   Html::back();
-
+    $formanswer->update($_POST);
+    Html::back();
 } else if (isset($_POST['refuse_formanswer'])) {
-   $formanswer->update($_POST);
-   $formanswer->redirectToList();
-
+    $formanswer->update($_POST);
+    $formanswer->redirectToList();
 } else if (isset($_POST['accept_formanswer'])) {
-   $formanswer->update($_POST);
-   $formanswer->redirectToList();
-
+    $formanswer->update($_POST);
+    $formanswer->redirectToList();
 } else if (isset($_POST['save_formanswer'])) {
-   if (!$formanswer->update($_POST)) {
-      Html::back();
-   }
-   if (plugin_formcreator_replaceHelpdesk()) {
-      $issue = new PluginFormcreatorIssue();
-      $issue->redirectToList();
-   } else {
-      $formanswer->redirectToList();
-   }
-
+    if (!$formanswer->update($_POST)) {
+        Html::back();
+    }
+    if (plugin_formcreator_replaceHelpdesk()) {
+        $issue = new PluginFormcreatorIssue();
+        $issue->redirectToList();
+    } else {
+        $formanswer->redirectToList();
+    }
 }
 // Show target ticket form
 $formanswer->getFromDB((int) $_GET['id']);
 if (!$formanswer->checkEntity()) {
-   Html::displayRightError();
+    Html::displayRightError();
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+    Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   Html::header(
-      __('Form Creator', 'formcreator'),
-      '',
-      'admin',
-      'PluginFormcreatorForm'
-   );
+    Html::header(
+        __('Form Creator', 'formcreator'),
+        '',
+        'admin',
+        'PluginFormcreatorForm'
+    );
 }
 
 
 $formanswer->display($_REQUEST);
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpFooter();
+    Html::helpFooter();
 } else {
-   Html::footer();
+    Html::footer();
 }

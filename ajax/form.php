@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,40 +30,40 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
-   http_response_code(403);
-   die();
+    http_response_code(403);
+    die();
 }
 
 $form = PluginFormcreatorCommon::getForm();
 
 if (!isset($_REQUEST['id']) || !isset($_REQUEST['action'])) {
-   http_response_code(400);
-   die();
+    http_response_code(400);
+    die();
 }
 
 $success = false;
 switch ($_REQUEST['action']) {
-   case 'toggle_active':
-      $success = $form->update([
-         'id' => $_POST['id'],
-         'toggle' => 'active',
-      ]);
-      break;
+    case 'toggle_active':
+        $success = $form->update([
+            'id' => $_POST['id'],
+            'toggle' => 'active',
+        ]);
+        break;
 
-   case 'toggle_default':
-      $success = $form->update([
-         'id' => $_POST['id'],
-         'toggle' => 'default',
-      ]);
-      break;
+    case 'toggle_default':
+        $success = $form->update([
+            'id' => $_POST['id'],
+            'toggle' => 'default',
+        ]);
+        break;
 
-   default:
-      http_response_code(400);
-      die();
+    default:
+        http_response_code(400);
+        die();
 }
 
 if (!$success) {
-   http_response_code(500);
+    http_response_code(500);
 }

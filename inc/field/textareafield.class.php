@@ -42,237 +42,257 @@ use Toolbox;
 class TextareaField extends TextField
 {
    /** @var array uploaded files on form submit */
-   private $uploads = [
-      '_filename' => [],
-      '_prefix_filename' => [],
-      '_tag_filename' => [],
-   ];
+    private $uploads = [
+        '_filename' => [],
+        '_prefix_filename' => [],
+        '_tag_filename' => [],
+    ];
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-      $this->deserializeValue($this->question->fields['default_values']);
-      $parameters = $this->getParameters();
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'question_params' => $parameters,
-         'params' => $options,
-      ]);
-   }
+    public function showForm(array $options): void
+    {
+        $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+        $this->deserializeValue($this->question->fields['default_values']);
+        $parameters = $this->getParameters();
+        TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'question_params' => $parameters,
+            'params' => $options,
+        ]);
+    }
 
-   public function getRenderedHtml($domain, $canEdit = true): string {
-      if (!$canEdit) {
-         $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
-         return RichText::getEnhancedHtml($value);
-      }
+    public function getRenderedHtml($domain, $canEdit = true): string
+    {
+        if (!$canEdit) {
+            $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
+            return RichText::getEnhancedHtml($value);
+        }
 
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $value = $this->value;
-      $html = '';
-      $html .= Html::textarea([
-         'name'              => $fieldName,
-         'editor_id'         => "$fieldName$rand",
-         'rand'              => $rand,
-         'value'             => $value,
-         'rows'              => 5,
-         'display'           => false,
-         'enable_richtext'   => true,
-         'enable_fileupload' => false,
-         'uploads'           => $this->uploads,
-      ]);
-      // The following file upload area is needed to allow embedded pics in the tetarea
-      $html .=  '<div style="display:none;">';
-      Html::file(['editor_id'    => "$fieldName$rand",
-                  'filecontainer' => "filecontainer$rand",
-                  'onlyimages'    => true,
-                  'showtitle'     => false,
-                  'multiple'      => true,
-                  'display'       => false]);
-      $html .=  '</div>';
-      $html .= Html::scriptBlock("$(function() {
+        $id           = $this->question->getID();
+        $rand         = mt_rand();
+        $fieldName    = 'formcreator_field_' . $id;
+        $value = $this->value;
+        $html = '';
+        $html .= Html::textarea([
+            'name'              => $fieldName,
+            'editor_id'         => "$fieldName$rand",
+            'rand'              => $rand,
+            'value'             => $value,
+            'rows'              => 5,
+            'display'           => false,
+            'enable_richtext'   => true,
+            'enable_fileupload' => false,
+            'uploads'           => $this->uploads,
+        ]);
+       // The following file upload area is needed to allow embedded pics in the tetarea
+        $html .=  '<div style="display:none;">';
+        Html::file(['editor_id'    => "$fieldName$rand",
+            'filecontainer' => "filecontainer$rand",
+            'onlyimages'    => true,
+            'showtitle'     => false,
+            'multiple'      => true,
+            'display'       => false
+        ]);
+        $html .=  '</div>';
+        $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");
 
-      return $html;
-   }
+        return $html;
+    }
 
-   public static function getName(): string {
-      return __('Textarea', 'formcreator');
-   }
+    public static function getName(): string
+    {
+        return __('Textarea', 'formcreator');
+    }
 
-   public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
+    public function serializeValue(): string
+    {
+        if ($this->value === null || $this->value === '') {
+            return '';
+        }
 
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (isset($this->uploads['_' . $key])) {
-         foreach ($this->uploads['_' . $key] as $id => $filename) {
-            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
-            // when is merged https://github.com/glpi-project/glpi/pull/9335
-            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
-               $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
-               $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (isset($this->uploads['_' . $key])) {
+            foreach ($this->uploads['_' . $key] as $id => $filename) {
+               // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
+               // when is merged https://github.com/glpi-project/glpi/pull/9335
+                if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
+                    $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
+                    $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
+                }
             }
-         }
-         $input = [$key => $this->value] + $this->uploads;
-         $input = $this->question->addFiles(
-            $input,
-            [
-               'force_update'  => true,
-               // 'content_field' => $key,
-               'content_field' => null,
-               'name'          => $key,
-            ]
-         );
-         $this->value = $input[$key];
-         $this->value = Html::entity_decode_deep($this->value);
-         foreach ($input['_tag'] as $tag) {
-            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
-            $this->value = preg_replace($regex, "#$tag#", $this->value);
-         }
-         $this->value = Html::entities_deep($this->value);
-      }
+            $input = [$key => $this->value] + $this->uploads;
+            $input = $this->question->addFiles(
+                $input,
+                [
+                    'force_update'  => true,
+                // 'content_field' => $key,
+                    'content_field' => null,
+                    'name'          => $key,
+                ]
+            );
+            $this->value = $input[$key];
+            $this->value = Html::entity_decode_deep($this->value);
+            foreach ($input['_tag'] as $tag) {
+                $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
+                $this->value = preg_replace($regex, "#$tag#", $this->value);
+            }
+            $this->value = Html::entities_deep($this->value);
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
+    public function deserializeValue($value)
+    {
+        $this->value = ($value !== null && $value !== '')
          ? $value
          : '';
-   }
+    }
 
-   public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
+    public function getValueForDesign(): string
+    {
+        if ($this->value === null) {
+            return '';
+        }
 
-      return $this->value;
-   }
+        return $this->value;
+    }
 
-   public function isValid(): bool {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && $this->value == '') {
-         Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR
-         );
-         return false;
-      }
+    public function isValid(): bool
+    {
+       // If the field is required it can't be empty
+        if ($this->isRequired() && $this->value == '') {
+            Session::addMessageAfterRedirect(
+                __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+                false,
+                ERROR
+            );
+            return false;
+        }
 
-      // All is OK
-      return true;
-   }
+       // All is OK
+        return true;
+    }
 
-   public function prepareQuestionInputForSave($input): array {
-      $success = true;
-      $fieldType = $this->getFieldTypeName();
-      if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
-         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
-         $success = PluginFormcreatorCommon::checkRegex($regex);
-         if (!$success) {
-            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
-         }
-      }
-      if (!$success) {
-         return [];
-      }
+    public function prepareQuestionInputForSave($input): array
+    {
+        $success = true;
+        $fieldType = $this->getFieldTypeName();
+        if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
+            $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
+            $success = PluginFormcreatorCommon::checkRegex($regex);
+            if (!$success) {
+                Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+            }
+        }
+        if (!$success) {
+            return [];
+        }
 
-      $this->value = $input['default_values'];
+        $this->value = $input['default_values'];
 
-      // Handle uploads
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (isset($input['_tag_default_values']) && isset($input['_default_values']) && isset($input['_prefix_default_values'])) {
-         $this->uploads['_' . $key] = $input['_default_values'];
-         $this->uploads['_prefix_' . $key] = $input['_prefix_default_values'];
-         $this->uploads['_tag_' . $key] = $input['_tag_default_values'];
-      }
-      $input[$key] = $input['default_values'];
+       // Handle uploads
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (isset($input['_tag_default_values']) && isset($input['_default_values']) && isset($input['_prefix_default_values'])) {
+            $this->uploads['_' . $key] = $input['_default_values'];
+            $this->uploads['_prefix_' . $key] = $input['_prefix_default_values'];
+            $this->uploads['_tag_' . $key] = $input['_tag_default_values'];
+        }
+        $input[$key] = $input['default_values'];
 
-      return $input;
-   }
+        return $input;
+    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
-   }
+    public function hasInput($input): bool
+    {
+        return isset($input['formcreator_field_' . $this->question->getID()]);
+    }
 
-   public function parseAnswerValues($input, $nonDestructive = false): bool {
-      parent::parseAnswerValues($input, $nonDestructive);
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
-         $this->uploads['_' . $key] = $input['_' . $key];
-         $this->uploads['_prefix_' . $key] = $input['_prefix_' . $key];
-         $this->uploads['_tag_' . $key] = $input['_tag_' . $key];
-      }
+    public function parseAnswerValues($input, $nonDestructive = false): bool
+    {
+        parent::parseAnswerValues($input, $nonDestructive);
+        $key = 'formcreator_field_' . $this->question->getID();
+        if (isset($input['_tag_' . $key]) && isset($input['_' . $key]) && isset($input['_prefix_' . $key])) {
+            $this->uploads['_' . $key] = $input['_' . $key];
+            $this->uploads['_prefix_' . $key] = $input['_prefix_' . $key];
+            $this->uploads['_tag_' . $key] = $input['_tag_' . $key];
+        }
 
-      return true;
-   }
+        return true;
+    }
 
-   public function getValueForTargetText($domain, $richText): ?string {
-      $value = $this->value;
-      if (!$richText) {
-         $value = strip_tags($value);
-      }
+    public function getValueForTargetText($domain, $richText): ?string
+    {
+        $value = $this->value;
+        if (!$richText) {
+            $value = strip_tags($value);
+        }
 
-      return $value;
-   }
+        return $value;
+    }
 
-   public function equals($value): bool {
-      return $this->value == $value;
-   }
+    public function equals($value): bool
+    {
+        return $this->value == $value;
+    }
 
-   public function notEquals($value): bool {
-      return !$this->equals($value);
-   }
+    public function notEquals($value): bool
+    {
+        return !$this->equals($value);
+    }
 
-   public function greaterThan($value): bool {
-      return $this->value > $value;
-   }
+    public function greaterThan($value): bool
+    {
+        return $this->value > $value;
+    }
 
-   public function lessThan($value): bool {
-      return !$this->greaterThan($value) && !$this->equals($value);
-   }
+    public function lessThan($value): bool
+    {
+        return !$this->greaterThan($value) && !$this->equals($value);
+    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+    public function regex($value): bool
+    {
+        return (preg_grep($value, $this->value)) ? true : false;
+    }
 
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
+    public function isPublicFormCompatible(): bool
+    {
+        return true;
+    }
 
-   public function getHtmlIcon(): string {
-      return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
-   }
+    public function getHtmlIcon(): string
+    {
+        return '<i class="far fa-comment-dots" aria-hidden="true"></i>';
+    }
 
-   public function getTranslatableStrings(array $options = []) : array {
-      $strings = parent::getTranslatableStrings($options);
+    public function getTranslatableStrings(array $options = []): array
+    {
+        $strings = parent::getTranslatableStrings($options);
 
-      $params = [
-         'searchText'      => '',
-         'id'              => '',
-         'is_translated'   => null,
-         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
-      ];
-      $options = array_merge($params, $options);
+        $params = [
+            'searchText'      => '',
+            'id'              => '',
+            'is_translated'   => null,
+            'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+        ];
+        $options = array_merge($params, $options);
 
-      $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
+        $searchString = Toolbox::stripslashes_deep(trim($options['searchText']));
 
-      if ($searchString != '' && stripos($this->question->fields['default_values'], $searchString) === false) {
-         return $strings;
-      }
-      $id = \PluginFormcreatorTranslation::getTranslatableStringId($this->question->fields['default_values']);
-      if ($options['id'] != '' && $id != $options['id']) {
-         return $strings;
-      }
-      if ($this->question->fields['default_values'] != '') {
-         $strings['text'][$id] = $this->question->fields['default_values'];
-         $strings['id'][$id] = 'text';
-      }
+        if ($searchString != '' && stripos($this->question->fields['default_values'], $searchString) === false) {
+            return $strings;
+        }
+        $id = \PluginFormcreatorTranslation::getTranslatableStringId($this->question->fields['default_values']);
+        if ($options['id'] != '' && $id != $options['id']) {
+            return $strings;
+        }
+        if ($this->question->fields['default_values'] != '') {
+            $strings['text'][$id] = $this->question->fields['default_values'];
+            $strings['id'][$id] = 'text';
+        }
 
-      return $strings;
-   }
+        return $strings;
+    }
 }

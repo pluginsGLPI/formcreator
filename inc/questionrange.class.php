@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -32,7 +33,7 @@
 use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 /**
@@ -41,166 +42,175 @@ if (!defined('GLPI_ROOT')) {
  * this case the question A has this parameter to maitnain the dependency to the
  * question B
  */
-class PluginFormcreatorQuestionRange
-extends PluginFormcreatorAbstractQuestionParameter
+class PluginFormcreatorQuestionRange extends PluginFormcreatorAbstractQuestionParameter
 {
-   use PluginFormcreatorTranslatable;
+    use PluginFormcreatorTranslatable;
 
-   public static function getTypeName($nb = 0) {
-      return _n('Question range', 'Question ranges', $nb, 'formcreator');
-   }
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Question range', 'Question ranges', $nb, 'formcreator');
+    }
 
-   public function rawSearchOptions() {
-      $tab = parent::rawSearchOptions();
+    public function rawSearchOptions()
+    {
+        $tab = parent::rawSearchOptions();
 
-      $tab[] = [
-         'id'                 => '4',
-         'table'              => $this::getTable(),
-         'field'              => 'range_min',
-         'name'               => __('Minimum range', 'formcreator'),
-         'datatype'           => 'integer',
-         'massiveaction'      => false,
-      ];
+        $tab[] = [
+            'id'                 => '4',
+            'table'              => $this::getTable(),
+            'field'              => 'range_min',
+            'name'               => __('Minimum range', 'formcreator'),
+            'datatype'           => 'integer',
+            'massiveaction'      => false,
+        ];
 
-      $tab[] = [
-         'id'                 => '5',
-         'table'              => $this::getTable(),
-         'field'              => 'range_max',
-         'name'               => __('maximum range', 'formcreator'),
-         'datatype'           => 'integer',
-         'massiveaction'      => false,
-      ];
+        $tab[] = [
+            'id'                 => '5',
+            'table'              => $this::getTable(),
+            'field'              => 'range_max',
+            'name'               => __('maximum range', 'formcreator'),
+            'datatype'           => 'integer',
+            'massiveaction'      => false,
+        ];
 
-      return $tab;
-   }
+        return $tab;
+    }
 
-   public function getParameterFormSize() {
-      return 0;
-   }
+    public function getParameterFormSize()
+    {
+        return 0;
+    }
 
-   public function getParameterForm(PluginFormcreatorQuestion $question) {
-      // get the name of the HTML input field
-      $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
+    public function getParameterForm(PluginFormcreatorQuestion $question)
+    {
+       // get the name of the HTML input field
+        $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
-      // get the selected value in the dropdown
-      $rangeMin = '';
-      $rangeMax = '';
-      $this->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $question->getID(),
-         'fieldname' => $this->fieldName,
-      ]);
-      if (!$this->isNewItem()) {
-         $rangeMin = $this->fields['range_min'];
-         $rangeMax = $this->fields['range_max'];
-      }
+       // get the selected value in the dropdown
+        $rangeMin = '';
+        $rangeMax = '';
+        $this->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $question->getID(),
+            'fieldname' => $this->fieldName,
+        ]);
+        if (!$this->isNewItem()) {
+            $rangeMin = $this->fields['range_min'];
+            $rangeMax = $this->fields['range_max'];
+        }
 
-      $out = TemplateRenderer::getInstance()->render(
-         '@formcreator/questionparameter/range.html.twig',
-         [
-            'item'   => $this,
-            'label'  => $this->label,
-            'params' => [
-               'name'  => $name,
-            ],
-         ]
-      );
+        $out = TemplateRenderer::getInstance()->render(
+            '@formcreator/questionparameter/range.html.twig',
+            [
+                'item'   => $this,
+                'label'  => $this->label,
+                'params' => [
+                    'name'  => $name,
+                ],
+            ]
+        );
 
-      return $out;
-   }
+        return $out;
+    }
 
-   public function post_getEmpty() {
-      $this->fields['range_min'] = '0';
-      $this->fields['range_max'] = '0';
-   }
+    public function post_getEmpty()
+    {
+        $this->fields['range_min'] = '0';
+        $this->fields['range_max'] = '0';
+    }
 
-   public function prepareInputForAdd($input) {
-      $input = parent::prepareInputForAdd($input);
-      $input['fieldname'] = $this->fieldName;
+    public function prepareInputForAdd($input)
+    {
+        $input = parent::prepareInputForAdd($input);
+        $input['fieldname'] = $this->fieldName;
 
-      return $input;
-   }
+        return $input;
+    }
 
-   public function getFieldName() {
-      return $this->fieldName;
-   }
+    public function getFieldName()
+    {
+        return $this->fieldName;
+    }
 
-   public function export(bool $remove_uuid = false) : array {
-      if ($this->isNewItem()) {
-         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
-      }
+    public function export(bool $remove_uuid = false): array
+    {
+        if ($this->isNewItem()) {
+            throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+        }
 
-      $parameter = $this->fields;
+        $parameter = $this->fields;
 
-      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
-      unset($parameter[$questionFk]);
+        $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+        unset($parameter[$questionFk]);
 
-      // remove ID or UUID
-      $idToRemove = 'id';
-      if ($remove_uuid) {
-         $idToRemove = 'uuid';
-      }
-      unset($parameter[$idToRemove]);
+       // remove ID or UUID
+        $idToRemove = 'id';
+        if ($remove_uuid) {
+            $idToRemove = 'uuid';
+        }
+        unset($parameter[$idToRemove]);
 
-      return $parameter;
-   }
+        return $parameter;
+    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
-      global $DB;
+    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0)
+    {
+        global $DB;
 
-      if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
-      }
+        if (!isset($input['uuid']) && !isset($input['id'])) {
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+        }
 
-      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
-      $input[$questionFk] = $containerId;
+        $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+        $input[$questionFk] = $containerId;
 
-      $question = new PluginFormcreatorQuestion();
-      $question->getFromDB($containerId);
-      $field = $question->getSubField();
+        $question = new PluginFormcreatorQuestion();
+        $question->getFromDB($containerId);
+        $field = $question->getSubField();
 
-      $item = $field->getEmptyParameters();
-      $item = $item[$input['fieldname']];
+        $item = $field->getEmptyParameters();
+        $item = $item[$input['fieldname']];
 
-      // Find an existing condition to update, only if an UUID is available
-      $itemId = false;
-      /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id';
-      if (isset($input['uuid'])) {
-         // Try to find an existing item to update
-         $idKey = 'uuid';
-         $itemId = plugin_formcreator_getFromDBByField(
-            $item,
-            'uuid',
-            $input['uuid']
-         );
-      }
+       // Find an existing condition to update, only if an UUID is available
+        $itemId = false;
+       /** @var string $idKey key to use as ID (id or uuid) */
+        $idKey = 'id';
+        if (isset($input['uuid'])) {
+           // Try to find an existing item to update
+            $idKey = 'uuid';
+            $itemId = plugin_formcreator_getFromDBByField(
+                $item,
+                'uuid',
+                $input['uuid']
+            );
+        }
 
-      // escape text fields
-      foreach (['range_min', 'range_max'] as $key) {
-         $input[$key] = $DB->escape($input[$key]);
-      }
+       // escape text fields
+        foreach (['range_min', 'range_max'] as $key) {
+            $input[$key] = $DB->escape($input[$key]);
+        }
 
-      // Add or update condition
-      $originalId = $input[$idKey];
-      if ($itemId !== false) {
-         $input['id'] = $itemId;
-         $item->update($input);
-      } else {
-         unset($input['id']);
-         $itemId = $item->add($input);
-      }
-      if ($itemId === false) {
-         $typeName = strtolower(self::getTypeName());
-         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
-      }
+       // Add or update condition
+        $originalId = $input[$idKey];
+        if ($itemId !== false) {
+            $input['id'] = $itemId;
+            $item->update($input);
+        } else {
+            unset($input['id']);
+            $itemId = $item->add($input);
+        }
+        if ($itemId === false) {
+            $typeName = strtolower(self::getTypeName());
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+        }
 
-      // add the question to the linker
-      $linker->addObject($originalId, $item);
+       // add the question to the linker
+        $linker->addObject($originalId, $item);
 
-      return $itemId;
-   }
+        return $itemId;
+    }
 
-   public static function countItemsToImport($input) : int {
-      return 1;
-   }
+    public static function countItemsToImport($input): int
+    {
+        return 1;
+    }
 }

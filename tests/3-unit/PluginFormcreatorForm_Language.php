@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -34,36 +35,39 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorForm_language extends CommonTestCase
-/* implements CommonItemtypeInterface */ {
-   public function providerGetTypeName() {
-      return [
-         [
-            0,
-            'Form languages'
-         ],
-         [
-            1,
-            'Form language'
-         ],
-         [
-            2,
-            'Form languages'
-         ],
-      ];
-   }
+/* implements CommonItemtypeInterface */
+{
+    public function providerGetTypeName()
+    {
+        return [
+            [
+                0,
+                'Form languages'
+            ],
+            [
+                1,
+                'Form language'
+            ],
+            [
+                2,
+                'Form languages'
+            ],
+        ];
+    }
 
-   public function testDefineTabs() {
-      $instance = $this->newTestedInstance();
-      $output = $instance->defineTabs();
-      $expected = [
-         'PluginFormcreatorForm_Language$main' => "Form language",
-         'PluginFormcreatorForm_Language$1' => 'Translations',
+    public function testDefineTabs()
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->defineTabs();
+        $expected = [
+            'PluginFormcreatorForm_Language$main' => "Form language",
+            'PluginFormcreatorForm_Language$1' => 'Translations',
 
-      ];
-      $this->array($output)
+        ];
+        $this->array($output)
          ->isEqualTo($expected)
          ->hasSize(count($expected));
-   }
+    }
 
    /**
     * @dataProvider providerGetTypeName
@@ -72,45 +76,47 @@ class PluginFormcreatorForm_language extends CommonTestCase
     * @param string $expected
     * @return void
     */
-   public function testGetTypeName($nb, $expected) {
-      $instance = $this->newTestedInstance();
-      $output = $instance->getTypeName($nb);
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetTypeName($nb, $expected)
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->getTypeName($nb);
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerPrepareInputForAdd() {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      return [
-         [
-            'input' => [
-               $formFk => 42
+    public function providerPrepareInputForAdd()
+    {
+        $formFk = \PluginFormcreatorForm::getForeignKeyField();
+        return [
+            [
+                'input' => [
+                    $formFk => 42
+                ],
+                'expected' => false,
+                'expectedMessage' => 'The name cannot be empty!',
             ],
-            'expected' => false,
-            'expectedMessage' => 'The name cannot be empty!',
-         ],
-         [
-            'input' => [
-               'name' => 'foo',
-               'comment' => 'bar',
+            [
+                'input' => [
+                    'name' => 'foo',
+                    'comment' => 'bar',
+                ],
+                'expected' => false,
+                'expectedMessage' => 'The language must be associated to a form!',
             ],
-            'expected' => false,
-            'expectedMessage' => 'The language must be associated to a form!',
-         ],
-         [
-            'input' => [
-               'name' => 'foo',
-               'comment' => 'bar',
-               $formFk => 42,
+            [
+                'input' => [
+                    'name' => 'foo',
+                    'comment' => 'bar',
+                    $formFk => 42,
+                ],
+                'expected' => [
+                    'name' => 'foo',
+                    'comment' => 'bar',
+                    $formFk => 42,
+                ],
+                'expectedMessage' => '',
             ],
-            'expected' => [
-               'name' => 'foo',
-               'comment' => 'bar',
-               $formFk => 42,
-            ],
-            'expectedMessage' => '',
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerPrepareInputForAdd
@@ -120,51 +126,53 @@ class PluginFormcreatorForm_language extends CommonTestCase
     * @param string $expectedMessage
     * @return void
     */
-   public function testPrepareInputrForAdd($input, $expected, $expectedMessage) {
-      $instance = $this->newTestedInstance();
-      $output = $instance->prepareInputForAdd($input);
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      if ($expected === false) {
-         $this->array($output)->size->isEqualTo(0);
-         $this->sessionHasMessage($expectedMessage, ERROR);
-      } else {
-         $this->string($output['name'])->isEqualTo($input['name']);
-         $this->string($output['comment'])->isEqualTo($output['comment']);
-         $this->integer((int) $output[$formFk])->isEqualTo($output[$formFk]);
-         $this->array($output)->hasKey('uuid');
-      }
-   }
+    public function testPrepareInputrForAdd($input, $expected, $expectedMessage)
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->prepareInputForAdd($input);
+        $formFk = \PluginFormcreatorForm::getForeignKeyField();
+        if ($expected === false) {
+            $this->array($output)->size->isEqualTo(0);
+            $this->sessionHasMessage($expectedMessage, ERROR);
+        } else {
+            $this->string($output['name'])->isEqualTo($input['name']);
+            $this->string($output['comment'])->isEqualTo($output['comment']);
+            $this->integer((int) $output[$formFk])->isEqualTo($output[$formFk]);
+            $this->array($output)->hasKey('uuid');
+        }
+    }
 
-   public function providerPrepareInputForUpdate() {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      return [
-         [
-            'input' => [
-               $formFk => 42
+    public function providerPrepareInputForUpdate()
+    {
+        $formFk = \PluginFormcreatorForm::getForeignKeyField();
+        return [
+            [
+                'input' => [
+                    $formFk => 42
+                ],
+                'expected' => [
+                ],
+                'expectedMessage' => '',
             ],
-            'expected' => [
+            [
+                'input' => [
+                    'name' => 'foo',
+                    'comment' => 'bar',
+                ],
+                'expected' => [],
+                'expectedMessage' => '',
             ],
-            'expectedMessage' => '',
-         ],
-         [
-            'input' => [
-               'name' => 'foo',
-               'comment' => 'bar',
+            [
+                'input' => [
+                    'name' => 'foo',
+                    'comment' => 'bar',
+                    $formFk => 42,
+                ],
+                'expected' => [],
+                'expectedMessage' => '',
             ],
-            'expected' => [],
-            'expectedMessage' => '',
-         ],
-         [
-            'input' => [
-               'name' => 'foo',
-               'comment' => 'bar',
-               $formFk => 42,
-            ],
-            'expected' => [],
-            'expectedMessage' => '',
-         ],
-      ];
-   }
+        ];
+    }
 
    /**
     * @dataProvider providerPrepareInputForUpdate
@@ -173,100 +181,104 @@ class PluginFormcreatorForm_language extends CommonTestCase
     * @param array $expected
     * @return void
     */
-   public function testPrepareInputrForUpdate($input, $expected, $expectedMessage) {
-      $instance = $this->newTestedInstance();
-      $output = $instance->prepareInputForUpdate($input);
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      if ($expected === false) {
-         $this->array($output)->size->isEqualTo(0);
-         $this->sessionHasMessage($expectedMessage, ERROR);
-      } else {
-         $this->array($output)->notHasKeys(['name', $formFk]);
-         $this->array($output)->hasKey('uuid');
-      }
-   }
+    public function testPrepareInputrForUpdate($input, $expected, $expectedMessage)
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->prepareInputForUpdate($input);
+        $formFk = \PluginFormcreatorForm::getForeignKeyField();
+        if ($expected === false) {
+            $this->array($output)->size->isEqualTo(0);
+            $this->sessionHasMessage($expectedMessage, ERROR);
+        } else {
+            $this->array($output)->notHasKeys(['name', $formFk]);
+            $this->array($output)->hasKey('uuid');
+        }
+    }
 
-   public function testExport() {
-      $question = $this->getQuestion();
-      $this->boolean($question->isNewItem())->isFalse();
-      $form = new \PluginFormcreatorForm();
-      $form = \PluginFormcreatorForm::getByItem($question);
-      $this->boolean($form->isNewItem())->isFalse();
+    public function testExport()
+    {
+        $question = $this->getQuestion();
+        $this->boolean($question->isNewItem())->isFalse();
+        $form = new \PluginFormcreatorForm();
+        $form = \PluginFormcreatorForm::getByItem($question);
+        $this->boolean($form->isNewItem())->isFalse();
 
-      $instance = $this->newTestedInstance();
-      $instance->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'comment' => 'foo',
-         'name' => 'en_US',
-      ]);
+        $instance = $this->newTestedInstance();
+        $instance->add([
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'comment' => 'foo',
+            'name' => 'en_US',
+        ]);
 
-      // Find a string to translate
-      $strings = $form->getTranslatableStrings([
-         'language' => $instance->fields['name'],
-      ]);
-      reset($strings['itemlink']);
-      $stringId = key($strings['itemlink']);
-      $stringValue = $strings['itemlink'][$stringId];
+       // Find a string to translate
+        $strings = $form->getTranslatableStrings([
+            'language' => $instance->fields['name'],
+        ]);
+        reset($strings['itemlink']);
+        $stringId = key($strings['itemlink']);
+        $stringValue = $strings['itemlink'][$stringId];
 
-      // Translate the found string
-      $translation = new \PluginFormcreatorTranslation();
-      $translation->add([
-         'plugin_formcreator_forms_languages_id' => $instance->getID(),
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'id' => $stringId,
-         'value' => "$stringValue translated"
-      ]);
+       // Translate the found string
+        $translation = new \PluginFormcreatorTranslation();
+        $translation->add([
+            'plugin_formcreator_forms_languages_id' => $instance->getID(),
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'id' => $stringId,
+            'value' => "$stringValue translated"
+        ]);
 
-      $output = $instance->export(false);
+        $output = $instance->export(false);
 
-      // Test the exported data
-      $fieldsWithoutID = [
-         'name',
-         'comment',
-      ];
-      $extraFields = [
-         '_strings',
-      ];
-      $this->array($output)
+       // Test the exported data
+        $fieldsWithoutID = [
+            'name',
+            'comment',
+        ];
+        $extraFields = [
+            '_strings',
+        ];
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
 
-      $output = $instance->export(true);
-      $this->array($output)
+        $output = $instance->export(true);
+        $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
-   }
+    }
 
-   public function testImport() {
-      $form = $this->getForm();
-      $uuid = plugin_formcreator_getUuid();
-      $input = [
-         'name' => 'en_US',
-         'comment' => 'foo',
-         'uuid' => $uuid,
-      ];
-      $linker = new \PluginFormcreatorLinker();
-      $formLanguageId = \PluginFormcreatorForm_Language::import($linker, $input, $form->getID());
-      $this->integer($formLanguageId)->isGreaterThan(0);
+    public function testImport()
+    {
+        $form = $this->getForm();
+        $uuid = plugin_formcreator_getUuid();
+        $input = [
+            'name' => 'en_US',
+            'comment' => 'foo',
+            'uuid' => $uuid,
+        ];
+        $linker = new \PluginFormcreatorLinker();
+        $formLanguageId = \PluginFormcreatorForm_Language::import($linker, $input, $form->getID());
+        $this->integer($formLanguageId)->isGreaterThan(0);
 
-      unset($input['uuid']);
+        unset($input['uuid']);
 
-      $this->exception(
-         function() use($linker, $input, $form) {
-            \PluginFormcreatorForm_Language::import($linker, $input, $form->getID());
-         }
-      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory for Form language'); // passes
+        $this->exception(
+            function () use ($linker, $input, $form) {
+                \PluginFormcreatorForm_Language::import($linker, $input, $form->getID());
+            }
+        )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+        ->hasMessage('UUID or ID is mandatory for Form language'); // passes
 
-      $input['id'] = $formLanguageId;
-      $formLanguageId1 = \PluginFormcreatorForm_Language::import($linker, $input, $form->getID());
-      $this->variable($formLanguageId1)->isNotFalse();
-      $this->integer((int) $formLanguageId)->isNotEqualTo($formLanguageId1);
-   }
+        $input['id'] = $formLanguageId;
+        $formLanguageId1 = \PluginFormcreatorForm_Language::import($linker, $input, $form->getID());
+        $this->variable($formLanguageId1)->isNotFalse();
+        $this->integer((int) $formLanguageId)->isNotEqualTo($formLanguageId1);
+    }
 
-   public  function testCountItemsToImport() {
-      $instance = $this->newTestedInstance();
-      $output = $instance->countItemsToImport([]);
-      $this->integer($output)->isEqualTo(1);
-   }
+    public function testCountItemsToImport()
+    {
+        $instance = $this->newTestedInstance();
+        $output = $instance->countItemsToImport([]);
+        $this->integer($output)->isEqualTo(1);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -29,11 +30,11 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    Html::displayNotFoundError();
 }
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
@@ -41,13 +42,13 @@ Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 $form = PluginFormcreatorCommon::getForm();
 $export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION, 'forms' => []];
 foreach ($_GET['plugin_formcreator_forms_id'] as $id) {
-   $form->getFromDB($id);
-   try {
-      $export_array['forms'][] = $form->export();
-   } catch (\RuntimeException $e) {
-      Session::addMessageAfterRedirect($e->getMessage(), false, ERROR, true);
-      Html::back();
-   }
+    $form->getFromDB($id);
+    try {
+        $export_array['forms'][] = $form->export();
+    } catch (\RuntimeException $e) {
+        Session::addMessageAfterRedirect($e->getMessage(), false, ERROR, true);
+        Html::back();
+    }
 }
 
 $export_json = json_encode($export_array, JSON_UNESCAPED_UNICODE
@@ -60,7 +61,7 @@ $export_json = json_encode($export_array, JSON_UNESCAPED_UNICODE
 header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
 header('Pragma: private');
 header('Cache-control: private, must-revalidate');
-header("Content-disposition: attachment; filename=\"export_formcreator_".date("Ymd_Hi").".json\"");
+header("Content-disposition: attachment; filename=\"export_formcreator_" . date("Ymd_Hi") . ".json\"");
 header("Content-type: application/json");
 
 echo $export_json;

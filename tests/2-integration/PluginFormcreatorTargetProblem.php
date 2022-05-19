@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,53 +34,55 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorTargetProblem extends CommonTestCase {
+class PluginFormcreatorTargetProblem extends CommonTestCase
+{
+    public function beforeTestMethod($method)
+    {
+        parent::beforeTestMethod($method);
 
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
+        $this->login('glpi', 'glpi');
+    }
 
-      $this->login('glpi', 'glpi');
-   }
+    public function testTargetProblemActors()
+    {
+       // Create a form with a target problem
+        $form = $this->getForm();
 
-   public function testTargetProblemActors() {
-      // Create a form with a target problem
-      $form = $this->getForm();
+        $instance = new \PluginFormcreatorTargetProblem();
+        $instance->add([
+            'name'                        => 'a target',
+            'plugin_formcreator_forms_id' => $form->getID()
+        ]);
+        $this->boolean($instance->isNewItem())->isFalse();
 
-      $instance = new \PluginFormcreatorTargetProblem();
-      $instance->add([
-         'name'                        => 'a target',
-         'plugin_formcreator_forms_id' => $form->getID()
-      ]);
-      $this->boolean($instance->isNewItem())->isFalse();
+        $requesterActor = new \PluginFormcreatorTarget_Actor();
+        $observerActor = new \PluginFormcreatorTarget_Actor();
+        $instanceId = $instance->getID();
 
-      $requesterActor = new \PluginFormcreatorTarget_Actor();
-      $observerActor = new \PluginFormcreatorTarget_Actor();
-      $instanceId = $instance->getID();
-
-      // find the actors created by default
-      $requesterActor->getFromDBByCrit([
-         'AND' => [
-            'itemtype'   => $instance->getType(),
-            'items_id'   => $instanceId,
-            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
-            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
-         ]
-      ]);
-      $observerActor->getFromDBByCrit([
-         'AND' => [
-            'itemtype'   => $instance->getType(),
-            'items_id'   => $instanceId,
-            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
-            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
+       // find the actors created by default
+        $requesterActor->getFromDBByCrit([
+            'AND' => [
+                'itemtype'   => $instance->getType(),
+                'items_id'   => $instanceId,
+                'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+                'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
             ]
-      ]);
-      $this->boolean($requesterActor->isNewItem())->isFalse();
-      $this->boolean($observerActor->isNewItem())->isFalse();
+        ]);
+        $observerActor->getFromDBByCrit([
+            'AND' => [
+                'itemtype'   => $instance->getType(),
+                'items_id'   => $instanceId,
+                'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+                'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
+            ]
+        ]);
+        $this->boolean($requesterActor->isNewItem())->isFalse();
+        $this->boolean($observerActor->isNewItem())->isFalse();
 
-      // check the settings of the default actors
-      $this->integer((int) $requesterActor->getField('use_notification'))
+       // check the settings of the default actors
+        $this->integer((int) $requesterActor->getField('use_notification'))
          ->isEqualTo(1);
-      $this->integer((int) $observerActor->getField('use_notification'))
+        $this->integer((int) $observerActor->getField('use_notification'))
          ->isEqualTo(1);
-   }
+    }
 }

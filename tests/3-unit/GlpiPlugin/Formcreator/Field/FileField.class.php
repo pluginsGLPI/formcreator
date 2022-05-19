@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,41 +34,46 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class FileField extends CommonTestCase {
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
+class FileField extends CommonTestCase
+{
+    public function testIsPrerequisites()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(true);
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('File');
-   }
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('File');
+    }
 
-   public function testDeserializeValue() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $instance->deserializeValue('invalid Json');
-      $this->string($instance->getValueForTargetText('', true))
+    public function testDeserializeValue()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $instance->deserializeValue('invalid Json');
+        $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('No attached document');
 
-      $instance->deserializeValue('[]');
-      $this->string($instance->getValueForTargetText('', true))
+        $instance->deserializeValue('[]');
+        $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('No attached document');
 
-      $instance->deserializeValue('[1]');
-      $this->string($instance->getValueForTargetText('', true))
+        $instance->deserializeValue('[1]');
+        $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('Attached document');
 
-      $instance->deserializeValue('[1,2]');
-      $this->string($instance->getValueForTargetText('', true))
+        $instance->deserializeValue('[1,2]');
+        $this->string($instance->getValueForTargetText('', true))
          ->isEqualTo('Attached document');
-   }
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 }

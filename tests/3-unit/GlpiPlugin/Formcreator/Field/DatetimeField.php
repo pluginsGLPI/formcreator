@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -33,262 +34,281 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class DatetimeField extends CommonTestCase {
+class DatetimeField extends CommonTestCase
+{
+    public function providerGetValue()
+    {
+        $dataset = [
+            [
+                'question'           => $this->getQuestion([
+                    'fieldtype'       => 'datetime',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [],
+                ]),
+                'expectedValue'   => null,
+                'expectedIsValid' => true
+            ],
+            [
+                'question'           => $this->getQuestion([
+                    'fieldtype'       => 'datetime',
+                    'name'            => 'question',
+                    'required'        => '0',
+                    'default_values'  => '2018-08-16 08:12:34',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [],
+                ]),
+                'expectedValue'   => '2018-08-16 08:12:34',
+                'expectedIsValid' => true
+            ],
+            [
+                'question'           => $this->getQuestion([
+                    'fieldtype'       => 'datetime',
+                    'name'            => 'question',
+                    'required'        => '1',
+                    'default_values'  => '',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [],
+                ]),
+                'expectedValue'   => null,
+                'expectedIsValid' => false
+            ],
+            [
+                'question'           => $this->getQuestion([
+                    'fieldtype'       => 'datetime',
+                    'name'            => 'question',
+                    'required'        => '1',
+                    'default_values'  => '2018-08-16 08:12:34',
+                    'values'          => "",
+                    'order'           => '1',
+                    'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+                    '_parameters'     => [],
+                ]),
+                'expectedValue'   => '2018-08-16 08:12:34',
+                'expectedIsValid' => true
+            ],
+        ];
 
-   public function providerGetValue() {
-      $dataset = [
-         [
-            'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [],
-            ]),
-            'expectedValue'   => null,
-            'expectedIsValid' => true
-         ],
-         [
-            'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '2018-08-16 08:12:34',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [],
-            ]),
-            'expectedValue'   => '2018-08-16 08:12:34',
-            'expectedIsValid' => true
-         ],
-         [
-            'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
-               'name'            => 'question',
-               'required'        => '1',
-               'default_values'  => '',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [],
-            ]),
-            'expectedValue'   => null,
-            'expectedIsValid' => false
-         ],
-         [
-            'question'           => $this->getQuestion([
-               'fieldtype'       => 'datetime',
-               'name'            => 'question',
-               'required'        => '1',
-               'default_values'  => '2018-08-16 08:12:34',
-               'values'          => "",
-               'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
-               '_parameters'     => [],
-            ]),
-            'expectedValue'   => '2018-08-16 08:12:34',
-            'expectedIsValid' => true
-         ],
-      ];
+        return $dataset;
+    }
 
-      return $dataset;
-   }
-
-   public function providerIsValid() {
-      return $this->providerGetValue();
-   }
+    public function providerIsValid()
+    {
+        return $this->providerGetValue();
+    }
 
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($question, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($question->fields['default_values']);
+    public function testIsValid($question, $expectedValue, $expectedValidity)
+    {
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($question->fields['default_values']);
 
-      $isValid = $instance->isValid();
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
-   }
+        $isValid = $instance->isValid();
+        $this->boolean((bool) $isValid)->isEqualTo($expectedValidity);
+    }
 
-   public function testGetName() {
-      $itemtype = $this->getTestedClassName();
-      $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Date & time');
-   }
+    public function testGetName()
+    {
+        $itemtype = $this->getTestedClassName();
+        $output = $itemtype::getName();
+        $this->string($output)->isEqualTo('Date & time');
+    }
 
-   public function providerParseAnswerValues() {
-      return [
-         [
-            'question' => $this->getQuestion(),
-            'value' => '',
-            'expected' => true,
-            'expectedValue' => ' ',
-         ],
-         [
-            'question' => $this->getQuestion(),
-            'value' => '2018-12-25 23:00:00',
-            'expected' => true,
-            'expectedValue' => '2018-12-25 23:00',
-         ],
-      ];
-   }
+    public function providerParseAnswerValues()
+    {
+        return [
+            [
+                'question' => $this->getQuestion(),
+                'value' => '',
+                'expected' => true,
+                'expectedValue' => ' ',
+            ],
+            [
+                'question' => $this->getQuestion(),
+                'value' => '2018-12-25 23:00:00',
+                'expected' => true,
+                'expectedValue' => '2018-12-25 23:00',
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerParseAnswerValues
     */
-   public function testParseAnswerValues($question, $value, $expected, $expectedValue) {
-      $instance = $this->newTestedInstance($question);
-      $output = $instance->parseAnswerValues([
-         'formcreator_field_' . $question->getID() => $value
-      ]);
-      $this->boolean($output)->isEqualTo($expected);
+    public function testParseAnswerValues($question, $value, $expected, $expectedValue)
+    {
+        $instance = $this->newTestedInstance($question);
+        $output = $instance->parseAnswerValues([
+            'formcreator_field_' . $question->getID() => $value
+        ]);
+        $this->boolean($output)->isEqualTo($expected);
 
-      $outputValue = $instance->getValueForTargetText('', false);
-      if ($expected === false) {
-         $this->variable($outputValue)->isNull();
-      } else {
-         $this->string($outputValue)
+        $outputValue = $instance->getValueForTargetText('', false);
+        if ($expected === false) {
+            $this->variable($outputValue)->isNull();
+        } else {
+            $this->string($outputValue)
             ->isEqualTo($expectedValue);
-      }
-   }
+        }
+    }
 
-   public function providerSerializeValue() {
-      return [
-         [
-            'id' => '1',
-            'input' => [],
-         ],
-      ];
-   }
+    public function providerSerializeValue()
+    {
+        return [
+            [
+                'id' => '1',
+                'input' => [],
+            ],
+        ];
+    }
 
-   public function testSerializeValue() {
-      $value = $expected = '2019-01-01 12:00:00';
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testSerializeValue()
+    {
+        $value = $expected = '2019-01-01 12:00:00';
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
+        $output = $instance->serializeValue();
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function testGetValueForDesign() {
-      $value = $expected = '2019-01-01 12:00:00';
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $instance->deserializeValue($value);
-      $output = $instance->getValueForDesign();
-      $this->string($output)->isEqualTo($expected);
-   }
+    public function testGetValueForDesign()
+    {
+        $value = $expected = '2019-01-01 12:00:00';
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $instance->deserializeValue($value);
+        $output = $instance->getValueForDesign();
+        $this->string($output)->isEqualTo($expected);
+    }
 
-   public function providerEquals() {
-      return [
-         [
-            'value'     => '0000-00-00 00:00:00',
-            'answer'    => '',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '2019-01-01 00:00:00',
-            'answer'    => '',
-            'expected'  => false,
-         ],
-         [
-            'value'     => '2019-01-01 02:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => false,
-         ],
-         [
-            'value'     => '2019-01-01 03:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => true,
-         ],
-      ];
-   }
+    public function providerEquals()
+    {
+        return [
+            [
+                'value'     => '0000-00-00 00:00:00',
+                'answer'    => '',
+                'expected'  => true,
+            ],
+            [
+                'value'     => '2019-01-01 00:00:00',
+                'answer'    => '',
+                'expected'  => false,
+            ],
+            [
+                'value'     => '2019-01-01 02:00:00',
+                'answer'    => '2019-01-01 03:00:00',
+                'expected'  => false,
+            ],
+            [
+                'value'     => '2019-01-01 03:00:00',
+                'answer'    => '2019-01-01 03:00:00',
+                'expected'  => true,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerEquals
     */
-   public function testEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->equals($value))->isEqualTo($expected);
-   }
+    public function testEquals($value, $answer, $expected)
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+        $this->boolean($instance->equals($value))->isEqualTo($expected);
+    }
 
-   public function providerNotEquals() {
-      return [
-         [
-            'value'     => '2019-01-01 00:00:00',
-            'answer'    => '',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '2019-01-01 02:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => true,
-         ],
-         [
-            'value'     => '2019-01-01 03:00:00',
-            'answer'    => '2019-01-01 03:00:00',
-            'expected'  => false,
-         ],
-      ];
-   }
+    public function providerNotEquals()
+    {
+        return [
+            [
+                'value'     => '2019-01-01 00:00:00',
+                'answer'    => '',
+                'expected'  => true,
+            ],
+            [
+                'value'     => '2019-01-01 02:00:00',
+                'answer'    => '2019-01-01 03:00:00',
+                'expected'  => true,
+            ],
+            [
+                'value'     => '2019-01-01 03:00:00',
+                'answer'    => '2019-01-01 03:00:00',
+                'expected'  => false,
+            ],
+        ];
+    }
 
    /**
     * @dataProvider providerNotEquals
     */
-   public function testNotEquals($value, $answer, $expected) {
-      $question = $this->getQuestion();
-      $instance = $this->newTestedInstance($question, $answer);
-      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
-      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
-   }
+    public function testNotEquals($value, $answer, $expected)
+    {
+        $question = $this->getQuestion();
+        $instance = $this->newTestedInstance($question, $answer);
+        $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
+        $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+    }
 
-   public function testisPublicFormCompatible() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPublicFormCompatible();
-      $this->boolean($output)->isTrue();
-   }
+    public function testisPublicFormCompatible()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPublicFormCompatible();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isPrerequisites();
-      $this->boolean($output)->isEqualTo(true);
-   }
+    public function testIsPrerequisites()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->isPrerequisites();
+        $this->boolean($output)->isEqualTo(true);
+    }
 
-   public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
+    public function testGetDocumentsForTarget()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $this->array($instance->getDocumentsForTarget())->hasSize(0);
+    }
 
-   public function testCanRequire() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->canRequire();
-      $this->boolean($output)->isTrue();
-   }
+    public function testCanRequire()
+    {
+        $instance = $this->newTestedInstance($this->getQuestion());
+        $output = $instance->canRequire();
+        $this->boolean($output)->isTrue();
+    }
 
-   public function providerGetValueForApi() {
-      return [
-         [
-            'input'    => '2021-05-11 12:15:30',
-            'expected' => '2021-05-11 12:15:30'
-         ]
-      ];
-   }
+    public function providerGetValueForApi()
+    {
+        return [
+            [
+                'input'    => '2021-05-11 12:15:30',
+                'expected' => '2021-05-11 12:15:30'
+            ]
+        ];
+    }
 
    /**
     * @dataProvider providerGetValueForApi
     *
     * @return void
     */
-   public function testGetValueForApi($input, $expected) {
-      $question = $this->getQuestion();
+    public function testGetValueForApi($input, $expected)
+    {
+        $question = $this->getQuestion();
 
-      $instance = $this->newTestedInstance($question);
-      $instance->deserializeValue($input);
-      $output = $instance->getValueForApi();
-      $this->string($output)->isEqualTo($expected);
-   }
+        $instance = $this->newTestedInstance($question);
+        $instance->deserializeValue($input);
+        $output = $instance->getValueForApi();
+        $this->string($output)->isEqualTo($expected);
+    }
 }

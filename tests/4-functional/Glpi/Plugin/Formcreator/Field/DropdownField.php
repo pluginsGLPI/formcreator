@@ -37,40 +37,42 @@ use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 
 class DropdownField extends CommonFunctionalTestCase
 {
-   use CommonQuestionTest;
+    use CommonQuestionTest;
 
-   public function testCreateForm() {
-      // Use a clean entity for the tests
-      $this->login('glpi', 'glpi');
+    public function testCreateForm()
+    {
+       // Use a clean entity for the tests
+        $this->login('glpi', 'glpi');
 
-      $form = $this->showCreateQuestionForm();
+        $form = $this->showCreateQuestionForm();
 
-      // set question type
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("dropdown")
+       // set question type
+        $this->client->executeScript(
+            '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').val("dropdown")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="fieldtype"]\').select2().trigger("change")
          '
-      );
+        );
 
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="itemtype"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="itemtype"]');
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
 
-      // set question itemtype
-      $this->client->executeScript(
-         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').val("' . \ITILCategory::gettype() . '")
+       // set question itemtype
+        $this->client->executeScript(
+            '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').val("' . \ITILCategory::gettype() . '")
          $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').select2().trigger("change")
          '
-      );
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="default_values"]');
+        );
+        $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="default_values"]');
 
-      $this->_testQuestionCreated($form, __METHOD__);
-   }
+        $this->_testQuestionCreated($form, __METHOD__);
+    }
 
-   public function testRenderQuestion() {
-      $this->_testRenderQuestion([
-         'fieldtype' => 'dropdown',
-         'itemtype'  => \Location::getType(),
-      ]);
-   }
+    public function testRenderQuestion()
+    {
+        $this->_testRenderQuestion([
+            'fieldtype' => 'dropdown',
+            'itemtype'  => \Location::getType(),
+        ]);
+    }
 }
