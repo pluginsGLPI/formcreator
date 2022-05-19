@@ -57,13 +57,6 @@ class SelectField extends RadiosField
       ]);
    }
 
-   public function getDesignSpecializationField(): string {
-      $specialization = parent::getDesignSpecializationField();
-      $specialization['may_be_empty'] = true;
-
-      return $specialization;
-   }
-
    public function getRenderedHtml($domain, $canEdit = true): string {
       if (!$canEdit) {
          return nl2br(__($this->value, $domain)) . PHP_EOL;
