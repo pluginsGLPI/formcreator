@@ -73,7 +73,7 @@ class RoboFile extends RoboFilePlugin
       if (isset($matches[1])) {
          return $matches[1];
       }
-      throw new Exception("Could not determine version of the plugin");
+      throw new \Exception("Could not determine version of the plugin");
    }
 
    protected function getIsRelease() {
@@ -85,7 +85,7 @@ class RoboFile extends RoboFilePlugin
       if (isset($matches[1])) {
          return $matches[1];
       }
-      throw new Exception("Could not determine release status of the plugin");
+      throw new \Exception("Could not determine release status of the plugin");
    }
 
    protected function getGLPIMinVersion() {
@@ -98,7 +98,7 @@ class RoboFile extends RoboFilePlugin
          return $matches[1];
       }
 
-      throw new Exception("Could not determine version of the plugin");
+      throw new \Exception("Could not determine version of the plugin");
    }
 
    /**
@@ -121,20 +121,20 @@ class RoboFile extends RoboFilePlugin
       $version = $this->getVersion();
 
       if (!SemVer::isSemVer($version)) {
-         throw new Exception("$version is not semver compliant. See http://semver.org/");
+         throw new \Exception("$version is not semver compliant. See http://semver.org/");
       }
 
       if ($release != 'release') {
          if ($this->getIsRelease() === 'true') {
-            throw new Exception('The Official release constant must be false');
+            throw new \Exception('The Official release constant must be false');
          }
       } else {
          if ($this->getIsRelease() !== 'true') {
-            throw new Exception('The Official release constant must be true');
+            throw new \Exception('The Official release constant must be true');
          }
 
          if (Git::tagExists($version)) {
-            throw new Exception("The tag $version already exists");
+            throw new \Exception("The tag $version already exists");
          }
 
          // if (!Git::isTagMatchesCurrentCommit($version)) {
@@ -143,7 +143,7 @@ class RoboFile extends RoboFilePlugin
 
          $versionTag = $this->getVersionTagFromXML($version);
          if (!is_array($versionTag)) {
-            throw new Exception("The version does not exists in the XML file");
+            throw new \Exception("The version does not exists in the XML file");
          }
       }
 
@@ -198,7 +198,7 @@ class RoboFile extends RoboFilePlugin
       $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
       $success = copy($srcFile, $dstFile);
       if (!$success) {
-         throw new RuntimeException("failed to generate CSS resources");
+         throw new \RuntimeException("failed to generate CSS resources");
       }
 
       // Add composer dependencies
@@ -217,7 +217,7 @@ class RoboFile extends RoboFilePlugin
       $output = [];
       exec("git ls-tree -r '$version' --name-only", $output, $retCode);
       if ($retCode != '0') {
-         throw new Exception("Unable to get tracked files");
+         throw new \Exception("Unable to get tracked files");
       }
       return $output;
    }
@@ -254,12 +254,12 @@ class RoboFile extends RoboFilePlugin
    protected function getPluginXMLDescription() {
       $pluginXML = 'plugin.xml';
       if (!is_file($pluginXML) || !is_readable($pluginXML)) {
-         throw Exception("plugin.xml file not found");
+         throw \Exception("plugin.xml file not found");
       }
 
       $xml = simplexml_load_string(file_get_contents($pluginXML));
       if ($xml === false) {
-         throw new Exception("$pluginXML is not valid XML");
+         throw new \Exception("$pluginXML is not valid XML");
       }
       $json = json_encode($xml);
       return json_decode($json, true);
@@ -283,7 +283,7 @@ class RoboFile extends RoboFilePlugin
    public function updateChangelog() {
        exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
       if ($retCode > 0) {
-         throw new Exception("Failed to update the changelog");
+         throw new \Exception("Failed to update the changelog");
       }
 
       $diff = $this->gitDiff(['CHANGELOG.md']);
@@ -380,7 +380,7 @@ class RoboFile extends RoboFilePlugin
       if (empty($this->headerTemplate)) {
          $this->headerTemplate = file_get_contents(__DIR__ . '/tools/HEADER');
          if (empty($this->headerTemplate)) {
-            throw new Exception('Header template file not found');
+            throw new \Exception('Header template file not found');
          }
       }
 
@@ -485,7 +485,7 @@ class RoboFile extends RoboFilePlugin
       // replace the header if it exists
       $source = preg_replace('#^' . $prefix . '(.*)' . $suffix . '#Us', $formatedHeader, $source, 1);
       if (empty($source)) {
-         throw new Exception("An error occurred while processing $filename");
+         throw new \Exception("An error occurred while processing $filename");
       }
 
       file_put_contents($filename, $source);
@@ -511,7 +511,7 @@ class RoboFile extends RoboFilePlugin
 
       exec("git diff $fromTo -- $arg", $output, $retCode);
       if ($retCode > 0) {
-         throw new Exception("Failed to diff $fromTo");
+         throw new \Exception("Failed to diff $fromTo");
       }
 
       return $output;
@@ -521,7 +521,7 @@ class RoboFile extends RoboFilePlugin
       $options = implode(' ', $options);
       exec("git log $a..$b", $output, $retCode);
       if ($retCode > 0) {
-         throw new Exception("Failed to log $a..$b");
+         throw new \Exception("Failed to log $a..$b");
       }
       return $output;
    }
@@ -538,7 +538,7 @@ class Git
    public static function getCurrentCommitHash() {
       exec('git rev-parse HEAD', $output, $retCode);
       if ($retCode != '0') {
-         throw new Exception("failed to get curent commit hash");
+         throw new \Exception("failed to get curent commit hash");
       }
       return $output[0];
    }
@@ -565,7 +565,7 @@ class Git
    public static function getTagDate($tag) {
       exec("git log -1 --format=%ai $tag", $output, $retCode);
       if ($retCode != '0') {
-         throw new Exception("failed to get date of a tag");
+         throw new \Exception("failed to get date of a tag");
       }
       if (isset($output[0])) {
          return new DateTime($output[0]);
@@ -621,7 +621,7 @@ class Git
       exec("git log --oneline $a..$b", $output, $retCode);
       if ($retCode != '0') {
          // An error occured
-         throw new Exception("Unable to get log from the repository");
+         throw new \Exception("Unable to get log from the repository");
       }
 
       return $output;
@@ -631,7 +631,7 @@ class Git
       exec("git remote -v", $output, $retCode);
       if ($retCode != '0') {
          // An error occured
-         throw new Exception("Unable to get remotes of the repository");
+         throw new \Exception("Unable to get remotes of the repository");
       }
       $remotes = [];
       foreach ($output as $line) {
@@ -659,7 +659,7 @@ class Git
       exec("git tag -l", $output, $retCode);
       if ($retCode != '0') {
          // An error occured
-         throw new Exception("Unable to get tags from the repository");
+         throw new \Exception("Unable to get tags from the repository");
       }
       return $output;
    }
@@ -679,7 +679,7 @@ class Git
    public static function getFileFromGit($path, $rev) {
       $output = shell_exec("git show $rev:$path");
       if ($output === null) {
-         throw new Exception ("coult not get file from git: $rev:$path");
+         throw new \Exception ("coult not get file from git: $rev:$path");
       }
       return $output;
    }
@@ -692,7 +692,7 @@ class Git
    public static function getCurrentBranch() {
       $output = shell_exec("git rev-parse --abbrev-ref HEAD");
       if ($output === null) {
-         throw new Exception ("could not get current branch");
+         throw new \Exception ("could not get current branch");
       }
       return $output;
 
@@ -799,7 +799,7 @@ class ConventionalChangelog
       }
       $startRef = array_shift($tags);
       if ($startRef === null) {
-         throw new RuntimeException("$a not found");
+         throw new \RuntimeException("$a not found");
       }
       while ($endRef = array_shift($tags)) {
          $log = array_merge($log, self::buildLogOneBump($startRef, $endRef));

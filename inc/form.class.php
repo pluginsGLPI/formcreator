@@ -29,8 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
@@ -1360,7 +1358,7 @@ PluginFormcreatorTranslatableInterface
       try {
          $export = $this->export(true);
          $new_form_id =  self::import($linker, $export);
-      } catch (ImportFailureException $e) {
+      } catch (\GlpiPlugin\Formcreator\Exception\ImportFailureException $e) {
          $forms = $linker->getObjectsByType(PluginFormcreatorForm::class);
          $form = reset($forms);
          $form->update([
@@ -1528,7 +1526,7 @@ PluginFormcreatorTranslatableInterface
 
    public function export(bool $remove_uuid = false): array {
       if ($this->isNewItem()) {
-         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $export = $this->fields;
@@ -1706,7 +1704,7 @@ PluginFormcreatorTranslatableInterface
             set_time_limit(30);
             try {
                self::import($linker, $form);
-            } catch (ImportFailureException $e) {
+            } catch (\GlpiPlugin\Formcreator\Exception\ImportFailureException $e) {
                // Import failed, give up
                $success = false;
                Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
@@ -1747,7 +1745,7 @@ PluginFormcreatorTranslatableInterface
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', self::getTypeName(1)));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', self::getTypeName(1)));
       }
 
       $item = new self();
@@ -1785,7 +1783,7 @@ PluginFormcreatorTranslatableInterface
                      false,
                      WARNING
                   );
-                  throw new ImportFailureException('Failed to add or update the item');
+                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException('Failed to add or update the item');
                }
                // The entity is not updatable
                Session::addMessageAfterRedirect(
@@ -1793,7 +1791,7 @@ PluginFormcreatorTranslatableInterface
                   false,
                   WARNING
                );
-               throw new ImportFailureException('Failed to add or update the item');
+               throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException('Failed to add or update the item');
             }
             $entityId = $entity->getID();
          } else {
@@ -1803,7 +1801,7 @@ PluginFormcreatorTranslatableInterface
                false,
                WARNING
             );
-            throw new ImportFailureException('Failed to add or update the item');
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException('Failed to add or update the item');
          }
       }
       $input[$entityFk] = $entityId;
@@ -1837,7 +1835,7 @@ PluginFormcreatorTranslatableInterface
       $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the form to the linker

@@ -32,11 +32,10 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use Html;
-use Toolbox;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
+use PluginFormcreatorAbstractField;
+use Toolbox;
 
 class IpField extends PluginFormcreatorAbstractField
 {
@@ -148,11 +147,11 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public function greaterThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function regex($value): bool {

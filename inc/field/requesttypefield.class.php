@@ -32,13 +32,13 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
+use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
+use PluginFormcreatorAbstractField;
 use Session;
 use Ticket;
-use Dropdown;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
-use PluginFormcreatorAbstractField;
+
 class RequestTypeField extends SelectField
 {
 
@@ -190,7 +190,7 @@ class RequestTypeField extends SelectField
    }
 
    public function regex($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function isPublicFormCompatible(): bool {

@@ -28,9 +28,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 namespace GlpiPlugin\Formcreator\Field\tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Location;
+
 class DropdownField extends CommonTestCase {
    public function beforeTestMethod($method) {
       switch ($method) {

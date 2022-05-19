@@ -1,6 +1,7 @@
 <?php
 
 namespace tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 
 class Central extends CommonFunctionalTestCase {

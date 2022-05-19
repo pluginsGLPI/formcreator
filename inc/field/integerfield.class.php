@@ -32,9 +32,9 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
+use PluginFormcreatorCommon;
 use Session;
 use Toolbox;
-use PluginFormcreatorCommon;
 
 class IntegerField extends FloatField
 {

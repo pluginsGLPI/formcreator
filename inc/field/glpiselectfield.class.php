@@ -32,14 +32,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use Html;
-use Session;
+use CommonTreeDropdown;
 use Dropdown;
 use Entity;
-use CommonTreeDropdown;
-
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
+use Session;
 
 class GlpiselectField extends DropdownField
 {
@@ -131,7 +129,7 @@ class GlpiselectField extends DropdownField
          return ($value === '');
       }
       if (!$item->getFromDB($this->value)) {
-         throw new ComparisonException('Item not found for comparison');
+         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
       }
       return $item->getField($item->getNameField()) == $value;
    }
@@ -145,7 +143,7 @@ class GlpiselectField extends DropdownField
       $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
-         throw new ComparisonException('Item not found for comparison');
+         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
       }
       return $item->getField($item->getNameField()) > $value;
    }

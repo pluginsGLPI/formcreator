@@ -28,10 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 namespace tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use RuntimeException;
-use Session;
 
 class PluginFormcreatorAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {

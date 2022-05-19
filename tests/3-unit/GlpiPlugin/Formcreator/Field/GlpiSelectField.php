@@ -29,10 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-
 namespace GlpiPlugin\Formcreator\Field\tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+
 use Computer;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class GlpiselectField extends CommonTestCase {
 

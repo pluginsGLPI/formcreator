@@ -29,8 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use Glpi\Application\View\TemplateRenderer;
-use Glpi\Toolbox\Sanitizer;
 use GlpiPlugin\Formcreator\Field\FileField;
 
 if (!defined('GLPI_ROOT')) {

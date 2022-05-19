@@ -32,10 +32,10 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use Html;
-use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
+use PluginFormcreatorAbstractField;
+use Toolbox;
 
 class HostnameField extends PluginFormcreatorAbstractField
 {

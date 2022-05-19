@@ -1,8 +1,6 @@
 <?php
 
 namespace GlpiPlugin\Formcreator\Tests;
-use GlpiPlugin\Formcreator\Tests\CommonBrowsing;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 /**
  * @engine inline

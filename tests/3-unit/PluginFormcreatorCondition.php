@@ -30,7 +30,9 @@
  */
 
 namespace tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+
 class PluginFormcreatorCondition extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);

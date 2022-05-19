@@ -32,13 +32,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use Html;
-use Session;
-use Toolbox;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
+use Html;
+use PluginFormcreatorAbstractField;
+use Session;
+use Toolbox;
 
 class DescriptionField extends PluginFormcreatorAbstractField
 {
@@ -128,23 +127,23 @@ class DescriptionField extends PluginFormcreatorAbstractField
    }
 
    public function equals($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function notEquals($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function greaterThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function regex($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function parseAnswerValues($input, $nonDestructive = false): bool {

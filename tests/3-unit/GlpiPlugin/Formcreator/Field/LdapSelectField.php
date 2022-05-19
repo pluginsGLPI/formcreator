@@ -33,6 +33,7 @@ namespace GlpiPlugin\Formcreator\Field\tests\units;
 
 use AuthLDAP;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+
 class LdapSelectField extends CommonTestCase {
 
    public function testGetName() {

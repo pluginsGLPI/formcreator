@@ -1400,7 +1400,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $itemTicket->getFromDB($result['id']);
       $ticket = new Ticket();
       if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
-         throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
+         throw new \RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
       }
       $ticketId = $ticket->getID();
       $ticketUser = new Ticket_User();
@@ -1517,7 +1517,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $itemTicket->getFromDB($result['id']);
       $ticket = new Ticket();
       if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
-         throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
+         throw new \RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
       }
       $ticketId = $ticket->getID();
       $ticketUser = new Ticket_User();
@@ -1730,11 +1730,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public function isFieldVisible(int $id) : bool {
       if ($this->isNewItem()) {
-         throw new RuntimeException("Instance is empty");
+         throw new \RuntimeException("Instance is empty");
       }
 
       if (!isset($this->questionFields[$id])) {
-         throw new RuntimeException("Question not found");
+         throw new \RuntimeException("Question not found");
       }
 
       return PluginFormcreatorFields::isVisible($this->questionFields[$id]->getQuestion(), $this->questionFields);

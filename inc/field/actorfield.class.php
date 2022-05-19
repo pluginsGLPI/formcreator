@@ -32,12 +32,11 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use Html;
-use User;
-use Session;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
+use PluginFormcreatorAbstractField;
+use Session;
+use User;
 
 /**
  * Actors field is a field which accepts several users. Those users may be
@@ -365,11 +364,11 @@ class ActorField extends PluginFormcreatorAbstractField
    }
 
    public function greaterThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function regex($value): bool {

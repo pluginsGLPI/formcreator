@@ -31,15 +31,14 @@
 
 namespace GlpiPlugin\Formcreator\Command;
 
+use Html;
+use Plugin;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Html;
-use RuntimeException;
-use Plugin;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CompileScssCommand extends Command
 {
@@ -61,7 +60,7 @@ class CompileScssCommand extends Command
       $compile_directory = Plugin::getPhpDir('formcreator') . '/css_compiled';
 
       if (!@is_dir($compile_directory) && !@mkdir($compile_directory)) {
-         throw new RuntimeException(
+         throw new \RuntimeException(
             sprintf(
                'Destination directory "%s" cannot be accessed.',
                $compile_directory

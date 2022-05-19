@@ -29,8 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -136,7 +134,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $input[static::$items_id] = $containerId;
@@ -176,7 +174,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                $user = new User;
                $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['actor_value']);
                if ($users_id === false) {
-                  throw new ImportFailureException(sprintf(__('Failed to find a user: %1$s'), $input['actor_value']));
+                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a user: %1$s'), $input['actor_value']));
                }
                $input['actor_value'] = $users_id;
                break;
@@ -185,7 +183,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                $group = new Group;
                $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['actor_value']);
                if ($groups_id === false) {
-                  throw new ImportFailureException(sprintf(__('Failed to find a group: %1$s'), $input['actor_value']));
+                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a group: %1$s'), $input['actor_value']));
                }
                $input['actor_value'] = $groups_id;
                break;
@@ -194,7 +192,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
                $supplier = new Supplier;
                $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['actor_value']);
                if ($suppliers_id === false) {
-                  throw new ImportFailureException(sprintf(__('Failed to find a supplier: %1$s'), $input['actor_value']));
+                  throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to find a supplier: %1$s'), $input['actor_value']));
                }
                $input['actor_value'] = $suppliers_id;
                break;
@@ -211,7 +209,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the question to the linker
@@ -232,7 +230,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
     */
    public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $target_actor = $this->fields;

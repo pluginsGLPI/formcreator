@@ -36,8 +36,8 @@ if (!defined('GLPI_ROOT')) {
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item as Dashboard_Item;
 use Glpi\Dashboard\Right as Dashboard_Right;
-
 use Ramsey\Uuid\Uuid;
+
 class PluginFormcreatorInstall {
    protected $migration;
 

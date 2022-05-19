@@ -28,7 +28,9 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 namespace tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorForm extends CommonTestCase {

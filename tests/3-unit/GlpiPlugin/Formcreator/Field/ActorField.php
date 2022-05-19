@@ -28,10 +28,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 namespace GlpiPlugin\Formcreator\Field\tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use User;
+
 class ActorField extends CommonTestCase {
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
@@ -353,7 +355,7 @@ class ActorField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testLessThan() {
@@ -362,7 +364,7 @@ class ActorField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testisPublicFormCompatible() {

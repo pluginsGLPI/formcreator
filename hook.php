@@ -29,9 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-
-use Glpi\Dashboard\Right as DashboardRight;
 use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Right as DashboardRight;
 
 /**
  * Install all necessary elements for the plugin

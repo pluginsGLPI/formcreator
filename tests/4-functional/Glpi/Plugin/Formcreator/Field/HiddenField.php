@@ -32,8 +32,6 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 
-use Plugin;
-use PluginFormcreatorForm;
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
 

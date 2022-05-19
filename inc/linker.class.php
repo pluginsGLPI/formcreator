@@ -29,7 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -94,7 +93,7 @@ class PluginFormcreatorLinker
          $this->imported[$object->getType()] = [];
       }
       if (isset($this->imported[$object->getType()][$originalId])) {
-         throw new ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
       }
       $this->imported[$object->getType()][$originalId] = $object;
       $this->progress++;

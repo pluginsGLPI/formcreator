@@ -33,11 +33,10 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use DateTime;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use PluginFormcreatorAbstractField;
 use Session;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
 
 class TimeField extends PluginFormcreatorAbstractField
 {
@@ -167,7 +166,7 @@ class TimeField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
 

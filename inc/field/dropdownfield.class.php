@@ -32,32 +32,32 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use PluginFormcreatorForm;
-use Html;
-use Toolbox;
-use Session;
-use DBUtils;
-use Dropdown;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
-use ITILCategory;
+use DBUtils;
+use Dropdown;
 use Entity;
-use Profile_User;
-use User;
+use Glpi\Application\View\TemplateRenderer;
 use Group;
 use Group_Ticket;
 use Group_User;
-use Ticket;
-use Ticket_User;
-use Search;
-use SLA;
+use Html;
+use ITILCategory;
 use OLA;
+use PluginFormcreatorAbstractField;
+use PluginFormcreatorForm;
+use Profile_User;
 use QuerySubQuery;
 use QueryUnion;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
+use Search;
+use Session;
+use SLA;
+use Ticket;
+use Ticket_User;
+use Toolbox;
+use User;
+
 class DropdownField extends PluginFormcreatorAbstractField
 {
 
@@ -597,7 +597,7 @@ class DropdownField extends PluginFormcreatorAbstractField
          return ($value === '');
       }
       if (!$dropdown->getFromDB($this->value)) {
-         throw new ComparisonException('Item not found for comparison');
+         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
       }
       if ($dropdown instanceof CommonTreeDropdown) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());
@@ -616,7 +616,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
-         throw new ComparisonException('Item not found for comparison');
+         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
       }
       if ($dropdown instanceof CommonTreeDropdown) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());
@@ -635,7 +635,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $itemtype = $this->question->fields['itemtype'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
-         throw new ComparisonException('Item not found for comparison');
+         throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
       }
       if ($dropdown instanceof CommonTreeDropdown) {
          $fieldValue = $dropdown->getField($dropdown->getCompleteNameField());

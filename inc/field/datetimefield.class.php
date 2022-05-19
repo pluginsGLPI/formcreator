@@ -32,12 +32,11 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use Html;
-use Session;
 use DateTime;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
+use PluginFormcreatorAbstractField;
+use Session;
 
 class DatetimeField extends PluginFormcreatorAbstractField
 {
@@ -173,7 +172,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function parseAnswerValues($input, $nonDestructive = false): bool {

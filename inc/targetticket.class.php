@@ -29,10 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
-use GlpiPlugin\Formcreator\Field\DropdownField;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -1333,7 +1330,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
@@ -1408,7 +1405,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $question = $linker->getObject($input[$fieldSetting['field']], PluginFormcreatorQuestion::class);
          if ($question === false) {
             $typeName = strtolower(self::getTypeName());
-            throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: a question is missing and is used in a parameter of the target', 'formceator'), $typeName, $input['name']));
+            throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s: a question is missing and is used in a parameter of the target', 'formceator'), $typeName, $input['name']));
          }
          $input[$fieldSetting['field']] = $question->getID();
       }
@@ -1426,7 +1423,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the target to the linker
@@ -1465,7 +1462,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
     */
    public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $export = $this->fields;

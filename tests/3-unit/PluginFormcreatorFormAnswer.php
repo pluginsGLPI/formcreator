@@ -28,16 +28,16 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
 namespace tests\units;
 
 use CommonITILObject;
-use Glpi\Agent\Communication\Headers\Common;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
-use PluginFormcreatorFormAnswer as GlobalPluginFormcreatorFormAnswer;
-use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
+use PluginFormcreatorTargetTicket;
+
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);

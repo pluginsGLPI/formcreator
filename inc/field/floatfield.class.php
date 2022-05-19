@@ -32,14 +32,14 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
+use Glpi\Application\View\TemplateRenderer;
+use Html;
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorCommon;
-use Html;
-use Toolbox;
-use Session;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
-use Glpi\Application\View\TemplateRenderer;
+use Session;
+use Toolbox;
 
 class FloatField extends PluginFormcreatorAbstractField
 {

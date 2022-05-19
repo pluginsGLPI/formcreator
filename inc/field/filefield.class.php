@@ -32,17 +32,16 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
 use Document;
-use Html;
-use Toolbox;
-use Session;
-use PluginFormcreatorForm;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
-use PluginFormcreatorSection;
-use PluginFormcreatorQuestion;
+use Html;
+use PluginFormcreatorAbstractField;
 use PluginFormcreatorCommon;
+use PluginFormcreatorForm;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorSection;
+use Session;
+use Toolbox;
 
 class FileField extends PluginFormcreatorAbstractField
 {
@@ -289,23 +288,23 @@ class FileField extends PluginFormcreatorAbstractField
    }
 
    public function equals($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function notEquals($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function greaterThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function regex($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function isPublicFormCompatible(): bool {

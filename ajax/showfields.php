@@ -57,7 +57,7 @@ if (!$form->canViewForRequest()) {
 
 try {
     $visibility = PluginFormcreatorFields::updateVisibility($_POST);
-} catch (Exception $e) {
+} catch (\Exception $e) {
     http_response_code(500);
     exit();
 }

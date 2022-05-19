@@ -1,11 +1,12 @@
 <?php
 
 namespace GlpiPlugin\Formcreator\Tests;
-use Session;
-use Html;
-use DB;
-use Auth;
+
 use atoum;
+use Auth;
+use DB;
+use Html;
+use Session;
 
 abstract class CommonTestCase extends atoum
 {

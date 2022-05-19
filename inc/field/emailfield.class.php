@@ -32,11 +32,10 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use Html;
-use Session;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
 use PluginFormcreatorAbstractField;
+use Session;
 
 class EmailField extends TextField
 {
@@ -142,11 +141,11 @@ class EmailField extends TextField
    }
 
    public function greaterThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function lessThan($value): bool {
-      throw new ComparisonException('Meaningless comparison');
+      throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Meaningless comparison');
    }
 
    public function regex($value): bool {

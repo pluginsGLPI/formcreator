@@ -29,13 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use GlpiPlugin\Formcreator\Field\UndefinedField;
-use Xylemical\Expressions\Math\BcMath;
 use Xylemical\Expressions\Context;
-use Xylemical\Expressions\ExpressionFactory;
 use Xylemical\Expressions\Evaluator;
+use Xylemical\Expressions\ExpressionFactory;
 use Xylemical\Expressions\Lexer;
+use Xylemical\Expressions\Math\BcMath;
 use Xylemical\Expressions\Parser;
 
 if (!defined('GLPI_ROOT')) {
@@ -145,7 +144,7 @@ class PluginFormcreatorFields
       } else if (self::$visibility[$itemtype][$itemId] !== null) {
          return self::$visibility[$itemtype][$itemId];
       } else {
-         throw new Exception("Infinite loop in show conditions evaluation");
+         throw new \Exception("Infinite loop in show conditions evaluation");
       }
 
       /**
@@ -226,7 +225,7 @@ class PluginFormcreatorFields
                   }
                   try {
                      $value = self::isVisible($conditionField->getQuestion(), $fields);
-                  } catch (ComparisonException $e) {
+                  } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                      $value = false;
                   }
                   break;
@@ -237,7 +236,7 @@ class PluginFormcreatorFields
                   }
                   try {
                      $value = !self::isVisible($conditionField->getQuestion(), $fields);
-                  } catch (ComparisonException $e) {
+                  } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                      $value = false;
                   }
                   break;
@@ -252,7 +251,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->notEquals($condition->fields['show_value']);
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -264,7 +263,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->equals($condition->fields['show_value']);
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -276,7 +275,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->greaterThan($condition->fields['show_value']);
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -288,7 +287,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->lessThan($condition->fields['show_value']);
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -301,7 +300,7 @@ class PluginFormcreatorFields
                      try {
                         $value = ($conditionField->greaterThan($condition->fields['show_value'])
                                  || $conditionField->equals($condition->fields['show_value']));
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -314,7 +313,7 @@ class PluginFormcreatorFields
                      try {
                         $value = ($conditionField->lessThan($condition->fields['show_value'])
                                  || $conditionField->equals($condition->fields['show_value']));
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;
@@ -326,7 +325,7 @@ class PluginFormcreatorFields
                      }
                      try {
                         $value = $conditionField->regex($condition->fields['show_value']);
-                     } catch (ComparisonException $e) {
+                     } catch (\GlpiPlugin\Formcreator\Exception\ComparisonException $e) {
                         $value = false;
                      }
                      break;

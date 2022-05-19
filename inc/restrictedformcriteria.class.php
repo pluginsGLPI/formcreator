@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ---------------------------------------------------------------------
  * Formcreator is a plugin which allows creation of custom forms of
@@ -28,8 +29,6 @@
  * @link     http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -144,7 +143,7 @@ abstract class PluginFormcreatorRestrictedFormCriteria
       $item2_input_key = "_" . strtolower($itemtype2);
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException(
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(
             sprintf(
                'UUID or ID is mandatory for %1$s',
                static::getTypeName(1)
@@ -174,7 +173,7 @@ abstract class PluginFormcreatorRestrictedFormCriteria
       $form_fk  = PluginFormcreatorForm::getForeignKeyField();
       if (!plugin_formcreator_getFromDBByField($item2, 'name', $input[$item2_input_key])) {
          // Item not found, stop import
-         throw new ImportFailureException(
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(
             sprintf(
                __('Failed to find %1$s %2$s', 'formceator'),
                $itemtype2::getTypeName(),
@@ -195,7 +194,7 @@ abstract class PluginFormcreatorRestrictedFormCriteria
       }
       if ($item_id === false) {
          $type_name = strtolower(self::getTypeName());
-         throw new ImportFailureException(
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(
             sprintf(
                __('Failed to add or update the %1$s %2$s', 'formceator'),
                $type_name,
@@ -221,7 +220,7 @@ abstract class PluginFormcreatorRestrictedFormCriteria
       $item2_input_key = "_" . strtolower($itemtype2);
 
       if ($this->isNewItem()) {
-         throw new ExportFailureException(
+         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(
             sprintf(
                __('Cannot export an empty object: %s', 'formcreator'),
                $this->getTypeName()

@@ -32,13 +32,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
+use Html;
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorQuestionDependency;
-use Toolbox;
-use Html;
-use Session;
 use PluginFormcreatorTranslatable;
-use PluginFormcreatorQuestion;
+use Session;
+use Toolbox;
 
 class DependentField extends PluginFormcreatorAbstractField
 {

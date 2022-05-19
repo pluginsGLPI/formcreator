@@ -32,12 +32,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use Html;
-use Toolbox;
-use Session;
-use PluginFormcreatorQuestionRange;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
+use PluginFormcreatorAbstractField;
+use PluginFormcreatorQuestionRange;
+use Session;
+use Toolbox;
 
 class CheckboxesField extends PluginFormcreatorAbstractField
 {

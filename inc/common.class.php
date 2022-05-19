@@ -29,8 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-use Gregwar\Captcha\CaptchaBuilder;
 use Glpi\Plugin\Hooks;
+use Gregwar\Captcha\CaptchaBuilder;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");

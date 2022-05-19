@@ -32,13 +32,12 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
-use PluginFormcreatorCommon;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\RichText\RichText;
 use Html;
+use PluginFormcreatorCommon;
 use Session;
 use Toolbox;
-use Glpi\RichText\RichText;
-use Glpi\Application\View\TemplateRenderer;
 
 class TextareaField extends TextField
 {

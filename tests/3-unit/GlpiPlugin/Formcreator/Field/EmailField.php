@@ -30,8 +30,8 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class EmailField extends CommonTestCase {
 
@@ -154,7 +154,7 @@ class EmailField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testLessThan() {
@@ -163,7 +163,7 @@ class EmailField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testCanRequire() {

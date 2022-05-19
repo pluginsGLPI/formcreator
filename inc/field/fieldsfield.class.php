@@ -32,22 +32,21 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFieldsContainer;
-use PluginFormcreatorAbstractField;
-use PluginFormcreatorForm;
-use Dropdown;
 use DbUtils;
-use Plugin;
-use Session;
+use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use OperatingSystem;
+use Plugin;
+use PluginFieldsContainer;
 use PluginFieldsDropdown;
 use PluginFieldsField;
+use PluginFormcreatorAbstractField;
+use PluginFormcreatorForm;
+use Session;
 use Toolbox;
 use User;
 
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
 class FieldsField extends PluginFormcreatorAbstractField
 {
 
@@ -563,7 +562,7 @@ class FieldsField extends PluginFormcreatorAbstractField
                $value = '';
             }
             if (!$item->getFromDB($this->value)) {
-               throw new ComparisonException('Item not found for comparison');
+               throw new \GlpiPlugin\Formcreator\Exception\ComparisonException('Item not found for comparison');
             }
             $value = $item->getField($item->getNameField());
          } else {

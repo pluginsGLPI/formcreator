@@ -30,8 +30,8 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
 
 class IpField extends CommonTestCase {
 
@@ -136,7 +136,7 @@ class IpField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testLessThan() {
@@ -145,7 +145,7 @@ class IpField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function providerGetValueForApi() {

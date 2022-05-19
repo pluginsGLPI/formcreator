@@ -33,12 +33,11 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use AuthLDAP;
-use Exception;
-use Html;
-use Session;
-use RuleRightParameter;
 use Glpi\Application\View\TemplateRenderer;
+use Html;
 use PluginFormcreatorAbstractField;
+use RuleRightParameter;
+use Session;
 
 class LdapselectField extends SelectField
 {
@@ -119,7 +118,7 @@ class LdapselectField extends SelectField
                $id++;
             }
          } while ($cookie !== null && $cookie != '');
-      } catch (Exception $e) {
+      } catch (\Exception $e) {
          restore_error_handler();
          trigger_error($e->getMessage(), E_USER_WARNING);
       }

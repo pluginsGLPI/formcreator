@@ -33,10 +33,10 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Session;
 use Toolbox;
-use Glpi\Application\View\TemplateRenderer;
 
 class SelectField extends RadiosField
 {

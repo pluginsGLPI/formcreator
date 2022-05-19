@@ -34,6 +34,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 use Glpi\RichText\RichText;
+
 class PluginFormcreatorIssue extends CommonDBTM {
    static $rightname = 'ticket';
 

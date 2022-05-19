@@ -32,15 +32,15 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use Html;
-use PluginFormcreatorAbstractField;
-use PluginFormcreatorQuestionRange;
-use PluginFormcreatorQuestionRegex;
-use PluginFormcreatorCommon;
-use Session;
-use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
+use Html;
+use PluginFormcreatorAbstractField;
+use PluginFormcreatorCommon;
+use PluginFormcreatorQuestionRange;
+use PluginFormcreatorQuestionRegex;
+use Session;
+use Toolbox;
 
 class TextField extends PluginFormcreatorAbstractField
 {

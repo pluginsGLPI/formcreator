@@ -32,11 +32,11 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
+use PluginFormcreatorAbstractField;
 use Session;
 use Toolbox;
-use Glpi\Application\View\TemplateRenderer;
 
 class RadiosField extends PluginFormcreatorAbstractField
 {

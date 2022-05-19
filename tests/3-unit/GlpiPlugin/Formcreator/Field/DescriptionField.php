@@ -30,6 +30,7 @@
  */
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class DescriptionField extends CommonTestCase {

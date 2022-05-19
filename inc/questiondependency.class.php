@@ -29,8 +29,6 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -135,7 +133,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
@@ -192,7 +190,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the parameter to the linker
@@ -207,7 +205,7 @@ extends PluginFormcreatorAbstractQuestionParameter
 
    public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $parameter = $this->fields;
