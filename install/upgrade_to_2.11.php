@@ -318,4 +318,3 @@ class PluginFormcreatorUpgradeTo2_11 {
       ]);
    }
 }
-

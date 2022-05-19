@@ -44,4 +44,3 @@ if (isset($_POST['purge'])) {
    Html::back();
 }
 Html::displayErrorAndDie("lost");
-

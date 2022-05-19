@@ -41,4 +41,3 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 // Return to form list
 Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
-
