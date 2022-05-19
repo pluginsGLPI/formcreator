@@ -2220,6 +2220,9 @@ SCRIPT;
             if (!($field instanceOf FileField)) {
                continue;
             }
+            if (!isset($saved_documents["_filename"][$questionId])) {
+               continue;
+            }
             $data["_filename"] = array_merge($data["_filename"], $saved_documents["_filename"][$questionId] ?? []);
             $data["_tag_filename"] = array_merge($data["_tag_filename"], $saved_documents["_tag_filename"][$questionId] ?? []);
 
