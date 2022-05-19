@@ -803,7 +803,7 @@ JAVASCRIPT;
          foreach ($plugin_menus as $menu_name => $menu_data) {
             $menu_data['default'] = $menu_data['page'] ?? '#';
             $newMenu[$menu_name] = $menu_data;
-       }
+         }
 
          return $newMenu;
       }
