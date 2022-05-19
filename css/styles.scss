@@ -508,6 +508,17 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       border: none;
       padding: 16px;
       height: 51px;
+      span {
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         display: inline-block;
+         width: calc(100% - 20px);
+      }
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: calc(100% - 20px);
    }
 
    li ul {
@@ -537,7 +548,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    a.next:after {
       content: '\276f';
-      margin-left: 1em;
       float: right;
    }
 
