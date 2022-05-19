@@ -1024,9 +1024,6 @@ PluginFormcreatorTranslatableInterface
       ]);
       // Delete saved answers if any
       unset($_SESSION['formcreator']['data']);
-
-      // Show validator selector
-      echo PluginFormcreatorForm_Validator::dropdownValidator($this);
    }
 
    /**

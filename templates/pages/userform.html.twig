@@ -122,6 +122,11 @@
               }
            )
         </script>
+
+        {{ call('PluginFormcreatorForm_Validator::dropdownValidator', [
+              item
+        ])|raw }}
+
         <div class="center">
           {{ call('Html::submit', [
               __('Send'),
