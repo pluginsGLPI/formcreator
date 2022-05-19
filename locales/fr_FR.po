@@ -1277,7 +1277,7 @@ msgstr "Intervalle maximum"
 
 #: inc/form.class.php:66 inc/form.class.php:432
 msgid "Public access"
-msgstr "Accès public / anonyme"
+msgstr "Accès public"
 
 #: inc/form.class.php:67 inc/form.class.php:436
 msgid "Private access"
