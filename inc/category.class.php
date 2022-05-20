@@ -91,7 +91,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $cat_table  = PluginFormcreatorCategory::getTable();
       $form_table = PluginFormcreatorForm::getTable();
-      $table_fp   = PluginFormcreatorForm_Profile::getTable();
 
       $query_faqs = KnowbaseItem::getListRequest([
          'faq'      => '1',
