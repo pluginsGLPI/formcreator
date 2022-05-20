@@ -398,7 +398,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             $date2    = strtotime($satisfaction->fields['date_begin']);
             if (($duration == 0)
                 || (strtotime("now") - $date2) <= $duration*DAY_TIMESTAMP) {
-               $satisfaction->showForm($item);
+               $satisfaction->showForm($item->getID());
             } else {
                echo "<p class='center b'>".__('Satisfaction survey expired')."</p>";
             }

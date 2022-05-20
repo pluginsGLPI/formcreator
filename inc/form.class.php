@@ -1024,15 +1024,6 @@ PluginFormcreatorTranslatableInterface
       ]);
       // Delete saved answers if any
       unset($_SESSION['formcreator']['data']);
-
-      // Show validator selector
-      if (Plugin::isPluginActive('advform')) {
-         echo PluginAdvformForm_Validator::dropdownValidator($this);
-      } else {
-         if ($this->validationRequired()) {
-            echo PluginFormcreatorForm_Validator::dropdownValidator($this);
-         }
-      }
    }
 
    /**
