@@ -40,6 +40,7 @@ class PluginFormcreatorUpgradeTo2_14 {
 
        $this->addTtoToIssues();
        $this->addRights();
+       $this->addPropertiesToCategories();
    }
 
    public function addTtoToIssues() {
@@ -87,5 +88,17 @@ class PluginFormcreatorUpgradeTo2_14 {
 
    public function isResyncIssuesRequiresd() {
       return true;
+   }
+
+   public function addPropertiesToCategories() {
+      global $DB;
+
+      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorCategory::class);
+      $this->migration->addField($table, 'icon', 'string', ['after' => 'knowbaseitemcategories_id']);
+      $this->migration->addField($table, 'icon_color', 'string', ['after' => 'icon']);
+      if (!$DB->fieldExists($table, 'background_color')) {
+         $this->migration->addField($table, 'background_color', 'string', ['after' => 'icon_color']);
+         $this->migration->addPostQuery("UPDATE `$table` SET background_color=''");
+      }
    }
 }

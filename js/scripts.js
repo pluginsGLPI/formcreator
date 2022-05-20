@@ -355,10 +355,25 @@ function buildKbCategoryList(tree) {
 function buildCategoryList(tree) {
    var html = '';
    if (tree.id != 0) {
+      var icon = '';
+      if (tree.icon != '' && tree.icon !== null ) {
+         if (tree.icon_color == '' || tree.icon_color  === null ) {
+            tree.icon_color = '#999999';
+         }
+         icon = '<i class="fa ' + tree.icon + '" style="color: ' + tree.icon_color+ '"></i>&nbsp;';
+      }
+
+
+      if (tree.background_color == '' || tree.background_color  === null) {
+         tree.background_color = '#e7e7e7';
+      }
+
       html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
          + ' onclick="plugin_formcreator.updateWizardFormsView(this)"'
-         + 'title="' + tree.name + '">'
+         + ' style="background-color: ' + tree.background_color + '"'
+         + ' title="' + tree.name + '">'
+         + icon
          + tree.name
          + '</a>';
    }
