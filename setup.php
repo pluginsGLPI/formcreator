@@ -423,6 +423,10 @@ function plugin_formcreator_redirect() {
       return;
    }
 
+   if (strpos($_SERVER['REQUEST_URI'], "front/ticket.php") !== false) {
+      Html::redirect(PluginFormcreatorIssue::getSearchURL());
+   }
+
    if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
       if (!isset($_POST['update'])) {
          $decodedUrl = [];
