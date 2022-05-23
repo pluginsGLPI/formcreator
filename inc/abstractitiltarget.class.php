@@ -763,7 +763,7 @@ PluginFormcreatorTranslatableInterface
       }
       // List questions
       if ($this->fields['due_date_rule'] != self::DUE_DATE_RULE_ANSWER
-            && $this->fields['due_date_rule'] != 'calcul') {
+            && $this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_CALC) {
          echo '<div id="due_date_questions" style="display:none">';
       } else {
          echo '<div id="due_date_questions">';
@@ -778,8 +778,9 @@ PluginFormcreatorTranslatableInterface
       );
       echo '</div>';
 
-      if ($this->fields['due_date_rule'] != '2'
-            && $this->fields['due_date_rule'] != '3') {
+      // time shift in minutes
+      if ($this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_TICKET
+            && $this->fields['due_date_rule'] != PluginFormcreatorAbstractTarget::DUE_DATE_RULE_CALC) {
          echo '<div id="due_date_time" style="display:none">';
       } else {
          echo '<div id="due_date_time">';
@@ -1229,7 +1230,7 @@ SCRIPT;
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $result = $DB->request([
          'SELECT' => [
-            $questionTable => ['id', 'name', 'values'],
+            $questionTable => ['id', 'name', 'values', 'itemtype'],
             $sectionTable => ['name as sname'],
          ],
          'FROM' => $questionTable,
@@ -1248,10 +1249,10 @@ SCRIPT;
       ]);
       $users_questions = [];
       foreach ($result as $question) {
-         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
-         if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'Location') {
-            $users_questions[$question['sname']][$question['id']] = $question['name'];
+         if ($question['itemtype'] != 'Location') {
+            continue;
          }
+         $users_questions[$question['sname']][$question['id']] = $question['name'];
       }
       Dropdown::showFromArray('_location_question', $users_questions, [
          'value' => $this->fields['location_question'],
