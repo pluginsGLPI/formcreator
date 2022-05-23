@@ -1229,7 +1229,7 @@ SCRIPT;
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $result = $DB->request([
          'SELECT' => [
-            $questionTable => ['id', 'name', 'values'],
+            $questionTable => ['id', 'name', 'values', 'itemtype'],
             $sectionTable => ['name as sname'],
          ],
          'FROM' => $questionTable,
@@ -1248,10 +1248,10 @@ SCRIPT;
       ]);
       $users_questions = [];
       foreach ($result as $question) {
-         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
-         if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'Location') {
-            $users_questions[$question['sname']][$question['id']] = $question['name'];
+         if ($question['itemtype'] != 'Location') {
+            continue;
          }
+         $users_questions[$question['sname']][$question['id']] = $question['name'];
       }
       Dropdown::showFromArray('_location_question', $users_questions, [
          'value' => $this->fields['location_question'],
