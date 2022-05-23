@@ -159,12 +159,12 @@ msgstr "양식이 저장되었습니다!"
 #: front/reservation.form.php:71
 #, php-format
 msgid "%1$s purges the reservation for item %2$s"
-msgstr ""
+msgstr "%1$s 가 항목 %2$s에 대한 예약을 삭제합니다"
 
 #: front/reservation.form.php:124
 #, php-format
 msgid "%1$s adds the reservation %2$s for item %3$s"
-msgstr ""
+msgstr "%1$s가 항목 %3$s에 대한 예약 %2$s를 추가합니다"
 
 #: inc/knowbase.class.php:60 inc/form.class.php:641
 #: inc/abstractitiltarget.class.php:952 inc/abstractitiltarget.class.php:966
@@ -215,7 +215,7 @@ msgstr "다음에 대한 잘못된 값"
 #: inc/field/dropdownfield.class.php:473
 #, php-format
 msgid "The itemtype field is required: %s"
-msgstr ""
+msgstr "itemtype 항목은 필수입니다: %s"
 
 #: inc/field/dropdownfield.class.php:489
 #, php-format
@@ -632,7 +632,7 @@ msgstr "최근 수정"
 #: inc/abstracttarget.class.php:508
 msgid "Entity"
 msgid_plural "Entities"
-msgstr[0] ""
+msgstr[0] "개체"
 
 #: inc/issue.class.php:584 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:218
@@ -730,7 +730,7 @@ msgstr "지식기반 분류"
 
 #: inc/category.class.php:78
 msgid "As child of"
-msgstr ""
+msgstr "다음의 하위"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -849,7 +849,7 @@ msgstr "관찰자"
 
 #: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1725
 msgid "Assigned to"
-msgstr ""
+msgstr "다음에 할당됨"
 
 #: inc/target_actor.class.php:91
 msgid "Target actor"
@@ -983,7 +983,7 @@ msgstr "캡챠 활성화"
 
 #: inc/formaccesstype.class.php:109
 msgid "Restricted to"
-msgstr ""
+msgstr "다음에 제한됨"
 
 #: inc/form_language.class.php:51
 msgid "Form language"
@@ -1126,7 +1126,7 @@ msgstr "증상"
 #: inc/entityconfig.class.php:116 inc/entityconfig.class.php:124
 #: inc/entityconfig.class.php:132
 msgid "Inheritance of the parent entity"
-msgstr ""
+msgstr "부모 개체의 상속"
 
 #: inc/entityconfig.class.php:84
 msgid "GLPi's helpdesk"
@@ -1603,7 +1603,7 @@ msgstr "OLA"
 #: inc/question.class.php:1292 inc/question.class.php:1332
 #: inc/question.class.php:1335
 msgid "Assets"
-msgstr ""
+msgstr "자산"
 
 #: inc/question.class.php:1306 hook.php:675 hook.php:692
 msgid "Assistance"
@@ -1704,7 +1704,7 @@ msgstr "이름은 필수입니다."
 
 #: inc/abstracttarget.class.php:493
 msgid "Destination entity"
-msgstr ""
+msgstr "대상 개체"
 
 #: inc/abstracttarget.class.php:509
 msgid "User type question"
@@ -1856,7 +1856,7 @@ msgstr "유형"
 
 #: inc/targetticket.class.php:1161
 msgid "Associated elements"
-msgstr ""
+msgstr "관련 요소"
 
 #: inc/targetticket.class.php:1172
 msgid "Item "
