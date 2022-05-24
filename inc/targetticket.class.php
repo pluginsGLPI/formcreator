@@ -248,8 +248,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $item->showSLASettings();
       $item->showOLASettings();
 
-      $item->showSourceSettings($rand);
-      $item->showTypeSettings($rand);
+      $item->showTargetSource($rand);
+      $item->showTargetType($rand);
       // -------------------------------------------------------------------------------------------
       //  associated elements of the target
       // -------------------------------------------------------------------------------------------
@@ -618,7 +618,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             }
          }
 
-         if (isset($input['type_question'])) {
+         if (isset($input['type_rule'])) {
             $input['type_question'] = '0';
             switch ($input['type_rule']) {
                case self::REQUESTTYPE_ANSWER:
@@ -1105,7 +1105,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       return $data;
    }
 
-   protected function showSourceSettings($rand): void {
+   protected function showTargetSource($rand): void {
       echo '<tr>';
       echo '<td width="15%">' . __('Request source') . '</td>';
       echo '<td width="25%">';
@@ -1118,7 +1118,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       echo '</tr>';
    }
 
-   protected  function showTypeSettings($rand) {
+   protected function showTargetType($rand) {
       echo '<tr>';
       echo '<td width="15%">' . __('Request type') . '</td>';
       echo '<td width="25%">';
