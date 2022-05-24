@@ -748,7 +748,7 @@ PluginFormcreatorTranslatableInterface
          // Searching for all forms without category restriction
          $onlyDefault = PluginFormcreatorEntityconfig::getUsedConfig('default_form_list_mode', Session::getActiveEntity());
          if ($onlyDefault == PluginFormcreatorEntityconfig::CONFIG_DEFAULT_FORM_LIST_DEFAULT) {
-            $where_form['WHERE']['is_default'] = 1;
+            $where_form['WHERE']['AND']['is_default'] = 1;
          }
       }
 
@@ -768,7 +768,7 @@ PluginFormcreatorTranslatableInterface
       $keywords = trim($keywords);
       if (!empty($keywords)) {
          $keywordsWithWilcards = $DB->escape(PluginFormcreatorCommon::prepareBooleanKeywords($keywords));
-         $where_form['AND'][] = [
+         $where_form['WHERE']['AND'][] = [
             'OR' => [
                new QueryExpression("MATCH($table_form.`name`, $table_form.`description`)
                   AGAINST('$keywordsWithWilcards' IN BOOLEAN MODE)"),
