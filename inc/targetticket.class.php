@@ -618,7 +618,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             }
          }
 
-         if (isset($input['type_question'])) {
+         if (isset($input['type_rule'])) {
             $input['type_question'] = '0';
             switch ($input['type_rule']) {
                case self::REQUESTTYPE_ANSWER:
