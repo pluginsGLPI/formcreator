@@ -78,6 +78,9 @@ class PluginFormcreatorInstall {
       '2.12.5' => '2.13',
    ];
 
+
+   protected bool $resyncIssues = false;
+
    /**
     * Install the plugin
     * @param Migration $migration
@@ -171,6 +174,11 @@ class PluginFormcreatorInstall {
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
+      if ($this->resyncIssues) {
+         // An upgrade step requires a resync of the issues
+         $task = new CronTask();
+         PluginFormcreatorIssue::cronSyncIssues($task);
+      }
       return true;
    }
 
@@ -192,6 +200,7 @@ class PluginFormcreatorInstall {
          $upgradeStep = new $updateClass();
          $upgradeStep->upgrade($this->migration);
          $this->migration->executeMigration();
+         $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequiresd();
       }
    }
 

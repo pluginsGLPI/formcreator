@@ -76,4 +76,8 @@ class PluginFormcreatorUpgradeTo2_12_1 {
       $table = 'glpi_plugin_formcreator_questions';
       $this->migration->changeField($table, 'description', 'description', 'MEDIUMTEXT');
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }

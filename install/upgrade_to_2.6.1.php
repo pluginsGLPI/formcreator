@@ -64,4 +64,8 @@ class PluginFormcreatorUpgradeTo2_6_1 {
          $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
       }
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }

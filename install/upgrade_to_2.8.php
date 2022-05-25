@@ -61,4 +61,8 @@ class PluginFormcreatorUpgradeTo2_8 {
          'name' => 'Form Creator',
       ]);
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }
