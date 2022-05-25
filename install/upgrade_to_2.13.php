@@ -316,4 +316,8 @@ class PluginFormcreatorUpgradeTo2_13 {
 
       $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `default_form_list_mode`=0 WHERE `entities_id`=0");
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }

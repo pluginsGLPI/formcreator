@@ -48,14 +48,10 @@ class PluginFormcreatorUpgradeTo2_12_5 {
       $table = 'glpi_plugin_formcreator_issues';
       if (!$DB->fieldExists($table, 'users_id_recipient')) {
          $this->migration->addField($table, 'users_id_recipient', 'integer', ['after' => 'comment']);
-
-         // Update issues
-         $this->migration->migrationOneTable($table);
-         if (PLUGIN_FORMCREATOR_SCHEMA_VERSION == '2.12') {
-            // sync only if this version is 2.12.5. If the table changes later, this will fail
-            $DB->query("TRUNCATE `$table`");
-            PluginFormcreatorIssue::syncIssues();
-         }
       }
+   }
+
+   public function isResyncIssuesRequiresd() {
+      return true;
    }
 }

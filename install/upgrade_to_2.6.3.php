@@ -85,4 +85,8 @@ class PluginFormcreatorUpgradeTo2_6_3 {
          $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
       }
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }
