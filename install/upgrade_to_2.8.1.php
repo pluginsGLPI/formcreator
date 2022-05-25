@@ -36,4 +36,8 @@ class PluginFormcreatorUpgradeTo2_8_1 {
       $table = 'glpi_plugin_formcreator_issues';
       $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
    }
+
+   public function isResyncIssuesRequiresd() {
+      return true;
+   }
 }

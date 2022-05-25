@@ -317,5 +317,8 @@ class PluginFormcreatorUpgradeTo2_11 {
          'state' => '0'
       ]);
    }
-}
 
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
+}

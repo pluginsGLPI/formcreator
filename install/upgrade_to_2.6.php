@@ -206,4 +206,8 @@ class PluginFormcreatorUpgradeTo2_6 {
 
       $migration->executeMigration();
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }
