@@ -23,9 +23,9 @@
  * ---------------------------------------------------------------------
  * @copyright Copyright © 2011 - 2021 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
- * @link     https://github.com/pluginsGLPI/formcreator/
- * @link     https://pluginsglpi.github.io/formcreator/
- * @link     http://plugins.glpi-project.org/#/plugin/formcreator
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
 
@@ -44,7 +44,6 @@ if (!isset($_POST['action'])) {
 
 switch ($_POST['action']) {
    case 'add':
-      $id = (int) $_POST['id'];
       $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? 0;
       $target_actor = new PluginFormcreatorTarget_Actor();
       if ($target_actor->add($_POST) === false) {
