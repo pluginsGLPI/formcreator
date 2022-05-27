@@ -150,6 +150,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             $dparams['right'] = 'all';
             $currentEntity = Session::getActiveEntity();
             $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
+            $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? 2;
             switch ($decodedValues['entity_restrict']) {
                case self::ENTITY_RESTRICT_FORM:
                   $form = PluginFormcreatorForm::getByItem($this->getQuestion());
@@ -184,6 +185,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             if (Session::getCurrentInterface() == 'helpdesk') {
                $dparams_cond_crit['is_helpdeskvisible'] = 1;
             }
+            $decodedValues['show_ticket_categories'] = $decodedValues['show_ticket_categories'] ?? 'all';
             switch ($decodedValues['show_ticket_categories']) {
                case 'request':
                   $dparams_cond_crit['is_request'] = 1;
@@ -306,6 +308,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             $itemtype::getTable(),
             $decodedValues['show_tree_root']
          );
+         $decodedValues['selectable_tree_root'] = $decodedValues['selectable_tree_root'] ?? '1';
          if (!isset($decodedValues['selectable_tree_root']) || $decodedValues['selectable_tree_root'] == '0') {
             unset($sons[$decodedValues['show_tree_root']]);
          }
@@ -372,9 +375,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $dparams = [];
-      if (!empty($this->question->fields['values'])) {
-         $dparams = $this->buildParams($rand);
-      }
+      $dparams = $this->buildParams($rand);
       $dparams['display'] = false;
       $dparams['_idor_token'] = Session::getNewIDORToken($itemtype);
       $html .= $itemtype::dropdown($dparams);
