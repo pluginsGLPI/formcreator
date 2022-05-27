@@ -426,7 +426,7 @@ function plugin_formcreator_redirect() {
    }
 
    if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
-      if (!isset($_POST['update'])) {
+      if (!isset($_POST['update']) && plugin_formcreator_replaceHelpdesk()) {
          $decodedUrl = [];
          $openItilFollowup = '';
          if (isset($_GET['_openfollowup'])) {
