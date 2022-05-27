@@ -522,7 +522,7 @@ PluginFormcreatorTranslatableInterface
                if ($question->isNewItem()) {
                   continue 2;
                }
-               $itemtype = $question->fields['values'];
+               $itemtype = $question->fields['itemtype'];
                if (!is_subclass_of($itemtype, CommonDBTM::class)) {
                   continue 2;
                }
