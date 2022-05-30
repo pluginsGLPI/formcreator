@@ -90,6 +90,7 @@ class PluginFormcreatorLinker
     * @return void
     */
    public function addObject($originalId, PluginFormcreatorExportableInterface $object) {
+      /** @var CommonDBTM $object  */
       if (!isset($this->imported[$object->getType()])) {
          $this->imported[$object->getType()] = [];
       }
