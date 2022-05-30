@@ -193,15 +193,17 @@ class PluginFormcreatorInstall {
 
       $suffix = str_replace('.', '_', $toVersion);
       $includeFile = __DIR__ . "/upgrade_to_$toVersion.php";
-      if (is_readable($includeFile) && is_file($includeFile)) {
-         include_once $includeFile;
-         $updateClass = "PluginFormcreatorUpgradeTo$suffix";
-         $this->migration->addNewMessageArea("Upgrade to $toVersion");
-         $upgradeStep = new $updateClass();
-         $upgradeStep->upgrade($this->migration);
-         $this->migration->executeMigration();
-         $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequiresd();
+      if (!is_readable($includeFile) || !is_file($includeFile)) {
+         return;
       }
+
+      include_once $includeFile;
+      $updateClass = "PluginFormcreatorUpgradeTo$suffix";
+      $this->migration->addNewMessageArea("Upgrade to $toVersion");
+      $upgradeStep = new $updateClass();
+      $upgradeStep->upgrade($this->migration);
+      $this->migration->executeMigration();
+      $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequiresd();
    }
 
    /**
