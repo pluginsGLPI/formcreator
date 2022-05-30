@@ -168,6 +168,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       }
 
       // set ID for linked objects
+      /** @var CommonDBTM $linked */
       $linked = $linker->getObject($input['plugin_formcreator_questions_id_2'], PluginFormcreatorQuestion::class);
       if ($linked === false) {
          $linked = new PluginFormcreatorQuestion();
