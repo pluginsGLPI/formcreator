@@ -241,7 +241,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       // Select the entity for the test
       $this->browsing->changeActiveEntity($entity, true);
 
-      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/wizard.php');
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $this->client->waitForVisibility($formTileSelector);
       $this->takeScreenshot();
@@ -253,7 +253,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       $this->boolean($success)->isTrue();
 
       $this->crawler = $this->client->reload();
-      $this->client->waitForVisibility('#plugin_formcreator_formlist');
+      $this->client->waitForVisibility('#plugin_formcreator_wizard_forms');
       $output = $this->crawler->filter($formTileSelector);
       $this->integer(count($output))->isEqualTo(0);
    }
