@@ -63,11 +63,13 @@ class PluginFormcreatorKnowbase {
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right" class="card">';
+      echo '<div class="card-body">';
 
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
+      echo '</div>';
       echo '</div>';
       echo '</div>';
    }
