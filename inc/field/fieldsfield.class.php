@@ -369,10 +369,6 @@ class FieldsField extends PluginFormcreatorAbstractField
       return $this->value;
    }
 
-   public function getRawValue() {
-      return $this->value;
-   }
-
    public function deserializeValue($value) {
       $this->value = $value;
    }

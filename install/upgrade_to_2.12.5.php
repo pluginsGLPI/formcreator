@@ -46,13 +46,12 @@ class PluginFormcreatorUpgradeTo2_12_5 {
 
       // Add users_id_recipient
       $table = 'glpi_plugin_formcreator_issues';
-      $this->migration->addField($table, 'users_id_recipient', 'integer');
-
-      // Update issues
-      $this->migration->migrationOneTable($table);
-      $DB->query("TRUNCATE `$table`");
-      PluginFormcreatorIssue::syncIssues();
-
+      if (!$DB->fieldExists($table, 'users_id_recipient')) {
+         $this->migration->addField($table, 'users_id_recipient', 'integer', ['after' => 'comment']);
+      }
    }
 
+   public function isResyncIssuesRequiresd() {
+      return true;
+   }
 }

@@ -142,7 +142,7 @@ class RequestTypeField extends SelectField
 
    public function getValueForTargetText($domain, $richText): ?string {
       $available = $this->getAvailableValues();
-      return $available[$this->value];
+      return $available[$this->value] ?? '';
    }
 
    public function moveUploads() {

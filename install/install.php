@@ -79,6 +79,9 @@ class PluginFormcreatorInstall {
       '2.13'   => '2.14',
    ];
 
+
+   protected bool $resyncIssues = false;
+
    /**
     * Install the plugin
     * @param Migration $migration
@@ -190,6 +193,11 @@ class PluginFormcreatorInstall {
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
+      if ($this->resyncIssues) {
+         // An upgrade step requires a resync of the issues
+         $task = new CronTask();
+         PluginFormcreatorIssue::cronSyncIssues($task);
+      }
       return true;
    }
 
@@ -204,16 +212,19 @@ class PluginFormcreatorInstall {
 
       $suffix = str_replace('.', '_', $toVersion);
       $includeFile = __DIR__ . "/upgrade_to_$toVersion.php";
-      if (is_readable($includeFile) && is_file($includeFile)) {
-         include_once $includeFile;
-         $updateClass = "PluginFormcreatorUpgradeTo$suffix";
-         if (isCommandLine()) {
-            $this->migration->addNewMessageArea("Upgrade to $toVersion");
-         }
-         $upgradeStep = new $updateClass();
-         $upgradeStep->upgrade($this->migration);
-         $this->migration->executeMigration();
+      if (!is_readable($includeFile) || !is_file($includeFile)) {
+         return;
       }
+
+      include_once $includeFile;
+      $updateClass = "PluginFormcreatorUpgradeTo$suffix";
+      if (isCommandLine()) {
+         $this->migration->addNewMessageArea("Upgrade to $toVersion");
+      }
+      $upgradeStep = new $updateClass();
+      $upgradeStep->upgrade($this->migration);
+      $this->migration->executeMigration();
+      $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequiresd();
    }
 
    /**

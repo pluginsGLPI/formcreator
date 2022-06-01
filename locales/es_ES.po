@@ -7,6 +7,7 @@
 # Jorge Saiz, 2021
 # 5b63a00e0726b96d7ef35c99d5553cd0_b787b5f <8bb2d0f7e8927228f17fba8639d787be_31711>, 2022
 # Nuria Costa <nuria.costa@uvic.cat>, 2022
+# Óscar Beiro - TICgal, 2022
 # Ricardo Herrero <ricardo.herrero@gmail.com>, 2022
 # 
 #, fuzzy
@@ -14,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-29 09:04+0200\n"
+"POT-Creation-Date: 2022-04-29 09:30+0200\n"
 "PO-Revision-Date: 2021-08-30 07:21+0000\n"
 "Last-Translator: Ricardo Herrero <ricardo.herrero@gmail.com>, 2022\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/teclib/teams/28042/es_ES/)\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ajax/question_update.php:36 ajax/section_update.php:37
 msgid "Bad request"
@@ -78,6 +79,7 @@ msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Formulario"
 msgstr[1] "Formularios"
+msgstr[2] "Formularios"
 
 #: ajax/section_delete.php:44 ajax/section_move.php:49
 #: ajax/section_duplicate.php:44
@@ -176,12 +178,9 @@ msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categoría"
 msgstr[1] "Categorías"
+msgstr[2] "Categorías"
 
-#: inc/knowbase.class.php:62 inc/form.class.php:643
-msgid "See all"
-msgstr ""
-
-#: inc/knowbase.class.php:79
+#: inc/knowbase.class.php:78
 msgid "Please, describe your need here"
 msgstr "Por favor, describe tu necesidad aquí"
 
@@ -217,6 +216,7 @@ msgid "Dropdown"
 msgid_plural "Dropdowns"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/field/dropdownfield.class.php:461
 msgid "Invalid value for "
@@ -241,6 +241,9 @@ msgid ""
 "To respect the GLPI entity system, \"Form\" should be selected. Others "
 "settings will break the entity restrictions"
 msgstr ""
+"Para respetar el sistema de entidades GLPI, se debe seleccionar "
+"\"Formulario\". Otras configuraciones romperán las restricciones de la "
+"entidad"
 
 #: inc/field/ldapselectfield.class.php:109
 msgid "LDAP size limit exceeded"
@@ -333,23 +336,24 @@ msgstr ""
 
 #: inc/field/ipfield.class.php:121
 msgid "IP address"
-msgid_plural "Adresses IP"
+msgid_plural "IP addresses"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/field/urgencyfield.class.php:84 inc/abstractitiltarget.class.php:994
 msgid "Urgency"
-msgstr ""
+msgstr "Urgencia"
 
 #: inc/field/urgencyfield.class.php:118
 msgctxt "urgency"
 msgid "Very high"
-msgstr ""
+msgstr "Muy alta"
 
 #: inc/field/urgencyfield.class.php:119
 msgctxt "urgency"
 msgid "High"
-msgstr ""
+msgstr "Alta"
 
 #: inc/field/urgencyfield.class.php:120
 msgctxt "urgency"
@@ -359,12 +363,12 @@ msgstr "Medio"
 #: inc/field/urgencyfield.class.php:121
 msgctxt "urgency"
 msgid "Low"
-msgstr ""
+msgstr "Baja"
 
 #: inc/field/urgencyfield.class.php:122
 msgctxt "urgency"
 msgid "Very low"
-msgstr ""
+msgstr "Muy baja"
 
 #: inc/field/tagfield.class.php:50
 msgid "Warning: Tag plugin is disabled or missing"
@@ -375,18 +379,21 @@ msgid "Tag"
 msgid_plural "Tags"
 msgstr[0] "Etiqueta"
 msgstr[1] "Etiquetas"
+msgstr[2] "Etiquetas"
 
 #: inc/field/glpiselectfield.class.php:71 entrée standard:38
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "Objeto GLPI"
 msgstr[1] "Objetos GLPI"
+msgstr[2] "Objetos GLPI"
 
 #: inc/field/hostnamefield.class.php:114
 msgid "Hostname"
-msgid_plural "Hostname"
+msgid_plural "Hostnames"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/field/timefield.class.php:128
 msgid "Time"
@@ -402,6 +409,7 @@ msgid "Email"
 msgid_plural "Emails"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/field/selectfield.class.php:104
 msgid "Select"
@@ -416,6 +424,7 @@ msgid "Actor"
 msgid_plural "Actors"
 msgstr[0] "Actor"
 msgstr[1] "Actores"
+msgstr[2] "Actores"
 
 #: inc/field/actorfield.class.php:249
 #, php-format
@@ -443,7 +452,7 @@ msgstr "Un campo obligatorio está vacío: %s"
 
 #: inc/field/filefield.class.php:173
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #: inc/field/multiselectfield.class.php:86
 msgid "Multiselect"
@@ -459,7 +468,7 @@ msgstr ""
 
 #: inc/field/fieldsfield.class.php:170 inc/targetticket.class.php:340
 msgid "Field"
-msgstr ""
+msgstr "Campo"
 
 #: inc/field/fieldsfield.class.php:243
 msgid "show"
@@ -518,7 +527,7 @@ msgstr "Float"
 
 #: inc/field/datefield.class.php:135
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: inc/field/descriptionfield.class.php:103 inc/form.class.php:165
 #: inc/question.class.php:166 entrée standard:82 standard:52 standard:113
@@ -534,6 +543,7 @@ msgid "Hidden field"
 msgid_plural "Hidden fields"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/condition.class.php:65 inc/targetproblem.class.php:579
 #: inc/targetchange.class.php:106 inc/targetticket.class.php:136
@@ -541,6 +551,7 @@ msgid "Condition"
 msgid_plural "Conditions"
 msgstr[0] "Condición"
 msgstr[1] "Condiciones"
+msgstr[2] "Condiciones"
 
 #: inc/condition.class.php:104
 msgid "is visible"
@@ -600,13 +611,14 @@ msgstr "Importando"
 
 #: inc/linker.class.php:80
 msgid "Import in progress"
-msgstr ""
+msgstr "Importación en curso"
 
 #: inc/issue.class.php:41
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Problema"
 msgstr[1] "Problemas"
+msgstr[2] "Problemas"
 
 #: inc/issue.class.php:54
 msgid "Update issue data from tickets and form answers"
@@ -615,13 +627,13 @@ msgstr ""
 
 #: inc/issue.class.php:389
 msgid "Satisfaction survey expired"
-msgstr ""
+msgstr "Encuesta de satisfacción caducada"
 
 #: inc/issue.class.php:509 inc/form_language.class.php:213
 #: inc/form.class.php:156 inc/form.class.php:2111 entrée standard:52
 #: standard:49 standard:57 standard:38 standard:39
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: inc/issue.class.php:522 inc/formanswer.class.php:198
 #: inc/formanswer.class.php:272 inc/targetproblem.class.php:622
@@ -629,25 +641,26 @@ msgstr ""
 #: inc/section.class.php:95 inc/question.class.php:156
 #: inc/targetticket.class.php:179
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: inc/issue.class.php:531 inc/form.class.php:2120 entrée standard:65
 msgid "Type"
 msgid_plural "Types"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/issue.class.php:544 inc/formanswer.class.php:259
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: inc/issue.class.php:556
 msgid "Opening date"
-msgstr ""
+msgstr "Fecha de apertura"
 
 #: inc/issue.class.php:565
 msgid "Last update"
-msgstr ""
+msgstr "Última modificación"
 
 #: inc/issue.class.php:574 inc/form.class.php:174
 #: inc/abstracttarget.class.php:508
@@ -655,6 +668,7 @@ msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/issue.class.php:584 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:218
@@ -663,6 +677,7 @@ msgid "Requester"
 msgid_plural "Requesters"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/issue.class.php:602 inc/formanswer.class.php:228
 msgid "Form approver"
@@ -680,11 +695,11 @@ msgstr "Aprobador del ticket"
 
 #: inc/issue.class.php:664
 msgid "Technician"
-msgstr ""
+msgstr "Técnico"
 
 #: inc/issue.class.php:697
 msgid "Technician group"
-msgstr ""
+msgstr "Grupo de técnicos"
 
 #: inc/issue.class.php:728 inc/formanswer.class.php:248
 msgid "Form approver group"
@@ -692,13 +707,14 @@ msgstr "Grupo de aprobación del formulario"
 
 #: inc/issue.class.php:761
 msgid "Ticket"
-msgstr ""
+msgstr "Petición"
 
 #: inc/issue.class.php:762 inc/formanswer.class.php:183
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Respuesta del formulario"
 msgstr[1] "Respuestas al formulario"
+msgstr[2] "Respuestas al formulario"
 
 #: inc/issue.class.php:767
 msgid "Not validated"
@@ -716,7 +732,7 @@ msgstr ""
 
 #: inc/issue.class.php:1099 inc/filter/itilcategoryfilter.class.php:56
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: inc/issue.class.php:1105
 msgid "New"
@@ -748,6 +764,7 @@ msgid "Form category"
 msgid_plural "Form categories"
 msgstr[0] "Categoría del formulario"
 msgstr[1] "Categorías de formulario"
+msgstr[2] "Categorías de formulario"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -791,6 +808,7 @@ msgid "Validator"
 msgid_plural "Validators"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/notificationtargetformanswer.class.php:81 inc/formanswer.class.php:239
 msgid "Creation date"
@@ -814,7 +832,7 @@ msgstr "Solicitud #"
 
 #: inc/notificationtargetformanswer.class.php:97
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: inc/notificationtargetformanswer.class.php:98
 #: inc/abstractitiltarget.class.php:1289
@@ -871,17 +889,18 @@ msgstr "Supervisor del autor del formulario"
 
 #: inc/target_actor.class.php:84
 msgid "Observer"
-msgstr ""
+msgstr "Observador"
 
 #: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1725
 msgid "Assigned to"
-msgstr ""
+msgstr "Asignado a"
 
 #: inc/target_actor.class.php:91
 msgid "Target actor"
 msgid_plural "Target actors"
 msgstr[0] "Actor objetivo"
 msgstr[1] "Actores objetivos"
+msgstr[2] "Actores objetivos"
 
 #: inc/target_actor.class.php:97 inc/target_actor.class.php:113
 #: inc/target_actor.class.php:122
@@ -921,7 +940,7 @@ msgstr "Formulario guardado exitosamente."
 
 #: inc/formanswer.class.php:621 inc/formaccesstype.class.php:122
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: inc/formanswer.class.php:633
 msgid "Required if refused"
@@ -997,6 +1016,7 @@ msgid "Access type"
 msgid_plural "Access types"
 msgstr[0] "Tipo de acceso"
 msgstr[1] "Tipos de Acceso"
+msgstr[2] "Tipos de Acceso"
 
 #: inc/formaccesstype.class.php:78
 msgid "Link to the form"
@@ -1019,12 +1039,14 @@ msgid "Form language"
 msgid_plural "Form languages"
 msgstr[0] "Idioma del fomulario"
 msgstr[1] "Idiomas del formulario"
+msgstr[2] "Idiomas del formulario"
 
 #: inc/form_language.class.php:72 inc/form_language.class.php:348
 msgid "Translation"
 msgid_plural "Translations"
 msgstr[0] "Traducción"
 msgstr[1] "Traducciones"
+msgstr[2] "Traducciones"
 
 #: inc/form_language.class.php:111 inc/form.class.php:1040
 #: inc/form.class.php:1165 inc/abstracttarget.class.php:160
@@ -1071,12 +1093,12 @@ msgstr "Cadena original"
 
 #: inc/form_language.class.php:399
 msgid "Add a new language"
-msgstr ""
+msgstr "Agregar un nuevo idioma"
 
 #: inc/form_language.class.php:432 inc/form_language.class.php:464
 #: inc/form.class.php:192 entrée standard:72
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #: inc/form_validator.class.php:68 inc/targetticket.class.php:98
 #: inc/abstractitiltarget.class.php:179
@@ -1085,11 +1107,11 @@ msgstr "Ninguno"
 
 #: inc/form_validator.class.php:122
 msgid "Need validaton?"
-msgstr ""
+msgstr "¿Necesita validación?"
 
 #: inc/form_validator.class.php:126 inc/abstractitiltarget.class.php:2029
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: inc/form_validator.class.php:303 inc/targetproblem.class.php:146
 #: inc/entityconfig.class.php:334 inc/targetchange.class.php:483
@@ -1097,7 +1119,7 @@ msgstr ""
 #: inc/abstractitiltarget.class.php:2018
 msgctxt "button"
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1269
 msgid "Validation"
@@ -1112,12 +1134,13 @@ msgid "Target problem"
 msgid_plural "Target problems"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/targetproblem.class.php:108 inc/targetproblem.class.php:577
 #: inc/targetchange.class.php:104 inc/targetchange.class.php:440
 #: inc/targetticket.class.php:134 inc/targetticket.class.php:237
 msgid "Properties"
-msgstr ""
+msgstr "Propiedades"
 
 #: inc/targetproblem.class.php:521 inc/targetchange.class.php:285
 #: inc/targetticket.class.php:1409
@@ -1136,7 +1159,7 @@ msgstr "Actores"
 
 #: inc/targetproblem.class.php:631 entrée standard:48
 msgid "Problem title"
-msgstr ""
+msgstr "Título del problema"
 
 #: inc/targetproblem.class.php:641 inc/targetchange.class.php:353
 #: inc/targetticket.class.php:198
@@ -1149,11 +1172,11 @@ msgstr "Impacto"
 
 #: inc/targetproblem.class.php:661 entrée standard:56
 msgid "Cause"
-msgstr ""
+msgstr "Motivo"
 
 #: inc/targetproblem.class.php:671 entrée standard:58
 msgid "Symptom"
-msgstr ""
+msgstr "Síntoma"
 
 #: inc/entityconfig.class.php:83 inc/entityconfig.class.php:92
 #: inc/entityconfig.class.php:100 inc/entityconfig.class.php:108
@@ -1247,6 +1270,7 @@ msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Cabecera"
 msgstr[1] "Cabeceras"
+msgstr[2] "Cabeceras"
 
 #: inc/entityconfig.class.php:378
 msgid "Display search field"
@@ -1261,6 +1285,7 @@ msgid "Question range"
 msgid_plural "Question ranges"
 msgstr[0] "Rango de preguntas"
 msgstr[1] "Rangos de Preguntas"
+msgstr[2] "Rangos de Preguntas"
 
 #: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:69
 msgid "Minimum range"
@@ -1296,7 +1321,7 @@ msgstr ""
 
 #: inc/form.class.php:183
 msgid "Recursive"
-msgstr ""
+msgstr "Recursivo"
 
 #: inc/form.class.php:204
 msgid "Homepage"
@@ -1309,7 +1334,7 @@ msgstr "Acceso"
 #: inc/form.class.php:248 inc/form.class.php:330 inc/form.class.php:397 entrée
 #: standard:54
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: inc/form.class.php:261 entrée standard:65
 msgid "Icon"
@@ -1329,7 +1354,7 @@ msgstr ""
 
 #: inc/form.class.php:329 inc/form.class.php:394
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #: inc/form.class.php:340 inc/form.class.php:413
 msgid "Not default form"
@@ -1341,13 +1366,14 @@ msgstr ""
 
 #: inc/form.class.php:492 entrée standard:102
 msgid "Answers title"
-msgstr ""
+msgstr "Título de las respuestas"
 
 #: inc/form.class.php:504 inc/form.class.php:557
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Objetivo"
 msgstr[1] "Objetivos"
+msgstr[2] "Objetivos"
 
 #: inc/form.class.php:540 inc/form.class.php:2108
 msgid "Add a target"
@@ -1355,10 +1381,14 @@ msgstr "Añadir un objetivo"
 
 #: inc/form.class.php:560
 msgid "Preview"
-msgstr ""
+msgstr "Vista previa"
 
 #: inc/form.class.php:561
 msgid "properties"
+msgstr "propiedades"
+
+#: inc/form.class.php:643
+msgid "See all"
 msgstr ""
 
 #: inc/form.class.php:869
@@ -1411,7 +1441,7 @@ msgstr "Duplicado"
 #: inc/form.class.php:1409
 msgctxt "button"
 msgid "Post"
-msgstr ""
+msgstr "Publicar"
 
 #: inc/form.class.php:1427
 #, php-format
@@ -1465,7 +1495,7 @@ msgstr "Habilitado"
 #: inc/form.class.php:1618
 msgctxt "button"
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #: inc/form.class.php:1637
 msgid "Forms import impossible, the file is empty"
@@ -1554,6 +1584,7 @@ msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] "Cambio de objetivo"
 msgstr[1] "Cambios de objetivos"
+msgstr[2] "Cambios de objetivos"
 
 #: inc/targetchange.class.php:343 entrée standard:48
 msgid "Change title"
@@ -1580,6 +1611,7 @@ msgid "Section"
 msgid_plural "Sections"
 msgstr[0] "Sección"
 msgstr[1] "Secciones"
+msgstr[2] "Secciones"
 
 #: inc/section.class.php:123 inc/section.class.php:164
 #: inc/question.class.php:312
@@ -1600,6 +1632,7 @@ msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Pregunta"
 msgstr[1] "Preguntas"
+msgstr[2] "Preguntas"
 
 #: inc/question.class.php:228 entrée standard:37
 msgid "Count of conditions"
@@ -1632,7 +1665,7 @@ msgstr "Un parámetro no se ha completado para este tipo de pregunta"
 
 #: inc/question.class.php:1273
 msgid "Service levels"
-msgstr ""
+msgstr "Niveles de servicio"
 
 #: inc/question.class.php:1274 inc/abstractitiltarget.class.php:805
 msgid "SLA"
@@ -1645,37 +1678,38 @@ msgstr "Acuerdo de Nivel de Operación"
 #: inc/question.class.php:1292 inc/question.class.php:1332
 #: inc/question.class.php:1335
 msgid "Assets"
-msgstr ""
+msgstr "Activos"
 
 #: inc/question.class.php:1306 hook.php:675 hook.php:692
 msgid "Assistance"
-msgstr ""
+msgstr "Asistencia"
 
 #: inc/question.class.php:1311
 msgid "Management"
-msgstr ""
+msgstr "Gestión"
 
 #: inc/question.class.php:1320
 msgid "Tools"
-msgstr ""
+msgstr "Herramientas"
 
 #: inc/question.class.php:1321
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #: inc/question.class.php:1322
 msgid "RSS feed"
-msgstr ""
+msgstr "Canal RSS"
 
 #: inc/question.class.php:1324
 msgid "Administration"
-msgstr ""
+msgstr "Administración"
 
 #: inc/question.class.php:1332 inc/question.class.php:1335
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
@@ -1723,15 +1757,15 @@ msgstr "Desde un objeto GLPI > Tipo de entidad pregunta respuesta"
 
 #: inc/abstracttarget.class.php:115
 msgid "Always generated"
-msgstr ""
+msgstr "Generar siempre"
 
 #: inc/abstracttarget.class.php:116
 msgid "Disabled unless"
-msgstr ""
+msgstr "Deshabilitado a menos"
 
 #: inc/abstracttarget.class.php:117
 msgid "Generated unless"
-msgstr ""
+msgstr "Generado a menos"
 
 #: inc/abstracttarget.class.php:128
 msgid "A target must be associated to a form."
@@ -1747,7 +1781,7 @@ msgstr "Se requiere el Nombre"
 
 #: inc/abstracttarget.class.php:493
 msgid "Destination entity"
-msgstr ""
+msgstr "Entidad de destino"
 
 #: inc/abstracttarget.class.php:509
 msgid "User type question"
@@ -1776,30 +1810,35 @@ msgid "Question regular expression"
 msgid_plural "Question regular expressions"
 msgstr[0] "Búsqueda de expresión regular"
 msgstr[1] "Búsqueda de expresiones regulares"
+msgstr[2] "Búsqueda de expresiones regulares"
 
 #: inc/questiondependency.class.php:66
 msgid "Question dependency"
 msgid_plural "Question dependencies"
 msgstr[0] "Dependencias de la pregunta"
 msgstr[1] "Dependencias de la pregunta"
+msgstr[2] "Dependencias de la pregunta"
 
 #: inc/answer.class.php:66 entrée standard:43
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Respuesta"
 msgstr[1] "Respuestas"
+msgstr[2] "Respuestas"
 
 #: inc/item_targetticket.class.php:52
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
 msgstr[0] "Componer relación entre tickets"
 msgstr[1] "Componer relaciones entre tickets"
+msgstr[2] "Componer relaciones entre tickets"
 
 #: inc/targetticket.class.php:56 entrée standard:43
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Ticket objetivo"
 msgstr[1] "Tickets objetivos"
+msgstr[2] "Tickets objetivos"
 
 #: inc/targetticket.class.php:99
 msgid "Specific asset"
@@ -1843,7 +1882,7 @@ msgstr "Agregar validación de mensaje como primer ticker de seguimiento"
 
 #: inc/targetticket.class.php:335
 msgid "Add a field"
-msgstr ""
+msgstr "Agregar un campo"
 
 #: inc/targetticket.class.php:363
 msgid "Managed fields"
@@ -1872,7 +1911,7 @@ msgstr ""
 #: inc/targetticket.class.php:482
 msgctxt "button"
 msgid "Delete permanently"
-msgstr ""
+msgstr "Eliminar permanentemente"
 
 #: inc/targetticket.class.php:741
 msgid "Invalid link type"
@@ -1904,7 +1943,7 @@ msgstr "Tipo"
 
 #: inc/targetticket.class.php:1161
 msgid "Associated elements"
-msgstr ""
+msgstr "Elementos asociados"
 
 #: inc/targetticket.class.php:1172
 msgid "Item "
@@ -1996,15 +2035,15 @@ msgstr "Ubicación específica"
 
 #: inc/abstractitiltarget.class.php:239
 msgid "No validation"
-msgstr ""
+msgstr "Sin validación"
 
 #: inc/abstractitiltarget.class.php:240
 msgid "Specific user or group"
-msgstr ""
+msgstr "Usuario o grupo específicos"
 
 #: inc/abstractitiltarget.class.php:241
 msgid "User from question answer"
-msgstr ""
+msgstr "Usuario desde la respuesta a la pregunta"
 
 #: inc/abstractitiltarget.class.php:242
 msgid "Group from question answer"
@@ -2019,24 +2058,28 @@ msgid "Minute"
 msgid_plural "Minutes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/abstractitiltarget.class.php:794
 msgid "Hour"
 msgid_plural "Hours"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/abstractitiltarget.class.php:795
 msgid "Day"
 msgid_plural "Days"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/abstractitiltarget.class.php:796
 msgid "Month"
 msgid_plural "Months"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/abstractitiltarget.class.php:828
 msgid "SLA (TTO/TTR)"
@@ -2064,7 +2107,7 @@ msgstr "Etiquetas"
 
 #: inc/abstractitiltarget.class.php:1202
 msgid "Location"
-msgstr ""
+msgstr "Ubicación"
 
 #: inc/abstractitiltarget.class.php:1214
 msgid "Location "
@@ -2079,6 +2122,7 @@ msgid "Watcher"
 msgid_plural "Watchers"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/abstractitiltarget.class.php:1737
 msgid "Cancel"
@@ -2087,19 +2131,19 @@ msgstr "Cancelar"
 #: inc/abstractitiltarget.class.php:2012 inc/abstractitiltarget.class.php:2028
 #: inc/abstractitiltarget.class.php:2029
 msgid "Email followup"
-msgstr ""
+msgstr "Seguimiento por correo"
 
 #: inc/abstractitiltarget.class.php:2026 inc/abstractitiltarget.class.php:2054
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: inc/abstractitiltarget.class.php:2027 inc/abstractitiltarget.class.php:2083
 msgid "Supplier"
-msgstr ""
+msgstr "Proveedor"
 
 #: inc/abstractitiltarget.class.php:2028
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: inc/abstractitiltarget.class.php:2065
 msgid "Group from the object"
@@ -2197,12 +2241,12 @@ msgstr "Duplicado"
 
 #: hook.php:306
 msgid "Transfer"
-msgstr ""
+msgstr "Transferir"
 
 #: hook.php:307
 msgctxt "button"
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #: hook.php:651
 msgid "Cancel my ticket"
@@ -2292,7 +2336,7 @@ msgstr "Requerido"
 #: entrée standard:57 standard:61 standard:60 standard:59 standard:43
 #: standard:69 standard:52 standard:37
 msgid "Default values"
-msgstr ""
+msgstr "Valores por defecto"
 
 #: entrée standard:52 standard:59 standard:58
 msgid "Show empty"
@@ -2303,6 +2347,7 @@ msgid "LDAP directory"
 msgid_plural "LDAP directories"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: entrée standard:68
 msgid "Filter"
@@ -2338,7 +2383,7 @@ msgstr "¿Eres un robot?"
 
 #: entrée standard:127
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #: entrée standard:40
 msgid "Condition to generate the target"
@@ -2350,11 +2395,11 @@ msgstr "Condicion para mostrar la pregunta"
 
 #: entrée standard:54
 msgid "Impacts"
-msgstr ""
+msgstr "Impactos"
 
 #: entrée standard:62
 msgid "Checklist"
-msgstr ""
+msgstr "Lista de Verificación"
 
 #: entrée standard:45
 msgid "Add a section"
@@ -2362,7 +2407,7 @@ msgstr "Agregar sección"
 
 #: entrée standard:55
 msgid "Condition to show the submit button"
-msgstr ""
+msgstr "Condición para mostrar el botón enviar"
 
 #: entrée standard:83
 msgid "Add a question"
@@ -2370,11 +2415,11 @@ msgstr "Agregar una pregunta"
 
 #: entrée standard:39
 msgid "List of available tags"
-msgstr ""
+msgstr "Lista de etiquetas disponibles"
 
 #: entrée standard:42
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: entrée standard:47
 msgid "Full form"

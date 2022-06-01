@@ -308,4 +308,8 @@ class PluginFormcreatorUpgradeTo2_7 {
          $DB->query("UPDATE `glpi_plugin_formcreator_forms` SET `name` = '$name', `description` = '$description', `content` = '$content' WHERE `id` = '$id'");
       }
    }
+
+   public function isResyncIssuesRequiresd() {
+      return true;
+   }
 }

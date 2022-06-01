@@ -147,4 +147,8 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->dropKey($table, 'original_id_sub_itemtype');
       $this->migration->addKey($table, ['itemtype', 'items_id'], 'item');
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }

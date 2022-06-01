@@ -84,4 +84,8 @@ class PluginFormcreatorUpgradeTo2_14 {
          ]);
       }
    }
+
+   public function isResyncIssuesRequiresd() {
+      return true;
+   }
 }

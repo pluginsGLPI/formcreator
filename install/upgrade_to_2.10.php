@@ -72,4 +72,8 @@ class PluginFormcreatorUpgradeTo2_10 {
       $migration->addKey($table, 'users_id_validator');
       $migration->addKey($table, 'groups_id_validator');
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }
