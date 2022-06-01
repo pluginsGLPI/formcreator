@@ -294,7 +294,11 @@ function showTiles(tiles, defaultForms) {
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
-      html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead', 'formcreator') + '</p>'
+      if (tiles.length > 0) {
+         html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead.', 'formcreator') + '</p>';
+      } else {
+         html += '<p>' + i18n.textdomain('formcreator').__('No form found.', 'formcreator') + '</p>';
+      }
    }
    html += buildTiles(tiles);
 
@@ -380,83 +384,80 @@ function buildTiles(list) {
 
    var html = '';
    if (list.length == 0) {
-      html = '<p id="plugin_formcreator_formlist">'
-      + i18n.textdomain('formcreator').__('No item yet in this category', 'formcreator')
-      + '</p>'
-      +'<p id="plugin_formcreator_faqlist"></p>';
-   } else {
-      var forms = [];
-      var faqs = [];
-      $.each(list, function (key, item) {
-         // Build a HTML tile
-         var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
-         if (item.type != 'form') {
-            url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
-         }
-
-         var tiles_design = "";
-         if (item.tile_template == "1") { // @see PluginFormcreatorEntityConfig::CONFIG_UI_FORM_UNIFORM_HEIGHT
-            tiles_design = "tile_design_uniform_height";
-         }
-
-         var description = '';
-         if (item.description) {
-            description = '<div class="plugin_formcreator_formTile_description '+ tiles_design +'">'
-                          +item.description
-                          +'</div>';
-         }
-
-         var default_class = '';
-         if (JSON.parse(item.is_default)) {
-            default_class = 'default_form';
-         }
-
-         if (item.icon == '') {
-            if (item.type == 'form') {
-               item.icon = 'fa fa-question-circle';
-            } else {
-               item.icon = 'fa fa-clipboard-list';
-            }
-         }
-
-         if (item.icon_color == '') {
-            item.icon_color = '#999999';
-         }
-
-         if (item.background_color == '') {
-            item.background_color = '#e7e7e7';
-         }
-
-         if (item.type == 'form') {
-            forms.push(
-               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
-               + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
-               + item.name
-               + '</a>'
-               + description
-               + '</div>'
-            );
-         } else {
-            faqs.push(
-               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
-               + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
-               + item.name
-               + '</a>'
-               + description
-               + '</div>'
-            );
-         }
-      });
-
-      // concatenate all HTML parts
-      html = '<div id="plugin_formcreator_formlist">'
-      + forms.join("")
-      + '</div><div id="plugin_formcreator_faqlist">'
-      + faqs.join("")
-      + '</div>'
+      return html;
    }
+
+   var forms = [];
+   var faqs = [];
+   $.each(list, function (key, item) {
+      // Build a HTML tile
+      var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
+      if (item.type != 'form') {
+         url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
+      }
+
+      var tiles_design = "";
+      if (item.tile_template == "1") { // @see PluginFormcreatorEntityConfig::CONFIG_UI_FORM_UNIFORM_HEIGHT
+         tiles_design = "tile_design_uniform_height";
+      }
+
+      var description = '';
+      if (item.description) {
+         description = '<div class="plugin_formcreator_formTile_description '+ tiles_design +'">'
+                        +item.description
+                        +'</div>';
+      }
+
+      var default_class = '';
+      if (JSON.parse(item.is_default)) {
+         default_class = 'default_form';
+      }
+
+      if (item.icon == '') {
+         if (item.type == 'form') {
+            item.icon = 'fa fa-question-circle';
+         } else {
+            item.icon = 'fa fa-clipboard-list';
+         }
+      }
+
+      if (item.icon_color == '') {
+         item.icon_color = '#999999';
+      }
+
+      if (item.background_color == '') {
+         item.background_color = '#e7e7e7';
+      }
+
+      if (item.type == 'form') {
+         forms.push(
+            '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
+            + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
+            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+            + item.name
+            + '</a>'
+            + description
+            + '</div>'
+         );
+      } else {
+         faqs.push(
+            '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
+            + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
+            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+            + item.name
+            + '</a>'
+            + description
+            + '</div>'
+         );
+      }
+   });
+
+   // concatenate all HTML parts
+   html = '<div id="plugin_formcreator_formlist">'
+   + forms.join("")
+   + '</div><div id="plugin_formcreator_faqlist">'
+   + faqs.join("")
+   + '</div>'
 
    return html;
 }
