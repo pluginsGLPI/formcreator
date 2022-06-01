@@ -113,7 +113,7 @@ $(function() {
       // Dynamically update forms and faq items while the user types in the search bar
       var timer = getTimer(searchInput);
       var callbackFunc;
-      if ($('#plugin_formcreator_kb_categories .category_active').length > 0) {
+      if ($('#plugin_formcreator_kb_categories').length > 0) {
          callbackFunc = plugin_formcreator.updateKbitemsView.bind(plugin_formcreator);
       } else {
          callbackFunc = plugin_formcreator.updateWizardFormsView.bind(plugin_formcreator);
@@ -125,14 +125,25 @@ $(function() {
       $('#plugin_formcreator_searchBar input').focus(function(event) {
          if (searchInput.val().length > 0) {
             searchInput.val('');
-            plugin_formcreator.updateWizardFormsView(null);
-            $.when(getFormAndFaqItems(0))
-            .then(
-               function (response) {
-                  tiles = response;
-                  showTiles(tiles.forms);
-               }
-            );
+            if ($('#plugin_formcreator_kb_categories').length > 0) {
+               plugin_formcreator.updateKbitemsView(null);
+               $.when(getFaqItems(0))
+               .then(
+                  function (response) {
+                     tiles = response;
+                     showTiles(tiles.forms);
+                  }
+               );
+            } else {
+               plugin_formcreator.updateWizardFormsView(null);
+               $.when(getFormAndFaqItems(0))
+               .then(
+                  function (response) {
+                     tiles = response;
+                     showTiles(tiles.forms);
+                  }
+               );
+            }
          }
       });
    }
@@ -233,7 +244,8 @@ function getFaqItems(categoryId) {
       data: {
          categoriesId: categoryId,
          keywords: keywords,
-         helpdeskHome: 0},
+         helpdeskHome: 0
+      },
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -252,7 +264,12 @@ function getFormAndFaqItems(categoryId) {
    var deferred = jQuery.Deferred();
    $.post({
       url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
-      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
+      data: {
+         wizard: 'forms',
+         categoriesId: categoryId,
+         keywords: keywords,
+         helpdeskHome: 0
+      },
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
