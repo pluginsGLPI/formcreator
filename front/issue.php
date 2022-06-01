@@ -51,12 +51,20 @@ if (Session::getCurrentInterface() == "helpdesk") {
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-      $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 2, 'mini_core');
-      $dashboard->show(true);
-   }
+   PluginFormcreatorCommon::showMiniDashboard();
 }
+
+//backup session value
+$save_session_fold_search = $_SESSION['glpifold_search'];
+//hide search if need
+if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
+   $_SESSION['glpifold_search'] = true;
+}
+
 Search::show('PluginFormcreatorIssue');
+
+//restore session value
+$_SESSION['glpifold_search'] = $save_session_fold_search;
 
 if (Session::getCurrentInterface() == "helpdesk") {
    Html::helpFooter();

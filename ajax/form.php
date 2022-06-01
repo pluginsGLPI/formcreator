@@ -30,7 +30,7 @@
  */
 
 include ('../../../inc/includes.php');
-if (!Session::haveRight('entity', UPDATE)) {
+if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
    http_response_code(403);
    die();
 }

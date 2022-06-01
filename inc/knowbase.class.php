@@ -58,7 +58,8 @@ class PluginFormcreatorKnowbase {
    public function showWizard() {
       echo '<div id="plugin_formcreator_kb_categories" class="card">';
       echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div><a href="#" id="kb_seeall"><i class="fas fa-home"></i></a></div>';
+      echo '<div class="slinky-menu"></div>';
+      echo '<div><a href="#" id="wizard_seeall">' . __('See all', 'formcreator') . '</a></div>';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right" class="card">';
@@ -100,11 +101,20 @@ class PluginFormcreatorKnowbase {
             [
                'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
                'FROM'   => KnowbaseItem::getTable(),
-               'WHERE'  => [
-                  KnowbaseItem::getTableField($cat_fk) => new QueryExpression(
-                     DB::quoteName(KnowbaseItemCategory::getTableField('id'))
-                  ),
-               ]
+               'LEFT JOIN' => [
+                  KnowbaseItem_KnowbaseItemCategory::getTable() => [
+                     'FKEY' => [
+                           KnowbaseItem::getTable() => 'id',
+                           KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItem::getForeignKeyField(),
+                     ],
+                  ],
+                  KnowbaseItemCategory::getTable() => [
+                     'FKEY' => [
+                        KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItemCategory::getForeignKeyField(),
+                        KnowbaseItemCategory::getTable() => 'id',
+                     ],
+                  ],
+               ],
             ],
             $kbitem_visibility_crit
          ),

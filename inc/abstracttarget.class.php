@@ -139,19 +139,20 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
          return false;
       }
 
+      if (!$this->skipChecks) {
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
+      }
+
       // generate a unique id
       if (!isset($input['uuid'])
          || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-      }
-
       return $input;
    }
-
 
    public function prepareInputForUpdate($input) {
       if (!$this->skipChecks) {
@@ -160,16 +161,16 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
             Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
+
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
 
       // generate a uniq id
       if (!isset($input['uuid'])
          || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
-      }
-
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
       }
 
       return $input;
@@ -194,6 +195,15 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
    protected function prepareTemplate($template, PluginFormcreatorFormAnswer $formAnswer, $richText = false) {
       if (strpos($template, '##FULLFORM##') !== false) {
          $template = str_replace('##FULLFORM##', $formAnswer->getFullForm($richText), $template);
+      }
+
+      $extra_tags_values = Plugin::doHookFunction('formcreator_prepare_extra_tags', [
+         'formanswer' => $formAnswer,
+         'values' => [],
+         'richtext' => $richText,
+      ]);
+      foreach ($extra_tags_values['values'] as $tag => $value) {
+         $template = str_replace($tag, $value, $template);
       }
 
       if ($richText) {
@@ -262,15 +272,14 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     * @return array all fields of the object wih converted template fields
     */
    protected function convertTags($input) {
-      $question = new PluginFormcreatorQuestion();
-      $questions = $question->getQuestionsFromForm($this->getForm()->getID());
+      $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm($this->getForm()->getID());
 
       $taggableFields = $this->getTaggableFields();
 
       // Prepare array of search / replace
       $ids = [];
       $uuids = [];
-      foreach ($questions as $question) {
+      foreach ($questionsGenerator as $question) {
          $id      = $question->fields['id'];
          $uuid    = $question->fields['uuid'];
          $ids[]   = "##question_$id##";

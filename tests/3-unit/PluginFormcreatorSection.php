@@ -504,7 +504,11 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->boolean($form->isNewItem())->isFalse();
 
       $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
-      $this->array($output)->hasSize(0);
+      $count = 0;
+      foreach ($output as $section) {
+         $count++;
+      }
+      $this->integer($count)->IsEqualTo(0);
 
       $sections = [];
       $section = $this->getSection([
@@ -520,8 +524,13 @@ class PluginFormcreatorSection extends CommonTestCase {
       $sections[] = $section;
 
       $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
-      $this->array($output)->hasSize(2);
+      $count = 0;
+      foreach ($output as $section) {
+         $count++;
+      }
+      $this->integer($count)->isEqualTo(2);
 
+      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
       $found = 0;
       foreach ($output as $section) {
          foreach ($sections as $search) {

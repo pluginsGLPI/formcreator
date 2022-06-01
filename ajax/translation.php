@@ -35,7 +35,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
    http_response_code(400);

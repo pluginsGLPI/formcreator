@@ -39,6 +39,7 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->migration = $migration;
 
        $this->addTtoToIssues();
+       $this->addRights();
    }
 
    public function addTtoToIssues() {
@@ -57,5 +58,30 @@ class PluginFormcreatorUpgradeTo2_14 {
         $this->migration->addKey($table, 'internal_time_to_resolve');
         $this->migration->addKey($table, 'solvedate');
         $this->migration->addKey($table, 'date');
+   }
+
+   public function addRights() {
+      // Add rights
+      global $DB;
+      $profiles = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Profile::getTable(),
+      ]);
+      foreach ($profiles as $profile) {
+         $rights = ProfileRight::getProfileRights(
+            $profile['id'],
+            [
+               Entity::$rightname,
+               PluginFormcreatorForm::$rightname,
+            ]
+         );
+         if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
+            continue;
+         }
+         $right = READ + UPDATE + CREATE + DELETE + PURGE;
+         ProfileRight::updateProfileRights($profile['id'], [
+            PluginFormcreatorForm::$rightname => $right,
+         ]);
+      }
    }
 }

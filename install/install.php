@@ -95,6 +95,7 @@ class PluginFormcreatorInstall {
       $this->createCronTasks();
       $this->createNotifications();
       $this->createMiniDashboard();
+      $this->addRightsToAdministrateForms();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       $task = new CronTask();
@@ -283,12 +284,14 @@ class PluginFormcreatorInstall {
 
       /** Value -2 is "inheritance from parent" @see PluginFormcreatorEntityconfig::CONFIG_PARENT */
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
-                  (entities_id, replace_helpdesk, default_form_list_mode, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible)
+                  (entities_id, replace_helpdesk, default_form_list_mode, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible, is_search_issue_visible, tile_design)
                SELECT ent.id,
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 0, -2),
+                  IF(ent.id = 0, 1, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 1, -2),
                   IF(ent.id = 0, 0, -2)
@@ -572,6 +575,7 @@ class PluginFormcreatorInstall {
       $this->deleteTicketRelation();
       $this->deleteTables();
       $this->deleteNotifications();
+      $this->deleteMiniDashboard();
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
@@ -591,6 +595,50 @@ class PluginFormcreatorInstall {
    }
 
    protected function createMiniDashboard() {
+      $this->createMiniDashboardBigNumbers();
+      // $this->createMiniDashboardSummary();
+   }
+
+   protected function createMiniDashboardSummary() {
+      $dashboard = new Dashboard();
+
+      if ($dashboard->getFromDB('plugin_formcreator_issue_summary') !== false) {
+         // The dashboard already exists, nothing to create
+         return;
+      }
+
+      $dashboard->add([
+         'key'     => 'plugin_formcreator_issue_summary',
+         'name'    => 'Assistance requests summary',
+         'context' => 'mini_core',
+      ]);
+
+      if ($dashboard->isNewItem()) {
+         // Failed to create the dashboard
+         return;
+      };
+
+      $item = new Dashboard_Item();
+      $item->addForDashboard($dashboard->fields['id'], [[
+         'card_id' => 'plugin_formcreator_issues_summary',
+         'gridstack_id' => 'plugin_formcreator_issues_summary_' . Uuid::uuid4(),
+         'x'       => 10,
+         'y'       => 0,
+         'width'   => 12,
+         'height'  => 2,
+         'card_options' => [
+            'color'        => '#FAFAFA',
+            'widgettype'   => 'summaryNumbers',
+            'use_gradient' => '0',
+            'point_labels' => '0',
+            'limit'        => '7',
+         ],
+      ]]);
+
+      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+   }
+
+   protected function createMiniDashboardBigNumbers() {
       $dashboard = new Dashboard();
 
       if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
@@ -610,29 +658,39 @@ class PluginFormcreatorInstall {
       };
 
       $commonOptions = [
-         'color'        => '#FAFAFA',
          'widgettype'   => 'bigNumber',
          'use_gradient' => '0',
          'point_labels' => '0',
-         'limit'        => '7',
       ];
       $cards = [
-         'plugin_formcreator_processing' => [
-            'color' => '#49bf4d'
+         'plugin_formcreator_all_issues'      => [
+            'color' => '#ffd957'
          ],
-         'plugin_formcreator_waiting'    => [
-            'color' => '#FFA500'
+         'plugin_formcreator_incoming_issues' => [
+            'color' => '#6fd169'
          ],
-         'plugin_formcreator_validate'   => [
-            'color' => '#8CABDB'
+         'plugin_formcreator_assigned_issues' => [
+            'color' => '#eaf4f7'
          ],
-         'plugin_formcreator_solved'     => [
-            'color' => '#000000'
+         'plugin_formcreator_waiting_issues'   => [
+            'color' => '#ffcb7d'
+         ],
+         'plugin_formcreator_validate_issues'  => [
+            'color' => '#6298d5'
+         ],
+         'plugin_formcreator_solved_issues'    => [
+            'color' => '#d7d7d7'
+         ],
+         'plugin_formcreator_closed_issues'    => [
+            'color' => '#515151'
          ],
       ];
-      $x = 0;
-      $w = 2; // Width
-      $h = 2; // Height
+
+      // With counters
+      $x = 2;
+      $w = 3; // Width
+      $h = 1; // Height
+      $s = 1; // space between widgets
       $y = 0;
       foreach ($cards as $key => $options) {
          $item = new Dashboard_Item();
@@ -645,9 +703,13 @@ class PluginFormcreatorInstall {
             'height'  => $h,
             'card_options' => array_merge($commonOptions, $options),
          ]]);
-         $x += $w;
+         $x += ($w + $s);
       }
 
+      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+   }
+
+   protected function adRightsToMiniDashboard(int $dashboardId) {
       // Give rights to all self service profiles
       $profile = new Profile();
       $helpdeskProfiles = $profile->find([
@@ -656,10 +718,54 @@ class PluginFormcreatorInstall {
       foreach ($helpdeskProfiles as $helpdeskProfile) {
          $dashboardRight = new Dashboard_Right();
          $dashboardRight->add([
-            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'dashboards_dashboards_id' => $dashboardId,
             'itemtype'                 => Profile::getType(),
             'items_id'                => $helpdeskProfile['id'],
          ]);
       }
+   }
+
+   protected function addRightsToAdministrateForms() {
+      global $DB;
+
+      $profiles = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Profile::getTable(),
+      ]);
+      foreach ($profiles as $profile) {
+         $rights = ProfileRight::getProfileRights(
+            $profile['id'],
+            [
+               Entity::$rightname,
+               PluginFormcreatorForm::$rightname,
+            ]
+         );
+         if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
+            continue;
+         }
+         $right = READ + UPDATE + CREATE + DELETE + PURGE;
+         ProfileRight::updateProfileRights($profile['id'], [
+            PluginFormcreatorForm::$rightname => $right,
+         ]);
+      }
+   }
+
+   public function deleteMiniDashboard(): bool {
+      $dashboard = new Dashboard();
+
+      if ($dashboard->getFromDB('plugin_formcreator_issue_counters') === false) {
+         // The dashboard does not exists, nothing to delete
+         return true;
+      }
+
+      $dashboard->delete([
+         'key' => 'plugin_formcreator_issue_counters'
+      ]);
+      if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
+         // Failed to delete the dashboard
+         return false;
+      }
+
+      return true;
    }
 }

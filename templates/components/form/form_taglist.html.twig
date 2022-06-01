@@ -49,6 +49,14 @@
                         <td><strong>##FULLFORM##</strong></td>
                         <td>-</td>
                     </tr>
+                     {% for tag in extra_tags %}
+                        <tr>
+                            <td colspan="2"><strong>{{ tag.question }}</strong></td>
+                            <td>{{ tag.title }}</td>
+                            <td><strong>{{ tag.answer }}</strong></td>
+                            <td>{{ tag.section }}</td>
+                        </tr>
+                    {% endfor %}
                     {% set sections = call('PluginFormcreatorQuestion::getQuestionsFromFormBySection', [item]) %}
                     {% for sectionName, questions in sections %}
                         {% for questionId, questionName in questions %}

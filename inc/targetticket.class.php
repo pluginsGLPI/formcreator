@@ -325,7 +325,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
    public static function showPluginFields(self $item) {
       $formId = $item->getID();
 
-      $canEdit = Session::haveRight('entity', UPDATE);
+      $canEdit = Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE);
 
       if ($canEdit) {
          // Global validation settings
@@ -1199,7 +1199,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $this->getForm(),
          [
             'fieldtype' => 'glpiselect',
-            'values' => $CFG_GLPI['ticket_types']
+            'itemtype' => $CFG_GLPI['ticket_types']
          ],
          '_associate_question',
          $this->fields['associate_question']

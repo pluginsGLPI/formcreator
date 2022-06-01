@@ -34,7 +34,7 @@
 
 {% block form_fields %}
     {% if item.isNewItem() %}
-        {% set language = session('glpilanguage') %}
+        {% set language = '' %}
         {% set iconColor = '#999999' %}
         {% set bgColor = '#E7E7E7' %}
     {% else %}

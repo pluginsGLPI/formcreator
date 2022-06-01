@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use GlpiPlugin\Formcreator\Field\UndefinedField;
 use Xylemical\Expressions\Math\BcMath;
 use Xylemical\Expressions\Context;
 use Xylemical\Expressions\ExpressionFactory;
@@ -107,7 +108,7 @@ class PluginFormcreatorFields
       // Get localized names of field types
       foreach (PluginFormcreatorFields::getClasses() as $field_type => $classname) {
          $classname = self::getFieldClassname($field_type);
-         if ($classname == PluginFormcreatorTagField::class && !$plugin->isActivated('tag')) {
+         if ($classname == UndefinedField::class) {
             continue;
          }
 
@@ -381,9 +382,10 @@ class PluginFormcreatorFields
 
       // Get the visibility result of sections
       $sectionToShow = [];
-      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
-      foreach ($sections as $section) {
-         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);
+      $sectionsGenerator = PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      /** @var PluginFormcreatorSection $section */
+      foreach ($sectionsGenerator as $sectionId => $section) {
+         $sectionToShow[$sectionId] = PluginFormcreatorFields::isVisible($section, $fields);
       }
 
       return [
@@ -409,7 +411,7 @@ class PluginFormcreatorFields
     * @param string $type type of field to test for existence
     * @return boolean
     */
-   public static function fieldTypeExists($type) {
+   public static function fieldTypeExists(string $type): bool {
       $className = self::getFieldClassname($type);
       return is_subclass_of($className, PluginFormcreatorAbstractField::class, true);
    }
@@ -419,10 +421,9 @@ class PluginFormcreatorFields
     *
     * @param string $type type of field to get
     * @param PluginFormcreatorQuestion $question question representing the field
-    * @param array $data additional data
     * @return null|PluginFormcreatorAbstractField
     */
-   public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
+   public static function getFieldInstance(string $type, PluginFormcreatorQuestion $question): ?PluginFormcreatorAbstractField {
       if (!self::fieldTypeExists($type)) {
          return null;
       }

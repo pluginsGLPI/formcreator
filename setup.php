@@ -29,13 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Hooks;
+
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
 define('PLUGIN_FORMCREATOR_VERSION', '2.14.0-dev');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.14');
 // is or is not an official release of the plugin
-define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0');
@@ -259,53 +261,66 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    die($error . "<br><br> Please, check migration log");
 }
 
-function plugin_formcreator_permanent_hook() {
+/**
+ * Permanent hooks, must be set even when the plugin is disabled
+ *
+ * @return void
+ */
+function plugin_formcreator_permanent_hook(): void {
    global $PLUGIN_HOOKS;
 
    // Set the plugin CSRF compliance (required since GLPI 0.84)
-   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
+   $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['formcreator'] = true;
 
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
 
    // hook to update issues when an operation occurs on a ticket
-   $PLUGIN_HOOKS['item_add']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_ADD]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_add_ticket',
       ITILFollowup::class => 'plugin_formcreator_hook_update_itilFollowup',
    ];
-   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['formcreator'] = [
+      User::class  => 'plugin_formcreator_hook_update_user',
+   ];
+   $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
       Profile::class => 'plugin_formcreator_hook_update_profile',
    ];
-   $PLUGIN_HOOKS['item_delete']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_DELETE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
    ];
-   $PLUGIN_HOOKS['item_restore']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_RESTORE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_restore_ticket'
    ];
-   $PLUGIN_HOOKS['item_purge']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::ITEM_PURGE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_purge_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
    ];
-   $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['formcreator'] = [
       PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
       PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
    ];
    // hook to add custom actions on a ticket in service catalog
-   $PLUGIN_HOOKS['timeline_actions']['formcreator'] = 'plugin_formcreator_timelineActions';
+   $PLUGIN_HOOKS[Hooks::TIMELINE_ACTIONS]['formcreator'] = 'plugin_formcreator_timelineActions';
 }
 
-function plugin_formcreator_hook() {
+/**
+ * Hooks to run when the plugin is active
+ *
+ * @return void
+ */
+function plugin_formcreator_hook(): void {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
-   $PLUGIN_HOOKS['add_css']['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
+   $PLUGIN_HOOKS[Hooks::ADD_CSS]['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
 
-   $PLUGIN_HOOKS['pre_show_tab']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['formcreator'] = [
       PluginFormcreatorCommon::class, 'hookPreShowTab',
    ];
-   $PLUGIN_HOOKS['post_show_tab']['formcreator'] = [
+   $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['formcreator'] = [
       PluginFormcreatorCommon::class, 'hookPostShowTab',
    ];
 
@@ -326,8 +341,8 @@ function plugin_formcreator_hook() {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
             $CFG_GLPI['javascript']['self-service']['none'] = [
                'dashboard',
                'gridstack'
@@ -356,11 +371,10 @@ function plugin_formcreator_hook() {
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-   $PLUGIN_HOOKS['redefine_menus']['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
+   $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS]['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
 
    // Config page
-   $links  = [];
-   if (Session::haveRight('entity', UPDATE)) {
+   if (Session::haveRightsOr(PluginFormcreatorForm::$rightname, [READ, UPDATE, CREATE, DELETE, PURGE])) {
       $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = PluginFormcreatorForm::class;
    }
 }
@@ -382,6 +396,8 @@ function plugin_formcreator_registerClasses() {
    ]);
 
    Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+
+   Plugin::registerClass(PluginFormcreatorProfile::class, ['addtabon' => Profile::class]);
 }
 
 function plugin_formcreator_redirect() {

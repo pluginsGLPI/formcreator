@@ -751,14 +751,14 @@ PluginFormcreatorTranslatableInterface
       );
 
       $questionTable = PluginFormcreatorQuestion::getTable();
-      $questions = (new PluginFormcreatorQuestion)->getQuestionsFromForm(
+      $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm(
          $this->getForm()->getID(),
          [
             "$questionTable.fieldtype" => ['date', 'datetime'],
          ]
       );
       $questions_list = [];
-      foreach ($questions as $question) {
+      foreach ($questionsGenerator as $question) {
          $questions_list[$question->getID()] = $question->fields['name'];
       }
       // List questions
@@ -1319,7 +1319,13 @@ SCRIPT;
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm(),
          [
-            new QueryExpression("`fieldtype` = 'actor' OR (`fieldtype` = 'glpiselect' AND `itemtype`='User')"),
+            'OR' => [
+               'fieldtype' => 'actor',
+               'AND' => [
+                  'fieldtype' => 'glpiselect',
+                  'itemtype'  => 'User',
+               ]
+            ]
          ],
          '_validation_from_user_question',
          $this->fields['commonitil_validation_question'],
@@ -1576,10 +1582,6 @@ SCRIPT;
          }
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-      }
-
       return $input;
    }
 
@@ -1607,11 +1609,7 @@ SCRIPT;
       ]);
    }
 
-   protected function getDeleteImage($id) {
-      $formUrl = static::getFormURL();
-      // $link  = ' &nbsp;<a href="' . $formUrl . '?delete_actor=' . $id . '&id=' . $this->getID() . '">';
-      // $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
-      // $link .= '</a>';
+   protected function getDeleteImage() {
       $link = '<a onclick="plugin_formcreator.deleteActor(this)">';
       $link .= '<i style="color: #000" class="fas fa-trash-alt" alt="' . __('Delete') . '" title="' . __('Delete') . '"></i>';
       $link .= '</a>';
@@ -2093,7 +2091,7 @@ SCRIPT;
                break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
-         echo $this->getDeleteImage($id);
+         echo $this->getDeleteImage();
          echo '</div>';
       }
 

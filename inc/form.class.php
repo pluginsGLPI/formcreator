@@ -47,7 +47,7 @@ PluginFormcreatorTranslatableInterface
    use PluginFormcreatorExportableTrait;
    use PluginFormcreatorTranslatable;
 
-   static $rightname = 'entity';
+   static $rightname = 'plugin_formcreator_form';
 
    public $dohistory = true;
 
@@ -74,7 +74,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    public static function canCreate() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, CREATE);
    }
 
    public static function canView() {
@@ -82,11 +82,11 @@ PluginFormcreatorTranslatableInterface
    }
 
    public static function canDelete() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, DELETE);
    }
 
    public static function canPurge() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, PURGE);
    }
 
    public function canPurgeItem() {
@@ -98,7 +98,7 @@ PluginFormcreatorTranslatableInterface
       if ($DbUtil->countElementsInTable(PluginFormcreatorFormAnswer::getTable(), $criteria) > 0) {
          return false;
       }
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(self::$rightname, UPDATE);
    }
 
    /**
@@ -501,20 +501,26 @@ PluginFormcreatorTranslatableInterface
    public function showTargets($ID, $options = []) {
       echo '<table class="tab_cadrehov">';
       echo '<tr>';
-      echo '<th colspan="3">'._n('Target', 'Targets', 2, 'formcreator').'</th>';
+      echo '<th>'._n('Target', 'Targets', 2, 'formcreator').'</th>';
+      echo '<th>'.__('Type', 'formcreator').'</th>';
+      echo '<th class="right">'.__('Actions', 'formcreator').'</th>';
       echo '</tr>';
 
       $allTargets = $this->getTargetsFromForm();
       $i = 0;
       foreach ($allTargets as $targetType => $targets) {
          foreach ($targets as $targetId => $target) {
+            /** @var PluginFormcreatorAbstractTarget $target  */
             $i++;
             echo '<tr class="tab_bg_'.($i % 2).'">';
             $targetItemUrl = $targetType::getFormURLWithID($targetId);
             echo '<td><a href="' . $targetItemUrl . '">';
-
             echo $target->fields['name'];
             echo '</a></td>';
+
+            echo '<td>';
+            echo $target->getTypeName();
+            echo '</td>';
 
             echo '<td align="center" width="32">';
             echo '<i
@@ -638,7 +644,9 @@ PluginFormcreatorTranslatableInterface
 
    public function showWizard() : void {
       echo '<div id="plugin_formcreator_wizard_categories" class="card">';
+
       echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
+      echo '<div class="category-divider"></div>';
       echo '<div class="slinky-menu"></div>';
       echo '<div><a href="#" id="wizard_seeall">' . __('See all', 'formcreator') . '</a></div>';
       echo '</div>';
@@ -662,13 +670,17 @@ PluginFormcreatorTranslatableInterface
       $sort_order = PluginFormcreatorEntityconfig::getUsedConfig('sort_order', Session::getActiveEntity());
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
-      echo '<label for="plugin_formcreator_mostPopular">&nbsp;'.$sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] .'</label>';
+      echo '<label for="plugin_formcreator_mostPopular">';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '"><i class="fa fa-star" aria-hidden="true"></i></a>';
+      echo '</label>';
       echo '</span>';
       echo '&nbsp;';
       echo '<span class="radios">';
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.' onclick="showTiles(tiles)"/>';
-      echo '<label for="plugin_formcreator_alphabetic">&nbsp;'.$sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL].'</label>';
+      echo '<label for="plugin_formcreator_alphabetic">';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL] . '"><i class="fa fa-arrow-down-a-z"></i></a>';
+      echo '</label>';
       echo '</span>';
       echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
@@ -689,6 +701,8 @@ PluginFormcreatorTranslatableInterface
     */
    public static function getFormList(int $rootCategory = 0, string $keywords = '', bool $helpdeskHome = false): array {
       global $DB, $TRANSLATE;
+
+      $display_format = PluginFormcreatorEntityconfig::getUsedConfig('tile_design', Session::getActiveEntity());
 
       $table_cat      = getTableForItemType(PluginFormcreatorCategory::class);
       $table_form     = getTableForItemType(PluginFormcreatorForm::class);
@@ -783,7 +797,8 @@ PluginFormcreatorTranslatableInterface
             'description'      => __($form['description'], $domain),
             'type'             => 'form',
             'usage_count'      => $form['usage_count'],
-            'is_default'       => $form['is_default'] ? "true" : "false"
+            'is_default'       => $form['is_default'] ? "true" : "false",
+            'tile_template'    => $display_format,
          ];
       }
 
@@ -821,7 +836,8 @@ PluginFormcreatorTranslatableInterface
                'description'      => '',
                'type'             => 'faq',
                'usage_count'      => $faq['view'],
-               'is_default'       => false
+               'is_default'       => false,
+               'tile_template'    => PluginFormcreatorEntityConfig::CONFIG_UI_FORM_MASONRY
             ];
          }
       }
@@ -851,6 +867,7 @@ PluginFormcreatorTranslatableInterface
                'type'             => 'form',
                'usage_count'      => $form['usage_count'],
                'is_default'       => true,
+               'tile_template'    => $display_format,
             ];
          }
       }
@@ -1007,15 +1024,6 @@ PluginFormcreatorTranslatableInterface
       ]);
       // Delete saved answers if any
       unset($_SESSION['formcreator']['data']);
-
-      // Show validator selector
-      if (Plugin::isPluginActive('advform')) {
-         echo PluginAdvformForm_Validator::dropdownValidator($this);
-      } else {
-         if ($this->validationRequired()) {
-            echo PluginFormcreatorForm_Validator::dropdownValidator($this);
-         }
-      }
    }
 
    /**
@@ -1422,6 +1430,11 @@ PluginFormcreatorTranslatableInterface
    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
       switch ($ma->getAction()) {
          case 'Duplicate' :
+            if (!Session::haveRight(PluginFormcreatorForm::$rightname, CREATE)) {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               return;
+            }
             foreach ($ids as $id) {
                if ($item->getFromDB($id) && $item->duplicate() !== false) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
@@ -1433,6 +1446,11 @@ PluginFormcreatorTranslatableInterface
             }
             return;
          case 'Transfert' :
+            if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               return;
+            }
             foreach ($ids as $id) {
                if ($item->getFromDB($id) && $item->transfer($ma->POST['entities_id'])) {
                   Session::addMessageAfterRedirect(sprintf(__('Form Transfered: %s', 'formcreator'), $item->getName()));
@@ -1444,6 +1462,11 @@ PluginFormcreatorTranslatableInterface
             }
             return;
          case 'Export' :
+            if (!Session::haveRight(PluginFormcreatorForm::$rightname, READ)) {
+               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+               $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+               return;
+            }
             foreach ($ids as $id) {
                if ($item->getFromDB($id)) {
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
@@ -2039,9 +2062,8 @@ PluginFormcreatorTranslatableInterface
          return $fields;
       }
 
-      $question = new PluginFormcreatorQuestion();
-      $found_questions = $question->getQuestionsFromForm($this->getID());
-      foreach ($found_questions as $id => $question) {
+      $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm($this->getID());
+      foreach ($questionsGenerator as $id => $question) {
          $fields[$id] = $question->getSubField();
       }
 
@@ -2294,7 +2316,7 @@ PluginFormcreatorTranslatableInterface
 
       $strings = $this->getMyTranslatableStrings($options);
 
-      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($this->getID()) as $section) {
+      foreach (PluginFormcreatorSection::getSectionsFromForm($this->getID()) as $section) {
          foreach ($section->getTranslatableStrings($options) as $type => $subStrings) {
             $strings[$type] = array_merge($strings[$type], $subStrings);
          }
@@ -2516,7 +2538,13 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showTagsList() {
+      $extra_tags = Plugin::doHookFunction('formcreator_add_extra_tags', [
+         'tags' => [],
+         'form' => $this,
+      ]);
+
       TemplateRenderer::getInstance()->display('@formcreator/components/form/form_taglist.html.twig', [
+         'extra_tags' => $extra_tags['tags'],
          'item'   => $this,
       ]);
 

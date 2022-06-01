@@ -496,7 +496,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    ul,
    li {
       list-style: none;
-      margin: 0;
+      padding-bottom: 10px;
    }
 
    ul {
@@ -506,8 +506,19 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    a {
       display: block;
       border: none;
-      padding: 16px;
-      height: 51px;
+      padding: 10px;
+      height: 40px;
+      span {
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         display: inline-block;
+         width: calc(100% - 20px);
+      }
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: calc(100% - 20px);
    }
 
    li ul {
@@ -537,7 +548,6 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    a.next:after {
       content: '\276f';
-      margin-left: 1em;
       float: right;
    }
 
@@ -597,7 +607,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 
    li {
       background-color: inherit;
-      height: 51px;
+      height: 40px;
    }
 }
 
@@ -646,14 +656,14 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 }
 
 .plugin_formcreator_formTile {
-   margin: 0 3px 6px 3px;
+   margin: 0 3px 17px 3px;
    width: 300px;
    display: inline-block;
    vertical-align: top;
    text-align: left;
    overflow: hidden;
    cursor: pointer;
-   border-radius: 0;
+   border-radius: 5px;
    box-sizing: border-box;
    animation-name: fadeInUp ;
    animation-iteration-count: 1;
@@ -668,9 +678,15 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    background-color: #CCC;
 }
 
+.plugin_formcreator_formTile.tile_design_uniform_height {
+   height: 150px;
+   display: inline-block;
+}
+
 a.plugin_formcreator_formTile_title {
    padding: 10px 40px 15px 10px;
    display: block;
+   font-weight: bold;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
@@ -816,8 +832,8 @@ a.plugin_formcreator_formTile_title {
    }
 
    > div {
-      border-bottom: 1px solid rgba(0,0,0,.1);
-      padding: 11px;
+      padding-left:  10px;
+      padding-right: 10px;
    }
 }
 
@@ -1031,4 +1047,26 @@ a.plugin_formcreator_formTile_title {
    span {
       max-width: 400px;
    }
+}
+
+/* TODO when the following PR is merged and minimal GLPI version is above the version containing it, remove this CSS */
+/* https://github.com/glpi-project/glpi/pull/11524 */
+.formcreator_dashboard_container .dashboard .big-number .label {
+   font-size: 12px !important;
+}
+
+.plugin_formcreator_sort .fa {
+   padding-left: 5px;
+   color: #717171;
+}
+
+.category-divider {
+   height: 0;
+   margin-bottom: 0.5rem;
+   overflow: hidden;
+   border-top: 1px solid rgba(98, 105, 118, 0.16);
+}
+
+a.category_active span {
+   font-weight: bold;
 }

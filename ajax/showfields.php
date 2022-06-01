@@ -45,7 +45,7 @@ if (!isset($_POST[$formFk])) {
 
 $form = PluginFormcreatorCommon::getForm();
 $form->getFromDB((int) $_POST['plugin_formcreator_forms_id']);
-if (!Session::haveRight('entity', UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
+if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
    http_response_code(403);
    exit();
 }

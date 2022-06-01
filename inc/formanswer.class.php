@@ -111,7 +111,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      if (Session::haveRight('entity', UPDATE)) {
+      if (Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
          return true;
       }
 
@@ -170,7 +170,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function canPurgeItem() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE);
    }
 
    /**
@@ -277,22 +277,20 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       if ($display_for_form) {
          $optindex = self::SOPTION_ANSWER;
-         $question = new PluginFormcreatorQuestion;
-         $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
+         $questionsGenerator = PluginFormcreatorQuestion::getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
 
-         foreach ($questions as $current_question) {
-            $questions_id = $current_question->getID();
+         foreach ($questionsGenerator as $questionId => $question) {
             $tab[] = [
                'id'            => $optindex,
                'table'         => PluginFormcreatorAnswer::getTable(),
                'field'         => 'answer',
-               'name'          => $current_question->fields['name'],
+               'name'          => $question->fields['name'],
                'datatype'      => 'string',
                'massiveaction' => false,
                'nosearch'      => false,
                'joinparams'    => [
                   'jointype'  => 'child',
-                  'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questions_id",
+                  'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questionId",
                ]
             ];
 
@@ -526,9 +524,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       echo '</h1>';
 
       // Form Header
-      if (!empty($this->fields['content'])) {
+      if (!empty($form->fields['content']) || !empty($form->getExtraHeader())) {
          echo '<div class="form_header">';
-         echo html_entity_decode($this->fields['content']);
+         echo html_entity_decode($form->fields['content']);
          echo html_entity_decode($form->getExtraHeader());
          echo '</div>';
       }
@@ -562,10 +560,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->answers['plugin_formcreator_forms_id'] = $form->getID();
       $visibility = PluginFormcreatorFields::updateVisibility($this->answers);
 
-      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
-      foreach ($sections as $section) {
-         $sectionId = $section->getID();
-
+      $sectionsGenerator = PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      foreach ($sectionsGenerator as $sectionId => $section) {
          // Section header
          $hiddenAttribute = $visibility[$section->getType()][$sectionId] ? '' : 'hidden=""';
          echo '<li'
@@ -585,8 +581,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Display all fields of the section
          $lastQuestion = null;
-         $questions = (new PluginFormcreatorQuestion)->getQuestionsFromSection($sectionId);
-         foreach ($questions as $question) {
+         foreach (PluginFormcreatorQuestion::getQuestionsFromSection($sectionId) as $question) {
             if ($lastQuestion !== null) {
                if ($lastQuestion->fields['row'] < $question->fields['row']) {
                   // the question begins a new line
@@ -1081,6 +1076,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
+         Plugin::doHookFunction('formcreator_before_generate_target', $this);
+
          if (!$this->generateTarget()) {
             Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
@@ -1221,7 +1218,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = Sanitizer::sanitize($content);
       }
 
-      return $content;
+      $hook_data = Plugin::doHookFunction('formcreator_parse_extra_tags', [
+         'formanswer' => $this,
+         'content'    => $content,
+         'target'     => $target,
+         'richtext'   => $richText,
+      ]);
+
+      return $hook_data['content'];
    }
 
    /**

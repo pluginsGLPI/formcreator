@@ -34,72 +34,36 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
 use Html;
-use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 
-class IpField extends PluginFormcreatorAbstractField
+class UndefinedField extends PluginFormcreatorAbstractField
 {
-   public function isPrerequisites(): bool {
-      return true;
+   public static function getName(): string {
+      return __('Undefined', 'formcreator');
    }
 
-   public function showForm(array $options): void {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
-
-      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
-      $this->deserializeValue($this->question->fields['default_values']);
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-      ]);
-   }
-
-   public function prepareQuestionInputForSave($input) {
-      return $input;
-   }
-
-   public function show(string $domain, bool $canEdit = true): string {
-      if (!$canEdit) {
-         return '';
-      }
-
-      $id           = $this->question->getID();
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $ip = Toolbox::getRemoteIpAddress();
-      $ip = Html::cleanInputText($ip);
-      return Html::hidden($fieldName, [
-         'id'     => $domId,
-         'value'  => $ip,
-      ]);
+   public static function canRequire(): bool {
+      return false;
    }
 
    public function serializeValue(): string {
-      if ($this->value === null || $this->value === '') {
-         return '';
-      }
-
-      return $this->value;
+      return '';
    }
 
    public function deserializeValue($value) {
-      $this->value = ($value !== null && $value !== '')
-         ? $value
-         : '';
    }
 
    public function getValueForDesign(): string {
-      if ($this->value === null) {
-         return '';
-      }
-
-      return $this->value;
+      return '';
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return $this->value;
+      return null;
+   }
+
+   public function getValueForApi() {
+      return '';
    }
 
    public function moveUploads() {
@@ -109,42 +73,52 @@ class IpField extends PluginFormcreatorAbstractField
       return [];
    }
 
+   public function isPrerequisites(): bool {
+       return true;
+   }
+
+   public function isPublicFormCompatible(): bool {
+      return true;
+   }
+
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/undefinedfield.html.twig';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
+   }
    public function isValid(): bool {
-      return true;
+       return true;
    }
-
    public function isValidValue($value): bool {
-      return true;
+       return true;
    }
 
-   public static function getName(): string {
-      return _n('IP address', 'IP addresses', 1);
-   }
-
-   public static function canRequire(): bool {
+   public function hasInput($input): bool {
       return false;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false): bool {
-      $key = 'formcreator_field_' . $this->question->getID();
-      if (!is_string($input[$key])) {
-         return false;
-      }
-
-      $this->value = $input[$key];
       return true;
    }
 
-   public function hasInput($input): bool {
-      return isset($input['formcreator_field_' . $this->question->getID()]);
+   public function isEditableField(): bool {
+      return true;
+   }
+
+   public function getHtmlIcon(): string {
+      return '<i class="fa fa-question" aria-hidden="true"></i>';
    }
 
    public function equals($value): bool {
-      return $this->value == $value;
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function notEquals($value): bool {
-      return !$this->equals($value);
+       throw new ComparisonException('Meaningless comparison');
    }
 
    public function greaterThan($value): bool {
@@ -156,26 +130,10 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
-
-   public function isPublicFormCompatible(): bool {
-      return true;
-   }
-
-   public function getHtmlIcon() {
-      return '<i class="fa fa-desktop" aria-hidden="true"></i>';
+      throw new ComparisonException('Meaningless comparison');
    }
 
    public function isVisibleField(): bool {
       return false;
-   }
-
-   public function isEditableField(): bool {
-      return false;
-   }
-
-   public function getValueForApi() {
-      return $this->value;
    }
 }

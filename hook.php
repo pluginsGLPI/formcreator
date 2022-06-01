@@ -666,17 +666,24 @@ function plugin_formcreator_timelineActions($options) {
    echo "</li>";
 }
 
-function plugin_formcreator_hook_dashboard_cards() {
-   $cards = [];
+function plugin_formcreator_hook_dashboard_cards($cards) {
+   if ($cards === null) {
+      $cards = [];
+   }
 
    $counters = [
-      'processing' => __('processing issues', 'formcreator'),
-      'waiting'    => __('waiting issues', 'formcreator'),
-      'validate'   => __('issues to validate', 'formcreator'),
-      'solved'     => __('solved issues', 'formcreator'),
+      'all'        => __('All', 'formcreator'),
+      'incoming'   => __('New', 'formcreator'),
+      'assigned'   => __('Assigned', 'formcreator'),
+      'waiting'    => __('Waiting', 'formcreator'),
+      'validate'   => __('To validate', 'formcreator'),
+      'solved'     => __('Solved', 'formcreator'),
+      'closed'     => __('Closed', 'formcreator'),
+      // Aggregaterd statuses
+      'old'        => __('Old', 'formcreator'), // Solved + closed
    ];
    foreach ($counters as $key => $label) {
-      $cards['plugin_formcreator_' . $key] = [
+      $cards['plugin_formcreator_' . $key . '_issues'] = [
          'widgettype' => ['bigNumber'],
          'itemtype'   => PluginFormcreatorIssue::getType(),
          'group'      => __('Assistance'),
@@ -685,13 +692,23 @@ function plugin_formcreator_hook_dashboard_cards() {
          'args'       => [
             'params' => [
                'status' => $key,
-               'label'  => $label
+               'label'  => $label,
             ]
          ],
          'cache'      => false,
          'filters'    => []
       ];
    }
+
+   $cards['plugin_formcreator_issues_summary'] = [
+      'widgettype' => ['summaryNumbers'],
+      'itemtype'   => PluginFormcreatorIssue::getType(),
+      'group'      => __('Assistance'),
+      'label'      => __('Issues summary', 'formcreator'),
+      'provider'   => 'PluginFormcreatorIssue::getIssuesSummary',
+      'cache'      => false,
+      'filters'    => []
+   ];
 
    return $cards;
 }
@@ -714,5 +731,19 @@ function plugin_formcreator_hook_update_profile(CommonDBTM $item) {
          'itemtype' => Profile::getType(),
          'items_id' => $item->getID(),
       ], 1);
+   }
+}
+
+function plugin_formcreator_hook_update_user(CommonDBTM $item) {
+   if ($item::getType() != User::getType()) {
+      return;
+   }
+
+   if (isset($item->input['default_dashboard_mini_ticket'])) {
+
+      if (in_array($item->input['default_dashboard_mini_ticket'], ['plugin_formcreator_issue_counters', 'plugin_formcreator_issue_summary'])) {
+         Session::addMessageAfterRedirect(__('Formcreator\'s mini dashboard not usable as default. This Setting has been ignored.', 'formcreator'), false, WARNING);
+         unset($item->input['default_dashboard_mini_ticket']);
+      }
    }
 }

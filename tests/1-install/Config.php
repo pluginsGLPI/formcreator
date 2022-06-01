@@ -31,7 +31,12 @@
 
 namespace tests\units;
 
+use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Item;
+use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Profile;
+use ProfileRight;
 
 /**
  * @engine inline
@@ -111,20 +116,18 @@ class Config extends CommonTestCase {
       $plugin->activate($plugin->fields['id']);
       $this->boolean($plugin->isActivated($pluginName))->isTrue('Cannot enable the plugin');
 
-      // Check the version saved in configuration
       $this->checkConfig();
-      $this->testPluginName();
+      $this->checkRequestType();
+      $this->checkPluginName();
       $this->checkAutomaticAction();
+      $this->checkDashboard();
+      $this->checkRights();
    }
 
    public function testUpgradedPlugin() {
       global $DB;
 
       $pluginName = TEST_PLUGIN_NAME;
-
-      // Check the version saved in configuration
-      $this->checkConfig();
-      $this->testPluginName();
 
       $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
       foreach ($fresh_tables as $fresh_table) {
@@ -151,11 +154,15 @@ class Config extends CommonTestCase {
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
 
-      $this->testRequestType();
+      $this->checkConfig();
+      $this->checkRequestType();
+      $this->checkPluginName();
       $this->checkAutomaticAction();
+      $this->checkDashboard();
+      $this->checkRights();
    }
 
-   public function testPluginName() {
+   public function checkPluginName() {
       $plugin = new \Plugin();
       $plugin->getFromDBbyDir(TEST_PLUGIN_NAME);
       $this->string($plugin->fields['name'])->isEqualTo('Form Creator');
@@ -171,7 +178,7 @@ class Config extends CommonTestCase {
       ]);
    }
 
-   public function testRequestType() {
+   public function checkRequestType() {
       $requestType = new \RequestType();
       $requestType->getFromDBByCrit(['name' => 'Formcreator']);
       $this->boolean($requestType->isNewItem())->isFalse();
@@ -281,5 +288,54 @@ class Config extends CommonTestCase {
          'schema' => strtolower($structure),
          'index'  => $index
       ];
+   }
+
+   public function checkDashboard() {
+      // Check the dashboard exists
+      $dashboard = new Dashboard();
+      $dashboard->getFromDB('plugin_formcreator_issue_counters');
+      $this->boolean($dashboard->isNewItem())->isFalse();
+
+      // Check rights on the dashboard
+      $right = new Right();
+      $profile = new Profile();
+      $helpdeskProfiles = $profile->find([
+         'interface' => 'helpdesk',
+      ]);
+      foreach ($helpdeskProfiles as $helpdeskProfile) {
+         $rows = $right->find([
+            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'itemtype'                 => Profile::getType(),
+            'items_id'                 => $helpdeskProfile['id']
+         ]);
+         $this->array($rows)->hasSize(1);
+      }
+
+      // Check there is widgets in the dashboard
+      $dashboardItem = new Item();
+      $rows = $dashboardItem->find([
+         'dashboards_dashboards_id' => $dashboard->fields['id'],
+      ]);
+      $this->array($rows)->hasSize(7);
+   }
+
+   public function checkRights() {
+      $profileRight = new ProfileRight();
+      $rows = $profileRight->find([
+         'name' => 'plugin_formcreator_form',
+         'profiles_id' => 4, // Super admin profile
+      ]);
+      $superAdminRightFound = false;
+      foreach ($rows as $rowId => $row) {
+         if ($row['profiles_id'] == 4) {
+            // Super admin have UPDATE on entity
+            $expected = READ + CREATE + UPDATE + DELETE + PURGE;
+            $superAdminRightFound = true;
+         } else {
+            $expected = READ;
+         }
+         $this->integer((int) $row['rights'])->isEqualTo($expected);
+      }
+      $this->boolean($superAdminRightFound)->istrue();
    }
 }

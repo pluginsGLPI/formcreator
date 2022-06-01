@@ -671,6 +671,14 @@ PluginFormcreatorExportableInterface
     *
     */
    public static function dropdownValidator(PluginFormcreatorForm $form): string {
+      if (Plugin::isPluginActive('advform')) {
+         return PluginAdvformForm_Validator::dropdownValidator($form);
+      }
+
+      if (!$form->validationRequired()) {
+         return '';
+      }
+
       $validators = [];
       $formValidator = new PluginFormcreatorForm_Validator();
       // Validators of either user type or group type

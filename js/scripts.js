@@ -37,6 +37,15 @@ var slinkyCategories;
 var timers = [];
 var formcreatorRootDoc = rootDoc + '/' + GLPI_PLUGINS_PATH.formcreator;
 
+
+// @see https://www.tiny.cloud/docs/integrations/bootstrap/
+// Prevent Bootstrap dialog from blocking focusin
+document.addEventListener('focusin', (e) => {
+   if (e.target.closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+     e.stopImmediatePropagation();
+   }
+ });
+
 // === COMMON ===
 
 function getTimer(object) {
@@ -90,7 +99,7 @@ $(function() {
    } else if ($('#plugin_formcreator_kb_categories').length > 0) {
       updateKbCategoriesView();
 
-      $('#plugin_formcreator_kb_categories #kb_seeall').on('click', function (event) {
+      $('#plugin_formcreator_kb_categories #wizard_seeall').on('click', function (event) {
          slinkyCategories.home();
          plugin_formcreator.updateKbitemsView(event.target);
          $('#plugin_formcreator_kb_categories .category_active').removeClass('category_active');
@@ -201,9 +210,9 @@ function updateKbCategoriesView() {
       });
       $('#plugin_formcreator_kb_categories a.back').on('click',
          function(event) {
-            parentItem = $(event.target).parentsUntil('#plugin_formcreator_kb_categories > div', 'li')[1];
-            parentAnchor = $(parentItem).children('a')[0];
-            updateKbitemsView(parentAnchor.getAttribute('data-parent-category-id'));
+            var parentItem = $(event.target).parentsUntil('#plugin_formcreator_kb_categories .slinky-menu > ul', 'li')[1];
+            var parentAnchor = $(parentItem).children('a')[0];
+            plugin_formcreator.updateKbitemsView(parentAnchor);
          }
       );
 
@@ -293,11 +302,34 @@ function showTiles(tiles, defaultForms) {
    $('#plugin_formcreator_wizard_forms').empty();
    $('#plugin_formcreator_wizard_forms').prepend(html);
    $('#plugin_formcreator_formlist').masonry({
-      horizontalOrder: true
+      horizontalOrder: true,
+      gutter: 10
    });
    $('#plugin_formcreator_faqlist').masonry({
-      horizontalOrder: true
+      horizontalOrder: true,
+      gutter: 10
    });
+
+
+   $(".plugin_formcreator_formTile_description.tile_design_uniform_height").each(function( index ) {
+      var length = 150;
+      //decrease length if contain icon
+      if ($(this).parent().find(".fa").length > 0) {
+         length = length - 35;
+      }
+
+      var parent_title = $(this).parent().find('.plugin_formcreator_formTile_title').text();
+      if (parent_title.length + $(this).text().length > length) {
+         var short = jQuery.trim($(this).text())
+                  .substring(0, length)
+                  .split(" ")
+                  .slice(0, -1)
+                  .join(" ") + " ...";
+         $(this).html(short);
+      }
+   });
+
+
 }
 
 function buildKbCategoryList(tree) {
@@ -305,7 +337,7 @@ function buildKbCategoryList(tree) {
    if (tree.id != 0) {
       html += '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="plugin_formcreator.updateWizardFormsView(this)">'
+         + ' onclick="plugin_formcreator.updateKbitemsView(this)">'
          + tree.name
          + '</a>';
    }
@@ -325,7 +357,8 @@ function buildCategoryList(tree) {
    if (tree.id != 0) {
       html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
-         + ' onclick="plugin_formcreator.updateWizardFormsView(this)">'
+         + ' onclick="plugin_formcreator.updateWizardFormsView(this)"'
+         + 'title="' + tree.name + '">'
          + tree.name
          + '</a>';
    }
@@ -348,7 +381,7 @@ function buildTiles(list) {
    var html = '';
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + i18n.textdomain('formcreator').__('No form yet in this category', 'formcreator')
+      + i18n.textdomain('formcreator').__('No item yet in this category', 'formcreator')
       + '</p>'
       +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
@@ -361,9 +394,14 @@ function buildTiles(list) {
             url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
          }
 
+         var tiles_design = "";
+         if (item.tile_template == "1") { // @see PluginFormcreatorEntityConfig::CONFIG_UI_FORM_UNIFORM_HEIGHT
+            tiles_design = "tile_design_uniform_height";
+         }
+
          var description = '';
          if (item.description) {
-            description = '<div class="plugin_formcreator_formTile_description">'
+            description = '<div class="plugin_formcreator_formTile_description '+ tiles_design +'">'
                           +item.description
                           +'</div>';
          }
@@ -391,7 +429,7 @@ function buildTiles(list) {
 
          if (item.type == 'form') {
             forms.push(
-               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
                + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name
@@ -401,7 +439,7 @@ function buildTiles(list) {
             );
          } else {
             faqs.push(
-               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
                + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name

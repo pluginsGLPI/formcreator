@@ -29,22 +29,39 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-// Check a user is logged in
-if (Session::getLoginUserID() === false) {
-    http_response_code(403);
-    die();
+class PluginFormcreatorProfile extends Profile {
+
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      return self::createTabEntry(PluginFormcreatorForm::getTypeName(Session::getPluralNumber()));
+   }
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      $formcreatorprofile = new self();
+      $formcreatorprofile->showForm($item->getID());
+      return true;
+   }
+
+   function showForm($ID, $options = []) {
+      if (!self::canView()) {
+         return false;
+      }
+
+      echo "<div class='spaced'>";
+      $profile = new Profile();
+      $profile->getFromDB($ID);
+      echo "<form method='post' action='".$profile->getFormURL()."'>";
+
+      $rights = [['itemtype'  => PluginFormcreatorForm::getType(),
+                  'label'     => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
+                  'field'     => PluginFormcreatorForm::$rightname]];
+      $matrix_options['title'] = PluginFormcreatorForm::getTypeName(Session::getPluralNumber());
+      $profile->displayRightsChoiceMatrix($rights, $matrix_options);
+
+      echo "<div class='center'>";
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+      echo "</div>\n";
+      Html::closeForm();
+      echo "</div>";
+   }
 }
-// Immediately close session to allow parallelization
-session_write_close();
-
-$counter = $_GET['counter'] ?? null;
-
-// Validate parameters
-if (!in_array($counter, [null, 'incoming', 'waiting', 'to_validate', 'solved'])) {
-    http_response_code(400);
-    die();
-};
-
-$status = PluginFormcreatorIssue::getTicketSummary($counter);
-echo json_encode($status);

@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use GlpiPlugin\Formcreator\Field\UndefinedField;
 use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
@@ -205,6 +206,7 @@ PluginFormcreatorTranslatableInterface
       $questionId = $this->getID();
       $sectionId = $this->fields[PluginFormcreatorSection::getForeignKeyField()];
       $fieldType = PluginFormcreatorFields::getFieldClassname($this->fields['fieldtype']);
+      /** @var PluginFormcreatorFieldInterface $field */
       $field = new $fieldType($this);
 
       $html .= '<div class="grid-stack-item"'
@@ -397,6 +399,10 @@ PluginFormcreatorTranslatableInterface
    public function prepareInputForAdd($input) {
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
+
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
       if (count($input) === 0) {
          return [];
@@ -454,10 +460,6 @@ PluginFormcreatorTranslatableInterface
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
-      }
-
       return $input;
    }
 
@@ -476,7 +478,12 @@ PluginFormcreatorTranslatableInterface
          if (!isset($input['plugin_formcreator_sections_id'])) {
             $input['plugin_formcreator_sections_id'] = $this->fields['plugin_formcreator_sections_id'];
          }
+
          $input = $this->checkBeforeSave($input);
+
+         if (!$this->checkConditionSettings($input)) {
+            $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
+         }
       }
 
       if (!is_array($input) || count($input) == 0) {
@@ -506,10 +513,6 @@ PluginFormcreatorTranslatableInterface
          if (!isset($this->fields['uuid']) && $this->fields['uuid'] != $input['uuid']) {
             $input['uuid'] = plugin_formcreator_getUuid();
          }
-      }
-
-      if (!$this->checkConditionSettings($input)) {
-         $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
       }
 
       return $input;
@@ -725,7 +728,7 @@ PluginFormcreatorTranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
-      $template = '@formcreator/field/undefined.html.twig';
+      $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [
             'item' => $this,
@@ -913,9 +916,9 @@ PluginFormcreatorTranslatableInterface
     * return array of question objects belonging to a form
     * @param int $formId
     * @param array $crit array for the WHERE clause
-    * @return PluginFormcreatorQuestion[]
+    * @return \Generator
     */
-   public static function getQuestionsFromForm($formId, $crit = []) {
+   public static function getQuestionsFromForm($formId, $crit = []): \Generator {
       global $DB;
 
       $table_question = PluginFormcreatorQuestion::getTable();
@@ -943,14 +946,11 @@ PluginFormcreatorTranslatableInterface
          ]
       ]);
 
-      $questions = [];
       foreach ($result as $row) {
          $question = new self();
          $question->getFromDB($row['id']);
-         $questions[$row['id']] = $question;
+         yield $row['id'] => $question;
       }
-
-      return $questions;
    }
 
    /**
@@ -958,12 +958,11 @@ PluginFormcreatorTranslatableInterface
     *
     * @param int $sectionId
     *
-    * @return PluginFormcreatorQuestion[]
+    * @return \Generator
     */
-   public static function getQuestionsFromSection($sectionId) {
+   public static function getQuestionsFromSection($sectionId): \Generator {
       global $DB;
 
-      $questions = [];
       $rows = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
@@ -973,12 +972,10 @@ PluginFormcreatorTranslatableInterface
          'ORDER'  => ['row ASC', 'col ASC']
       ]);
       foreach ($rows as $row) {
-            $question = new self();
-            $question->getFromDB($row['id']);
-            $questions[$row['id']] = $question;
+         $question = new self();
+         $question->getFromDB($row['id']);
+         yield $row['id'] => $question;
       }
-
-      return $questions;
    }
 
    /**
@@ -1186,7 +1183,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    /**
-    * load instance if field associated to the question
+    * load instance of field associated to the question
     *
     * @return bool true on sucess, false otherwise
     */
@@ -1332,6 +1329,28 @@ PluginFormcreatorTranslatableInterface
       if ((new Plugin())->isActivated('databases')) {
          $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
+
+      // Get additional itemtypes from plugins
+      $additionalTypes = Plugin::doHookFunction('formcreator_get_glpi_object_types', []);
+      // Cleanup data from plugins
+      $cleanedAditionalTypes = [];
+      foreach ($additionalTypes as $groupName => $itemtypes) {
+         if (!is_string($groupName)) {
+            continue;
+         }
+         $cleanedAditionalTypes[$groupName] = [];
+         foreach ($itemtypes as $itemtype => $typeName) {
+            if (!class_exists($itemtype)) {
+               continue;
+            }
+            if (array_search($itemtype, $cleanedAditionalTypes[$groupName])) {
+               continue;
+            }
+            $cleanedAditionalTypes[$groupName][$itemtype] = $typeName;
+         }
+      }
+      // Merge new itemtypes to predefined ones
+      $optgroup = array_merge_recursive($optgroup, $cleanedAditionalTypes);
 
       $itemtype = is_subclass_of($options['value'], CommonDBTM::class) ? $options['value'] : '';
       Dropdown::showFromArray($name, $optgroup, [

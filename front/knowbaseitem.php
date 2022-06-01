@@ -43,10 +43,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    Html::header(__('Service catalog', 'formcreator'));
 }
 
-if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-   $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 2, 'mini_core');
-   $dashboard->show(true);
-}
+PluginFormcreatorCommon::showMiniDashboard();
 
 $kb = new PluginFormcreatorKnowbase();
 $kb->showServiceCatalog();

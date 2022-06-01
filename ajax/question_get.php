@@ -31,17 +31,16 @@
 
 include ('../../../inc/includes.php');
 Session::checkLoginUser();
-Session::checkRight('entity', UPDATE);
+Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
    http_response_code(400);
    exit();
 }
 $sectionId = (int) $_REQUEST['id'];
-$questions = PluginFormcreatorQuestion::getQuestionsFromSection($sectionId);
 
 $json = [];
-foreach ($questions as $question) {
+foreach (PluginFormcreatorQuestion::getQuestionsFromSection($sectionId) as $question) {
     $json[$question->getID()] = [
         'y'      => $question->fields['row'],
         'x'      => $question->fields['col'],

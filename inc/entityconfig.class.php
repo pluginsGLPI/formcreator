@@ -63,6 +63,13 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_DASHBOARD_HIDDEN = 0;
    const CONFIG_DASHBOARD_VISIBLE = 1;
 
+   const CONFIG_SEARCH_ISSUE_HIDDEN = 0;
+   const CONFIG_SEARCH_ISSUE_VISIBLE = 1;
+
+   const CONFIG_UI_FORM_MASONRY = 0;
+   const CONFIG_UI_FORM_UNIFORM_HEIGHT = 1;
+
+
    /**
     * @var bool $dohistory maintain history
     */
@@ -132,6 +139,22 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
          self::CONFIG_DASHBOARD_VISIBLE => __('Visible', 'formcreator'),
          self::CONFIG_DASHBOARD_HIDDEN  => __('Hidden', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumSearchIssueVisibility() : array {
+      return [
+         self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         self::CONFIG_SEARCH_ISSUE_VISIBLE => __('Visible', 'formcreator'),
+         self::CONFIG_SEARCH_ISSUE_HIDDEN  => __('Hidden', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumUIForm() : array {
+      return [
+         self::CONFIG_PARENT                 => __('Inheritance of the parent entity'),
+         self::CONFIG_UI_FORM_MASONRY        => __('Variable height', 'formcreator'),
+         self::CONFIG_UI_FORM_UNIFORM_HEIGHT => __('Uniform height', 'formcreator'),
       ];
    }
 
@@ -310,6 +333,38 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('is_header_visible', $elements, ['value' => $this->fields['is_header_visible']]);
       if ($this->fields['is_header_visible'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('is_header_visible', $entityId);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
+      // Search issue visibility
+      $elements = self::getEnumSearchIssueVisibility();
+      if ($entityId == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Search issue', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_search_issue_visible', $elements, ['value' => $this->fields['is_search_issue_visible']]);
+      if ($this->fields['is_search_issue_visible'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_search_issue_visible', $entityId);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
+      // Tiles Design
+      $elements = self::getEnumUIForm();
+      if ($entityId == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Tile design', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('tile_design', $elements, ['value' => $this->fields['tile_design']]);
+      if ($this->fields['tile_design'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('tile_design', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }

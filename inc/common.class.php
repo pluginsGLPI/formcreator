@@ -30,6 +30,7 @@
  */
 
 use Gregwar\Captcha\CaptchaBuilder;
+use Glpi\Plugin\Hooks;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -796,6 +797,14 @@ JAVASCRIPT;
                'icon'    => 'fa-fw ti ti-rss',
             ];
          }
+
+         // Add plugins menus
+         $plugin_menus = $menus['plugins']['content'] ?? [];
+         foreach ($plugin_menus as $menu_name => $menu_data) {
+            $menu_data['default'] = $menu_data['page'] ?? '#';
+            $newMenu[$menu_name] = $menu_data;
+         }
+
          return $newMenu;
       }
 
@@ -825,5 +834,22 @@ JAVASCRIPT;
       }
 
       return $newMenus;
+   }
+
+   /**
+    * Show a mini dashboard
+    *
+    * @return void
+    */
+   public static function showMiniDashboard(): void {
+
+      Plugin::doHook(Hooks::DISPLAY_CENTRAL);
+
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
+         $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+         echo "<div class='formcreator_dashboard_container'>";
+         $dashboard->show(true);
+         echo "</div>";
+      }
    }
 }
