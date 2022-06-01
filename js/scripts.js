@@ -316,6 +316,10 @@ function showTiles(tiles, defaultForms) {
       } else {
          html += '<p>' + i18n.textdomain('formcreator').__('No form found.', 'formcreator') + '</p>';
       }
+   } else {
+      if (tiles.length < 1) {
+         html += '<p>' + i18n.textdomain('formcreator').__('No FAQ item found.', 'formcreator') + '</p>';
+      }
    }
    html += buildTiles(tiles);
 
