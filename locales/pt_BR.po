@@ -18,7 +18,7 @@
 # Jean Vergaças <jvergacas@gmail.com>, 2022
 # Manoel Ramon, 2022
 # Diego Nobre <diego@koruma.com.br>, 2022
-# Arthur Ramos Schaefer <arthur.r.schaefer@gmail.com>, 2022
+# Arthur Schaefer <arthur.r.schaefer@gmail.com>, 2022
 # Eduardo Spinola <eduardo.spinola@gmail.com>, 2022
 # 
 #, fuzzy
