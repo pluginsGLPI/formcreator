@@ -671,7 +671,7 @@ PluginFormcreatorTranslatableInterface
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_mostPopular">';
-      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '"><i class="fa fa-star" aria-hidden="true"></i></a>';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '">&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a>';
       echo '</label>';
       echo '</span>';
       echo '&nbsp;';
@@ -679,7 +679,7 @@ PluginFormcreatorTranslatableInterface
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_alphabetic">';
-      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL] . '"><i class="fa fa-arrow-down-a-z"></i></a>';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL] . '">&nbsp;<i class="fa fa-arrow-down-a-z"></i></a>';
       echo '</label>';
       echo '</span>';
       echo '</div>';
