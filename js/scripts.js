@@ -113,7 +113,7 @@ $(function() {
       // Dynamically update forms and faq items while the user types in the search bar
       var timer = getTimer(searchInput);
       var callbackFunc;
-      if ($('#plugin_formcreator_kb_categories .category_active').length > 0) {
+      if ($('#plugin_formcreator_kb_categories').length > 0) {
          callbackFunc = plugin_formcreator.updateKbitemsView.bind(plugin_formcreator);
       } else {
          callbackFunc = plugin_formcreator.updateWizardFormsView.bind(plugin_formcreator);
@@ -125,14 +125,25 @@ $(function() {
       $('#plugin_formcreator_searchBar input').focus(function(event) {
          if (searchInput.val().length > 0) {
             searchInput.val('');
-            plugin_formcreator.updateWizardFormsView(null);
-            $.when(getFormAndFaqItems(0))
-            .then(
-               function (response) {
-                  tiles = response;
-                  showTiles(tiles.forms);
-               }
-            );
+            if ($('#plugin_formcreator_kb_categories').length > 0) {
+               plugin_formcreator.updateKbitemsView(null);
+               $.when(getFaqItems(0))
+               .then(
+                  function (response) {
+                     tiles = response;
+                     showTiles(tiles.forms);
+                  }
+               );
+            } else {
+               plugin_formcreator.updateWizardFormsView(null);
+               $.when(getFormAndFaqItems(0))
+               .then(
+                  function (response) {
+                     tiles = response;
+                     showTiles(tiles.forms);
+                  }
+               );
+            }
          }
       });
    }
@@ -233,7 +244,8 @@ function getFaqItems(categoryId) {
       data: {
          categoriesId: categoryId,
          keywords: keywords,
-         helpdeskHome: 0},
+         helpdeskHome: 0
+      },
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -252,7 +264,12 @@ function getFormAndFaqItems(categoryId) {
    var deferred = jQuery.Deferred();
    $.post({
       url: formcreatorRootDoc + '/ajax/homepage_wizard.php',
-      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
+      data: {
+         wizard: 'forms',
+         categoriesId: categoryId,
+         keywords: keywords,
+         helpdeskHome: 0
+      },
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
@@ -294,7 +311,15 @@ function showTiles(tiles, defaultForms) {
    var tiles = sortFormAndFaqItems(tiles, sortByName);
    var html = '';
    if (defaultForms) {
-      html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead', 'formcreator') + '</p>'
+      if (tiles.length > 0) {
+         html += '<p>' + i18n.textdomain('formcreator').__('No form found. Please choose a form below instead.', 'formcreator') + '</p>';
+      } else {
+         html += '<p>' + i18n.textdomain('formcreator').__('No form found.', 'formcreator') + '</p>';
+      }
+   } else {
+      if (tiles.length < 1) {
+         html += '<p>' + i18n.textdomain('formcreator').__('No FAQ item found.', 'formcreator') + '</p>';
+      }
    }
    html += buildTiles(tiles);
 
@@ -380,83 +405,80 @@ function buildTiles(list) {
 
    var html = '';
    if (list.length == 0) {
-      html = '<p id="plugin_formcreator_formlist">'
-      + i18n.textdomain('formcreator').__('No item yet in this category', 'formcreator')
-      + '</p>'
-      +'<p id="plugin_formcreator_faqlist"></p>';
-   } else {
-      var forms = [];
-      var faqs = [];
-      $.each(list, function (key, item) {
-         // Build a HTML tile
-         var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
-         if (item.type != 'form') {
-            url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
-         }
-
-         var tiles_design = "";
-         if (item.tile_template == "1") { // @see PluginFormcreatorEntityConfig::CONFIG_UI_FORM_UNIFORM_HEIGHT
-            tiles_design = "tile_design_uniform_height";
-         }
-
-         var description = '';
-         if (item.description) {
-            description = '<div class="plugin_formcreator_formTile_description '+ tiles_design +'">'
-                          +item.description
-                          +'</div>';
-         }
-
-         var default_class = '';
-         if (JSON.parse(item.is_default)) {
-            default_class = 'default_form';
-         }
-
-         if (item.icon == '') {
-            if (item.type == 'form') {
-               item.icon = 'fa fa-question-circle';
-            } else {
-               item.icon = 'fa fa-clipboard-list';
-            }
-         }
-
-         if (item.icon_color == '') {
-            item.icon_color = '#999999';
-         }
-
-         if (item.background_color == '') {
-            item.background_color = '#e7e7e7';
-         }
-
-         if (item.type == 'form') {
-            forms.push(
-               '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
-               + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
-               + item.name
-               + '</a>'
-               + description
-               + '</div>'
-            );
-         } else {
-            faqs.push(
-               '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
-               + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
-               + item.name
-               + '</a>'
-               + description
-               + '</div>'
-            );
-         }
-      });
-
-      // concatenate all HTML parts
-      html = '<div id="plugin_formcreator_formlist">'
-      + forms.join("")
-      + '</div><div id="plugin_formcreator_faqlist">'
-      + faqs.join("")
-      + '</div>'
+      return html;
    }
+
+   var forms = [];
+   var faqs = [];
+   $.each(list, function (key, item) {
+      // Build a HTML tile
+      var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + item.id;
+      if (item.type != 'form') {
+         url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
+      }
+
+      var tiles_design = "";
+      if (item.tile_template == "1") { // @see PluginFormcreatorEntityConfig::CONFIG_UI_FORM_UNIFORM_HEIGHT
+         tiles_design = "tile_design_uniform_height";
+      }
+
+      var description = '';
+      if (item.description) {
+         description = '<div class="plugin_formcreator_formTile_description '+ tiles_design +'">'
+                        +item.description
+                        +'</div>';
+      }
+
+      var default_class = '';
+      if (JSON.parse(item.is_default)) {
+         default_class = 'default_form';
+      }
+
+      if (item.icon == '') {
+         if (item.type == 'form') {
+            item.icon = 'fa fa-question-circle';
+         } else {
+            item.icon = 'fa fa-clipboard-list';
+         }
+      }
+
+      if (item.icon_color == '') {
+         item.icon_color = '#999999';
+      }
+
+      if (item.background_color == '') {
+         item.background_color = '#e7e7e7';
+      }
+
+      if (item.type == 'form') {
+         forms.push(
+            '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
+            + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
+            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+            + item.name
+            + '</a>'
+            + description
+            + '</div>'
+         );
+      } else {
+         faqs.push(
+            '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
+            + '<i class="fa ' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
+            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+            + item.name
+            + '</a>'
+            + description
+            + '</div>'
+         );
+      }
+   });
+
+   // concatenate all HTML parts
+   html = '<div id="plugin_formcreator_formlist">'
+   + forms.join("")
+   + '</div><div id="plugin_formcreator_faqlist">'
+   + faqs.join("")
+   + '</div>'
 
    return html;
 }
