@@ -671,7 +671,7 @@ PluginFormcreatorTranslatableInterface
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_mostPopular">';
-      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '"><i class="fa fa-star" aria-hidden="true"></i></a>';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_POPULARITY] . '">&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a>';
       echo '</label>';
       echo '</span>';
       echo '&nbsp;';
@@ -679,7 +679,7 @@ PluginFormcreatorTranslatableInterface
       $selected = $sort_order == PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL ? 'checked="checked"' : '';
       echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.' onclick="showTiles(tiles)"/>';
       echo '<label for="plugin_formcreator_alphabetic">';
-      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL] . '"><i class="fa fa-arrow-down-a-z"></i></a>';
+      echo '<a title="' . $sort_settings[PluginFormcreatorEntityConfig::CONFIG_SORT_ALPHABETICAL] . '">&nbsp;<i class="fa fa-arrow-down-a-z"></i></a>';
       echo '</label>';
       echo '</span>';
       echo '</div>';
@@ -713,46 +713,46 @@ PluginFormcreatorTranslatableInterface
 
       $order         = "$table_form.name ASC";
 
-      $where_form = self::getFormListQuery();
-      $where_form['SELECT'] = [
+      $formList = self::getFormListQuery();
+      $formList['SELECT'] = [
          $table_form => ['id', 'name', 'icon', 'icon_color', 'background_color', 'description', 'usage_count', 'is_default'],
       ];
-      $where_form['LEFT JOIN'][$table_cat] = [
+      $formList['LEFT JOIN'][$table_cat] = [
          'FKEY' => [
             $table_cat => 'id',
             $table_form => $categoryFk,
          ]
       ];
-      $where_form['LEFT JOIN'][$table_section] = [
+      $formList['LEFT JOIN'][$table_section] = [
          'FKEY' => [
             $table_section => PluginFormcreatorForm::getForeignKeyField(),
             $table_form => 'id',
          ]
       ];
-      $where_form['LEFT JOIN'][$table_question] = [
+      $formList['LEFT JOIN'][$table_question] = [
          'FKEY' => [
             $table_question => PluginFormcreatorSection::getForeignKeyField(),
             $table_section => 'id'
          ]
       ];
       if ($helpdeskHome) {
-         $where_form['WHERE']['AND']["$table_form.helpdesk_home"] = '1';
+         $formList['WHERE']['AND']["$table_form.helpdesk_home"] = '1';
       }
 
       $selectedCategories = [];
       if ($rootCategory != 0) {
          // The user choosed a category
          $selectedCategories = getSonsOf($table_cat, $rootCategory);
-         $where_form['WHERE']['AND']["$table_form.$categoryFk"] = $selectedCategories;
+         $formList['WHERE']['AND']["$table_form.$categoryFk"] = $selectedCategories;
       } else {
          // Searching for all forms without category restriction
          $onlyDefault = PluginFormcreatorEntityconfig::getUsedConfig('default_form_list_mode', Session::getActiveEntity());
          if ($onlyDefault == PluginFormcreatorEntityconfig::CONFIG_DEFAULT_FORM_LIST_DEFAULT) {
-            $where_form['WHERE']['AND']['is_default'] = 1;
+            $formList['WHERE']['AND']['is_default'] = 1;
          }
       }
 
-      $where_form['GROUPBY'] = [
+      $formList['GROUPBY'] = [
          "$table_form.id",
          "$table_form.name",
          "$table_form.description",
@@ -760,7 +760,7 @@ PluginFormcreatorTranslatableInterface
          "$table_form.is_default"
       ];
 
-      $where_form['ORDER'] = [
+      $formList['ORDER'] = [
          $order
       ];
 
@@ -768,7 +768,7 @@ PluginFormcreatorTranslatableInterface
       $keywords = trim($keywords);
       if (!empty($keywords)) {
          $keywordsWithWilcards = $DB->escape(PluginFormcreatorCommon::prepareBooleanKeywords($keywords));
-         $where_form['WHERE']['AND'][] = [
+         $formList['WHERE']['AND'][] = [
             'OR' => [
                new QueryExpression("MATCH($table_form.`name`, $table_form.`description`)
                   AGAINST('$keywordsWithWilcards' IN BOOLEAN MODE)"),
@@ -778,7 +778,7 @@ PluginFormcreatorTranslatableInterface
          ];
       }
 
-      $result_forms = $DB->request($where_form);
+      $result_forms = $DB->request($formList);
 
       $formList = [];
       foreach ($result_forms as $form) {

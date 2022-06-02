@@ -1822,7 +1822,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Undocumented function
+    * Get approver users or approver groups
     *
     * @param array $crit
     * @return array|null
