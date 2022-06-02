@@ -64,6 +64,14 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $item->showChildren();
    }
 
+   public function displaySpecificTypeField($ID, $field = [], array $options = []) {
+      if ($field['name'] == 'icon') {
+         PluginFormcreatorCommon::showFontAwesomeDropdown($field['name'], [
+            'value' => $this->fields[$field['name']],
+         ]);
+      }
+   }
+
    public function getAdditionalFields() {
       return [
          [
@@ -77,7 +85,25 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'type'      => 'parent',
             'label'     => __('As child of'),
             'list'      => false
-         ]
+         ],
+         [
+            'name'      => 'icon',
+            'type'      => 'fontawesome-icon',
+            'label'     => __('Icon', 'formcreator'),
+            'list'      => false
+         ],
+         [
+            'name'      => 'icon_color',
+            'type'      => 'color',
+            'label'     => __('Icon color', 'formcreator'),
+            'list'      => false
+         ],
+         [
+            'name'      => 'background_color',
+            'type'      => 'color',
+            'label'     => __('Background color', 'formcreator'),
+            'list'      => false
+         ],
       ];
    }
 
@@ -91,7 +117,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $cat_table  = PluginFormcreatorCategory::getTable();
       $form_table = PluginFormcreatorForm::getTable();
-      $table_fp   = PluginFormcreatorForm_Profile::getTable();
 
       $query_faqs = KnowbaseItem::getListRequest([
          'faq'      => '1',
@@ -132,6 +157,9 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'SELECT' => [
             'id',
             'name',
+            'icon',
+            'icon_color',
+            'background_color',
             "$categoryFk as parent",
             'level',
             new QueryExpression(

@@ -487,6 +487,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
     > ul {
       left: 0;
       position: relative;
+
       transform: translateZ(0);
       transition: all 300ms ease;
       -webkit-transform: translateZ(0);
@@ -496,7 +497,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    ul,
    li {
       list-style: none;
-      padding-bottom: 10px;
+      // padding-bottom: 10px;
    }
 
    ul {
@@ -518,7 +519,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: calc(100% - 20px);
+      // width: calc(100% - 20px);
    }
 
    li ul {
@@ -575,7 +576,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    }
 
    a[data-category-id]:not([data-parent-category-id="0"]) {
-      margin-left: 20px;
+      // margin-left: 20px;
    }
 
    .category_active:not(.next),
@@ -583,20 +584,20 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       position: relative;
    }
 
-   .category_active:not(.next):before,
-   .category_active ~ul .header:before {
-      position: absolute;
-      left: calc(100% - 46px);
-      top: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      border-right-color: #DDD;
-      border-width: 23px;
-      margin-top: -23px;
-      z-index: 20;
-   }
+   // .category_active:not(.next):before,
+   // .category_active ~ul .header:before {
+   //    position: absolute;
+   //    left: calc(100% - 46px);
+   //    top: 50%;
+   //    border: solid transparent;
+   //    content: " ";
+   //    height: 0;
+   //    width: 0;
+   //    border-right-color: #DDD;
+   //    border-width: 23px;
+   //    margin-top: -23px;
+   //    z-index: 20;
+   // }
 
    .card-title {
       padding: 0.83em 0;
@@ -1067,6 +1068,6 @@ a.plugin_formcreator_formTile_title {
    border-top: 1px solid rgba(98, 105, 118, 0.16);
 }
 
-a.category_active span {
+a.category_active span, a.category_active + ul > li:first-child > a {
    font-weight: bold;
 }
