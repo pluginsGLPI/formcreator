@@ -396,7 +396,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          echo '.itil-right-side { width: 0 !important }';
          echo '.itil-left-side { width: 100% !important }';
          echo '#itil-object-container .form-buttons span { display: none !important }';
-         echo '#itil-object-container .form-buttons { flex: inherit; width: 89px}';
+         echo '#itil-object-container .form-buttons { flex: inherit; width: auto}';
          echo "#itil-object-container .timeline-buttons { flex: 1 1 auto }";
          echo '</style>';
          $item->showForm($item->getID());
