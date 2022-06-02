@@ -181,7 +181,9 @@ function updateCategoriesView() {
 
       // Show label of parent in the 'back' item
       document.querySelectorAll('#plugin_formcreator_wizard_categories .slinky-menu a.back').forEach(item => {
-         var parentLabel = item.closest('ul').closest('li').querySelector('a').innerText;
+         var parent = item.closest('ul').closest('li').querySelector('a');
+         var parentLabel = parent.innerText;
+         item.setAttribute('style', parent.getAttribute('style'));
          item.innerText = parentLabel;
       });
 
@@ -189,6 +191,8 @@ function updateCategoriesView() {
          function(event) {
             var parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories .slinky-menu > ul', 'li')[1];
             var parentAnchor = $(parentItem).children('a')[0];
+            $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
+            $(parentAnchor).addClass('category_active');
             plugin_formcreator.updateWizardFormsView(parentAnchor);
          }
       );
@@ -380,10 +384,25 @@ function buildKbCategoryList(tree) {
 function buildCategoryList(tree) {
    var html = '';
    if (tree.id != 0) {
+      var icon = '';
+      if (tree.icon != '' && tree.icon !== null ) {
+         if (tree.icon_color == '' || tree.icon_color  === null ) {
+            tree.icon_color = '#999999';
+         }
+         icon = '<i class="fa ' + tree.icon + '" style="color: ' + tree.icon_color+ '"></i>&nbsp;';
+      }
+
+
+      if (tree.background_color == '' || tree.background_color  === null) {
+         tree.background_color = '#e7e7e7';
+      }
+
       html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
          + ' data-category-id="' + tree.id + '"'
          + ' onclick="plugin_formcreator.updateWizardFormsView(this)"'
-         + 'title="' + tree.name + '">'
+         + ' style="background-color: ' + tree.background_color + '"'
+         + ' title="' + tree.name + '">'
+         + icon
          + tree.name
          + '</a>';
    }
