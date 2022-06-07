@@ -358,9 +358,10 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
    $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
    $issue = new PluginFormcreatorIssue();
    $issue->add([
+      'name'               => $issueName,
+      'display_id'         => 't_' . $item->getID(),
       'items_id'           => $item->getID(),
       'itemtype'           => 'Ticket',
-      'name'               => $issueName,
       'status'             => $validationStatus,
       'date_creation'      => $item->fields['date'],
       'date_mod'           => $item->fields['date_mod'],
@@ -368,6 +369,8 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       'is_recursive'       => '0',
       'requester_id'       => $requester['users_id'],
       'comment'            => addslashes($item->fields['content']),
+      'users_id_recipient' => $item->fields['users_id_recipient'],
+
    ]);
 }
 
