@@ -436,9 +436,9 @@ function buildTiles(list) {
 
       if (item.icon == '') {
          if (item.type == 'form') {
-            item.icon = 'fa fa-question-circle';
-         } else {
             item.icon = 'fa fa-clipboard-list';
+         } else {
+            item.icon = 'fa fa-question-circle';
          }
       }
 
