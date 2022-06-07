@@ -971,11 +971,11 @@ PluginFormcreatorTranslatableInterface
          }
          echo '</ul>';
          echo '<div class="text-center card-footer">';
-         $criteria = 'criteria[0][field]=10'
+         $criteria = 'criteria[0][field]=5'
                      . '&criteria[0][searchtype]=equals'
                      . '&criteria[0][value]=' . $userId;
          $criteria.= "&criteria[1][link]=OR"
-                     . "&criteria[1][field]=11"
+                     . "&criteria[1][field]=7"
                      . "&criteria[1][searchtype]=equals"
                      . "&criteria[1][value]=mygroups";
 
