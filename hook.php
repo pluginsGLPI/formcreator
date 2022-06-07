@@ -370,7 +370,6 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       'requester_id'       => $requester['users_id'],
       'comment'            => addslashes($item->fields['content']),
       'users_id_recipient' => $item->fields['users_id_recipient'],
-
    ]);
 }
 
