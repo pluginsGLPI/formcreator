@@ -220,7 +220,7 @@ class FieldsField extends PluginFormcreatorAbstractField
 
       $dropdown_matches = [];
       if (preg_match('/^dropdown-(?<class>.+)$/i', $dropdown_type, $dropdown_matches)
-         && class_exists($dropdown_matches['class'])
+         && isset($dropdown_matches['class']) && class_exists($dropdown_matches['class'])
       ) {
          $dropdown_type = 'dropdown_extend';
          $dropdown_class = $dropdown_matches['class'];
