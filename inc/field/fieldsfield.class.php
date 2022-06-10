@@ -200,6 +200,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       }
 
       $rand         = mt_rand();
+      $dropdown_type = $this->getField()->fields['type'];
 
       //compute default values
       if (!empty($value)) {
@@ -217,11 +218,20 @@ class FieldsField extends PluginFormcreatorAbstractField
          $field['value'] = $value;
       }
 
+      $dropdown_matches = [];
+      $dropdown_type = '';
+      if (preg_match('/^dropdown-(?<class>.+)$/i', $dropdown_type, $dropdown_matches)
+         && isset($dropdown_matches['class']) && class_exists($dropdown_matches['class'])
+      ) {
+         $dropdown_type = 'dropdown_extend';
+         $dropdown_class = $dropdown_matches['class'];
+      }
+
       $html = "";
       $readonly = ($this->getField()->fields['is_readonly'] || !$canedit);
       $this->question->fields['required'] = $this->getField()->fields['mandatory'];
 
-      switch ($this->getField()->fields['type']) {
+      switch ($dropdown_type) {
          case 'number':
          case 'text':
             $value = Html::cleanInputText($value);
@@ -356,9 +366,26 @@ class FieldsField extends PluginFormcreatorAbstractField
                $os->getFromDB($value);
                $html.= $os->fields['name'];
             }
+         case 'dropdown_extend':
+            $itemtype = $dropdown_class;
+
+            if ($canedit && !$readonly) {
+               $html.= $itemtype::dropdown(['name'      => $fieldName,
+                                       'value'     => $value,
+                                       'entity'    => -1,
+                                       'right'     => 'all',
+                                       'display'   => false]);
+               $html .= Html::scriptBlock("$(function() {
+                  pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
+               });");
+            } else {
+               $dropdown_field = new $itemtype();
+               $dropdown_field->getFromDB($value);
+               $html.= $dropdown_field->fields['name'];
+            }
             break;
          default:
-            $html .= __('Field type not implemented yet !', 'formcreator');
+            $html .= sprintf(__('Field \'%1$s\' type not implemented yet !', 'formcreator'), $dropdown_type);
       }
 
       unset($_SESSION['plugin']['fields']['values_sent']);
