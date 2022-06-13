@@ -541,7 +541,7 @@ PluginFormcreatorTranslatableInterface
       // Display add target link...
       echo '<tr class="tab_bg_'.(($i + 1) % 2).' id="add_target_row">';
       echo '<td colspan="3">';
-      echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.');">
+      echo '<a href="javascript:plugin_formcreator.addTarget('.$ID.');">
                 <i class="fa fa-plus"></i>
                 '.__('Add a target', 'formcreator').'
             </a>';
