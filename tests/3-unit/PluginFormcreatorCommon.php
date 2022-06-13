@@ -471,6 +471,62 @@ class PluginFormcreatorCommon extends CommonTestCase {
          'expected' => \Html::generateMenuSession(true),
       ];
 
+      // Check that simplified interface without service catalog) shows "Forms" menu item
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => $entityId]);
+      $this->boolean($entityConfig->isNewItem())->isFalse();
+      $entityConfig->update([
+         'id' => $entityConfig->getID(),
+         'replace_helpdesk' => '0',
+      ]);
+      $this->login('post-only', 'postonly');
+      \Session::changeActiveEntities($entityId);
+
+      yield [
+         'input'    => \Html::generateHelpMenu(),
+         'expected' => [
+            'home' => [
+               'default' => '/front/helpdesk.public.php',
+               'title' => 'Home',
+               'icon' => 'fas fa-home',
+            ],
+            'create_ticket' => [
+               'default' => '/front/helpdesk.public.php?create_ticket=1',
+               'title' => 'Create a ticket',
+               'icon' => 'ti ti-plus',
+            ],
+            'seek_assistance' => [
+               'default' => "plugins/formcreator/front/wizard.php",
+               'title' => 'Forms',
+               'icon' => 'fa-fw ti ti-headset',
+            ],
+            'tickets' => [
+               'default' => '/front/ticket.php',
+               'title' => 'Tickets',
+               'icon' => 'ti ti-alert-circle',
+               'content' => [
+                  'ticket' => [
+                     'links' => [
+                        'search' => '/glpi/front/ticket.php',
+                        'lists' => '',
+                        'add' => '/front/helpdesk.public.php?create_ticket=1',
+                     ],
+                  ],
+               ],
+            ],
+            'reservation' => [
+               'default' => '/front/reservationitem.php',
+               'title' => 'Reservations',
+               'icon' => 'ti ti-calendar-event',
+            ],
+            'faq' => [
+               'default' => '/front/helpdesk.faq.php',
+               'title' => 'FAQ',
+               'icon' => 'ti ti-lifebuoy',
+            ],
+         ],
+      ];
+
       // Check that service catalog enabled does not impacts the menu for Central users
       $entityConfig = new \PluginFormcreatorEntityConfig();
       $entityConfig->getFromDbByCrit(['entities_id' => $entityId]);
@@ -495,24 +551,24 @@ class PluginFormcreatorCommon extends CommonTestCase {
       yield [
          'input' => \Html::generateHelpMenu(),
          'expected' => [
-             'seek_assistance' =>
-             [
-               'default' => 'plugins/formcreator/front/wizard.php',
-               'title' => 'Seek assistance',
-               'icon' => 'fa-fw ti ti-headset',
-             ],
-             'my_assistance_requests' =>
-             [
-               'default' => '/plugins/formcreator/front/issue.php',
-               'title' => 'My requests for assistance',
-               'icon' => 'fa-fw ti ti-list',
-             ],
-             'reservation' =>
-             [
-               'default' => '/front/reservationitem.php',
-               'title' => 'Reservations',
-               'icon' => 'ti ti-calendar-event',
-             ],
+            'seek_assistance' =>
+            [
+            'default' => 'plugins/formcreator/front/wizard.php',
+            'title' => 'Seek assistance',
+            'icon' => 'fa-fw ti ti-headset',
+            ],
+            'my_assistance_requests' =>
+            [
+            'default' => '/plugins/formcreator/front/issue.php',
+            'title' => 'My requests for assistance',
+            'icon' => 'fa-fw ti ti-list',
+            ],
+            'reservation' =>
+            [
+            'default' => '/front/reservationitem.php',
+            'title' => 'Reservations',
+            'icon' => 'ti ti-calendar-event',
+            ],
          ]
       ];
 
@@ -524,8 +580,8 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->boolean($rssFeed->isNewItem())->isFalse();
       $entityRssFeed = new \Entity_RSSFeed();
       $entityRssFeed->add([
-      'entities_id' => $entityId,
-      'rssfeeds_id' => $rssFeed->getID()
+         'entities_id' => $entityId,
+         'rssfeeds_id' => $rssFeed->getID()
       ]);
       $this->boolean($entityRssFeed->isNewItem())->isFalse();
       yield [
@@ -565,7 +621,5 @@ class PluginFormcreatorCommon extends CommonTestCase {
    public function testHookRedefineMenu($input, $expected) {
       $output = \PluginFormcreatorCommon::hookRedefineMenu($input);
       $this->array($output)->isIdenticalTo($expected);
-
-      return;
    }
 }
