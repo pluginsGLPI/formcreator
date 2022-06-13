@@ -158,8 +158,9 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $values = json_decode($this->question->fields['values']);
       $tab_values = [];
       foreach ($values as $value) {
-         if ((trim($value) != '')) {
-            $tab_values[$value] = $value;
+         $trimmedValue = trim($value);
+         if (($trimmedValue != '')) {
+            $tab_values[$trimmedValue] = $trimmedValue;
          }
       }
       return $tab_values;

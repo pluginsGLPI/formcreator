@@ -755,7 +755,20 @@ JAVASCRIPT;
       }
 
       if (plugin_formcreator_replaceHelpdesk() === false) {
-         return $menus;
+         $newMenu = [];
+         foreach ($menus as $menuKey => $menuItem) {
+            if ($menuKey != 'tickets') {
+               $newMenu[$menuKey] = $menuItem;
+               continue;
+            }
+            $newMenu['seek_assistance'] = [
+               'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
+               'title'   => __('Seek assistance', 'formcreator'),
+               'icon'    => 'fa-fw ti ti-headset',
+            ];
+            $newMenu[$menuKey] = $menuItem;
+         }
+         return $newMenu;
       }
 
       $newMenu = [];

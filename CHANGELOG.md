@@ -1,3 +1,57 @@
+<a name="HEAD"></a>
+## [2.13.0-rc.1](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-beta.2..2.13.0-rc.1) (2022-06-07)
+
+
+### Bug Fixes
+
+*  missing menu entry in simplified interface ([5a07a70c](https://github.com/pluginsGLPI/formcreator/commit/5a07a70c))
+* **abstractitiltarget:** due date constants ([eda3c116](https://github.com/pluginsGLPI/formcreator/commit/eda3c116))
+* **abstractitiltarget:** failed to assign group frop object ([aa92a2f8](https://github.com/pluginsGLPI/formcreator/commit/aa92a2f8))
+* **abstractitiltarget:** mess with actors dropdown ([baf9c042](https://github.com/pluginsGLPI/formcreator/commit/baf9c042))
+* **abstractitiltarget:** php warning when processing file questions without answer ([63e54162](https://github.com/pluginsGLPI/formcreator/commit/63e54162))
+* **abstractitiltarget:** unable to choose a question for location ([6ad92e9a](https://github.com/pluginsGLPI/formcreator/commit/6ad92e9a))
+* **bastractitiltarget:** reapply a324ed9f0635e033cbabaeddb8e238147d0c5024 ([c4dac1c0](https://github.com/pluginsGLPI/formcreator/commit/c4dac1c0))
+* **dropdownfield,glpiselectfield:** build parameters even when none in DB ([57b7596b](https://github.com/pluginsGLPI/formcreator/commit/57b7596b))
+* **fieldsfield:** remove redefined methond identical to parent ([728acf60](https://github.com/pluginsGLPI/formcreator/commit/728acf60))
+* **form:** search criteria when using keywords ([23ab7a35](https://github.com/pluginsGLPI/formcreator/commit/23ab7a35))
+* **form:** search forms to approce ([5335d0ae](https://github.com/pluginsGLPI/formcreator/commit/5335d0ae))
+* **form:** show validator dropdown before submit button ([3ec88a41](https://github.com/pluginsGLPI/formcreator/commit/3ec88a41))
+* **form:** where criteria outside where clause ([4cdb8d8a](https://github.com/pluginsGLPI/formcreator/commit/4cdb8d8a))
+* **formanswer:** quote escaping problem ([1b56e540](https://github.com/pluginsGLPI/formcreator/commit/1b56e540))
+* **instal:** add column to explicit position, sync issues only on version condition ([0bcba9be](https://github.com/pluginsGLPI/formcreator/commit/0bcba9be))
+* **issue:** pass object isntead of ID ([6605ced2](https://github.com/pluginsGLPI/formcreator/commit/6605ced2))
+* **issue:** redirect ticket to issue only in service catalog ([6826ea86](https://github.com/pluginsGLPI/formcreator/commit/6826ea86))
+* **questionregex:** compatibility with PHP 8.1 ([b64386f9](https://github.com/pluginsGLPI/formcreator/commit/b64386f9))
+* **requesttypefield:** typo ([5b9e8f56](https://github.com/pluginsGLPI/formcreator/commit/5b9e8f56))
+* **selectfield:** trim values ([4f59294a](https://github.com/pluginsGLPI/formcreator/commit/4f59294a))
+* **target_actor:** drop unused var causing PHP warning ([7b223001](https://github.com/pluginsGLPI/formcreator/commit/7b223001))
+* **targetticket:** unable to set type ([2e186345](https://github.com/pluginsGLPI/formcreator/commit/2e186345))
+* **textareafield:** remove hack for textarea in previous versions ([203acd10](https://github.com/pluginsGLPI/formcreator/commit/203acd10))
+* **urgencyfield,requesttypefield:** php error if answers does not exists ([42178663](https://github.com/pluginsGLPI/formcreator/commit/42178663))
+* **wizard:** FAQ page may show forms ([d90b0b93](https://github.com/pluginsGLPI/formcreator/commit/d90b0b93))
+* **wizard:** Info message on emlty FAQ result ([d268caea](https://github.com/pluginsGLPI/formcreator/commit/d268caea))
+* **wizard:** adjustable width for ticket footer ([80033ada](https://github.com/pluginsGLPI/formcreator/commit/80033ada))
+* **wizard:** card content overflow ([8b22b271](https://github.com/pluginsGLPI/formcreator/commit/8b22b271))
+* **wizard:** hide save button ([48d98870](https://github.com/pluginsGLPI/formcreator/commit/48d98870))
+* **wizard:** margin problem on separated FAQ page ([03828b4c](https://github.com/pluginsGLPI/formcreator/commit/03828b4c))
+* **wizard:** more space between radio and iconic label ([e2cdbe76](https://github.com/pluginsGLPI/formcreator/commit/e2cdbe76))
+* **wizard:** show only one information message ([74a55a70](https://github.com/pluginsGLPI/formcreator/commit/74a55a70))
+* **wizard:** show plugin menus in service catalog ([77c8f62c](https://github.com/pluginsGLPI/formcreator/commit/77c8f62c))
+* **wizard:** show search input only if config allows it ([b807974a](https://github.com/pluginsGLPI/formcreator/commit/b807974a))
+* **wizard:** simplified catalog: only timeline for ticket ([7a24970c](https://github.com/pluginsGLPI/formcreator/commit/7a24970c))
+* **wizard:** swapped form and faq icons ([42a45579](https://github.com/pluginsGLPI/formcreator/commit/42a45579))
+* **wizard:** tooltip and ellipsis on long category name ([77036a9d](https://github.com/pluginsGLPI/formcreator/commit/77036a9d))
+* **wizard:** various fixes in KB only search ([41cbfd22](https://github.com/pluginsGLPI/formcreator/commit/41cbfd22))
+* **wizard:** vertical overlap of categories ([5412ed99](https://github.com/pluginsGLPI/formcreator/commit/5412ed99))
+
+
+### Features
+
+*  do not modify the menu with simplified interface ([f7ccc2b8](https://github.com/pluginsGLPI/formcreator/commit/f7ccc2b8))
+* **install:** run sync issues only once when if several upgrade steps require it ([c7f329ca](https://github.com/pluginsGLPI/formcreator/commit/c7f329ca))
+
+
+
 <a name="2.13.0-beta.2"></a>
 ## [2.13.0-beta.2](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-beta.1..2.13.0-beta.2) (2022-05-17)
 
