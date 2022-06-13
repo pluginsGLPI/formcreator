@@ -763,7 +763,7 @@ JAVASCRIPT;
             }
             $newMenu['seek_assistance'] = [
                'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
-               'title'   => __('Seek assistance', 'formcreator'),
+               'title'   => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
                'icon'    => 'fa-fw ti ti-headset',
             ];
             $newMenu[$menuKey] = $menuItem;
