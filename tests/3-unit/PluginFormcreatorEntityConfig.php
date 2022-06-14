@@ -215,4 +215,13 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          \PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_HIDDEN  => __('Hidden', 'formcreator'),
       ]);
    }
+
+   public function testGetEnumormTransition() {
+      $output = \PluginFormcreatorEntityconfig::getEnumheaderVisibility();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT                => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_FORM_TRANSITION_PAGE  => __('Full page', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_FORM_TRANSITION_MODAL => __('Modal', 'formcreator'),
+      ]);
+   }
 }

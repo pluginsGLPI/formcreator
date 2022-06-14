@@ -30,6 +30,8 @@
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
+{% set target = options['target'] ?? item.getFormURL() %}
+
 <style>
 	{% set widthPercent = 100 / options.columns %}
 	{% for i in range(1, options.columns ) %}
@@ -45,7 +47,7 @@
 
 <div class="asset">
     {% set formName = 'plugin_formcreator_form' %}
-	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action={{ item.getFormURL() }} id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}">
+	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action={{ target }} id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}" {{ options.formoptions|raw }}">
 		<h1 class='form-title'>
 		        {{ __(item.fields['name'], options.domain) }}
 			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
@@ -133,7 +135,7 @@
               {'name': 'submit_formcreator'}
           ])|raw }}
         </div>
-        {{ fields.hiddenField('plugin_formcreator_forms_id', item.fields['id']) }}
+        {{ fields.hiddenField('id', item.fields['id']) }}
         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
 	</form>
 </div>

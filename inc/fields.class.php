@@ -366,7 +366,7 @@ class PluginFormcreatorFields
     */
    public static function updateVisibility($input) {
       $form = PluginFormcreatorCommon::getForm();
-      $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
+      $form->getFromDB((int) $input['id']);
       $fields = $form->getFields();
       foreach ($fields as $id => $field) {
          $fields[$id]->parseAnswerValues($input, true);

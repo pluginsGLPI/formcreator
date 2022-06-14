@@ -419,7 +419,8 @@ function buildCategoryList(tree) {
 
 function buildTiles(list) {
    $(document).on('click', '.plugin_formcreator_formTile', function(){
-      document.location = $(this).children('a').attr('href');
+      // document.location = $(this).children('a').attr('href');
+      $(this).children('a').trigger('click');
    });
 
    var html = '';
@@ -470,10 +471,11 @@ function buildTiles(list) {
       }
 
       if (item.type == 'form') {
+         url = 'plugin_formcreator.showUserForm(event, ' + item.id + ')';
          forms.push(
             '<div data-itemtype="PluginFormcreatorForm" data-id="' + item.id + '" style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+tiles_design+' '+default_class+'" title="'+item.description+'">'
             + '<i class="' + item.icon + '" style="color: ' + item.icon_color+ '"></i>'
-            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+            + '<a onclick="' + url + '" class="plugin_formcreator_formTile_title">'
             + item.name
             + '</a>'
             + description
@@ -1377,7 +1379,7 @@ var plugin_formcreator = new function() {
       var form = document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"]');
       var questionId = 0;
       if (document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]')) {
-         questionId = document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').value;
+         questionId = document.qeuerySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').value;
       }
       var data = new FormData(form);
       data.append('id', questionId);
@@ -1408,8 +1410,52 @@ var plugin_formcreator = new function() {
             plugin_formcreator_forms_id: items_id
          },
       });
-   }
+   };
 
+   this.showUserForm = function(event, id) {
+      var url = formcreatorRootDoc + '/front/formdisplay.php?id=' + id;
+      switch (CFG_GLPI['plugin_formcreator']['form_transition']) {
+         case 0:
+            document.location = url;
+            break;
+
+         case 1:
+            var modalId = glpi_ajax_dialog({
+               dialogclass: 'modal-xl',
+               url: url + '&modal',
+               autoShow: true,
+            });
+            event.stopPropagation();
+            break;
+      }
+   };
+
+   /**
+    * Submit a form displayed in a modal
+    */
+   this.submitForm = function (target) {
+      // The form is in a modal
+      if (typeof(tinyMCE) != 'undefined') {
+         tinyMCE.triggerSave();
+      }
+      var form = event.target;
+      var data = new FormData(form);
+      data.append('action', 'submit_formcreator');
+      $.post({
+         url: formcreatorRootDoc + '/ajax/formanswer.php',
+         data: data,
+         processData: false,
+         contentType: false,
+         dataType: 'json',
+      }).fail(function (data) {
+         displayAjaxMessageAfterRedirect();
+      }).done(function (data) {
+         $(target).closest('div.modal').modal('hide');
+         if (typeof(data['redirect']) == 'string') {
+            document.location = data['redirect'];
+         }
+      });
+   }
 }
 
 // === TARGETS ===

@@ -36,35 +36,37 @@ class PluginFormcreatorUpgradeTo2_14 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-       $this->migration = $migration;
+      $this->migration = $migration;
 
        $this->addTtoToIssues();
        $this->addRights();
        $this->addPropertiesToCategories();
        $this->addTargetActorUnicity();
+       $this->addFormTransition();
    }
 
    public function addTtoToIssues() {
-        $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
-        $this->migration->addField($table, 'time_to_own', 'timestamp', ['after' => 'users_id_recipient']);
-        $this->migration->addField($table, 'time_to_resolve', 'timestamp', ['after' => 'time_to_own']);
-        $this->migration->addField($table, 'internal_time_to_own', 'timestamp', ['after' => 'time_to_resolve']);
-        $this->migration->addField($table, 'internal_time_to_resolve', 'timestamp', ['after' => 'internal_time_to_own']);
-        $this->migration->addField($table, 'solvedate', 'timestamp', ['after' => 'internal_time_to_resolve']);
-        $this->migration->addField($table, 'date', 'timestamp', ['after' => 'solvedate']);
-        $this->migration->addField($table, 'takeintoaccount_delay_stat', 'int', ['after' => 'date']);
+      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
+      $this->migration->addField($table, 'time_to_own', 'timestamp', ['after' => 'users_id_recipient']);
+      $this->migration->addField($table, 'time_to_resolve', 'timestamp', ['after' => 'time_to_own']);
+      $this->migration->addField($table, 'internal_time_to_own', 'timestamp', ['after' => 'time_to_resolve']);
+      $this->migration->addField($table, 'internal_time_to_resolve', 'timestamp', ['after' => 'internal_time_to_own']);
+      $this->migration->addField($table, 'solvedate', 'timestamp', ['after' => 'internal_time_to_resolve']);
+      $this->migration->addField($table, 'date', 'timestamp', ['after' => 'solvedate']);
+      $this->migration->addField($table, 'takeintoaccount_delay_stat', 'int', ['after' => 'date']);
 
-        $this->migration->addKey($table, 'time_to_own');
-        $this->migration->addKey($table, 'time_to_resolve');
-        $this->migration->addKey($table, 'internal_time_to_own');
-        $this->migration->addKey($table, 'internal_time_to_resolve');
-        $this->migration->addKey($table, 'solvedate');
-        $this->migration->addKey($table, 'date');
+      $this->migration->addKey($table, 'time_to_own');
+      $this->migration->addKey($table, 'time_to_resolve');
+      $this->migration->addKey($table, 'internal_time_to_own');
+      $this->migration->addKey($table, 'internal_time_to_resolve');
+      $this->migration->addKey($table, 'solvedate');
+      $this->migration->addKey($table, 'date');
    }
 
    public function addRights() {
-      // Add rights
+      /** @var DBmysql $DB */
       global $DB;
+
       $profiles = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => Profile::getTable(),
@@ -92,6 +94,7 @@ class PluginFormcreatorUpgradeTo2_14 {
    }
 
    public function addPropertiesToCategories() {
+      /** @var DBmysql $DB */
       global $DB;
 
       $table = (new DBUtils())->getTableForItemType(PluginFormcreatorCategory::class);
@@ -130,5 +133,11 @@ class PluginFormcreatorUpgradeTo2_14 {
 
       // Set unicity
       $this->migration->addKey($table, $unicity, 'unicity', 'UNIQUE');
+   }
+
+   public function addFormTransition() {
+      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorEntityConfig::class);
+      $this->migration->addField($table, 'form_transition', 'integer', ['after' => 'header', 'value' => '-2']);
+      $this->migration->addPostQuery("UPDATE `$table` SET `form_transition`='0' WHERE `entities_id`='0'");
    }
 }

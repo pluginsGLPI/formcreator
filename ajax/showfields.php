@@ -38,13 +38,13 @@ if (!(new Plugin())->isActivated('formcreator')) {
 }
 
 $formFk = PluginFormcreatorForm::getForeignKeyField();
-if (!isset($_POST[$formFk])) {
+if (!isset($_POST['id'])) {
    http_response_code(403);
    exit();
 }
 
 $form = PluginFormcreatorCommon::getForm();
-$form->getFromDB((int) $_POST['plugin_formcreator_forms_id']);
+$form->getFromDB((int) $_POST['id']);
 if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
    http_response_code(403);
    exit();

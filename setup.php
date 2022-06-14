@@ -128,12 +128,14 @@ function plugin_init_formcreator() {
 
    array_push($CFG_GLPI["ticket_types"], PluginFormcreatorFormAnswer::class);
    array_push($CFG_GLPI["document_types"], PluginFormcreatorFormAnswer::class);
-
    $plugin = new Plugin();
    if (!$plugin->isActivated('formcreator')) {
       return;
    }
 
+   if (Session::getLoginUserID(true) !== false) {
+      $CFG_GLPI['plugin_formcreator']['form_transition'] = PluginFormcreatorEntityConfig::getUsedConfig('form_transition', Session::getActiveEntity(), 'form_transition', 'page');
+   }
    plugin_formcreator_redirect();
 
    spl_autoload_register('plugin_formcreator_autoload');

@@ -541,7 +541,7 @@ PluginFormcreatorTranslatableInterface
 
             case 2:
                echo '<div style="text-align: left">';
-               $item->displayUserForm();
+               $item->displayUserForm(true);
                echo '</div>';
                break;
 
@@ -937,10 +937,11 @@ PluginFormcreatorTranslatableInterface
 
    /**
     * Display the Form end-user form to be filled
+    * @param bool $forcePage Force display as page
     *
     * @return void
     */
-   public function displayUserForm() : void {
+   public function displayUserForm(bool $forcePage = false) : void {
       global $TRANSLATE;
 
       // Print css media
@@ -958,16 +959,23 @@ PluginFormcreatorTranslatableInterface
       }
       $formanswer = new PluginFormcreatorFormAnswer();
       $formanswer->loadAnswersFromSession();
+      $options =  [
+         'columns' => PluginFormcreatorSection::COLUMNS,
+         'domain'  => $domain, // For translation
+         'public'  => isset($_SESSION['formcreator_public']),
+         'formanswer' => $formanswer,
+         'use_captcha' => ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
+                           && $this->fields['is_captcha_enabled'] != '0'),
+      ];
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitForm(this)"');
+      // if (!$forcePage && PluginFormcreatorEntityConfig::getUsedConfig('form_transition', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_FORM_TRANSITION_MODAL) {
+      //    $options['target'] = "javascript:;";
+      //    $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitForm(this)"');
+      // }
       TemplateRenderer::getInstance()->display('@formcreator/pages/userform.html.twig', [
          'item'    => $this,
-         'options' => [
-            'columns' => PluginFormcreatorSection::COLUMNS,
-            'domain'  => $domain, // For translation
-            'public'  => isset($_SESSION['formcreator_public']),
-            'formanswer' => $formanswer,
-            'use_captcha' => ($this->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC
-                              && $this->fields['is_captcha_enabled'] != '0'),
-         ]
+         'options' => $options
       ]);
       // Delete saved answers if any
       unset($_SESSION['formcreator']['data']);

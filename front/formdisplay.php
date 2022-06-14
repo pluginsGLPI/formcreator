@@ -37,7 +37,9 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-PluginFormcreatorCommon::header();
+if (!isset($_REQUEST['modal'])) {
+   PluginFormcreatorCommon::header();
+}
 
 if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
@@ -54,12 +56,20 @@ if (isset($_REQUEST['id'])
 
    // If the form has restriced access and user is not logged in, send to login form
    if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC && Session::getLoginUserID() === false) {
-      Session::redirectIfNotLoggedIn();
+      if (!(new Plugin())->isActivated('formcreator')) {
+         Session::redirectIfNotLoggedIn();
+      } else {
+         http_response_code(403);
+      }
       exit();
    }
 
    if (!$form->canViewForRequest()) {
-      Html::displayRightError();
+      if (!(new Plugin())->isActivated('formcreator')) {
+         Html::displayRightError();
+      } else {
+         http_response_code(403);
+      }
       exit();
    }
    if (($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
@@ -75,6 +85,7 @@ if (isset($_REQUEST['id'])
                                                 ? "'" . implode("', '", $subentities) . "'"
                                                 : "'" . $form->fields['entities_id'] . "'";
          $_SESSION['glpilanguage'] = $form->getBestLanguage();
+         $CFG_GLPI['plugin_formcreator']['form_transition'] = PluginFormcreatorEntityConfig::getUsedConfig('form_transition', $form->fields['entities_id'], 'form_transition', );
       }
    }
 
@@ -91,4 +102,6 @@ if (isset($_REQUEST['id'])
    Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
 }
 
-PluginFormcreatorCommon::footer();
+if (!isset($_REQUEST['modal'])) {
+   PluginFormcreatorCommon::footer();
+}
