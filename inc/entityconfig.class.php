@@ -457,6 +457,56 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          'massiveaction'   => true,
       ];
 
+      $tab[] = [
+         'id'              => '9',
+         'table'           => self::getTable(),
+         'name'            => __('Default Form list mode', 'formcreator'),
+         'field'           => 'default_form_list_mode',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => true,
+      ];
+
+      $tab[] = [
+         'id'              => '10',
+         'table'           => self::getTable(),
+         'name'            => __('Search', 'formcreator'),
+         'field'           => 'is_search_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => true,
+      ];
+
+      $tab[] = [
+         'id'              => '11',
+         'table'           => self::getTable(),
+         'name'            => __('Counters dashboard', 'formcreator'),
+         'field'           => 'is_dashboard_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => true,
+      ];
+
+      $tab[] = [
+         'id'              => '12',
+         'table'           => self::getTable(),
+         'name'            => __('Search issue', 'formcreator'),
+         'field'           => 'is_search_issue_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => true,
+      ];
+
+      $tab[] = [
+         'id'              => '13',
+         'table'           => self::getTable(),
+         'name'            => __('Tile design', 'formcreator'),
+         'field'           => 'tile_design',
+         'datatype'        => 'integer',
+         'nosearch'        => false,
+         'massiveaction'   => true,
+      ];
+
       return $tab;
    }
 
