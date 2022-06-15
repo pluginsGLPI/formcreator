@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glpi 100a\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-29 09:30+0200\n"
-"PO-Revision-Date: 2022-04-29 09:30+0200\n"
+"POT-Creation-Date: 2022-06-15 14:10+0200\n"
+"PO-Revision-Date: 2022-06-15 14:10+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -64,9 +64,8 @@ msgstr "No limit"
 
 #: ajax/homepage_link.php:36 inc/field/dropdownfield.class.php:71
 #: inc/formlist.class.php:46 inc/formanswer.class.php:208
-#: inc/common.class.php:810 inc/entityconfig.class.php:75
-#: inc/form.class.php:111 inc/form.class.php:565 inc/form.class.php:1915
-#: inc/filter/entityfilter.class.php:45
+#: inc/entityconfig.class.php:82 inc/form.class.php:111 inc/form.class.php:571
+#: inc/form.class.php:1923 inc/filter/entityfilter.class.php:45
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Form"
@@ -89,11 +88,11 @@ msgstr "Could not add the question"
 msgid "Could not move the section"
 msgstr "Could not move the section"
 
-#: ajax/target_actor.php:52
+#: ajax/target_actor.php:51
 msgid "Failed to add the actor"
 msgstr "Failed to add the actor"
 
-#: ajax/target_actor.php:63
+#: ajax/target_actor.php:62
 msgid "Failed to delete the actor"
 msgstr "Failed to delete the actor"
 
@@ -147,8 +146,8 @@ msgstr "%1$s = %2$s"
 msgid "Form list"
 msgstr "Form list"
 
-#: front/formdisplay.php:84 inc/formanswer.class.php:880
-#: inc/formanswer.class.php:1098 inc/formanswer.class.php:1148
+#: front/formdisplay.php:90 inc/formanswer.class.php:882
+#: inc/formanswer.class.php:1102 inc/formanswer.class.php:1152
 msgid "The form has been successfully saved!"
 msgstr "The form has been successfully saved!"
 
@@ -163,14 +162,18 @@ msgstr "%1$s purges the reservation for item %2$s"
 msgid "%1$s adds the reservation %2$s for item %3$s"
 msgstr "%1$s adds the reservation %2$s for item %3$s"
 
-#: inc/knowbase.class.php:60 inc/form.class.php:641
-#: inc/abstractitiltarget.class.php:952 inc/abstractitiltarget.class.php:966
+#: inc/knowbase.class.php:60 inc/form.class.php:648
+#: inc/abstractitiltarget.class.php:953 inc/abstractitiltarget.class.php:967
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Category"
 msgstr[1] "Categories"
 
-#: inc/knowbase.class.php:78
+#: inc/knowbase.class.php:62 inc/form.class.php:651
+msgid "See all"
+msgstr "See all"
+
+#: inc/knowbase.class.php:83
 msgid "Please, describe your need here"
 msgstr "Please, describe your need here"
 
@@ -178,10 +181,10 @@ msgstr "Please, describe your need here"
 msgid "Textarea"
 msgstr "Textarea"
 
-#: inc/field/textareafield.class.php:160 inc/field/dropdownfield.class.php:439
+#: inc/field/textareafield.class.php:160 inc/field/dropdownfield.class.php:440
 #: inc/field/ldapselectfield.class.php:152 inc/field/textfield.class.php:124
 #: inc/field/urgencyfield.class.php:164 inc/field/tagfield.class.php:162
-#: inc/field/timefield.class.php:112 inc/field/fieldsfield.class.php:464
+#: inc/field/timefield.class.php:112 inc/field/fieldsfield.class.php:487
 #: inc/field/requesttypefield.class.php:159
 msgid "A required field is empty:"
 msgstr "A required field is empty:"
@@ -193,7 +196,7 @@ msgid "The regular expression is invalid"
 msgstr "The regular expression is invalid"
 
 #: inc/field/dropdownfield.class.php:70 inc/filter/entityfilter.class.php:44
-#: inc/abstractitiltarget.class.php:2025 inc/abstractitiltarget.class.php:2043
+#: inc/abstractitiltarget.class.php:2028 inc/abstractitiltarget.class.php:2046
 msgid "User"
 msgstr "User"
 
@@ -201,22 +204,22 @@ msgstr "User"
 msgid "User and form"
 msgstr "User and form"
 
-#: inc/field/dropdownfield.class.php:430 entrée standard:38
+#: inc/field/dropdownfield.class.php:431 entrée standard:38
 msgid "Dropdown"
 msgid_plural "Dropdowns"
 msgstr[0] "Dropdown"
 msgstr[1] "Dropdowns"
 
-#: inc/field/dropdownfield.class.php:461
+#: inc/field/dropdownfield.class.php:462
 msgid "Invalid value for "
 msgstr "Invalid value for "
 
-#: inc/field/dropdownfield.class.php:473
+#: inc/field/dropdownfield.class.php:474
 #, php-format
 msgid "The itemtype field is required: %s"
 msgstr "The itemtype field is required: %s"
 
-#: inc/field/dropdownfield.class.php:489
+#: inc/field/dropdownfield.class.php:490
 #, php-format
 msgid "Invalid dropdown type: %s"
 msgstr "Invalid dropdown type: %s"
@@ -287,11 +290,11 @@ msgid "Radios"
 msgstr "Radios"
 
 #: inc/field/radiosfield.class.php:114 inc/field/glpiselectfield.class.php:86
-#: inc/field/fieldsfield.class.php:488 inc/field/checkboxesfield.class.php:229
+#: inc/field/fieldsfield.class.php:511 inc/field/checkboxesfield.class.php:229
 msgid "The field value is required:"
 msgstr "The field value is required:"
 
-#: inc/field/radiosfield.class.php:192 inc/field/selectfield.class.php:111
+#: inc/field/radiosfield.class.php:192 inc/field/selectfield.class.php:104
 #: inc/field/datetimefield.class.php:117 inc/field/actorfield.class.php:239
 #: inc/field/checkboxesfield.class.php:174 inc/field/floatfield.class.php:123
 #: inc/field/datefield.class.php:114
@@ -328,7 +331,7 @@ msgid_plural "IP addresses"
 msgstr[0] "IP address"
 msgstr[1] "IP addresses"
 
-#: inc/field/urgencyfield.class.php:84 inc/abstractitiltarget.class.php:994
+#: inc/field/urgencyfield.class.php:84 inc/abstractitiltarget.class.php:995
 msgid "Urgency"
 msgstr "Urgency"
 
@@ -394,7 +397,7 @@ msgid_plural "Emails"
 msgstr[0] "Email"
 msgstr[1] "Emails"
 
-#: inc/field/selectfield.class.php:104
+#: inc/field/selectfield.class.php:97
 msgid "Select"
 msgstr "Select"
 
@@ -452,23 +455,24 @@ msgstr "Block"
 msgid "Field"
 msgstr "Field"
 
-#: inc/field/fieldsfield.class.php:243
+#: inc/field/fieldsfield.class.php:253
 msgid "show"
 msgstr "show"
 
-#: inc/field/fieldsfield.class.php:361
-msgid "Field type not implemented yet !"
-msgstr "Field type not implemented yet !"
+#: inc/field/fieldsfield.class.php:388
+#, php-format
+msgid "Field '%1$s' type not implemented yet !"
+msgstr "Field '%1$s' type not implemented yet !"
 
-#: inc/field/fieldsfield.class.php:442
+#: inc/field/fieldsfield.class.php:465
 msgid "Some numeric fields contains non numeric values"
 msgstr "Some numeric fields contains non numeric values"
 
-#: inc/field/fieldsfield.class.php:447
+#: inc/field/fieldsfield.class.php:470
 msgid "Some URL fields contains invalid links"
 msgstr "Some URL fields contains invalid links"
 
-#: inc/field/fieldsfield.class.php:533
+#: inc/field/fieldsfield.class.php:556
 msgid "Additionnal fields"
 msgstr "Additionnal fields"
 
@@ -560,10 +564,10 @@ msgstr "Displayed unless"
 #: inc/condition.class.php:179 inc/target_actor.class.php:214
 #: inc/form_language.class.php:540 inc/form_validator.class.php:387
 #: inc/targetproblem.class.php:539 inc/questionrange.class.php:196
-#: inc/form.class.php:1808 inc/targetchange.class.php:303
+#: inc/form.class.php:1816 inc/targetchange.class.php:303
 #: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
-#: inc/question.class.php:831 inc/questionparameter/range.class.php:205
-#: inc/questionregex.class.php:185 inc/questiondependency.class.php:195
+#: inc/question.class.php:832 inc/questionparameter/range.class.php:211
+#: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
 #: inc/item_targetticket.class.php:150 inc/targetticket.class.php:1427
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
@@ -572,10 +576,10 @@ msgstr "Failed to add or update the %1$s %2$s"
 #: inc/condition.class.php:201 inc/target_actor.class.php:235
 #: inc/form_language.class.php:556 inc/form_validator.class.php:411
 #: inc/targetproblem.class.php:374 inc/questionrange.class.php:131
-#: inc/form.class.php:1499 inc/targetchange.class.php:148
+#: inc/form.class.php:1507 inc/targetchange.class.php:148
 #: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
-#: inc/question.class.php:880 inc/questionparameter/range.class.php:140
-#: inc/questionregex.class.php:120 inc/questiondependency.class.php:210
+#: inc/question.class.php:881 inc/questionparameter/range.class.php:145
+#: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
 #: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1466
 #, php-format
 msgid "Cannot export an empty object: %s"
@@ -607,13 +611,13 @@ msgstr "Update issue data from tickets and form answers"
 msgid "Satisfaction survey expired"
 msgstr "Satisfaction survey expired"
 
-#: inc/issue.class.php:509 inc/form_language.class.php:213
-#: inc/form.class.php:156 inc/form.class.php:2111 entrée standard:52
+#: inc/issue.class.php:518 inc/form_language.class.php:213
+#: inc/form.class.php:156 inc/form.class.php:2119 entrée standard:52
 #: standard:49 standard:57 standard:38 standard:39
 msgid "Name"
 msgstr "Name"
 
-#: inc/issue.class.php:522 inc/formanswer.class.php:198
+#: inc/issue.class.php:531 inc/formanswer.class.php:198
 #: inc/formanswer.class.php:272 inc/targetproblem.class.php:622
 #: inc/form.class.php:147 inc/targetchange.class.php:334
 #: inc/section.class.php:95 inc/question.class.php:156
@@ -621,115 +625,117 @@ msgstr "Name"
 msgid "ID"
 msgstr "ID"
 
-#: inc/issue.class.php:531 inc/form.class.php:2120 entrée standard:65
+#: inc/issue.class.php:540 inc/form.class.php:505 inc/form.class.php:2128
+#: entrée standard:65
 msgid "Type"
 msgid_plural "Types"
 msgstr[0] "Type"
 msgstr[1] "Types"
 
-#: inc/issue.class.php:544 inc/formanswer.class.php:259
+#: inc/issue.class.php:553 inc/formanswer.class.php:259
 msgid "Status"
 msgstr "Status"
 
-#: inc/issue.class.php:556
+#: inc/issue.class.php:565
 msgid "Opening date"
 msgstr "Opening date"
 
-#: inc/issue.class.php:565
+#: inc/issue.class.php:574
 msgid "Last update"
 msgstr "Last update"
 
-#: inc/issue.class.php:574 inc/form.class.php:174
-#: inc/abstracttarget.class.php:508
+#: inc/issue.class.php:583 inc/form.class.php:174
+#: inc/abstracttarget.class.php:518
 msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] "Entity"
 msgstr[1] "Entities"
 
-#: inc/issue.class.php:584 inc/notificationtargetformanswer.class.php:79
+#: inc/issue.class.php:593 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:218
-#: inc/formanswer.class.php:613 inc/abstractitiltarget.class.php:1711
+#: inc/formanswer.class.php:613 inc/abstractitiltarget.class.php:1714
 msgid "Requester"
 msgid_plural "Requesters"
 msgstr[0] "Requester"
 msgstr[1] "Requesters"
 
-#: inc/issue.class.php:602 inc/formanswer.class.php:228
+#: inc/issue.class.php:611 inc/formanswer.class.php:228
 msgid "Form approver"
 msgstr "Form approver"
 
-#: inc/issue.class.php:618 inc/formanswer.class.php:539
+#: inc/issue.class.php:627 inc/formanswer.class.php:539
 #: inc/formanswer.class.php:546 inc/formanswer.class.php:628
 #: inc/form_language.class.php:227
 msgid "Comment"
 msgstr "Comment"
 
-#: inc/issue.class.php:630
+#: inc/issue.class.php:639
 msgid "Ticket approver"
 msgstr "Ticket approver"
 
-#: inc/issue.class.php:664
+#: inc/issue.class.php:673
 msgid "Technician"
 msgstr "Technician"
 
-#: inc/issue.class.php:697
+#: inc/issue.class.php:704
 msgid "Technician group"
 msgstr "Technician group"
 
-#: inc/issue.class.php:728 inc/formanswer.class.php:248
+#: inc/issue.class.php:737 inc/formanswer.class.php:248
 msgid "Form approver group"
 msgstr "Form approver group"
 
-#: inc/issue.class.php:761
+#: inc/issue.class.php:770
 msgid "Ticket"
 msgstr "Ticket"
 
-#: inc/issue.class.php:762 inc/formanswer.class.php:183
+#: inc/issue.class.php:771 inc/formanswer.class.php:183
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Form answer"
 msgstr[1] "Form answers"
 
-#: inc/issue.class.php:767
+#: inc/issue.class.php:776
 msgid "Not validated"
 msgstr "Not validated"
 
-#: inc/issue.class.php:768 inc/formanswer.class.php:76
+#: inc/issue.class.php:777 inc/formanswer.class.php:76
 #: inc/form_validator.class.php:71
 msgid "Refused"
 msgstr "Refused"
 
-#: inc/issue.class.php:836
+#: inc/issue.class.php:845
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: inc/issue.class.php:1099 inc/filter/itilcategoryfilter.class.php:56
+#: inc/issue.class.php:1108 inc/filter/itilcategoryfilter.class.php:56
+#: hook.php:663
 msgid "All"
 msgstr "All"
 
-#: inc/issue.class.php:1105
+#: inc/issue.class.php:1114 hook.php:664
 msgid "New"
 msgstr "New"
 
-#: inc/issue.class.php:1111
+#: inc/issue.class.php:1120 hook.php:665
 msgid "Assigned"
 msgstr "Assigned"
 
-#: inc/issue.class.php:1117 inc/formanswer.class.php:75
-#: inc/form_validator.class.php:69
+#: inc/issue.class.php:1126 inc/formanswer.class.php:75
+#: inc/form_validator.class.php:69 hook.php:666
 msgid "Waiting"
 msgstr "Waiting"
 
-#: inc/issue.class.php:1123
+#: inc/issue.class.php:1132 hook.php:667
 msgid "To validate"
 msgstr "To validate"
 
-#: inc/issue.class.php:1129
+#: inc/issue.class.php:1138 hook.php:668
 msgid "Solved"
 msgstr "Solved"
 
-#: inc/issue.class.php:1135
+#: inc/issue.class.php:1144 hook.php:669
 msgid "Closed"
 msgstr "Closed"
 
@@ -751,19 +757,19 @@ msgstr "As child of"
 msgid "The form as been saved"
 msgstr "The form as been saved"
 
-#: inc/notificationtargetformanswer.class.php:44 install/install.php:321
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:334
 msgid "A form need to be validate"
 msgstr "A form need to be validate"
 
-#: inc/notificationtargetformanswer.class.php:45 install/install.php:327
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:340
 msgid "The form is refused"
 msgstr "The form is refused"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:333
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:346
 msgid "The form is accepted"
 msgstr "The form is accepted"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:339
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:352
 msgid "The form is deleted"
 msgstr "The form is deleted"
 
@@ -807,15 +813,15 @@ msgid "Author"
 msgstr "Author"
 
 #: inc/notificationtargetformanswer.class.php:98
-#: inc/abstractitiltarget.class.php:1289
+#: inc/abstractitiltarget.class.php:1290
 msgid "Approver"
 msgstr "Approver"
 
-#: inc/target_actor.class.php:66 inc/abstractitiltarget.class.php:2035
+#: inc/target_actor.class.php:66 inc/abstractitiltarget.class.php:2038
 msgid "Form author"
 msgstr "Form author"
 
-#: inc/target_actor.class.php:67 inc/abstractitiltarget.class.php:2038
+#: inc/target_actor.class.php:67 inc/abstractitiltarget.class.php:2041
 msgid "Form validator"
 msgstr "Form validator"
 
@@ -823,7 +829,7 @@ msgstr "Form validator"
 msgid "Specific person"
 msgstr "Specific person"
 
-#: inc/target_actor.class.php:69 inc/abstractitiltarget.class.php:2048
+#: inc/target_actor.class.php:69 inc/abstractitiltarget.class.php:2051
 msgid "Person from the question"
 msgstr "Person from the question"
 
@@ -831,7 +837,7 @@ msgstr "Person from the question"
 msgid "Specific group"
 msgstr "Specific group"
 
-#: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2059
+#: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2062
 msgid "Group from the question"
 msgstr "Group from the question"
 
@@ -847,15 +853,15 @@ msgstr "Tech group from an object"
 msgid "Specific supplier"
 msgstr "Specific supplier"
 
-#: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2088
+#: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2091
 msgid "Supplier from the question"
 msgstr "Supplier from the question"
 
-#: inc/target_actor.class.php:76 inc/abstractitiltarget.class.php:2077
+#: inc/target_actor.class.php:76 inc/abstractitiltarget.class.php:2080
 msgid "Actors from the question"
 msgstr "Actors from the question"
 
-#: inc/target_actor.class.php:77 inc/abstractitiltarget.class.php:2092
+#: inc/target_actor.class.php:77 inc/abstractitiltarget.class.php:2095
 msgid "Form author's supervisor"
 msgstr "Form author's supervisor"
 
@@ -863,7 +869,7 @@ msgstr "Form author's supervisor"
 msgid "Observer"
 msgstr "Observer"
 
-#: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1725
+#: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1728
 msgid "Assigned to"
 msgstr "Assigned to"
 
@@ -937,27 +943,27 @@ msgstr "Accept"
 msgid "Refused comment is required!"
 msgstr "Refused comment is required!"
 
-#: inc/formanswer.class.php:753
+#: inc/formanswer.class.php:755
 msgid "You are not the validator of these answers"
 msgstr "You are not the validator of these answers"
 
-#: inc/formanswer.class.php:959 inc/formanswer.class.php:961
+#: inc/formanswer.class.php:961 inc/formanswer.class.php:963
 msgid "Form data"
 msgstr "Form data"
 
-#: inc/formanswer.class.php:1085 inc/formanswer.class.php:1135
+#: inc/formanswer.class.php:1089 inc/formanswer.class.php:1139
 msgid "Cannot generate targets!"
 msgstr "Cannot generate targets!"
 
-#: inc/formanswer.class.php:1252
+#: inc/formanswer.class.php:1263
 msgid "No turing test set"
 msgstr "No turing test set"
 
-#: inc/formanswer.class.php:1257
+#: inc/formanswer.class.php:1268
 msgid "You failed the Turing test"
 msgstr "You failed the Turing test"
 
-#: inc/formanswer.class.php:1299
+#: inc/formanswer.class.php:1310
 msgid "You must select validator!"
 msgstr "You must select validator!"
 
@@ -969,15 +975,15 @@ msgstr "You cannot delete this issue. Maybe it is taken into account."
 msgid "Failed to delete this issue. An internal error occured."
 msgstr "Failed to delete this issue. An internal error occured."
 
-#: inc/common.class.php:761
+#: inc/common.class.php:777
 msgid "Seek assistance"
 msgstr "Seek assistance"
 
-#: inc/common.class.php:766
+#: inc/common.class.php:782
 msgid "My requests for assistance"
 msgstr "My requests for assistance"
 
-#: inc/common.class.php:796
+#: inc/common.class.php:812
 msgid "Consult feeds"
 msgstr "Consult feeds"
 
@@ -1015,9 +1021,9 @@ msgid_plural "Translations"
 msgstr[0] "Translation"
 msgstr[1] "Translations"
 
-#: inc/form_language.class.php:111 inc/form.class.php:1040
-#: inc/form.class.php:1165 inc/abstracttarget.class.php:160
-#: inc/abstractitiltarget.class.php:1538
+#: inc/form_language.class.php:111 inc/form.class.php:1048
+#: inc/form.class.php:1173 inc/abstracttarget.class.php:161
+#: inc/abstractitiltarget.class.php:1545
 msgid "The name cannot be empty!"
 msgstr "The name cannot be empty!"
 
@@ -1029,7 +1035,7 @@ msgstr "The language must be associated to a form!"
 msgid "Add a translation"
 msgstr "Add a translation"
 
-#: inc/form_language.class.php:283 js/scripts.js:1113
+#: inc/form_language.class.php:283 js/scripts.js:1160
 msgid "Update a translation"
 msgstr "Update a translation"
 
@@ -1050,7 +1056,7 @@ msgid "Do you want to delete the selected items?"
 msgstr "Do you want to delete the selected items?"
 
 #: inc/form_language.class.php:337 inc/form_language.class.php:376
-#: inc/form.class.php:523 inc/abstractitiltarget.class.php:1616
+#: inc/form.class.php:529 inc/abstractitiltarget.class.php:1619
 msgid "Delete"
 msgstr "Delete"
 
@@ -1076,23 +1082,23 @@ msgstr "None"
 msgid "Need validaton?"
 msgstr "Need validaton?"
 
-#: inc/form_validator.class.php:126 inc/abstractitiltarget.class.php:2029
+#: inc/form_validator.class.php:126 inc/abstractitiltarget.class.php:2032
 msgid "No"
 msgstr "No"
 
 #: inc/form_validator.class.php:303 inc/targetproblem.class.php:146
-#: inc/entityconfig.class.php:334 inc/targetchange.class.php:483
+#: inc/entityconfig.class.php:389 inc/targetchange.class.php:483
 #: inc/targetticket.class.php:317 inc/targetticket.class.php:352
-#: inc/abstractitiltarget.class.php:2018
+#: inc/abstractitiltarget.class.php:2021
 msgctxt "button"
 msgid "Save"
 msgstr "Save"
 
-#: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1269
+#: inc/form_validator.class.php:717 inc/abstractitiltarget.class.php:1270
 msgid "Validation"
 msgstr "Validation"
 
-#: inc/form_validator.class.php:711
+#: inc/form_validator.class.php:719
 msgid "Choose a validator"
 msgstr "Choose a validator"
 
@@ -1119,7 +1125,7 @@ msgstr ""
 "a parameter of the target"
 
 #: inc/targetproblem.class.php:578 inc/targetchange.class.php:105
-#: inc/targetticket.class.php:135 inc/abstractitiltarget.class.php:1171
+#: inc/targetticket.class.php:135 inc/abstractitiltarget.class.php:1172
 msgid "Actors"
 msgstr "Actors"
 
@@ -1144,118 +1150,136 @@ msgstr "Cause"
 msgid "Symptom"
 msgstr "Symptom"
 
-#: inc/entityconfig.class.php:83 inc/entityconfig.class.php:92
-#: inc/entityconfig.class.php:100 inc/entityconfig.class.php:108
-#: inc/entityconfig.class.php:116 inc/entityconfig.class.php:124
-#: inc/entityconfig.class.php:132
+#: inc/entityconfig.class.php:90 inc/entityconfig.class.php:99
+#: inc/entityconfig.class.php:107 inc/entityconfig.class.php:115
+#: inc/entityconfig.class.php:123 inc/entityconfig.class.php:131
+#: inc/entityconfig.class.php:139 inc/entityconfig.class.php:147
+#: inc/entityconfig.class.php:155
 msgid "Inheritance of the parent entity"
 msgstr "Inheritance of the parent entity"
 
-#: inc/entityconfig.class.php:84
+#: inc/entityconfig.class.php:91
 msgid "GLPi's helpdesk"
 msgstr "GLPi's helpdesk"
 
-#: inc/entityconfig.class.php:85
+#: inc/entityconfig.class.php:92
 msgid "Service catalog simplified"
 msgstr "Service catalog simplified"
 
-#: inc/entityconfig.class.php:86
+#: inc/entityconfig.class.php:93
 msgid "Service catalog extended"
 msgstr "Service catalog extended"
 
-#: inc/entityconfig.class.php:93
+#: inc/entityconfig.class.php:100
 msgid "All available forms"
 msgstr "All available forms"
 
-#: inc/entityconfig.class.php:94
+#: inc/entityconfig.class.php:101
 msgid "Only default forms"
 msgstr "Only default forms"
 
-#: inc/entityconfig.class.php:101
+#: inc/entityconfig.class.php:108
 msgid "Popularity sort"
 msgstr "Popularity sort"
 
-#: inc/entityconfig.class.php:102
+#: inc/entityconfig.class.php:109
 msgid "Alphabetic sort"
 msgstr "Alphabetic sort"
 
-#: inc/entityconfig.class.php:109
+#: inc/entityconfig.class.php:116
 msgid "Merged with Forms"
 msgstr "Merged with Forms"
 
-#: inc/entityconfig.class.php:110
+#: inc/entityconfig.class.php:117
 msgid "Distinct menu entry"
 msgstr "Distinct menu entry"
 
-#: inc/entityconfig.class.php:117 inc/entityconfig.class.php:125
-#: inc/entityconfig.class.php:133 inc/form.class.php:285 entrée standard:100
+#: inc/entityconfig.class.php:124 inc/entityconfig.class.php:132
+#: inc/entityconfig.class.php:140 inc/entityconfig.class.php:148
+#: inc/form.class.php:285 entrée standard:100
 msgid "Visible"
 msgstr "Visible"
 
-#: inc/entityconfig.class.php:118 inc/entityconfig.class.php:126
-#: inc/entityconfig.class.php:134
+#: inc/entityconfig.class.php:125 inc/entityconfig.class.php:133
+#: inc/entityconfig.class.php:141 inc/entityconfig.class.php:149
 msgid "Hidden"
 msgstr "Hidden"
 
-#: inc/entityconfig.class.php:208
+#: inc/entityconfig.class.php:156
+msgid "Variable height"
+msgstr "Variable height"
+
+#: inc/entityconfig.class.php:157
+msgid "Uniform height"
+msgstr "Uniform height"
+
+#: inc/entityconfig.class.php:231
 msgid "Helpdesk"
 msgstr "Helpdesk"
 
-#: inc/entityconfig.class.php:216 inc/entityconfig.class.php:348 entrée
+#: inc/entityconfig.class.php:239 inc/entityconfig.class.php:403 entrée
 #: standard:44
 msgid "Helpdesk mode"
 msgstr "Helpdesk mode"
 
-#: inc/entityconfig.class.php:227
+#: inc/entityconfig.class.php:250
 msgid "Default Form list mode"
 msgstr "Default Form list mode"
 
-#: inc/entityconfig.class.php:245 inc/entityconfig.class.php:358
+#: inc/entityconfig.class.php:268 inc/entityconfig.class.php:413
 msgid "Sort order"
 msgstr "Sort order"
 
-#: inc/entityconfig.class.php:261 inc/entityconfig.class.php:368
+#: inc/entityconfig.class.php:284 inc/entityconfig.class.php:423
 msgid "Knowledge base"
 msgstr "Knowledge base"
 
-#: inc/entityconfig.class.php:276
+#: inc/entityconfig.class.php:299
 msgid "Search"
 msgstr "Search"
 
-#: inc/entityconfig.class.php:292
+#: inc/entityconfig.class.php:315
 msgid "Counters dashboard"
 msgstr "Counters dashboard"
 
-#: inc/entityconfig.class.php:308
+#: inc/entityconfig.class.php:331
 msgid "Header message"
 msgstr "Header message"
 
-#: inc/entityconfig.class.php:320 inc/entityconfig.class.php:398
+#: inc/entityconfig.class.php:347
+msgid "Search issue"
+msgstr "Search issue"
+
+#: inc/entityconfig.class.php:363
+msgid "Tile design"
+msgstr "Tile design"
+
+#: inc/entityconfig.class.php:375 inc/entityconfig.class.php:453
 #: inc/form.class.php:239 entrée standard:84
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Header"
 msgstr[1] "Headers"
 
-#: inc/entityconfig.class.php:378
+#: inc/entityconfig.class.php:433
 msgid "Display search field"
 msgstr "Display search field"
 
-#: inc/entityconfig.class.php:388
+#: inc/entityconfig.class.php:443
 msgid "Display header"
 msgstr "Display header"
 
-#: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:59
+#: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:57
 msgid "Question range"
 msgid_plural "Question ranges"
 msgstr[0] "Question range"
 msgstr[1] "Question ranges"
 
-#: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:69
+#: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:68
 msgid "Minimum range"
 msgstr "Minimum range"
 
-#: inc/questionrange.class.php:71 inc/questionparameter/range.class.php:78
+#: inc/questionrange.class.php:71 inc/questionparameter/range.class.php:77
 msgid "maximum range"
 msgstr "maximum range"
 
@@ -1275,7 +1299,7 @@ msgstr "Restricted access"
 msgid "Answers waiting for validation"
 msgstr "Answers waiting for validation"
 
-#: inc/form.class.php:124 inc/form.class.php:1583 inc/form.class.php:1609
+#: inc/form.class.php:124 inc/form.class.php:1591 inc/form.class.php:1617
 msgid "Import forms"
 msgstr "Import forms"
 
@@ -1332,147 +1356,147 @@ msgstr "All languages"
 msgid "Answers title"
 msgstr "Answers title"
 
-#: inc/form.class.php:504 inc/form.class.php:557
+#: inc/form.class.php:504 inc/form.class.php:563
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Target"
 msgstr[1] "Targets"
 
-#: inc/form.class.php:540 inc/form.class.php:2108
+#: inc/form.class.php:506
+msgid "Actions"
+msgstr "Actions"
+
+#: inc/form.class.php:546 inc/form.class.php:2116
 msgid "Add a target"
 msgstr "Add a target"
 
-#: inc/form.class.php:560
+#: inc/form.class.php:566
 msgid "Preview"
 msgstr "Preview"
 
-#: inc/form.class.php:561
+#: inc/form.class.php:567
 msgid "properties"
 msgstr "properties"
 
-#: inc/form.class.php:643
-msgid "See all"
-msgstr "See all"
-
-#: inc/form.class.php:869
+#: inc/form.class.php:886
 msgid "What are you looking for?"
 msgstr "What are you looking for?"
 
-#: inc/form.class.php:877
+#: inc/form.class.php:894
 #, php-format
 msgid "My %1$d last forms (requester)"
 msgstr "My %1$d last forms (requester)"
 
-#: inc/form.class.php:880
+#: inc/form.class.php:897
 msgid "No form posted yet"
 msgstr "No form posted yet"
 
-#: inc/form.class.php:910
+#: inc/form.class.php:927
 msgid "All my forms (requester)"
 msgstr "All my forms (requester)"
 
-#: inc/form.class.php:923
+#: inc/form.class.php:940
 #, php-format
 msgid "My %1$d last forms (validator)"
 msgstr "My %1$d last forms (validator)"
 
-#: inc/form.class.php:931
+#: inc/form.class.php:948
 msgid "No form waiting for validation"
 msgstr "No form waiting for validation"
 
-#: inc/form.class.php:966
+#: inc/form.class.php:983
 msgid "All my forms (validator)"
 msgstr "All my forms (validator)"
 
-#: inc/form.class.php:1176
+#: inc/form.class.php:1184
 msgid "Cannot use empty name for form answers. Keeping the previous value."
 msgstr "Cannot use empty name for form answers. Keeping the previous value."
 
-#: inc/form.class.php:1271
+#: inc/form.class.php:1279
 #, php-format
 msgid "The question %s is not compatible with public forms"
 msgstr "The question %s is not compatible with public forms"
 
-#: inc/form.class.php:1351
+#: inc/form.class.php:1359
 msgid "Errored duplicate"
 msgstr "Errored duplicate"
 
-#: inc/form.class.php:1362
+#: inc/form.class.php:1370
 msgid "Duplicate"
 msgstr "Duplicate"
 
-#: inc/form.class.php:1409
+#: inc/form.class.php:1417
 msgctxt "button"
 msgid "Post"
 msgstr "Post"
 
-#: inc/form.class.php:1427
+#: inc/form.class.php:1435
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Form duplicated: %s"
 
-#: inc/form.class.php:1438
+#: inc/form.class.php:1446
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Form Transfered: %s"
 
-#: inc/form.class.php:1457
+#: inc/form.class.php:1465
 msgid "Back"
 msgstr "Back"
 
-#: inc/form.class.php:1556
+#: inc/form.class.php:1564
 msgid "Upload of JSON files not allowed."
 msgstr "Upload of JSON files not allowed."
 
-#: inc/form.class.php:1559
+#: inc/form.class.php:1567
 msgid "You may allow JSON files right now."
 msgstr "You may allow JSON files right now."
 
-#: inc/form.class.php:1560
+#: inc/form.class.php:1568
 msgctxt "button"
 msgid "Create"
 msgstr "Create"
 
-#: inc/form.class.php:1563 inc/form.class.php:1574
+#: inc/form.class.php:1571 inc/form.class.php:1582
 msgid "Please contact your GLPI administrator."
 msgstr "Please contact your GLPI administrator."
 
-#: inc/form.class.php:1564 inc/form.class.php:1575
+#: inc/form.class.php:1572 inc/form.class.php:1583
 msgctxt "button"
 msgid "Back"
 msgstr "Back"
 
-#: inc/form.class.php:1567
+#: inc/form.class.php:1575
 msgid "Upload of JSON files not enabled."
 msgstr "Upload of JSON files not enabled."
 
-#: inc/form.class.php:1570 inc/form.class.php:1573
+#: inc/form.class.php:1578 inc/form.class.php:1581
 msgid "You may enable JSON files right now."
 msgstr "You may enable JSON files right now."
 
-#: inc/form.class.php:1571
+#: inc/form.class.php:1579
 msgctxt "button"
 msgid "Enable"
 msgstr "Enable"
 
-#: inc/form.class.php:1618
+#: inc/form.class.php:1626
 msgctxt "button"
 msgid "Send"
 msgstr "Send"
 
-#: inc/form.class.php:1637
+#: inc/form.class.php:1645
 msgid "Forms import impossible, the file is empty"
 msgstr "Forms import impossible, the file is empty"
 
-#: inc/form.class.php:1641 inc/form.class.php:1645
+#: inc/form.class.php:1649 inc/form.class.php:1653
 msgid "Forms import impossible, the file seems corrupt"
 msgstr "Forms import impossible, the file seems corrupt"
 
-#: inc/form.class.php:1651
+#: inc/form.class.php:1659
 msgid "Forms import impossible, the file was generated with another version"
 msgstr "Forms import impossible, the file was generated with another version"
 
-#: inc/form.class.php:1658
+#: inc/form.class.php:1666
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
@@ -1480,61 +1504,61 @@ msgstr ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
 
-#: inc/form.class.php:1684
+#: inc/form.class.php:1692
 #, php-format
 msgid "Failed to import %s"
 msgstr "Failed to import %s"
 
-#: inc/form.class.php:1689
+#: inc/form.class.php:1697
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Forms successfully imported from %s"
 
-#: inc/form.class.php:1752
+#: inc/form.class.php:1760
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "The form %1$s already exists and is in an unmodifiable entity."
 
-#: inc/form.class.php:1760
+#: inc/form.class.php:1768
 #, php-format
 msgid "You don't have right to update the entity %1$s."
 msgstr "You don't have right to update the entity %1$s."
 
-#: inc/form.class.php:1770
+#: inc/form.class.php:1778
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "The entity %1$s is required for the form %2$s."
 
-#: inc/form.class.php:1852
+#: inc/form.class.php:1860
 msgid "Failed to create JSON document type"
 msgstr "Failed to create JSON document type"
 
-#: inc/form.class.php:1859
+#: inc/form.class.php:1867
 msgid "JSON document type not found"
 msgstr "JSON document type not found"
 
-#: inc/form.class.php:1866
+#: inc/form.class.php:1874
 msgid "Failed to update JSON document type"
 msgstr "Failed to update JSON document type"
 
-#: inc/form.class.php:1886
+#: inc/form.class.php:1894
 msgid "Forms without category"
 msgstr "Forms without category"
 
-#: inc/form.class.php:1907
+#: inc/form.class.php:1915
 msgid "No form available"
 msgstr "No form available"
 
-#: inc/form.class.php:2139 inc/targetticket.class.php:392
-#: inc/abstractitiltarget.class.php:1735 inc/abstractitiltarget.class.php:2018
+#: inc/form.class.php:2147 inc/targetticket.class.php:392
+#: inc/abstractitiltarget.class.php:1738 inc/abstractitiltarget.class.php:2021
 msgid "Add"
 msgstr "Add"
 
-#: inc/form.class.php:2157 inc/form.class.php:2180
+#: inc/form.class.php:2165 inc/form.class.php:2188
 msgid "Unsupported target type."
 msgstr "Unsupported target type."
 
-#: inc/form.class.php:2219
+#: inc/form.class.php:2227
 msgid "plugin_formcreator_load_check"
 msgstr "plugin_formcreator_load_check"
 
@@ -1581,9 +1605,9 @@ msgid "Failed to find %1$s %2$s"
 msgstr "Failed to find %1$s %2$s"
 
 #: inc/question.class.php:70 inc/targetticket.class.php:1132
-#: inc/targetticket.class.php:1171 inc/abstractitiltarget.class.php:967
-#: inc/abstractitiltarget.class.php:1004 inc/abstractitiltarget.class.php:1082
-#: inc/abstractitiltarget.class.php:1213 inc/abstractitiltarget.class.php:1294
+#: inc/targetticket.class.php:1171 inc/abstractitiltarget.class.php:968
+#: inc/abstractitiltarget.class.php:1005 inc/abstractitiltarget.class.php:1083
+#: inc/abstractitiltarget.class.php:1214 inc/abstractitiltarget.class.php:1295
 #: entrée standard:41
 msgid "Question"
 msgid_plural "Questions"
@@ -1619,48 +1643,48 @@ msgstr "This type of question requires parameters"
 msgid "A parameter is missing for this question type"
 msgstr "A parameter is missing for this question type"
 
-#: inc/question.class.php:1273
+#: inc/question.class.php:1274
 msgid "Service levels"
 msgstr "Service levels"
 
-#: inc/question.class.php:1274 inc/abstractitiltarget.class.php:805
+#: inc/question.class.php:1275 inc/abstractitiltarget.class.php:806
 msgid "SLA"
 msgstr "SLA"
 
-#: inc/question.class.php:1275 inc/abstractitiltarget.class.php:878
+#: inc/question.class.php:1276 inc/abstractitiltarget.class.php:879
 msgid "OLA"
 msgstr "OLA"
 
-#: inc/question.class.php:1292 inc/question.class.php:1332
-#: inc/question.class.php:1335
+#: inc/question.class.php:1293 inc/question.class.php:1333
+#: inc/question.class.php:1336
 msgid "Assets"
 msgstr "Assets"
 
-#: inc/question.class.php:1306 hook.php:675 hook.php:692
+#: inc/question.class.php:1307 hook.php:677 hook.php:694
 msgid "Assistance"
 msgstr "Assistance"
 
-#: inc/question.class.php:1311
+#: inc/question.class.php:1312
 msgid "Management"
 msgstr "Management"
 
-#: inc/question.class.php:1320
+#: inc/question.class.php:1321
 msgid "Tools"
 msgstr "Tools"
 
-#: inc/question.class.php:1321
+#: inc/question.class.php:1322
 msgid "Notes"
 msgstr "Notes"
 
-#: inc/question.class.php:1322
+#: inc/question.class.php:1323
 msgid "RSS feed"
 msgstr "RSS feed"
 
-#: inc/question.class.php:1324
+#: inc/question.class.php:1325
 msgid "Administration"
 msgstr "Administration"
 
-#: inc/question.class.php:1332 inc/question.class.php:1335
+#: inc/question.class.php:1333 inc/question.class.php:1336
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] "Plugin"
@@ -1734,15 +1758,15 @@ msgstr "A target must be associated to an existing form."
 msgid "Name is required."
 msgstr "Name is required."
 
-#: inc/abstracttarget.class.php:493
+#: inc/abstracttarget.class.php:503
 msgid "Destination entity"
 msgstr "Destination entity"
 
-#: inc/abstracttarget.class.php:509
+#: inc/abstracttarget.class.php:519
 msgid "User type question"
 msgstr "User type question"
 
-#: inc/abstracttarget.class.php:510
+#: inc/abstracttarget.class.php:520
 msgid "Entity type question"
 msgstr "Entity type question"
 
@@ -1879,7 +1903,7 @@ msgstr "Linked item does not exists"
 msgid "Failed to link the item"
 msgstr "Failed to link the item"
 
-#: inc/targetticket.class.php:957 install/install.php:334
+#: inc/targetticket.class.php:957 install/install.php:347
 msgid "Your form has been accepted by the validator"
 msgstr "Your form has been accepted by the validator"
 
@@ -2003,116 +2027,116 @@ msgstr "Group from question answer"
 msgid "Time to resolve"
 msgstr "Time to resolve"
 
-#: inc/abstractitiltarget.class.php:793
+#: inc/abstractitiltarget.class.php:794
 msgid "Minute"
 msgid_plural "Minutes"
 msgstr[0] "Minute"
 msgstr[1] "Minutes"
 
-#: inc/abstractitiltarget.class.php:794
+#: inc/abstractitiltarget.class.php:795
 msgid "Hour"
 msgid_plural "Hours"
 msgstr[0] "Hour"
 msgstr[1] "Hours"
 
-#: inc/abstractitiltarget.class.php:795
+#: inc/abstractitiltarget.class.php:796
 msgid "Day"
 msgid_plural "Days"
 msgstr[0] "Day"
 msgstr[1] "Days"
 
-#: inc/abstractitiltarget.class.php:796
+#: inc/abstractitiltarget.class.php:797
 msgid "Month"
 msgid_plural "Months"
 msgstr[0] "Month"
 msgstr[1] "Months"
 
-#: inc/abstractitiltarget.class.php:828
+#: inc/abstractitiltarget.class.php:829
 msgid "SLA (TTO/TTR)"
 msgstr "SLA (TTO/TTR)"
 
-#: inc/abstractitiltarget.class.php:829 inc/abstractitiltarget.class.php:902
+#: inc/abstractitiltarget.class.php:830 inc/abstractitiltarget.class.php:903
 msgid "Question (TTO/TTR)"
 msgstr "Question (TTO/TTR)"
 
-#: inc/abstractitiltarget.class.php:901
+#: inc/abstractitiltarget.class.php:902
 msgid "OLA (TTO/TTR)"
 msgstr "OLA (TTO/TTR)"
 
-#: inc/abstractitiltarget.class.php:1005
+#: inc/abstractitiltarget.class.php:1006
 msgid "Urgency "
 msgstr "Urgency "
 
-#: inc/abstractitiltarget.class.php:1035
+#: inc/abstractitiltarget.class.php:1036
 msgid "Ticket tags"
 msgstr "Ticket tags"
 
-#: inc/abstractitiltarget.class.php:1083
+#: inc/abstractitiltarget.class.php:1084
 msgid "Tags"
 msgstr "Tags"
 
-#: inc/abstractitiltarget.class.php:1202
+#: inc/abstractitiltarget.class.php:1203
 msgid "Location"
 msgstr "Location"
 
-#: inc/abstractitiltarget.class.php:1214
+#: inc/abstractitiltarget.class.php:1215
 msgid "Location "
 msgstr "Location "
 
-#: inc/abstractitiltarget.class.php:1544
+#: inc/abstractitiltarget.class.php:1551
 msgid "The description cannot be empty!"
 msgstr "The description cannot be empty!"
 
-#: inc/abstractitiltarget.class.php:1718
+#: inc/abstractitiltarget.class.php:1721
 msgid "Watcher"
 msgid_plural "Watchers"
 msgstr[0] "Watcher"
 msgstr[1] "Watchers"
 
-#: inc/abstractitiltarget.class.php:1737
+#: inc/abstractitiltarget.class.php:1740
 msgid "Cancel"
 msgstr "Cancel"
 
-#: inc/abstractitiltarget.class.php:2012 inc/abstractitiltarget.class.php:2028
-#: inc/abstractitiltarget.class.php:2029
+#: inc/abstractitiltarget.class.php:2015 inc/abstractitiltarget.class.php:2031
+#: inc/abstractitiltarget.class.php:2032
 msgid "Email followup"
 msgstr "Email followup"
 
-#: inc/abstractitiltarget.class.php:2026 inc/abstractitiltarget.class.php:2054
+#: inc/abstractitiltarget.class.php:2029 inc/abstractitiltarget.class.php:2057
 msgid "Group"
 msgstr "Group"
 
-#: inc/abstractitiltarget.class.php:2027 inc/abstractitiltarget.class.php:2083
+#: inc/abstractitiltarget.class.php:2030 inc/abstractitiltarget.class.php:2086
 msgid "Supplier"
 msgstr "Supplier"
 
-#: inc/abstractitiltarget.class.php:2028
+#: inc/abstractitiltarget.class.php:2031
 msgid "Yes"
 msgstr "Yes"
 
-#: inc/abstractitiltarget.class.php:2065
+#: inc/abstractitiltarget.class.php:2068
 msgid "Group from the object"
 msgstr "Group from the object"
 
-#: inc/abstractitiltarget.class.php:2071
+#: inc/abstractitiltarget.class.php:2074
 msgid "Tech group from the object"
 msgstr "Tech group from the object"
 
-#: install/install.php:128
+#: install/install.php:131
 msgid ""
 "Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb"
 msgstr ""
 "Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb"
 
-#: install/install.php:315
+#: install/install.php:328
 msgid "A form has been created"
 msgstr "A form has been created"
 
-#: install/install.php:316
+#: install/install.php:329
 msgid "Your request has been saved"
 msgstr "Your request has been saved"
 
-#: install/install.php:317
+#: install/install.php:330
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -2122,11 +2146,11 @@ msgstr ""
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 
-#: install/install.php:322
+#: install/install.php:335
 msgid "A form from GLPI need to be validate"
 msgstr "A form from GLPI need to be validate"
 
-#: install/install.php:323
+#: install/install.php:336
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this link:\\n##formcreator."
@@ -2136,11 +2160,11 @@ msgstr ""
 "validator.\\nYou can access it by clicking onto this link:\\n##formcreator."
 "validation_link##"
 
-#: install/install.php:328
+#: install/install.php:341
 msgid "Your form has been refused by the validator"
 msgstr "Your form has been refused by the validator"
 
-#: install/install.php:329
+#: install/install.php:342
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason below:\\n##formcreator.validation_comment##\\n"
@@ -2152,7 +2176,7 @@ msgstr ""
 "\\nYou can still modify and resubmit it by clicking onto this link:"
 "\\n##formcreator.validation_link##"
 
-#: install/install.php:335
+#: install/install.php:348
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
@@ -2160,11 +2184,11 @@ msgstr ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 
-#: install/install.php:340
+#: install/install.php:353
 msgid "Your form has been deleted by an administrator"
 msgstr "Your form has been deleted by an administrator"
 
-#: install/install.php:341
+#: install/install.php:354
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
@@ -2172,7 +2196,7 @@ msgstr ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 
-#: install/install.php:567
+#: install/install.php:580
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Sync service catalog issues"
 
@@ -2190,52 +2214,24 @@ msgctxt "button"
 msgid "Export"
 msgstr "Export"
 
-#: hook.php:651
+#: hook.php:653
 msgid "Cancel my ticket"
 msgstr "Cancel my ticket"
 
-#: hook.php:661
-msgid "All issues"
-msgstr "All issues"
+#: hook.php:671
+msgid "Old"
+msgstr "Old"
 
-#: hook.php:662
-msgid "New issues"
-msgstr "New issues"
-
-#: hook.php:663
-msgid "Assigned issues"
-msgstr "Assigned issues"
-
-#: hook.php:664
-msgid "Waiting issues"
-msgstr "Waiting issues"
-
-#: hook.php:665
-msgid "Issues to validate"
-msgstr "Issues to validate"
-
-#: hook.php:666
-msgid "Solved issues"
-msgstr "Solved issues"
-
-#: hook.php:667
-msgid "Closed issues"
-msgstr "Closed issues"
-
-#: hook.php:669
-msgid "Old issues"
-msgstr "Old issues"
-
-#: hook.php:676
+#: hook.php:678
 #, php-format
 msgid "Number of %s"
 msgstr "Number of %s"
 
-#: hook.php:693
+#: hook.php:695
 msgid "Issues summary"
 msgstr "Issues summary"
 
-#: hook.php:731
+#: hook.php:733
 msgid ""
 "Formcreator's mini dashboard not usable as default. This Setting has been "
 "ignored."
@@ -2243,31 +2239,35 @@ msgstr ""
 "Formcreator's mini dashboard not usable as default. This Setting has been "
 "ignored."
 
-#: js/scripts.js:297
-msgid "No form found. Please choose a form below instead"
-msgstr "No form found. Please choose a form below instead"
+#: js/scripts.js:315
+msgid "No form found. Please choose a form below instead."
+msgstr "No form found. Please choose a form below instead."
 
-#: js/scripts.js:360
-msgid "No form yet in this category"
-msgstr "No form yet in this category"
+#: js/scripts.js:317
+msgid "No form found."
+msgstr "No form found."
 
-#: js/scripts.js:639
+#: js/scripts.js:321
+msgid "No FAQ item found."
+msgstr "No FAQ item found."
+
+#: js/scripts.js:690
 msgid "Are you sure you want to delete this question?"
 msgstr "Are you sure you want to delete this question?"
 
-#: js/scripts.js:826
+#: js/scripts.js:873
 msgid "Are you sure you want to delete this section?"
 msgstr "Are you sure you want to delete this section?"
 
-#: js/scripts.js:1066
+#: js/scripts.js:1113
 msgid "Add translations"
 msgstr "Add translations"
 
-#: js/scripts.js:1213 js/scripts.js:1237
+#: js/scripts.js:1260 js/scripts.js:1284
 msgid "An error occured while querying forms"
 msgstr "An error occured while querying forms"
 
-#: js/scripts.js:1351
+#: js/scripts.js:1398
 msgid "Are you sure you want to delete this target:"
 msgstr "Are you sure you want to delete this target:"
 
@@ -2322,7 +2322,7 @@ msgstr "Default form in service catalog"
 msgid "Are you a robot ?"
 msgstr "Are you a robot ?"
 
-#: entrée standard:127
+#: entrée standard:132
 msgid "Send"
 msgstr "Send"
 

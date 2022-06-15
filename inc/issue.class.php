@@ -707,10 +707,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
-      if (!Session::isCron() // no filter for cron
-          && Session::getCurrentInterface() == 'helpdesk') {
-         $newtab['right']       = 'id';
-      }
       $tab[] = $newtab;
 
       if (!Session::isCron() // no filter for cron

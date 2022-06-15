@@ -154,9 +154,10 @@ class GlpiselectField extends DropdownField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+   // public function regex($value): bool {
+   //    $text = $this->getValueForTargetText('', false);
+   //    return (preg_match($value, $text)) ? true : false;
+   // }
 
    public function isPublicFormCompatible(): bool {
       return false;
