@@ -37,7 +37,7 @@ class FloatField extends CommonTestCase {
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
       $output = $itemtype::getName();
-      $this->string($output)->isEqualTo('Float');
+      $this->string($output)->isEqualTo('Decimal number');
    }
 
    public function provider() {
