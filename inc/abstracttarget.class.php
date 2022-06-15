@@ -696,7 +696,11 @@ PluginFormcreatorTranslatableInterface
                if ($question->isNewItem()) {
                   continue 2;
                }
-               $itemtype = DropdownField::getSubItemtypeForValues($question->fields['values']);
+               $field = $question->getSubField();
+               if (!method_exists($field, 'getSubItemtype')) {
+                  continue 2;
+               }
+               $itemtype = $field->getSubItemtype();
                if (!is_subclass_of($itemtype, CommonDBTM::class)) {
                   continue 2;
                }
