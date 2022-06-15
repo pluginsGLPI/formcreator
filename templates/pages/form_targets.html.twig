@@ -1,0 +1,44 @@
+<table class="tab_cadrehov">
+<tr>
+<th>{{ _n('Target', 'Targets', 2, 'formcreator') }}</th>
+<th>{{ __('Type', 'formcreator') }}</th>
+<th class="right">{{ __('Actions', 'formcreator') }}</th>
+</tr>
+{% set i = 0 %}
+{% set allTargets = item.getTargetsFromForm() %}
+{% for targetType, targets in allTargets %}
+    {% for targetId, target in targets %}
+        {% set i = i + 1 %}
+        <tr class="tab_bg_{{ i % 2 }}">
+            <td><a href="{{ targetType|itemtype_form_path(targetId) }}">
+                {{ target.fields['name'] }}
+            </a></td>
+
+            <td>{{ target.getTypeName() }}</td>
+
+            <td align="center" width="32">
+                <i
+                    class="far fa-trash-alt formcreator_delete_target"
+                    alt="*"
+                    title="{{ __('Delete', 'formcreator') }}"
+                    data-itemtype="{{ target.getType() }}"
+                    data-items-id="{{ targetId }}"
+                    align="absmiddle"
+                    style="cursor: pointer"></i>
+            </td>
+        </tr>
+    {% endfor %}
+{% endfor %}
+
+{# Display add target link #}
+{% set i = i + 1 %}
+<tr class="tab_bg_{{ i % 2 }}" id="add_target_row">
+    <td colspan="3">
+        <a href="javascript:plugin_formcreator.addTarget({{ item.getId() }});">
+            <i class="fa fa-plus"></i>
+            {{ __('Add a target', 'formcreator') }}
+        </a>
+    </td>
+</tr>
+
+</table>
