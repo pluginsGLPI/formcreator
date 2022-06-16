@@ -486,16 +486,14 @@ PluginFormcreatorTranslatableInterface
    public function showFormAnswerProperties($ID, $options = []) {
       $options['candel'] = false;
       $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Answers title', 'formcretor') . '</td>';
-      echo '<td colspan="3">' . Html::input('formanswer_name', ['value' => $this->fields['formanswer_name']]) . '</td>';
-      echo '</tr>';
-
-        $this->showFormButtons($options);
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form_formanswerproperties.html.twig', [
+       'item'   => $this,
+       'params' => $options,
+      ]);
 
       $this->showTagsList();
+
+      return true;
    }
 
    public function showTargets($ID, $options = []) {
