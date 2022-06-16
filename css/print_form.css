@@ -133,3 +133,15 @@ label[for] {
    height:16px;
    width:16px;
 }
+
+#plugin_formcreator_form.plugin_formcreator_form li.plugin_formcreator_section {
+   position: inherit;
+   top: inherit;
+   left: inherit;
+   display: inherit !important;
+}
+
+#plugin_formcreator_form.plugin_formcreator_form li.plugin_formcreator_section .next_button,
+#plugin_formcreator_form.plugin_formcreator_form li.plugin_formcreator_section .previous_button {
+   display: none;
+}

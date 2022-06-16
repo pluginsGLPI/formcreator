@@ -106,6 +106,15 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
    }
 
+   public function testGetEnumSectionDisplayMode() {
+      $output = \PluginFormcreatorForm::getEnumSectionDisplayMode();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorForm::SECTION_DISPLAY_VERTICAL_STACK => __('Vertical stack', 'formcreator'),
+         \PluginFormcreatorForm::SECTION_DISPLAY_WIZARD         => __('Wizard', 'formcreator'),
+         \PluginFormcreatorForm::SECTION_DISPLAY_ACCORDION      => __('Accordion', 'formcreator'),
+      ]);
+   }
+
    public function testCanCreate() {
       $this->login('glpi', 'glpi');
       $output = \PluginFormcreatorForm::canCreate();
@@ -533,6 +542,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'profiles',
          'users',
          'groups',
+         'section_display_mode',
       ];
       $extraFields = [
          '_entity',

@@ -42,6 +42,7 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addRights();
        $this->addPropertiesToCategories();
        $this->addTargetActorUnicity();
+       $this->addSectionDisplayMode();
    }
 
    public function addTtoToIssues() {
@@ -130,5 +131,10 @@ class PluginFormcreatorUpgradeTo2_14 {
 
       // Set unicity
       $this->migration->addKey($table, $unicity, 'unicity', 'UNIQUE');
+   }
+
+   public function addSectionDisplayMode() {
+      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorForm::class);
+      $this->migration->addField($table, 'section_display_mode', 'integer', ['after' => 'is_visible']);
    }
 }

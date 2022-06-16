@@ -1,0 +1,194 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+<style>
+	{% set widthPercent = 100 / options.columns %}
+	{% for i in range(1, options.columns ) %}
+		{% set width = i * widthPercent %}
+            #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][gs-w="{{ i }}"],
+            #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[gs-w="{{ i }}"] {
+                min-width: {{ widthPercent }}%;
+                width: {{ width }}%;
+                margin-left: -0.25em;
+            }
+	{% endfor %}
+</style>
+
+<div class="asset">
+    {% set formName = 'plugin_formcreator_form' %}
+	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action={{ item.getFormURL() }} id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}">
+		<h1 class='form-title'>
+		        {{ __(item.fields['name'], options.domain) }}
+			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
+		</h1>
+        {% if item.fields['content'] != '' or item.getExtraHeader() != "" %}
+            <div class="form_header">
+            {{ __(item.fields['content'], options.domain)|safe_html }}
+            {{ item.getExtraHeader()|safe_html }}
+            </div>
+        {% endif %}
+        <ol>
+
+        <script type="text/javascript">
+            function plugin_formcreator_wizard_next(target) {
+                var current = $(target.closest('li.plugin_formcreator_section'));
+                var next = current.next('li.plugin_formcreator_section');
+                if (next.length < 1) {
+                    return;
+                }
+                next.css('left', '100%');
+                next.show();
+                current.css('left', '-100%');
+                next.css('left', '0');
+                current.hide();
+            }
+            function plugin_formcreator_wizard_prev(target) {
+                var current = $(target.closest('li.plugin_formcreator_section'));
+                var prev = current.prev('li.plugin_formcreator_section');
+                if (prev.length < 1) {
+                    return;
+                }
+                prev.css('left', '-100%');
+                prev.show();
+                current.css('left', '100%');
+                prev.css('left', '0');
+                current.hide();
+            }
+        </script>
+
+        {% set sections = call('PluginFormcreatorSection::getSectionsFromForm', [
+            item.fields['id']
+        ]) %}
+        {% set sectionsCount = call('PluginFormcreatorSection::getSectionsCountFromForm', [
+            item.fields['id']
+        ]) %}
+        {% set currentSection = 0 %}
+        {% for section in sections %}
+            {% set currentSection = currentSection + 1 %}
+            {% set sectionId = section.fields['id'] %}
+            <li class="card plugin_formcreator_section plugin_formcreator_section_wizard" data-itemtype="PluginFormcreatorSection" data-id={{ sectionId }}  >
+                <div class="card-header">
+                    <h2 class="card-title">
+                        {% if section.fields['name'] == '' %}
+                            ({{ sectionId }})
+                        {% else %}
+                            {{ __(section.fields['name'], options.domain) }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {% set lastQuestion = null %}
+                    {% set questions = call('PluginFormcreatorQuestion::getQuestionsFromSection', [
+                        sectionId
+                    ]) %}
+                    {% for question in questions %}
+                        {% if not (lastQuestion is null) %}
+                            {% if lastQuestion.fields['row'] < question.fields['row'] %}
+                                <div class="plugin_formcreator_newRow"></div>
+                            {% else %}
+                                {% set x = lastQuestion.fields['col'] + lastQuestion.fields['width'] %}
+                                {% set width = question.fields['col'] - x %}
+                                {% if x < question.fields['col'] %}
+                                    <div class="plugin_formcreator_gap" gs-x="{{ x }}" gs-w="{{ width }}"></div>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        {% if not options.public or question.getSubField().isPublicFormCompatible() %}
+                            {% set sessionData = session('formcreator') %}
+                            {{ question.getRenderedHtml(options.domain, true, options.formanswer)|raw }}
+                        {% endif %}
+                        {% set lastQuestion = question %}
+                    {% endfor %}
+                </div>
+
+                {% if currentSection == sectionsCount %}
+                    {% if options.use_captcha %}
+                        {% set captchaTime = call('time') %}
+                        {% set catchaId = call('md5', [captchaTime ~ item.fields['id']]) %}
+                        {% set captcha = call('PluginFormcreatorCommon::getCaptcha', [captchaId]) %}
+                        <div id="plugin_formcreator_captcha_section">
+                            <div class="card-header">{{ __('Are you a robot ?', 'formcreator') }}</div>
+                            <div class="card-body"><label for="plugin_formcreator_captcha">{{ __('Are you a robot ?', 'formcreator') }}</label>
+                                <div><i onclick="plugin_formcreator_refreshCaptcha()" class="fas fa-sync-alt"></i>&nbsp;<img src="{{ captcha['img']|raw }}">
+                                    <div style="width: 50%; float: right" class="form_field"><span class="no-wrap">
+                                    {{ fields.textField('plugin_formcreator_captcha', '', '', { 'no_label': true}) }}
+                                    {{ fields.hiddenField('plugin_formcreator_captcha_id', captchaId) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {{ call('PluginFormcreatorForm_Validator::dropdownValidator', [
+                        item
+                    ])|raw }}
+                {% endif %}
+
+                <div class='plugin_formcreator_section_navigate'>
+                    {% if currentSection > 1%}
+                        <button class="btn btn-outline-secondary me-2 previous_button" type="button" name="action" value="previous" onclick="plugin_formcreator_wizard_prev(this)">
+                            <i class="fa-solid fa-circle-left"></i>
+                            <span>{{ _x('button', 'Previous') }}</span>
+                        </button>
+                    {% else %}
+                    {% endif %}
+                    {% if currentSection < sectionsCount %}
+                        <button class="btn btn-primary me-2 next_button" type="button" name="action" value="next" onclick="plugin_formcreator_wizard_next(this)">
+                            <i class="fa-solid fa-circle-right"></i>
+                            <span>{{ _x('button', 'Next') }}</span>
+                        </button>
+                    {% else %}
+                        {{ call('Html::submit', [
+                            __('Send'),
+                            {'name': 'submit_formcreator',
+                            'class': 'btn btn-primary me-2 next_button',
+                            'icon': 'far fa-save'}
+                        ])|raw }}
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+        </ol>
+        <script>
+           $(
+                function() {
+                    $('#plugin_formcreator_form.plugin_formcreator_form li.plugin_formcreator_section').hide();
+                    $('#plugin_formcreator_form.plugin_formcreator_form li.plugin_formcreator_section:first').show();
+                    plugin_formcreator.showFields($("form[name='{{ formName }}']"));
+                }
+           )
+        </script>
+
+        {{ fields.hiddenField('plugin_formcreator_forms_id', item.fields['id']) }}
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
+	</form>
+</div>

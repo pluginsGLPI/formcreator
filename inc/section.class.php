@@ -449,6 +449,26 @@ PluginFormcreatorTranslatableInterface
       }
    }
 
+      /**
+    * Counts sections in a form
+    * @param int $formId ID of a form
+    * @return int
+    */
+   public static function getSectionsCountFromForm($formId): int {
+      global $DB;
+
+      $count = $DB->request([
+         'COUNT' => 'c',
+         'FROM'   => self::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $formId
+         ],
+         'ORDER'  => 'order ASC'
+      ])->current();
+
+      return $count['c'];
+   }
+
    public function showForm($ID, $options = []) {
       $this->initForm($ID, $options);
       $options['candel'] = false;

@@ -225,11 +225,33 @@
       list-style-type: none;
       text-align: left;
       padding-left: 0;
+      overflow: hidden;
    }
 
    [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]), .plugin_formcreator_gap {
       vertical-align: top;
       display: inline-block;
+   }
+
+   li.plugin_formcreator_section {
+      position: relative;
+      width: 100%;
+      top: 0;
+      left: 0;
+      transition-property: left;
+      transition-duration: 0.3s;
+   }
+
+   .plugin_formcreator_section_navigate {
+      padding-bottom: 8px;
+      .previous_button {
+         margin-left: 8px;
+         float: inherit;
+      }
+
+      .next_button {
+         float: right;
+      }
    }
 }
 

@@ -61,11 +61,23 @@ PluginFormcreatorTranslatableInterface
    const VALIDATION_USER     = 1;
    const VALIDATION_GROUP    = 2;
 
+   const SECTION_DISPLAY_VERTICAL_STACK = 0;
+   const SECTION_DISPLAY_WIZARD = 1;
+   const SECTION_DISPLAY_ACCORDION = 2;
+
    public static function getEnumAccessType() {
       return [
          self::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
          self::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
          self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumSectionDisplayMode() {
+      return [
+         self::SECTION_DISPLAY_VERTICAL_STACK => __('Vertical stack', 'formcreator'),
+         self::SECTION_DISPLAY_WIZARD         => __('Wizard', 'formcreator'),
+         self::SECTION_DISPLAY_ACCORDION      => __('Accordion', 'formcreator'),
       ];
    }
 
@@ -958,7 +970,20 @@ PluginFormcreatorTranslatableInterface
       }
       $formanswer = new PluginFormcreatorFormAnswer();
       $formanswer->loadAnswersFromSession();
-      TemplateRenderer::getInstance()->display('@formcreator/pages/userform.html.twig', [
+
+      switch ($this->fields['section_display_mode']) {
+         default:
+            $template = '@formcreator/pages/userform_stack.html.twig';
+            break;
+         case self::SECTION_DISPLAY_WIZARD :
+            $template = '@formcreator/pages/userform_wizard.html.twig';
+            break;
+         case self::SECTION_DISPLAY_ACCORDION :
+            $template = '@formcreator/pages/userform_acordion.html.twig';
+            break;
+      }
+
+      TemplateRenderer::getInstance()->display($template, [
          'item'    => $this,
          'options' => [
             'columns' => PluginFormcreatorSection::COLUMNS,
@@ -2571,5 +2596,17 @@ PluginFormcreatorTranslatableInterface
       }
 
       return $extra_header;
+   }
+
+   /**
+    * Show a section display mode dropdown
+    *
+    * @param string $name
+    * @param array $options
+    * @return void
+    */
+   public static function dropdownSectionDisplayMode(string $name, array $options): void {
+      $modes = self::getEnumSectionDisplayMode();
+      Dropdown::showFromArray($name, $modes, $options);
    }
 }

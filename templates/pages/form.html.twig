@@ -98,4 +98,6 @@
         {% set visible = item.fields['is_visible'] %}
     {% endif %}
     {{ fields.dropdownYesNo('is_visible', visible, __('Visible', 'formcreator'), { 'add_field_html': tooltip }) }}
+
+    {{ formcreatorFields.dropdownSectionDisplayMode('section_display_mode', item.fields['section_display_mode'], __('Section display mode', 'formcreator')) }}
 {% endblock %}
