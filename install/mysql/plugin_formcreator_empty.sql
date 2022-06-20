@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `id`                    int unsigned  NOT NULL AUTO_INCREMENT,
-  `name`                  varchar(255)  NOT NULL DEFAULT '',
+  `name`                  varchar(255)  NULL DEFAULT NULL,
   `display_id`            varchar(255)  NOT NULL,
   `items_id`              int unsigned  NOT NULL DEFAULT '0',
   `itemtype`              varchar(255)  NOT NULL DEFAULT '',
