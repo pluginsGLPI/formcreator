@@ -31,10 +31,8 @@
 namespace tests\units;
 
 use CommonITILObject;
-use Glpi\Agent\Communication\Headers\Common;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
-use PluginFormcreatorFormAnswer as GlobalPluginFormcreatorFormAnswer;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
@@ -98,10 +96,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $form = new PluginFormcreatorForm();
       $form = \PluginFormcreatorForm::getByItem($question);
       $this->boolean($form->isNewItem())->isFalse();
+      $user = new \User();
+      $user->getFromDBbyName('tech');
       $success = $form->update([
          'id'                  => $form->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users'    => [2] // glpi
+         '_validator_users'    => [$user->getID()] // glpi
       ]);
       $this->boolean($success)->isTrue();
 
@@ -117,8 +117,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             'entities_id'                             => \Session::getActiveEntity(),
             'is_recursive'                            => 0,
             'requester_id'                            => \Session::getLoginUserID(),
-            'formcreator_validator'                   => 'User_2',
-            'users_id_validator'                      => 2,
+            'formcreator_validator'                   => $user::getType() . '_' . $user->getID(),
+            'users_id_validator'                      => $user->getID(),
             'groups_id_validator'                     => 0,
             'status'                                  => \PluginFormcreatorFormAnswer::STATUS_WAITING,
             'request_date'                            => $_SESSION['glpi_currenttime'],
