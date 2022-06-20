@@ -767,8 +767,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       switch ($field) {
          case 'itemtype':
             return Dropdown::showFromArray($name,
-                                           [Ticket::class                      => __('Ticket'),
-                                            PluginFormcreatorFormAnswer::class => __('Form answer', 'formcreator')],
+                                           [Ticket::class                      => Ticket::getTypeName(1),
+                                            PluginFormcreatorFormAnswer::class => PluginFormcreatorFormAnswer::getTypeName(1)],
                                            ['display' => false,
                                             'value'   => $values[$field]]);
          case 'status' :
