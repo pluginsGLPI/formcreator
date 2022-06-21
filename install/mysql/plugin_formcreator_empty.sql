@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `internal_time_to_resolve` timestamp     NULL,
   `solvedate`                timestamp     NULL DEFAULT NULL,
   `date`                     timestamp     NULL DEFAULT NULL,
-  `takeintoaccount_delay_stat` int(11)       NOT NULL DEFAULT '0',
+  `takeintoaccount_delay_stat` int(11)     NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `item` (`itemtype`, `items_id`),
   INDEX `entities_id` (`entities_id`),
