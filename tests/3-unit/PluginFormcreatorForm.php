@@ -46,6 +46,25 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testCountAvailableForm':
             $this->login('glpi', 'glpi');
       }
+
+      switch ($method) {
+         case 'testCreateValidationNotification':
+            \Config::setConfigurationValues(
+               'core',
+               ['use_notifications' => 1, 'notifications_mailing' => 1]
+            );
+      }
+   }
+
+   public function afterTestMethod($method) {
+      parent::afterTestMethod($method);
+      switch ($method) {
+         case 'testCreateValidationNotification':
+            \Config::setConfigurationValues(
+               'core',
+               ['use_notifications' => 0, 'notifications_mailing' => 0]
+            );
+      }
    }
 
    public function providerGetTypeName() {
@@ -390,7 +409,51 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $form->fields['usage_count'])->isEqualTo(1);
    }
 
-   public function testCreateValidationNotification() {
+   public function providerCreateValidationNotification() {
+      // give email address to users
+      $validator = new \User();
+      $validator->getFromDBbyName('tech');
+      $useremail = new \UserEmail();
+      $useremail->deleteByCriteria([
+         'users_id' => $validator->getID(),
+      ]);
+      $validator->update([
+         'id' => $validator->getID(),
+         '_useremails' => [
+            'tech@localhost.com',
+         ]
+      ]);
+
+      $requester = new \User();
+      $requester->getFromDBbyName('normal');
+      $useremail = new \UserEmail();
+      $useremail->deleteByCriteria([
+         'users_id' => $requester->getID(),
+      ]);
+      $requester->update([
+         'id' => $requester->getID(),
+         '_useremails' => [
+            'normal@localhost.com',
+         ]
+      ]);
+
+      yield [
+         $requester,
+         $validator,
+         2
+      ];
+
+      yield [
+         $requester,
+         $requester,
+         1
+      ];
+   }
+
+   /**
+    * @dataProvider providerCreateValidationNotification
+    */
+   public function testCreateValidationNotification(\User $requester, \User $validator, $expectedNotificationCount) {
       global $DB, $CFG_GLPI;
 
       // Enable notifications in GLPI
@@ -398,25 +461,13 @@ class PluginFormcreatorForm extends CommonTestCase {
          'core',
          ['use_notifications' => 1, 'notifications_mailing' => 1]
       );
-      $CFG_GLPI['use_notifications'] = 1;
-      $CFG_GLPI['notifications_mailing'] = 1;
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $_SESSION['glpiID'] = $user->getID();
-      $useremail = new \UserEmail();
-      $useremail->deleteByCriteria([
-         'users_id' => $user->getID(),
-      ]);
-      $user->update([
-         'id' => $_SESSION['glpiID'],
-         '_useremails' => [
-            'glpi@localhost.com',
-         ]
-      ]);
+      // $CFG_GLPI['use_notifications'] = 1;
+      // $CFG_GLPI['notifications_mailing'] = 1;
+
       $form = $this->getForm([
          'name'                  => 'validation notification',
          'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'      => [$_SESSION['glpiID']],
+         '_validator_users'      => [$validator->getID()],
       ]);
       $this->getSection([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
@@ -424,16 +475,15 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $this->login('normal', 'normal');
       $this->disableDebug();
       $formAnswerId = $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => \User::class . '_' . $_SESSION['glpiID'],
+         'formcreator_validator'       => $validator->getType() . '_' . $validator->getID(),
       ]);
       $this->restoreDebug();
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
-      // 1 notification to the validator
-      // 1 notification to the requester
       $foundNotifications = $DB->request([
          'COUNT' => 'cpt',
          'FROM'  => \QueuedNotification::getTable(),
@@ -442,7 +492,7 @@ class PluginFormcreatorForm extends CommonTestCase {
             'items_id' => $formAnswerId,
          ]
       ])->current();
-      $this->integer((int) $foundNotifications['cpt'])->isEqualTo(2);
+      $this->integer((int) $foundNotifications['cpt'])->isEqualTo($expectedNotificationCount);
    }
 
    public function testExport() {

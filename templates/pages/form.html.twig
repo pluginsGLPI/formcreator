@@ -98,6 +98,4 @@
         {% set visible = item.fields['is_visible'] %}
     {% endif %}
     {{ fields.dropdownYesNo('is_visible', visible, __('Visible', 'formcreator'), { 'add_field_html': tooltip }) }}
-
-    {{ fields.textField('formanswer_name', item.fields['formanswer_name'], __('Answers title', 'formcreator')) }}
 {% endblock %}
