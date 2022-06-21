@@ -99,11 +99,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function canViewItem() {
       global $DB;
 
-      // if (Plugin::isPluginActive('advform')) {
-      //    $advFormAnswer = new PluginAdvformFormanswer();
-      //    $advFormAnswer->getFromDB($this->getID());
-      //    return $advFormAnswer->canViewItem();
-      // }
+      if (Plugin::isPluginActive('advform')) {
+         $advFormAnswer = new PluginAdvformFormanswer();
+         $advFormAnswer->getFromDB($this->getID());
+         return $advFormAnswer->canViewItem();
+      }
 
       $currentUser = Session::getLoginUserID();
 
@@ -454,9 +454,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Can the current user validate the form ?
     */
    public function canValidate(): bool {
-      // if (Plugin::isPluginActive('advform')) {
-      //    return PluginAdvformFormAnswer::canValidate($this);
-      // }
+      if (Plugin::isPluginActive('advform')) {
+         $formAnswer = new PluginAdvformFormAnswer();
+         $formAnswer->getFromDB($this->getID());
+         return $formAnswer->canValidate($this);
+      }
 
       if (!PluginFormcreatorCommon::canValidate()) {
          return false;
@@ -665,7 +667,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       if (Plugin::isPluginActive('advform')) {
-         PluginAdvformFormanswerValidation::showValidationStatuses($this);
+         $formAnswer = PluginFormcreatorCommon::getFormAnswer();
+         $formAnswer->getFromDB($this->getID());
+         PluginAdvformFormanswerValidation::showValidationStatuses($formAnswer);
       }
       $options['canedit'] = true;
       $options['candel'] = false;
@@ -936,7 +940,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = PluginFormcreatorForm::getById($formId ?? $this->fields[$formFk]);
+      $form = PluginFormcreatorCommon::getForm();
+      $form->getFromDB($formId ?? $this->fields[$formFk]);
       if ($form === false) {
          return null;
       }
@@ -1544,10 +1549,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public static function getMyLastAnswersAsRequester($limit = 5) {
       global $DB;
-
-      if (Plugin::isPluginActive('advform')) {
-         return PluginAdvformFormAnswer::getMyLastAnswersAsRequester($limit);
-      }
 
       $formAnswerTable = self::getTable();
       $formTable = PluginFormcreatorForm::getTable();
