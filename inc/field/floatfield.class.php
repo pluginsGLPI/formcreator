@@ -178,7 +178,7 @@ class FloatField extends PluginFormcreatorAbstractField
    }
 
    public static function getName(): string {
-      return __('Float', 'formcreator');
+      return __('Decimal number', 'formcreator');
    }
 
    public function prepareQuestionInputForSave($input) {

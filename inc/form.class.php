@@ -497,61 +497,10 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showTargets($ID, $options = []) {
-      echo '<table class="tab_cadrehov">';
-      echo '<tr>';
-      echo '<th>'._n('Target', 'Targets', 2, 'formcreator').'</th>';
-      echo '<th>'.__('Type', 'formcreator').'</th>';
-      echo '<th class="right">'.__('Actions', 'formcreator').'</th>';
-      echo '</tr>';
-
-      $allTargets = $this->getTargetsFromForm();
-      $i = 0;
-      foreach ($allTargets as $targetType => $targets) {
-         foreach ($targets as $targetId => $target) {
-            /** @var PluginFormcreatorAbstractTarget $target  */
-            $i++;
-            echo '<tr class="tab_bg_'.($i % 2).'">';
-            $targetItemUrl = $targetType::getFormURLWithID($targetId);
-            echo '<td><a href="' . $targetItemUrl . '">';
-            echo $target->fields['name'];
-            echo '</a></td>';
-
-            echo '<td>';
-            echo $target->getTypeName();
-            echo '</td>';
-
-            echo '<td align="center" width="32">';
-            echo '<i
-               class="far fa-trash-alt formcreator_delete_target"
-               alt="*"
-               title="' . __('Delete', 'formcreator') . '"
-               data-itemtype="' . get_class($target) . '"
-               data-items-id="' . $targetId . '"
-               align="absmiddle"
-               style="cursor: pointer"
-            ></i>';
-            echo '</td>';
-
-            echo '</tr>';
-         }
-      }
-
-      // Display add target link...
-      echo '<tr class="tab_bg_'.(($i + 1) % 2).' id="add_target_row">';
-      echo '<td colspan="3">';
-      echo '<a href="javascript:plugin_formcreator.addTarget('.$ID.');">
-                <i class="fa fa-plus"></i>
-                '.__('Add a target', 'formcreator').'
-            </a>';
-      echo '</td>';
-      echo '</tr>';
-
-      // OR display add target form
-      echo '<tr id="add_target_form" style="display: none;">';
-      echo '<td colspan="3" id="add_target_form_td"></td>';
-      echo '</tr>';
-
-      echo "</table>";
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form_targets.html.twig', [
+         'item'    => $this,
+         'options' => $options
+      ]);
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
