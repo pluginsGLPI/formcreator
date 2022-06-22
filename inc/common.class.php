@@ -634,7 +634,7 @@ JAVASCRIPT;
     * @return PluginFormcreatorFormAnswer
     */
    public static function getFormAnswer(): PluginFormcreatorFormAnswer {
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          return new PluginAdvformFormAnswer();
       }
 
@@ -647,7 +647,7 @@ JAVASCRIPT;
     * @return string
     */
    public static function getFormanswerItemtype() {
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          return PluginAdvformFormAnswer::class;
       }
 
@@ -655,7 +655,7 @@ JAVASCRIPT;
    }
 
    public static function getForm() {
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          return new PluginAdvformForm();
       }
 
