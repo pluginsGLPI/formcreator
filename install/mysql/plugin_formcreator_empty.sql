@@ -283,6 +283,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
   `use_notification` tinyint(1)   NOT NULL DEFAULT '1',
   `uuid`             varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`itemtype`,`items_id`, `actor_role`, `actor_type`, `actor_value`),
   INDEX `item` (`itemtype`, `items_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (

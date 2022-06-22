@@ -395,7 +395,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'items_id'         => $targetTicket1->getID(),
          'actor_role'       => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
          'actor_type'       => \CommonITILActor::REQUESTER,
-         'actor_value'      => 3,
+         'actor_value_' . \CommonITILActor::REQUESTER      => 3,
          'use_notification' => '1',
       ]);
       $this->boolean($actor1->isNewItem())->isFalse();
@@ -405,7 +405,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'items_id'         => $targetTicket1->getID(),
          'actor_role'       => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
          'actor_type'       => \CommonITILActor::REQUESTER,
-         'actor_value'      => 5,
+         'actor_value_' . \CommonITILActor::REQUESTER      => 5,
          'use_notification' => '1',
       ]);
       $this->boolean($actor2->isNewItem())->isFalse();
