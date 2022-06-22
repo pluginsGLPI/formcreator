@@ -49,6 +49,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addFormVisibility();
       $this->addRequestSourceSetting();
       $this->addEntityOption();
+      $this->fixissues();
    }
 
    public function addEntityOption() {
@@ -315,6 +316,12 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
 
       $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `default_form_list_mode`=0 WHERE `entities_id`=0");
+   }
+
+   public function fixissues() {
+      $table = 'glpi_plugin_formcreator_issues';
+
+      $this->migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'nodefault' => true]);
    }
 
    public function isResyncIssuesRequiresd() {

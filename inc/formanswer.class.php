@@ -1755,6 +1755,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   break;
                }
                $usersIdValidator = (int) $validatorItem[1];
+               if (Session::getLoginUserID(true) == $usersIdValidator) {
+                  // The requester is the validator. No need to validate
+                  break;
+               }
                $input['status'] = self::STATUS_WAITING;
                break;
 
@@ -1764,6 +1768,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   break;
                }
                $groupIdValidator = (int) $validatorItem[1];
+               if (Session::getLoginUserID(true) !== false && in_array($groupIdValidator, $_SESSION['glpigroups'])) {
+                  // The requester is a member of the validator group
+                  break;
+               }
                $input['status'] = self::STATUS_WAITING;
                break;
          }
@@ -1867,7 +1875,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return array|null
     */
    public function getCurrentApprovers(): ?array {
-      if ($this->fields['status'] =! self::STATUS_WAITING) {
+      if ($this->fields['status'] != self::STATUS_WAITING) {
          return null;
       }
 

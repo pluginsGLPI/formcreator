@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets_actors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `id`                       int unsigned  NOT NULL AUTO_INCREMENT,
-  `name`                     varchar(255)  NOT NULL DEFAULT '',
+  `name`                     varchar(255)  NULL DEFAULT NULL,
   `display_id`               varchar(255)  NOT NULL,
   `items_id`                 int unsigned  NOT NULL DEFAULT '0',
   `itemtype`                 varchar(255)  NOT NULL DEFAULT '',
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `internal_time_to_resolve` timestamp     NULL,
   `solvedate`                timestamp     NULL DEFAULT NULL,
   `date`                     timestamp     NULL DEFAULT NULL,
-  `takeintoaccount_delay_stat` int(11)       NOT NULL DEFAULT '0',
+  `takeintoaccount_delay_stat` int(11)     NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `item` (`itemtype`, `items_id`),
   INDEX `entities_id` (`entities_id`),
