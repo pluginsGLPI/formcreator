@@ -41,6 +41,7 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addTtoToIssues();
        $this->addRights();
        $this->addPropertiesToCategories();
+       $this->addTargetActorUnicity();
    }
 
    public function addTtoToIssues() {
@@ -100,5 +101,34 @@ class PluginFormcreatorUpgradeTo2_14 {
          $this->migration->addField($table, 'background_color', 'string', ['after' => 'icon_color']);
          $this->migration->addPostQuery("UPDATE `$table` SET background_color=''");
       }
+   }
+
+   public function addTargetActorUnicity() {
+      /** @var DBmysql $DB */
+      global $DB;
+
+      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorTarget_Actor::class);
+      $unicity = [
+         'itemtype',
+         'items_id',
+         'actor_role',
+         'actor_type',
+         'actor_value'
+      ];
+
+      // Clean existing duplicates
+      $DB->queryOrDie("DELETE `t1` FROM `$table` `t1`
+         INNER JOIN `$table` `t2`
+         WHERE
+            t1.id < t2.id AND
+            t1.itemtype = t2.itemtype
+            AND t1.items_id = t2.items_id
+            AND t1.actor_role = t2.actor_role
+            AND t1.actor_type = t2.actor_type
+            AND t1.actor_value = t2.actor_value"
+      );
+
+      // Set unicity
+      $this->migration->addKey($table, $unicity, 'unicity', 'UNIQUE');
    }
 }
