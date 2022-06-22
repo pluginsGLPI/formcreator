@@ -600,7 +600,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          $newtab = PluginAdvformIssue::rawSearchOptionFormApprover();
       } else {
          $newtab = [
@@ -727,7 +727,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ];
       }
 
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          $tab[] = PluginAdvformIssue::rawSearchOptionFormApproverGroup();
       } else {
          $tab[] = [
@@ -741,7 +741,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ];
       }
 
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          foreach (PluginAdvformIssue::rawSearchOptions() as $so) {
             $tab[] = $so;
          }

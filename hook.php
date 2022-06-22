@@ -94,7 +94,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
          $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`items_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
-         if (Plugin::isPluginActive('advform')) {
+         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
          } else {
             $issueSo = Search::getOptions($itemtype);
@@ -113,7 +113,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
          break;
 
       case PluginFormcreatorFormAnswer::class:
-         if (Plugin::isPluginActive('advform')) {
+         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
          }
          break;
@@ -145,7 +145,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             $condition .= ' OR ';
          }
          // condition where current user is a validator of the issue
-         if (Plugin::isPluginActive('advform')) {
+         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[9]['joinparams']);
             $condition .= "`glpi_users_$complexJoinId`.`id` = '$currentUser'";
          } else {
@@ -159,7 +159,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          }
          if (count($groupList) > 0) {
             $groupList = implode("', '", $groupList);
-            if (Plugin::isPluginActive('advform')) {
+            if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
                $complexJoinId = Search::computeComplexJoinID(Search::getOptions($itemtype)[9]['joinparams']);
                $condition .= " OR `glpi_groups_$complexJoinId`.`id` IN ('$groupList')";
             } else {
@@ -191,7 +191,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             return "`$table`.`requester_id` = $currentUser";
          }
 
-         if (Plugin::isPluginActive('advform')) {
+         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             return PluginAdvformCommon::addDefaultWhere($itemtype);
          } else {
             // check the user
