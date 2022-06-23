@@ -671,7 +671,7 @@ PluginFormcreatorExportableInterface
     *
     */
    public static function dropdownValidator(PluginFormcreatorForm $form): string {
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          return PluginAdvformForm_Validator::dropdownValidator($form);
       }
 
