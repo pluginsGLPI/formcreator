@@ -199,7 +199,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
    }
 
    public function testGetEnumHeaderVisibility() {
-      $output = \PluginFormcreatorEntityconfig::getEnumheaderVisibility();
+      $output = \PluginFormcreatorEntityconfig::getEnumHeaderVisibility();
       $this->array($output)->isEqualTo([
          \PluginFormcreatorEntityconfig::CONFIG_PARENT         => __('Inheritance of the parent entity'),
          \PluginFormcreatorEntityconfig::CONFIG_HEADER_VISIBLE => __('Visible', 'formcreator'),
@@ -208,7 +208,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
    }
 
    public function testGetEnumDashboardVisibility() {
-      $output = \PluginFormcreatorEntityconfig::getEnumheaderVisibility();
+      $output = \PluginFormcreatorEntityconfig::getEnumDashboardVisibility();
       $this->array($output)->isEqualTo([
          \PluginFormcreatorEntityconfig::CONFIG_PARENT            => __('Inheritance of the parent entity'),
          \PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE => __('Visible', 'formcreator'),
@@ -216,8 +216,8 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       ]);
    }
 
-   public function testGetEnumormTransition() {
-      $output = \PluginFormcreatorEntityconfig::getEnumheaderVisibility();
+   public function testGetEnumFormTransition() {
+      $output = \PluginFormcreatorEntityconfig::getEnumFormTransition();
       $this->array($output)->isEqualTo([
          \PluginFormcreatorEntityconfig::CONFIG_PARENT                => __('Inheritance of the parent entity'),
          \PluginFormcreatorEntityconfig::CONFIG_FORM_TRANSITION_PAGE  => __('Full page', 'formcreator'),
