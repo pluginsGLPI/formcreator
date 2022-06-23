@@ -487,3 +487,12 @@ function plugin_formcreator_options() {
       Plugin::OPTION_AUTOINSTALL_DISABLED => true,
    ];
 }
+
+/**
+ * Get the path to the empty SQL schema file
+ *
+ * @return string|null
+ */
+function plugin_formcreator_getSchemaPath(): ?string {
+   return Plugin::getPhpDir('formcreator') . '/install/mysql/plugin_formcreator_empty.sql';
+}
