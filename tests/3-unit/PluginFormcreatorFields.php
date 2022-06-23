@@ -314,7 +314,7 @@ class PluginFormcreatorFields extends CommonTestCase {
       $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
       $form = \PluginFormcreatorForm::getByItem($section);
       $input = [
-         'plugin_formcreator_forms_id' => $form->getID(),
+         'id' => $form->getID(),
          $question1->getID() => '',
          $question2->getID() => '',
       ];
