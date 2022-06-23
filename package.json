@@ -4,8 +4,8 @@
         "masonry-layout": "^4.2"
     },
     "devDependencies": {
-        "standard-version": "^9.0",
-        "conventional-changelog-cli": "^2.0"
+        "conventional-changelog-cli": "^2.0",
+        "standard-version": "^9.0"
     },
     "standard-version": {
         "skip": {
