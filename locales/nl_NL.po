@@ -4,10 +4,6 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-<<<<<<< HEAD
-=======
-# Glenn Franssen <github@glennfrn.nl>, 2022
->>>>>>> support/2.13.0
 # Chris Gralike, 2022
 # Glenn Franssen <github@glennfrn.nl>, 2022
 # 
@@ -16,15 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
 "POT-Creation-Date: 2022-06-15 14:47+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
 "Last-Translator: Glenn Franssen <github@glennfrn.nl>, 2022\n"
-=======
-"POT-Creation-Date: 2022-06-15 14:46+0200\n"
-"PO-Revision-Date: 2021-08-30 07:22+0000\n"
-"Last-Translator: Chris Gralike, 2022\n"
->>>>>>> support/2.13.0
 "Language-Team: Dutch (Netherlands) (https://www.transifex.com/teclib/teams/28042/nl_NL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,11 +70,7 @@ msgstr "Geen limit"
 #: ajax/homepage_link.php:36 inc/field/dropdownfield.class.php:71
 #: inc/formlist.class.php:46 inc/formanswer.class.php:208
 #: inc/entityconfig.class.php:82 inc/form.class.php:111 inc/form.class.php:571
-<<<<<<< HEAD
 #: inc/form.class.php:1938 inc/filter/entityfilter.class.php:45
-=======
-#: inc/form.class.php:1923 inc/filter/entityfilter.class.php:45
->>>>>>> support/2.13.0
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] ""
@@ -150,11 +136,7 @@ msgstr "Onjuiste aanroep tijdens het verwijderen van een behandelaar"
 
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
-<<<<<<< HEAD
 #: front/formanswer.form.php:78 front/form.php:43 inc/common.class.php:686
-=======
-#: front/formanswer.form.php:78 front/form.php:44 inc/common.class.php:686
->>>>>>> support/2.13.0
 #: inc/common.class.php:693
 msgid "Form Creator"
 msgstr "Formcreator"
@@ -169,13 +151,8 @@ msgstr "%1$s = %2$s"
 msgid "Form list"
 msgstr "Formulierenlijst"
 
-<<<<<<< HEAD
 #: front/formdisplay.php:90 inc/formanswer.class.php:877
 #: inc/formanswer.class.php:1097 inc/formanswer.class.php:1147
-=======
-#: front/formdisplay.php:90 inc/formanswer.class.php:882
-#: inc/formanswer.class.php:1102 inc/formanswer.class.php:1152
->>>>>>> support/2.13.0
 msgid "The form has been successfully saved!"
 msgstr "Het formulier is succesvol bewaard"
 
@@ -224,11 +201,7 @@ msgid "The regular expression is invalid"
 msgstr "The reguliere expressie is invalide"
 
 #: inc/field/dropdownfield.class.php:70 inc/filter/entityfilter.class.php:44
-<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:2024 inc/abstractitiltarget.class.php:2042
-=======
-#: inc/abstractitiltarget.class.php:2028 inc/abstractitiltarget.class.php:2046
->>>>>>> support/2.13.0
 msgid "User"
 msgstr "Gebruiker"
 
@@ -266,13 +239,8 @@ msgid ""
 "settings will break the entity restrictions"
 msgstr ""
 "In overeenstemming met het GLPI entiteitensysteem dient \"Fomulier\" "
-<<<<<<< HEAD
 "geselecteerd te zijn. Overige instellingen zullen de werking van "
 "entiteitbeperkingen breken."
-=======
-"geselecteerd te zijn. Overige instellingen maken de entiteitbeperkingen "
-"onklaar."
->>>>>>> support/2.13.0
 
 #: inc/field/ldapselectfield.class.php:109
 msgid "LDAP size limit exceeded"
@@ -321,11 +289,7 @@ msgstr "Bereik"
 
 #: inc/field/textfield.class.php:223 inc/field/floatfield.class.php:244
 msgid "Additional validation"
-<<<<<<< HEAD
 msgstr "Aanvullende validatie"
-=======
-msgstr "Additionele validatie"
->>>>>>> support/2.13.0
 
 #: inc/field/radiosfield.class.php:108
 msgid "Radios"
@@ -540,11 +504,7 @@ msgstr "Minimaal bereik"
 msgid "Range max"
 msgstr "Maximaal bereik"
 
-<<<<<<< HEAD
 #: inc/field/requesttypefield.class.php:85 inc/targetticket.class.php:1123
-=======
-#: inc/field/requesttypefield.class.php:85 inc/targetticket.class.php:1121
->>>>>>> support/2.13.0
 msgid "Request type"
 msgstr "Verzoektype"
 
@@ -554,13 +514,8 @@ msgid "This is not a number: %s"
 msgstr "Dit is geen cijfer: %s "
 
 #: inc/field/floatfield.class.php:181
-<<<<<<< HEAD
 msgid "Decimal number"
 msgstr ""
-=======
-msgid "Float"
-msgstr "Kommagetal"
->>>>>>> support/2.13.0
 
 #: inc/field/datefield.class.php:135
 msgid "Date"
@@ -610,28 +565,16 @@ msgstr "Verborgen tenzij"
 
 #: inc/condition.class.php:119
 msgid "Displayed unless"
-<<<<<<< HEAD
 msgstr "Weergeven tenzij"
-=======
-msgstr "Laten zien behalve als"
->>>>>>> support/2.13.0
 
 #: inc/condition.class.php:179 inc/target_actor.class.php:214
 #: inc/form_language.class.php:540 inc/form_validator.class.php:387
 #: inc/targetproblem.class.php:539 inc/questionrange.class.php:196
-<<<<<<< HEAD
 #: inc/form.class.php:1831 inc/targetchange.class.php:303
 #: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
 #: inc/question.class.php:832 inc/questionparameter/range.class.php:205
 #: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
 #: inc/item_targetticket.class.php:150 inc/targetticket.class.php:1429
-=======
-#: inc/form.class.php:1816 inc/targetchange.class.php:303
-#: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
-#: inc/question.class.php:832 inc/questionparameter/range.class.php:211
-#: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
-#: inc/item_targetticket.class.php:150 inc/targetticket.class.php:1427
->>>>>>> support/2.13.0
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "Het toevoegen of bijwerken van %1$s %2$s is gefaald"
@@ -639,19 +582,11 @@ msgstr "Het toevoegen of bijwerken van %1$s %2$s is gefaald"
 #: inc/condition.class.php:201 inc/target_actor.class.php:235
 #: inc/form_language.class.php:556 inc/form_validator.class.php:411
 #: inc/targetproblem.class.php:374 inc/questionrange.class.php:131
-<<<<<<< HEAD
 #: inc/form.class.php:1522 inc/targetchange.class.php:148
 #: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
 #: inc/question.class.php:881 inc/questionparameter/range.class.php:140
 #: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
 #: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1468
-=======
-#: inc/form.class.php:1507 inc/targetchange.class.php:148
-#: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
-#: inc/question.class.php:881 inc/questionparameter/range.class.php:145
-#: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
-#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1466
->>>>>>> support/2.13.0
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "Kan een leeg object niet exporteren: %s"
@@ -678,30 +613,17 @@ msgstr[1] ""
 msgid "Update issue data from tickets and form answers"
 msgstr "Update problemen data van tickets en formulier antwoorden"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:403
 msgid "Satisfaction survey expired"
 msgstr ""
 
 #: inc/issue.class.php:532 inc/form_language.class.php:213
 #: inc/form.class.php:156 inc/form.class.php:2133 entrée standard:52
-=======
-#: inc/issue.class.php:389
-msgid "Satisfaction survey expired"
-msgstr ""
-
-#: inc/issue.class.php:518 inc/form_language.class.php:213
-#: inc/form.class.php:156 inc/form.class.php:2119 entrée standard:52
->>>>>>> support/2.13.0
 #: standard:49 standard:57 standard:38 standard:39
 msgid "Name"
 msgstr "Naam"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:545 inc/formanswer.class.php:198
-=======
-#: inc/issue.class.php:531 inc/formanswer.class.php:198
->>>>>>> support/2.13.0
 #: inc/formanswer.class.php:272 inc/targetproblem.class.php:622
 #: inc/form.class.php:147 inc/targetchange.class.php:334
 #: inc/section.class.php:95 inc/question.class.php:156
@@ -709,18 +631,13 @@ msgstr "Naam"
 msgid "ID"
 msgstr "ID"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:554 inc/form.class.php:505 inc/form.class.php:2142
-=======
-#: inc/issue.class.php:540 inc/form.class.php:505 inc/form.class.php:2128
->>>>>>> support/2.13.0
 #: entrée standard:65
 msgid "Type"
 msgid_plural "Types"
 msgstr[0] ""
 msgstr[1] ""
 
-<<<<<<< HEAD
 #: inc/issue.class.php:567 inc/formanswer.class.php:259
 msgid "Status"
 msgstr "Status"
@@ -735,85 +652,41 @@ msgstr "Laatste update"
 
 #: inc/issue.class.php:597 inc/form.class.php:174
 #: inc/abstracttarget.class.php:517
-=======
-#: inc/issue.class.php:553 inc/formanswer.class.php:259
-msgid "Status"
-msgstr "Status"
-
-#: inc/issue.class.php:565
-msgid "Opening date"
-msgstr "Openingsdatum"
-
-#: inc/issue.class.php:574
-msgid "Last update"
-msgstr "Laatste update"
-
-#: inc/issue.class.php:583 inc/form.class.php:174
-#: inc/abstracttarget.class.php:518
->>>>>>> support/2.13.0
 msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] ""
 msgstr[1] ""
 
-<<<<<<< HEAD
 #: inc/issue.class.php:607 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:218
 #: inc/formanswer.class.php:608 inc/abstractitiltarget.class.php:1710
-=======
-#: inc/issue.class.php:593 inc/notificationtargetformanswer.class.php:79
-#: inc/target_actor.class.php:83 inc/formanswer.class.php:218
-#: inc/formanswer.class.php:613 inc/abstractitiltarget.class.php:1714
->>>>>>> support/2.13.0
 msgid "Requester"
 msgid_plural "Requesters"
 msgstr[0] ""
 msgstr[1] ""
 
-<<<<<<< HEAD
 #: inc/issue.class.php:625 inc/formanswer.class.php:228
 msgid "Form approver"
 msgstr "Goedkeurder"
 
 #: inc/issue.class.php:641 inc/formanswer.class.php:537
 #: inc/formanswer.class.php:544 inc/formanswer.class.php:623
-=======
-#: inc/issue.class.php:611 inc/formanswer.class.php:228
-msgid "Form approver"
-msgstr "Goedkeurder"
-
-#: inc/issue.class.php:627 inc/formanswer.class.php:539
-#: inc/formanswer.class.php:546 inc/formanswer.class.php:628
->>>>>>> support/2.13.0
 #: inc/form_language.class.php:227
 msgid "Comment"
 msgstr "Commentaar"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:653
 msgid "Ticket approver"
 msgstr "Ticket goedkeurder"
 
 #: inc/issue.class.php:687
-=======
-#: inc/issue.class.php:639
-msgid "Ticket approver"
-msgstr "Ticket goedkeurder"
-
-#: inc/issue.class.php:673
->>>>>>> support/2.13.0
 msgid "Technician"
 msgstr "Technicus"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:718
-=======
-#: inc/issue.class.php:704
->>>>>>> support/2.13.0
 msgid "Technician group"
 msgstr "Technicusgroep"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:751 inc/formanswer.class.php:248
 msgid "Form approver group"
 msgstr "Goedkeurder groep"
@@ -859,49 +732,25 @@ msgid "Ticket"
 msgstr "Ticket"
 
 #: inc/issue.class.php:878 inc/formanswer.class.php:183
-=======
-#: inc/issue.class.php:737 inc/formanswer.class.php:248
-msgid "Form approver group"
-msgstr "Goedkeurder groep"
-
-#: inc/issue.class.php:770
-msgid "Ticket"
-msgstr "Ticket"
-
-#: inc/issue.class.php:771 inc/formanswer.class.php:183
->>>>>>> support/2.13.0
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
 
-<<<<<<< HEAD
 #: inc/issue.class.php:883
 msgid "Not validated"
 msgstr "Niet gevalideerd"
 
 #: inc/issue.class.php:884 inc/formanswer.class.php:76
-=======
-#: inc/issue.class.php:776
-msgid "Not validated"
-msgstr "Niet gevalideerd"
-
-#: inc/issue.class.php:777 inc/formanswer.class.php:76
->>>>>>> support/2.13.0
 #: inc/form_validator.class.php:71
 msgid "Refused"
 msgstr "Geweigerd"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:952
-=======
-#: inc/issue.class.php:845
->>>>>>> support/2.13.0
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-<<<<<<< HEAD
 #: inc/issue.class.php:1215 inc/filter/itilcategoryfilter.class.php:56
 #: hook.php:677
 msgid "All"
@@ -929,35 +778,6 @@ msgid "Solved"
 msgstr "Opgelost"
 
 #: inc/issue.class.php:1251 hook.php:683
-=======
-#: inc/issue.class.php:1108 inc/filter/itilcategoryfilter.class.php:56
-#: hook.php:663
-msgid "All"
-msgstr "Alles"
-
-#: inc/issue.class.php:1114 hook.php:664
-msgid "New"
-msgstr "Nieuw"
-
-#: inc/issue.class.php:1120 hook.php:665
-msgid "Assigned"
-msgstr "Toegewezen"
-
-#: inc/issue.class.php:1126 inc/formanswer.class.php:75
-#: inc/form_validator.class.php:69 hook.php:666
-msgid "Waiting"
-msgstr "Wachtend"
-
-#: inc/issue.class.php:1132 hook.php:667
-msgid "To validate"
-msgstr "Om te valideren"
-
-#: inc/issue.class.php:1138 hook.php:668
-msgid "Solved"
-msgstr "Opgelost"
-
-#: inc/issue.class.php:1144 hook.php:669
->>>>>>> support/2.13.0
 msgid "Closed"
 msgstr "Gesloten"
 
@@ -991,7 +811,6 @@ msgstr "Achtergrondkleur"
 msgid "The form as been saved"
 msgstr "Het formulier is bewaard"
 
-<<<<<<< HEAD
 #: inc/notificationtargetformanswer.class.php:44 install/install.php:355
 msgid "A form need to be validate"
 msgstr "Een formulier heeft validatie nodig"
@@ -1005,21 +824,6 @@ msgid "The form is accepted"
 msgstr "Het formulier is geaccepteerd"
 
 #: inc/notificationtargetformanswer.class.php:47 install/install.php:373
-=======
-#: inc/notificationtargetformanswer.class.php:44 install/install.php:334
-msgid "A form need to be validate"
-msgstr "Een formulier heeft validatie nodig"
-
-#: inc/notificationtargetformanswer.class.php:45 install/install.php:340
-msgid "The form is refused"
-msgstr "Het formulier is geweigerd"
-
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:346
-msgid "The form is accepted"
-msgstr "Het formulier is geaccepteerd"
-
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:352
->>>>>>> support/2.13.0
 msgid "The form is deleted"
 msgstr "Het formulier is verwijderd"
 
@@ -1067,19 +871,11 @@ msgstr "Auteur"
 msgid "Approver"
 msgstr "Goedkeurder"
 
-<<<<<<< HEAD
 #: inc/target_actor.class.php:66 inc/abstractitiltarget.class.php:2034
 msgid "Form author"
 msgstr "Formulier auteur"
 
 #: inc/target_actor.class.php:67 inc/abstractitiltarget.class.php:2037
-=======
-#: inc/target_actor.class.php:66 inc/abstractitiltarget.class.php:2038
-msgid "Form author"
-msgstr "Formulier auteur"
-
-#: inc/target_actor.class.php:67 inc/abstractitiltarget.class.php:2041
->>>>>>> support/2.13.0
 msgid "Form validator"
 msgstr "Formulier validatiegever"
 
@@ -1087,11 +883,7 @@ msgstr "Formulier validatiegever"
 msgid "Specific person"
 msgstr "Specifiek persoon"
 
-<<<<<<< HEAD
 #: inc/target_actor.class.php:69 inc/abstractitiltarget.class.php:2047
-=======
-#: inc/target_actor.class.php:69 inc/abstractitiltarget.class.php:2051
->>>>>>> support/2.13.0
 msgid "Person from the question"
 msgstr "Persoon van vraag"
 
@@ -1099,11 +891,7 @@ msgstr "Persoon van vraag"
 msgid "Specific group"
 msgstr "Specifieke groep"
 
-<<<<<<< HEAD
 #: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2058
-=======
-#: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2062
->>>>>>> support/2.13.0
 msgid "Group from the question"
 msgstr "Groep van deze vraag"
 
@@ -1119,27 +907,15 @@ msgstr "Tech groep afkomstig uit een object"
 msgid "Specific supplier"
 msgstr "Specifieke leverancier"
 
-<<<<<<< HEAD
 #: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2087
 msgid "Supplier from the question"
 msgstr "Leverancier van deze vraag"
 
 #: inc/target_actor.class.php:76 inc/abstractitiltarget.class.php:2076
-=======
-#: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2091
-msgid "Supplier from the question"
-msgstr "Leverancier van deze vraag"
-
-#: inc/target_actor.class.php:76 inc/abstractitiltarget.class.php:2080
->>>>>>> support/2.13.0
 msgid "Actors from the question"
 msgstr "Uitvoerders van deze vraag"
 
-<<<<<<< HEAD
 #: inc/target_actor.class.php:77 inc/abstractitiltarget.class.php:2091
-=======
-#: inc/target_actor.class.php:77 inc/abstractitiltarget.class.php:2095
->>>>>>> support/2.13.0
 msgid "Form author's supervisor"
 msgstr "Formulier auteur toezichthouder"
 
@@ -1147,11 +923,7 @@ msgstr "Formulier auteur toezichthouder"
 msgid "Observer"
 msgstr "Observator"
 
-<<<<<<< HEAD
 #: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1724
-=======
-#: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1728
->>>>>>> support/2.13.0
 msgid "Assigned to"
 msgstr "Toegewezen aan"
 
@@ -1185,7 +957,6 @@ msgstr "Leverancier kon niet worden gevonden: %1$s"
 msgid "Accepted"
 msgstr "Accepteren"
 
-<<<<<<< HEAD
 #: inc/formanswer.class.php:523
 msgid "Print this form"
 msgstr "Dit formulier printen"
@@ -1247,69 +1018,6 @@ msgid "You failed the Turing test"
 msgstr "U heeft de Turing test niet doorstaan"
 
 #: inc/formanswer.class.php:1305
-=======
-#: inc/formanswer.class.php:525
-msgid "Print this form"
-msgstr "Dit formulier printen"
-
-#: inc/formanswer.class.php:549
-msgid "Form accepted by validator."
-msgstr "Formulier geaccepteerd door validator."
-
-#: inc/formanswer.class.php:551
-msgid "Form successfully saved."
-msgstr "Formulier succesvol bewaard."
-
-#: inc/formanswer.class.php:621 inc/formaccesstype.class.php:122
-msgid "Save"
-msgstr "Opslaan"
-
-#: inc/formanswer.class.php:633
-msgid "Required if refused"
-msgstr "Verplicht als het geweigerd wordt"
-
-#: inc/formanswer.class.php:639
-msgid "Refuse"
-msgstr "Geweigerd"
-
-#: inc/formanswer.class.php:647
-msgid "Edit answers"
-msgstr "Wijzig antwoorden"
-
-#: inc/formanswer.class.php:653
-msgid "Cancel edition"
-msgstr "Annuleer editie"
-
-#: inc/formanswer.class.php:660
-msgid "Accept"
-msgstr "Accepteren"
-
-#: inc/formanswer.class.php:681
-msgid "Refused comment is required!"
-msgstr "Geweigerd. Commentaar is verplicht!"
-
-#: inc/formanswer.class.php:755
-msgid "You are not the validator of these answers"
-msgstr "Jij bent niet de validatie gever van deze antwoorden"
-
-#: inc/formanswer.class.php:961 inc/formanswer.class.php:963
-msgid "Form data"
-msgstr "Formulier data"
-
-#: inc/formanswer.class.php:1089 inc/formanswer.class.php:1139
-msgid "Cannot generate targets!"
-msgstr "Kan het doel niet genereren"
-
-#: inc/formanswer.class.php:1263
-msgid "No turing test set"
-msgstr "Geen turing test set"
-
-#: inc/formanswer.class.php:1268
-msgid "You failed the Turing test"
-msgstr "U heeft de Turing test niet doorstaan"
-
-#: inc/formanswer.class.php:1310
->>>>>>> support/2.13.0
 msgid "You must select validator!"
 msgstr "U moet een validatie kiezen!"
 
@@ -1373,11 +1081,7 @@ msgstr[1] ""
 
 #: inc/form_language.class.php:111 inc/form.class.php:1048
 #: inc/form.class.php:1173 inc/abstracttarget.class.php:161
-<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:1541
-=======
-#: inc/abstractitiltarget.class.php:1545
->>>>>>> support/2.13.0
 msgid "The name cannot be empty!"
 msgstr "De naam kan niet leeg zijn"
 
@@ -1389,11 +1093,7 @@ msgstr "De taal moet zijn toegewezen aan een formulier!"
 msgid "Add a translation"
 msgstr "Een vertaling toevoegen"
 
-<<<<<<< HEAD
 #: inc/form_language.class.php:283 js/scripts.js:1179
-=======
-#: inc/form_language.class.php:283 js/scripts.js:1160
->>>>>>> support/2.13.0
 msgid "Update a translation"
 msgstr "Een vertaling bijwerken"
 
@@ -1414,11 +1114,7 @@ msgid "Do you want to delete the selected items?"
 msgstr "Wilt u de geselecteerde onderdelen verwijderen? "
 
 #: inc/form_language.class.php:337 inc/form_language.class.php:376
-<<<<<<< HEAD
 #: inc/form.class.php:529 inc/abstractitiltarget.class.php:1615
-=======
-#: inc/form.class.php:529 inc/abstractitiltarget.class.php:1619
->>>>>>> support/2.13.0
 msgid "Delete"
 msgstr "Verwijder"
 
@@ -1444,7 +1140,6 @@ msgstr "Geen"
 msgid "Need validaton?"
 msgstr "Validatie nodig?"
 
-<<<<<<< HEAD
 #: inc/form_validator.class.php:126 inc/abstractitiltarget.class.php:2028
 msgid "No"
 msgstr "Nee"
@@ -1453,16 +1148,6 @@ msgstr "Nee"
 #: inc/targetproblem.class.php:146 inc/entityconfig.class.php:389
 #: inc/targetchange.class.php:483 inc/targetticket.class.php:317
 #: inc/targetticket.class.php:352 inc/abstractitiltarget.class.php:2017
-=======
-#: inc/form_validator.class.php:126 inc/abstractitiltarget.class.php:2032
-msgid "No"
-msgstr "Nee"
-
-#: inc/form_validator.class.php:303 inc/targetproblem.class.php:146
-#: inc/entityconfig.class.php:389 inc/targetchange.class.php:483
-#: inc/targetticket.class.php:317 inc/targetticket.class.php:352
-#: inc/abstractitiltarget.class.php:2021
->>>>>>> support/2.13.0
 msgctxt "button"
 msgid "Save"
 msgstr "Opslaan"
@@ -1488,11 +1173,7 @@ msgid "Properties"
 msgstr "Eigenschappen"
 
 #: inc/targetproblem.class.php:521 inc/targetchange.class.php:285
-<<<<<<< HEAD
 #: inc/targetticket.class.php:1411
-=======
-#: inc/targetticket.class.php:1409
->>>>>>> support/2.13.0
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1644,29 +1325,17 @@ msgstr "Zoekveld tonen"
 msgid "Display header"
 msgstr "Kopteksten tonen"
 
-<<<<<<< HEAD
 #: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:59
-=======
-#: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:57
->>>>>>> support/2.13.0
 msgid "Question range"
 msgid_plural "Question ranges"
 msgstr[0] ""
 msgstr[1] ""
 
-<<<<<<< HEAD
 #: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:69
 msgid "Minimum range"
 msgstr "Minimaal bereik"
 
 #: inc/questionrange.class.php:71 inc/questionparameter/range.class.php:78
-=======
-#: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:68
-msgid "Minimum range"
-msgstr "Minimaal bereik"
-
-#: inc/questionrange.class.php:71 inc/questionparameter/range.class.php:77
->>>>>>> support/2.13.0
 msgid "maximum range"
 msgstr "Maximaal bereik"
 
@@ -1686,11 +1355,7 @@ msgstr "Beperkte toegang"
 msgid "Answers waiting for validation"
 msgstr "Antwoorden die wachten op validatie"
 
-<<<<<<< HEAD
 #: inc/form.class.php:124 inc/form.class.php:1606 inc/form.class.php:1632
-=======
-#: inc/form.class.php:124 inc/form.class.php:1591 inc/form.class.php:1617
->>>>>>> support/2.13.0
 msgid "Import forms"
 msgstr "Importeer formulieren"
 
@@ -1715,29 +1380,10 @@ msgstr "Toegang"
 msgid "Active"
 msgstr "Actief"
 
-<<<<<<< HEAD
 #: inc/form.class.php:300 inc/form.class.php:341 inc/form.class.php:416
 msgid "Default form"
 msgstr "Standaardformulier"
 
-=======
-#: inc/form.class.php:261 entrée standard:65
-msgid "Icon"
-msgstr "Icoon"
-
-#: inc/form.class.php:269 entrée standard:67
-msgid "Icon color"
-msgstr "Icoonkleur"
-
-#: inc/form.class.php:277 entrée standard:80
-msgid "Background color"
-msgstr "Achtergrondkleur"
-
-#: inc/form.class.php:300 inc/form.class.php:341 inc/form.class.php:416
-msgid "Default form"
-msgstr "Standaardformulier"
-
->>>>>>> support/2.13.0
 #: inc/form.class.php:329 inc/form.class.php:394
 msgid "Inactive"
 msgstr "inactief"
@@ -1764,11 +1410,7 @@ msgstr[1] ""
 msgid "Actions"
 msgstr ""
 
-<<<<<<< HEAD
 #: inc/form.class.php:546 inc/form.class.php:2130
-=======
-#: inc/form.class.php:546 inc/form.class.php:2116
->>>>>>> support/2.13.0
 msgid "Add a target"
 msgstr "Doel toevoegen"
 
@@ -1816,15 +1458,6 @@ msgstr ""
 "U mag geen leeg naamveld gebruiken bij antwoorden, de eerdere waarde blijft "
 "bewaard."
 
-<<<<<<< HEAD
-=======
-#: inc/form.class.php:1184
-msgid "Cannot use empty name for form answers. Keeping the previous value."
-msgstr ""
-"U mag geen leeg naamveld gebruiken bij antwoorden, de eerdere waarde blijft "
-"bewaard."
-
->>>>>>> support/2.13.0
 #: inc/form.class.php:1279
 #, php-format
 msgid "The question %s is not compatible with public forms"
@@ -1843,25 +1476,16 @@ msgctxt "button"
 msgid "Post"
 msgstr "Versturen"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1440
-=======
-#: inc/form.class.php:1435
->>>>>>> support/2.13.0
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulier gedupliceerd: 1%s"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1456
-=======
-#: inc/form.class.php:1446
->>>>>>> support/2.13.0
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulier verplaatst: 1%s"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1480
 msgid "Back"
 msgstr "Terug"
@@ -1871,111 +1495,56 @@ msgid "Upload of JSON files not allowed."
 msgstr "Het uploaden van JSON bestanden is niet toegestaan"
 
 #: inc/form.class.php:1582
-=======
-#: inc/form.class.php:1465
-msgid "Back"
-msgstr "Terug"
-
-#: inc/form.class.php:1564
-msgid "Upload of JSON files not allowed."
-msgstr "Het uploaden van JSON bestanden is niet toegestaan"
-
-#: inc/form.class.php:1567
->>>>>>> support/2.13.0
 msgid "You may allow JSON files right now."
 msgstr "U kunt nu JSON bestanden toestaan."
 
-<<<<<<< HEAD
 #: inc/form.class.php:1583
-=======
-#: inc/form.class.php:1568
->>>>>>> support/2.13.0
 msgctxt "button"
 msgid "Create"
 msgstr "Creëren "
 
-<<<<<<< HEAD
 #: inc/form.class.php:1586 inc/form.class.php:1597
-=======
-#: inc/form.class.php:1571 inc/form.class.php:1582
->>>>>>> support/2.13.0
 msgid "Please contact your GLPI administrator."
 msgstr "Neem contact op met uw GLPI beheerder."
 
-<<<<<<< HEAD
 #: inc/form.class.php:1587 inc/form.class.php:1598
-=======
-#: inc/form.class.php:1572 inc/form.class.php:1583
->>>>>>> support/2.13.0
 msgctxt "button"
 msgid "Back"
 msgstr "Terug"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1590
-=======
-#: inc/form.class.php:1575
->>>>>>> support/2.13.0
 msgid "Upload of JSON files not enabled."
 msgstr "Uploaden van JSON bestanden is uitgeschakeld."
 
-<<<<<<< HEAD
 #: inc/form.class.php:1593 inc/form.class.php:1596
 msgid "You may enable JSON files right now."
 msgstr "U kunt nu JSON bestanden toestaan."
 
 #: inc/form.class.php:1594
-=======
-#: inc/form.class.php:1578 inc/form.class.php:1581
-msgid "You may enable JSON files right now."
-msgstr "U kunt nu JSON bestanden toestaan."
-
-#: inc/form.class.php:1579
->>>>>>> support/2.13.0
 msgctxt "button"
 msgid "Enable"
 msgstr "Inschakelen"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1641
-=======
-#: inc/form.class.php:1626
->>>>>>> support/2.13.0
 msgctxt "button"
 msgid "Send"
 msgstr "Verzenden"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1660
-=======
-#: inc/form.class.php:1645
->>>>>>> support/2.13.0
 msgid "Forms import impossible, the file is empty"
 msgstr "Formulieren importeren niet mogelijk, het bestand is leeg"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1664 inc/form.class.php:1668
 msgid "Forms import impossible, the file seems corrupt"
 msgstr "Formulieren importeren niet mogelijk, het bestand lijkt corrupt. "
 
 #: inc/form.class.php:1674
-=======
-#: inc/form.class.php:1649 inc/form.class.php:1653
-msgid "Forms import impossible, the file seems corrupt"
-msgstr "Formulieren importeren niet mogelijk, het bestand lijkt corrupt. "
-
-#: inc/form.class.php:1659
->>>>>>> support/2.13.0
 msgid "Forms import impossible, the file was generated with another version"
 msgstr ""
 "Formulieren importeren niet mogelijk, het bestand is aangemaakt met een "
 "andere productversie."
 
-<<<<<<< HEAD
 #: inc/form.class.php:1681
-=======
-#: inc/form.class.php:1666
->>>>>>> support/2.13.0
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
@@ -1983,53 +1552,32 @@ msgstr ""
 "Het bestand heeft geen schemaversie gespecificeerd. Het bestand is "
 "waarschijnlijk aangemaakt met een versie ouder dan 2.10. "
 
-<<<<<<< HEAD
 #: inc/form.class.php:1707
-=======
-#: inc/form.class.php:1692
->>>>>>> support/2.13.0
 #, php-format
 msgid "Failed to import %s"
 msgstr "Het importeren van %s is mislukt."
 
-<<<<<<< HEAD
 #: inc/form.class.php:1712
-=======
-#: inc/form.class.php:1697
->>>>>>> support/2.13.0
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formulieren succesvol geïmporteerd van 1%s"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1775
-=======
-#: inc/form.class.php:1760
->>>>>>> support/2.13.0
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr "Formulier %1$s bestaat al en betreft een niet te wijzigen entiteit"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1783
-=======
-#: inc/form.class.php:1768
->>>>>>> support/2.13.0
 #, php-format
 msgid "You don't have right to update the entity %1$s."
 msgstr ""
 "U heeft niet de rechten om wijzigingen aan te brengen in entiteit %1$s."
 
-<<<<<<< HEAD
 #: inc/form.class.php:1793
-=======
-#: inc/form.class.php:1778
->>>>>>> support/2.13.0
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
 msgstr "Entiteit %1$s is noodzakelijk voor formulier %2$s"
 
-<<<<<<< HEAD
 #: inc/form.class.php:1875
 msgid "Failed to create JSON document type"
 msgstr "Het is niet gelukt om een JSON document type te maken"
@@ -2060,38 +1608,6 @@ msgid "Unsupported target type."
 msgstr "Niet ondersteund doeltype."
 
 #: inc/form.class.php:2241
-=======
-#: inc/form.class.php:1860
-msgid "Failed to create JSON document type"
-msgstr "Het is niet gelukt om een JSON document type te maken"
-
-#: inc/form.class.php:1867
-msgid "JSON document type not found"
-msgstr "JSON document type is niet gevonden"
-
-#: inc/form.class.php:1874
-msgid "Failed to update JSON document type"
-msgstr "Het is niet gelukt om het JSON document type te updaten"
-
-#: inc/form.class.php:1894
-msgid "Forms without category"
-msgstr "Formulieren zonder categorie"
-
-#: inc/form.class.php:1915
-msgid "No form available"
-msgstr "Geenm formulier beschikbaar"
-
-#: inc/form.class.php:2147 inc/targetticket.class.php:392
-#: inc/abstractitiltarget.class.php:1738 inc/abstractitiltarget.class.php:2021
-msgid "Add"
-msgstr "Toevoegen"
-
-#: inc/form.class.php:2165 inc/form.class.php:2188
-msgid "Unsupported target type."
-msgstr "Niet ondersteund doeltype."
-
-#: inc/form.class.php:2227
->>>>>>> support/2.13.0
 msgid "plugin_formcreator_load_check"
 msgstr ""
 
@@ -2137,13 +1653,8 @@ msgstr "Titel is verplicht"
 msgid "Failed to find %1$s %2$s"
 msgstr "%1$s %2$s kon niet gevonden worden"
 
-<<<<<<< HEAD
 #: inc/question.class.php:70 inc/targetticket.class.php:1134
 #: inc/targetticket.class.php:1173 inc/abstractitiltarget.class.php:968
-=======
-#: inc/question.class.php:70 inc/targetticket.class.php:1132
-#: inc/targetticket.class.php:1171 inc/abstractitiltarget.class.php:968
->>>>>>> support/2.13.0
 #: inc/abstractitiltarget.class.php:1005 inc/abstractitiltarget.class.php:1083
 #: inc/abstractitiltarget.class.php:1214 inc/abstractitiltarget.class.php:1295
 #: entrée standard:41
@@ -2181,7 +1692,6 @@ msgstr "Dit vraagtype vereist parameters."
 msgid "A parameter is missing for this question type"
 msgstr "Er ontbreekt een parameter voor dit vraagtype."
 
-<<<<<<< HEAD
 #: inc/question.class.php:1268
 msgid "Service levels"
 msgstr "Service levels"
@@ -2206,54 +1716,6 @@ msgstr "Ondersteuning"
 #: inc/question.class.php:1306
 msgid "Management"
 msgstr "Management"
-=======
-#: inc/question.class.php:1274
-msgid "Service levels"
-msgstr "Service levels"
-
-#: inc/question.class.php:1275 inc/abstractitiltarget.class.php:806
-msgid "SLA"
-msgstr "SLA"
-
-#: inc/question.class.php:1276 inc/abstractitiltarget.class.php:879
-msgid "OLA"
-msgstr "OLA"
-
-#: inc/question.class.php:1293 inc/question.class.php:1333
-#: inc/question.class.php:1336
-msgid "Assets"
-msgstr "Assets"
-
-#: inc/question.class.php:1307 hook.php:677 hook.php:694
-msgid "Assistance"
-msgstr "Ondersteuning"
-
-#: inc/question.class.php:1312
-msgid "Management"
-msgstr "Management"
-
-#: inc/question.class.php:1321
-msgid "Tools"
-msgstr "Hulpmiddelen"
-
-#: inc/question.class.php:1322
-msgid "Notes"
-msgstr "Notities"
-
-#: inc/question.class.php:1323
-msgid "RSS feed"
-msgstr "RSS feed"
-
-#: inc/question.class.php:1325
-msgid "Administration"
-msgstr "Administratie"
-
-#: inc/question.class.php:1333 inc/question.class.php:1336
-msgid "Plugin"
-msgid_plural "Plugins"
-msgstr[0] ""
-msgstr[1] ""
->>>>>>> support/2.13.0
 
 #: inc/question.class.php:1315
 msgid "Tools"
@@ -2263,7 +1725,6 @@ msgstr "Hulpmiddelen"
 msgid "Notes"
 msgstr "Notities"
 
-<<<<<<< HEAD
 #: inc/question.class.php:1317
 msgid "RSS feed"
 msgstr "RSS feed"
@@ -2286,8 +1747,6 @@ msgstr "Parameter"
 msgid "Field name"
 msgstr "Veldnaam"
 
-=======
->>>>>>> support/2.13.0
 #: inc/abstracttarget.class.php:96
 msgid "Current active entity"
 msgstr "Huidige actieve entiteit"
@@ -2348,7 +1807,6 @@ msgstr ""
 msgid "Name is required."
 msgstr ""
 
-<<<<<<< HEAD
 #: inc/abstracttarget.class.php:502
 msgid "Destination entity"
 msgstr ""
@@ -2358,17 +1816,6 @@ msgid "User type question"
 msgstr "Gebruikers type vraag"
 
 #: inc/abstracttarget.class.php:519
-=======
-#: inc/abstracttarget.class.php:503
-msgid "Destination entity"
-msgstr ""
-
-#: inc/abstracttarget.class.php:519
-msgid "User type question"
-msgstr "Gebruikers type vraag"
-
-#: inc/abstracttarget.class.php:520
->>>>>>> support/2.13.0
 msgid "Entity type question"
 msgstr "Entiteit type vraag"
 
@@ -2421,7 +1868,6 @@ msgid "Specific asset"
 msgstr ""
 
 #: inc/targetticket.class.php:100 inc/targetticket.class.php:116
-<<<<<<< HEAD
 #: inc/abstractitiltarget.class.php:200 inc/abstractitiltarget.class.php:208
 #: inc/abstractitiltarget.class.php:216 inc/abstractitiltarget.class.php:224
 #: inc/abstractitiltarget.class.php:233
@@ -2430,16 +1876,6 @@ msgstr "Gelijk aan antwoord op deze vraag"
 
 #: inc/targetticket.class.php:101 inc/abstractitiltarget.class.php:225
 #: inc/abstractitiltarget.class.php:234
-=======
-#: inc/abstractitiltarget.class.php:199 inc/abstractitiltarget.class.php:207
-#: inc/abstractitiltarget.class.php:215 inc/abstractitiltarget.class.php:223
-#: inc/abstractitiltarget.class.php:232
-msgid "Equals to the answer to the question"
-msgstr "Gelijk aan antwoord op deze vraag"
-
-#: inc/targetticket.class.php:101 inc/abstractitiltarget.class.php:224
-#: inc/abstractitiltarget.class.php:233
->>>>>>> support/2.13.0
 msgid "Last valid answer"
 msgstr ""
 
@@ -2516,7 +1952,6 @@ msgstr "Gelinkt item bestaat niet"
 msgid "Failed to link the item"
 msgstr "Gefaald om item te linken"
 
-<<<<<<< HEAD
 #: inc/targetticket.class.php:959 install/install.php:368
 msgid "Your form has been accepted by the validator"
 msgstr "Je formulier is geaccepteerd door de validator"
@@ -2534,25 +1969,6 @@ msgid "Associated elements"
 msgstr ""
 
 #: inc/targetticket.class.php:1174
-=======
-#: inc/targetticket.class.php:957 install/install.php:347
-msgid "Your form has been accepted by the validator"
-msgstr "Je formulier is geaccepteerd door de validator"
-
-#: inc/targetticket.class.php:1108
-msgid "Request source"
-msgstr ""
-
-#: inc/targetticket.class.php:1133
-msgid "Type "
-msgstr ""
-
-#: inc/targetticket.class.php:1161
-msgid "Associated elements"
-msgstr ""
-
-#: inc/targetticket.class.php:1172
->>>>>>> support/2.13.0
 msgid "Item "
 msgstr ""
 
@@ -2589,7 +2005,6 @@ msgid "Tags from questions or specific tags"
 msgstr "Tags van vragen of specifieke tags"
 
 #: inc/abstractitiltarget.class.php:189
-<<<<<<< HEAD
 msgid "TTR from template or none"
 msgstr ""
 
@@ -2661,79 +2076,6 @@ msgstr ""
 msgid "Group from question answer"
 msgstr ""
 
-=======
-msgid "equals to the answer to the question"
-msgstr "Gelijk aan antwoord op deze vraag"
-
-#: inc/abstractitiltarget.class.php:190
-msgid "calculated from the ticket creation date"
-msgstr "Uitgerekend vanaf datum aanmaak ticket"
-
-#: inc/abstractitiltarget.class.php:191
-msgid "calculated from the answer to the question"
-msgstr "Uitgerekend vanaf antwoord op deze vraag"
-
-#: inc/abstractitiltarget.class.php:197
-msgid "SLA from template or none"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:198
-msgid "Specific SLA"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:205
-msgid "OLA from template or none"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:206
-msgid "Specific OLA"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:213
-msgid "Urgency from template or Medium"
-msgstr "Urgentie van template of gemiddeld"
-
-#: inc/abstractitiltarget.class.php:214
-msgid "Specific urgency"
-msgstr "Specifieke urgentie"
-
-#: inc/abstractitiltarget.class.php:221
-msgid "Category from template or none"
-msgstr "Categorie van template of geen"
-
-#: inc/abstractitiltarget.class.php:222
-msgid "Specific category"
-msgstr "Specifieke categorie"
-
-#: inc/abstractitiltarget.class.php:230
-msgid "Location from template or none"
-msgstr "Locatie van template of geen"
-
-#: inc/abstractitiltarget.class.php:231
-msgid "Specific location"
-msgstr "Specifieke locatie"
-
-#: inc/abstractitiltarget.class.php:239
-msgid "No validation"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:240
-msgid "Specific user or group"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:241
-msgid "User from question answer"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:242
-msgid "Group from question answer"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:741
-msgid "Time to resolve"
-msgstr ""
-
->>>>>>> support/2.13.0
 #: inc/abstractitiltarget.class.php:794
 msgid "Minute"
 msgid_plural "Minutes"
@@ -2777,7 +2119,6 @@ msgstr "Urgentie"
 #: inc/abstractitiltarget.class.php:1036
 msgid "Ticket tags"
 msgstr "Ticket tags"
-<<<<<<< HEAD
 
 #: inc/abstractitiltarget.class.php:1084
 msgid "Tags"
@@ -2831,67 +2172,11 @@ msgid "Tech group from the object"
 msgstr ""
 
 #: install/install.php:133
-=======
-
-#: inc/abstractitiltarget.class.php:1084
-msgid "Tags"
-msgstr "Tags"
-
-#: inc/abstractitiltarget.class.php:1203
-msgid "Location"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:1215
-msgid "Location "
-msgstr "Locatie"
-
-#: inc/abstractitiltarget.class.php:1551
-msgid "The description cannot be empty!"
-msgstr "De omschrijving kan niet leeg zijn"
-
-#: inc/abstractitiltarget.class.php:1721
-msgid "Watcher"
-msgid_plural "Watchers"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/abstractitiltarget.class.php:1740
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: inc/abstractitiltarget.class.php:2015 inc/abstractitiltarget.class.php:2031
-#: inc/abstractitiltarget.class.php:2032
-msgid "Email followup"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:2029 inc/abstractitiltarget.class.php:2057
-msgid "Group"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:2030 inc/abstractitiltarget.class.php:2086
-msgid "Supplier"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:2031
-msgid "Yes"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:2068
-msgid "Group from the object"
-msgstr ""
-
-#: inc/abstractitiltarget.class.php:2074
-msgid "Tech group from the object"
-msgstr ""
-
-#: install/install.php:131
->>>>>>> support/2.13.0
 msgid ""
 "Upgrade tables to innoDB; run php bin/console "
 "glpi:migration:myisam_to_innodb"
 msgstr ""
 
-<<<<<<< HEAD
 #: install/install.php:174
 #, php-format
 msgid ""
@@ -2904,21 +2189,10 @@ msgid "A form has been created"
 msgstr "Een formulier is gemaakt"
 
 #: install/install.php:350
-=======
-#: install/install.php:328
-msgid "A form has been created"
-msgstr "Een formulier is gemaakt"
-
-#: install/install.php:329
->>>>>>> support/2.13.0
 msgid "Your request has been saved"
 msgstr "Je verzoek is opgeslagen"
 
-<<<<<<< HEAD
 #: install/install.php:351
-=======
-#: install/install.php:330
->>>>>>> support/2.13.0
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -2928,19 +2202,11 @@ msgstr ""
 "##formcreator.request_id## en aan de helpdesk toegekend.\\nJe kunt hier je "
 "ticket volgen:\\n##formcreator.validation_link## "
 
-<<<<<<< HEAD
 #: install/install.php:356
 msgid "A form from GLPI need to be validate"
 msgstr "Een formulier van GLPI heeft validatie nodig"
 
 #: install/install.php:357
-=======
-#: install/install.php:335
-msgid "A form from GLPI need to be validate"
-msgstr "Een formulier van GLPI heeft validatie nodig"
-
-#: install/install.php:336
->>>>>>> support/2.13.0
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
@@ -2949,19 +2215,11 @@ msgstr ""
 "Hallo, \\nJe bent uitgekozen om een formulier van GLPI te valideren. \\nJe "
 "kunt hier het forumulier bekijken\\n##formcreator.validation_link##"
 
-<<<<<<< HEAD
 #: install/install.php:362
 msgid "Your form has been refused by the validator"
 msgstr "Je formulier is geweigerd door de validator"
 
 #: install/install.php:363
-=======
-#: install/install.php:341
-msgid "Your form has been refused by the validator"
-msgstr "Je formulier is geweigerd door de validator"
-
-#: install/install.php:342
->>>>>>> support/2.13.0
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -2971,11 +2229,7 @@ msgstr ""
 "Hallo,\\nHet spijt ons om je te moeten informeren dat je formulier geweigerd is door de validatiegever. Met deze reden:\n"
 "\\n##formcreator.validation_comment##\\n\\nJe kunt nog steeds het formulieren wijzigen en opnieuw invoeren met deze link:\\n##formcreator.validation_link##"
 
-<<<<<<< HEAD
 #: install/install.php:369
-=======
-#: install/install.php:348
->>>>>>> support/2.13.0
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
@@ -2983,19 +2237,11 @@ msgstr ""
 "Hallo,\\nWe willen je laten weten dat je formulier geaccepteerd is door de "
 "validatiegever.\\nJe aanvraag zal binnenkort uitgevoerd worden."
 
-<<<<<<< HEAD
 #: install/install.php:374
 msgid "Your form has been deleted by an administrator"
 msgstr "Je formulier is verwijderd door de administrator"
 
 #: install/install.php:375
-=======
-#: install/install.php:353
-msgid "Your form has been deleted by an administrator"
-msgstr "Je formulier is verwijderd door de administrator"
-
-#: install/install.php:354
->>>>>>> support/2.13.0
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
@@ -3004,11 +2250,7 @@ msgstr ""
 "behandeling genomen zal worden, omdat een administrator je aanvraag heeft "
 "verwijderd. "
 
-<<<<<<< HEAD
 #: install/install.php:601
-=======
-#: install/install.php:580
->>>>>>> support/2.13.0
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator: Sync service catalogus problemen"
 
@@ -3026,7 +2268,6 @@ msgctxt "button"
 msgid "Export"
 msgstr ""
 
-<<<<<<< HEAD
 #: hook.php:667
 msgid "Cancel my ticket"
 msgstr ""
@@ -3036,40 +2277,20 @@ msgid "Old"
 msgstr ""
 
 #: hook.php:692
-=======
-#: hook.php:653
-msgid "Cancel my ticket"
-msgstr ""
-
-#: hook.php:671
-msgid "Old"
-msgstr ""
-
-#: hook.php:678
->>>>>>> support/2.13.0
 #, php-format
 msgid "Number of %s"
 msgstr ""
 
-<<<<<<< HEAD
 #: hook.php:709
 msgid "Issues summary"
 msgstr ""
 
 #: hook.php:747
-=======
-#: hook.php:695
-msgid "Issues summary"
-msgstr ""
-
-#: hook.php:733
->>>>>>> support/2.13.0
 msgid ""
 "Formcreator's mini dashboard not usable as default. This Setting has been "
 "ignored."
 msgstr ""
 
-<<<<<<< HEAD
 #: js/scripts.js:319
 msgid "No form found. Please choose a form below instead."
 msgstr ""
@@ -3099,37 +2320,6 @@ msgid "An error occured while querying forms"
 msgstr "Er is een fout opgetreden terwijl we de formulieren opvroegen"
 
 #: js/scripts.js:1418
-=======
-#: js/scripts.js:315
-msgid "No form found. Please choose a form below instead."
-msgstr ""
-
-#: js/scripts.js:317
-msgid "No form found."
-msgstr ""
-
-#: js/scripts.js:321
-msgid "No FAQ item found."
-msgstr ""
-
-#: js/scripts.js:690
-msgid "Are you sure you want to delete this question?"
-msgstr "Weet je zeker dat je deze vraag wilt verwijderen?"
-
-#: js/scripts.js:873
-msgid "Are you sure you want to delete this section?"
-msgstr "Weet je zeker dat je dit gedeelte wilt verwijderen?"
-
-#: js/scripts.js:1113
-msgid "Add translations"
-msgstr ""
-
-#: js/scripts.js:1260 js/scripts.js:1284
-msgid "An error occured while querying forms"
-msgstr "Er is een fout opgetreden terwijl we de formulieren opvroegen"
-
-#: js/scripts.js:1398
->>>>>>> support/2.13.0
 msgid "Are you sure you want to delete this target:"
 msgstr ""
 
