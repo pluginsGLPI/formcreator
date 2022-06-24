@@ -133,9 +133,9 @@ class RoboFile extends RoboFilePlugin
             throw new Exception('The Official release constant must be true');
          }
 
-         if (Git::tagExists($version)) {
+         // if (Git::tagExists($version)) {
             // throw new Exception("The tag $version already exists");
-         }
+         // }
 
          // if (!Git::isTagMatchesCurrentCommit($version)) {
          //    throw new Exception("HEAD is not pointing to the tag of the version to build");
@@ -145,13 +145,12 @@ class RoboFile extends RoboFilePlugin
          if (!is_array($versionTag)) {
             throw new Exception("The version does not exists in the XML file");
          }
+
+         // $this->updateChangelog();
       }
 
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
-      if ($release == 'release') {
-         // $this->updateChangelog();
-      }
 
       $diff = $this->gitDiff(['package.json']);
       $diff = implode("\n", $diff);
