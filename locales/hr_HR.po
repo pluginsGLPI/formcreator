@@ -72,9 +72,9 @@ msgstr "Bez ograničenja"
 #: inc/form.class.php:1938 inc/filter/entityfilter.class.php:45
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Obrazac"
+msgstr[1] "Obrasci"
+msgstr[2] "Obrasci"
 
 #: ajax/section_delete.php:44 ajax/section_move.php:49
 #: ajax/section_duplicate.php:44
@@ -171,9 +171,9 @@ msgstr "%1$s dodaje rezervaciju %2$s za predmet %3$s"
 #: inc/abstractitiltarget.class.php:953 inc/abstractitiltarget.class.php:967
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Kategorija"
+msgstr[1] "Kategorije"
+msgstr[2] "Kategorije"
 
 #: inc/knowbase.class.php:62 inc/form.class.php:651
 msgid "See all"
@@ -213,9 +213,9 @@ msgstr "Korisnik i obrazac"
 #: inc/field/dropdownfield.class.php:431 entrée standard:38
 msgid "Dropdown"
 msgid_plural "Dropdowns"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Padajući izbornik"
+msgstr[1] "Padajući izbornici"
+msgstr[2] "Padajući izbornici"
 
 #: inc/field/dropdownfield.class.php:462
 msgid "Invalid value for "
@@ -282,7 +282,7 @@ msgstr "Tekst"
 #: inc/field/textfield.class.php:212 inc/field/floatfield.class.php:233
 #: inc/questionregex.class.php:62 entrée standard:42
 msgid "Regular expression"
-msgstr "Regularan izraz"
+msgstr "Regularni izraz"
 
 #: inc/field/textfield.class.php:217 inc/field/floatfield.class.php:238
 msgid "Range"
@@ -335,9 +335,9 @@ msgstr "Neodređeno"
 #: inc/field/ipfield.class.php:121
 msgid "IP address"
 msgid_plural "IP addresses"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "IP adresa"
+msgstr[1] "IP adrese"
+msgstr[2] "IP adrese"
 
 #: inc/field/urgencyfield.class.php:84 inc/abstractitiltarget.class.php:995
 msgid "Urgency"
@@ -375,23 +375,23 @@ msgstr "Upozorenje: Oznaka je deaktivirana ili nedostaje"
 #: inc/field/tagfield.class.php:196
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Oznaka"
+msgstr[1] "Oznake"
+msgstr[2] "Oznake"
 
 #: inc/field/glpiselectfield.class.php:71 entrée standard:38
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "GLPI objekt"
+msgstr[1] "GLPI objekti"
+msgstr[2] "GLPI objekti"
 
 #: inc/field/hostnamefield.class.php:114
 msgid "Hostname"
 msgid_plural "Hostnames"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ime računala"
+msgstr[1] "Imena računala"
+msgstr[2] "Imena računala"
 
 #: inc/field/timefield.class.php:128
 msgid "Time"
@@ -405,9 +405,9 @@ msgstr "Ovo nije valjana e-mail adresa: %s"
 #: inc/field/emailfield.class.php:98
 msgid "Email"
 msgid_plural "Emails"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "E-mail adresa"
+msgstr[1] "E-mail adrese"
+msgstr[2] "E-mail adrese"
 
 #: inc/field/selectfield.class.php:97
 msgid "Select"
@@ -420,9 +420,9 @@ msgstr "Datum i vrijeme"
 #: inc/field/actorfield.class.php:65
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Učesnik"
+msgstr[1] "Učesnici"
+msgstr[2] "Učesnici"
 
 #: inc/field/actorfield.class.php:249
 #, php-format
@@ -475,7 +475,7 @@ msgstr "prikaži"
 #: inc/field/fieldsfield.class.php:388
 #, php-format
 msgid "Field '%1$s' type not implemented yet !"
-msgstr ""
+msgstr "Vrsta polja „%1$s” još nije implementirana!"
 
 #: inc/field/fieldsfield.class.php:465
 msgid "Some numeric fields contains non numeric values"
@@ -522,7 +522,7 @@ msgstr "Ovo nije broj: %s"
 
 #: inc/field/floatfield.class.php:181
 msgid "Decimal number"
-msgstr ""
+msgstr "Decimalni broj"
 
 #: inc/field/datefield.class.php:135
 msgid "Date"
@@ -540,17 +540,17 @@ msgstr "Polje opisa bi trebalo imati opis:"
 #: inc/field/hiddenfield.class.php:94
 msgid "Hidden field"
 msgid_plural "Hidden fields"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Skriveno polje"
+msgstr[1] "Skrivena polja"
+msgstr[2] "Skrivena polja"
 
 #: inc/condition.class.php:65 inc/targetproblem.class.php:579
 #: inc/targetchange.class.php:106 inc/targetticket.class.php:136
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Stanje"
+msgstr[1] "Stanja"
+msgstr[2] "Stanja"
 
 #: inc/condition.class.php:104
 msgid "is visible"
@@ -615,9 +615,9 @@ msgstr "Uvoz u tijeku"
 #: inc/issue.class.php:41
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Problem"
+msgstr[1] "Problemi"
+msgstr[2] "Problemi"
 
 #: inc/issue.class.php:54
 msgid "Update issue data from tickets and form answers"
@@ -645,9 +645,9 @@ msgstr "ID"
 #: entrée standard:65
 msgid "Type"
 msgid_plural "Types"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Vrsta"
+msgstr[1] "Vrste"
+msgstr[2] "Vrste"
 
 #: inc/issue.class.php:567 inc/formanswer.class.php:259
 msgid "Status"
@@ -665,18 +665,18 @@ msgstr "Zadnje aktualiziranje"
 #: inc/abstracttarget.class.php:517
 msgid "Entity"
 msgid_plural "Entities"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Entitet"
+msgstr[1] "Entiteti"
+msgstr[2] "Entiteti"
 
 #: inc/issue.class.php:607 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:218
 #: inc/formanswer.class.php:608 inc/abstractitiltarget.class.php:1710
 msgid "Requester"
 msgid_plural "Requesters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Podnositelj zahtjeva"
+msgstr[1] "Podnositelji zahtjeva"
+msgstr[2] "Podnositelji zahtjeva"
 
 #: inc/issue.class.php:625 inc/formanswer.class.php:228
 msgid "Form approver"
@@ -710,27 +710,27 @@ msgstr "Vrijeme rješavanja"
 
 #: inc/issue.class.php:773
 msgid "Time to resolve + Progress"
-msgstr ""
+msgstr "Vrijeme rješavanja + napredak"
 
 #: inc/issue.class.php:783
 msgid "Internal time to resolve"
-msgstr ""
+msgstr "Interno vrijeme rješavanja"
 
 #: inc/issue.class.php:794
 msgid "Internal time to resolve + Progress"
-msgstr ""
+msgstr "Interno vrijeme rješavanja + napredak"
 
 #: inc/issue.class.php:804
 msgid "Resolution date"
-msgstr ""
+msgstr "Datum rješenja"
 
 #: inc/issue.class.php:819
 msgid "Internal time to own"
-msgstr ""
+msgstr "Interno vrijeme posjedovanja"
 
 #: inc/issue.class.php:830
 msgid "Internal time to own + Progress"
-msgstr ""
+msgstr "Interno vrijeme posjedovanja + napredak"
 
 #: inc/issue.class.php:840
 msgid "Time to own"
@@ -738,7 +738,7 @@ msgstr "Vrijeme posjedovanja"
 
 #: inc/issue.class.php:851
 msgid "Time to own + Progress"
-msgstr ""
+msgstr "Vrijeme posjedovanja + napredak"
 
 #: inc/issue.class.php:877
 msgid "Ticket"
@@ -747,9 +747,9 @@ msgstr "Nalog"
 #: inc/issue.class.php:878 inc/formanswer.class.php:183
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Odgovor u obrascu"
+msgstr[1] "Odgovori u obrascu"
+msgstr[2] "Odgovori u obrascu"
 
 #: inc/issue.class.php:883
 msgid "Not validated"
@@ -798,9 +798,9 @@ msgstr "Zatvoreni"
 #: inc/category.class.php:50 inc/form.class.php:230 hook.php:72
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Kategorija obrasca"
+msgstr[1] "Kategorija obrazaca"
+msgstr[2] "Kategorija obrazaca"
 
 #: inc/category.class.php:80
 msgid "Knowbase category"
@@ -854,9 +854,9 @@ msgstr "Ime obrasca"
 #: inc/form_validator.class.php:76
 msgid "Validator"
 msgid_plural "Validators"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Potvrditelj"
+msgstr[1] "Potvrditelji"
+msgstr[2] "Potvrditelji"
 
 #: inc/notificationtargetformanswer.class.php:81 inc/formanswer.class.php:239
 msgid "Creation date"
@@ -876,7 +876,7 @@ msgstr "Poveznica potvrđivanja"
 
 #: inc/notificationtargetformanswer.class.php:85
 msgid "Request #"
-msgstr "Broj zahtjeva"
+msgstr "Zahtjev broj"
 
 #: inc/notificationtargetformanswer.class.php:97
 msgid "Author"
@@ -933,7 +933,7 @@ msgstr "Učesnici iz pitanja"
 
 #: inc/target_actor.class.php:77 inc/abstractitiltarget.class.php:2091
 msgid "Form author's supervisor"
-msgstr "Obrazac autorskog nadzornika"
+msgstr "Nadzornik autora obrasca"
 
 #: inc/target_actor.class.php:84
 msgid "Observer"
@@ -941,14 +941,14 @@ msgstr "Promatrač"
 
 #: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1724
 msgid "Assigned to"
-msgstr "Dodijeljeno za"
+msgstr "Dodijeljeno"
 
 #: inc/target_actor.class.php:91
 msgid "Target actor"
 msgid_plural "Target actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Učesnik cilja"
+msgstr[1] "Učesnici cilja"
+msgstr[2] "Učesnici cilja"
 
 #: inc/target_actor.class.php:97 inc/target_actor.class.php:113
 #: inc/target_actor.class.php:122
@@ -1061,9 +1061,9 @@ msgstr "Pregledaj feedove"
 #: inc/formaccesstype.class.php:39 inc/formaccesstype.class.php:64
 msgid "Access type"
 msgid_plural "Access types"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Vrsta pristupa"
+msgstr[1] "Vrste pristupa"
+msgstr[2] "Vrste pristupa"
 
 #: inc/formaccesstype.class.php:78
 msgid "Link to the form"
@@ -1084,16 +1084,16 @@ msgstr "Ograničeno na"
 #: inc/form_language.class.php:51
 msgid "Form language"
 msgid_plural "Form languages"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Jezik obrasca"
+msgstr[1] "Jezici obrasca"
+msgstr[2] "Jezici obrasca"
 
 #: inc/form_language.class.php:72 inc/form_language.class.php:348
 msgid "Translation"
 msgid_plural "Translations"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Prijevod"
+msgstr[1] "Prijevodi"
+msgstr[2] "Prijevodi"
 
 #: inc/form_language.class.php:111 inc/form.class.php:1048
 #: inc/form.class.php:1173 inc/abstracttarget.class.php:161
@@ -1179,9 +1179,9 @@ msgstr "Odaberi potvrditelja"
 #: inc/targetproblem.class.php:42 entrée standard:43
 msgid "Target problem"
 msgid_plural "Target problems"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Problem cilja"
+msgstr[1] "Problemi cilja"
+msgstr[2] "Problemi cilja"
 
 #: inc/targetproblem.class.php:108 inc/targetproblem.class.php:577
 #: inc/targetchange.class.php:104 inc/targetchange.class.php:440
@@ -1282,11 +1282,11 @@ msgstr "Skriveno"
 
 #: inc/entityconfig.class.php:156
 msgid "Variable height"
-msgstr ""
+msgstr "Promjenjiva visina"
 
 #: inc/entityconfig.class.php:157
 msgid "Uniform height"
-msgstr ""
+msgstr "Jednolika visina"
 
 #: inc/entityconfig.class.php:231
 msgid "Helpdesk"
@@ -1323,19 +1323,19 @@ msgstr "Poruka zaglavlja"
 
 #: inc/entityconfig.class.php:347
 msgid "Search issue"
-msgstr ""
+msgstr "Traži problem"
 
 #: inc/entityconfig.class.php:363
 msgid "Tile design"
-msgstr ""
+msgstr "Dizajn pločice"
 
 #: inc/entityconfig.class.php:375 inc/entityconfig.class.php:453
 #: inc/form.class.php:239 entrée standard:84
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Zaglavlje"
+msgstr[1] "Zaglavlja"
+msgstr[2] "Zaglavlja"
 
 #: inc/entityconfig.class.php:433
 msgid "Display search field"
@@ -1348,9 +1348,9 @@ msgstr "Prikaži zaglavlje"
 #: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:59
 msgid "Question range"
 msgid_plural "Question ranges"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Raspon pitanja"
+msgstr[1] "Rasponi pitanja"
+msgstr[2] "Rasponi pitanja"
 
 #: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:69
 msgid "Minimum range"
@@ -1424,13 +1424,13 @@ msgstr "Naslov odgovora"
 #: inc/form.class.php:504 inc/form.class.php:563
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Cilj"
+msgstr[1] "Ciljevi"
+msgstr[2] "Ciljevi"
 
 #: inc/form.class.php:506
 msgid "Actions"
-msgstr ""
+msgstr "Radnje"
 
 #: inc/form.class.php:546 inc/form.class.php:2130
 msgid "Add a target"
@@ -1591,7 +1591,7 @@ msgstr "Obrazac %1$s već postoji i nije promjenjiv entitet."
 #: inc/form.class.php:1783
 #, php-format
 msgid "You don't have right to update the entity %1$s."
-msgstr "Nemaš pravo aktualiziranja entiteta %1$s."
+msgstr "Nemaš prava za aktualiziranje entiteta %1$s."
 
 #: inc/form.class.php:1793
 #, php-format
@@ -1634,9 +1634,9 @@ msgstr "plugin_formcreator_load_check"
 #: inc/targetchange.class.php:43 entrée standard:43
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Promjena cilja"
+msgstr[1] "Promjene cilja"
+msgstr[2] "Promjene cilja"
 
 #: inc/targetchange.class.php:343 entrée standard:48
 msgid "Change title"
@@ -1661,9 +1661,9 @@ msgstr "Popis provjere"
 #: inc/section.class.php:71 entrée standard:53 standard:44
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Odjeljak"
+msgstr[1] "Odjeljci"
+msgstr[2] "Odjeljci"
 
 #: inc/section.class.php:123 inc/section.class.php:164
 #: inc/question.class.php:312
@@ -1682,9 +1682,9 @@ msgstr "Neuspjelo pronalaženje %1$s %2$s"
 #: entrée standard:41
 msgid "Question"
 msgid_plural "Questions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Pitanje"
+msgstr[1] "Pitanja"
+msgstr[2] "Pitanja"
 
 #: inc/question.class.php:228 entrée standard:37
 msgid "Count of conditions"
@@ -1759,9 +1759,9 @@ msgstr "Administracija"
 #: inc/question.class.php:1327 inc/question.class.php:1330
 msgid "Plugin"
 msgid_plural "Plugins"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Dodatak"
+msgstr[1] "Dodaci"
+msgstr[2] "Dodaci"
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
@@ -1825,7 +1825,7 @@ msgstr "Cilj mora biti povezan s obrascem."
 
 #: inc/abstracttarget.class.php:133
 msgid "A target must be associated to an existing form."
-msgstr "Cilj mora biti povezan s postojećim obrascem."
+msgstr "Cilj mora biti povezan s jednim postojećim obrascem."
 
 #: inc/abstracttarget.class.php:138
 msgid "Name is required."
@@ -1833,7 +1833,7 @@ msgstr "Ime je obavezno."
 
 #: inc/abstracttarget.class.php:502
 msgid "Destination entity"
-msgstr "Odredište entiteta"
+msgstr "Entitet odredišta"
 
 #: inc/abstracttarget.class.php:518
 msgid "User type question"
@@ -1860,37 +1860,37 @@ msgstr "Promijeni kategorije"
 #: inc/questionregex.class.php:52
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Regularni izraz pitanja"
+msgstr[1] "Regularni izrazi pitanja"
+msgstr[2] "Regularni izrazi pitanja"
 
 #: inc/questiondependency.class.php:66
 msgid "Question dependency"
 msgid_plural "Question dependencies"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ovisnost pitanja"
+msgstr[1] "Ovisnosti pitanja"
+msgstr[2] "Ovisnosti pitanja"
 
 #: inc/answer.class.php:66 entrée standard:43
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Odgovor"
+msgstr[1] "Odgovori"
+msgstr[2] "Odgovori"
 
 #: inc/item_targetticket.class.php:52
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Odnos sastavljenog naloga"
+msgstr[1] "Odnosi sastavljenog naloga"
+msgstr[2] "Odnosi sastavljenog naloga"
 
 #: inc/targetticket.class.php:56 entrée standard:43
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nalog cilja"
+msgstr[1] "Nalozi cilja"
+msgstr[2] "Nalozi cilja"
 
 #: inc/targetticket.class.php:99
 msgid "Specific asset"
@@ -2035,7 +2035,7 @@ msgstr "Oznake pitanja ili određene oznake"
 
 #: inc/abstractitiltarget.class.php:189
 msgid "TTR from template or none"
-msgstr ""
+msgstr "Vrijeme rješavanja iz predloška ili ništa"
 
 #: inc/abstractitiltarget.class.php:190
 msgid "equals to the answer to the question"
@@ -2067,7 +2067,7 @@ msgstr "Određeni ugovor o operativnoj raznini (OLA)"
 
 #: inc/abstractitiltarget.class.php:214
 msgid "Urgency from template or Medium"
-msgstr "Hitnost iz predloška ili Srednje"
+msgstr "Hitnost iz predloška ili Srednja"
 
 #: inc/abstractitiltarget.class.php:215
 msgid "Specific urgency"
@@ -2108,43 +2108,43 @@ msgstr "Grupa iz odgovora na pitanje"
 #: inc/abstractitiltarget.class.php:794
 msgid "Minute"
 msgid_plural "Minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Minuta"
+msgstr[1] "Minute"
+msgstr[2] "Minute"
 
 #: inc/abstractitiltarget.class.php:795
 msgid "Hour"
 msgid_plural "Hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Sat"
+msgstr[1] "Sati"
+msgstr[2] "Sati"
 
 #: inc/abstractitiltarget.class.php:796
 msgid "Day"
 msgid_plural "Days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Dan"
+msgstr[1] "Dani"
+msgstr[2] "Dani"
 
 #: inc/abstractitiltarget.class.php:797
 msgid "Month"
 msgid_plural "Months"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mjesec"
+msgstr[1] "Mjeseci"
+msgstr[2] "Mjeseci"
 
 #: inc/abstractitiltarget.class.php:829
 msgid "SLA (TTO/TTR)"
-msgstr "Ugovor o razini usluge (vrijeme posjedovanja/vrijeme ispravljanja)"
+msgstr "Ugovor o razini usluge (vrijeme posjedovanja/vrijeme rješavanja)"
 
 #: inc/abstractitiltarget.class.php:830 inc/abstractitiltarget.class.php:903
 msgid "Question (TTO/TTR)"
-msgstr "Pitanje (vrijeme posjedovanja/vrijeme ispravljanja)"
+msgstr "Pitanje (vrijeme posjedovanja/vrijeme rješavanja)"
 
 #: inc/abstractitiltarget.class.php:902
 msgid "OLA (TTO/TTR)"
 msgstr ""
-"Ugovor o operativnoj raznini (vrijeme posjedovanja/vrijeme ispravljanja)"
+"Ugovor o operativnoj raznini (vrijeme posjedovanja/vrijeme rješavanja)"
 
 #: inc/abstractitiltarget.class.php:1006
 msgid "Urgency "
@@ -2173,9 +2173,9 @@ msgstr "Opis ne može biti prazan!"
 #: inc/abstractitiltarget.class.php:1717
 msgid "Watcher"
 msgid_plural "Watchers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Promatrač"
+msgstr[1] "Promatrači"
+msgstr[2] "Promatrači"
 
 #: inc/abstractitiltarget.class.php:1736
 msgid "Cancel"
@@ -2220,10 +2220,12 @@ msgid ""
 "A fatal error occured in the upgrade from %s! Upgrade aborted. Please check "
 "logs to fix the problem then try again."
 msgstr ""
+"Došlo je do fatalne greške u nadogradnji za %s! Nadogradnja je prekinuta. Za"
+" ispravljanje problema pogledaj log-zapise, a zatim pokušaj ponovo."
 
 #: install/install.php:349
 msgid "A form has been created"
-msgstr "Stvoren je jedan obrazac"
+msgstr "Obrazac je stvoren"
 
 #: install/install.php:350
 msgid "Your request has been saved"
@@ -2313,7 +2315,7 @@ msgstr "Otkaži moj nalog"
 
 #: hook.php:685
 msgid "Old"
-msgstr ""
+msgstr "Staro"
 
 #: hook.php:692
 #, php-format
@@ -2334,15 +2336,15 @@ msgstr ""
 
 #: js/scripts.js:319
 msgid "No form found. Please choose a form below instead."
-msgstr ""
+msgstr "Nijedan obrazac nije pronađen. Dolje odaberi obrazac."
 
 #: js/scripts.js:321
 msgid "No form found."
-msgstr ""
+msgstr "Nijedan obrazac nije pronađen."
 
 #: js/scripts.js:325
 msgid "No FAQ item found."
-msgstr ""
+msgstr "Nijedno ČPP nije pronađeno."
 
 #: js/scripts.js:709
 msgid "Are you sure you want to delete this question?"
@@ -2380,9 +2382,9 @@ msgstr "Prikaži prazne"
 #: entrée standard:39
 msgid "LDAP directory"
 msgid_plural "LDAP directories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "LDAP direktorij"
+msgstr[1] "LDAP direktoriji"
+msgstr[2] "LDAP direktorijii"
 
 #: entrée standard:68
 msgid "Filter"

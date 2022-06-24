@@ -73,8 +73,8 @@ msgstr "Sınır yok"
 #: inc/form.class.php:1938 inc/filter/entityfilter.class.php:45
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form"
+msgstr[1] "Formlar"
 
 #: ajax/section_delete.php:44 ajax/section_move.php:49
 #: ajax/section_duplicate.php:44
@@ -95,11 +95,11 @@ msgstr "Bölüm taşınamadı"
 
 #: ajax/target_actor.php:51
 msgid "Failed to add the actor"
-msgstr "Aktör eklenemedi"
+msgstr "İlgili eklenemedi"
 
 #: ajax/target_actor.php:62
 msgid "Failed to delete the actor"
-msgstr "Aktör silinemedi"
+msgstr "İlgili silinemedi"
 
 #: ajax/section_duplicate.php:56
 msgid "Could not duplicate the section"
@@ -132,7 +132,7 @@ msgstr "Bu ögeyi güncelleme izniniz yok."
 
 #: front/targetticket.form.php:75
 msgid "Bad request while deleting an actor."
-msgstr "Bir aktör silinirken hatalı bir istek yapıldı."
+msgstr "Bir ilgili silinirken hatalı bir istek yapıldı."
 
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
@@ -171,8 +171,8 @@ msgstr "%1$s, %3$s ögesinin %2$s ayırtmasını ekledi"
 #: inc/abstractitiltarget.class.php:953 inc/abstractitiltarget.class.php:967
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Kategori"
+msgstr[1] "Kategoriler"
 
 #: inc/knowbase.class.php:62 inc/form.class.php:651
 msgid "See all"
@@ -212,8 +212,8 @@ msgstr "Kullanıcı ve form"
 #: inc/field/dropdownfield.class.php:431 entrée standard:38
 msgid "Dropdown"
 msgid_plural "Dropdowns"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Açılan kutu"
+msgstr[1] "Açılan kutular"
 
 #: inc/field/dropdownfield.class.php:462
 msgid "Invalid value for "
@@ -333,8 +333,8 @@ msgstr "Tanımlanmamış"
 #: inc/field/ipfield.class.php:121
 msgid "IP address"
 msgid_plural "IP addresses"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "IP adresi"
+msgstr[1] "IP adresleri"
 
 #: inc/field/urgencyfield.class.php:84 inc/abstractitiltarget.class.php:995
 msgid "Urgency"
@@ -372,20 +372,20 @@ msgstr "Uyarı: Etiket uygulama eki devre dışı bırakılmış ya da eksik"
 #: inc/field/tagfield.class.php:196
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Etiket"
+msgstr[1] "Etiketler"
 
 #: inc/field/glpiselectfield.class.php:71 entrée standard:38
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "GLPI nesnesi"
+msgstr[1] "GLPI nesneleri"
 
 #: inc/field/hostnamefield.class.php:114
 msgid "Hostname"
 msgid_plural "Hostnames"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sunucu adı"
+msgstr[1] "Sunucu adları"
 
 #: inc/field/timefield.class.php:128
 msgid "Time"
@@ -399,8 +399,8 @@ msgstr "E-posta adresi geçersiz: %s"
 #: inc/field/emailfield.class.php:98
 msgid "Email"
 msgid_plural "Emails"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "E-posta"
+msgstr[1] "E-postalar"
 
 #: inc/field/selectfield.class.php:97
 msgid "Select"
@@ -413,8 +413,8 @@ msgstr "Tarih ve saat"
 #: inc/field/actorfield.class.php:65
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "İlgili"
+msgstr[1] "İlgililer"
 
 #: inc/field/actorfield.class.php:249
 #, php-format
@@ -467,7 +467,7 @@ msgstr "görüntüle"
 #: inc/field/fieldsfield.class.php:388
 #, php-format
 msgid "Field '%1$s' type not implemented yet !"
-msgstr ""
+msgstr "'%1$s' aşan türü henüz kullanıma sunulmamış!"
 
 #: inc/field/fieldsfield.class.php:465
 msgid "Some numeric fields contains non numeric values"
@@ -514,7 +514,7 @@ msgstr "Bu bir sayı değil: %s"
 
 #: inc/field/floatfield.class.php:181
 msgid "Decimal number"
-msgstr ""
+msgstr "Ondalık sayı"
 
 #: inc/field/datefield.class.php:135
 msgid "Date"
@@ -532,15 +532,15 @@ msgstr "Bir açıklama alanında açıklama bulunmalıdır:"
 #: inc/field/hiddenfield.class.php:94
 msgid "Hidden field"
 msgid_plural "Hidden fields"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Gizli alan"
+msgstr[1] "Gizli alanlar"
 
 #: inc/condition.class.php:65 inc/targetproblem.class.php:579
 #: inc/targetchange.class.php:106 inc/targetticket.class.php:136
 msgid "Condition"
 msgid_plural "Conditions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Koşul"
+msgstr[1] "Koşullar"
 
 #: inc/condition.class.php:104
 msgid "is visible"
@@ -605,8 +605,8 @@ msgstr "İçe aktarılıyor"
 #: inc/issue.class.php:41
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sorun"
+msgstr[1] "Sorunlar"
 
 #: inc/issue.class.php:54
 msgid "Update issue data from tickets and form answers"
@@ -634,8 +634,8 @@ msgstr "Kod"
 #: entrée standard:65
 msgid "Type"
 msgid_plural "Types"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tür"
+msgstr[1] "Türler"
 
 #: inc/issue.class.php:567 inc/formanswer.class.php:259
 msgid "Status"
@@ -653,16 +653,16 @@ msgstr "Son güncelleme"
 #: inc/abstracttarget.class.php:517
 msgid "Entity"
 msgid_plural "Entities"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Birim"
+msgstr[1] "Birimler"
 
 #: inc/issue.class.php:607 inc/notificationtargetformanswer.class.php:79
 #: inc/target_actor.class.php:83 inc/formanswer.class.php:218
 #: inc/formanswer.class.php:608 inc/abstractitiltarget.class.php:1710
 msgid "Requester"
 msgid_plural "Requesters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "İstekte bulunan"
+msgstr[1] "İstekte bulunanlar"
 
 #: inc/issue.class.php:625 inc/formanswer.class.php:228
 msgid "Form approver"
@@ -696,27 +696,27 @@ msgstr "Çözümlenme zamanı"
 
 #: inc/issue.class.php:773
 msgid "Time to resolve + Progress"
-msgstr ""
+msgstr "Çözümlenme süresi + ilerleme"
 
 #: inc/issue.class.php:783
 msgid "Internal time to resolve"
-msgstr ""
+msgstr "İç çözümlenme süresi"
 
 #: inc/issue.class.php:794
 msgid "Internal time to resolve + Progress"
-msgstr ""
+msgstr "İç çözümlenme süresi + ilerleme"
 
 #: inc/issue.class.php:804
 msgid "Resolution date"
-msgstr ""
+msgstr "Çözümlenme tarihi"
 
 #: inc/issue.class.php:819
 msgid "Internal time to own"
-msgstr ""
+msgstr "İç ele alınma süresi"
 
 #: inc/issue.class.php:830
 msgid "Internal time to own + Progress"
-msgstr ""
+msgstr "İç ele allınma süresi + ilerleme"
 
 #: inc/issue.class.php:840
 msgid "Time to own"
@@ -724,7 +724,7 @@ msgstr "Ele alınma zamanı"
 
 #: inc/issue.class.php:851
 msgid "Time to own + Progress"
-msgstr ""
+msgstr "Ele alınma süresi + ilerleme"
 
 #: inc/issue.class.php:877
 msgid "Ticket"
@@ -733,8 +733,8 @@ msgstr "Destek kaydı"
 #: inc/issue.class.php:878 inc/formanswer.class.php:183
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form yanıtı"
+msgstr[1] "Form yanıtları"
 
 #: inc/issue.class.php:883
 msgid "Not validated"
@@ -783,8 +783,8 @@ msgstr "Kapalı"
 #: inc/category.class.php:50 inc/form.class.php:230 hook.php:72
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form kategorisi"
+msgstr[1] "Form kategorileri"
 
 #: inc/category.class.php:80
 msgid "Knowbase category"
@@ -838,8 +838,8 @@ msgstr "Form adı"
 #: inc/form_validator.class.php:76
 msgid "Validator"
 msgid_plural "Validators"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Değerlendiren"
+msgstr[1] "Değerlendirenler"
 
 #: inc/notificationtargetformanswer.class.php:81 inc/formanswer.class.php:239
 msgid "Creation date"
@@ -929,13 +929,13 @@ msgstr "Atanan"
 #: inc/target_actor.class.php:91
 msgid "Target actor"
 msgid_plural "Target actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef ilgili"
+msgstr[1] "Hedef ilgililer"
 
 #: inc/target_actor.class.php:97 inc/target_actor.class.php:113
 #: inc/target_actor.class.php:122
 msgid "Bad request while adding an actor."
-msgstr "Bir aktör eklenirken hatalı bir istek yapıldı."
+msgstr "Bir ilgili eklenirken hatalı bir istek yapıldı."
 
 #: inc/target_actor.class.php:179
 #, php-format
@@ -1043,8 +1043,8 @@ msgstr "Akışlara bak"
 #: inc/formaccesstype.class.php:39 inc/formaccesstype.class.php:64
 msgid "Access type"
 msgid_plural "Access types"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Erişim türü"
+msgstr[1] "Erişim türleri"
 
 #: inc/formaccesstype.class.php:78
 msgid "Link to the form"
@@ -1065,14 +1065,14 @@ msgstr "Şununla kısıtlanmış"
 #: inc/form_language.class.php:51
 msgid "Form language"
 msgid_plural "Form languages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Form dili"
+msgstr[1] "Form dilleri"
 
 #: inc/form_language.class.php:72 inc/form_language.class.php:348
 msgid "Translation"
 msgid_plural "Translations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Çeviri"
+msgstr[1] "Çeviriler"
 
 #: inc/form_language.class.php:111 inc/form.class.php:1048
 #: inc/form.class.php:1173 inc/abstracttarget.class.php:161
@@ -1158,8 +1158,8 @@ msgstr "Bir değerlendiren seçin"
 #: inc/targetproblem.class.php:42 entrée standard:43
 msgid "Target problem"
 msgid_plural "Target problems"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef sorun"
+msgstr[1] "Hedef sorunlar"
 
 #: inc/targetproblem.class.php:108 inc/targetproblem.class.php:577
 #: inc/targetchange.class.php:104 inc/targetchange.class.php:440
@@ -1260,11 +1260,11 @@ msgstr "Gizli"
 
 #: inc/entityconfig.class.php:156
 msgid "Variable height"
-msgstr ""
+msgstr "Değişken yükseklik"
 
 #: inc/entityconfig.class.php:157
 msgid "Uniform height"
-msgstr ""
+msgstr "Sabit yükseklik"
 
 #: inc/entityconfig.class.php:231
 msgid "Helpdesk"
@@ -1301,18 +1301,18 @@ msgstr "Başlık iletisi"
 
 #: inc/entityconfig.class.php:347
 msgid "Search issue"
-msgstr ""
+msgstr "Arama sorunu"
 
 #: inc/entityconfig.class.php:363
 msgid "Tile design"
-msgstr ""
+msgstr "Karo tasarımı"
 
 #: inc/entityconfig.class.php:375 inc/entityconfig.class.php:453
 #: inc/form.class.php:239 entrée standard:84
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Başlık"
+msgstr[1] "Başlıklar"
 
 #: inc/entityconfig.class.php:433
 msgid "Display search field"
@@ -1325,8 +1325,8 @@ msgstr "Başlık görüntülensin"
 #: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:59
 msgid "Question range"
 msgid_plural "Question ranges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru aralığı"
+msgstr[1] "Soru aralıkları"
 
 #: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:69
 msgid "Minimum range"
@@ -1400,12 +1400,12 @@ msgstr "Yanıtlar başlığı"
 #: inc/form.class.php:504 inc/form.class.php:563
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef"
+msgstr[1] "Hedefler"
 
 #: inc/form.class.php:506
 msgid "Actions"
-msgstr ""
+msgstr "İşlemler"
 
 #: inc/form.class.php:546 inc/form.class.php:2130
 msgid "Add a target"
@@ -1606,8 +1606,8 @@ msgstr "plugin_formcreator_load_check"
 #: inc/targetchange.class.php:43 entrée standard:43
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef değişikliği"
+msgstr[1] "Hedef değişiklikleri"
 
 #: inc/targetchange.class.php:343 entrée standard:48
 msgid "Change title"
@@ -1632,8 +1632,8 @@ msgstr "Denetim listesi"
 #: inc/section.class.php:71 entrée standard:53 standard:44
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bölüm"
+msgstr[1] "Bölümler"
 
 #: inc/section.class.php:123 inc/section.class.php:164
 #: inc/question.class.php:312
@@ -1652,8 +1652,8 @@ msgstr "%1$s %2$s bulunamadı"
 #: entrée standard:41
 msgid "Question"
 msgid_plural "Questions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru"
+msgstr[1] "Sorular"
 
 #: inc/question.class.php:228 entrée standard:37
 msgid "Count of conditions"
@@ -1728,8 +1728,8 @@ msgstr "İdari"
 #: inc/question.class.php:1327 inc/question.class.php:1330
 msgid "Plugin"
 msgid_plural "Plugins"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Uygulama eki"
+msgstr[1] "Uygulama ekleri"
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
@@ -1828,32 +1828,32 @@ msgstr "Değişiklik kategorileri"
 #: inc/questionregex.class.php:52
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru kurallı ifadesi"
+msgstr[1] "Soru kurallı ifadeleri"
 
 #: inc/questiondependency.class.php:66
 msgid "Question dependency"
 msgid_plural "Question dependencies"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Soru bağımlılığı"
+msgstr[1] "Soru bağımlılıkları"
 
 #: inc/answer.class.php:66 entrée standard:43
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Yanıt"
+msgstr[1] "Yanıtlar"
 
 #: inc/item_targetticket.class.php:52
 msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Birleşik destek kaydı ilişkisi"
+msgstr[1] "Birleşik destek kaydı ilişkileri"
 
 #: inc/targetticket.class.php:56 entrée standard:43
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Hedef destek kaydı"
+msgstr[1] "Hedef destek kayıtları"
 
 #: inc/targetticket.class.php:99
 msgid "Specific asset"
@@ -1999,7 +1999,7 @@ msgstr "Sorulardan etiketler ya da belirli etiketler"
 
 #: inc/abstractitiltarget.class.php:189
 msgid "TTR from template or none"
-msgstr ""
+msgstr "Kalıptan çözümlenme süresi ya da yok"
 
 #: inc/abstractitiltarget.class.php:190
 msgid "equals to the answer to the question"
@@ -2072,26 +2072,26 @@ msgstr "Soru yanıtından grup"
 #: inc/abstractitiltarget.class.php:794
 msgid "Minute"
 msgid_plural "Minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dakika"
+msgstr[1] "Dakika"
 
 #: inc/abstractitiltarget.class.php:795
 msgid "Hour"
 msgid_plural "Hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Saat"
+msgstr[1] "Saat"
 
 #: inc/abstractitiltarget.class.php:796
 msgid "Day"
 msgid_plural "Days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Gün"
+msgstr[1] "Gün"
 
 #: inc/abstractitiltarget.class.php:797
 msgid "Month"
 msgid_plural "Months"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ay"
+msgstr[1] "Ay"
 
 #: inc/abstractitiltarget.class.php:829
 msgid "SLA (TTO/TTR)"
@@ -2132,8 +2132,8 @@ msgstr "Açıklama boş olamaz!"
 #: inc/abstractitiltarget.class.php:1717
 msgid "Watcher"
 msgid_plural "Watchers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "İzleyen"
+msgstr[1] "İzleyenler"
 
 #: inc/abstractitiltarget.class.php:1736
 msgid "Cancel"
@@ -2178,6 +2178,9 @@ msgid ""
 "A fatal error occured in the upgrade from %s! Upgrade aborted. Please check "
 "logs to fix the problem then try again."
 msgstr ""
+"%s sürümünden güncellenirken ciddi bir sorun çıktı! Güncelleme işlemi iptal "
+"edildi. Lütfen sorunu çözmek için günlük kayıtlarına bakın ve ardından "
+"yeniden deneyin."
 
 #: install/install.php:349
 msgid "A form has been created"
@@ -2271,7 +2274,7 @@ msgstr "Çağrı kaydımı iptal et"
 
 #: hook.php:685
 msgid "Old"
-msgstr ""
+msgstr "Eski"
 
 #: hook.php:692
 #, php-format
@@ -2292,15 +2295,15 @@ msgstr ""
 
 #: js/scripts.js:319
 msgid "No form found. Please choose a form below instead."
-msgstr ""
+msgstr "Herhangi bir form bulunamadı. Lütfen aşağıdan bir form seçin."
 
 #: js/scripts.js:321
 msgid "No form found."
-msgstr ""
+msgstr "Herhangi bir form bulunamadı."
 
 #: js/scripts.js:325
 msgid "No FAQ item found."
-msgstr ""
+msgstr "Herhangi bir SSS ögesi bulunamadı."
 
 #: js/scripts.js:709
 msgid "Are you sure you want to delete this question?"
@@ -2338,8 +2341,8 @@ msgstr "Boşlar görüntülensin"
 #: entrée standard:39
 msgid "LDAP directory"
 msgid_plural "LDAP directories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "LDAP klasörü"
+msgstr[1] "LDAP klasörleri"
 
 #: entrée standard:68
 msgid "Filter"

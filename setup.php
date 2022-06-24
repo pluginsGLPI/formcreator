@@ -47,7 +47,7 @@ define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '10.1');
 define('FORMCREATOR_ROOTDOC', Plugin::getWebDir('formcreator'));
 
 // Advanced features for Formcreator
-define('PLUGIN_FORMCREATOR_ADVANCED', 'advform');
+define('PLUGIN_FORMCREATOR_ADVANCED_VALIDATION', 'advform');
 
 /**
  * Define the plugin's version and informations

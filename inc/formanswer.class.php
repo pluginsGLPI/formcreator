@@ -99,11 +99,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function canViewItem() {
       global $DB;
 
-      // if (Plugin::isPluginActive('advform')) {
-      //    $advFormAnswer = new PluginAdvformFormanswer();
-      //    $advFormAnswer->getFromDB($this->getID());
-      //    return $advFormAnswer->canViewItem();
-      // }
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         $advFormAnswer = new PluginAdvformFormanswer();
+         $advFormAnswer->getFromDB($this->getID());
+         return $advFormAnswer->canViewItem();
+      }
 
       $currentUser = Session::getLoginUserID();
 
@@ -452,9 +452,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Can the current user validate the form ?
     */
    public function canValidate(): bool {
-      // if (Plugin::isPluginActive('advform')) {
-      //    return PluginAdvformFormAnswer::canValidate($this);
-      // }
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         $formAnswer = new PluginAdvformFormAnswer();
+         $formAnswer->getFromDB($this->getID());
+         return $formAnswer->canValidate($this);
+      }
 
       if (!PluginFormcreatorCommon::canValidate()) {
          return false;
@@ -659,8 +661,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
       }
 
-      if (Plugin::isPluginActive('advform')) {
-         PluginAdvformFormanswerValidation::showValidationStatuses($this);
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         $formAnswer = PluginFormcreatorCommon::getFormAnswer();
+         $formAnswer->getFromDB($this->getID());
+         PluginAdvformFormanswerValidation::showValidationStatuses($formAnswer);
       }
       $options['canedit'] = true;
       $options['candel'] = false;
@@ -754,7 +758,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $newStatus = isset($input['refuse_formanswer'])
             ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED
             : PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
-         if (Plugin::isPluginActive('advform')) {
+         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             PluginAdvformFormanswerValidation::updateValidationStatus($this, $newStatus);
          }
          $computedStatus = self::getValidationStatus($this);
@@ -931,7 +935,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = PluginFormcreatorForm::getById($formId ?? $this->fields[$formFk]);
+      $form = PluginFormcreatorCommon::getForm();
+      $form->getFromDB($formId ?? $this->fields[$formFk]);
       if ($form === false) {
          return null;
       }
@@ -1568,10 +1573,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public static function getMyLastAnswersAsRequester($limit = 5) {
       global $DB;
 
-      if (Plugin::isPluginActive('advform')) {
-         return PluginAdvformFormAnswer::getMyLastAnswersAsRequester($limit);
-      }
-
       $formAnswerTable = self::getTable();
       $formTable = PluginFormcreatorForm::getTable();
       $request = [
@@ -1609,7 +1610,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public static function getMyLastAnswersAsValidator($limit = 5) : DBMysqlIterator {
       global $DB;
 
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          return PluginAdvformFormAnswer::getMyLastAnswersAsValidator($limit);
       }
 
@@ -1820,7 +1821,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return integer
     */
    protected static function getValidationStatus(PluginFormcreatorFormAnswer $formAnswer): int {
-      if (Plugin::isPluginActive('advform')) {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          return PluginAdvformFormAnswer::getValidationStatus($formAnswer);
       }
 

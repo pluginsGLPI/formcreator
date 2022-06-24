@@ -219,7 +219,6 @@ class FieldsField extends PluginFormcreatorAbstractField
       }
 
       $dropdown_matches = [];
-      $dropdown_type = '';
       if (preg_match('/^dropdown-(?<class>.+)$/i', $dropdown_type, $dropdown_matches)
          && isset($dropdown_matches['class']) && class_exists($dropdown_matches['class'])
       ) {
@@ -385,7 +384,7 @@ class FieldsField extends PluginFormcreatorAbstractField
             }
             break;
          default:
-            $html .= sprintf(__('Field \'%1$s\' type not implemented yet !', 'formcreator'), $dropdown_type);
+            $html .= sprintf(__('Field \'%1$s\' type not implemented yet!', 'formcreator'), $dropdown_type);
       }
 
       unset($_SESSION['plugin']['fields']['values_sent']);

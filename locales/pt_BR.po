@@ -17,9 +17,9 @@
 # Rafael Viana <rafaelvian@gmail.com>, 2022
 # Manoel Ramon, 2022
 # Andrei Bernardo Simoni <andrei_simoni@hotmail.com>, 2022
-# Diego Nobre <diego@koruma.com.br>, 2022
 # Jean Vergaças <jvergacas@gmail.com>, 2022
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2022
+# Diego Nobre <diego@koruma.com.br>, 2022
 # 
 #, fuzzy
 msgid ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-15 14:47+0200\n"
 "PO-Revision-Date: 2022-06-15 12:10+0000\n"
-"Last-Translator: Pedro de Oliveira Lira <pedrolira@live.com>, 2022\n"
+"Last-Translator: Diego Nobre <diego@koruma.com.br>, 2022\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,9 +87,9 @@ msgstr "Nenhum limite"
 #: inc/form.class.php:1938 inc/filter/entityfilter.class.php:45
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Formulário"
+msgstr[1] "Formulários"
+msgstr[2] "Formulários"
 
 #: ajax/section_delete.php:44 ajax/section_move.php:49
 #: ajax/section_duplicate.php:44
@@ -110,11 +110,11 @@ msgstr "Não foi possível mover a seção"
 
 #: ajax/target_actor.php:51
 msgid "Failed to add the actor"
-msgstr ""
+msgstr "Falha ao adicionar o ator"
 
 #: ajax/target_actor.php:62
 msgid "Failed to delete the actor"
-msgstr ""
+msgstr "Falha ao excluir o ator"
 
 #: ajax/section_duplicate.php:56
 msgid "Could not duplicate the section"
@@ -143,11 +143,11 @@ msgstr "Item não encontrado"
 #: front/targetticket.form.php:81 front/targetchange.form.php:46
 #: front/targetproblem.form.php:46
 msgid "No right to update this item."
-msgstr ""
+msgstr "Nenhum direito de atualizar este item."
 
 #: front/targetticket.form.php:75
 msgid "Bad request while deleting an actor."
-msgstr ""
+msgstr "Erro ao excluir um ator."
 
 #: front/targetticket.form.php:95 front/targetchange.form.php:81
 #: front/formanswer.php:47 front/targetproblem.form.php:81
@@ -186,9 +186,9 @@ msgstr "%1$s adiciona a reserva %2$s para o item %3$s"
 #: inc/abstractitiltarget.class.php:953 inc/abstractitiltarget.class.php:967
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Categoria"
+msgstr[1] "Categorias"
+msgstr[2] "Categorias"
 
 #: inc/knowbase.class.php:62 inc/form.class.php:651
 msgid "See all"
