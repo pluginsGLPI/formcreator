@@ -1,12 +1,21 @@
 <?php
 
 namespace GlpiPlugin\Formcreator\Tests;
-use Session;
-use Html;
-use DB;
-use Auth;
+
 use atoum;
 use Ticket;
+use Auth;
+use DB;
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\Question;
+use GlpiPlugin\Formcreator\Section;
+use GlpiPlugin\Formcreator\Target\Change as TargetChange;
+use GlpiPlugin\Formcreator\Target\Problem as TargetProblem;
+use GlpiPlugin\Formcreator\Target\Ticket as TargetTicket;
+use Html;
+use Session;
 
 abstract class CommonTestCase extends atoum
 {
@@ -188,7 +197,7 @@ abstract class CommonTestCase extends atoum
       if (!isset($input['is_active'])) {
          $input['is_active'] = 1;
       }
-      $form = new \PluginFormcreatorForm();
+      $form = new Form();
       $form->add($input);
       $this->boolean($form->isNewItem())->isFalse();
       $form->getFromDB($form->getID());
@@ -197,7 +206,7 @@ abstract class CommonTestCase extends atoum
    }
 
    protected function getSection($input = [], $formInput = []) {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = Form::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $formId = $this->getForm($formInput)->getID();
          $input[$formFk] = $formId;
@@ -205,17 +214,17 @@ abstract class CommonTestCase extends atoum
       if (!isset($input['name'])) {
          $input['name'] = $this->getUniqueString();
       }
-      $section = new \PluginFormcreatorSection();
+      $section = new Section();
       $section->add($input);
       $this->boolean($section->isNewItem())->isFalse();
       return $section;
    }
 
-   protected function getQuestion($input = [], $sectionInput = [], $formInput = []) {
+   protected function getQuestion($input = [], $sectionInput = [], $formInput = []): Question {
       if (!isset($input['name'])) {
          $input['name'] = 'question';
       }
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $sectionFk = Section::getForeignKeyField();
       if (!isset($input[$sectionFk])) {
          $sectionId = $this->getSection($sectionInput, $formInput)->getID();
          $input[$sectionFk] = $sectionId;
@@ -230,7 +239,7 @@ abstract class CommonTestCase extends atoum
          'row'                            => '0',
          'col'                            => '0',
          'width'                          => '4',
-         'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'show_rule'                      => Condition::SHOW_RULE_ALWAYS,
          '_parameters'                    => [],
       ];
       $input = array_merge($defaultInput, $input);
@@ -247,7 +256,7 @@ abstract class CommonTestCase extends atoum
       ];
       $input['_parameters'] = array_merge($defaultParams, $input['_parameters']);
 
-      $question = new \PluginFormcreatorQuestion();
+      $question = new Question();
       $question->add($input);
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->getFromDB($question->getID());
@@ -260,12 +269,12 @@ abstract class CommonTestCase extends atoum
          $input['name'] = $this->getUniqueString();
       }
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = Form::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $input[$formFk] = $this->getForm()->getID();
       }
 
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = new TargetTicket();
       $targetTicket->add($input);
 
       return $targetTicket;
@@ -276,19 +285,19 @@ abstract class CommonTestCase extends atoum
          $input['name'] = $this->getUniqueString();
       }
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = Form::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $input[$formFk] = $this->getForm()->getID();
       }
 
-      $targetChange = new \PluginFormcreatorTargetChange();
+      $targetChange = new TargetChange();
       $targetChange->add($input);
 
       return $targetChange;
    }
 
-   protected function getFormAnswer(array $input): ?\PluginFormcreatorFormAnswer {
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+   protected function getFormAnswer(array $input): ?FormAnswer {
+      $formAnswer = new FormAnswer();
       $formAnswer->add($input);
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
@@ -300,12 +309,12 @@ abstract class CommonTestCase extends atoum
          $input['name'] = $this->getUniqueString();
       }
 
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = Form::getForeignKeyField();
       if (!isset($input[$formFk])) {
          $input[$formFk] = $this->getForm()->getID();
       }
 
-      $targetProblem = new \PluginFormcreatorTargetProblem();
+      $targetProblem = new TargetProblem();
       $targetProblem->add($input);
 
       return $targetProblem;

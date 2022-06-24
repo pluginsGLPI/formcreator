@@ -29,13 +29,13 @@
  #}
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
-<div class="col-12 col-xxl-12 flex-column" data-itemtype="PluginFormcreatorCondition">
+<div class="col-12 col-xxl-12 flex-column" data-itemtype="GlpiPlugin_Formcreator_Condition">
     <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
         <div class="row flex-row align-items-start flex-grow-1">
             <div class="row flex-row">
 
                 {# Logic operator #}
-                {% set elements = call('PluginFormcreatorCondition::getEnumShowLogic') %}
+                {% set elements = call('GlpiPlugin\\Formcreator\\Condition::getEnumShowLogic') %}
                 {% set options = {
                     'value': condition.fields['show_logic']|verbatim_value,
                     'width': '100%',
@@ -55,15 +55,15 @@
                     'rand': random(),
                     'width': '100%',
                 } %}
-                {% set excludeQuestions = call('PluginFormcreatorCondition::getQuestionsExclusion', [parent]) %}
-                {% set form = call('PluginFormcreatorForm::getByItem', [parent]) %}
+                {% set excludeQuestions = call('GlpiPlugin\\Formcreator\\Condition::getQuestionsExclusion', [parent]) %}
+                {% set form = call('GlpiPlugin\\Formcreator\\Form::getByItem', [parent]) %}
                 {% set field %}
-                    {% do call('PluginFormcreatorQuestion::dropdownForForm', [form, excludeQuestions, '_conditions[plugin_formcreator_questions_id][]', condition.fields['plugin_formcreator_questions_id']]) %}
+                    {% do call('GlpiPlugin\\Formcreator\\Question::dropdownForForm', [form, excludeQuestions, '_conditions[plugin_formcreator_questions_id][]', condition.fields['plugin_formcreator_questions_id']]) %}
                 {% endset %}
                 {{ fields.field(name, field, label, options|merge({'id': 'dropdown_' ~ name ~ '_' ~ options.rand})) }}
 
                 {# operator field #}
-                {% set elements = call('PluginFormcreatorCondition::getEnumShowCondition') %}
+                {% set elements = call('GlpiPlugin\\Formcreator\\Condition::getEnumShowCondition') %}
                 {% set options = {
                     'value': condition.fields['show_condition']|verbatim_value,
                     'width': '100%',

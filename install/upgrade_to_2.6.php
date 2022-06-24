@@ -29,11 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Question;
+
 /**
  * Upgrade any version of Formcreator >= 2.5.0 to 2.6.0
  * @param Migration $migration
  */
-class PluginFormcreatorUpgradeTo2_6 {
+class UpgradeTo2_6 {
    /**
     * @param Migration $migration
     */
@@ -45,7 +48,7 @@ class PluginFormcreatorUpgradeTo2_6 {
 
       $rows = $DB->request([
          'SELECT' => ['id', 'values'],
-         'FROM'   => PluginFormcreatorQuestion::getTable(),
+         'FROM'   => Question::getTable(),
          'WHERE'  => [
             'fieldtype' => 'dropdown',
             'values'    => 'ITILCategory'
@@ -99,7 +102,7 @@ class PluginFormcreatorUpgradeTo2_6 {
             ['after' => 'category_question']
          );
       } else {
-         $current_enum_location_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'location_rule');
+         $current_enum_location_rule = Common::getEnumValues('glpi_plugin_formcreator_targettickets', 'location_rule');
          if (count($current_enum_location_rule) != count(['none', 'specific', 'answer'])) {
             $migration->changeField(
                'glpi_plugin_formcreator_targettickets',
@@ -139,11 +142,11 @@ class PluginFormcreatorUpgradeTo2_6 {
       }
 
       // add uuid and generate for existing rows
-      $table = PluginFormcreatorTargetTicket::getTable();
+      $table = 'glpi_plugin_formcreator_targettickets';
       $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
       $migration->migrationOneTable($table);
       $all_targetTickets = $DB->request([
-         'FROM'   => PluginFormcreatorTargetTicket::getTable(),
+         'FROM'   => $table,
          'WHERE'  => [
             'uuid' => null,
          ]
@@ -163,7 +166,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                   ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
-         $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues($table, 'category_rule');
+         $current_enum_category_rule = Common::getEnumValues($table, 'category_rule');
          if (count($current_enum_category_rule) != count(['none', 'specific', 'answer'])) {
             $query = "ALTER TABLE `$table`
                      CHANGE COLUMN `category_rule` `category_rule`
@@ -180,7 +183,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                   ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
-         $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'urgency_rule');
+         $current_enum_urgency_rule = Common::getEnumValues('glpi_plugin_formcreator_targetchanges', 'urgency_rule');
          if (count($current_enum_urgency_rule) != count(['none', 'specific', 'answer'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                      CHANGE COLUMN `urgency_rule` `urgency_rule`
@@ -197,7 +200,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                   ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
-         $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'category_rule');
+         $current_enum_category_rule = Common::getEnumValues('glpi_plugin_formcreator_targetchanges', 'category_rule');
          if (count($current_enum_category_rule) != count(['none', 'specific', 'answer'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                      CHANGE COLUMN `category_rule` `category_rule`

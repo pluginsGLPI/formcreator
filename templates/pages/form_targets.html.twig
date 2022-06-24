@@ -21,7 +21,7 @@
                     class="far fa-trash-alt formcreator_delete_target"
                     alt="*"
                     title="{{ __('Delete', 'formcreator') }}"
-                    data-itemtype="{{ target.getType() }}"
+                    data-itemtype="{{ target.getType()|replace({'\\': '_'}) }}"
                     data-items-id="{{ targetId }}"
                     align="absmiddle"
                     style="cursor: pointer"></i>

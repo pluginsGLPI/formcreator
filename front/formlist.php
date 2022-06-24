@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+
 include ('../../../inc/includes.php');
 
 Session::checkLoginUser();
@@ -48,7 +50,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    Html::header(__('Form list', 'formcreator'));
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 $form->showList();
 
 if (Session::getCurrentInterface() == "helpdesk") {

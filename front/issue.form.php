@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\Issue;
+
 global $CFG_GLPI;
 require_once ('../../../inc/includes.php');
 
@@ -39,10 +42,10 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 Session::checkValidSessionId();
 
-/** @var PluginFormcreatorIssue $issue */
+/** @var Issue $issue */
 $issueId = $_REQUEST['id'] ?? null;
-$issue = PluginFormcreatorIssue::getById((int) $issueId);
-if ($issueId === null || !($issue instanceof PluginFormcreatorIssue)) {
+$issue = Issue::getById((int) $issueId);
+if ($issueId === null || !($issue instanceof Issue)) {
    $header = __('Item not found');
    if (Session::getCurrentInterface() == "helpdesk") {
       Html::helpHeader($header);
@@ -71,7 +74,7 @@ $old_id = $_GET['id'];
 $_GET['id'] = $issue->fields['display_id'];
 
 // Specific case, viewing a ticket from a formanswer result
-if ($itemtype == PluginFormcreatorFormAnswer::class && isset($_GET['tickets_id'])) {
+if ($itemtype == FormAnswer::class && isset($_GET['tickets_id'])) {
    $itemtype = Ticket::class;
    $_GET['id'] = "f_$_GET[tickets_id]";
 }

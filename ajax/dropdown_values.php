@@ -29,9 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['dropdown_itemtype'])
     || $_REQUEST['dropdown_itemtype'] == '0'
@@ -44,7 +47,7 @@ if (!isset($_REQUEST['dropdown_itemtype'])
    );
 } else {
    $itemtype = $_REQUEST['dropdown_itemtype'];
-   $question = new PluginFormcreatorQuestion();
+   $question = new Question();
    $question->getFromDB((int) $_REQUEST['id']);
    $defaultValue = isset($question->fields['default_values'])
                    ? $question->fields['default_values']

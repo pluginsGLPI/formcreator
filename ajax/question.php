@@ -29,15 +29,19 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+use GlpiPlugin\Formcreator\Section;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 $question_id = $_REQUEST['id'] ?? 0;
-$question = new PluginFormcreatorQuestion();
+$question = new Question();
 if ($question_id == 0) {
    $question->getEmpty();
-   $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST['plugin_formcreator_sections_id'];
+   $sectionFk = Section::getForeignKeyField();
+   $question->fields[$sectionFk] = (int) $_REQUEST[$sectionFk];
 } else {
    $question->getFromDB($question_id);
 }

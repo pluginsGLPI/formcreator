@@ -29,8 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['move']) || !is_array($_REQUEST['move'])) {
    http_response_code(400);
@@ -39,7 +42,7 @@ if (!isset($_REQUEST['move']) || !is_array($_REQUEST['move'])) {
 
 $questions = [];
 foreach ($_REQUEST['move'] as $id => $item) {
-   $question = new PluginFormcreatorQuestion();
+   $question = new Question();
    if (!$question->getFromDB((int) $id)) {
       http_response_code(404);
       echo __('Question not found', 'formcreator');

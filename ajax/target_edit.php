@@ -29,8 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
     http_response_code(400);
@@ -43,7 +45,7 @@ if (!isset($_REQUEST['itemtype'])) {
     exit;
 }
 $itemtype = $_REQUEST['itemtype'];
-if (!in_array($itemtype, PluginFormcreatorForm::getTargetTypes())) {
+if (!in_array($itemtype, Form::getTargetTypes())) {
     http_response_code(400);
     exit;
 }

@@ -57,7 +57,7 @@ foreach ($available_options as $key) {
       $options[$key] = $_GET[$key];
    }
 }
-$_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
+$_SESSION['glpilisturl'][KnowbaseItem::getType()] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
 $kb->showFull($options);
 
 if (Session::getCurrentInterface() == "helpdesk") {
@@ -65,4 +65,3 @@ if (Session::getCurrentInterface() == "helpdesk") {
 } else {
    Html::footer();
 }
-

@@ -29,7 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\Question;
+use GlpiPlugin\Formcreator\QuestionRange;
+use GlpiPlugin\Formcreator\QuestionRegex;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class FloatField extends CommonTestCase {
@@ -49,7 +54,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -73,7 +78,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '2',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -97,7 +102,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "2",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                '_parameters'     => [
                   'float' => [
@@ -120,7 +125,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "5",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -144,7 +149,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "3.141592",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -168,7 +173,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -192,7 +197,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "1.234",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -216,7 +221,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "12.345",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -240,7 +245,7 @@ class FloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -269,7 +274,7 @@ class FloatField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
+      $question = new Question();
       $question->add($fields);
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
@@ -296,9 +301,9 @@ class FloatField extends CommonTestCase {
          ->hasKey('regex')
          ->array($output)->size->isEqualTo(2);
       $this->object($output['range'])
-         ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
+         ->isInstanceOf(QuestionRange::class);
       $this->object($output['regex'])
-         ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
+         ->isInstanceOf(QuestionRegex::class);
    }
 
    public function testisPublicFormCompatible() {

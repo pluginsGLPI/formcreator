@@ -34,7 +34,7 @@
 	{% set widthPercent = 100 / options.columns %}
 	{% for i in range(1, options.columns ) %}
 		{% set width = i * widthPercent %}
-            #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][gs-w="{{ i }}"],
+            #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "GlpiPlugin_Formcreator_Question"][gs-w="{{ i }}"],
             #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[gs-w="{{ i }}"] {
                 min-width: {{ widthPercent }}%;
                 width: {{ width }}%;
@@ -45,7 +45,7 @@
 
 <div class="asset">
     {% set formName = 'plugin_formcreator_form' %}
-	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action="javascript:plugin_formcreator.submitUserForm()" onkeypress="return plugin_formcreator.submitUserFormByKeyPress(event);" id="plugin_formcreator_form" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}">
+	<form name="{{ formName }}" method="post" role="form" enctype="multipart/form-data" class="plugin_formcreator_form" action="javascript:plugin_formcreator.submitUserForm()" onkeypress="return plugin_formcreator.submitUserFormByKeyPress(event);" id="plugin_formcreator_form" data-itemtype="GlpiPlugin_Formcreator_Form" data-id="{{ item.fields['id'] }}">
 		<h1 class='form-title'>
 		        {{ call('Glpi\\Toolbox\\Sanitizer::unsanitize', [__(item.fields['name'], options.domain)]) }}
 			<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>
@@ -57,12 +57,12 @@
             </div>
         {% endif %}
         <ol>
-        {% set sections = call('PluginFormcreatorSection::getSectionsFromForm', [
+        {% set sections = call('GlpiPlugin\\Formcreator\\Section::getSectionsFromForm', [
             item.fields['id']
         ]) %}
         {% for section in sections %}
             {% set sectionId = section.fields['id'] %}
-            <li class="card plugin_formcreator_section" data-itemtype="PluginFormcreatorSection" data-id={{ sectionId }}>
+            <li class="card plugin_formcreator_section" data-itemtype="GlpiPlugin_Formcreator_Section" data-id={{ sectionId }}>
                 <div class="card-header">
                     <h2 class="card-title">
                         {% if section.fields['name'] == '' %}
@@ -74,7 +74,7 @@
                 </div>
                 <div class="card-body">
                     {% set lastQuestion = null %}
-                    {% set questions = call('PluginFormcreatorQuestion::getQuestionsFromSection', [
+                    {% set questions = call('GlpiPlugin\\Formcreator\\Question::getQuestionsFromSection', [
                         sectionId
                     ]) %}
                     {% for question in questions %}
@@ -108,7 +108,7 @@
         {% if options.use_captcha %}
             {% set captchaTime = call('time') %}
             {% set catchaId = call('md5', [captchaTime ~ item.fields['id']]) %}
-            {% set captcha = call('PluginFormcreatorCommon::getCaptcha', [captchaId]) %}
+            {% set captcha = call('GlpiPlugin\\Formcreator\\Common::getCaptcha', [captchaId]) %}
             <li class="plugin_formcreator_section" id="plugin_formcreator_captcha_section">
                 <div class="card-header">{{ __('Are you a robot ?', 'formcreator') }}</div>
                 <div class="card-body"><label for="plugin_formcreator_captcha">{{ __('Are you a robot ?', 'formcreator') }}</label>
@@ -130,7 +130,7 @@
            )
         </script>
 
-        {{ call('PluginFormcreatorForm_Validator::dropdownValidator', [
+        {{ call('GlpiPlugin\\Formcreator\\Form_Validator::dropdownValidator', [
               item
         ])|raw }}
 

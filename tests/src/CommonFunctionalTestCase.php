@@ -1,8 +1,9 @@
 <?php
 
 namespace GlpiPlugin\Formcreator\Tests;
-use GlpiPlugin\Formcreator\Tests\CommonBrowsing;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+
+use Plugin;
+use Symfony\Component\Panther\Client;
 
 /**
  * @engine inline
@@ -26,7 +27,7 @@ class CommonFunctionalTestCase extends CommonTestCase {
       parent::beforeTestMethod($method);
 
       // Check the plugin is active
-      $this->boolean(\Plugin::isPluginActive('formcreator'))->isTrue();
+      $this->boolean(Plugin::isPluginActive('formcreator'))->isTrue();
 
       // set path for screenshots
       $classname = explode('\\', static::class);
@@ -37,10 +38,10 @@ class CommonFunctionalTestCase extends CommonTestCase {
       // create client
       $chromeDriver = getenv('CHROME_DRIVER_BINARY');
       $chromeDriver === false ? null : $chromeDriver;
-      $this->client = \Symfony\Component\Panther\Client::createChromeClient($chromeDriver, null, [], 'http://localhost:8000');
+      $this->client = Client::createChromeClient($chromeDriver, null, [], 'http://localhost:8000');
 
       $firefoxDriver = getenv('FIREFOX_DRIVER_BINARY'); // returns null if not set, which is fine
-      //$this->client = \Symfony\Component\Panther\Client::createFirefoxClient(null, null, [], 'http://localhost:8000');
+      //$this->client = Client::createFirefoxClient(null, null, [], 'http://localhost:8000');
 
       $this->currentTestMethod = $method;
       $this->browsing = new CommonBrowsing($this);

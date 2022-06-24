@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+
 global $CFG_GLPI, $DB;
 include ('../../../inc/includes.php');
 
@@ -37,7 +40,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-PluginFormcreatorCommon::header();
+Common::header();
 
 if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
@@ -47,13 +50,13 @@ if (isset($_REQUEST['id'])
       'is_active' => '1',
       'is_deleted'=> '0',
    ];
-   $form = PluginFormcreatorCommon::getForm();
+   $form = Common::getForm();
    if (!$form->getFromDBByCrit($criteria)) {
       Html::displayNotFoundError();
    }
 
    // If the form has restriced access and user is not logged in, send to login form
-   if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC && Session::getLoginUserID() === false) {
+   if ($form->fields['access_rights'] != Form::ACCESS_PUBLIC && Session::getLoginUserID() === false) {
       Session::redirectIfNotLoggedIn();
       exit();
    }
@@ -62,7 +65,7 @@ if (isset($_REQUEST['id'])
       Html::displayRightError();
       exit();
    }
-   if (($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
+   if (($form->fields['access_rights'] == Form::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
       // If user is not authenticated, create temporary user
       if (!isset($_SESSION['glpiname'])) {
          $_SESSION['formcreator_forms_id'] = $form->getID();
@@ -91,4 +94,4 @@ if (isset($_REQUEST['id'])
    Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
 }
 
-PluginFormcreatorCommon::footer();
+Common::footer();

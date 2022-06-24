@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form_Language;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -46,7 +48,7 @@ if (!isset($_POST['id'])) {
 }
 
 $_POSt['id'] = (int) $_POST['id'];
-$formLanguage = new PluginFormcreatorForm_Language();
+$formLanguage = new Form_Language();
 if (!$formLanguage->getFromDB((int) $_POST['id'])) {
    http_response_code(404);
    die();

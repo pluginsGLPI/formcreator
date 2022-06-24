@@ -29,6 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\EntityConfig;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Issue;
+
 require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -36,7 +41,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (!PluginFormcreatorIssue::canView()) {
+if (!Issue::canView()) {
    Html::displayRightError();
 }
 if (Session::getCurrentInterface() == "helpdesk") {
@@ -46,15 +51,15 @@ if (Session::getCurrentInterface() == "helpdesk") {
       __('Service catalog', 'formcreator'),
       '',
       'admin',
-      PluginFormcreatorForm::class
+      Form::class
    );
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   PluginFormcreatorCommon::showMiniDashboard();
+   Common::showMiniDashboard();
 }
 
-PluginFormcreatorCommon::showGenericSearchIssue();
+Common::showGenericSearchIssue();
 
 if (Session::getCurrentInterface() == "helpdesk") {
    Html::helpFooter();

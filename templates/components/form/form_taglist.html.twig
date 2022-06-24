@@ -57,7 +57,7 @@
                             <td>{{ tag.section }}</td>
                         </tr>
                     {% endfor %}
-                    {% set sections = call('PluginFormcreatorQuestion::getQuestionsFromFormBySection', [item]) %}
+                    {% set sections = call('GlpiPlugin\\Formcreator\\Question::getQuestionsFromFormBySection', [item]) %}
                     {% for sectionName, questions in sections %}
                         {% for questionId, questionName in questions %}
                             <tr>

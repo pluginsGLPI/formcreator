@@ -27,8 +27,7 @@
       "pear/archive_tar": "^1.4",
       "atoum/atoum": "^4.0",
       "atoum/stubs": "^2.5",
-      "glpi-project/tools": "^0.1.0",
-      "glpi-project/coding-standard": "^0.7.1",
+      "glpi-project/tools": "^0.2.0",
       "php-parallel-lint/php-parallel-lint": "^1.0",
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
       "phpcsstandards/phpcsutils": "^1.0@alpha",
@@ -42,8 +41,8 @@
         }
     },
     "scripts": {
-        "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
-        "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
+        "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ ajax/ tests/ RoboFile.php",
+        "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ src/ front/ ajax/ tests/ RoboFile.php",
         "lint": "vendor/bin/parallel-lint --exclude vendor .",
         "stan": "vendor/bin/phpstan analyze -c phpstan.neon"
     }

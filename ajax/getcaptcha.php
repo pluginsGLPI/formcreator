@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -42,5 +44,5 @@ if (!isset($_POST['captcha_id']) || !isset($_SESSION['plugin_formcreator']['capt
    die();
 }
 
-$captcha = PluginFormcreatorCommon::getCaptcha($_POST['captcha_id']);
+$captcha = Common::getCaptcha($_POST['captcha_id']);
 echo $captcha['img'];

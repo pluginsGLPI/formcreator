@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @copyright Copyright © 2011 - 2020 Teclib'
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
+namespace GlpiPlugin\Formcreator\Field\tests\units;
+
+use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonQuestionTest;
+
+class CheckboxesField extends CommonFunctionalTestCase
+{
+   use CommonQuestionTest;
+
+   public function testCreateForm() {
+      // Use a clean entity for the tests
+      $this->login('glpi', 'glpi');
+
+      $form = $this->showCreateQuestionForm();
+
+      // set question type
+      $this->client->executeScript(
+         '$(\'form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] [name="fieldtype"]\').val("checkboxes")
+         $(\'form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] [name="fieldtype"]\').select2().trigger("change")
+         '
+      );
+
+      $this->client->waitForVisibility('form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] select[name="required"]');
+      $this->client->waitForVisibility('form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] textarea[name="default_values"]');
+      $this->client->waitForVisibility('form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] textarea[name="values"]');
+      $this->client->waitForVisibility('form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] input[name="_parameters[checkboxes][range][range_min]"]');
+      $this->client->waitForVisibility('form[data-itemtype="' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . '"] input[name="_parameters[checkboxes][range][range_max]"]');
+
+      $browserForm = $this->crawler->filter('form[data-itemtype=' . str_replace('\\', '_', 'GlpiPlugin_Formcreator_Question') . ']')->form();
+      $browserForm['values'] = "a\r\nb\r\nc";
+
+      $this->_testQuestionCreated($form, __METHOD__);
+   }
+
+   public function testRenderQuestion() {
+      $this->_testRenderQuestion([
+         'fieldtype' => 'checkboxes',
+         'values'    => implode('\r\n', ["foo", "bar"]),
+      ]);
+   }
+}

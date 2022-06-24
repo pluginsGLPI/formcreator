@@ -2,9 +2,7 @@
 
 namespace GlpiPlugin\Formcreator\Tests;
 
-use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
-use \DBUtils;
-use \Entity;
+use Entity;
 
 /**
  * Implements navigation tasks in GLPI like login or changing entity

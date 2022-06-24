@@ -29,7 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class IntegerField extends CommonTestCase {
@@ -49,7 +51,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -72,7 +74,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '2',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -95,7 +97,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "2",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                '_parameters'     => [
                   'integer' => [
@@ -117,7 +119,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "5",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -140,7 +142,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "3.4",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -163,7 +165,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "4",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -186,7 +188,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -209,7 +211,7 @@ class IntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [

@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Translation;
+
 include ('../../../inc/includes.php');
 
 // Direct access to file
@@ -45,4 +47,4 @@ if (!(new Plugin())->isActivated('formcreator')) {
 }
 
 Session::checkLoginUser();
-echo PluginFormcreatorTranslation::getDropdownValue($_POST);
+echo Translation::getDropdownValue($_POST);

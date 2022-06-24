@@ -29,10 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Section;
 
-$section = new PluginFormcreatorSection();
+include ('../../../inc/includes.php');
+Session::checkRight(Form::$rightname, UPDATE);
+
+$section = new Section();
 if (!$section->canCreate()) {
     http_response_code(403);
     Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);

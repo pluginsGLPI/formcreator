@@ -29,9 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\EntityConfig;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
@@ -39,7 +42,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 }
 
 if (isset($_POST['update'])) {
-   $entityConfig = new PluginFormcreatorEntityconfig();
+   $entityConfig = new EntityConfig();
    if ($entityConfig->getFromDBByCrit(['entities_id' => (int) $_POST['entities_id']])) {
       $_POST['id'] = $entityConfig->getID();
       unset($_POST['entities_id']);

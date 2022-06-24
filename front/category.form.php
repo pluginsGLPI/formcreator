@@ -29,12 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Category;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 Plugin::load('formcreator', true);
 
-$dropdown = new PluginFormcreatorCategory();
+$dropdown = new Category();
 
 include (GLPI_ROOT . "/front/dropdown.common.form.php");

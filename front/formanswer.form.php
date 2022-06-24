@@ -29,6 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Issue;
+
 include ("../../../inc/includes.php");
 
 Session::redirectIfNotLoggedIn();
@@ -38,7 +42,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-$formanswer = PluginFormcreatorCommon::getFormAnswer();
+$formanswer = Common::getFormAnswer();
 
 if (isset($_POST['update'])) {
    // Edit an existing target ticket
@@ -58,7 +62,7 @@ if (isset($_POST['update'])) {
       Html::back();
    }
    if (plugin_formcreator_replaceHelpdesk()) {
-      $issue = new PluginFormcreatorIssue();
+      $issue = new Issue();
       $issue->redirectToList();
    } else {
       $formanswer->redirectToList();
@@ -78,7 +82,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
       __('Form Creator', 'formcreator'),
       '',
       'admin',
-      'PluginFormcreatorForm'
+      Form::getType()
    );
 }
 

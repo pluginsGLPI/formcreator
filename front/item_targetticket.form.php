@@ -29,9 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Item_TargetTicket;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
@@ -39,9 +42,8 @@ if (!(new Plugin())->isActivated('formcreator')) {
 }
 
 if (isset($_POST['purge'])) {
-   $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
+   $item_targetTicket = new Item_TargetTicket();
    $item_targetTicket->delete($_POST, 1);
    Html::back();
 }
 Html::displayErrorAndDie("lost");
-

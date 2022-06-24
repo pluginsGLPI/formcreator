@@ -29,9 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
-
-use Glpi\Dashboard\Right as DashboardRight;
 use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Right as DashboardRight;
+use GlpiPlugin\Formcreator\Category;
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\Install;
+use GlpiPlugin\Formcreator\Issue;
 
 /**
  * Install all necessary elements for the plugin
@@ -44,7 +49,7 @@ function plugin_formcreator_install(array $args = []): bool {
    $version   = plugin_version_formcreator();
    $migration = new Migration($version['version']);
    require_once(__DIR__ . '/install/install.php');
-   $install = new PluginFormcreatorInstall();
+   $install = new Install();
    if (!$install->isPluginInstalled()
       || isset($args['force-install'])
       && $args['force-install'] === true) {
@@ -60,7 +65,7 @@ function plugin_formcreator_install(array $args = []): bool {
  */
 function plugin_formcreator_uninstall() {
    require_once(__DIR__ . '/install/install.php');
-   $install = new PluginFormcreatorInstall();
+   $install = new Install();
    $install->uninstall();
 }
 
@@ -69,24 +74,24 @@ function plugin_formcreator_uninstall() {
  */
 function plugin_formcreator_getDropdown() {
    return [
-      'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
+      Category::getType() => Category::getTypeName(Session::getPluralNumber()),
    ];
 }
 
 
 function plugin_formcreator_addDefaultSelect($itemtype) {
    switch ($itemtype) {
-      case PluginFormcreatorIssue::class:
+      case Issue::class:
          return "`glpi_plugin_formcreator_issues`.`itemtype`, ";
    }
-   return "";
+   return '';
 }
 
 
 function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
    $join = '';
    switch ($itemtype) {
-      case PluginFormcreatorIssue::class:
+      case Issue::class:
          // Get default joins for tickets
          $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
          $join .= Search::addLeftJoin($itemtype, $ref_table, $already_link_tables, Group::getTable(), 'groups_id_validator');
@@ -175,19 +180,19 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          return "($condition)";
       break;
 
-      case PluginFormcreatorFormAnswer::class:
+      case FormAnswer::class:
          $table = $itemtype::getTable();
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
             // Context is displaying the answers for a given form
-            $formFk = PluginFormcreatorForm::getForeignKeyField();
+            $formFk = Form::getForeignKeyField();
             return "`$table`.`$formFk` = ".
                          $_SESSION['formcreator']['form_search_answers'];
          }
          if (Session::haveRight('config', UPDATE)) {
             return '';
          }
-         if (!PluginFormcreatorCommon::canValidate()) {
+         if (!Common::canValidate()) {
             return "`$table`.`requester_id` = $currentUser";
          }
 
@@ -277,7 +282,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   foreach ($item->getClosedStatusArray() as $status) {
                      unset($tocheck[$status]);
                   }
-                  unset($tocheck[PluginFormcreatorFormAnswer::STATUS_REFUSED]);
+                  unset($tocheck[FormAnswer::STATUS_REFUSED]);
 
                   $tocheck = array_keys($tocheck);
                   break;
@@ -303,7 +308,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
 
 function plugin_formcreator_AssignToTicket($types) {
-   $types[PluginFormcreatorFormAnswer::class] = PluginFormcreatorFormAnswer::getTypeName();
+   $types[FormAnswer::class] = FormAnswer::getTypeName();
 
    return $types;
 }
@@ -312,7 +317,7 @@ function plugin_formcreator_AssignToTicket($types) {
 function plugin_formcreator_MassiveActions($itemtype) {
 
    switch ($itemtype) {
-      case PluginFormcreatorForm::class:
+      case Form::class:
          return [
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
@@ -325,8 +330,8 @@ function plugin_formcreator_MassiveActions($itemtype) {
 
 function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
    switch ($itemtype) {
-      case PluginFormcreatorIssue::class:
-         return PluginFormcreatorIssue::giveItem($itemtype, $ID, $data, $num);
+      case Issue::class:
+         return Issue::giveItem($itemtype, $ID, $data, $num);
          break;
    }
 
@@ -360,10 +365,10 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       ];
    }
 
-   $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
+   $validationStatus = Common::getTicketStatusForIssue($item);
 
    $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
-   $issue = new PluginFormcreatorIssue();
+   $issue = new Issue();
    $issue->add([
       'name'                       => $issueName,
       'display_id'                 => 't_' . $item->getID(),
@@ -396,10 +401,10 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 
    $id = $item->getID();
 
-   $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
+   $validationStatus = Common::getTicketStatusForIssue($item);
 
    $issueName = $item->fields['name'] != '' ? addslashes($item->fields['name']) : '(' . $item->getID() . ')';
-   $issue = new PluginFormcreatorIssue();
+   $issue = new Issue();
    $issue->getFromDBByCrit([
       'AND' => [
          'itemtype'  => Ticket::class,
@@ -446,7 +451,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 
    // No issue linked to the ticket,
    // then find the form answer linked to the ticket
-   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer = new FormAnswer();
    if (!$formAnswer->getFromDbByTicket($id)) {
       // Should not happen as one and only one form answer shall be linked to a ticket
       // If several formanswer found, the previous getFromDBByCrit() logs an error
@@ -469,7 +474,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    $id = $item->getID();
 
    // Update the formanswer's status (for cases where a form answer has several tickets)
-   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer = new FormAnswer();
    if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus === null) {
@@ -482,7 +487,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 
    // Delete the issue
    // TODO: add is_deleted column to issue ?
-   $issue = new PluginFormcreatorIssue();
+   $issue = new Issue();
    $issue->deleteByCriteria([
       'items_id' => $id,
       'itemtype' => Ticket::getType(),
@@ -490,7 +495,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
-   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer = new FormAnswer();
    if ($formAnswer->getFromDbByTicket($item)) {
       $formAnswer->createIssue();
       $minimalStatus = $formAnswer->getAggregatedStatus();
@@ -511,7 +516,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
    $id = $item->getID();
 
    // Update the formanswer's status (for cases where a form answer has several tickets)
-   $formAnswer = new PluginFormcreatorFormAnswer();
+   $formAnswer = new FormAnswer();
    if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus === null) {
@@ -523,7 +528,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
    }
 
    // delete issue if any
-   $issue = new PluginFormcreatorIssue();
+   $issue = new Issue();
    $issue->deleteByCriteria([
       'items_id' => $id,
       'itemtype' => Ticket::getType()
@@ -531,10 +536,17 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_pre_purge_targetTicket(CommonDBTM $item) {
+   /** @var TargetTicket $item */
    $item->pre_purgeItem();
 }
 
 function plugin_formcreator_hook_pre_purge_targetChange(CommonDBTM $item) {
+   /** @var TargetChange $item */
+   $item->pre_purgeItem();
+}
+
+function plugin_formcreator_hook_pre_purge_targetProblem(CommonDBTM $item) {
+   /** @var TargetProblem $item */
    $item->pre_purgeItem();
 }
 
@@ -546,9 +558,9 @@ function plugin_formcreator_hook_update_ticketvalidation(CommonDBTM $item) {
       return;
    }
 
-   $status = PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
+   $status = Common::getTicketStatusForIssue($ticket);
 
-   $issue = new PluginFormcreatorIssue();
+   $issue = new Issue();
    $issue->getFromDBByCrit([
       'itemtype' => Ticket::getType(),
       'items_id' => $item->fields['tickets_id']
@@ -570,8 +582,8 @@ function plugin_formcreator_hook_update_itilFollowup($followup) {
       return;
    }
 
-   $validationStatus = PluginFormcreatorCommon::getTicketStatusForIssue($item);
-   $issue = new PluginFormcreatorIssue();
+   $validationStatus = Common::getTicketStatusForIssue($item);
+   $issue = new Issue();
    $issue->getFromDBByCrit([
       'AND' => [
          'itemtype' => $itemtype,
@@ -592,15 +604,15 @@ function plugin_formcreator_hook_update_itilFollowup($followup) {
 
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
-      case PluginFormcreatorFormAnswer::class;
+      case FormAnswer::class;
          if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
             if (strpos($url['path'],
                        Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {
                parse_str($url['query'], $query);
                if (isset($query['id'])) {
-                  $item = PluginFormcreatorCommon::getForm();
+                  $item = Common::getForm();
                   $item->getFromDB($query['id']);
-                  PluginFormcreatorFormAnswer::showForForm($item, $params);
+                  FormAnswer::showForForm($item, $params);
                   return true;
                }
             }
@@ -653,10 +665,10 @@ function plugin_formcreator_hook_dashboard_cards($cards) {
    foreach ($counters as $key => $label) {
       $cards['plugin_formcreator_' . $key . '_issues'] = [
          'widgettype' => ['bigNumber'],
-         'itemtype'   => PluginFormcreatorIssue::getType(),
+         'itemtype'   => Issue::getType(),
          'group'      => __('Assistance'),
          'label'      => sprintf(__("Number of %s"), $label),
-         'provider'   => 'PluginFormcreatorIssue::nbIssues',
+         'provider'   => Issue::class . '::nbIssues',
          'args'       => [
             'params' => [
                'status' => $key,
@@ -670,10 +682,10 @@ function plugin_formcreator_hook_dashboard_cards($cards) {
 
    $cards['plugin_formcreator_issues_summary'] = [
       'widgettype' => ['summaryNumbers'],
-      'itemtype'   => PluginFormcreatorIssue::getType(),
+      'itemtype'   => Issue::getType(),
       'group'      => __('Assistance'),
       'label'      => __('Issues summary', 'formcreator'),
-      'provider'   => 'PluginFormcreatorIssue::getIssuesSummary',
+      'provider'   => Issue::class . '::getIssuesSummary',
       'cache'      => false,
       'filters'    => []
    ];

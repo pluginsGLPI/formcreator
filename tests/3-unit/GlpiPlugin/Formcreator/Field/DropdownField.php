@@ -28,9 +28,16 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use Computer;
+use GlpiPlugin\Formcreator\Question;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use ITILCategory;
 use Location;
+use UndefinedItemtype;
+
 class DropdownField extends CommonTestCase {
    public function beforeTestMethod($method) {
       switch ($method) {
@@ -48,43 +55,44 @@ class DropdownField extends CommonTestCase {
 
    public function providerPrepareQuestionInputForSave() {
       $name = $this->getUniqueString();
+      $testedClass = $this->getTestedClassName();
       return [
          [
             'input' => [
                'name' => $name,
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
                'selectable_tree_root' => '0',
             ],
             'expected' => [
                'name' => $name,
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'values' => json_encode([
                   'show_tree_depth' => '5',
                   'show_tree_root' => '0',
                   'selectable_tree_root' => '0',
-                  'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
+                  'entity_restrict' => $testedClass::ENTITY_RESTRICT_FORM,
                ]),
             ]
          ],
          [
             'input' => [
                'name' => $name,
-               'itemtype' => \ITILCategory::class,
+               'itemtype' => ITILCategory::class,
                'show_ticket_categories' => '2',
                'show_tree_depth' => '3',
                'default_values'  => '',
             ],
             'expected' => [
                'name' => $name,
-               'itemtype' => \ITILCategory::class,
+               'itemtype' => ITILCategory::class,
                'values' => json_encode([
                   'show_ticket_categories' => '2',
                   'show_tree_depth' => '3',
                   'show_tree_root'  => '',
                   'selectable_tree_root' => '0',
-                  'entity_restrict' => \GlpiPlugin\Formcreator\Field\DropdownField::ENTITY_RESTRICT_FORM,
+                  'entity_restrict' => $testedClass::ENTITY_RESTRICT_FORM,
                ]),
                'default_values'  => '',
             ]
@@ -112,13 +120,13 @@ class DropdownField extends CommonTestCase {
 
    public function testIsPrerequisites() {
       $instance = $this->newTestedInstance($this->getQuestion([
-         'itemtype' => \Computer::class
+         'itemtype' => Computer::class
       ]));
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
 
       $instance = $this->newTestedInstance($this->getQuestion([
-         'itemtype' => \UndefinedItemtype::class
+         'itemtype' => UndefinedItemtype::class
       ]));
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(false);
@@ -133,12 +141,12 @@ class DropdownField extends CommonTestCase {
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
+      $instance = $this->newTestedInstance(new Question());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 
    public function providerIsValid() {
-      $location = new \Location();
+      $location = new Location();
       $locationId = $location->import([
          'completename' => 'foo',
          'entities_id'  => $_SESSION['glpiactive_entity']
@@ -148,13 +156,13 @@ class DropdownField extends CommonTestCase {
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'values' => '',
                'required' => '0',
                'default_values' => '0',
             ]),
             'input' => [
-               'dropdown_values' => \Location::class,
+               'dropdown_values' => Location::class,
                'dropdown_default_value' => '0',
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
@@ -164,12 +172,12 @@ class DropdownField extends CommonTestCase {
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'values' => '',
                'required' => '1',
             ]),
             'input' => [
-               'dropdown_values' => \Location::class,
+               'dropdown_values' => Location::class,
                'dropdown_default_value' => '0',
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
@@ -179,13 +187,13 @@ class DropdownField extends CommonTestCase {
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'values' => '',
                'required' => '1',
                'default_values' => '',
             ]),
             'input' => [
-               'dropdown_values' => \Location::class,
+               'dropdown_values' => Location::class,
                'dropdown_default_value' => '42',
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
@@ -195,13 +203,13 @@ class DropdownField extends CommonTestCase {
          [
             'question' => $this->getQuestion([
                'name' =>  'fieldname',
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'values' => '',
                'required' => '1',
                'default_values' => $locationId,
             ]),
             'input' => [
-               'dropdown_values' => \Location::class,
+               'dropdown_values' => Location::class,
                'dropdown_default_value' => '42',
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
@@ -222,7 +230,7 @@ class DropdownField extends CommonTestCase {
    }
 
    public function providerGetValueForTargetText() {
-      $location = new \Location();
+      $location = new Location();
       $location->add([
          'name' => $this->getUniqueString(),
       ]);
@@ -230,10 +238,10 @@ class DropdownField extends CommonTestCase {
          [
             'fields' => $this->getQuestion([
                'name' =>  'fieldname',
-               'itemtype' => \Location::class,
+               'itemtype' => Location::class,
                'values' => '',
                'required' => '1',
-               'dropdown_values' => \Location::class,
+               'dropdown_values' => Location::class,
                'dropdown_default_value' => '42',
             ]),
             'value' => "",
@@ -242,10 +250,10 @@ class DropdownField extends CommonTestCase {
          [
             'fields' => $this->getQuestion([
                'name' =>  'fieldname',
-               'itemtype' =>\Location::class,
+               'itemtype' =>Location::class,
                'values' =>'',
                'required' => '1',
-               'dropdown_values' => \Location::class,
+               'dropdown_values' => Location::class,
                'dropdown_default_value' => '',
             ]),
             'value' => $location->getID(),
@@ -266,8 +274,8 @@ class DropdownField extends CommonTestCase {
    }
 
    public function providerEquals() {
-      $location1 = new \Location();
-      $location2 = new \Location();
+      $location1 = new Location();
+      $location2 = new Location();
       $location1Id = $location1->add([
          'name' => $this->getUniqueString()
       ]);
@@ -278,7 +286,7 @@ class DropdownField extends CommonTestCase {
       return [
          [
             'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
+               'itemtype'  => Location::class,
             ]),
             'value'     => $location1->fields['completename'],
             'answer'    => (string) $location1Id,
@@ -286,7 +294,7 @@ class DropdownField extends CommonTestCase {
          ],
          [
             'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
+               'itemtype'  => Location::class,
             ]),
             'value'     => $location2->fields['completename'],
             'answer'    => (string) $location1Id,
@@ -305,8 +313,8 @@ class DropdownField extends CommonTestCase {
    }
 
    public function providerNotEquals() {
-      $location1 = new \Location();
-      $location2 = new \Location();
+      $location1 = new Location();
+      $location2 = new Location();
       $location1Id = $location1->add([
          'name' => $this->getUniqueString()
       ]);
@@ -317,7 +325,7 @@ class DropdownField extends CommonTestCase {
       return [
          [
             'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
+               'itemtype'  => Location::class,
             ]),
             'value'     => $location1->fields['completename'],
             'answer'    => (string) $location1Id,
@@ -325,7 +333,7 @@ class DropdownField extends CommonTestCase {
          ],
          [
             'fields'    => $this->getQuestion([
-               'itemtype'  => \Location::class,
+               'itemtype'  => Location::class,
             ]),
             'value'     => $location2->fields['completename'],
             'answer'    => (string) $location1Id,

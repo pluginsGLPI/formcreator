@@ -29,9 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use PluginFormcreatorFormAnswer;
 
 class RadiosField extends CommonTestCase {
    public function testPrepareQuestionInputForSave() {
@@ -42,7 +44,7 @@ class RadiosField extends CommonTestCase {
          'default_values'  => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
          'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
          'order'           => '1',
-         'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'show_rule'       => Condition::SHOW_RULE_ALWAYS,
          'range_min'       => 3,
          'range_max'       => 4,
       ]);
@@ -136,7 +138,7 @@ class RadiosField extends CommonTestCase {
    public function testSerializeValue($instance, $value, $expected) {
       $instance->parseAnswerValues(['formcreator_field_' . $instance->getQuestion()->getID() => $value]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);

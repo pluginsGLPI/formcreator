@@ -4,4 +4,4 @@ parameters:
     - ../../src
     - ../../inc
   paths:
-    - inc
+    - src

@@ -28,7 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_9 {
+
+use GlpiPlugin\Formcreator\Common;
+
+class UpgradeTo2_9 {
 
    protected $migration;
 
@@ -353,7 +356,7 @@ class PluginFormcreatorUpgradeTo2_9 {
    protected function enumToInt($table, $field, array $map, $options = []) {
       global $DB;
 
-      $isEnum = PluginFormcreatorCommon::getEnumValues($table, $field);
+      $isEnum = Common::getEnumValues($table, $field);
       if (count($isEnum) > 0) {
          $this->migration->addField(
             $table,

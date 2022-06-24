@@ -29,10 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
 
-$question = new PluginFormcreatorQuestion();
+include ('../../../inc/includes.php');
+Session::checkRight(Form::$rightname, UPDATE);
+
+$question = new Question();
 if (!$question->canCreate()) {
     http_response_code(403);
     echo array_shift($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);

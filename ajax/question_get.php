@@ -29,9 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+
 include ('../../../inc/includes.php');
 Session::checkLoginUser();
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
    http_response_code(400);
@@ -40,7 +43,7 @@ if (!isset($_REQUEST['id'])) {
 $sectionId = (int) $_REQUEST['id'];
 
 $json = [];
-foreach (PluginFormcreatorQuestion::getQuestionsFromSection($sectionId) as $question) {
+foreach (Question::getQuestionsFromSection($sectionId) as $question) {
     $json[$question->getID()] = [
         'y'      => $question->fields['row'],
         'x'      => $question->fields['col'],

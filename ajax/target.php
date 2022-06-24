@@ -29,8 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
     http_response_code(400);
@@ -38,7 +41,7 @@ if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
 }
 $formId = $_REQUEST['plugin_formcreator_forms_id'];
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 if (!$form->getFromDB($formId)) {
     http_response_code(400);
     exit;

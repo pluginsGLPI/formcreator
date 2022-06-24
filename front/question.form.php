@@ -29,9 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+ use GlpiPlugin\Formcreator\Form;
+
 include ("../../../inc/includes.php");
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
@@ -41,4 +43,3 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 // Return to form list
 Html::redirect(FORMCREATOR_ROOTDOC . '/front/form.php');
-
