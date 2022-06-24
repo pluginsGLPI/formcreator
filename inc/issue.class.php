@@ -806,14 +806,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
-<<<<<<< HEAD
-      if (Plugin::isPluginActive('advform')) {
-=======
       if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
->>>>>>> origin/support/2.13.0
-=======
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
->>>>>>> e2ea947f11283bb3bd29a202e77022cd22621acf
          foreach (PluginAdvformIssue::rawSearchOptions() as $so) {
             $tab[] = $so;
          }
