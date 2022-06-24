@@ -676,6 +676,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
+         'right'              => 'interface',
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Ticket_User::getTable(),
