@@ -50,7 +50,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('PluginFormcreatorQuestion::dropdownQuestionType', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Question::dropdownQuestionType', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -74,7 +74,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('PluginFormcreatorQuestion::dropdownDropdownSubType', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Question::dropdownDropdownSubType', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -97,7 +97,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('PluginFormcreatorQuestion::dropdownObjectSubType', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Question::dropdownObjectSubType', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -120,7 +120,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('\\GlpiPlugin\\Formcreator\\Filter\\EntityFilter::dropdown', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Filter\\EntityFilter::dropdown', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -143,7 +143,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('\\GlpiPlugin\\Formcreator\\Filter\\ItilCategoryFilter::dropdown', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Filter\\ItilCategoryFilter::dropdown', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -210,7 +210,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('PluginFormcreatorCommon::showFontAwesomeDropdown', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Common::showFontAwesomeDropdown', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -231,7 +231,7 @@
    {% endif %}
 
       {% set field %}
-      {% do call('PluginFormcreatorForm_Validator::dropdownValidatorUser', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Form_Validator::dropdownValidatorUser', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',
@@ -251,7 +251,7 @@
    {% endif %}
 
    {% set field %}
-      {% do call('PluginFormcreatorForm_Validator::dropdownValidatorGroup', [name, {
+      {% do call('GlpiPlugin\\Formcreator\\Form_Validator::dropdownValidatorGroup', [name, {
          'value': value,
          'rand': rand,
          'width': '100%',

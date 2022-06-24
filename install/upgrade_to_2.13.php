@@ -28,7 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_13 {
+
+use GlpiPlugin\Formcreator\Common;
+
+class UpgradeTo2_13 {
    /** @var Migration */
    protected $migration;
 
@@ -489,7 +492,7 @@ class PluginFormcreatorUpgradeTo2_13 {
          $this->migration->addField($table, 'source_rule', 'integer', ['after' => 'target_name']);
          $this->migration->addField($table, 'source_question', 'integer', ['after' => 'source_rule']);
          $this->migration->migrationOneTable($table);
-         $formcreatorSourceId = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+         $formcreatorSourceId = Common::getFormcreatorRequestTypeId();
          $DB->queryOrDie("UPDATE `$table` SET `source_rule` = '1', `source_question` = '$formcreatorSourceId'");
       }
    }

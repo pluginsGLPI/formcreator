@@ -29,7 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class FileField extends CommonTestCase {

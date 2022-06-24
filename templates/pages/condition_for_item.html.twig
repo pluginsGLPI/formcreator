@@ -30,7 +30,7 @@
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
-<div id="plugin_formcreator_form" class="asset plugin_formcreator_form_design" data-itemtype="{{ item.getType }}" data-id="{{ item.fields['id'] }}">
+<div id="plugin_formcreator_form" class="asset plugin_formcreator_form_design" data-itemtype="{{ item.getType|replace({'\\', '_'}) }}" data-id="{{ item.fields['id'] }}">
    {{ include('components/form/header.html.twig') }}
     <div class="card-body d-flex flex-wrap">
         <div class="col-12 col-xxl-{{ item_has_pictures ? '9' : '12' }} flex-column">
@@ -40,7 +40,7 @@
                         {{ fields.smallTitle(__('Condition to generate the target', 'formcreator')) }}
 
                         {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
-                        {% set conditions = call('PluginFormcreatorCondition::getConditionsFromItem', [item]) %}
+                        {% set conditions = call('Plugin\\Formcreator\\Condition::getConditionsFromItem', [item]) %}
                         {% for condition in conditions %}
                             {{ include('@formcreator/components/form/condition.html.twig') }}
                         {% endfor %}

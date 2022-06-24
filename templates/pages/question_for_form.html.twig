@@ -30,10 +30,10 @@
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
-<div id="plugin_formcreator_form" class="asset plugin_formcreator_form_design" data-itemtype="PluginFormcreatorForm" data-id="{{ item.fields['id'] }}">
+<div id="plugin_formcreator_form" class="asset plugin_formcreator_form_design" data-itemtype="GlpiPlugin_Formcreator_Form" data-id="{{ item.fields['id'] }}">
    {{ include('components/form/header.html.twig') }}
     <ol>
-        {% set sections = call('PluginFormcreatorSection::getSectionsFromForm', [item.fields['id']]) %}
+        {% set sections = call('GlpiPlugin\\Formcreator\\Section::getSectionsFromForm', [item.fields['id']]) %}
         {% for section in sections %}
             {% include '@formcreator/components/form/section_design.html.twig' with {'item': section} %}
         {% endfor %}
@@ -55,7 +55,7 @@
                     {{ fields.smallTitle(__('Condition to show the submit button', 'formcreator')) }}
 
                     {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
-                    {% set conditions = call('PluginFormcreatorCondition::getConditionsFromItem', [item]) %}
+                    {% set conditions = call('GlpiPlugin\\Formcreator\\Condition::getConditionsFromItem', [item]) %}
                     {% for condition in conditions %}
                         {{ include('@formcreator/components/form/condition.html.twig') }}
                     {% endfor %}

@@ -29,13 +29,15 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+
 include ('../../../inc/includes.php');
 if (!isset($_POST['id'])) {
     http_response_code(400);
     exit;
 }
 $ticketId = (int) $_POST['id'];
-if (!PluginFormcreatorCommon::cancelMyTicket($ticketId)) {
+if (!Common::cancelMyTicket($ticketId)) {
     http_response_code(403);
     echo implode('<br>', $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]);
     $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];

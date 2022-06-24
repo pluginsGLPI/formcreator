@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -42,7 +45,7 @@ if (!isset($_REQUEST['itemtype']) || !isset($_REQUEST['items_id']) || !isset($_R
     die();
 }
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-if (!PluginFormcreatorCommon::getForm()->deleteTarget($_REQUEST)) {
+Session::checkRight(Form::$rightname, UPDATE);
+if (!Common::getForm()->deleteTarget($_REQUEST)) {
     http_response_code(500);
 }

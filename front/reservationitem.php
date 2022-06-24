@@ -53,9 +53,9 @@ if (isset($_GET['reset'])) {
 $_POST = $_SESSION['plugin_formcreator']['redirected']['POST'] ?? [];
 unset($_SESSION['plugin_formcreator']['redirected']);
 if (isset($_POST['submit'])) {
-   $_SESSION['glpi_saved']['ReservationItem'] = $_POST;
+   $_SESSION['glpi_saved'][ReservationItem::getType()] = $_POST;
 } else {
-   unset($_SESSION['glpi_saved']['ReservationItem']);
+   unset($_SESSION['glpi_saved'][ReservationItem::getType()]);
 }
 
 if (Session::getCurrentInterface() == "helpdesk") {

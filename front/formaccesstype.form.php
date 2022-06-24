@@ -29,9 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
@@ -39,7 +41,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 }
 
 // Get target form
-$form_id = $_POST[PluginFormcreatorForm::getForeignKeyField()] ?? null;
+$form_id = $_POST[Form::getForeignKeyField()] ?? null;
 if (is_null($form_id)) {
    http_response_code(400);
    die;
@@ -53,7 +55,7 @@ if (!isset($_POST['access_rights'])) {
 }
 
 // Try to load form
-$form = PluginFormcreatorForm::getById($form_id);
+$form = Form::getById($form_id);
 if (!$form) {
    Html::displayNotFoundError();
 }

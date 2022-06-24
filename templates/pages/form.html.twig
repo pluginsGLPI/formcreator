@@ -54,10 +54,10 @@
     {{ fields.dropdownYesNo('is_active', item.fields['is_active'], __('Active'), { required: true }) }}
 
     {{ fields.dropdownField(
-        'PluginFormcreatorCategory',
+        'GlpiPlugin\\Formcreator\\Category',
         'plugin_formcreator_categories_id',
         item.fields['plugin_formcreator_categories_id'],
-        'PluginFormcreatorCategory'|itemtype_name
+        'GlpiPlugin\\Formcreator\\Category'|itemtype_name
     ) }}
 
     {{ fields.dropdownYesNo('helpdesk_home', item.fields['helpdesk_home'], __('Direct access on homepage', 'formcreator')) }}

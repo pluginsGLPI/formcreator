@@ -29,7 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorUpgradeTo2_6_1 {
+class UpgradeTo2_6_1 {
    /**
     * @param Migration $migration
     */

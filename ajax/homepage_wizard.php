@@ -28,6 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+use GlpiPlugin\Formcreator\Category;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
 if (!isset($_SESSION['glpiactiveprofile']['id'])) {
@@ -53,11 +57,11 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-   $tree = PluginFormcreatorCategory::getCategoryTree();
+   $tree = Category::getCategoryTree();
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
-   $formList = PluginFormcreatorForm::getFormList($rootCategory, $keywords, $helpdeskHome);
+   $formList = Form::getFormList($rootCategory, $keywords, $helpdeskHome);
    echo json_encode($formList, JSON_UNESCAPED_SLASHES);
 }

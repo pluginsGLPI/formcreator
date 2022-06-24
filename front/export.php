@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -36,9 +39,9 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 $export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION, 'forms' => []];
 foreach ($_GET['plugin_formcreator_forms_id'] as $id) {
    $form->getFromDB($id);

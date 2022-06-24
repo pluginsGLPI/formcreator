@@ -28,7 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+use GlpiPlugin\Formcreator\Command;
+
 include ('../../../inc/includes.php');
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Command::getForm();
 $form->showForCentral();

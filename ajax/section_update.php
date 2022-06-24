@@ -29,8 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Section;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
     http_response_code(400);
@@ -38,7 +41,7 @@ if (!isset($_REQUEST['id'])) {
     exit;
 }
 
-$section = new PluginFormcreatorSection();
+$section = new Section();
 if (!$section->canUpdate()) {
     http_response_code(403);
     Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);

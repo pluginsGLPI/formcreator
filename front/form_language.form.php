@@ -29,15 +29,18 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Form_Language;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-$formLanguage = new PluginFormcreatorForm_Language();
+$formLanguage = new Form_Language();
 
 if (isset($_POST['add'])) {
    $formLanguage->add($_POST);
@@ -52,10 +55,10 @@ if (isset($_POST['add'])) {
    Html::back();
 } else {
    Html::header(
-      PluginFormcreatorForm_Language::getTypeName(2),
+      Form_Language::getTypeName(2),
       $_SERVER['PHP_SELF'],
       'admin',
-      'PluginFormcreatorForm_Language',
+      Form_Language::getType(),
       'option'
    );
 
@@ -63,7 +66,7 @@ if (isset($_POST['add'])) {
    if (!$formLanguage->getFromDB($_GET['id'])) {
       $_SESSION['glpilisturl'][$formLanguage::getType()] = Html::getBackUrl();
    } else {
-      $_SESSION['glpilisturl'][$formLanguage::getType()] = PluginFormcreatorForm::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
+      $_SESSION['glpilisturl'][$formLanguage::getType()] = Form::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
    }
    $formLanguage->display([
       'ids' => $_GET['id'],

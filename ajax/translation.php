@@ -29,13 +29,16 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Translation;
+
 include ('../../../inc/includes.php');
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_POST['plugin_formcreator_forms_languages_id'])) {
    http_response_code(400);
@@ -50,7 +53,7 @@ if (!isset($_POST['value'])) {
    die();
 }
 
-if (!(new PluginFormcreatorTranslation())->add($_POST)) {
+if (!(new Translation())->add($_POST)) {
    http_response_code(400);
    die();
 }

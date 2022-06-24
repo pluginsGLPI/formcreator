@@ -28,6 +28,9 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+
+use GlpiPlugin\Formcreator\Knowbase;
+
 include ('../../../inc/includes.php');
 
 if (!Session::getLoginUserID()) {
@@ -36,5 +39,5 @@ if (!Session::getLoginUserID()) {
    exit;
 }
 
-$tree = PluginFormcreatorKnowbase::getCategoryTree();
+$tree = Knowbase::getCategoryTree();
 echo json_encode($tree, JSON_UNESCAPED_SLASHES);

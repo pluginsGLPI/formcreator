@@ -29,8 +29,13 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Fields;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+use GlpiPlugin\Formcreator\Section;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
    http_response_code(400);
@@ -41,7 +46,7 @@ if (!isset($_REQUEST['fieldtype'])) {
    exit();
 }
 
-$question = new PluginFormcreatorQuestion();
+$question = new Question();
 $question->getEmpty();
 if (!$question->isNewID((int) $_REQUEST['id']) && !$question->getFromDB((int) $_REQUEST['id'])) {
    http_response_code(400);
@@ -49,7 +54,8 @@ if (!$question->isNewID((int) $_REQUEST['id']) && !$question->getFromDB((int) $_
 }
 
 // Modify the question to reflect changes in the form
-$question->fields['plugin_formcreator_sections_id'] = (int) $_REQUEST['plugin_formcreator_sections_id'];
+$sectionFk = Section::getForeignKeyField();
+$question->fields[$sectionFk] = (int) $_REQUEST[$sectionFk];
 $values = [];
 //compute question->fields from $_REQUEST (by comparing key)
 //add other keys to 'values' key
@@ -62,7 +68,7 @@ foreach ($_REQUEST as $request_key => $request_value) {
 }
 
 $question->fields['values'] = json_encode($values);
-$field = PluginFormcreatorFields::getFieldInstance(
+$field = Fields::getFieldInstance(
    $_REQUEST['fieldtype'],
    $question
 );

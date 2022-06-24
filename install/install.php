@@ -29,17 +29,36 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Formcreator;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
+use Config;
+use CronTask;
+use DbUtils;
+use DisplayPreference;
+use Entity;
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item as Dashboard_Item;
 use Glpi\Dashboard\Right as Dashboard_Right;
 use Glpi\System\Diagnostic\DatabaseSchemaIntegrityChecker;
+use Item_Ticket;
+use Log;
+use Migration;
+use Notification;
+use Notification_NotificationTemplate;
+use NotificationTarget;
+use NotificationTemplate;
+use NotificationTemplateTranslation;
+use Profile as GlpiProfile;
+use ProfileRight;
 use Ramsey\Uuid\Uuid;
+use Session;
+use Toolbox;
 
-class PluginFormcreatorInstall {
+class Install {
    protected $migration;
 
    /**
@@ -103,7 +122,7 @@ class PluginFormcreatorInstall {
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       $task = new CronTask();
-      PluginFormcreatorIssue::cronSyncIssues($task);
+      Issue::cronSyncIssues($task);
 
       return true;
    }
@@ -238,7 +257,7 @@ class PluginFormcreatorInstall {
       if ($this->resyncIssues) {
          // An upgrade step requires a resync of the issues
          $task = new CronTask();
-         PluginFormcreatorIssue::cronSyncIssues($task);
+         Issue::cronSyncIssues($task);
       }
 
       $lazyCheck = false;
@@ -289,7 +308,7 @@ class PluginFormcreatorInstall {
       }
 
       include_once $includeFile;
-      $updateClass = "PluginFormcreatorUpgradeTo$suffix";
+      $updateClass = "UpgradeTo$suffix";
       if (isCommandLine()) {
          $this->migration->addNewMessageArea("Upgrade to $toVersion");
       }
@@ -367,7 +386,7 @@ class PluginFormcreatorInstall {
    protected function configureExistingEntities() {
       global $DB;
 
-      /** Value -2 is "inheritance from parent" @see PluginFormcreatorEntityconfig::CONFIG_PARENT */
+      /** Value -2 is "inheritance from parent" @see Entityconfig::CONFIG_PARENT */
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
                   (entities_id, replace_helpdesk, default_form_list_mode, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible, is_search_issue_visible, tile_design, home_page, is_category_visible, is_folded_menu)
                SELECT ent.id,
@@ -409,9 +428,9 @@ class PluginFormcreatorInstall {
 
    protected function createDefaultDisplayPreferences() {
       $this->migration->updateDisplayPrefs([
-         'PluginFormcreatorFormAnswer' => [2, 3, 4, 5, 6],
-         'PluginFormcreatorForm'       => [30, 3, 10, 7, 8, 9],
-         'PluginFormcreatorIssue'      => [1, 2, 4, 5, 6, 7, 8],
+         'FormAnswer' => [2, 3, 4, 5, 6],
+         'Form'       => [30, 3, 10, 7, 8, 9],
+         'Issue'      => [1, 2, 4, 5, 6, 7, 8],
       ]);
    }
 
@@ -426,31 +445,31 @@ class PluginFormcreatorInstall {
             'name'     => __('A form has been created', 'formcreator'),
             'subject'  => __('Your request has been saved', 'formcreator'),
             'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
-            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+            'notified' => NotificationTargetFormAnswer::AUTHOR,
          ],
          'plugin_formcreator_need_validation' => [
             'name'     => __('A form need validation', 'formcreator'),
             'subject'  => __('A form from GLPI need to be validated', 'formcreator'),
             'content'  => __('Hi,\nA form from GLPI need to be validated and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-            'notified' => PluginFormcreatorNotificationTargetFormAnswer::APPROVER,
+            'notified' => NotificationTargetFormAnswer::APPROVER,
          ],
          'plugin_formcreator_refused'         => [
             'name'     => __('The form is refused', 'formcreator'),
             'subject'  => __('Your form has been refused by the validator', 'formcreator'),
             'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+            'notified' => NotificationTargetFormAnswer::AUTHOR,
          ],
          'plugin_formcreator_accepted'        => [
             'name'     => __('The form is accepted', 'formcreator'),
             'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
             'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
-            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+            'notified' => NotificationTargetFormAnswer::AUTHOR,
          ],
          'plugin_formcreator_deleted'         => [
             'name'     => __('The form is deleted', 'formcreator'),
             'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
             'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
-            'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
+            'notified' => NotificationTargetFormAnswer::AUTHOR,
          ],
       ];
 
@@ -467,7 +486,7 @@ class PluginFormcreatorInstall {
             'COUNT'  => 'cpt',
             'FROM'   => $notification::getTable(),
             'WHERE'  => [
-               'itemtype' => 'PluginFormcreatorFormAnswer',
+               'itemtype' => 'FormAnswer',
                'event'    => $event,
             ]
          ])->current();
@@ -477,7 +496,7 @@ class PluginFormcreatorInstall {
             $template_id = $template->add([
                'name'     => Toolbox::addslashes_deep($data['name']),
                'comment'  => '',
-               'itemtype' => PluginFormcreatorFormAnswer::class,
+               'itemtype' => FormAnswer::class,
             ]);
 
             // Add a default translation for the template
@@ -496,7 +515,7 @@ class PluginFormcreatorInstall {
                'entities_id'              => 0,
                'is_recursive'             => 1,
                'is_active'                => 1,
-               'itemtype'                 => PluginFormcreatorFormAnswer::class,
+               'itemtype'                 => FormAnswer::class,
                'notificationtemplates_id' => $template_id,
                'event'                    => $event,
                'mode'                     => 'mail',
@@ -522,7 +541,7 @@ class PluginFormcreatorInstall {
       global $DB;
 
       $itemtypes = [
-         PluginFormcreatorFormAnswer::class,
+         FormAnswer::class,
       ];
 
       if (count($itemtypes) == 0) {
@@ -591,7 +610,7 @@ class PluginFormcreatorInstall {
       $CFG_GLPI['use_notifications'] = 0;
 
       $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
+      $item_ticket->deleteByCriteria(['itemtype' => FormAnswer::class]);
 
       $CFG_GLPI['use_notifications'] = $use_mailing ? '1' : '0';
    }
@@ -604,32 +623,32 @@ class PluginFormcreatorInstall {
 
       // Keep  these itemtypes as string because classes might not be available (if plugin is inactive)
       $itemtypes = [
-         'PluginFormcreatorAnswer',
-         'PluginFormcreatorCategory',
-         'PluginFormcreatorEntityconfig',
-         'PluginFormcreatorFormAnswer',
-         'PluginFormcreatorForm_Profile',
-         'PluginFormcreatorForm_User',
-         'PluginFormcreatorForm_Group',
-         'PluginFormcreatorForm_Validator',
-         'PluginFormcreatorForm',
-         'PluginFormcreatorCondition',
-         'PluginFormcreatorQuestion',
-         'PluginFormcreatorSection',
-         'PluginFormcreatorTargetChange',
-         'PluginFormcreatorTargetProblem',
-         'PluginFormcreatorTargetTicket',
-         'PluginFormcreatorTarget_Actor',
-         'PluginFormcreatorItem_TargetTicket',
-         'PluginFormcreatorIssue',
-         'PluginFormcreatorQuestionDependency',
-         'PluginFormcreatorQuestionRange',
-         'PluginFormcreatorQuestionRegex',
-         'PluginFormcreatorForm_Language',
+         Answer::class,
+         Category::class,
+         Entityconfig::class,
+         FormAnswer::class,
+         Form_Profile::class,
+         Form_User::class,
+         Form_Group::class,
+         Form_Validator::class,
+         Form::class,
+         Condition::class,
+         Question::class,
+         Section::class,
+         Target\Change::class,
+         Target\Problem::class,
+         Target\Ticket::class,
+         Target_Actor::class,
+         Item_TargetTicket::class,
+         Issue::class,
+         QuestionDependency::class,
+         QuestionRange::class,
+         QuestionRegex::class,
+         Form_Language::class,
       ];
 
       foreach ($itemtypes as $itemtype) {
-         $table = getTableForItemType($itemtype);
+         $table = (new DbUtils())->getTableForItemType($itemtype);
          $log = new Log();
          $log->deleteByCriteria(['itemtype' => $itemtype]);
 
@@ -643,7 +662,7 @@ class PluginFormcreatorInstall {
       $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
 
       $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(['itemtype' => PluginFormCreatorIssue::class]);
+      $displayPreference->deleteByCriteria(['itemtype' => Issue::class]);
    }
 
    /**
@@ -664,6 +683,7 @@ class PluginFormcreatorInstall {
       $this->deleteTables();
       $this->deleteNotifications();
       $this->deleteMiniDashboard();
+      $this->deleteRightsToAdministrateForms();
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
@@ -673,7 +693,7 @@ class PluginFormcreatorInstall {
     * Create cron tasks
     */
    protected function createCronTasks() {
-      CronTask::Register(PluginFormcreatorIssue::class, 'SyncIssues', HOUR_TIMESTAMP,
+      CronTask::Register(Issue::class, 'SyncIssues', HOUR_TIMESTAMP,
          [
             'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
             'mode'      => CronTask::MODE_EXTERNAL,
@@ -799,7 +819,7 @@ class PluginFormcreatorInstall {
 
    protected function adRightsToMiniDashboard(int $dashboardId) {
       // Give rights to all self service profiles
-      $profile = new Profile();
+      $profile = new GlpiProfile();
       $helpdeskProfiles = $profile->find([
          'interface' => 'helpdesk',
       ]);
@@ -807,8 +827,8 @@ class PluginFormcreatorInstall {
          $dashboardRight = new Dashboard_Right();
          $dashboardRight->add([
             'dashboards_dashboards_id' => $dashboardId,
-            'itemtype'                 => Profile::getType(),
-            'items_id'                => $helpdeskProfile['id'],
+            'itemtype'                 => GlpiProfile::getType(),
+            'items_id'                 => $helpdeskProfile['id'],
          ]);
       }
    }
@@ -818,14 +838,14 @@ class PluginFormcreatorInstall {
 
       $profiles = $DB->request([
          'SELECT' => ['id'],
-         'FROM'   => Profile::getTable(),
+         'FROM'   => GlpiProfile::getTable(),
       ]);
       foreach ($profiles as $profile) {
          $rights = ProfileRight::getProfileRights(
             $profile['id'],
             [
                Entity::$rightname,
-               PluginFormcreatorForm::$rightname,
+               Form::$rightname,
             ]
          );
          if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
@@ -833,8 +853,14 @@ class PluginFormcreatorInstall {
          }
          $right = READ + UPDATE + CREATE + DELETE + PURGE;
          ProfileRight::updateProfileRights($profile['id'], [
-            PluginFormcreatorForm::$rightname => $right,
+            Form::$rightname => $right,
          ]);
+      }
+   }
+
+   protected function deleteRightsToAdministrateForms() {
+      foreach (Profile::getAllRights() as $right) {
+         ProfileRight::deleteProfileRights([$right['field']]);
       }
    }
 

@@ -29,10 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use PluginFormcreatorFormAnswer;
 
 class EmailField extends CommonTestCase {
 
@@ -79,7 +79,7 @@ class EmailField extends CommonTestCase {
          'formcreator_field_' . $question->getID() => $value
       ]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);
@@ -99,7 +99,7 @@ class EmailField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);
@@ -165,7 +165,7 @@ class EmailField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testLessThan() {
@@ -174,7 +174,7 @@ class EmailField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testCanRequire() {

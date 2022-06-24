@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Knowbase;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -43,9 +46,9 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    Html::header(__('Service catalog', 'formcreator'));
 }
 
-PluginFormcreatorCommon::showMiniDashboard();
+Common::showMiniDashboard();
 
-$kb = new PluginFormcreatorKnowbase();
+$kb = new Knowbase();
 $kb->showServiceCatalog();
 
 if (Session::getCurrentInterface() == 'helpdesk') {

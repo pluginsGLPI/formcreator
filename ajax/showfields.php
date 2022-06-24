@@ -29,6 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Fields;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -37,15 +41,15 @@ if (!(new Plugin())->isActivated('formcreator')) {
    exit();
 }
 
-$formFk = PluginFormcreatorForm::getForeignKeyField();
+$formFk = Form::getForeignKeyField();
 if (!isset($_POST[$formFk])) {
    http_response_code(403);
    exit();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 $form->getFromDB((int) $_POST['plugin_formcreator_forms_id']);
-if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
+if (!Session::haveRight(Form::$rightname, UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
    http_response_code(403);
    exit();
 }
@@ -56,8 +60,8 @@ if (!$form->canViewForRequest()) {
 }
 
 try {
-    $visibility = PluginFormcreatorFields::updateVisibility($_POST);
-} catch (Exception $e) {
+    $visibility = Fields::updateVisibility($_POST);
+} catch (\Exception $e) {
     http_response_code(500);
     exit();
 }

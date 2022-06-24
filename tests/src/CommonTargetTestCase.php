@@ -1,6 +1,7 @@
 <?php
 
 namespace GlpiPlugin\Formcreator\Tests;
+
 use PluginFormcreatorForm;
 
 abstract class CommonTargetTestCase extends CommonTestCase

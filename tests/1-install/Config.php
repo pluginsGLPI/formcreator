@@ -34,6 +34,8 @@ namespace tests\units;
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item;
 use Glpi\Dashboard\Right;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Issue;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Profile;
 use ProfileRight;
@@ -185,7 +187,7 @@ class Config extends CommonTestCase {
    public function checkAutomaticAction() {
       $cronTask = new \CronTask();
       $cronTask->getFromDBByCrit([
-         'itemtype' => 'PluginFormcreatorIssue',
+         'itemtype' => Issue::class,
          'name'     => 'SyncIssues'
       ]);
       $this->boolean($cronTask->isNewItem())->isFalse();
@@ -347,7 +349,7 @@ class Config extends CommonTestCase {
    public function checkRights() {
       $profileRight = new ProfileRight();
       $rows = $profileRight->find([
-         'name' => 'plugin_formcreator_form',
+         'name' => Form::$rightname,
          'profiles_id' => 4, // Super admin profile
       ]);
       $superAdminRightFound = false;

@@ -29,24 +29,26 @@
  * ---------------------------------------------------------------------
  */
 
-require_once ('../../../inc/includes.php');
+use GlpiPlugin\Formcreator\Form;
 
-Session::checkRight(PluginFormcreatorForm::$rightname, READ);
+require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (PluginFormcreatorForm::canView()) {
+Session::checkRight(Form::$rightname, READ);
+
+if (Form::canView()) {
    Html::header(
       __('Form Creator', 'formcreator'),
       $_SERVER['PHP_SELF'],
       'admin',
-      'PluginFormcreatorForm'
+      Form::class
    );
 
-   Search::show('PluginFormcreatorForm');
+   Search::show(Form::class);
 
    Html::footer();
 } else {

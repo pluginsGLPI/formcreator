@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form_Language;
+use GlpiPlugin\Formcreator\Translation;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -46,10 +49,10 @@ if (!isset($_POST['plugin_formcreator_form_languages_id'])) {
 //    die();
 // }
 
-$formLanguage = new PluginFormcreatorForm_Language();
+$formLanguage = new Form_Language();
 if (!$formLanguage->getFromDB((int) $_POST['plugin_formcreator_form_languages_id'])) {
    http_response_code(400);
    die();
 }
 
-echo PluginFormcreatorTranslation::getEditorFieldsHtml($formLanguage, $_POST['plugin_formcreator_translations_id']);
+echo Translation::getEditorFieldsHtml($formLanguage, $_POST['plugin_formcreator_translations_id']);

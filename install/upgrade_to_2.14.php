@@ -28,7 +28,17 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_14 {
+
+use GlpiPlugin\Formcreator\Category;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Issue;
+use GlpiPlugin\Formcreator\Item_TargetTicket;
+use GlpiPlugin\Formcreator\Target\Change as TargetChange;
+use GlpiPlugin\Formcreator\Target\Problem as TargetProblem;
+use GlpiPlugin\Formcreator\Target\Ticket as TargetTicket;
+use GlpiPlugin\Formcreator\Target_Actor;
+
+class UpgradeTo2_14 {
    /** @var Migration */
    protected $migration;
 
@@ -36,14 +46,15 @@ class PluginFormcreatorUpgradeTo2_14 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-       $this->migration = $migration;
+      $this->migration = $migration;
 
-       $this->addTtoToIssues();
-       $this->addRights();
-       $this->addPropertiesToCategories();
-       $this->addTargetActorUnicity();
-       $this->addTargetContract();
-       $this->addEntityOption();
+      $this->addTargetContract();
+      $this->namespacize();
+      $this->addTtoToIssues();
+      $this->addRights();
+      $this->addPropertiesToCategories();
+      $this->addTargetActorUnicity();
+      $this->addEntityOption();
    }
 
    public function addEntityOption() {
@@ -83,8 +94,36 @@ class PluginFormcreatorUpgradeTo2_14 {
       );
    }
 
+   public function namespacize() {
+      global $DB;
+
+      // Due to move of targets in a namespace, the table name changed
+      $tables = [
+         // Old table name                     => new table name
+         \PluginFormcreatorTargetTicket::class  => TargetTicket::class,
+         \PluginFormcreatorTargetChange::class  => TargetChange::class,
+         \PluginFormcreatorTargetProblem::class => TargetProblem::class,
+      ];
+      foreach ($tables as $oldItemtype => $newItemtype) {
+         if (!$DB->tableExists((new DbUtils())->getTableForItemType($oldItemtype))) {
+            // Table will be created at the end of the upgrade, by the empty.sql file
+            // Occurs when upgrading from version < 2.13.0 for target problems
+            continue;
+         }
+         $this->migration->renameItemtype($oldItemtype, $newItemtype);
+      }
+
+      // Same for some foreign keys
+      // $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
+      $table = (new DbUtils())->getTableForItemType(Item_TargetTicket::class);
+      // $this->migration->changeField($table, 'plugin_formcreator_targettickets_id', 'plugin_formcreator_targets_tickets_id', $unsignedIntType);
+      // column plugin_formcreator_targettickets_id was renamed by Migration::renameItemtype()
+      $this->migration->dropKey($table, 'plugin_formcreator_targettickets_id');
+      $this->migration->addKey($table, 'plugin_formcreator_targets_tickets_id');
+   }
+
    public function addTtoToIssues() {
-        $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
+        $table = (new DbUtils())->getTableForItemType(Issue::class);
         $this->migration->addField($table, 'time_to_own', 'timestamp', ['after' => 'users_id_recipient']);
         $this->migration->addField($table, 'time_to_resolve', 'timestamp', ['after' => 'time_to_own']);
         $this->migration->addField($table, 'internal_time_to_own', 'timestamp', ['after' => 'time_to_resolve']);
@@ -113,7 +152,7 @@ class PluginFormcreatorUpgradeTo2_14 {
             $profile['id'],
             [
                Entity::$rightname,
-               PluginFormcreatorForm::$rightname,
+               Form::$rightname,
             ]
          );
          if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
@@ -121,7 +160,7 @@ class PluginFormcreatorUpgradeTo2_14 {
          }
          $right = READ + UPDATE + CREATE + DELETE + PURGE;
          ProfileRight::updateProfileRights($profile['id'], [
-            PluginFormcreatorForm::$rightname => $right,
+            Form::$rightname => $right,
          ]);
       }
    }
@@ -133,7 +172,7 @@ class PluginFormcreatorUpgradeTo2_14 {
    public function addPropertiesToCategories() {
       global $DB;
 
-      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorCategory::class);
+      $table = (new DbUtils())->getTableForItemType(Category::class);
       $this->migration->addField($table, 'icon', 'string', ['after' => 'knowbaseitemcategories_id']);
       $this->migration->addField($table, 'icon_color', 'string', ['after' => 'icon']);
       if (!$DB->fieldExists($table, 'background_color')) {
@@ -146,7 +185,7 @@ class PluginFormcreatorUpgradeTo2_14 {
       /** @var DBmysql $DB */
       global $DB;
 
-      $table = (new DBUtils())->getTableForItemType(PluginFormcreatorTarget_Actor::class);
+      $table = (new DbUtils())->getTableForItemType(Target_Actor::class);
       $unicity = [
          'itemtype',
          'items_id',

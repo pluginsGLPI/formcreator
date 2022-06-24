@@ -28,9 +28,12 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use PluginFormcreatorFormAnswer;
 
 class TimeField extends CommonTestCase {
 
@@ -44,7 +47,7 @@ class TimeField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       =>Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
@@ -58,7 +61,7 @@ class TimeField extends CommonTestCase {
                'default_values'  => '08:12',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       =>Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
             'expectedValue'   => '08:12',
@@ -72,7 +75,7 @@ class TimeField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       =>Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
@@ -86,7 +89,7 @@ class TimeField extends CommonTestCase {
                'default_values'  => '08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       =>Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [],
             ]),
             'expectedValue'   => '08:12:34',
@@ -169,7 +172,7 @@ class TimeField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);

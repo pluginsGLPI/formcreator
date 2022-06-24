@@ -29,13 +29,16 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
-if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
+if (!Session::haveRight(Form::$rightname, UPDATE)) {
    http_response_code(403);
    die();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 
 if (!isset($_REQUEST['id']) || !isset($_REQUEST['action'])) {
    http_response_code(400);

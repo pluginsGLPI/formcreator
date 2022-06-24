@@ -29,15 +29,19 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\ConditionnableInterface;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // integrity check
 if (!isset($_POST['itemtype']) || !isset($_POST['items_id'])) {
    http_response_code(400);
    die();
 }
-if (!is_subclass_of($_POST['itemtype'], PluginFormcreatorConditionnableInterface::class)) {
+if (!is_subclass_of($_POST['itemtype'], ConditionnableInterface::class)) {
    http_response_code(400);
    die();
 }
@@ -56,7 +60,7 @@ if ($parent::isNewID((int) $_POST['items_id'])) {
 }
 
 // get an empty condition HTML table row
-$condition = new PluginFormcreatorCondition();
+$condition = new Condition();
 $condition->fields['itemtype'] = $_POST['itemtype'];
 $condition->fields['items_id'] = (int) $_POST['items_id'];
 echo $condition->getConditionHtml($parent);

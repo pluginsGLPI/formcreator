@@ -30,6 +30,17 @@
  */
 
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\EntityConfig;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\FormList;
+use GlpiPlugin\Formcreator\Issue;
+use GlpiPlugin\Formcreator\Profile;
+use GlpiPlugin\Formcreator\Target\Change as TargetChange;
+use GlpiPlugin\Formcreator\Target\Problem as TargetProblem;
+use GlpiPlugin\Formcreator\Target\Ticket as TargetTicket;
+use Profile as GlpiProfile;
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
@@ -128,17 +139,18 @@ function plugin_init_formcreator() {
 
    plugin_formcreator_permanent_hook();
 
-   array_push($CFG_GLPI["ticket_types"], PluginFormcreatorFormAnswer::class);
-   array_push($CFG_GLPI["document_types"], PluginFormcreatorFormAnswer::class);
+   array_push($CFG_GLPI['ticket_types'], FormAnswer::class);
+   array_push($CFG_GLPI['document_types'], FormAnswer::class);
 
    $plugin = new Plugin();
    if (!$plugin->isActivated('formcreator')) {
       return;
    }
 
+   // spl_autoload_register('plugin_formcreator_autoload');
+
    plugin_formcreator_redirect();
 
-   spl_autoload_register('plugin_formcreator_autoload');
    require_once(__DIR__ . '/vendor/autoload.php');
 
    plugin_formcreator_hook();
@@ -164,9 +176,9 @@ function plugin_init_formcreator() {
    }
 
    // Html::requireJs('gridstack');
-   $CFG_GLPI['javascript']['admin'][strtolower(PluginFormcreatorForm::class)] = ['gridstack'];
-   $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorFormlist::class)] = ['gridstack'];
-   $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorIssue::class)] = ['photoswipe'];
+   $CFG_GLPI['javascript']['admin'][strtolower(Form::class)] = ['gridstack'];
+   $CFG_GLPI['javascript']['helpdesk'][strtolower(FormList::class)] = ['gridstack'];
+   $CFG_GLPI['javascript']['helpdesk'][strtolower(Issue::class)] = ['photoswipe'];
 }
 
 /**
@@ -183,8 +195,8 @@ function plugin_formcreator_replaceHelpdesk() {
       return false;
    }
 
-   $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
-   if ($helpdeskMode != PluginFormcreatorEntityConfig::CONFIG_GLPI_HELPDSK) {
+   $helpdeskMode = EntityConfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
+   if ($helpdeskMode != EntityConfig::CONFIG_GLPI_HELPDSK) {
       return $helpdeskMode;
    }
 
@@ -241,9 +253,10 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
  * @param string $classname
  */
 function plugin_formcreator_autoload($classname) {
-   if (strpos($classname, 'PluginFormcreator') === 0) {
-      // useful only for installer GLPi autoloader already handles inc/ folder
-      $filename = __DIR__ . '/inc/' . strtolower(str_replace('PluginFormcreator', '', $classname)). '.class.php';
+   if (strpos($classname, NS_PLUG . 'Formcreator') === 0) {
+      // useful only for installer GLPi autoloader already handles src/ folder
+      $classname = str_replace(NS_PLUG . 'Formcreator\\', '', $classname);
+      $filename = __DIR__ . '/src/' . $classname . '.php';
       if (is_readable($filename) && is_file($filename)) {
          include_once($filename);
          return true;
@@ -288,7 +301,7 @@ function plugin_formcreator_permanent_hook(): void {
    $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_update_ticket',
       TicketValidation::class => 'plugin_formcreator_hook_update_ticketvalidation',
-      Profile::class => 'plugin_formcreator_hook_update_profile',
+      GlpiProfile::class => 'plugin_formcreator_hook_update_profile',
    ];
    $PLUGIN_HOOKS[Hooks::ITEM_DELETE]['formcreator'] = [
       Ticket::class => 'plugin_formcreator_hook_delete_ticket'
@@ -301,8 +314,9 @@ function plugin_formcreator_permanent_hook(): void {
       TicketValidation::class => 'plugin_formcreator_hook_purge_ticketvalidation',
    ];
    $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['formcreator'] = [
-      PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
-      PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
+      TargetTicket::class  => 'plugin_formcreator_hook_pre_purge_targetTicket',
+      TargetChange::class  => 'plugin_formcreator_hook_pre_purge_targetChange',
+      TargetProblem::class => 'plugin_formcreator_hook_pre_purge_targetProblem',
    ];
    // hook to add custom actions on a ticket in service catalog
    $PLUGIN_HOOKS[Hooks::TIMELINE_ACTIONS]['formcreator'] = 'plugin_formcreator_timelineActions';
@@ -317,13 +331,13 @@ function plugin_formcreator_hook(): void {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Add specific CSS
-   $PLUGIN_HOOKS[Hooks::ADD_CSS]['formcreator'][] = PluginFormcreatorCommon::getCssFilename();
+   $PLUGIN_HOOKS[Hooks::ADD_CSS]['formcreator'][] = Common::getCssFilename();
 
    $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['formcreator'] = [
-      PluginFormcreatorCommon::class, 'hookPreShowTab',
+      Common::class, 'hookPreShowTab',
    ];
    $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['formcreator'] = [
-      PluginFormcreatorCommon::class, 'hookPostShowTab',
+      Common::class, 'hookPostShowTab',
    ];
 
    // Load JS and CSS files if we are on a page which need them
@@ -364,7 +378,7 @@ function plugin_formcreator_hook(): void {
       return;
    }
 
-   $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
+   $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = FormList::class;
 
    // Massive Action definition
    $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
@@ -372,11 +386,11 @@ function plugin_formcreator_hook(): void {
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-   $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS]['formcreator'] = [PluginFormcreatorCommon::class, 'hookRedefineMenu'];
+   $PLUGIN_HOOKS[Hooks::REDEFINE_MENUS]['formcreator'] = [Common::class, 'hookRedefineMenu'];
 
    // Config page
-   if (Session::haveRightsOr(PluginFormcreatorForm::$rightname, [READ, UPDATE, CREATE, DELETE, PURGE])) {
-      $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = PluginFormcreatorForm::class;
+   if (Session::haveRightsOr(Form::$rightname, [READ, UPDATE, CREATE, DELETE, PURGE])) {
+      $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = Form::class;
    }
 }
 
@@ -384,21 +398,21 @@ function plugin_formcreator_registerClasses() {
    // Load menu entries if user is logged in and if he has access to at least one form
    if (Session::getLoginUserID() !== false) {
 
-      Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+      Plugin::registerClass(EntityConfig::class, ['addtabon' => Entity::class]);
    }
-   Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
+   Plugin::registerClass(Form::class, ['addtabon' => Central::class]);
 
    // Load field class and all its method to manage fields
-   Plugin::registerClass(PluginFormcreatorFields::class);
+   Plugin::registerClass(Fields::class);
 
    // Notification
-   Plugin::registerClass(PluginFormcreatorFormAnswer::class, [
+   Plugin::registerClass(FormAnswer::class, [
       'notificationtemplates_types' => true
    ]);
 
-   Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+   Plugin::registerClass(EntityConfig::class, ['addtabon' => Entity::class]);
 
-   Plugin::registerClass(PluginFormcreatorProfile::class, ['addtabon' => Profile::class]);
+   Plugin::registerClass(Profile::class, ['addtabon' => GlpiProfile::class]);
 }
 
 function plugin_formcreator_redirect() {

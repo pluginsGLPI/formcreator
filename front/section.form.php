@@ -29,15 +29,18 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Section;
+
 include ("../../../inc/includes.php");
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-$section = new PluginFormcreatorSection();
+$section = new Section();
 
 if (isset($_POST['add'])) {
    // Add a new Section

@@ -28,10 +28,10 @@
  # ---------------------------------------------------------------------
  #}
 
-{% set lastSectionOrder = call('PluginFormcreatorCommon::getMax', [item, { 'plugin_formcreator_forms_id': item.fields['plugin_formcreator_forms_id']}, 'order']) %}
+{% set lastSectionOrder = call('GlpiPlugin\\Formcreator\\Common::getMax', [item, { 'plugin_formcreator_forms_id': item.fields['plugin_formcreator_forms_id']}, 'order']) %}
 
-<li class="plugin_formcreator_section" data-itemtype="PluginFormcreatorSection" data-id="{{ item.fields['id'] }}">
-    {% set conditionsCount = call('PluginFormcreatorCondition::countForItem', [item]) %}
+<li class="plugin_formcreator_section" data-itemtype="GlpiPlugin_Formcreator_Section" data-id="{{ item.fields['id'] }}">
+    {% set conditionsCount = call('GlpiPlugin\\Formcreator\\Condition::countForItem', [item]) %}
     <a href="#" onclick="plugin_formcreator.showSectionForm({{ item.fields['plugin_formcreator_forms_id'] }}, {{ item.fields['id'] }})">
         {# TODO : Show count of conditions #}
         <sup class="plugin_formcreator_conditions_count" title="{{ __('Count of conditions', 'formcreator') }}">{{ conditionsCount }}</sup>
@@ -74,7 +74,7 @@
     </span>
 
     {# Section content #}
-    {% set columns = call('constant', ['PluginFormcreatorSection::COLUMNS']) %}
+    {% set columns = call('constant', ['GlpiPlugin\\Formcreator\\Section::COLUMNS']) %}
     <div class="grid-stack grid-stack-{{ columns }}" data-gs-animate="yes" data-gs-width="{{ columns }}" data-id="{{ item.fields['id'] }}"></div>
 
     {# Add a question #}

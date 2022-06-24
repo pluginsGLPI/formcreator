@@ -29,9 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use PluginFormcreatorFormAnswer;
 
 class SelectField extends CommonTestCase {
 
@@ -46,7 +48,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '1',
             'expectedValidity' => true
@@ -60,7 +62,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '',
             'expectedValidity' => true
@@ -74,7 +76,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '3',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '3',
             'expectedValidity' => true
@@ -88,7 +90,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '1',
             'expectedValidity' => true
@@ -102,7 +104,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '',
             'expectedValidity' => true
@@ -140,7 +142,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'value'   => '1',
             'expected' => true
@@ -154,7 +156,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'value'   => '0',
             'expected' => true
@@ -168,7 +170,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '3',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'value'   => '3',
             'expected' => true
@@ -182,7 +184,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '1',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'value'   => '1',
             'expected' => true
@@ -196,7 +198,7 @@ class SelectField extends CommonTestCase {
                   'default_values'  => '',
                   'values'          => '1\r\n2\r\n3\r\n4\r\n5\r\n6',
                   'order'           => '1',
-                  'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+                  'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'value'   => '0',
             'expected' => false
@@ -281,7 +283,7 @@ class SelectField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);

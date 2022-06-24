@@ -29,8 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
    Session::addMessageAfterRedirect(__('Bad request', 'formcreator'), false, ERROR);
@@ -39,7 +42,7 @@ if (!isset($_REQUEST['id'])) {
 }
 $questionId = (int) $_REQUEST['id'];
 
-$question = new PluginFormcreatorQuestion();
+$question = new Question();
 if (!$question->getFromDB($questionId)) {
    http_response_code(404);
    Session::addMessageAfterRedirect(__('Question not found', 'formcreator'), false, ERROR);

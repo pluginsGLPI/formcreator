@@ -28,11 +28,14 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
+use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use PluginFormcreatorFormAnswer;
 use User;
+
 class ActorField extends CommonTestCase {
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
@@ -41,7 +44,7 @@ class ActorField extends CommonTestCase {
    }
 
    public function providerGetValue() {
-      $user = new \User();
+      $user = new User();
       $user->getFromDBbyName('glpi');
       $userId = $user->getID();
       $dataset = [
@@ -53,7 +56,7 @@ class ActorField extends CommonTestCase {
                'default_values'  => json_encode([]),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
             'expectedValidity' => true
@@ -66,7 +69,7 @@ class ActorField extends CommonTestCase {
                'default_values'  => json_encode([]),
                'values'          => 'glpi',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
             'expectedValidity' => true
@@ -79,7 +82,7 @@ class ActorField extends CommonTestCase {
                'default_values'  => json_encode(['email@something.com']),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => ['email@something.com'],
             'expectedValidity' => true
@@ -92,7 +95,7 @@ class ActorField extends CommonTestCase {
                'default_values'  => json_encode([$userId, 'email@something.com']),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => ['glpi', 'email@something.com'],
             'expectedValidity' => true
@@ -157,7 +160,7 @@ class ActorField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);
@@ -166,7 +169,7 @@ class ActorField extends CommonTestCase {
    }
 
    public function providerDeserializeValue() {
-      $user = new \User();
+      $user = new User();
       $user->getFromDBbyName('glpi');
       $glpiId = $user->getID();
       $user->getFromDBbyName('normal');
@@ -210,7 +213,7 @@ class ActorField extends CommonTestCase {
    }
 
    public function providerGetValueForDesign() {
-      $user = new \User();
+      $user = new User();
       $user->getFromDBbyName('glpi');
       $glpiId = $user->getID();
       $user->getFromDBbyName('normal');
@@ -250,8 +253,8 @@ class ActorField extends CommonTestCase {
    }
 
    public function providerEquals() {
-      $glpiUser = new \User();
-      $normalUser = new \User();
+      $glpiUser = new User();
+      $normalUser = new User();
       $glpiUser->getFromDBByName('glpi');
       $normalUser->getFromDBByName('normal');
 
@@ -302,8 +305,8 @@ class ActorField extends CommonTestCase {
    }
 
    public function providerNotEquals() {
-      $glpiUser = new \User();
-      $normalUser = new \User();
+      $glpiUser = new User();
+      $normalUser = new User();
       $glpiUser->getFromDBByName('glpi');
       $normalUser->getFromDBByName('normal');
 
@@ -359,7 +362,7 @@ class ActorField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->greaterThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testLessThan() {
@@ -368,7 +371,7 @@ class ActorField extends CommonTestCase {
             $instance = $this->newTestedInstance($this->getQuestion());
             $instance->lessThan('');
          }
-      )->isInstanceOf(ComparisonException::class);
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ComparisonException::class);
    }
 
    public function testisPublicFormCompatible() {
@@ -396,10 +399,10 @@ class ActorField extends CommonTestCase {
 
    public function providerIsValidValue() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $missingUserId = (new \User())->add([
+      $missingUserId = (new User())->add([
          'name' => $this->getUniqueString(),
       ]);
-      (new \User())->delete([
+      (new User())->delete([
          'id' => $missingUserId,
       ]);
       return [

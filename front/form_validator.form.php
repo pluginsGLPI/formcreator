@@ -29,9 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+
 include ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
@@ -42,7 +45,7 @@ if (!isset($_POST['plugin_formcreator_forms_id'])) {
    // should not happen
    Html::back();
 }
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 if (isset($_POST['save'])) {
    $input = $_POST;
    $input['id'] = (int) $_POST['plugin_formcreator_forms_id'];

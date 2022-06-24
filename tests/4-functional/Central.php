@@ -1,7 +1,10 @@
 <?php
 
 namespace tests\units;
+
+use GlpiPlugin\Formcreator\Category;
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
+use Session;
 
 class Central extends CommonFunctionalTestCase {
    private $selectors = [
@@ -32,8 +35,8 @@ class Central extends CommonFunctionalTestCase {
       $this->login('glpi', 'glpi');
 
       // create a category
-      \Session::changeActiveEntities($entity->getID(), true);
-      $category = new \PluginFormcreatorCategory();
+      Session::changeActiveEntities($entity->getID(), true);
+      $category = new Category();
       $categoryId = $category->import([
          'completename' => $this->getUniqueString(),
          'entities_id'  => $entity->getID(),
@@ -55,7 +58,7 @@ class Central extends CommonFunctionalTestCase {
 
       // Check the form is not displayed
       $this->takeScreenshot();
-      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
+      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="Form"][data-id="' . $form->getID() . '"]';
       $output = $this->crawler->filter($formSelector)->count();
       $this->integer($output)->isEqualTo(0);
 
@@ -76,7 +79,7 @@ class Central extends CommonFunctionalTestCase {
       // Open the forms tab
       $this->browsing->openTab('Forms');
       $this->takeScreenshot();
-      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="PluginFormcreatorCategory"][data-id="0"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
+      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="GlpiPlugin_Formcreator_Category"][data-id="0"] + [data-itemtype="GlpiPlugin_Formcreator_Form"][data-id="' . $form->getID() . '"]';
       $output = $this->crawler->filter($formSelector)->count();
       $this->integer($output)->isEqualTo(1);
       $formSelector .= ' a';
@@ -86,7 +89,7 @@ class Central extends CommonFunctionalTestCase {
       // Move the form in a category
       $form->update([
          'id'            => $form->getID(),
-         \PluginFormcreatorCategory::getForeignKeyField() => $categoryId,
+         Category::getForeignKeyField() => $categoryId,
       ]);
       $this->crawler = $this->client->reload();
       // Open the forms tab
@@ -94,7 +97,7 @@ class Central extends CommonFunctionalTestCase {
 
       // Check the form shows in the expected category
       $this->takeScreenshot();
-      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="PluginFormcreatorCategory"][data-id="' . $categoryId . '"] + [data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
+      $formSelector = '#plugin_formcreatorHomepageForms [data-itemtype="GlpiPlugin_Formcreator_Category"][data-id="' . $categoryId . '"] + [data-itemtype="GlpiPlugin_Formcreator_Form"][data-id="' . $form->getID() . '"]';
       $output = $this->crawler->filter($formSelector)->count();
       $this->integer($output)->isEqualTo(1);
       $formSelector .= ' a';

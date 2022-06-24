@@ -32,7 +32,11 @@
 namespace tests\units;
 
 use Glpi\Dashboard\Dashboard;
+use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Plugin;
+use ProfileRight;
+use RequestType;
 
 class Config extends CommonTestCase
 {
@@ -47,7 +51,7 @@ class Config extends CommonTestCase
 
       $pluginName = TEST_PLUGIN_NAME;
 
-      $plugin = new \Plugin();
+      $plugin = new Plugin();
       $plugin->getFromDBbyDir($pluginName);
 
       // Uninstall the plugin
@@ -76,7 +80,7 @@ class Config extends CommonTestCase
          'COUNT' => 'cpt',
          'FROM'  => \Notification::getTable(),
          'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'itemtype' => 'FormAnswer',
          ]
       ])->current();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
@@ -85,13 +89,14 @@ class Config extends CommonTestCase
          'COUNT' => 'cpt',
          'FROM'  => \NotificationTemplate::getTable(),
          'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'itemtype' => 'FormAnswer',
          ]
       ])->current();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
       $this->checkRequestType();
       $this->checkDashboard();
+      $this->checkRights();
 
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
@@ -107,8 +112,22 @@ class Config extends CommonTestCase
 
    public function checkRequestType() {
       // request type must persist after uninstall
-      $requestType = new \RequestType();
+      $requestType = new RequestType();
       $requestType->getFromDBByCrit(['name' => 'Formcreator']);
       $this->boolean($requestType->isNewItem())->isFalse();
+   }
+
+   public function checkRights() {
+      global $DB;
+
+      $result = $DB->request([
+         'SELECT' => 'id',
+         'FROM'   => ProfileRight::getTable(),
+         'WHERE'  => [
+            'name' => Form::$rightname
+         ]
+      ]);
+
+      $this->integer(count($result))->isEqualTo(0);
    }
 }

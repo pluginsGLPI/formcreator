@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Knowbase;
+
 include ('../../../inc/includes.php');
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -48,5 +50,5 @@ if (isset($_REQUEST['categoriesId'])) {
 }
 $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
 
-$faqList = PluginFormcreatorKnowbase::getFaqItems($categoriesId, $keywords);
+$faqList = Knowbase::getFaqItems($categoriesId, $keywords);
 echo json_encode($faqList, JSON_UNESCAPED_SLASHES);

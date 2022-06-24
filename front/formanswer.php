@@ -29,6 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\FormAnswer;
+
 require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -36,7 +40,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (!PluginFormcreatorFormAnswer::canView()) {
+if (!FormAnswer::canView()) {
    Html::displayRightError();
 }
 
@@ -47,11 +51,11 @@ if (Session::getCurrentInterface() == 'helpdesk') {
       __('Form Creator', 'formcreator'),
       '',
       'admin',
-      PluginFormcreatorForm::class
+      Form::class
    );
 }
 
-Search::show(PluginFormcreatorCommon::getFormanswerItemtype());
+Search::show(Common::getFormAnswerItemtype());
 
 if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpFooter();

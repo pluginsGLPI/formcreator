@@ -29,14 +29,17 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Section;
 
-$section = new PluginFormcreatorSection();
+include ('../../../inc/includes.php');
+Session::checkRight(Form::$rightname, UPDATE);
+
+$section = new Section();
 if (empty($_REQUEST['section_id'])) {
    $section_id    = 0;
    $section->getEmpty();
-   $formFk = PluginFormcreatorForm::getForeignKeyField();
+   $formFk = Form::getForeignKeyField();
    $section->fields[$formFk] = (int) $_REQUEST['plugin_formcreator_forms_id'];
 } else {
    $section_id    = (int) $_REQUEST['section_id'];

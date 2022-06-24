@@ -29,8 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Section;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if ($_REQUEST['way'] !== 'up' && $_REQUEST['way'] !== 'down') {
     http_response_code(400);
@@ -43,7 +46,7 @@ if (!isset($_REQUEST['id'])) {
 }
 $sectionId = (int) $_REQUEST['id'];
 
-$section = new PluginFormcreatorSection();
+$section = new Section();
 if (!$section->getFromDB($sectionId)) {
     http_response_code(404);
     echo __('Source section not found', 'formcreator');

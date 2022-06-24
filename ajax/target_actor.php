@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Target_Actor;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -45,7 +47,7 @@ if (!isset($_POST['action'])) {
 switch ($_POST['action']) {
    case 'add':
       $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? 0;
-      $target_actor = new PluginFormcreatorTarget_Actor();
+      $target_actor = new Target_Actor();
       if ($target_actor->add($_POST) === false) {
          http_response_code(500);
          Session::addMessageAfterRedirect(__('Failed to add the actor', 'formcreator'), false, ERROR, true);
@@ -53,7 +55,7 @@ switch ($_POST['action']) {
       break;
 
    case 'delete':
-      $target_actor = new PluginFormcreatorTarget_Actor();
+      $target_actor = new Target_Actor();
       $success = $target_actor->delete([
          'id' => (int) $_POST['id']
       ]);

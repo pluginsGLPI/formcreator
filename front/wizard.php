@@ -29,6 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\EntityConfig;
+
 include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -46,11 +49,11 @@ if (Session::getCurrentInterface() == "helpdesk") {
    Html::header(__('Service catalog', 'formcreator'));
 }
 
-if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-   PluginFormcreatorCommon::showMiniDashboard();
+if (EntityConfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_DASHBOARD_VISIBLE) {
+   Common::showMiniDashboard();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 $form->showServiceCatalog();
 
 if (Session::getCurrentInterface() == "helpdesk") {

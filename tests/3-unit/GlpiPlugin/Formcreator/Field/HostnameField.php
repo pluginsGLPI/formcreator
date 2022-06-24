@@ -29,9 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use PluginFormcreatorFormAnswer;
 
 class HostnameField extends CommonTestCase {
    public function testIsPrerequisites() {
@@ -75,7 +76,7 @@ class HostnameField extends CommonTestCase {
          'default_values' => $value,
       ]);
       $form = $this->getForm();
-      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          $form::getForeignKeyField() => $form->getID(),
       ]);

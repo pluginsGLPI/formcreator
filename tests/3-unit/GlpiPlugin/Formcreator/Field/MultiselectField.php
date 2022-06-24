@@ -28,10 +28,13 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-namespace GlpiPlugin\Formcreator\Field\tests\units;
+
+namespace tests\units\GlpiPlugin\Formcreator\Field;
+
+use GlpiPlugin\Formcreator\Condition;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class MultiSelectField extends CommonTestCase {
+class MultiselectField extends CommonTestCase {
 
    public function provider() {
       $dataset = [
@@ -44,7 +47,7 @@ class MultiSelectField extends CommonTestCase {
                'default_values'  => '[]',
                'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -66,7 +69,7 @@ class MultiSelectField extends CommonTestCase {
                'default_values'  => '["3"]',
                'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -88,7 +91,7 @@ class MultiSelectField extends CommonTestCase {
                'default_values'  => '[3]',
                'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -110,7 +113,7 @@ class MultiSelectField extends CommonTestCase {
                'default_values'  => json_encode(['3', '4']),
                'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -132,7 +135,7 @@ class MultiSelectField extends CommonTestCase {
                'default_values'  => json_encode(['3', '4', '2', '1', '6']),
                'values'          => json_encode(['1', '2', '3', '4', '5', '6']),
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'show_rule'       => Condition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [

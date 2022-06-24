@@ -29,15 +29,19 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+
 include ('../../../inc/includes.php');
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
+Session::checkRight(Form::$rightname, UPDATE);
 
 if (!isset($_REQUEST['id'])) {
    http_response_code(400);
    exit();
 }
 $questionId = (int) $_REQUEST['id'];
-$question = new PluginFormcreatorQuestion();
+$question = new Question();
 if (!$question->getFromDB($questionId)) {
     http_response_code(404);
     echo __('Source question not found', 'formcreator');
@@ -50,7 +54,7 @@ if (!$question->canCreate()) {
     exit;
 }
 
-$newRow = 1 + PluginFormcreatorCommon::getMax(
+$newRow = 1 + Common::getMax(
     $question, [
         'plugin_formcreator_sections_id' => $question->fields['plugin_formcreator_sections_id']
     ], 'row'
@@ -60,7 +64,7 @@ if (($newId = $question->duplicate(['progress' => false, 'fields' => ['row' => $
     exit;
 }
 
-$question = new PluginFormcreatorQuestion();
+$question = new Question();
 if (!$question->getFromDB($newId)) {
     http_response_code(500);
     exit;
