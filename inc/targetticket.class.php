@@ -935,6 +935,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       $this->appendFieldsData($formanswer, $data);
 
+      // Cleanup actors array
+      $data = $this->cleanActors($data);
+
       // Create the target ticket
       $data['_auto_import'] = true;
       if (!$ticketID = $ticket->add($data)) {

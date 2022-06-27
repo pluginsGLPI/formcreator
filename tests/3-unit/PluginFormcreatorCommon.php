@@ -196,11 +196,18 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4,
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::NONE;
          $dataSet = [
@@ -233,11 +240,18 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4 // Tech,
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::ACCEPTED;
          $dataSet = [
@@ -269,11 +283,18 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' =>  4, /* Tech */
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
          $dataSet = [
@@ -336,11 +357,18 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4, /* Tech */
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::REFUSED;
          $dataSet = [
@@ -367,11 +395,18 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4, /* Tech */
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::REFUSED;
          $dataSet = [

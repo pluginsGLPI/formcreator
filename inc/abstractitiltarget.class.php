@@ -2149,6 +2149,64 @@ SCRIPT;
    }
 
    /**
+    * Cleanup invalid actors or emoty keys on actors of the target
+    *
+    * @param array $data
+    * @return array
+    */
+   public function cleanActors(array $data): array {
+      $actorTypes = [
+         '_users_id_requester',
+         '_users_id_observer',
+         '_users_id_assign',
+         '_suppliers_id_assign',
+      ];
+
+      foreach ($actorTypes as $actorType) {
+         if (isset($data["$actorType"])) {
+            if (is_array($data["$actorType"])) {
+               if (count($data["$actorType"]) < 1) {
+                  unset($data["$actorType"]);
+                  unset($data["${actorType}_notif"]);
+               } else {
+                  $cleaned = [];
+                  $cleaned_notif = [];
+                  foreach ($data["$actorType"] as $key => $actor) {
+                     if ($actor == 0) {
+                        continue;
+                     }
+                     $cleaned[] = $actor;
+                     $cleaned_notif['use_notification'][] = $data["${actorType}_notif"]['use_notification'][$key];
+                     $cleaned_notif['alternative_email'][] = $data["${actorType}_notif"]['alternative_email'][$key];
+                  }
+                  $data["$actorType"] = $cleaned;
+                  $data["${actorType}_notif"] = $cleaned_notif;
+               }
+            } else {
+               if ($data["$actorType"] == 0) {
+                  unset($data["$actorType"]);
+                  unset($data["${actorType}_notif"]);
+               }
+            }
+         }
+      }
+
+      if (isset($data['_groups_id_requester']) && $data['_groups_id_requester'] == 0) {
+         unset($data['_groups_id_requester']);
+      }
+
+      if (isset($data['_groups_id_observer']) && $data['_groups_id_observer'] == 0) {
+         unset($data['_groups_id_observer']);
+      }
+
+      if (isset($data['_groups_id_assign']) && $data['_groups_id_assign'] == 0) {
+         unset($data['_groups_id_assign']);
+      }
+
+      return $data;
+   }
+
+   /**
     * Set default values for the item to create
     *
     * @param PluginFormcreatorFormAnswer $formanswer
