@@ -873,7 +873,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
+      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED];
    }
 
    static function getProcessStatusArray() {
