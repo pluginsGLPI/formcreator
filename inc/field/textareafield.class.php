@@ -37,6 +37,7 @@ use PluginFormcreatorCommon;
 use Html;
 use Session;
 use Toolbox;
+use Glpi\Toolbox\Sanitizer;
 use Glpi\RichText\RichText;
 use Glpi\Application\View\TemplateRenderer;
 
@@ -128,12 +129,12 @@ class TextareaField extends TextField
             ]
          );
          $this->value = $input[$key];
-         $this->value = Html::entity_decode_deep($this->value);
+         $this->value = Sanitizer::unsanitize($this->value);
          foreach ($input['_tag'] as $tag) {
             $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
             $this->value = preg_replace($regex, "#$tag#", $this->value);
          }
-         $this->value = Html::entities_deep($this->value);
+         $this->value = Sanitizer::sanitize($this->value);
       }
 
       return $this->value;
