@@ -223,6 +223,9 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
 
       $this->appendFieldsData($formanswer, $data);
 
+      // Cleanup actors array
+      $data = $this->cleanActors($data);
+
       // Create the target problem
       if (!$problemID = $problem->add($data)) {
          return null;

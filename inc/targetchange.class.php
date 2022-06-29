@@ -726,6 +726,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
 
       $this->appendFieldsData($formanswer, $data);
 
+      // Cleanup actors array
+      $data = $this->cleanActors($data);
+
       // Create the target change
       if (!$changeID = $change->add($data)) {
          return null;

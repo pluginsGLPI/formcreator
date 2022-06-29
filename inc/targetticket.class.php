@@ -936,6 +936,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
       $this->appendFieldsData($formanswer, $data);
 
+      // Cleanup actors array
+      $data = $this->cleanActors($data);
+
       // Create the target ticket
       $data['_auto_import'] = true;
       $data['_skip_sla_assign'] = true;
@@ -1092,6 +1095,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             ])->current();
             if (isset($type['answer']) && ctype_digit($type['answer'])) {
                $type = $type['answer'];
+            } else {
+               // Invalid value. Maybe the questin is not compatible.
+               trigger_error(sprintf("Attempt to set the type of a ticket from an incompatible question. Check the target ticket %s of the form ID=%s",
+                  $this->fields['name'],
+                  $this->getForm()->getID()
+               ));
+               $type = null;
             }
             break;
          case self::REQUESTTYPE_SPECIFIC:

@@ -690,6 +690,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
+         'right'              => 'interface',
          'joinparams'         => [
             'beforejoin'         => [
                'table'              => Ticket_User::getTable(),
@@ -979,7 +980,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
+      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED];
    }
 
    static function getProcessStatusArray() {

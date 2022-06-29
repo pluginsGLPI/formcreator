@@ -384,7 +384,7 @@ class FieldsField extends PluginFormcreatorAbstractField
             }
             break;
          default:
-            $html .= sprintf(__('Field \'%1$s\' type not implemented yet !', 'formcreator'), $dropdown_type);
+            $html .= sprintf(__('Field \'%1$s\' type not implemented yet!', 'formcreator'), $dropdown_type);
       }
 
       unset($_SESSION['plugin']['fields']['values_sent']);

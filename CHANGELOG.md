@@ -1,4 +1,4 @@
-<a name="HEAD"></a>
+<a name="2.13.0-rc.1"></a>
 ## [2.13.0-rc.1](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-beta.2..2.13.0-rc.1) (2022-06-07)
 
 
