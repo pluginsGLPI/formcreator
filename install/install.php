@@ -352,9 +352,9 @@ class PluginFormcreatorInstall {
             'notified' => PluginFormcreatorNotificationTargetFormAnswer::AUTHOR,
          ],
          'plugin_formcreator_need_validation' => [
-            'name'     => __('A form need to be validate', 'formcreator'),
-            'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
-            'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+            'name'     => __('A form need validation', 'formcreator'),
+            'subject'  => __('A form from GLPI need to be validated', 'formcreator'),
+            'content'  => __('Hi,\nA form from GLPI need to be validated and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
             'notified' => PluginFormcreatorNotificationTargetFormAnswer::APPROVER,
          ],
          'plugin_formcreator_refused'         => [

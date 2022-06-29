@@ -1294,11 +1294,11 @@ msgstr "Caché"
 
 #: inc/entityconfig.class.php:156
 msgid "Variable height"
-msgstr ""
+msgstr "Hauteur variable"
 
 #: inc/entityconfig.class.php:157
 msgid "Uniform height"
-msgstr ""
+msgstr "Hauteur uniforme"
 
 #: inc/entityconfig.class.php:231
 msgid "Helpdesk"
@@ -1335,11 +1335,11 @@ msgstr "Message d'entête"
 
 #: inc/entityconfig.class.php:347
 msgid "Search issue"
-msgstr ""
+msgstr "Recherche de demande d'assistance"
 
 #: inc/entityconfig.class.php:363
 msgid "Tile design"
-msgstr ""
+msgstr "Apparence des tuiles"
 
 #: inc/entityconfig.class.php:375 inc/entityconfig.class.php:453
 #: inc/form.class.php:239 entrée standard:84
@@ -1442,7 +1442,7 @@ msgstr[2] ""
 
 #: inc/form.class.php:506
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: inc/form.class.php:546 inc/form.class.php:2130
 msgid "Add a target"
@@ -2327,7 +2327,7 @@ msgstr "Annuler mon ticket"
 
 #: hook.php:685
 msgid "Old"
-msgstr ""
+msgstr "Ancien"
 
 #: hook.php:692
 #, php-format
@@ -2349,14 +2349,16 @@ msgstr ""
 #: js/scripts.js:319
 msgid "No form found. Please choose a form below instead."
 msgstr ""
+"Aucun formulaire trouvé. Veuillez choisir un formulaire ci dessous à la "
+"place."
 
 #: js/scripts.js:321
 msgid "No form found."
-msgstr ""
+msgstr "Aucun formulaire trouvé."
 
 #: js/scripts.js:325
 msgid "No FAQ item found."
-msgstr ""
+msgstr "Aucun élément de FAQ n'a été trouvé."
 
 #: js/scripts.js:709
 msgid "Are you sure you want to delete this question?"
