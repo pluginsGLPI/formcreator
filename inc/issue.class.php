@@ -864,7 +864,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getClosedStatusArray() {
-      return Ticket::getClosedStatusArray();
+      return [...Ticket::getClosedStatusArray(), PluginFormcreatorFormAnswer::STATUS_ACCEPTED];
    }
 
    static function getSolvedStatusArray() {
@@ -872,7 +872,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED];
+      return [Ticket::INCOMING];
+   }
+
+   static function getPendingStatusArray() {
+      return [Ticket::WAITING, PluginFormcreatorFormAnswer::STATUS_WAITING];
    }
 
    static function getProcessStatusArray() {

@@ -239,6 +239,14 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   $tocheck = $item->getNewStatusArray();
                   break;
 
+               case Ticket::WAITING:
+                  $tocheck = $item->getPendingStatusArray();
+                  break;
+
+               case Ticket::CLOSED:
+                  $tocheck = $item->getClosedStatusArray();
+                  break;
+
                case 'process' :
                   // getProcessStatusArray should be an abstract method of CommonITILObject
                   $tocheck = $item->getProcessStatusArray();
