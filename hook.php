@@ -235,6 +235,10 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   $tocheck = array_keys($item->getAllStatusArray());
                   break;
 
+               case Ticket::SOLVED:
+                  $tocheck = $item->getSolvedStatusArray();
+                  break;
+
                case Ticket::INCOMING:
                   $tocheck = $item->getNewStatusArray();
                   break;

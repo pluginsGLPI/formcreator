@@ -868,7 +868,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getSolvedStatusArray() {
-      return Ticket::getSolvedStatusArray();
+      return [...Ticket::getSolvedStatusArray(), PluginFormcreatorFormAnswer::STATUS_REFUSED];
    }
 
    static function getNewStatusArray() {
@@ -942,10 +942,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'searchtype' => 'equals',
             'value'      => Ticket::SOLVED, // see Ticket::getAllStatusArray()
          ],
-         ['field' => 4,
-            'searchtype' => 'equals',
-            'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-            'link'       => 'OR']
          ]],
       ],
       'reset'    => 'reset'];
