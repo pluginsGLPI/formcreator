@@ -960,7 +960,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getOldCriteria() {
-      $currentUser = Session::getLoginUserID();
       return ['criteria' => [
          ['link'       => 'AND',
          'criteria' => [[
