@@ -55,6 +55,15 @@ define('PLUGIN_FORMCREATOR_ADVANCED_VALIDATION', 'advform');
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
 function plugin_version_formcreator() {
+   $plugin = new Plugin();
+   $plugin->getFromDBbyDir('formcreator');
+   $oldVersion = $plugin->fields['version'];
+   if ($oldVersion != PLUGIN_FORMCREATOR_VERSION) {
+      Config::setConfigurationValues('formcreator', [
+         'previous_version' => $oldVersion,
+      ]);
+   }
+
    $glpiVersion = rtrim(GLPI_VERSION, '-dev');
    if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
