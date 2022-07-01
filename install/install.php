@@ -36,8 +36,9 @@ if (!defined('GLPI_ROOT')) {
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item as Dashboard_Item;
 use Glpi\Dashboard\Right as Dashboard_Right;
-
+use Glpi\System\Diagnostic\DatabaseSchemaIntegrityChecker;
 use Ramsey\Uuid\Uuid;
+
 class PluginFormcreatorInstall {
    protected $migration;
 
@@ -125,11 +126,20 @@ class PluginFormcreatorInstall {
          }
          if ($hasMyisamTables) {
             // Need to convert myisam tables into innodb first
+            $message = __('Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb', 'formcreator');
             if (isCommandLine()) {
-               echo "Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb" . PHP_EOL;
+               echo $message . PHP_EOL;
             } else {
-               Session::addMessageAfterRedirect(__('Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb', 'formcreator'), false, ERROR);
+               Session::addMessageAfterRedirect($message, false, ERROR);
             }
+            return false;
+         }
+      }
+
+      // Check schema of tables
+      if (!isset($args['skip-db-check'])) {
+         $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
+         if ($oldVersion !== null && !$this->checkSchema($oldVersion)) {
             return false;
          }
       }
@@ -262,7 +272,7 @@ class PluginFormcreatorInstall {
    protected function installSchema() {
       global $DB;
 
-      $dbFile = __DIR__ . '/mysql/plugin_formcreator_empty.sql';
+      $dbFile = plugin_formcreator_getSchemaPath();
       if (!$DB->runFile($dbFile)) {
          $this->migration->displayWarning("Error creating tables : " . $DB->error(), true);
          die('Giving up');
@@ -728,6 +738,70 @@ class PluginFormcreatorInstall {
       ]);
       if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
          // Failed to delete the dashboard
+         return false;
+      }
+
+      return true;
+   }
+
+   /**
+    * Check the schema of all tables of the plugin against the expected schema of the given version
+    *
+    * @return boolean
+    */
+   public function checkSchema(string $version): bool {
+      global $DB;
+
+      $schemaFile = plugin_formcreator_getSchemaPath($version);
+
+      $checker = new DatabaseSchemaIntegrityChecker(
+         $DB,
+         true,
+         false,
+         false,
+         false,
+         false,
+         false
+      );
+
+      try {
+         $differences = $checker->checkCompleteSchema($schemaFile, true, 'plugin:formcreator');
+      } catch (\Throwable $e) {
+         $message = __('Failed to check the sanity of the tables!', 'formcreator');
+         if (isCommandLine()) {
+            echo $message . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect($message, false, ERROR);
+         }
+         return false;
+      }
+
+      if (count($differences) > 0) {
+         if (!isCommandLine()) {
+            Session::addMessageAfterRedirect(sprintf(
+               __('Inconsistencies detected in the database. To see the logs run the command %s', 'formcreator'),
+               'bin/console glpi:plugin:install formcreator'
+            ), false, ERROR);
+         }
+         foreach ($differences as $table_name => $difference) {
+            $message = null;
+            switch ($difference['type']) {
+               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_ALTERED_TABLE:
+                  $message = sprintf(__('Table schema differs for table "%s".'), $table_name);
+                  break;
+               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_MISSING_TABLE:
+                  $message = sprintf(__('Table "%s" is missing.'), $table_name);
+                  break;
+               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_UNKNOWN_TABLE:
+                  $message = sprintf(__('Unknown table "%s" has been found in database.'), $table_name);
+                  break;
+            }
+            if (isCommandLine()) {
+               echo $message . PHP_EOL;
+               echo $difference['diff'] . PHP_EOL;
+            }
+         }
+
          return false;
       }
 

@@ -65,7 +65,7 @@ function plugin_version_formcreator() {
    }
 
    $glpiVersion = rtrim(GLPI_VERSION, '-dev');
-   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+   if (!method_exists($plugin, 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
@@ -502,6 +502,11 @@ function plugin_formcreator_options() {
  *
  * @return string|null
  */
-function plugin_formcreator_getSchemaPath(): ?string {
-   return Plugin::getPhpDir('formcreator') . '/install/mysql/plugin_formcreator_empty.sql';
+function plugin_formcreator_getSchemaPath(string $version = null): ?string {
+   if ($version === null) {
+      $matches = [];
+      preg_match('/^(\d+\.\d+\.\d+)/', PLUGIN_FORMCREATOR_VERSION, $matches);
+      $version = $matches[1];
+   }
+   return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
 }
