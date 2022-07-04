@@ -126,7 +126,10 @@ class PluginFormcreatorInstall {
          }
          if ($hasMyisamTables) {
             // Need to convert myisam tables into innodb first
-            $message = __('Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb', 'formcreator');
+            $message = sprintf(
+               __('Upgrade tables to innoDB; run %s', 'formcreator'),
+               'php bin/console glpi:migration:myisam_to_innodb'
+            );
             if (isCommandLine()) {
                echo $message . PHP_EOL;
             } else {
@@ -153,15 +156,12 @@ class PluginFormcreatorInstall {
       }
 
       if (version_compare($fromSchemaVersion, '2.5') < 0) {
+         $message = __('Upgrade from version older than 2.5.0 is no longer supported. Please upgrade to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.', 'formcreator');
          if (isCommandLine()) {
-            echo 'Upgrade from version < 2.5.0 is no longer supported.' . PHP_EOL;
-            echo 'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,' . PHP_EOL;
-            echo 'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.' . PHP_EOL;
+            echo $message;
          } else {
             Session::addMessageAfterRedirect(
-               'Upgrade from version < 2.5.0 is no longer supported.<br>' .
-               'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,<br>' .
-               'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.',
+               $message,
                true,
                ERROR
             );
