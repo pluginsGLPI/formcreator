@@ -139,10 +139,25 @@ class PluginFormcreatorInstall {
          }
       }
 
-      // Check schema of tables
+      // Check schema of tables before upgrading
       if (!isset($args['skip-db-check'])) {
          $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
-         if ($oldVersion !== null && !$this->checkSchema($oldVersion)) {
+         $log = '';
+         if ($oldVersion !== null && !$this->checkSchema($oldVersion, $log)) {
+            if (!isCommandLine()) {
+               Session::addMessageAfterRedirect(sprintf(
+                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                  $oldVersion,
+                  'bin/console glpi:plugin:install formcreator'
+               ), false, ERROR);
+            } else {
+               echo sprintf(
+                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                  $oldVersion,
+                  'bin/console glpi:plugin:install formcreator'
+               ) . PHP_EOL;
+               echo $log . PHP_EOL;
+            }
             return false;
          }
       }
@@ -189,6 +204,26 @@ class PluginFormcreatorInstall {
          $task = new CronTask();
          PluginFormcreatorIssue::cronSyncIssues($task);
       }
+
+      // Check schema of tables after upgrade
+      $log = '';
+      if (!$this->checkSchema(PLUGIN_FORMCREATOR_VERSION, $log)) {
+         if (!isCommandLine()) {
+            Session::addMessageAfterRedirect(sprintf(
+               __('The database schema is not consistent with the installed Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
+               PLUGIN_FORMCREATOR_VERSION,
+               'bin/console glpi:database:check_schema_integrity -p formcreator'
+            ), false, ERROR);
+         } else {
+            echo sprintf(
+               __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+               PLUGIN_FORMCREATOR_VERSION,
+               'bin/console glpi:database:check_schema_integrity -p formcreator'
+            ) . PHP_EOL;
+            echo $log . PHP_EOL;
+         }
+      }
+
       return true;
    }
 
@@ -749,7 +784,7 @@ class PluginFormcreatorInstall {
     *
     * @return boolean
     */
-   public function checkSchema(string $version): bool {
+   public function checkSchema(string $version, string &$log = ''): bool {
       global $DB;
 
       $schemaFile = plugin_formcreator_getSchemaPath($version);
@@ -777,28 +812,22 @@ class PluginFormcreatorInstall {
       }
 
       if (count($differences) > 0) {
-         if (!isCommandLine()) {
-            Session::addMessageAfterRedirect(sprintf(
-               __('Inconsistencies detected in the database. To see the logs run the command %s', 'formcreator'),
-               'bin/console glpi:plugin:install formcreator'
-            ), false, ERROR);
-         }
-         foreach ($differences as $table_name => $difference) {
-            $message = null;
-            switch ($difference['type']) {
-               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_ALTERED_TABLE:
-                  $message = sprintf(__('Table schema differs for table "%s".'), $table_name);
-                  break;
-               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_MISSING_TABLE:
-                  $message = sprintf(__('Table "%s" is missing.'), $table_name);
-                  break;
-               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_UNKNOWN_TABLE:
-                  $message = sprintf(__('Unknown table "%s" has been found in database.'), $table_name);
-                  break;
-            }
-            if (isCommandLine()) {
-               echo $message . PHP_EOL;
-               echo $difference['diff'] . PHP_EOL;
+         if (isCommandLine()) {
+            foreach ($differences as $table_name => $difference) {
+               $message = null;
+               switch ($difference['type']) {
+                  case DatabaseSchemaIntegrityChecker::RESULT_TYPE_ALTERED_TABLE:
+                     $message = sprintf(__('Table schema differs for table "%s".'), $table_name);
+                     break;
+                  case DatabaseSchemaIntegrityChecker::RESULT_TYPE_MISSING_TABLE:
+                     $message = sprintf(__('Table "%s" is missing.'), $table_name);
+                     break;
+                  case DatabaseSchemaIntegrityChecker::RESULT_TYPE_UNKNOWN_TABLE:
+                     $message = sprintf(__('Unknown table "%s" has been found in database.'), $table_name);
+                     break;
+               }
+               $log .= $message . PHP_EOL;
+               $log .= $difference['diff'] . PHP_EOL;
             }
          }
 

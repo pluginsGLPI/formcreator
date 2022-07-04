@@ -504,9 +504,13 @@ function plugin_formcreator_options() {
  */
 function plugin_formcreator_getSchemaPath(string $version = null): ?string {
    if ($version === null) {
-      $matches = [];
-      preg_match('/^(\d+\.\d+\.\d+)/', PLUGIN_FORMCREATOR_VERSION, $matches);
-      $version = $matches[1];
+      $version = PLUGIN_FORMCREATOR_VERSION;
    }
+
+   // Drop suffixes for alpha, beta, rc versions
+   $matches = [];
+   preg_match('/^(\d+\.\d+\.\d+)/', PLUGIN_FORMCREATOR_VERSION, $matches);
+   $version = $matches[1];
+
    return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
 }
