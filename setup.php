@@ -502,7 +502,7 @@ function plugin_formcreator_getSchemaPath(string $version = null): ?string {
 
    // Drop suffixes for alpha, beta, rc versions
    $matches = [];
-   preg_match('/^(\d+\.\d+\.\d+)/', PLUGIN_FORMCREATOR_VERSION, $matches);
+   preg_match('/^(\d+\.\d+\.\d+)/', $version, $matches);
    $version = $matches[1];
 
    return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
