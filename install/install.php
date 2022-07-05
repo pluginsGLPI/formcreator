@@ -143,22 +143,49 @@ class PluginFormcreatorInstall {
       if (!isset($args['skip-db-check'])) {
          $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
          $log = '';
-         if ($oldVersion !== null && !$this->checkSchema($oldVersion, $log)) {
-            if (!isCommandLine()) {
-               Session::addMessageAfterRedirect(sprintf(
-                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
-                  $oldVersion,
-                  'bin/console glpi:plugin:install formcreator'
-               ), false, ERROR);
+         if ($oldVersion !== null) {
+            $checkResult = true;
+            if (version_compare($oldVersion, '2.13.0') < 0) {
+               // Upgrading from GLPI 9.5 to GLPI 10
+               // check only columns format
+               $checkResult = $this->checkSchema(
+               $oldVersion,
+               true,
+               false,
+               false,
+               true,
+               true,
+               true,
+               $log);
             } else {
-               echo sprintf(
-                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+               // more strict DB check : dynamic rows, utf8mb4, unsigned int for foreign keys
+               $checkResult = $this->checkSchema(
                   $oldVersion,
-                  'bin/console glpi:plugin:install formcreator'
-               ) . PHP_EOL;
-               echo $log . PHP_EOL;
+                  true,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  $log);
+               }
+            if (!$checkResult) {
+               if (!isCommandLine()) {
+                  Session::addMessageAfterRedirect(sprintf(
+                     __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                     $oldVersion,
+                     'bin/console glpi:plugin:install formcreator'
+                  ), false, ERROR);
+               } else {
+                  echo sprintf(
+                     __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                     $oldVersion,
+                     'bin/console glpi:plugin:install formcreator'
+                  ) . PHP_EOL;
+                  echo $log . PHP_EOL;
+               }
+               return false;
             }
-            return false;
          }
       }
 
@@ -207,7 +234,17 @@ class PluginFormcreatorInstall {
 
       // Check schema of tables after upgrade
       $log = '';
-      if (!$this->checkSchema(PLUGIN_FORMCREATOR_VERSION, $log)) {
+      $checkResult = $this->checkSchema(
+         $oldVersion,
+         true,
+         false,
+         false,
+         false,
+         false,
+         false,
+         $log
+      );
+      if (!$checkResult) {
          if (!isCommandLine()) {
             Session::addMessageAfterRedirect(sprintf(
                __('The database schema is not consistent with the installed Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
@@ -784,19 +821,27 @@ class PluginFormcreatorInstall {
     *
     * @return boolean
     */
-   public function checkSchema(string $version, string &$log = ''): bool {
+   public function checkSchema(
+      string $version,
+      bool $strict = true,
+      bool $ignore_innodb_migration = false,
+      bool $ignore_timestamps_migration = false,
+      bool $ignore_utf8mb4_migration = false,
+      bool $ignore_dynamic_row_format_migration = false,
+      bool $ignore_unsigned_keys_migration = false,
+      string &$log = ''): bool {
       global $DB;
 
       $schemaFile = plugin_formcreator_getSchemaPath($version);
 
       $checker = new DatabaseSchemaIntegrityChecker(
          $DB,
-         true,
-         false,
-         false,
-         false,
-         false,
-         false
+         $strict,
+         $ignore_innodb_migration,
+         $ignore_timestamps_migration,
+         $ignore_utf8mb4_migration,
+         $ignore_dynamic_row_format_migration,
+         $ignore_unsigned_keys_migration
       );
 
       try {

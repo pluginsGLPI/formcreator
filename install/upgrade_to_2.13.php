@@ -37,6 +37,7 @@ class PluginFormcreatorUpgradeTo2_13 {
     */
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
+      $this->fixTables();
       $this->migrateEntityConfig();
       $this->addDefaultFormListMode();
       $this->addDashboardVisibility();
@@ -51,6 +52,74 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addEntityOption();
       $this->fixissues();
       $this->migrateTablesToDynamic();
+   }
+
+   public function fixTables() {
+      global $DB;
+      // Based on schema from version 2.12.5, try to fix some harlmess inconsistencies
+
+      $table = 'glpi_plugin_formcreator_answers';
+      $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', 'integer');
+      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer');
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_forms';
+      $this->migration->changeField($table, 'name', 'name', 'string', ['default' => '']);
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_formanswers';
+      $this->migration->changeField($table, 'users_id_validator', 'users_id_validator', 'integer');
+      $this->migration->changeField($table, 'groups_id_validator', 'groups_id_validator', 'integer');
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_questions';
+      $this->migration->changeField($table, 'name', 'name', 'string', ['default' => '']);
+      // Assume the content of the 2 following columns is out of date
+      // because they should have been migrated in version 2.7.0
+      $this->migration->dropField($table, 'range_min');
+      $this->migration->dropField($table, 'range_max');
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_sections';
+      $this->migration->changeField($table, 'name', 'name', 'string', ['default' => '']);
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $DB->update(
+         $table,
+         ['destination_entity_value' => '0'],
+         ['destination_entity_value' => null]
+      );
+      $this->migration->changeField($table, 'validation_followup', 'validation_followup', 'bool', ['after' => 'urgency_question', 'default' => '1']);
+      $this->migration->changeField($table, 'destination_entity', 'destination_entity', 'integer', ['after' => 'validation_followup', 'default' => '1']);
+      $this->migration->changeField($table, 'destination_entity_value', 'destination_entity_value', 'integer', ['after' => 'destination_entity', 'default' => '1']);
+      $this->migration->changeField($table, 'tag_type', 'tag_type', 'integer', ['after' => 'destination_entity_value', 'default' => '1']);
+      $this->migration->changeField($table, 'tag_questions', 'tag_questions', 'string', ['after' => 'tag_type']);
+      $this->migration->changeField($table, 'tag_specifics', 'tag_specifics', 'string', ['after' => 'tag_questions']);
+      $this->migration->changeField($table, 'category_rule', 'category_rule', 'integer', ['after' => 'tag_specifics', 'default' => '1']);
+      $this->migration->changeField($table, 'category_question', 'category_question', 'integer', ['after' => 'category_rule']);
+      $this->migration->changeField($table, 'associate_rule', 'associate_rule', 'integer', ['after' => 'category_question', 'default' => '1']);
+      $this->migration->changeField($table, 'associate_question', 'associate_question', 'integer', ['after' => 'associate_rule']);
+      $this->migration->changeField($table, 'location_rule', 'location_rule', 'integer', ['after' => 'associate_question', 'default' => '1']);
+      $this->migration->changeField($table, 'location_question', 'location_question', 'integer', ['after' => 'location_rule']);
+      $this->migration->changeField($table, 'show_rule', 'show_rule', 'integer', ['after' => 'location_question', 'default' => '1']);
+      $this->migration->changeField($table, 'sla_rule', 'sla_rule', 'integer', ['after' => 'show_rule', 'default' => '1']);
+      $this->migration->changeField($table, 'sla_question_tto', 'sla_question_tto', 'integer', ['after' => 'sla_rule']);
+      $this->migration->changeField($table, 'sla_question_ttr', 'sla_question_ttr', 'integer', ['after' => 'sla_question_tto']);
+      $this->migration->changeField($table, 'ola_rule', 'ola_rule', 'integer', ['after' => 'sla_question_ttr', 'default' => '1']);
+      $this->migration->changeField($table, 'ola_question_tto', 'ola_question_tto', 'integer', ['after' => 'ola_rule']);
+      $this->migration->changeField($table, 'ola_question_ttr', 'ola_question_ttr', 'integer', ['after' => 'ola_question_tto']);
+      $this->migration->changeField($table, 'uuid', 'uuid', 'string', ['after' => 'ola_question_ttr']);
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_questiondependencies';
+      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer');
+      $this->migration->changeField($table, 'plugin_formcreator_questions_id_2', 'plugin_formcreator_questions_id_2', 'integer');
+      $this->migration->migrationOneTable($table);
+
+      $table = 'glpi_plugin_formcreator_forms_languages';
+      $this->migration->changeField($table, 'plugin_formcreator_forms_id', 'plugin_formcreator_forms_id', 'integer');
+      $this->migration->migrationOneTable($table);
    }
 
    public function addEntityOption() {
@@ -332,7 +401,7 @@ class PluginFormcreatorUpgradeTo2_13 {
    public function migrateTablesToDynamic() {
       global $DB;
 
-      // all tables in this version of Formcreator
+      // all tables in previous release of Formcreator (2.12.5)
       $tables = [
          'glpi_plugin_formcreator_answers',
          'glpi_plugin_formcreator_categories',
@@ -340,15 +409,12 @@ class PluginFormcreatorUpgradeTo2_13 {
          'glpi_plugin_formcreator_forms',
          'glpi_plugin_formcreator_formanswers',
          'glpi_plugin_formcreator_forms_profiles',
-         'glpi_plugin_formcreator_forms_users',
-         'glpi_plugin_formcreator_forms_groups',
          'glpi_plugin_formcreator_forms_validators',
          'glpi_plugin_formcreator_questions',
          'glpi_plugin_formcreator_conditions',
          'glpi_plugin_formcreator_sections',
          'glpi_plugin_formcreator_targetchanges',
          'glpi_plugin_formcreator_targettickets',
-         'glpi_plugin_formcreator_targetproblems',
          'glpi_plugin_formcreator_targets_actors',
          'glpi_plugin_formcreator_issues',
          'glpi_plugin_formcreator_items_targettickets',
