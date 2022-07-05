@@ -70,6 +70,7 @@ class PluginFormcreatorUpgradeTo2_13 {
 
       $table = 'glpi_plugin_formcreator_forms';
       $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
+      $this->migration->changeField($table, 'description', 'description', 'string');
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_formanswers';
@@ -89,6 +90,7 @@ class PluginFormcreatorUpgradeTo2_13 {
 
       $table = 'glpi_plugin_formcreator_questions';
       $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
+      $this->migration->changeField($table, 'description', 'description', 'mediumtext');
       // Assume the content of the 2 following columns is out of date
       // because they should have been migrated in version 2.7.0
       $this->migration->dropField($table, 'range_min');
