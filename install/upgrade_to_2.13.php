@@ -69,7 +69,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_forms';
-      $this->migration->changeField($table, 'name', 'name', 'string', ['default' => '']);
+      $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_formanswers';
@@ -88,7 +88,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_questions';
-      $this->migration->changeField($table, 'name', 'name', 'string', ['default' => '']);
+      $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
       // Assume the content of the 2 following columns is out of date
       // because they should have been migrated in version 2.7.0
       $this->migration->dropField($table, 'range_min');
@@ -96,7 +96,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_sections';
-      $this->migration->changeField($table, 'name', 'name', 'string', ['default' => '']);
+      $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_targettickets';
@@ -105,23 +105,23 @@ class PluginFormcreatorUpgradeTo2_13 {
          ['destination_entity_value' => '0'],
          ['destination_entity_value' => null]
       );
-      $this->migration->changeField($table, 'validation_followup', 'validation_followup', 'bool', ['after' => 'urgency_question', 'default' => '1']);
-      $this->migration->changeField($table, 'destination_entity', 'destination_entity', 'integer', ['after' => 'validation_followup', 'default' => '1']);
+      $this->migration->changeField($table, 'validation_followup', 'validation_followup', 'bool', ['after' => 'urgency_question', 'value' => '1']);
+      $this->migration->changeField($table, 'destination_entity', 'destination_entity', 'integer', ['after' => 'validation_followup', 'value' => '1']);
       $this->migration->changeField($table, 'destination_entity_value', 'destination_entity_value', 'integer', ['after' => 'destination_entity', 'default' => '1']);
-      $this->migration->changeField($table, 'tag_type', 'tag_type', 'integer', ['after' => 'destination_entity_value', 'default' => '1']);
+      $this->migration->changeField($table, 'tag_type', 'tag_type', 'integer', ['after' => 'destination_entity_value', 'value' => '1']);
       $this->migration->changeField($table, 'tag_questions', 'tag_questions', 'string', ['after' => 'tag_type']);
       $this->migration->changeField($table, 'tag_specifics', 'tag_specifics', 'string', ['after' => 'tag_questions']);
-      $this->migration->changeField($table, 'category_rule', 'category_rule', 'integer', ['after' => 'tag_specifics', 'default' => '1']);
+      $this->migration->changeField($table, 'category_rule', 'category_rule', 'integer', ['after' => 'tag_specifics', 'value' => '1']);
       $this->migration->changeField($table, 'category_question', 'category_question', 'integer', ['after' => 'category_rule']);
-      $this->migration->changeField($table, 'associate_rule', 'associate_rule', 'integer', ['after' => 'category_question', 'default' => '1']);
+      $this->migration->changeField($table, 'associate_rule', 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
       $this->migration->changeField($table, 'associate_question', 'associate_question', 'integer', ['after' => 'associate_rule']);
-      $this->migration->changeField($table, 'location_rule', 'location_rule', 'integer', ['after' => 'associate_question', 'default' => '1']);
+      $this->migration->changeField($table, 'location_rule', 'location_rule', 'integer', ['after' => 'associate_question', 'value' => '1']);
       $this->migration->changeField($table, 'location_question', 'location_question', 'integer', ['after' => 'location_rule']);
-      $this->migration->changeField($table, 'show_rule', 'show_rule', 'integer', ['after' => 'location_question', 'default' => '1']);
-      $this->migration->changeField($table, 'sla_rule', 'sla_rule', 'integer', ['after' => 'show_rule', 'default' => '1']);
+      $this->migration->changeField($table, 'show_rule', 'show_rule', 'integer', ['after' => 'location_question', 'value' => '1']);
+      $this->migration->changeField($table, 'sla_rule', 'sla_rule', 'integer', ['after' => 'show_rule', 'value' => '1']);
       $this->migration->changeField($table, 'sla_question_tto', 'sla_question_tto', 'integer', ['after' => 'sla_rule']);
       $this->migration->changeField($table, 'sla_question_ttr', 'sla_question_ttr', 'integer', ['after' => 'sla_question_tto']);
-      $this->migration->changeField($table, 'ola_rule', 'ola_rule', 'integer', ['after' => 'sla_question_ttr', 'default' => '1']);
+      $this->migration->changeField($table, 'ola_rule', 'ola_rule', 'integer', ['after' => 'sla_question_ttr', 'value' => '1']);
       $this->migration->changeField($table, 'ola_question_tto', 'ola_question_tto', 'integer', ['after' => 'ola_rule']);
       $this->migration->changeField($table, 'ola_question_ttr', 'ola_question_ttr', 'integer', ['after' => 'ola_question_tto']);
       $this->migration->changeField($table, 'uuid', 'uuid', 'string', ['after' => 'ola_question_ttr']);
