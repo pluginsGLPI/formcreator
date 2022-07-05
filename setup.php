@@ -520,8 +520,8 @@ function plugin_formcreator_getSchemaPath(string $version = null): ?string {
 function plugin_formcreator_savePreviousVersion(): void {
    $plugin = new Plugin();
    $plugin->getFromDBbyDir('formcreator');
-   $oldVersion = $plugin->fields['version'];
-   if ($oldVersion != PLUGIN_FORMCREATOR_VERSION) {
+   $oldVersion = $plugin->fields['version'] ?? null;
+   if ($oldVersion !== null && $oldVersion != PLUGIN_FORMCREATOR_VERSION) {
       Config::setConfigurationValues('formcreator', [
          'previous_version' => $oldVersion,
       ]);
