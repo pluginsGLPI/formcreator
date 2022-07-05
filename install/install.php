@@ -149,14 +149,15 @@ class PluginFormcreatorInstall {
                // Upgrading from GLPI 9.5 to GLPI 10
                // check only columns format
                $checkResult = $this->checkSchema(
-               $oldVersion,
-               true,
-               false,
-               false,
-               true,
-               true,
-               true,
-               $log);
+                  $oldVersion,
+                  true,
+                  false,
+                  false,
+                  true,
+                  true,
+                  true,
+                  $log
+               );
             } else {
                // more strict DB check : dynamic rows, utf8mb4, unsigned int for foreign keys
                $checkResult = $this->checkSchema(
@@ -167,8 +168,9 @@ class PluginFormcreatorInstall {
                   false,
                   false,
                   false,
-                  $log);
-               }
+                  $log
+               );
+            }
             if (!$checkResult) {
                if (!isCommandLine()) {
                   Session::addMessageAfterRedirect(sprintf(
