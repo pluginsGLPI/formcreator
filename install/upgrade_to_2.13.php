@@ -54,6 +54,11 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migrateTablesToDynamic();
    }
 
+   /**
+    * Fix possible inconsistencies accumulated over years from 2.5.0 to 2.12.5
+    *
+    * @return void
+    */
    public function fixTables() {
       global $DB;
       // Based on schema from version 2.12.5, try to fix some harlmess inconsistencies
@@ -68,6 +73,16 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_formanswers';
+      $DB->update(
+         $table,
+         ['users_id_validator' => '0'],
+         ['users_id_validator' => null]
+      );
+      $DB->update(
+         $table,
+         ['groups_id_validator' => '0'],
+         ['groups_id_validator' => null]
+      );
       $this->migration->changeField($table, 'users_id_validator', 'users_id_validator', 'integer');
       $this->migration->changeField($table, 'groups_id_validator', 'groups_id_validator', 'integer');
       $this->migration->migrationOneTable($table);
