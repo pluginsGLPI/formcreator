@@ -55,17 +55,10 @@ define('PLUGIN_FORMCREATOR_ADVANCED_VALIDATION', 'advform');
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
 function plugin_version_formcreator() {
-   $plugin = new Plugin();
-   $plugin->getFromDBbyDir('formcreator');
-   $oldVersion = $plugin->fields['version'];
-   if ($oldVersion != PLUGIN_FORMCREATOR_VERSION) {
-      Config::setConfigurationValues('formcreator', [
-         'previous_version' => $oldVersion,
-      ]);
-   }
+   plugin_formcreator_savePreviousVersion();
 
    $glpiVersion = rtrim(GLPI_VERSION, '-dev');
-   if (!method_exists($plugin, 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+   if (!method_exists(Plugin::class, 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
@@ -513,4 +506,24 @@ function plugin_formcreator_getSchemaPath(string $version = null): ?string {
    $version = $matches[1];
 
    return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
+}
+
+/**
+ * Detect a versin change and save the previous version in the DB
+ *
+ * Used to proceed a DB sanity check before an upgrade
+ * @see PluginFormcreatorInstall::upgrade
+ * @see PluginFormcreatorInstall::checkSchema
+ *
+ * @return void
+ */
+function plugin_formcreator_savePreviousVersion(): void {
+   $plugin = new Plugin();
+   $plugin->getFromDBbyDir('formcreator');
+   $oldVersion = $plugin->fields['version'];
+   if ($oldVersion != PLUGIN_FORMCREATOR_VERSION) {
+      Config::setConfigurationValues('formcreator', [
+         'previous_version' => $oldVersion,
+      ]);
+   }
 }
