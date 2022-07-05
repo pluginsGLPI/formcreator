@@ -237,7 +237,7 @@ class PluginFormcreatorInstall {
       // Check schema of tables after upgrade
       $log = '';
       $checkResult = $this->checkSchema(
-         $oldVersion,
+         PLUGIN_FORMCREATOR_VERSION,
          true,
          false,
          false,
