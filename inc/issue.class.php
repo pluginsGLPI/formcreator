@@ -881,8 +881,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                             'value'   => $values[$field]]);
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
-            $ticket_opts[PluginFormcreatorFormAnswer::STATUS_WAITING] = __('Not validated', 'formcreator');
-            $ticket_opts[PluginFormcreatorFormAnswer::STATUS_REFUSED] = __('Refused', 'formcreator');
+            $ticket_opts = $ticket_opts + PluginFormcreatorFormAnswer::getStatuses();
             return Dropdown::showFromArray($name, $ticket_opts, ['display' => false,
                                                                  'value'   => $values[$field]]);
             break;
@@ -972,15 +971,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getClosedStatusArray() {
-      return Ticket::getClosedStatusArray();
+      return [...Ticket::getClosedStatusArray(), PluginFormcreatorFormAnswer::STATUS_ACCEPTED];
    }
 
    static function getSolvedStatusArray() {
-      return Ticket::getSolvedStatusArray();
+      return [...Ticket::getSolvedStatusArray(), PluginFormcreatorFormAnswer::STATUS_REFUSED];
    }
 
    static function getNewStatusArray() {
-      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED];
+      return [Ticket::INCOMING];
+   }
+
+   static function getPendingStatusArray() {
+      return [Ticket::WAITING, PluginFormcreatorFormAnswer::STATUS_WAITING];
    }
 
    static function getProcessStatusArray() {
@@ -1050,10 +1053,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'searchtype' => 'equals',
             'value'      => Ticket::SOLVED, // see Ticket::getAllStatusArray()
          ],
-         ['field' => 4,
-            'searchtype' => 'equals',
-            'value'      => PluginFormcreatorFormAnswer::STATUS_REFUSED,
-            'link'       => 'OR']
          ]],
       ],
       'reset'    => 'reset'];
@@ -1068,7 +1067,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getOldCriteria() {
-      $currentUser = Session::getLoginUserID();
       return ['criteria' => [
          ['link'       => 'AND',
          'criteria' => [[

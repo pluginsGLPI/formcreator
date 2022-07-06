@@ -81,10 +81,17 @@
                         {% if not (lastQuestion is null) %}
                             {% if lastQuestion.fields['row'] < question.fields['row'] %}
                                 <div class="plugin_formcreator_newRow"></div>
+                                {% if question.fields['col'] > 0 %}
+                                    {# There is a gap before the question #}
+                                    {% set x = 0 %}
+                                    {% set width = question.fields['col'] %}
+                                    <div class="plugin_formcreator_gap" gs-x="{{ x }}" gs-w="{{ width }}"></div>
+                                {% endif %}
                             {% else %}
                                 {% set x = lastQuestion.fields['col'] + lastQuestion.fields['width'] %}
                                 {% set width = question.fields['col'] - x %}
                                 {% if x < question.fields['col'] %}
+                                    {# There is a gap before the question #}
                                     <div class="plugin_formcreator_gap" gs-x="{{ x }}" gs-w="{{ width }}"></div>
                                 {% endif %}
                             {% endif %}

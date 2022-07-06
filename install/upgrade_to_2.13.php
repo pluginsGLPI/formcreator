@@ -50,6 +50,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->addRequestSourceSetting();
       $this->addEntityOption();
       $this->fixissues();
+      $this->migrateTablesToDynamic();
    }
 
    public function addEntityOption() {
@@ -326,5 +327,39 @@ class PluginFormcreatorUpgradeTo2_13 {
 
    public function isResyncIssuesRequiresd() {
       return false;
+   }
+
+   public function migrateTablesToDynamic() {
+      global $DB;
+
+      // all tables in this version of Formcreator
+      $tables = [
+         'glpi_plugin_formcreator_answers',
+         'glpi_plugin_formcreator_categories',
+         'glpi_plugin_formcreator_entityconfigs',
+         'glpi_plugin_formcreator_forms',
+         'glpi_plugin_formcreator_formanswers',
+         'glpi_plugin_formcreator_forms_profiles',
+         'glpi_plugin_formcreator_forms_users',
+         'glpi_plugin_formcreator_forms_groups',
+         'glpi_plugin_formcreator_forms_validators',
+         'glpi_plugin_formcreator_questions',
+         'glpi_plugin_formcreator_conditions',
+         'glpi_plugin_formcreator_sections',
+         'glpi_plugin_formcreator_targetchanges',
+         'glpi_plugin_formcreator_targettickets',
+         'glpi_plugin_formcreator_targetproblems',
+         'glpi_plugin_formcreator_targets_actors',
+         'glpi_plugin_formcreator_issues',
+         'glpi_plugin_formcreator_items_targettickets',
+         'glpi_plugin_formcreator_questiondependencies',
+         'glpi_plugin_formcreator_questionregexes',
+         'glpi_plugin_formcreator_questionranges',
+         'glpi_plugin_formcreator_forms_languages',
+      ];
+
+      foreach ($tables as $table) {
+         $DB->query("ALTER TABLE `$table` ROW_FORMAT = DYNAMIC");
+      }
    }
 }
