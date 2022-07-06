@@ -56,10 +56,13 @@ class PluginFormcreatorUpgradeTo2_13 {
 
    /**
     * Fix possible inconsistencies accumulated over years from 2.5.0 to 2.12.5
+    * At the end of this method the schema shall match the version 2.12.5
+    * Modifications are immediately applied to tables as the state of the schema is the expected
+    * basis for changes required to migrate to 2.13.0
     *
     * @return void
     */
-   public function fixTables() {
+   public function fixTables(): void {
       global $DB;
       // Based on schema from version 2.12.5, try to fix some harlmess inconsistencies
 
