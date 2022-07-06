@@ -185,6 +185,12 @@ class PluginFormcreatorInstall {
                      'bin/console glpi:plugin:install formcreator'
                   ) . PHP_EOL;
                   echo $log . PHP_EOL;
+                  echo 'Some tables have an incorrect schema. Please review them in the above log.' . PHP_EOL;
+                  echo 'Some of those errors are handled in the upgrade step from 2.12.5 to 2.13.0. ' . PHP_EOL;
+                  echo 'Please _take a snapshot of your complete database_, then try to run the upgrade with the following command: ' . PHP_EOL;
+                  echo 'bin/console glpi:plugin:install formcreator -f -p skip-db-check' . PHP_EOL;
+                  echo 'The upgrade procedure will try to solve known errors before upgrading the tables to 2.13.0 version.' . PHP_EOL;
+                  echo 'Finally a check of the tables will be executed to report unhandled inconsistencies.' . PHP_EOL;
                }
                return false;
             }
