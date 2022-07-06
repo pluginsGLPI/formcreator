@@ -301,9 +301,18 @@ class PluginFormcreatorUpgradeTo2_13 {
       $DB->queryOrDie("UPDATE `$table` SET `actor_value` = 0 WHERE `actor_value` IS NULL");
 
       $tables = [
+         'glpi_plugin_formcreator_answers' => [
+            'plugin_formcreator_formanswers_id',
+            'plugin_formcreator_questions_id',
+         ],
          'glpi_plugin_formcreator_formanswers' => [
             'plugin_formcreator_forms_id',
             'requester_id',
+            'users_id_validator',
+            'groups_id_validator',
+         ],
+         'glpi_plugin_formcreator_forms_languages' => [
+            'plugin_formcreator_forms_id',
          ],
          'glpi_plugin_formcreator_forms_profiles' => [
             'plugin_formcreator_forms_id',
@@ -313,8 +322,15 @@ class PluginFormcreatorUpgradeTo2_13 {
             'plugin_formcreator_forms_id',
             'items_id',
          ],
+         'glpi_plugin_formcreator_issues' => [
+            'users_id_recipient',
+         ],
          'glpi_plugin_formcreator_questions' => [
             'plugin_formcreator_sections_id',
+         ],
+         'glpi_plugin_formcreator_questiondependencies' => [
+            'plugin_formcreator_questions_id',
+            'plugin_formcreator_questions_id_2',
          ],
          'glpi_plugin_formcreator_sections' => [
             'plugin_formcreator_forms_id',
