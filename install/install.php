@@ -142,7 +142,6 @@ class PluginFormcreatorInstall {
       // Check schema of tables before upgrading
       if (!isset($args['skip-db-check'])) {
          $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
-         $log = '';
          if ($oldVersion !== null) {
             $checkResult = true;
             if (version_compare($oldVersion, '2.13.0') >= 0) {
@@ -154,43 +153,29 @@ class PluginFormcreatorInstall {
                   false,
                   false,
                   false,
-                  false,
-                  $log
+                  false
                );
-            } else {
-               // Upgrading from GLPI 9.5 to GLPI 10
-               // check only columns format
-               // $checkResult = $this->checkSchema(
-               //    $oldVersion,
-               //    true,
-               //    false,
-               //    false,
-               //    true,
-               //    true,
-               //    true,
-               //    $log
-               // );
             }
             if (!$checkResult) {
+               $message = sprintf(
+                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                  $oldVersion,
+                  'bin/console glpi:plugin:install formcreator -f'
+               );
                if (!isCommandLine()) {
-                  Session::addMessageAfterRedirect(sprintf(
-                     __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
-                     $oldVersion,
-                     'bin/console glpi:plugin:install formcreator'
-                  ), false, ERROR);
+                  Session::addMessageAfterRedirect($message, false, ERROR);
                } else {
+                  echo $message . PHP_EOL;
+                  // echo 'Some tables have an incorrect schema. Please review them in the above log.' . PHP_EOL;
+                  // echo 'Some of those errors are handled in the upgrade step from 2.12.5 to 2.13.0. ' . PHP_EOL;
+                  // echo 'Please _take a snapshot of your complete database_, then try to run the upgrade with the following command: ' . PHP_EOL;
+                  // echo 'bin/console glpi:plugin:install formcreator -f -p skip-db-check' . PHP_EOL;
+                  // echo 'The upgrade procedure will try to solve known errors before upgrading the tables to 2.13.0 version.' . PHP_EOL;
+                  // echo 'Finally a check of the tables will be executed to report unhandled inconsistencies.' . PHP_EOL;
                   echo sprintf(
-                     __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
-                     $oldVersion,
-                     'bin/console glpi:plugin:install formcreator'
+                     __('To ignore the inconsistencies and upgrade anyway run %s', 'formcreator'),
+                     'bin/console glpi:plugin:install formcreator -f -p skip-db-check'
                   ) . PHP_EOL;
-                  echo $log . PHP_EOL;
-                  echo 'Some tables have an incorrect schema. Please review them in the above log.' . PHP_EOL;
-                  echo 'Some of those errors are handled in the upgrade step from 2.12.5 to 2.13.0. ' . PHP_EOL;
-                  echo 'Please _take a snapshot of your complete database_, then try to run the upgrade with the following command: ' . PHP_EOL;
-                  echo 'bin/console glpi:plugin:install formcreator -f -p skip-db-check' . PHP_EOL;
-                  echo 'The upgrade procedure will try to solve known errors before upgrading the tables to 2.13.0 version.' . PHP_EOL;
-                  echo 'Finally a check of the tables will be executed to report unhandled inconsistencies.' . PHP_EOL;
                }
                return false;
             }
@@ -241,31 +226,25 @@ class PluginFormcreatorInstall {
       }
 
       // Check schema of tables after upgrade
-      $log = '';
       $checkResult = $this->checkSchema(
          PLUGIN_FORMCREATOR_VERSION,
-         true,
          false,
          false,
          false,
          false,
          false,
-         $log
+         false
       );
       if (!$checkResult) {
+         $message = sprintf(
+            __('The database schema is not consistent with the installed Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
+            PLUGIN_FORMCREATOR_VERSION,
+            'bin/console glpi:database:check_schema_integrity -p formcreator'
+         );
          if (!isCommandLine()) {
-            Session::addMessageAfterRedirect(sprintf(
-               __('The database schema is not consistent with the installed Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
-               PLUGIN_FORMCREATOR_VERSION,
-               'bin/console glpi:database:check_schema_integrity -p formcreator'
-            ), false, ERROR);
+            Session::addMessageAfterRedirect($message, false, ERROR);
          } else {
-            echo sprintf(
-               __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
-               PLUGIN_FORMCREATOR_VERSION,
-               'bin/console glpi:database:check_schema_integrity -p formcreator'
-            ) . PHP_EOL;
-            echo $log . PHP_EOL;
+            echo $message . PHP_EOL;
          }
       }
 
@@ -836,8 +815,8 @@ class PluginFormcreatorInstall {
       bool $ignore_timestamps_migration = false,
       bool $ignore_utf8mb4_migration = false,
       bool $ignore_dynamic_row_format_migration = false,
-      bool $ignore_unsigned_keys_migration = false,
-      string &$log = ''): bool {
+      bool $ignore_unsigned_keys_migration = false
+   ): bool {
       global $DB;
 
       $schemaFile = plugin_formcreator_getSchemaPath($version);
@@ -865,25 +844,6 @@ class PluginFormcreatorInstall {
       }
 
       if (count($differences) > 0) {
-         if (isCommandLine()) {
-            foreach ($differences as $table_name => $difference) {
-               $message = null;
-               switch ($difference['type']) {
-                  case DatabaseSchemaIntegrityChecker::RESULT_TYPE_ALTERED_TABLE:
-                     $message = sprintf(__('Table schema differs for table "%s".'), $table_name);
-                     break;
-                  case DatabaseSchemaIntegrityChecker::RESULT_TYPE_MISSING_TABLE:
-                     $message = sprintf(__('Table "%s" is missing.'), $table_name);
-                     break;
-                  case DatabaseSchemaIntegrityChecker::RESULT_TYPE_UNKNOWN_TABLE:
-                     $message = sprintf(__('Unknown table "%s" has been found in database.'), $table_name);
-                     break;
-               }
-               $log .= $message . PHP_EOL;
-               $log .= $difference['diff'] . PHP_EOL;
-            }
-         }
-
          return false;
       }
 
