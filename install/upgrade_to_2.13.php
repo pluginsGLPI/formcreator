@@ -66,9 +66,11 @@ class PluginFormcreatorUpgradeTo2_13 {
       global $DB;
       // Based on schema from version 2.12.5, try to fix some harlmess inconsistencies
 
+      $unsignedIntType = "INT " . DBConnection::getDefaultPrimaryKeySignOption() . " NOT NULL DEFAULT 0";
+
       $table = 'glpi_plugin_formcreator_answers';
-      $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', 'integer');
-      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer');
+      $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', $unsignedIntType);
+      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', $unsignedIntType);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_forms';
@@ -87,8 +89,8 @@ class PluginFormcreatorUpgradeTo2_13 {
          ['groups_id_validator' => '0'],
          ['groups_id_validator' => null]
       );
-      $this->migration->changeField($table, 'users_id_validator', 'users_id_validator', 'integer');
-      $this->migration->changeField($table, 'groups_id_validator', 'groups_id_validator', 'integer');
+      $this->migration->changeField($table, 'users_id_validator', 'users_id_validator', $unsignedIntType);
+      $this->migration->changeField($table, 'groups_id_validator', 'groups_id_validator', $unsignedIntType);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_questions';
@@ -112,33 +114,33 @@ class PluginFormcreatorUpgradeTo2_13 {
       );
       $this->migration->changeField($table, 'validation_followup', 'validation_followup', 'bool', ['after' => 'urgency_question', 'value' => '1']);
       $this->migration->changeField($table, 'destination_entity', 'destination_entity', 'integer', ['after' => 'validation_followup', 'value' => '1']);
-      $this->migration->changeField($table, 'destination_entity_value', 'destination_entity_value', 'integer', ['after' => 'destination_entity', 'default' => '1']);
+      $this->migration->changeField($table, 'destination_entity_value', 'destination_entity_value', $unsignedIntType, ['after' => 'destination_entity', 'default' => '1']);
       $this->migration->changeField($table, 'tag_type', 'tag_type', 'integer', ['after' => 'destination_entity_value', 'value' => '1']);
       $this->migration->changeField($table, 'tag_questions', 'tag_questions', 'string', ['after' => 'tag_type']);
       $this->migration->changeField($table, 'tag_specifics', 'tag_specifics', 'string', ['after' => 'tag_questions']);
       $this->migration->changeField($table, 'category_rule', 'category_rule', 'integer', ['after' => 'tag_specifics', 'value' => '1']);
       $this->migration->changeField($table, 'category_question', 'category_question', 'integer', ['after' => 'category_rule']);
       $this->migration->changeField($table, 'associate_rule', 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
-      $this->migration->changeField($table, 'associate_question', 'associate_question', 'integer', ['after' => 'associate_rule']);
+      $this->migration->changeField($table, 'associate_question', 'associate_question', $unsignedIntType, ['after' => 'associate_rule']);
       $this->migration->changeField($table, 'location_rule', 'location_rule', 'integer', ['after' => 'associate_question', 'value' => '1']);
-      $this->migration->changeField($table, 'location_question', 'location_question', 'integer', ['after' => 'location_rule']);
+      $this->migration->changeField($table, 'location_question', 'location_question', $unsignedIntType, ['after' => 'location_rule']);
       $this->migration->changeField($table, 'show_rule', 'show_rule', 'integer', ['after' => 'location_question', 'value' => '1']);
       $this->migration->changeField($table, 'sla_rule', 'sla_rule', 'integer', ['after' => 'show_rule', 'value' => '1']);
-      $this->migration->changeField($table, 'sla_question_tto', 'sla_question_tto', 'integer', ['after' => 'sla_rule']);
-      $this->migration->changeField($table, 'sla_question_ttr', 'sla_question_ttr', 'integer', ['after' => 'sla_question_tto']);
+      $this->migration->changeField($table, 'sla_question_tto', 'sla_question_tto', $unsignedIntType, ['after' => 'sla_rule']);
+      $this->migration->changeField($table, 'sla_question_ttr', 'sla_question_ttr', $unsignedIntType, ['after' => 'sla_question_tto']);
       $this->migration->changeField($table, 'ola_rule', 'ola_rule', 'integer', ['after' => 'sla_question_ttr', 'value' => '1']);
-      $this->migration->changeField($table, 'ola_question_tto', 'ola_question_tto', 'integer', ['after' => 'ola_rule']);
-      $this->migration->changeField($table, 'ola_question_ttr', 'ola_question_ttr', 'integer', ['after' => 'ola_question_tto']);
+      $this->migration->changeField($table, 'ola_question_tto', 'ola_question_tto', $unsignedIntType, ['after' => 'ola_rule']);
+      $this->migration->changeField($table, 'ola_question_ttr', 'ola_question_ttr', $unsignedIntType, ['after' => 'ola_question_tto']);
       $this->migration->changeField($table, 'uuid', 'uuid', 'string', ['after' => 'ola_question_ttr']);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_questiondependencies';
-      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', 'integer');
-      $this->migration->changeField($table, 'plugin_formcreator_questions_id_2', 'plugin_formcreator_questions_id_2', 'integer');
+      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', $unsignedIntType);
+      $this->migration->changeField($table, 'plugin_formcreator_questions_id_2', 'plugin_formcreator_questions_id_2', $unsignedIntType);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_forms_languages';
-      $this->migration->changeField($table, 'plugin_formcreator_forms_id', 'plugin_formcreator_forms_id', 'integer');
+      $this->migration->changeField($table, 'plugin_formcreator_forms_id', 'plugin_formcreator_forms_id', $unsignedIntType);
       $this->migration->migrationOneTable($table);
    }
 

@@ -145,20 +145,7 @@ class PluginFormcreatorInstall {
          $log = '';
          if ($oldVersion !== null) {
             $checkResult = true;
-            if (version_compare($oldVersion, '2.13.0') < 0) {
-               // Upgrading from GLPI 9.5 to GLPI 10
-               // check only columns format
-               $checkResult = $this->checkSchema(
-                  $oldVersion,
-                  true,
-                  false,
-                  false,
-                  true,
-                  true,
-                  true,
-                  $log
-               );
-            } else {
+            if (version_compare($oldVersion, '2.13.0') >= 0) {
                // more strict DB check : dynamic rows, utf8mb4, unsigned int for foreign keys
                $checkResult = $this->checkSchema(
                   $oldVersion,
@@ -170,6 +157,19 @@ class PluginFormcreatorInstall {
                   false,
                   $log
                );
+            } else {
+               // Upgrading from GLPI 9.5 to GLPI 10
+               // check only columns format
+               // $checkResult = $this->checkSchema(
+               //    $oldVersion,
+               //    true,
+               //    false,
+               //    false,
+               //    true,
+               //    true,
+               //    true,
+               //    $log
+               // );
             }
             if (!$checkResult) {
                if (!isCommandLine()) {
