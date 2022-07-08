@@ -40,7 +40,7 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php-versions: [7.4]
+        php-versions: [7.4, 8.1]
         env:
           - { GLPI_BRANCH: 10.0/bugfixes }
     services:
@@ -110,7 +110,7 @@ jobs:
   style:
     strategy:
       matrix:
-        php-versions: [7.4]
+        php-versions: [8.1]
         env:
           - { GLPI_BRANCH: 10.0/bugfixes }
     name: "Code quality"
