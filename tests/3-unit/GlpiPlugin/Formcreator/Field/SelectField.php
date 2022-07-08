@@ -48,7 +48,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -62,7 +62,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -76,7 +76,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '3',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -90,7 +90,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -104,7 +104,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 

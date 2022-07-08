@@ -55,7 +55,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -68,7 +68,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -81,7 +81,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => ['email@something.com'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -94,7 +94,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => ['glpi', 'email@something.com'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 

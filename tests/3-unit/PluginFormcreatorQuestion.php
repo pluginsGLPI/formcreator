@@ -94,15 +94,15 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    public function providerGetTypeName() {
       return [
          [
-            'input' => 0,
+            'number' => 0,
             'expected' => 'Questions',
          ],
          [
-            'input' => 1,
+            'number' => 1,
             'expected' => 'Question',
          ],
          [
-            'input' => 2,
+            'number' => 2,
             'expected' => 'Questions',
          ],
       ];
@@ -503,7 +503,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $data = [
          'actor' => [
             'questionType' => 'actor',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '8c647f55ac463429f736aea1ad64d318' => "actors question",
@@ -524,7 +524,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'checkboxes' => [
             'questionType' => 'checkboxes',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  'de1ece2a98dacb86a2b65334373ccb99' => "checkboxes question",
@@ -551,7 +551,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'date' => [
             'questionType' => 'date',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  'e121a8d9e19bf923a648d6bfb33094d8' => "date question",
@@ -572,7 +572,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'datetime' =>[
             'questionType' => 'datetime',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '7d3246feb9616461eee152642ad9f1fb' => "datetime question",
@@ -593,7 +593,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'description' => [
             'questionType' => 'description',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '824d1cc309c56586a33b52858cbc146b' => "description question",
@@ -614,7 +614,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'dropdown' => [
             'questionType' => 'dropdown',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '8347ce048fc3fe8b954dbc6cd9c4b716' => "dropdown question",
@@ -635,7 +635,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'email' => [
             'questionType' => 'email',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '895472a7be51fe6b1b9591a150fb55d8' => "email question",
@@ -656,7 +656,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'file' => [
             'questionType' => 'file',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '75c4f52e98ebd4a57410d882780353db' => "file question",
@@ -677,7 +677,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'float' => [
             'questionType' => 'float',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '037cad549bb834c2fab44fe14480f9a9' => "float question",
@@ -698,7 +698,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'glpiselect' => [
             'questionType' => 'glpiselect',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '97ee07194ba5af1c81eb5a9b22141241' => "GLPI object question",
@@ -719,7 +719,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'hidden' => [
             'questionType' => 'hidden',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '74b8be9aff59bf5ddd149248d6156baa' => "hidden question",
@@ -742,7 +742,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'hostname' => [
             'questionType' => 'hostname',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '0550a71495224d60dfcd00826345f0fa' => "hostname question",
@@ -763,7 +763,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'integer' => [
             'questionType' => 'integer',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  'b5c09bbe5587577a8c86ada678664877' => "integer question",
@@ -784,7 +784,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'ip' => [
             'questionType' => 'ip',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  'd767bdc805e010bfd2302c2516501ffb' => "IP address question",
@@ -805,7 +805,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'ldapselect' => [
             'questionType' => 'ldapselect',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '5b3ebb576a3977eaa267f0769bdd8e98' => "LDAP question",
@@ -826,7 +826,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'multiselect' => [
             'questionType' => 'multiselect',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '35226e073fabdcce01c547c5bce62d14' => "multiselect question",
@@ -853,7 +853,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'radios' => [
             'questionType' => 'radios',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '58e2a2355ba7ac135d42f558591d6a6a' => "radio question",
@@ -880,7 +880,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'requesttype' => [
             'questionType' => 'requesttype',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '2637b4d11281dffbaa2e340561347ebc' => "request type question",
@@ -901,7 +901,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'select' => [
             'questionType' => 'select',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '212afc3240debecf859880ea9ab4fc2e' => "select question",
@@ -928,7 +928,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          // 'tag' => [
          //    'questionType' => 'tag',
-         //    'expeected' => [
+         //    'expected' => [
          //       'itemlink' =>
          //       [
          //         'e121a8d9e19bf923a648d6bfb33094d8' => "tag question",
@@ -949,7 +949,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          // ],
          'textarea' => [
             'questionType' => 'textarea',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  'b99b0833f1dab41a14eb421fa2ce690d' => "textarea question",
@@ -972,7 +972,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'text' => [
             'questionType' => 'text',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '6fd6eacf3005974a7489a199ed7b45ee' => "text question",
@@ -993,7 +993,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'time' => [
             'questionType' => 'time',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  'e3a0dfbc9d24603beddcbd1388808a7a' => "time question",
@@ -1014,7 +1014,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ],
          'urgency' => [
             'questionType' => 'urgency',
-            'expeected' => [
+            'expected' => [
                'itemlink' =>
                [
                  '49dce550d75300e99052ed4e8006b65a' => "urgency question",

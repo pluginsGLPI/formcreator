@@ -55,7 +55,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => [],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -77,7 +77,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -99,7 +99,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3'],
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -121,7 +121,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3', '4'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -143,7 +143,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3', '4', '2', '1', '6'],
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
       ];
 

@@ -40,9 +40,9 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php-versions: [7.4]
+        php-versions: [7.4, 8.1]
         env:
-          - { GLPI_BRANCH: master }
+          - { GLPI_BRANCH: 10.0/bugfixes }
     services:
       db:
         image: mariadb:10.2
@@ -110,9 +110,9 @@ jobs:
   style:
     strategy:
       matrix:
-        php-versions: [7.4]
+        php-versions: [8.1]
         env:
-          - { GLPI_BRANCH: 9.5/bugfixes }
+          - { GLPI_BRANCH: 10.0/bugfixes }
     name: "Code quality"
     runs-on: "ubuntu-latest"
     steps:

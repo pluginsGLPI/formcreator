@@ -359,6 +359,9 @@ class PluginFormcreatorUpgradeTo2_13 {
       ];
 
       foreach ($tables as $table) {
+         if (!$DB->tableExists($table)) {
+            continue;
+         }
          $DB->query("ALTER TABLE `$table` ROW_FORMAT = DYNAMIC");
       }
    }

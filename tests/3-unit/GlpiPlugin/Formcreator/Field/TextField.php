@@ -58,7 +58,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          [
@@ -84,7 +84,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too short (minimum 5 characters): question',
          ],
          [
@@ -110,7 +110,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too short (minimum 6 characters): question',
          ],
          [
@@ -136,7 +136,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          [
@@ -162,7 +162,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          'regex with escaped chars' => [
@@ -188,7 +188,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
       ];
