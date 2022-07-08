@@ -20,16 +20,16 @@ init_databases() {
 install_glpi() {
    echo Installing GLPI
    rm -rf ../glpi
-   # git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi
-   # cd ../glpi
-   # composer install --no-dev --no-interaction
-   # php bin/console dependencies install composer-options=--no-dev
-   # php bin/console locales:compile
-   # php bin/console glpi:build:compile_scss
-   # php bin/console glpi:system:check_requirements
-   # rm .atoum.php
-   curl $GLPI_PACKAGE_URL --output /tmp/glpi.tar.gz
-   tar xf /tmp/glpi.tar.gz --directory ../
+   git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi
+   cd ../glpi
+   composer install --no-dev --no-interaction
+   php bin/console dependencies install composer-options=--no-dev
+   php bin/console locales:compile
+   php bin/console glpi:build:compile_scss
+   php bin/console glpi:system:check_requirements
+   rm .atoum.php
+   # curl $GLPI_PACKAGE_URL --output /tmp/glpi.tar.gz
+   # tar xf /tmp/glpi.tar.gz --directory ../
    cd ../glpi
    mkdir -p tests/files/_cache
    cp -r ../$PLUGINNAME plugins/$PLUGINNAME
