@@ -246,6 +246,10 @@ class PluginFormcreatorInstall {
          } else {
             echo $message . PHP_EOL;
          }
+      } else {
+         if (isCommandLine()) {
+            echo __('The tables of the plugin passed the schema integrity check.', 'formcreator') . PHP_EOL;
+         }
       }
 
       return true;
