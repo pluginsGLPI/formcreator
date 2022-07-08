@@ -201,7 +201,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                'content'      => '',
             ],
             'expected' => false, // An empty name should be rejected
-            'message'  => 'The name cannot be empty!',
+            'expectedMessage'  => 'The name cannot be empty!',
          ],
          'html entities conversion' => [
             'input' => [
@@ -210,7 +210,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                'content'      => '&lt;p&gt;être ou ne pas être&lt;/p&gt;',
             ],
             'expected' => true,
-            'message' => '',
+            'expectedMessage' => '',
          ],
          'quote escaping' => [
             'input' => [
@@ -219,7 +219,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                'content'      => '&lt;p&gt;test d\\\'apostrophe&lt;/p&gt;',
             ],
             'expected' => true,
-            'message' => '',
+            'expectedMessage' => '',
          ],
       ];
    }
@@ -251,7 +251,7 @@ class PluginFormcreatorForm extends CommonTestCase {
             'name' => '',
          ],
          'expected' => false,
-         'message'  => 'The name cannot be empty!',
+         'expectedMessage'  => 'The name cannot be empty!',
       ];
 
       return $data;
@@ -633,7 +633,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          [
             'item'         => $section,
             'expectedType' => \PluginFormcreatorForm::getType(),
-            'expectedId'   => true,
+            'expected'     => true,
          ],
          [
             'item'         => new \PluginFormcreatorSection(),
@@ -641,12 +641,12 @@ class PluginFormcreatorForm extends CommonTestCase {
             'expected'     => false,
          ],
          [
-            'question'     => $question,
+            'item'         => $question,
             'expectedType' => \PluginFormcreatorForm::getType(),
             'expected'     => true,
          ],
          [
-            'question'     => new \PluginFormcreatorQuestion(),
+            'item'         => new \PluginFormcreatorQuestion(),
             'expectedType' => \PluginFormcreatorForm::getType(),
             'expected'     => false,
          ],
@@ -657,7 +657,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    /**
     * @dataProvider providerGetByItem
     */
-   public function testgetByItem($item, $expectedType, $expected) {
+   public function testGetByItem($item, $expectedType, $expected) {
       $output = \PluginFormcreatorForm::getByItem($item);
       if ($expected === false) {
          $this->variable($output)->isNull();

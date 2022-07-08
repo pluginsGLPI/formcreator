@@ -159,7 +159,7 @@ class DropdownField extends CommonTestCase {
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
             ],
-            'expected' => true,
+            'expectedValidity' => true,
          ],
          [
             'question' => $this->getQuestion([
@@ -174,7 +174,7 @@ class DropdownField extends CommonTestCase {
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
             ],
-            'expected' => false,
+            'expectedValidity' => false,
          ],
          [
             'question' => $this->getQuestion([
@@ -190,7 +190,7 @@ class DropdownField extends CommonTestCase {
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
             ],
-            'expected' => false,
+            'expectedValidity' => false,
          ],
          [
             'question' => $this->getQuestion([
@@ -206,7 +206,7 @@ class DropdownField extends CommonTestCase {
                'show_tree_depth' => '5',
                'show_tree_root' => '0',
             ],
-            'expected' => true,
+            'expectedValidity' => true,
          ],
       ];
    }
@@ -214,11 +214,11 @@ class DropdownField extends CommonTestCase {
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($question, $input, $expected) {
+   public function testIsValid($question, $input, $expectedValidity) {
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($question->fields['default_values']);
       $output = $instance->isValid();
-      $this->boolean($output)->isEqualTo($expected);
+      $this->boolean($output)->isEqualTo($expectedValidity);
    }
 
    public function providerGetValueForTargetText() {

@@ -54,15 +54,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function providerGetTypeName() {
       return [
          [
-            'input' => 0,
+            'number' => 0,
             'expected' => 'Target tickets',
          ],
          [
-            'input' => 1,
+            'number' => 1,
             'expected' => 'Target ticket',
          ],
          [
-            'input' => 2,
+            'number' => 2,
             'expected' => 'Target tickets',
          ],
       ];
@@ -498,8 +498,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       return [
          [
-            'instance'   => $targetTicket1,
-            'formanswerid' => (new \PluginFormcreatorFormAnswer())->add([
+            'originalInstance'   => $targetTicket1,
+            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
                \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
@@ -510,8 +510,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'expected'   => \Ticket::INCIDENT_TYPE,
          ],
          [
-            'instance'   => $targetTicket1,
-            'formanswerid' => (new \PluginFormcreatorFormAnswer())->add([
+            'originalInstance'   => $targetTicket1,
+            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
                \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
@@ -522,8 +522,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'expected'   => \Ticket::INCIDENT_TYPE,
          ],
          [
-            'instance'   => $targetTicket2,
-            'formanswerid' => (new \PluginFormcreatorFormAnswer())->add([
+            'originalInstance'   => $targetTicket2,
+            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
                \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
@@ -534,8 +534,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'expected'   => \Ticket::DEMAND_TYPE,
          ],
          [
-            'instance'   => $targetTicket2,
-            'formanswerid' => (new \PluginFormcreatorFormAnswer())->add([
+            'originalInstance'   => $targetTicket2,
+            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
                \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
@@ -609,7 +609,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       return [
          [
             'template' => '##FULLFORM##',
-            'form_answer' => $formAnswer,
+            'formAnswer' => $formAnswer,
             'expected' => [
                0 => 'Form data' . $eolSimple
                   . '=================' . $eolSimple
