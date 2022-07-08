@@ -42,7 +42,7 @@ jobs:
       matrix:
         php-versions: [7.4]
         env:
-          - { GLPI_BRANCH: master }
+          - { GLPI_BRANCH: 10.0/bugfixes }
     services:
       db:
         image: mariadb:10.2

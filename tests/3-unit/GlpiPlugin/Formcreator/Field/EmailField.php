@@ -50,19 +50,19 @@ class EmailField extends CommonTestCase {
    public function providerParseAnswerValue() {
       return [
          [
-            'input' => 42,
+            'value' => 42,
             'expected' => '',
          ],
          [
-            'input' => '',
+            'value' => '',
             'expected' => '',
          ],
          [
-            'input' => 'foo@bar.baz',
+            'value' => 'foo@bar.baz',
             'expected' => 'foo@bar.baz',
          ],
          [
-            'input' => 'not an email',
+            'value' => 'not an email',
             'expected' => 'not an email',
          ],
       ];
@@ -71,11 +71,11 @@ class EmailField extends CommonTestCase {
    /**
     * @dataProvider providerParseAnswerValue
     */
-   public function testParseAnswerValue($input, $expected) {
+   public function testParseAnswerValue($value, $expected) {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $output = $instance->parseAnswerValues([
-         'formcreator_field_' . $question->getID() => $input
+         'formcreator_field_' . $question->getID() => $value
       ]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);

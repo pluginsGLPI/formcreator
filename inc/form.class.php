@@ -2452,9 +2452,7 @@ PluginFormcreatorTranslatableInterface
       }
 
       if (count($availableLanguages) < 1) {
-         // Empty array does let \Locale::lookup return the default language
-         // @see https://www.php.net/manual/fr/locale.lookup.php#115459
-         $availableLanguages = [false];
+         return $defaultLanguage;
       }
       return \Locale::lookup($availableLanguages, $_SESSION['glpilanguage'], false, $defaultLanguage);
    }

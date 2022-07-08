@@ -80,7 +80,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -95,7 +95,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -110,7 +110,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -125,7 +125,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
 
          [
@@ -141,7 +141,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => $computer->getName(),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -156,7 +156,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -171,7 +171,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => $computer->getName(),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -186,7 +186,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -201,7 +201,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => (new \Entity())->getFromDB(0),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -216,7 +216,7 @@ class GlpiselectField extends CommonTestCase {
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 

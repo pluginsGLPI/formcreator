@@ -47,7 +47,7 @@ class DatetimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'question'           => $this->getQuestion([
@@ -61,7 +61,7 @@ class DatetimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => '2018-08-16 08:12:34',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'question'           => $this->getQuestion([
@@ -75,7 +75,7 @@ class DatetimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'question'           => $this->getQuestion([
@@ -89,7 +89,7 @@ class DatetimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => '2018-08-16 08:12:34',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 

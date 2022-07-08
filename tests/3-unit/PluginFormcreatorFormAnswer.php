@@ -68,7 +68,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'form FK required' => [
             'input' => [],
             'expected' => false,
-            'message' => '',
+            'expectedMessage' => '',
          ],
          'tags parsing in name' => [
             'input' => [
@@ -88,7 +88,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
                'request_date'                            => $_SESSION['glpi_currenttime'],
                'comment'                                 => '',
             ],
-            'message' => '',
+            'expectedMessage' => '',
          ],
       ];
 
@@ -124,7 +124,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             'request_date'                            => $_SESSION['glpi_currenttime'],
             'comment'                                 => '',
          ],
-         'message' => '',
+         'expectedMessage' => '',
       ];
 
       return $data;
@@ -197,7 +197,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       return [
          // fullForm matches all question and section names
          [
-            'answer' => [
+            'answers' => [
                \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'yes',
                'formcreator_field_' . $question2->getID() => 'yes',
@@ -213,7 +213,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ],
          // fullForm matches only visible section names
          [
-            'answer' => [
+            'answers' => [
                \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'no',
                'formcreator_field_' . $question2->getID() => 'yes',
@@ -229,7 +229,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ],
          // fullForm matches only visible question names
          [
-            'answer' => [
+            'answers' => [
                \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'yes',
                'formcreator_field_' . $question2->getID() => 'no',

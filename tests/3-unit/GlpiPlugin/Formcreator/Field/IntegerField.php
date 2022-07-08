@@ -63,7 +63,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -86,7 +86,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -108,7 +108,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -131,7 +131,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '5',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -154,7 +154,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '3.4',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -177,7 +177,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '4',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -199,9 +199,8 @@ class IntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '4',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -223,9 +222,8 @@ class IntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '4',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 

@@ -44,15 +44,15 @@ class PluginFormcreatorAnswer extends CommonTestCase {
    public function providerGetTypeName() {
       return [
          [
-            'input' => 0,
+            'number' => 0,
             'expected' => 'Answers',
          ],
          [
-            'input' => 1,
+            'number' => 1,
             'expected' => 'Answer',
          ],
          [
-            'input' => 2,
+            'number' => 2,
             'expected' => 'Answers',
          ],
       ];
