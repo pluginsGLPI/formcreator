@@ -82,9 +82,9 @@ if (isset($_REQUEST['id'])
 
    // If user was not authenticated, remove temporary user
    if (isset($_SESSION['formcreator_public'])) {
-      unset($_SESSION['glpiname']);
       unset($_SESSION['formcreator_public']);
       session_write_close();
+      unset($_SESSION['glpiname']);
    }
 } else if (isset($_GET['answer_saved'])) {
    $message = __("The form has been successfully saved!");
