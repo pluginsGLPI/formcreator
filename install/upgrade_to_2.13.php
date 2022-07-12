@@ -434,6 +434,10 @@ class PluginFormcreatorUpgradeTo2_13 {
    public function fixissues() {
       $table = 'glpi_plugin_formcreator_issues';
 
+      // If a row contains a string of 255 chars, mysql fails to convert the colomn from varchar(255) to varchar(255)
+      // $this->migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'nodefault' => true]);
+      $this->migration->changeField($table, 'name', 'name', 'text', ['after' => 'id', 'nodefault' => true]);
+      $this->migration->migrationOneTable($table);
       $this->migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'nodefault' => true]);
    }
 
