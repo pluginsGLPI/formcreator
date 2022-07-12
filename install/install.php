@@ -144,10 +144,9 @@ class PluginFormcreatorInstall {
          if ($oldVersion !== null) {
             $checkResult = true;
             if (version_compare($oldVersion, '2.13.0') >= 0) {
-               // more strict DB check : dynamic rows, utf8mb4, unsigned int for foreign keys
                $checkResult = $this->checkSchema(
                   $oldVersion,
-                  true,
+                  false,
                   false,
                   false,
                   false,
@@ -197,12 +196,13 @@ class PluginFormcreatorInstall {
          return false;
       }
 
+      ob_start();
       while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
          $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
          $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
       }
-
       $this->migration->executeMigration();
+
       // if the schema contains new tables
       $this->installSchema();
       $this->configureExistingEntities();
@@ -211,6 +211,7 @@ class PluginFormcreatorInstall {
       $this->createCronTasks();
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
+      ob_get_flush();
 
       if ($this->resyncIssues) {
          // An upgrade step requires a resync of the issues
