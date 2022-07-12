@@ -76,6 +76,8 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_answers';
       $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', $unsignedIntType);
       $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', $unsignedIntType);
+      $this->migration->dropKey($table, 'plugin_formcreator_question_id');
+      $this->migration->addKey($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id');
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_forms';

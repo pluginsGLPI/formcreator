@@ -293,6 +293,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          'glpi_plugin_formcreator_issues',
       ];
       foreach ($tables as $table) {
+         $DB->query("UPDATE `$table` SET `name`='' WHERE `name` IS NULL");
          $migration->changeField($table, 'name', 'name', 'VARCHAR(255) NOT NULL DEFAULT \'\' AFTER `id`');
       }
 
