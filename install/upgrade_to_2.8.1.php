@@ -33,7 +33,10 @@ class PluginFormcreatorUpgradeTo2_8_1 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
+      global $DB;
+
       $table = 'glpi_plugin_formcreator_issues';
+      $DB->query("UPDATE `$table` SET `name`='' WHERE `name` IS NULL");
       $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
    }
 

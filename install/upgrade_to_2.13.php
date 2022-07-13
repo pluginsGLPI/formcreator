@@ -71,7 +71,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       // with unsigned integer, with assumption that the admin aloready migrated IDs
       // and FK to unsigned with the GLPI Core CLI command
 
-      $unsignedIntType = "INT " . DBConnection::getDefaultPrimaryKeySignOption() . " NOT NULL DEFAULT 0";
+      $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
 
       $table = 'glpi_plugin_formcreator_answers';
       $this->migration->changeField($table, 'plugin_formcreator_formanswers_id', 'plugin_formcreator_formanswers_id', $unsignedIntType);
@@ -98,9 +98,15 @@ class PluginFormcreatorUpgradeTo2_13 {
       );
       $this->migration->changeField($table, 'users_id_validator', 'users_id_validator', $unsignedIntType);
       $this->migration->changeField($table, 'groups_id_validator', 'groups_id_validator', $unsignedIntType);
+      $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_questions';
+      $DB->update(
+         $table,
+         ['name' => ''],
+         ['name' => null]
+      );
       $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
       $this->migration->changeField($table, 'description', 'description', 'mediumtext');
       // Assume the content of the 2 following columns is out of date
@@ -109,7 +115,19 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->dropField($table, 'range_max');
       $this->migration->migrationOneTable($table);
 
+      $table = 'glpi_plugin_formcreator_issues';
+      $this->migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
+      $this->migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
+      $this->migration->addKey($table, 'users_id_validator', 'users_id_validator');
+      $this->migration->addKey($table, 'groups_id_validator', 'groups_id_validator');
+      $this->migration->changeField($table, 'itemtype', 'itemtype', 'string', ['value' => '']);
+
       $table = 'glpi_plugin_formcreator_sections';
+      $DB->update(
+         $table,
+         ['name' => ''],
+         ['name' => null]
+      );
       $this->migration->changeField($table, 'name', 'name', 'string', ['value' => '']);
       $this->migration->migrationOneTable($table);
 
@@ -333,6 +351,7 @@ class PluginFormcreatorUpgradeTo2_13 {
          ],
          'glpi_plugin_formcreator_issues' => [
             'users_id_recipient',
+            'plugin_formcreator_categories_id',
          ],
          'glpi_plugin_formcreator_questions' => [
             'plugin_formcreator_sections_id',
@@ -437,6 +456,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $table = 'glpi_plugin_formcreator_issues';
 
       $this->migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'nodefault' => true]);
+      $this->migration->changeField($table, 'status', 'status', 'string', ['value' => '']);
    }
 
    public function isResyncIssuesRequiresd() {
