@@ -646,12 +646,12 @@ PluginFormcreatorTranslatableInterface
       if ($actorKey === false) {
          // Add the actor
          $actorType[]                           = $userId;
-         $actorTypeNotif['use_notification'][]  = ($notify == true);
+         $actorTypeNotif['use_notification'][]  = $notify;
          $actorTypeNotif['alternative_email'][] = $alternativeEmail;
       } else {
          // New actor settings takes precedence
          $actorType[$actorKey]                           = $userId;
-         $actorTypeNotif['use_notification'][$actorKey]  = ($notify == true);
+         $actorTypeNotif['use_notification'][$actorKey]  = $notify;
          $actorTypeNotif['alternative_email'][$actorKey] = $alternativeEmail;
       }
 

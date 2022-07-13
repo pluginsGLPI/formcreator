@@ -1154,4 +1154,54 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       ];
       $this->array(array_intersect($questionIds, $expectedQuestionIds))->hasSize(2);
    }
+
+   public function providerCanUpdate() {
+      yield [
+         'user' => 'post-only',
+         'password' => 'postonly',
+         'expected' => false,
+      ];
+
+      yield [
+         'user' => 'glpi',
+         'password' => 'glpi',
+         'expected' => true,
+      ];
+
+   }
+
+   /**
+    * @dataProvider providerCanUpdate
+    */
+   public function testCanUpdate($user, $password, $expected) {
+      $this->login($user, $password);
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::canUpdate();
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerCanView() {
+      yield [
+         'user' => 'post-only',
+         'password' => 'postonly',
+         'expected' => true,
+      ];
+
+      yield [
+         'user' => 'glpi',
+         'password' => 'glpi',
+         'expected' => true,
+      ];
+
+   }
+
+   /**
+    * @dataProvider providerCanView
+    */
+   public function testCanView($user, $password, $expected) {
+      $this->login($user, $password);
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::canView();
+      $this->boolean($output)->isEqualTo($expected);
+   }
 }
