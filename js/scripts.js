@@ -1379,7 +1379,17 @@ var plugin_formcreator = new function() {
             return;
          }
       });
-   }
+   };
+
+   this.submitUserForm = function (event) {
+      var keyPressed = event.keyCode || event.which;
+      if (keyPressed === 13 && $('[name="submit_formcreator"]').is(':hidden')) {
+         event.preventDefault();
+         return false;
+      }
+
+      return true;
+   };
 }
 
 // === TARGETS ===
