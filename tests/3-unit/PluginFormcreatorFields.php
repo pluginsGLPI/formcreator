@@ -330,4 +330,12 @@ class PluginFormcreatorFields extends CommonTestCase {
          \PluginFormcreatorForm::class => true,
       ]);
    }
+
+   public function testGetNames() {
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getNames();
+
+      $this->array($output)
+         ->hasSize(26);
+   }
 }

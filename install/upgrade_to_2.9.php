@@ -295,6 +295,10 @@ class PluginFormcreatorUpgradeTo2_9 {
          $migration->changeField($table, 'plugin_formcreator_questions_id', 'items_id', 'integer', ['comment' => 'item ID of the item affected by the condition']);
       }
       $migration->migrationOneTable($table);
+
+      // Fix possible nulls (despite those lines are definetely broken not usable; maybe a form does not behaves properly showing / hiding a question)
+      $DB->query("UPDATE `$table` SET `show_field` = 0 WHERE `show_field` IS NULL");
+
       $migration->changeField($table, 'show_field', 'plugin_formcreator_questions_id', 'integer', ['value' => '0', 'comment' => 'question to test for the condition']);
       $migration->dropKey($table, 'plugin_formcreator_questions_id');
       $migration->migrationOneTable($table);

@@ -36,8 +36,9 @@ if (!defined('GLPI_ROOT')) {
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item as Dashboard_Item;
 use Glpi\Dashboard\Right as Dashboard_Right;
-
+use Glpi\System\Diagnostic\DatabaseSchemaIntegrityChecker;
 use Ramsey\Uuid\Uuid;
+
 class PluginFormcreatorInstall {
    protected $migration;
 
@@ -77,7 +78,6 @@ class PluginFormcreatorInstall {
       '2.12.1' => '2.12.5',
       '2.12.5' => '2.13',
    ];
-
 
    protected bool $resyncIssues = false;
 
@@ -125,12 +125,52 @@ class PluginFormcreatorInstall {
          }
          if ($hasMyisamTables) {
             // Need to convert myisam tables into innodb first
+            $message = sprintf(
+               __('Upgrade tables to innoDB; run %s', 'formcreator'),
+               'php bin/console glpi:migration:myisam_to_innodb'
+            );
             if (isCommandLine()) {
-               echo "Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb" . PHP_EOL;
+               echo $message . PHP_EOL;
             } else {
-               Session::addMessageAfterRedirect(__('Upgrade tables to innoDB; run php bin/console glpi:migration:myisam_to_innodb', 'formcreator'), false, ERROR);
+               Session::addMessageAfterRedirect($message, false, ERROR);
             }
             return false;
+         }
+      }
+
+      // Check schema of tables before upgrading
+      if (!isset($args['skip-db-check'])) {
+         $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
+         if ($oldVersion !== null) {
+            $checkResult = true;
+            if (version_compare($oldVersion, '2.13.0') >= 0) {
+               $checkResult = $this->checkSchema(
+                  $oldVersion,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false
+               );
+            }
+            if (!$checkResult) {
+               $message = sprintf(
+                  __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
+                  $oldVersion,
+                  'bin/console glpi:plugin:install formcreator -f'
+               );
+               if (!isCommandLine()) {
+                  Session::addMessageAfterRedirect($message, false, ERROR);
+               } else {
+                  echo $message . PHP_EOL;
+                  echo sprintf(
+                     __('To ignore the inconsistencies and upgrade anyway run %s', 'formcreator'),
+                     'bin/console glpi:plugin:install formcreator -f -p skip-db-check'
+                  ) . PHP_EOL;
+               }
+               return false;
+            }
          }
       }
 
@@ -143,15 +183,12 @@ class PluginFormcreatorInstall {
       }
 
       if (version_compare($fromSchemaVersion, '2.5') < 0) {
+         $message = __('Upgrade from version older than 2.5.0 is no longer supported. Please upgrade to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.', 'formcreator');
          if (isCommandLine()) {
-            echo 'Upgrade from version < 2.5.0 is no longer supported.' . PHP_EOL;
-            echo 'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,' . PHP_EOL;
-            echo 'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.' . PHP_EOL;
+            echo $message;
          } else {
             Session::addMessageAfterRedirect(
-               'Upgrade from version < 2.5.0 is no longer supported.<br>' .
-               'Please upgrade to GLPI 9.5, upgrade Formcreator to version 2.12,<br>' .
-               'then upgrade again to GLPI 10 or later and Formcreator 2.13 or later.',
+               $message,
                true,
                ERROR
             );
@@ -159,12 +196,13 @@ class PluginFormcreatorInstall {
          return false;
       }
 
+      ob_start();
       while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
          $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
          $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
       }
-
       $this->migration->executeMigration();
+
       // if the schema contains new tables
       $this->installSchema();
       $this->configureExistingEntities();
@@ -173,12 +211,41 @@ class PluginFormcreatorInstall {
       $this->createCronTasks();
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
+      ob_get_flush();
 
       if ($this->resyncIssues) {
          // An upgrade step requires a resync of the issues
          $task = new CronTask();
          PluginFormcreatorIssue::cronSyncIssues($task);
       }
+
+      // Check schema of tables after upgrade
+      $checkResult = $this->checkSchema(
+         PLUGIN_FORMCREATOR_VERSION,
+         false,
+         false,
+         false,
+         false,
+         false,
+         false
+      );
+      if (!$checkResult) {
+         $message = sprintf(
+            __('The database schema is not consistent with the installed Formcreator %s. To see the logs enable the plugin and run the command %s', 'formcreator'),
+            PLUGIN_FORMCREATOR_VERSION,
+            'bin/console glpi:database:check_schema_integrity -p formcreator'
+         );
+         if (!isCommandLine()) {
+            Session::addMessageAfterRedirect($message, false, ERROR);
+         } else {
+            echo $message . PHP_EOL;
+         }
+      } else {
+         if (isCommandLine()) {
+            echo __('The tables of the plugin passed the schema integrity check.', 'formcreator') . PHP_EOL;
+         }
+      }
+
       return true;
    }
 
@@ -262,7 +329,7 @@ class PluginFormcreatorInstall {
    protected function installSchema() {
       global $DB;
 
-      $dbFile = __DIR__ . '/mysql/plugin_formcreator_empty.sql';
+      $dbFile = plugin_formcreator_getSchemaPath();
       if (!$DB->runFile($dbFile)) {
          $this->migration->displayWarning("Error creating tables : " . $DB->error(), true);
          die('Giving up');
@@ -728,6 +795,53 @@ class PluginFormcreatorInstall {
       ]);
       if ($dashboard->getFromDB('plugin_formcreator_issue_counters') !== false) {
          // Failed to delete the dashboard
+         return false;
+      }
+
+      return true;
+   }
+
+   /**
+    * Check the schema of all tables of the plugin against the expected schema of the given version
+    *
+    * @return boolean
+    */
+   public function checkSchema(
+      string $version,
+      bool $strict = true,
+      bool $ignore_innodb_migration = false,
+      bool $ignore_timestamps_migration = false,
+      bool $ignore_utf8mb4_migration = false,
+      bool $ignore_dynamic_row_format_migration = false,
+      bool $ignore_unsigned_keys_migration = false
+   ): bool {
+      global $DB;
+
+      $schemaFile = plugin_formcreator_getSchemaPath($version);
+
+      $checker = new DatabaseSchemaIntegrityChecker(
+         $DB,
+         $strict,
+         $ignore_innodb_migration,
+         $ignore_timestamps_migration,
+         $ignore_utf8mb4_migration,
+         $ignore_dynamic_row_format_migration,
+         $ignore_unsigned_keys_migration
+      );
+
+      try {
+         $differences = $checker->checkCompleteSchema($schemaFile, true, 'plugin:formcreator');
+      } catch (\Throwable $e) {
+         $message = __('Failed to check the sanity of the tables!', 'formcreator');
+         if (isCommandLine()) {
+            echo $message . PHP_EOL;
+         } else {
+            Session::addMessageAfterRedirect($message, false, ERROR);
+         }
+         return false;
+      }
+
+      if (count($differences) > 0) {
          return false;
       }
 

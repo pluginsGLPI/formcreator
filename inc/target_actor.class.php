@@ -207,6 +207,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          $item->update($input);
       } else {
          unset($input['id']);
+         $input['actor_value_' . $input['actor_type']] = $input['actor_value'];
          $itemId = $item->add($input);
       }
       if ($itemId === false) {

@@ -33,11 +33,11 @@ use Glpi\Plugin\Hooks;
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-rc.1');
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.0-dev');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
-define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '10.0');
@@ -55,8 +55,10 @@ define('PLUGIN_FORMCREATOR_ADVANCED_VALIDATION', 'advform');
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
 function plugin_version_formcreator() {
+   plugin_formcreator_savePreviousVersion();
+
    $glpiVersion = rtrim(GLPI_VERSION, '-dev');
-   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+   if (!method_exists(Plugin::class, 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
@@ -493,6 +495,35 @@ function plugin_formcreator_options() {
  *
  * @return string|null
  */
-function plugin_formcreator_getSchemaPath(): ?string {
-   return Plugin::getPhpDir('formcreator') . '/install/mysql/plugin_formcreator_empty.sql';
+function plugin_formcreator_getSchemaPath(string $version = null): ?string {
+   if ($version === null) {
+      $version = PLUGIN_FORMCREATOR_VERSION;
+   }
+
+   // Drop suffixes for alpha, beta, rc versions
+   $matches = [];
+   preg_match('/^(\d+\.\d+\.\d+)/', $version, $matches);
+   $version = $matches[1];
+
+   return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
+}
+
+/**
+ * Detect a versin change and save the previous version in the DB
+ *
+ * Used to proceed a DB sanity check before an upgrade
+ * @see PluginFormcreatorInstall::upgrade
+ * @see PluginFormcreatorInstall::checkSchema
+ *
+ * @return void
+ */
+function plugin_formcreator_savePreviousVersion(): void {
+   $plugin = new Plugin();
+   $plugin->getFromDBbyDir('formcreator');
+   $oldVersion = $plugin->fields['version'] ?? null;
+   if ($oldVersion !== null && $oldVersion != PLUGIN_FORMCREATOR_VERSION) {
+      Config::setConfigurationValues('formcreator', [
+         'previous_version' => $oldVersion,
+      ]);
+   }
 }
