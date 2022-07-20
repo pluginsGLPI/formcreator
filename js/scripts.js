@@ -1408,8 +1408,17 @@ var plugin_formcreator = new function() {
             plugin_formcreator_forms_id: items_id
          },
       });
-   }
+   };
 
+   this.submitUserForm = function (event) {
+      var keyPressed = event.keyCode || event.which;
+      if (keyPressed === 13 && $('[name="submit_formcreator"]').is(':hidden')) {
+         event.preventDefault();
+         return false;
+      }
+
+      return true;
+   };
 }
 
 // === TARGETS ===

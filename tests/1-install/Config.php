@@ -172,10 +172,7 @@ class Config extends CommonTestCase {
       $pluginName = TEST_PLUGIN_NAME;
 
       // Check the version saved in configuration
-      $config = \Config::getConfigurationValues($pluginName);
-      $this->array($config)->isIdenticalTo([
-         'schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION
-      ]);
+      $this->string(\Config::getConfigurationValue($pluginName, 'schema_version'))->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    }
 
    public function checkRequestType() {
