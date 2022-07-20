@@ -1,3 +1,67 @@
+<a name="2.13.0-rc.2"></a>
+## [2.13.0-rc.2](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-rc.1..2.13.0-rc.2) (2022-07-20)
+
+
+### Bug Fixes
+
+*  php warning ([9304443c](https://github.com/pluginsGLPI/formcreator/commit/9304443c))
+* **abstractitiltarget:** use_notification is not a bool ([fc7d8a2f](https://github.com/pluginsGLPI/formcreator/commit/fc7d8a2f))
+* **changelog:** bad anchor ([be417f55](https://github.com/pluginsGLPI/formcreator/commit/be417f55))
+* **fieldsfield:** broken rendering of question ([e6bb7fbc](https://github.com/pluginsGLPI/formcreator/commit/e6bb7fbc))
+* **fieldsfield:** typo in string ([ad9bdfb1](https://github.com/pluginsGLPI/formcreator/commit/ad9bdfb1))
+* **form:** able to submit when button disabled ([bf3ebefe](https://github.com/pluginsGLPI/formcreator/commit/bf3ebefe))
+* **form:** form property showed twice ([c5e00541](https://github.com/pluginsGLPI/formcreator/commit/c5e00541))
+* **form:** unable to upload files from public_form ([6276402b](https://github.com/pluginsGLPI/formcreator/commit/6276402b))
+* **formanswer:** handle null value when parsing tags ([63bb428c](https://github.com/pluginsGLPI/formcreator/commit/63bb428c))
+* **formanswer:** typo in comparison operator ([77415730](https://github.com/pluginsGLPI/formcreator/commit/77415730)), closes [#2844](https://github.com/pluginsGLPI/formcreator/issues/2844)
+* **glpiselectfield:** regex comparison ([64e28bbd](https://github.com/pluginsGLPI/formcreator/commit/64e28bbd))
+* **install:** bad argument fordefault values ([6f7fbc84](https://github.com/pluginsGLPI/formcreator/commit/6f7fbc84))
+* **install:** convert all FK to unsigned ([4ba5ed89](https://github.com/pluginsGLPI/formcreator/commit/4ba5ed89))
+* **install:** disable db check prior upgrade ([504727b5](https://github.com/pluginsGLPI/formcreator/commit/504727b5))
+* **install:** fix possible schema errors coming from version older than 2.5.0 ([c9338cd6](https://github.com/pluginsGLPI/formcreator/commit/c9338cd6))
+* **install:** give more instructions to support the upgrade process ([104f8fd0](https://github.com/pluginsGLPI/formcreator/commit/104f8fd0))
+* **install:** handle invalid values before changing columns, add possibly missing index ([f5369f6d](https://github.com/pluginsGLPI/formcreator/commit/f5369f6d))
+* **install:** less picky checks when upgrading from 2.13.0 ([7420cdce](https://github.com/pluginsGLPI/formcreator/commit/7420cdce))
+* **install:** move command out of localizable string ([859443f4](https://github.com/pluginsGLPI/formcreator/commit/859443f4))
+* **install:** move error messages, find schema file with unstable  versions ([cc886985](https://github.com/pluginsGLPI/formcreator/commit/cc886985))
+* **install:** pick the right schema ([d9cf90a4](https://github.com/pluginsGLPI/formcreator/commit/d9cf90a4))
+* **install:** post install db check ([722158db](https://github.com/pluginsGLPI/formcreator/commit/722158db))
+* **install:** preveit failure if tables contains some NULL values ([e87b6f57](https://github.com/pluginsGLPI/formcreator/commit/e87b6f57))
+* **install:** prevent output in ajax response ([1d19d7c9](https://github.com/pluginsGLPI/formcreator/commit/1d19d7c9))
+* **install:** try to prevent SQL error in migration ([831f273d](https://github.com/pluginsGLPI/formcreator/commit/831f273d))
+* **install:** workaround alter table failure ([91baefb9](https://github.com/pluginsGLPI/formcreator/commit/91baefb9))
+* **intall:** do not process non-existing tables ([d5b5fd89](https://github.com/pluginsGLPI/formcreator/commit/d5b5fd89))
+* **issue:** Show pending / accepted forms search results ([58ea0662](https://github.com/pluginsGLPI/formcreator/commit/58ea0662))
+* **issue:** accepted status not searchable ([2df02ae4](https://github.com/pluginsGLPI/formcreator/commit/2df02ae4))
+* **issue:** allow null in name column ([bb32843d](https://github.com/pluginsGLPI/formcreator/commit/bb32843d))
+* **issue:** vonsistency with seaerch for accepted issues ([64876111](https://github.com/pluginsGLPI/formcreator/commit/64876111))
+* **section:** untranslated sring ([fb6800cc](https://github.com/pluginsGLPI/formcreator/commit/fb6800cc))
+* **target_actor:** import requires specific input format ([3a8d3eae](https://github.com/pluginsGLPI/formcreator/commit/3a8d3eae))
+* **targetticket:** prevent setting a type from an incompatible question ([f5de8bb6](https://github.com/pluginsGLPI/formcreator/commit/f5de8bb6))
+* **textarea:** encoding problem when picture is embedded ([525cfd5b](https://github.com/pluginsGLPI/formcreator/commit/525cfd5b))
+* **wizard:** rename forms menu for simplified interface ([07d27926](https://github.com/pluginsGLPI/formcreator/commit/07d27926))
+
+
+### Features
+
+*  enable advanced validation ([6a24d7bd](https://github.com/pluginsGLPI/formcreator/commit/6a24d7bd))
+*  update dependencies ([3b9c5d8e](https://github.com/pluginsGLPI/formcreator/commit/3b9c5d8e))
+*  update js dependencies ([7dba5f2a](https://github.com/pluginsGLPI/formcreator/commit/7dba5f2a))
+* **fields:** manage new fields type plugin ([a2b58191](https://github.com/pluginsGLPI/formcreator/commit/a2b58191))
+* **formanswer:** do not valdiate if requester is validator ([613e6e30](https://github.com/pluginsGLPI/formcreator/commit/613e6e30))
+* **install:** add schema of all older versions ([814729be](https://github.com/pluginsGLPI/formcreator/commit/814729be))
+* **install:** attempt to fix old inconsistencies ([a94c928c](https://github.com/pluginsGLPI/formcreator/commit/a94c928c))
+* **install:** check schema prior to upgrade ([60f4bf75](https://github.com/pluginsGLPI/formcreator/commit/60f4bf75))
+* **install:** find old plugin version ([5cbcd2d7](https://github.com/pluginsGLPI/formcreator/commit/5cbcd2d7))
+* **install:** method to get the empty SQL file ([ef5fd200](https://github.com/pluginsGLPI/formcreator/commit/ef5fd200))
+* **install:** migrate tables to dynamic ([54c40c8d](https://github.com/pluginsGLPI/formcreator/commit/54c40c8d))
+* **install:** report successful integrity check ([f2316602](https://github.com/pluginsGLPI/formcreator/commit/f2316602))
+* **issue:** allow search on techs, not only myself as tech ([5a462977](https://github.com/pluginsGLPI/formcreator/commit/5a462977))
+* **issue:** limit tech users list ([0feb7d16](https://github.com/pluginsGLPI/formcreator/commit/0feb7d16))
+* **question:** allow gaps in rows ([20c212e8](https://github.com/pluginsGLPI/formcreator/commit/20c212e8))
+* **targetticket,targetcvhange,targetproblem:** update actors array ([4d92bc59](https://github.com/pluginsGLPI/formcreator/commit/4d92bc59))
+
+
 <a name="2.13.0-rc.1"></a>
 ## [2.13.0-rc.1](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-beta.2..2.13.0-rc.1) (2022-06-07)
 
