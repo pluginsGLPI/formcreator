@@ -2108,7 +2108,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showAddTargetForm() {
-      echo '<form name="form_target" method="post" action="'.self::getFormURL().'">';
+      echo '<form name="form_target" method="post" action="'. static::getFormURL() . '">';
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">'.__('Add a target', 'formcreator').'</th></tr>';
