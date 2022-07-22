@@ -890,7 +890,8 @@ PluginFormcreatorTranslatableInterface
       $userId = Session::getLoginUserID();
       echo '<div id="plugin_formcreator_last_req_forms" class="card">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
-      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
+      $formAnswer = PluginFormcreatorCommon::getFormAnswer();
+      $result = $formAnswer::getMyLastAnswersAsRequester($limit);
       if ($result->count() == 0) {
          echo '<div class="card-body text-center text-muted">'.__('No form posted yet', 'formcreator').'</div>';
       } else {
