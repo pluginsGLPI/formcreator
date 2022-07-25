@@ -92,6 +92,7 @@ class TextareaField extends TextField
                   'multiple'      => true,
                   'display'       => false]);
       $html .=  '</div>';
+      // This JS function intercepts tinyMCE creation then must be executed before end of page load
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");
