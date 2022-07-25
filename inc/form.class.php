@@ -1991,7 +1991,7 @@ PluginFormcreatorTranslatableInterface
    public static function getByItem(?CommonDBTM $item): ?self {
       global $DB;
 
-      if ($item::getType() == self::getType()) {
+      if ($item instanceof self) {
          return $item;
       }
 

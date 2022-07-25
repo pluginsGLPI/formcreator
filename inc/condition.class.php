@@ -310,38 +310,31 @@ class PluginFormcreatorCondition extends CommonDBChild implements PluginFormcrea
       }
 
       /** @var CommonDBTM $item */
-      $itemtype = $item->getType();
-      switch ($itemtype) {
-         case PluginFormcreatorForm::class:
-            return [];
-            break;
-
-         case PluginFormcreatorSection::class:
-            if ($item->isNewItem()) {
-               $formFk = PluginFormcreatorForm::getForeignKeyField();
-               $sections = (new PluginFormcreatorSection())->getSectionsFromForm($item->fields[$formFk]);
-               $sectionsList = [];
-               foreach ($sections as $section) {
-                  $sectionsList[] = $section->getID();
-               }
-               $questionListExclusion = [];
-               if (count($sectionsList) > 0) {
-                  $questionListExclusion[] = [
-                     PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
-                  ];
-               }
-               return $questionListExclusion;
+      if ($item instanceof PluginFormcreatorForm) {
+         return [];
+      } else if ($item instanceof PluginFormcreatorSection) {
+         if ($item->isNewItem()) {
+            $formFk = PluginFormcreatorForm::getForeignKeyField();
+            $sections = (new PluginFormcreatorSection())->getSectionsFromForm($item->fields[$formFk]);
+            $sectionsList = [];
+            foreach ($sections as $section) {
+               $sectionsList[] = $section->getID();
             }
-            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-            return [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $item->getID()]];
-            break;
-
-         case PluginFormcreatorQuestion::class:
-            if (!$item->isNewItem()) {
-               return [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $item->getID()]];
+            $questionListExclusion = [];
+            if (count($sectionsList) > 0) {
+               $questionListExclusion[] = [
+                  PluginFormcreatorSection::getForeignKeyField() => $sectionsList,
+               ];
             }
-            return [];
-            break;
+            return $questionListExclusion;
+         }
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+         return [PluginFormcreatorQuestion::getTable() . '.' . $sectionFk => ['<>', $item->getID()]];
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         if (!$item->isNewItem()) {
+            return [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $item->getID()]];
+         }
+         return [];
       }
       if (in_array($item::getType(), PluginFormcreatorForm::getTargetTypes())) {
          // No question exclusion for targets
