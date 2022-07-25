@@ -1030,8 +1030,7 @@ PluginFormcreatorTranslatableInterface
    protected function showPluginTagsSettings($rand) {
       global $DB;
 
-      $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+      if (Plugin::isPluginActive('tag')) {
          echo '<tr>';
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
@@ -1639,8 +1638,7 @@ SCRIPT;
       global $DB;
 
       // Add tag if presents
-      $plugin = new Plugin();
-      if (!$plugin->isActivated('tag')) {
+      if (!Plugin::isPluginActive('tag')) {
          return;
       }
 
