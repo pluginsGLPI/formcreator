@@ -223,7 +223,7 @@ class TextareaField extends TextField
    }
 
    public function equals($value): bool {
-      return $this->value == $value;
+      return $this->value == Sanitizer::unsanitize($value);
    }
 
    public function notEquals($value): bool {
@@ -231,7 +231,7 @@ class TextareaField extends TextField
    }
 
    public function greaterThan($value): bool {
-      return $this->value > $value;
+      return $this->value > Sanitizer::unsanitize($value);
    }
 
    public function lessThan($value): bool {
