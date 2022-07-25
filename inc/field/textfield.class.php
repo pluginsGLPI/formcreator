@@ -201,7 +201,6 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      $this->value = Sanitizer::sanitize($input[$key]);
       $this->value = Sanitizer::unsanitize($input[$key]);
       return true;
    }
