@@ -134,7 +134,7 @@ class RoboFile extends RoboFilePlugin
          }
 
          if (Git::tagExists($version)) {
-            // throw new Exception("The tag $version already exists");
+            throw new Exception("The tag $version already exists");
          }
 
          // if (!Git::isTagMatchesCurrentCommit($version)) {
@@ -150,7 +150,7 @@ class RoboFile extends RoboFilePlugin
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
       if ($release == 'release') {
-         // $this->updateChangelog();
+         $this->updateChangelog();
       }
 
       $diff = $this->gitDiff(['package.json']);
