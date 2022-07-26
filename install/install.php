@@ -141,8 +141,8 @@ class PluginFormcreatorInstall {
       }
 
       // Check schema of tables before upgrading
+      $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
       if (!isset($args['skip-db-check'])) {
-         $oldVersion = Config::getConfigurationValue('formcreator', 'previous_version');
          if ($oldVersion !== null) {
             $checkResult = true;
             if (version_compare($oldVersion, '2.13.0') >= 0) {
@@ -238,15 +238,17 @@ class PluginFormcreatorInstall {
          PluginFormcreatorIssue::cronSyncIssues($task);
       }
 
+      $lazyCheck = false;
+      // $lazyCheck = (version_compare($oldVersion, '2.13.0') < 0);
       // Check schema of tables after upgrade
       $checkResult = $this->checkSchema(
          PLUGIN_FORMCREATOR_VERSION,
          false,
-         false,
-         false,
-         false,
-         false,
-         false
+         $lazyCheck,
+         $lazyCheck,
+         $lazyCheck,
+         $lazyCheck,
+         $lazyCheck
       );
       if (!$checkResult) {
          $message = sprintf(
