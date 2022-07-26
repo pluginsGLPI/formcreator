@@ -38,6 +38,7 @@ class PluginFormcreatorUpgradeTo2_13 {
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
       $this->fixTables();
+      $this->updateShortText();
       $this->migrateEntityConfig();
       $this->addDefaultFormListMode();
       $this->addDashboardVisibility();
@@ -160,13 +161,30 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->migrationOneTable($table);
 
       $table = 'glpi_plugin_formcreator_questiondependencies';
-      $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', $unsignedIntType);
-      $this->migration->changeField($table, 'plugin_formcreator_questions_id_2', 'plugin_formcreator_questions_id_2', $unsignedIntType);
-      $this->migration->migrationOneTable($table);
+      if ($DB->tableExists($table)) {
+         // Table may be created at the very end when upgrading from < 2.12
+         $this->migration->changeField($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id', $unsignedIntType);
+         $this->migration->changeField($table, 'plugin_formcreator_questions_id_2', 'plugin_formcreator_questions_id_2', $unsignedIntType);
+         $this->migration->migrationOneTable($table);
+      }
 
       $table = 'glpi_plugin_formcreator_forms_languages';
-      $this->migration->changeField($table, 'plugin_formcreator_forms_id', 'plugin_formcreator_forms_id', $unsignedIntType);
-      $this->migration->migrationOneTable($table);
+      if ($DB->tableExists($table)) {
+         // Table may be created at the very end when upgrading from < 2.12
+         $this->migration->changeField($table, 'plugin_formcreator_forms_id', 'plugin_formcreator_forms_id', $unsignedIntType);
+         $this->migration->migrationOneTable($table);
+      }
+   }
+
+   public function updateShortText() {
+      $table = 'glpi_plugin_formcreator_categories';
+      $this->migration->changeField($table, 'comment', 'comment', 'mediumtext');
+
+      $table = 'glpi_plugin_formcreator_formanswers';
+      $this->migration->changeField($table, 'comment', 'comment', 'mediumtext');
+
+      $table = 'glpi_plugin_formcreator_questionregexes';
+      $this->migration->changeField($table, 'regex', 'regex', 'mediumtext');
    }
 
    public function addEntityOption() {
@@ -399,6 +417,9 @@ class PluginFormcreatorUpgradeTo2_13 {
       ];
 
       foreach ($tables as $table => $fields) {
+         if (!$DB->tableExists($table)) {
+            continue;
+         }
          foreach ($fields as $field) {
             if ($field == 'id') {
                $type = 'autoincrement';

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   `id`                               int unsigned NOT NULL AUTO_INCREMENT,
   `name`                             varchar(255) NOT NULL DEFAULT '',
-  `comment`                          text,
+  `comment`                          mediumtext,
   `completename`                     varchar(255) DEFAULT NULL,
   `plugin_formcreator_categories_id` int unsigned NOT NULL DEFAULT '0',
   `level`                            int(11) NOT NULL DEFAULT '1',
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `groups_id_validator`         int unsigned NOT NULL DEFAULT '0' COMMENT 'Group in charge of validation',
   `request_date`                timestamp    NULL,
   `status`                      int(11)      NOT NULL DEFAULT '101',
-  `comment`                     text,
+  `comment`                     mediumtext,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
@@ -329,7 +329,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `id`                                int unsigned  NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_questions_id`   int unsigned  NOT NULL DEFAULT '0',
-  `regex`                             text          DEFAULT NULL,
+  `regex`                             mediumtext    DEFAULT NULL,
   `fieldname`                         varchar(255)  DEFAULT NULL,
   `uuid`                              varchar(255)  DEFAULT NULL,
   PRIMARY KEY (`id`),
