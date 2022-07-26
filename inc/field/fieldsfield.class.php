@@ -268,9 +268,10 @@ class FieldsField extends PluginFormcreatorAbstractField
                   'rows'    => 4,
                   'display' => false,
                ]);
-               $html .= Html::scriptBlock("$(function() {
+               // This JS function intercepts tinyMCE creation then must be executed before end of page load
+               $html .= Html::scriptBlock("
                   pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
-               });");
+               ");
             } else {
                $html.= nl2br($value);
             }

@@ -839,7 +839,8 @@ PluginFormcreatorTranslatableInterface
       $userId = Session::getLoginUserID();
       echo '<div id="plugin_formcreator_last_req_forms" class="card">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
-      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester($limit);
+      $formAnswer = PluginFormcreatorCommon::getFormAnswer();
+      $result = $formAnswer::getMyLastAnswersAsRequester($limit);
       if ($result->count() == 0) {
          echo '<div class="card-body text-center text-muted">'.__('No form posted yet', 'formcreator').'</div>';
       } else {
@@ -1954,7 +1955,7 @@ PluginFormcreatorTranslatableInterface
    public static function getByItem(?CommonDBTM $item): ?self {
       global $DB;
 
-      if ($item::getType() == self::getType()) {
+      if ($item instanceof self) {
          return $item;
       }
 
@@ -2071,7 +2072,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showAddTargetForm() {
-      echo '<form name="form_target" method="post" action="'.self::getFormURL().'">';
+      echo '<form name="form_target" method="post" action="'. static::getFormURL() . '">';
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">'.__('Add a target', 'formcreator').'</th></tr>';
