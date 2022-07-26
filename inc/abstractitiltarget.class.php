@@ -2184,8 +2184,10 @@ SCRIPT;
                }
             } else {
                if ($data["$actorType"] == 0) {
-                  unset($data["$actorType"]);
-                  unset($data["${actorType}_notif"]);
+                  if (isset($data["${actorType}_notif"]) && count($data["${actorType}_notif"]) < 1) {
+                     unset($data["$actorType"]);
+                     unset($data["${actorType}_notif"]);
+                  }
                }
             }
          }
