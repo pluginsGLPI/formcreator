@@ -59,7 +59,10 @@ plugin_test_upgrade() {
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_empty_2.5.0.sql
    php ../../bin/console glpi:migration:myisam_to_innodb --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
    php ../../bin/console glpi:plugin:install formcreator --username=glpi --config-dir=../../$TEST_GLPI_CONFIG_DIR
+   # Upgrading from < 2.6 will create a MyISAM table, then re-run innoDB migration
+   php ../../bin/console glpi:migration:myisam_to_innodb --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
    php ../../bin/console glpi:migration:unsigned_keys    --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
+   php ../../bin/console glpi:migration:utf8mb4          --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
 }
 
 # Plugin test
