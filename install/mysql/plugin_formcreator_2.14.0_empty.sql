@@ -247,6 +247,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `associate_question`             int unsigned NOT NULL DEFAULT '0',
   `location_rule`                  int(11)      NOT NULL DEFAULT '1',
   `location_question`              int unsigned NOT NULL DEFAULT '0',
+  `contract_rule`                  int(11)      NOT NULL DEFAULT '1',
+  `contract_question`              int unsigned NOT NULL DEFAULT '0',
   `commonitil_validation_rule`     int(11)      NOT NULL DEFAULT '1',
   `commonitil_validation_question` varchar(255) DEFAULT NULL,
   `show_rule`                      int(11)      NOT NULL DEFAULT '1',

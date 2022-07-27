@@ -161,6 +161,11 @@ PluginFormcreatorTranslatableInterface
    const LOCATION_RULE_ANSWER = 3;
    const LOCATION_RULE_LAST_ANSWER  = 4;
 
+   const CONTRACT_RULE_NONE = 1;
+   const CONTRACT_RULE_SPECIFIC = 2;
+   const CONTRACT_RULE_ANSWER = 3;
+   const CONTRACT_RULE_LAST_ANSWER  = 4;
+
    const COMMONITIL_VALIDATION_RULE_NONE = 1;
    const COMMONITIL_VALIDATION_RULE_SPECIFIC_USER_OR_GROUP = 2;
    const COMMONITIL_VALIDATION_RULE_ANSWER_USER = 3;
@@ -232,6 +237,15 @@ PluginFormcreatorTranslatableInterface
          self::LOCATION_RULE_SPECIFIC     => __('Specific location', 'formcreator'),
          self::LOCATION_RULE_ANSWER       => __('Equals to the answer to the question', 'formcreator'),
          self::LOCATION_RULE_LAST_ANSWER  => __('Last valid answer', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumContractRule() {
+      return [
+         self::CONTRACT_RULE_NONE         => __('Contract from template or none', 'formcreator'),
+         self::CONTRACT_RULE_SPECIFIC     => __('Specific contract', 'formcreator'),
+         self::CONTRACT_RULE_ANSWER       => __('Equals to the answer to the question', 'formcreator'),
+         self::CONTRACT_RULE_LAST_ANSWER  => __('Last valid answer', 'formcreator'),
       ];
    }
 
@@ -1257,6 +1271,48 @@ SCRIPT;
       Dropdown::showFromArray('_location_question', $users_questions, [
          'value' => $this->fields['location_question'],
       ]);
+
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   protected function showContractSettings($rand) {
+      global $DB;
+
+      echo '<tr>';
+      echo '<td width="15%">' . __('Contract') . '</td>';
+      echo '<td width="45%">';
+      Dropdown::showFromArray('contract_rule', static::getEnumContractRule(), [
+         'value'                 => $this->fields['contract_rule'],
+         'on_change'             => "plugin_formcreator_change_contract($rand)",
+         'rand'                  => $rand
+      ]);
+
+      echo Html::scriptBlock("plugin_formcreator_change_contract($rand)");
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="contract_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="contract_specific_title" style="display: none">' . __('Contract ', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="contract_specific_value" style="display: none">';
+      Contract::dropdown([
+         'name' => '_contract_specific',
+         'value' => $this->fields["contract_question"],
+      ]);
+      echo '</div>';
+      echo '<div id="contract_question_value" style="display: none">';
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'itemtype' => Contract::class
+         ],
+         'contract_question',
+         $this->fields['contract_question']
+      );
 
       echo '</div>';
       echo '</td>';
