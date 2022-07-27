@@ -118,10 +118,14 @@ class PluginFormcreatorUpgradeTo2_6 {
       $migration->dropKey($table, 'plugin_formcreator_question_id');
       $migration->addKey($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id');
 
+      $defaultCharset = DBConnection::getDefaultCharset();
+      $defaultCollation = DBConnection::getDefaultCollation();
+      $defaultKeySign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = 'glpi_plugin_formcreator_items_targettickets';
       if (!$DB->tableExists($table)) {
          $query = "CREATE TABLE `$table` (
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `id` int(11) $defaultKeySign NOT NULL AUTO_INCREMENT,
                   `plugin_formcreator_targettickets_id` int(11) NOT NULL DEFAULT '0',
                   `link` int(11) NOT NULL DEFAULT '0',
                   `itemtype` varchar(255) NOT NULL DEFAULT '',
@@ -130,7 +134,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                   PRIMARY KEY (`id`),
                   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
                   INDEX `item` (`itemtype`,`items_id`)
-                  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                  ) ENGINE=InnoDB DEFAULT CHARSET=$defaultCharset COLLATE=$defaultCollation ROW_FORMAT=DYNAMIC;";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
 
