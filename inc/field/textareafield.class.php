@@ -240,7 +240,7 @@ class TextareaField extends TextField
    }
 
    public function regex($value): bool {
-      return (preg_match($value, $this->value) === 1) ? true : false;
+      return (preg_match(Sanitizer::unsanitize($value), $this->value) === 1) ? true : false;
    }
 
    public function isPublicFormCompatible(): bool {
