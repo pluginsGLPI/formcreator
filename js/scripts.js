@@ -1930,6 +1930,24 @@ function plugin_formcreator_change_location(rand) {
    }
 }
 
+function plugin_formcreator_change_contract(rand) {
+   $('#contract_specific_title').hide();
+   $('#contract_specific_value').hide();
+   $('#contract_question_title').hide();
+   $('#contract_question_value').hide();
+
+   switch($('#dropdown_contract_rule' + rand).val()) {
+      case '3' : // PluginFormcreatorAbstractTarget::CONTRACT_RULE_ANSWER
+         $('#contract_question_title').show();
+         $('#contract_question_value').show();
+         break;
+      case '2' : // PluginFormcreatorAbstractTarget::CONTRACT_RULE_SPECIFIC
+         $('#contract_specific_title').show();
+         $('#contract_specific_value').show();
+         break;
+   }
+}
+
 function plugin_formcreator_change_validation(rand) {
    switch($('#dropdown_commonitil_validation_rule' + rand).val()) {
       case '1' : // PluginFormcreatorAbstractTarget::COMMONITIL_VALIDATION_RULE_NONE

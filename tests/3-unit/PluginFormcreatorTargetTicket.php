@@ -41,6 +41,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          case 'testSetTargetEntity':
          case 'testSetTargetCategory':
          case 'testSetTargetLocation':
+         case 'testSetTargetContract':
          case 'testSetTargetType':
          case 'testPrepareTemplate':
          case 'testDeleteLinkedTickets':
@@ -138,6 +139,16 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
          \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
          \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
+      ]);
+   }
+
+   public function testGetEnumContractType() {
+      $output = \PluginFormcreatorTargetTicket::getEnumContractRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE        => __('Contract from template or none', 'formcreator'),
+         \PluginFormcreatorTargetTicket::CONTRACT_RULE_SPECIFIC    => __('Specific contract', 'formcreator'),
+         \PluginFormcreatorTargetTicket::CONTRACT_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         \PluginFormcreatorTargetTicket::CONTRACT_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ]);
    }
 
@@ -680,6 +691,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'associate_question',
          'location_rule',
          'location_question',
+         'contract_rule',
+         'contract_question',
          'commonitil_validation_rule',
          'commonitil_validation_question',
          'show_rule',
@@ -1712,5 +1725,290 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $output = $dummyInstance->publicSetTargetLocation($data, $formanswer);
 
       $this->integer((int) $output['locations_id'])->isEqualTo($expected);
+   }
+
+   public function providerSetTargetContract_NotSet() {
+      // Prepare form
+
+      $form1 = $this->getForm();
+
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => 'foo',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+         'contract_question' => '0',
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => null,
+         ],
+      ];
+   }
+
+   public function providerSetTargetContract_LastItem() {
+      // Prepare form
+      $validItemtype = \Contract::class;
+      $invalidItemtype = \Monitor::getType();
+
+      $item1 = new $validItemtype();
+      $item1->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item1->isNewItem())->isFalse();
+      $item2 = new $validItemtype();
+      $item2->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => \Session::getActiveEntity(),
+      ]);
+      $this->boolean($item2->isNewItem())->isFalse();
+
+      $question1 = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => $validItemtype,
+      ]);
+      $form1 = \PluginFormcreatorForm::getByItem($question1);
+      $sectionId = $question1->fields['plugin_formcreator_sections_id'];
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $sectionId,
+         'fieldtype'                      => 'glpiselect',
+         'itemtype'                       => $validItemtype
+      ]);
+      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1->add([
+         'name' => 'foo',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         'content' => '##FULLFORM',
+         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_LAST_ANSWER,
+         'contract_question' => '0',
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
+         'formcreator_field_' . $question2->getID() => (string) $item2->getID(),
+      ]);
+      $this->boolean($formAnswer1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formAnswer1,
+            'expected'   => $item2->getID(),
+         ],
+      ];
+   }
+
+   public function providerSetTargetContract_nothing() {
+      $form = $this->getForm();
+      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer->isNewItem())->isFalse();
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->add([
+         'name' => 'target ticket no contract',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+      ]);
+      $this->boolean($targetTicket->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $targetTicket,
+            'formanswer' => $formanswer,
+            'expected'   => 0
+         ],
+      ];
+   }
+
+   public function providerSetTargetContract_noTemplate() {
+      $contract1 = new \Contract();
+      $contract1Id = $contract1->add([
+         'name' => 'contract 1',
+         'entities_id' => 0,
+      ]);
+      $contract2 = new \Contract();
+      $contract2Id = $contract2->add([
+         'name' => 'contract 2',
+         'entities_id' => 0,
+      ]);
+
+      $question1 = $this->getQuestion([
+         'name'      => 'request type',
+         'fieldtype' => 'requesttype',
+      ]);
+      $this->boolean($question1->isNewItem())->isFalse();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
+      $this->boolean($section->isNewItem())->isFalse();
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'contract',
+         'fieldtype'                      => 'glpiselect',
+         'itemtype'                       => \Contract::class,
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions'                    => [
+            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'                      => ['Incident'],
+         ]
+      ]);
+      $question3 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+         'name'                           => 'other contract',
+         'fieldtype'                      => 'glpiselect',
+         'itemtype'                       => \Contract::class,
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
+         '_conditions'                    => [
+            'show_logic' => [\PluginFormcreatorCondition::SHOW_LOGIC_AND],
+            'plugin_formcreator_questions_id' => [$question1->getID()],
+            'show_condition'                  => [\PluginFormcreatorCondition::SHOW_CONDITION_EQ],
+            'show_value'                      => ['Request'],
+         ]
+      ]);
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $contract1Id,
+         'formcreator_field_' . $question3->getID() => (string) $contract2Id,
+      ]);
+
+      $formanswer2 = new \PluginFormcreatorFormAnswer();
+      $formanswer2->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $contract1Id,
+         'formcreator_field_' . $question3->getID() => (string) $contract2Id,
+      ]);
+
+      $formanswer3 = new \PluginFormcreatorFormAnswer();
+      $formanswer3->add([
+         'plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id'],
+         'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
+         'formcreator_field_' . $question2->getID() => (string) $contract1Id,
+         'formcreator_field_' . $question3->getID() => (string) 0,
+      ]);
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket no template',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $formanswer1->getForm()->getID(),
+         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_LAST_ANSWER,
+      ]);
+
+      return [
+         // Check visibility is taken into account
+         'visibility taken into account' => [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $contract1Id,
+         ],
+         // Check contract dropdown is ignored
+         '1st ticket contract question is ignored' => [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer2,
+            'expected'   => $contract2Id,
+         ],
+         // Check zero value is ignored
+         'zero value is ignored' => [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer3,
+            'expected'   => $contract1Id,
+         ]
+      ];
+   }
+
+   public function providerSetTargetContract_FromTemplate() {
+      // When the target ticket uses a ticket template and does not specify a contract
+      $contract1 = new \Contract();
+      $contract1Id = $contract1->add([
+         'name' => 'contract 1',
+         'entities_id' => 0,
+      ]);
+
+      $ticketTemplate = $this->getGlpiCoreItem(
+         \TicketTemplate::getType(), [
+            'name' => 'template with predefined contract',
+         ]
+      );
+      $this->getGlpiCoreItem(\TicketTemplatePredefinedField::getType(), [
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'num'                => 193, // Contract
+         'value'              => $contract1Id
+      ]);
+
+      $form = $this->getForm();
+
+      $formanswer1 = new \PluginFormcreatorFormAnswer();
+      $formanswer1->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formanswer1->isNewItem())->isFalse();
+
+      $instance1 = $this->newTestedInstance();
+      $instance1->add([
+         'name' => 'target ticket with template',
+         'target_name' => 'target ticket',
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'tickettemplates_id' => $ticketTemplate->getID(),
+         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+      ]);
+      $this->boolean($instance1->isNewItem())->isFalse();
+
+      return [
+         [
+            'instance'   => $instance1,
+            'formanswer' => $formanswer1,
+            'expected'   => $contract1Id,
+         ],
+      ];
+   }
+
+   public function providerSetTargetContract() {
+      return array_merge(
+         $this->providerSetTargetContract_nothing(),
+         $this->providerSetTargetContract_noTemplate(),
+         $this->providerSetTargetContract_FromTemplate(),
+      );
+   }
+
+   /**
+    * @dataProvider providerSetTargetContract
+    *
+    */
+   public function testSetTargetContract($instance, $formanswer, $expected) {
+      // Substitute a dummy class to access protected / private methods
+      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
+      $dummyInstance = new $dummyItemtype();
+      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
+      $instance->getFromDB($instance->getID());
+      $dummyInstance->fields = $instance->fields;
+
+      \PluginFormcreatorFields::resetVisibilityCache();
+      $data = $dummyInstance->publicGetDefaultData($formanswer);
+      $output = $dummyInstance->publicSetTargetContract($data, $formanswer);
+
+      $this->integer((int) $output['_contracts_id'])->isEqualTo($expected);
    }
 }

@@ -42,6 +42,7 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addRights();
        $this->addPropertiesToCategories();
        $this->addTargetActorUnicity();
+       $this->addTargetContract();
    }
 
    public function addTtoToIssues() {
@@ -130,5 +131,13 @@ class PluginFormcreatorUpgradeTo2_14 {
 
       // Set unicity
       $this->migration->addKey($table, $unicity, 'unicity', 'UNIQUE');
+   }
+
+   public function addTargetContract() {
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
+
+      $this->migration->addField($table, 'contract_rule', 'integer', ['after' => 'location_question', 'value' => '1']);
+      $this->migration->addField($table, 'contract_question', $unsignedIntType, ['after' => 'contract_rule']);
    }
 }
