@@ -271,6 +271,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $item->showLocationSettings($rand);
 
       // -------------------------------------------------------------------------------------------
+      //  Contracts
+      // -------------------------------------------------------------------------------------------
+      $item->showContractSettings($rand);
+
+      // -------------------------------------------------------------------------------------------
       // Validation selection
       // -------------------------------------------------------------------------------------------
       $item->showValidationSettings($rand);
@@ -669,6 +674,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             }
          }
 
+         if (isset($input['contract_rule'])) {
+            switch ($input['contract_rule']) {
+               case self::CONTRACT_RULE_ANSWER:
+                  $input['contract_question'] = $input['_contract_question'];
+                  break;
+               case self::CONTRACT_RULE_SPECIFIC:
+                  $input['contract_question'] = $input['_contract_specific'];
+                  break;
+               case self::CONTRACT_RULE_LAST_ANSWER:
+               default:
+                  $input['contract_question'] = '0';
+            }
+         }
+
+         $plugin = new Plugin();
          if (Plugin::isPluginActive('tag')) {
             if (isset($input['tag_questions'])) {
                $input['tag_questions'] = (!empty($input['_tag_questions']))
@@ -887,6 +907,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
       $data = $this->setTargetLocation($data, $formanswer);
+      $data = $this->setTargetContract($data, $formanswer);
       $data = $this->setTargetAssociatedItem($data, $formanswer);
       $data = $this->setTargetValidation($data, $formanswer);
 
@@ -1063,6 +1084,82 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       }
       if (!is_null($location)) {
          $data['locations_id'] = $location;
+      }
+
+      return $data;
+   }
+
+   protected function setTargetContract($data, $formanswer) {
+      global $DB;
+
+      $contract = null;
+      switch ($this->fields['contract_rule']) {
+         case self::CONTRACT_RULE_ANSWER:
+            $contract = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['contract_question']
+               ]
+            ])->current();
+            if (isset($contract['answer']) && ctype_digit($contract['answer'])) {
+               $contract = $contract['answer'];
+            }
+            break;
+         case self::CONTRACT_RULE_SPECIFIC:
+            $contract = $this->fields['contract_question'];
+            break;
+         case self::CONTRACT_RULE_LAST_ANSWER:
+            $form_answer_id = $formanswer->fields['id'];
+
+            // Get all answers for dropdown questions of this form, ordered
+            // from last to first displayed
+            $answers = $DB->request([
+               'SELECT' => ['answer.plugin_formcreator_questions_id', 'answer.answer', 'question.values'],
+               'FROM' => PluginFormcreatorAnswer::getTable() . ' AS answer',
+               'JOIN' => [
+                  PluginFormcreatorQuestion::getTable() . ' AS question' => [
+                     'ON' => [
+                        'answer' => 'plugin_formcreator_questions_id',
+                        'question' => 'id',
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
+                  'question.fieldtype'                       => "glpiselect",
+                  'question.itemtype'                        => Contract::class,
+               ],
+               'ORDER' => [
+                  'row DESC',
+                  'col DESC',
+               ]
+            ]);
+
+            foreach ($answers as $answer) {
+               // Decode dropdown settings
+               $question = PluginFormcreatorQuestion::getById($answer[PluginFormcreatorQuestion::getForeignKeyField()]);
+               $itemtype = $question->fields['itemtype'];
+
+               // Skip if question was not answered
+               if (empty($answer['answer'])) {
+                  continue;
+               }
+
+               // Skip if question is not visible
+               if (!$formanswer->isFieldVisible($answer['plugin_formcreator_questions_id'])) {
+                  continue;
+               }
+
+               // Found a valid answer, stop here
+               $contract = $answer['answer'];
+               break;
+            }
+            break;
+      }
+      if (!is_null($contract)) {
+         $data['_contracts_id'] = $contract;
       }
 
       return $data;
@@ -1514,6 +1611,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             'category_rule'      => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
             'associate_rule'     => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
             'location_rule'      => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+            'contract_rule'      => ['values' => self::CONTRACT_RULE_ANSWER, 'field' => 'contract_question'],
             'destination_entity' => [
                'values' => [
                   self::DESTINATION_ENTITY_ENTITY,

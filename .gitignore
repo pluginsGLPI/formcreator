@@ -8,6 +8,7 @@ vendor/
 .project
 /.gtm/
 lib/
+.vscode/
 
 # Ignore content of data except for the index
 css_compiled/*

@@ -97,6 +97,10 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
       return $this->setTargetLocation($data, $formanswer);
    }
 
+   public function publicSetTargetContract($data, $formanswer) {
+      return $this->setTargetContract($data, $formanswer);
+   }
+
    public function publicSetTargetSource($data, $formanswer): array {
       return $this->setTargetSource($data, $formanswer);
    }
