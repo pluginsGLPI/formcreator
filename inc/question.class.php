@@ -1323,10 +1323,10 @@ PluginFormcreatorTranslatableInterface
             Profile::class            => Profile::getTypeName(2)
          ],
       ];
-      if ((new Plugin())->isActivated('appliances')) {
+      if (Plugin::isPluginActive('appliances')) {
          $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
-      if ((new Plugin())->isActivated('databases')) {
+      if (Plugin::isPluginActive('databases')) {
          $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
       }
 

@@ -72,7 +72,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function isPrerequisites(): bool {
-      return (new Plugin())->isActivated('fields');
+      return Plugin::isPluginActive('fields');
    }
 
    public static function getFieldsFromBlock($block_id): array {
@@ -149,7 +149,7 @@ class FieldsField extends PluginFormcreatorAbstractField
    }
 
    public function showForm(array $options): void {
-      if (!\Plugin::isPluginActive('fields')) {
+      if (!Plugin::isPluginActive('fields')) {
          $options['error'] = __('Warning: Additional Fields plugin is disabled or missing', 'formcreator');
          $template = '@formcreator/field/undefinedfield.html.twig';
          TemplateRenderer::getInstance()->display($template, [
@@ -177,7 +177,7 @@ class FieldsField extends PluginFormcreatorAbstractField
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       // Plugin field not available
-      if (!(new Plugin())->isActivated('fields')) {
+      if (!Plugin::isPluginActive('fields')) {
          return '';
       }
 

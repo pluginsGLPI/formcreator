@@ -135,7 +135,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                2 => __('Actors', 'formcreator'),
                3 => __('Condition', 'formcreator'),
             ];
-            // if ((new Plugin)->isActivated('fields')) {
+            // if (Plugin::isPluginActive('fields')) {
             //    $tab[4] = __('Fields plugin', 'formcreator');
             // }
             return $tab;
@@ -689,7 +689,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          }
 
          $plugin = new Plugin();
-         if ($plugin->isActivated('tag')) {
+         if (Plugin::isPluginActive('tag')) {
             if (isset($input['tag_questions'])) {
                $input['tag_questions'] = (!empty($input['_tag_questions']))
                                           ? implode(',', $input['_tag_questions'])
