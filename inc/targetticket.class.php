@@ -1129,6 +1129,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                'WHERE' => [
                   'answer.plugin_formcreator_formanswers_id' => $form_answer_id,
                   'question.fieldtype'                       => "glpiselect",
+                  'question.itemtype'                        => Contract::class,
                ],
                'ORDER' => [
                   'row DESC',
@@ -1140,11 +1141,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                // Decode dropdown settings
                $question = PluginFormcreatorQuestion::getById($answer[PluginFormcreatorQuestion::getForeignKeyField()]);
                $itemtype = $question->fields['itemtype'];
-
-               // Skip if not a dropdown on contracts
-               if ($itemtype !== Contract::class) {
-                  continue;
-               }
 
                // Skip if question was not answered
                if (empty($answer['answer'])) {

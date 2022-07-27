@@ -1304,40 +1304,15 @@ SCRIPT;
       ]);
       echo '</div>';
       echo '<div id="contract_question_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $questionTable = PluginFormcreatorQuestion::getTable();
-      $sectionTable = PluginFormcreatorSection::getTable();
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $result = $DB->request([
-         'SELECT' => [
-            $questionTable => ['id', 'name', 'values', 'itemtype'],
-            $sectionTable => ['name as sname'],
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'itemtype' => Contract::class
          ],
-         'FROM' => $questionTable,
-         'INNER JOIN' => [
-            $sectionTable => [
-               'FKEY' => [
-                  $sectionTable => 'id',
-                  $questionTable => $sectionFk
-               ]
-            ],
-         ],
-         'WHERE' => [
-            "$formFk" => $this->getForm()->getID(),
-            "$questionTable.fieldtype" => 'glpiselect'
-         ]
-      ]);
-      $users_questions = [];
-      foreach ($result as $question) {
-         if ($question['itemtype'] != 'Contract') {
-            continue;
-         }
-         $users_questions[$question['sname']][$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_contract_question', $users_questions, [
-         'value' => $this->fields['contract_question'],
-      ]);
+         'contract_question',
+         $this->fields['contract_question']
+      );
 
       echo '</div>';
       echo '</td>';

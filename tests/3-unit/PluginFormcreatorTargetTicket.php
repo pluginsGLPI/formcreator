@@ -1727,7 +1727,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $output['locations_id'])->isEqualTo($expected);
    }
 
-   public function providerSetTargetContract_NotSet() {
+   public function providerSetTargetContract_notSet() {
       // Prepare form
 
       $form1 = $this->getForm();
@@ -1757,7 +1757,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
-   public function providerSetTargetContract_LastItem() {
+   public function providerSetTargetContract_lastItem() {
       // Prepare form
       $validItemtype = \Contract::class;
       $invalidItemtype = \Monitor::getType();
@@ -1939,7 +1939,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ];
    }
 
-   public function providerSetTargetContract_FromTemplate() {
+   public function providerSetTargetContract_fromTemplate() {
       // When the target ticket uses a ticket template and does not specify a contract
       $contract1 = new \Contract();
       $contract1Id = $contract1->add([
@@ -1987,9 +1987,11 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
    public function providerSetTargetContract() {
       return array_merge(
+         $this->providerSetTargetContract_notSet(),
+         $this->providerSetTargetContract_lastItem(),
          $this->providerSetTargetContract_nothing(),
          $this->providerSetTargetContract_noTemplate(),
-         $this->providerSetTargetContract_FromTemplate(),
+         $this->providerSetTargetContract_fromTemplate(),
       );
    }
 
