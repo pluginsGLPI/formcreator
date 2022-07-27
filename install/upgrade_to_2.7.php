@@ -123,18 +123,21 @@ class PluginFormcreatorUpgradeTo2_7 {
       $migration->dropField($table, 'changetemplates_id');
 
       // Migrate regex question parameters
+      $defaultCharset = DBConnection::getDefaultCharset();
+      $defaultCollation = DBConnection::getDefaultCollation();
+      $defaultKeySign = DBConnection::getDefaultPrimaryKeySignOption();
       $table = 'glpi_plugin_formcreator_questions';
       if ($DB->fieldExists($table, 'regex')) {
          $DB->query(
             "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `id` int(11) $defaultKeySign NOT NULL AUTO_INCREMENT,
             `plugin_formcreator_questions_id`   int(11)       NOT NULL,
             `regex`                             text          DEFAULT NULL,
             `fieldname`                         varchar(255)  DEFAULT NULL,
             `uuid`                              varchar(255)  DEFAULT NULL,
             PRIMARY KEY (`id`),
             INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+            ) ENGINE=InnoDB DEFAULT CHARSET=$defaultCharset COLLATE=$defaultCollation ROW_FORMAT=DYNAMIC;"
          );
          $request = [
          'FROM' => $table,
@@ -156,7 +159,7 @@ class PluginFormcreatorUpgradeTo2_7 {
       if ($DB->fieldExists($table, 'range_min')) {
          $DB->query(
             "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
-               `id` int(11) NOT NULL AUTO_INCREMENT,
+               `id` int(11) $defaultKeySign NOT NULL AUTO_INCREMENT,
                `plugin_formcreator_questions_id`   int(11)       NOT NULL,
                `range_min`                         varchar(255)  DEFAULT NULL,
                `range_max`                         varchar(255)  DEFAULT NULL,
@@ -164,7 +167,7 @@ class PluginFormcreatorUpgradeTo2_7 {
                `uuid`                              varchar(255)  DEFAULT NULL,
                PRIMARY KEY (`id`),
                INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+             ) ENGINE=InnoDB DEFAULT CHARSET=$defaultCharset COLLATE=$defaultCollation ROW_FORMAT=DYNAMIC;"
          );
          $request = [
          'FROM' => $table,
