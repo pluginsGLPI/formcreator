@@ -1286,7 +1286,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       if (!$this->isAnswersValid) {
          // Save answers in session to display it again with the same values
-         $_SESSION['formcreator']['data'] = Toolbox::stripslashes_deep($input);
+         $_SESSION['formcreator']['data'] = Sanitizer::unsanitize($input);
          return false;
       }
 
