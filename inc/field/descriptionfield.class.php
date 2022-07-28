@@ -78,10 +78,10 @@ class DescriptionField extends PluginFormcreatorAbstractField
    public function getValueForTargetText($domain, $richText): ?string {
       $text = $this->question->fields['description'];
       if (!$richText) {
-         $text = nl2br(strip_tags(html_entity_decode(__($text, $domain))));
+         $text = Sanitizer::unsanitize(strip_tags(html_entity_decode(__($text, $domain))));
       }
 
-      return $text;
+      return Sanitizer::unsanitize(__($text, $domain));
    }
 
    public function moveUploads() {
