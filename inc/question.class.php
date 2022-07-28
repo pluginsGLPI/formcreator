@@ -616,6 +616,17 @@ PluginFormcreatorTranslatableInterface
          ]
       );
 
+      if ($this->input['fieldtype'] == 'textarea') {
+         $this->input = $this->addFiles(
+            $this->input,
+            [
+               'force_update'  => true,
+               'content_field' => 'default_values',
+               'name'          => 'default_values',
+            ]
+         );
+      }
+
       $this->updateConditions($this->input);
       if (!$this->skipChecks) {
          $this->updateParameters($this->input);
@@ -631,6 +642,17 @@ PluginFormcreatorTranslatableInterface
             'name'          => 'description',
          ]
       );
+
+      if (($this->input['fieldtype'] ?? $this->fields['fieldtype']) == 'textarea') {
+         $this->input = $this->addFiles(
+            $this->input,
+            [
+               'force_update'  => true,
+               'content_field' => 'default_values',
+               'name'          => 'default_values',
+            ]
+         );
+      }
 
       $this->updateConditions($this->input);
       if (!$this->skipChecks) {
