@@ -213,6 +213,28 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       return $entityConfig;
    }
 
+   public function post_addItem() {
+      $this->input = $this->addFiles(
+         $this->input,
+         [
+            'force_update'  => true,
+            'content_field' => 'header',
+            'name'          => 'header',
+         ]
+      );
+   }
+
+   public function post_updateItem($history = 1) {
+      $this->input = $this->addFiles(
+         $this->input,
+         [
+            'force_update'  => true,
+            'content_field' => 'header',
+            'name'          => 'header',
+         ]
+      );
+   }
+
    public function showFormForEntity(Entity $entity) {
       $entityId = $entity->getID();
       if (!$entity->can($entityId, READ)) {
