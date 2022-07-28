@@ -427,33 +427,6 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      // handle description field and its inline pictures
-      if (isset($input['_description'])) {
-         foreach ($input['_description'] as $id => $filename) {
-            $document = new Document();
-            if ($document->getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
-               $this->value = str_replace('id="' .  $input['_tag_description'] . '"', $document->fields['tag'], $this->value);
-               $input['_tag_description'][$id] = $document->fields['tag'];
-            }
-         }
-
-         $input = $this->addFiles(
-            $input,
-            [
-               'force_update'  => true,
-               'content_field' => null,
-               'name'          => 'description',
-            ]
-         );
-
-         $input['description'] = Html::entity_decode_deep($input['description']);
-         foreach ($input['_tag_description'] as $tag) {
-            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
-            $input['description'] = preg_replace($regex, "#$tag#", $input['description']);
-         }
-         $input['description'] = Html::entities_deep($input['description']);
-      }
-
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -488,23 +461,6 @@ PluginFormcreatorTranslatableInterface
 
       if (!is_array($input) || count($input) == 0) {
          return false;
-      }
-
-      // handle description field and its inline pictures
-      if (isset($input['_description'])) {
-         foreach ($input['_description'] as $id => $filename) {
-            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
-            // when is merged https://github.com/glpi-project/glpi/pull/9335
-            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
-               $this->value = str_replace('id="' .  $input['_tag_description'] . '"', $document->fields['tag'], $this->value);
-               $input['_tag_description'][$id] = $document->fields['tag'];
-            }
-         }
-
-         foreach ($input['_tag_description'] as $tag) {
-            $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
-            $input['description'] = preg_replace($regex, "#$tag#", $input['description']);
-         }
       }
 
       // generate a unique id
@@ -651,6 +607,26 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function post_addItem() {
+      $this->input = $this->addFiles(
+         $this->input,
+         [
+            'force_update'  => true,
+            'content_field' => 'description',
+            'name'          => 'description',
+         ]
+      );
+
+      if ($this->input['fieldtype'] == 'textarea') {
+         $this->input = $this->addFiles(
+            $this->input,
+            [
+               'force_update'  => true,
+               'content_field' => 'default_values',
+               'name'          => 'default_values',
+            ]
+         );
+      }
+
       $this->updateConditions($this->input);
       if (!$this->skipChecks) {
          $this->updateParameters($this->input);
@@ -658,6 +634,26 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function post_updateItem($history = 1) {
+      $this->input = $this->addFiles(
+         $this->input,
+         [
+            'force_update'  => true,
+            'content_field' => 'description',
+            'name'          => 'description',
+         ]
+      );
+
+      if (($this->input['fieldtype'] ?? $this->fields['fieldtype']) == 'textarea') {
+         $this->input = $this->addFiles(
+            $this->input,
+            [
+               'force_update'  => true,
+               'content_field' => 'default_values',
+               'name'          => 'default_values',
+            ]
+         );
+      }
+
       $this->updateConditions($this->input);
       if (!$this->skipChecks) {
          $this->updateParameters($this->input);
@@ -1369,5 +1365,4 @@ PluginFormcreatorTranslatableInterface
          ],
       ] + $options);
    }
-
 }
