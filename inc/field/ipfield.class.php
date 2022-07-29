@@ -156,7 +156,7 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
+      return (preg_match($value, $this->value) === 1) ? true : false;
    }
 
    public function isPublicFormCompatible(): bool {
