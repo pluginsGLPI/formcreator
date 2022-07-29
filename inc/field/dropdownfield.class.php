@@ -83,6 +83,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+
       $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
       $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;

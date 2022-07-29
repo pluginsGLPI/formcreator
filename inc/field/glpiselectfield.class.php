@@ -37,6 +37,7 @@ use Session;
 use Dropdown;
 use Entity;
 use CommonTreeDropdown;
+use CommonDBTM;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
@@ -48,15 +49,20 @@ class GlpiselectField extends DropdownField
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
 
-      $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
       $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
+      $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
-      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
-         $this->question->fields['_is_tree'] = '1';
+      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonDBTM::class)) {
          $item = new $this->question->fields['itemtype'];
          $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+      }
+      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
+         $this->question->fields['_is_tree'] = '1';
+         // $item = new $this->question->fields['itemtype'];
+         // $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
       }
       $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
