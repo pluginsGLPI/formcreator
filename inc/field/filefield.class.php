@@ -112,6 +112,23 @@ class FileField extends PluginFormcreatorAbstractField
       if (count($this->uploadData) > 0) {
          $this->value = __('Attached document', 'formcreator');
       }
+
+      $key = 'formcreator_field_' . $this->question->getID();
+      $this->uploads['_' . $key] = [];
+      $this->uploads['_tag_' . $key] = [];
+      $this->uploads['_prefix_' . $key] = [];
+      foreach ($this->uploadData as $documentId) {
+         $document = Document::getById($documentId);
+         if (!is_object($document)) {
+            // If the document no longer exists
+            continue;
+         }
+         $prefix = uniqid('', true);
+         copy(GLPI_DOC_DIR . '/' . $document->fields['filepath'], GLPI_TMP_DIR . '/' . $prefix . $document->fields['filename']);
+         $this->uploads['_' . $key][] = $prefix . $document->fields['filename'];
+         $this->uploads['_tag_' . $key][] = $document->fields['tag'];
+         $this->uploads['_prefix_' . $key][] = $prefix;
+      }
    }
 
    public function getValueForDesign(): string {
@@ -280,8 +297,25 @@ class FileField extends PluginFormcreatorAbstractField
          // To restore input from database
          $this->uploadData = json_decode($input[$key]);
          $this->value = __('Attached document', 'formcreator');
-         return true;
 
+         $this->uploads = [];
+         $this->uploads['_' . $key] = [];
+         $this->uploads['_tag_' . $key] = [];
+         $this->uploads['_prefix_' . $key] = [];
+         foreach ($this->uploadData as $documentId) {
+            $document = Document::getById($documentId);
+            if (!is_object($document)) {
+               // If the document no longer exists
+               continue;
+            }
+            $prefix = uniqid('', true);
+            copy(GLPI_DOC_DIR . '/' . $document->fields['filepath'], GLPI_TMP_DIR . '/' . $prefix . $document->fields['filename']);
+            $this->uploads['_' . $key][] = $prefix . $document->fields['filename'];
+            $this->uploads['_tag_' . $key][] = $document->fields['tag'];
+            $this->uploads['_prefix_' . $key][] = $prefix;
+         }
+
+         return true;
       }
       $this->uploadData = [];
       $this->value = '';
