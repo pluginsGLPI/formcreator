@@ -497,8 +497,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       for ($i = 0; $i < PluginFormcreatorSection::COLUMNS; $i++) {
          $width = ($i+1) * $width_percent;
          $style.= '
-         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][data-gs-width="' . ($i+1) . '"],
-         #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[data-gs-width="' . ($i+1) . '"]
+         #plugin_formcreator_form.plugin_formcreator_form [data-itemtype = "PluginFormcreatorQuestion"][gs-w="' . ($i+1) . '"],
+         #plugin_formcreator_form.plugin_formcreator_form .plugin_formcreator_gap[gs-w="' . ($i+1) . '"]
          {
             min-width: ' . $width_percent . '%;
             width: ' . $width . '%;
