@@ -33,12 +33,13 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use Session;
+use PluginFormcreatorFormAnswer;
 use Toolbox;
 use PluginFormcreatorCommon;
 
 class IntegerField extends FloatField
 {
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

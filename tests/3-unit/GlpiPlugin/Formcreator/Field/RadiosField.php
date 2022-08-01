@@ -31,6 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class RadiosField extends CommonTestCase {
    public function testPrepareQuestionInputForSave() {
@@ -134,7 +135,12 @@ class RadiosField extends CommonTestCase {
     */
    public function testSerializeValue($instance, $value, $expected) {
       $instance->parseAnswerValues(['formcreator_field_' . $instance->getQuestion()->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 

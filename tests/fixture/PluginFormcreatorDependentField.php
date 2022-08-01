@@ -39,6 +39,7 @@ use Html;
 use Session;
 use PluginFormcreatorTranslatable;
 use PluginFormcreatorQuestion;
+use PluginFormcreatorFormAnswer;
 
 class DependentField extends PluginFormcreatorAbstractField
 {
@@ -102,7 +103,7 @@ class DependentField extends PluginFormcreatorAbstractField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

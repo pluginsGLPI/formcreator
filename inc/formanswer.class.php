@@ -67,7 +67,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /** @var PluginFormcreatorForm $form The form attached to the object */
    private $form = null;
 
-   /** @var array $answers set od answers */
+   /** @var array $answers set of answers */
    private array $answers = [];
 
    public static function getStatuses() {
@@ -1069,7 +1069,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       foreach ($this->getQuestionFields($formId) as $questionId => $field) {
          $field->moveUploads();
          $answer = new PluginFormcreatorAnswer();
-         $answer_value = $field->serializeValue();
+         $answer_value = $field->serializeValue($this);
          $answer->add([
             'plugin_formcreator_formanswers_id'  => $formAnswerId,
             'plugin_formcreator_questions_id'    => $questionId,
@@ -1125,7 +1125,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
             $answer->update([
                'id'     => $answer->getID(),
-               'answer' => $field->serializeValue(),
+               'answer' => $field->serializeValue($this),
             ], 0);
             foreach ($field->getDocumentsForTarget() as $documentId) {
                $docItem = new Document_Item();
@@ -1290,8 +1290,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       if (!$this->isAnswersValid) {
-         // Save answers in session to display it again with the same values
-         $_SESSION['formcreator']['data'] = Sanitizer::unsanitize($input);
          return false;
       }
 
@@ -1657,7 +1655,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param int $formId ID of the form where come the fileds to load
     * @return PluginFormcreatorAbstractField[]
     */
-   private function getQuestionFields($formId) : array {
+   public function getQuestionFields($formId) : array {
       if ($this->questionFields !== null) {
          return $this->questionFields;
       }
@@ -2019,7 +2017,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $file_tags = [];
 
       foreach ($this->getQuestionFields($this->getForm()->getID()) as $question_id => $field) {
-         if ($field->getQuestion()->fields['fieldtype'] != 'file') {
+         if (!in_array($field->getQuestion()->fields['fieldtype'], ['file'])) {
             continue;
          }
 

@@ -36,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Toolbox;
+use PluginFormcreatorFormAnswer;
 use Glpi\Application\View\TemplateRenderer;
 
 class RadiosField extends PluginFormcreatorAbstractField
@@ -152,7 +153,7 @@ class RadiosField extends PluginFormcreatorAbstractField
       $this->value = array_shift($this->value);
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

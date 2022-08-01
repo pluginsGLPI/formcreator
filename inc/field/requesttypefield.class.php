@@ -35,6 +35,7 @@ namespace GlpiPlugin\Formcreator\Field;
 use Html;
 use Session;
 use Ticket;
+use PluginFormcreatorFormAnswer;
 use Dropdown;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
@@ -114,7 +115,7 @@ class RequestTypeField extends SelectField
       return Ticket::getTypes();
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '2';
       }

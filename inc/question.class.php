@@ -383,7 +383,7 @@ PluginFormcreatorTranslatableInterface
 
       // Might need to merge $this->fields and $input, $input having precedence
       // over $this->fields
-      //$input['default_values'] = $this->field->serializeValue();
+      //$input['default_values'] = $this->field->serializeValue($formanswer);
 
       return $input;
    }

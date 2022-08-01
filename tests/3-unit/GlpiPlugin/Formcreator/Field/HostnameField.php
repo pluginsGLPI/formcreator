@@ -31,6 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class HostnameField extends CommonTestCase {
    public function testIsPrerequisites() {
@@ -73,7 +74,12 @@ class HostnameField extends CommonTestCase {
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
