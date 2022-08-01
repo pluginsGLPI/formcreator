@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Html;
 use Session;
+use PluginFormcreatorFormAnswer;
 use Dropdown;
 use Entity;
 use CommonTreeDropdown;

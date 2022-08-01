@@ -36,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Ticket;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 
@@ -123,7 +124,7 @@ class UrgencyField extends PluginFormcreatorAbstractField
       ];
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '3';
       }

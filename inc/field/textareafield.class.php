@@ -32,23 +32,25 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
 use PluginFormcreatorCommon;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer;
 use Html;
 use Session;
 use Toolbox;
+use Document;
 use Glpi\Toolbox\Sanitizer;
 use Glpi\RichText\RichText;
 use Glpi\Application\View\TemplateRenderer;
 
 class TextareaField extends TextField
 {
+   /**@var array $uploadData uploads saved as documents   */
+   private $uploadData = [];
+
    /** @var array uploaded files on form submit */
-   private $uploads = [
-      '_filename' => [],
-      '_prefix_filename' => [],
-      '_tag_filename' => [],
-   ];
+   private $uploads = [];
 
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
@@ -62,8 +64,86 @@ class TextareaField extends TextField
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
+      global $CFG_GLPI;
+
       if (!$canEdit) {
-         $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
+         $value = $this->value;
+         if (version_compare(GLPI_VERSION, '10.0.3') < 0) {
+            // TODO: duplicates Toolbox::convertTagToImage() with simplification and change to build proper URL
+            //       must improve GLPI code
+            $document = new Document();
+            $doc_data = Toolbox::getDocumentsFromTag($value);
+            foreach ($doc_data as $id => $image) {
+               if (!isset($image['tag'])) {
+                  continue;
+               }
+               if (!$document->getFromDB($id) || strpos($document->fields['mime'], 'image/') === false) {
+                  $value = preg_replace(
+                     '/' . Document::getImageTag($image['tag']) . '/',
+                     '',
+                     $value
+                  );
+                  continue;
+               }
+
+               $itil_url_param = null !== $this->form_answer
+                        ? sprintf("&itemtype=%s&items_id=%s", $this->form_answer->getType(), $this->form_answer->getID())
+                        : "";
+               $img = "<img alt='" . $image['tag'] . "' src='" . $CFG_GLPI['root_doc'] .
+                  "/front/document.send.php?docid=" . $id . $itil_url_param . "'/>";
+
+               // 1 - Replace direct tag (with prefix and suffix) by the image
+               $value = preg_replace(
+                  '/' . Document::getImageTag($image['tag']) . '/',
+                  $img,
+                  $value
+               );
+
+               // 2 - Replace img with tag in id attribute by the image
+               $regex = '/<img[^>]+' . preg_quote($image['tag'], '/') . '[^<]+>/im';
+               preg_match_all($regex, $value, $matches);
+               foreach ($matches[0] as $match_img) {
+                  //retrieve dimensions
+                  $width = $height = null;
+                  $attributes = [];
+                  preg_match_all('/(width|height)="([^"]*)"/i', $match_img, $attributes);
+                  if (isset($attributes[1][0])) {
+                      ${$attributes[1][0]} = $attributes[2][0];
+                  }
+                  if (isset($attributes[1][1])) {
+                      ${$attributes[1][1]} = $attributes[2][1];
+                  }
+
+                  if ($width == null || $height == null) {
+                      $path = GLPI_DOC_DIR . "/" . $image['filepath'];
+                      $img_infos  = getimagesize($path);
+                      $width = $img_infos[0];
+                      $height = $img_infos[1];
+                  }
+
+                  // replace image
+                  $new_image =  Html::getImageHtmlTagForDocument(
+                      $id,
+                      $width,
+                      $height,
+                      true,
+                      $itil_url_param
+                  );
+                  if (empty($new_image)) {
+                        $new_image = '#' . $image['tag'] . '#';
+                  }
+                  $value = str_replace(
+                      $match_img,
+                      $new_image,
+                      $value
+                  );
+               }
+
+            }
+         } else {
+            $value = Toolbox::convertTagToImage($this->value, $this->form_answer);
+         }
+
          return RichText::getEnhancedHtml($value);
       }
 
@@ -83,7 +163,7 @@ class TextareaField extends TextField
          'enable_fileupload' => false,
          'uploads'           => $this->uploads,
       ]);
-      // The following file upload area is needed to allow embedded pics in the tetarea
+      // The following file upload area is needed to allow embedded pics in the textarea
       $html .=  '<div style="display:none;">';
       Html::file(['editor_id'    => "$fieldName$rand",
                   'filecontainer' => "filecontainer$rand",
@@ -92,7 +172,6 @@ class TextareaField extends TextField
                   'multiple'      => true,
                   'display'       => false]);
       $html .=  '</div>';
-      // This JS function intercepts tinyMCE creation then must be executed before end of page load
       $html .= Html::scriptBlock("$(function() {
          pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");
@@ -104,36 +183,33 @@ class TextareaField extends TextField
       return __('Textarea', 'formcreator');
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
 
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($this->uploads['_' . $key])) {
-         foreach ($this->uploads['_' . $key] as $id => $filename) {
-            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
-            // when is merged https://github.com/glpi-project/glpi/pull/9335
-            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
-               $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
-               $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
-            }
-         }
          $input = [$key => $this->value] + $this->uploads;
-         $input = $this->question->addFiles(
+         $input = $formanswer->addFiles(
             $input,
             [
-               'force_update'  => true,
-               // 'content_field' => $key,
+               'force_update'  => false,
                'content_field' => null,
                'name'          => $key,
             ]
          );
-         $this->value = $input[$key];
+         $input[$key] = $this->value; // Restore the text because we don't want image converted into A + IMG tags
+         // $this->value = $input[$key];
          $this->value = Sanitizer::unsanitize($this->value);
-         foreach ($input['_tag'] as $tag) {
+         foreach ($input['_tag'] as $docKey => $tag) {
+            $document = new Document();
+            $newTag = $tag;
+            if ($document->getDuplicateOf($formanswer->fields['entities_id'], GLPI_TMP_DIR . '/' . $input['_' . $key][$docKey])) {
+               $newTag = $document->fields['tag'];
+            }
             $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
-            $this->value = preg_replace($regex, "#$tag#", $this->value);
+            $this->value = preg_replace($regex, "#$newTag#", $this->value);
          }
          $this->value = Sanitizer::sanitize($this->value);
       }
@@ -153,6 +229,10 @@ class TextareaField extends TextField
       }
 
       return $this->value;
+   }
+
+   public function getDocumentsForTarget(): array {
+      return $this->uploadData;
    }
 
    public function isValid(): bool {

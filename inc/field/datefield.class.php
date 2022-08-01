@@ -36,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use DateTime;
 use Session;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 
@@ -80,7 +81,7 @@ class DateField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return $this->value;
    }
 

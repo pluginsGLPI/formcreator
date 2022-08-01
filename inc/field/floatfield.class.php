@@ -37,6 +37,7 @@ use PluginFormcreatorCommon;
 use Html;
 use Toolbox;
 use Session;
+use PluginFormcreatorFormAnswer;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
 use Glpi\Application\View\TemplateRenderer;
@@ -84,7 +85,7 @@ class FloatField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

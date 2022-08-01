@@ -33,6 +33,7 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use Dropdown;
+use PluginFormcreatorFormAnswer;
 use PluginTagTag;
 use Session;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
@@ -128,7 +129,7 @@ class TagField extends DropdownField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

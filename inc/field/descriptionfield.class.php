@@ -36,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use Session;
 use Toolbox;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
@@ -63,7 +64,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return nl2br(html_entity_decode($value));
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return '';
    }
 

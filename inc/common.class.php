@@ -593,8 +593,11 @@ JAVASCRIPT;
     * @return array data from documents having tags found
     */
    public static function getDocumentsFromTag(string $content_text): array {
-      preg_match_all('/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/', $content_text,
-                     $matches, PREG_PATTERN_ORDER);
+      preg_match_all(
+         '/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/',
+         $content_text,
+         $matches, PREG_PATTERN_ORDER
+      );
       if (!isset($matches[1]) || count($matches[1]) == 0) {
          return [];
       }

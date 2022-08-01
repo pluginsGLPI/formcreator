@@ -35,6 +35,7 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
+use PluginFormcreatorFormAnswer;
 use Glpi\Application\View\TemplateRenderer;
 
 class HostnameField extends PluginFormcreatorAbstractField
@@ -75,7 +76,7 @@ class HostnameField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return $this->value;
    }
 

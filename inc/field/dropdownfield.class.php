@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer;
 use Html;
 use Toolbox;
 use Session;
@@ -386,7 +387,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

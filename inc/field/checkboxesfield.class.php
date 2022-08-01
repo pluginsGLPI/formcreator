@@ -37,6 +37,7 @@ use Html;
 use Toolbox;
 use Session;
 use PluginFormcreatorQuestionRange;
+use PluginFormcreatorFormAnswer;
 use Glpi\Application\View\TemplateRenderer;
 
 class CheckboxesField extends PluginFormcreatorAbstractField
@@ -116,7 +117,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return __('Checkboxes', 'formcreator');
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

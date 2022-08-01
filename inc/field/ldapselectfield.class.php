@@ -35,6 +35,7 @@ namespace GlpiPlugin\Formcreator\Field;
 use AuthLDAP;
 use Html;
 use Session;
+use PluginFormcreatorFormAnswer;
 use RuleRightParameter;
 use PluginFormcreatorQuestion;
 use Glpi\Application\View\TemplateRenderer;
@@ -94,7 +95,7 @@ class LdapselectField extends SelectField
       return __('LDAP Select', 'formcreator');
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return $this->value;
    }
 
