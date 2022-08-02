@@ -58,6 +58,35 @@ class LdapselectField extends SelectField
       ]);
    }
 
+   public function getRenderedHtml($domain, $canEdit = true): string {
+      if (!$canEdit) {
+         return $this->value . PHP_EOL;
+      }
+
+      $html         = '';
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $values       = $this->getAvailableValues();
+
+      if (!empty($this->question->fields['values'])) {
+         $html .= Dropdown::showFromArray($fieldName, $values, [
+            'display_emptychoice' => $this->question->fields['show_empty'] == 1,
+            'value'     => $this->value,
+            'values'    => [],
+            'rand'      => $rand,
+            'multiple'  => false,
+            'display'   => false,
+         ]);
+      }
+      $html .=  PHP_EOL;
+      $html .=  Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeSelect('$fieldName', '$rand');
+      });");
+
+      return $html;
+   }
+
    public function getAvailableValues() {
       if (empty($this->question->fields['values'])) {
          return [];
