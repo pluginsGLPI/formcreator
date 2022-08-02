@@ -2039,4 +2039,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          "_tag_filename" => $file_tags
       ];
    }
+
+   public static function getDefaultSearchRequest(): array {
+      return [
+         'sort' => 6, // See self::rawSearchOptions()
+         'order' => 'DESC'
+      ];
+   }
 }
