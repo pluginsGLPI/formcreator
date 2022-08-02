@@ -542,7 +542,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
                'content' => [
                   'ticket' => [
                      'links' => [
-                        'search' => '/glpi/front/ticket.php',
+                        'search' => '/front/ticket.php',
                         'lists' => '',
                         'add' => '/front/helpdesk.public.php?create_ticket=1',
                      ],
