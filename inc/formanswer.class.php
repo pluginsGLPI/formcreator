@@ -593,7 +593,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $width = $question->fields['col'] - $x;
                   if ($x < $question->fields['col']) {
                      // there is an horizontal gap between previous question and current one
-                     echo '<div class="plugin_formcreator_gap" data-gs-x="' . $x . '" data-gs-width="' . $width . '"></div>';
+                     echo '<div class="plugin_formcreator_gap" gs-x="' . $x . '" gs-w="' . $width . '"></div>';
                   }
                }
             }
