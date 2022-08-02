@@ -70,7 +70,7 @@ $input = [
 ];
 
 $restrictions = $_POST['restrictions'] ?? null;
-if (!is_null($_POST['restrictions'])) {
+if (!is_null($restrictions)) {
    $input['users']    = AbstractRightsDropdown::getPostedIds($restrictions, User::class);
    $input['groups']   = AbstractRightsDropdown::getPostedIds($restrictions, Group::class);
    $input['profiles'] = AbstractRightsDropdown::getPostedIds($restrictions, Profile::class);
