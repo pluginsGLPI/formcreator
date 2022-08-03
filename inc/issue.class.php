@@ -285,6 +285,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!class_exists($itemtype)) {
          Html::displayNotFoundError();
       }
+      /** @var CommonDBTM $item */
       $item = new $itemtype();
       if (!$item->getFromDB($this->fields['items_id'])) {
          Html::displayNotFoundError();
