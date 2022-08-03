@@ -114,7 +114,9 @@ class Config extends CommonTestCase {
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
-      $this->boolean($plugin->isActivated($pluginName))->isTrue('Cannot enable the plugin');
+      $messages = $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR];
+      $messages = implode(PHP_EOL, $messages);
+      $this->boolean($plugin->isActivated($pluginName))->isTrue('Cannot enable the plugin: ' . $messages);
 
       $this->checkConfig();
       $this->checkRequestType();
