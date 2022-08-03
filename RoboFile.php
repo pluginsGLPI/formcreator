@@ -46,6 +46,7 @@ class RoboFile extends RoboFilePlugin
          '.settings',
          '.project',
          '.buildpath',
+         '.github',
          'tools',
          'tests',
          'screenshot*.png',
@@ -228,7 +229,7 @@ class RoboFile extends RoboFilePlugin
       // prepare banned items for regex
       $patterns = [];
       foreach ($this->getBannedFiles() as $bannedItem) {
-         $pattern = "#" . preg_quote("$bannedItem", "#") . "$#";
+         $pattern = "#^" . preg_quote("$bannedItem", "#") . "#";
          $pattern = str_replace("\\?", ".", $pattern);
          $pattern = str_replace("\\*", ".*", $pattern);
          $patterns[] = $pattern;
