@@ -37,6 +37,8 @@ use Glpi\RichText\RichText;
 class PluginFormcreatorIssue extends CommonDBTM {
    static $rightname = 'ticket';
 
+   protected static $showTitleInNavigationHeader = true;
+
    public static function getTypeName($nb = 0) {
       return _n('Issue', 'Issues', $nb, 'formcreator');
    }
