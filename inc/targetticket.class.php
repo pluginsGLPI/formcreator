@@ -1226,7 +1226,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             // find the itemtype of the associated item
             $associateQuestion = $this->fields['associate_question'];
             $question = new PluginFormcreatorQuestion();
-            $question->getFromDB($associateQuestion);
+            if (!$question->getFromDB($associateQuestion)) {
+               Toolbox::logError(sprintf("Question ID %s not found and should be used in target ticket ID %s", $associateQuestion, $this-getID()));
+               break;
+            }
             /** @var  GlpiPlugin\Formcreator\Field\DropdownField */
             $field = $question->getSubField();
             $itemtype = $field->getSubItemtype();
