@@ -1208,7 +1208,7 @@ PluginFormcreatorTranslatableInterface
     * Get the field object representing the question
     * @return PluginFormcreatorFieldInterface|null
     */
-   public function getSubField(): PluginFormcreatorFieldInterface {
+   public function getSubField(): ?PluginFormcreatorFieldInterface {
       if ($this->isNewItem()) {
          return null;
       }
