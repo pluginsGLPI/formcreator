@@ -169,7 +169,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
 
       // generate a uniq id
       if (!isset($input['uuid'])
-         || empty($input['uuid'])) {
+         && empty($this->fields['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
