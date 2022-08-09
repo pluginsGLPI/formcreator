@@ -563,10 +563,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
    public function prepareInputForUpdate($input) {
       // Control fields values :
       if (!$this->skipChecks) {
-         if (isset($input[('content')])) {
-            $input['content'] = Html::entity_decode_deep($input['content']);
-         }
-
          if (isset($input['destination_entity'])) {
             switch ($input['destination_entity']) {
                case self::DESTINATION_ENTITY_SPECIFIC :
