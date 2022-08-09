@@ -1557,12 +1557,6 @@ SCRIPT;
          $this->skipCreateActors = true;
       }
 
-      // generate a uniq id
-      if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
-
       if (isset($input['commonitil_validation_rule'])) {
          switch ($input['commonitil_validation_rule']) {
             default:
