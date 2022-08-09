@@ -1546,6 +1546,10 @@ SCRIPT;
             return [];
          }
 
+         if (isset($input[('content')])) {
+            $input['content'] = Html::entity_decode_deep($input['content']);
+         }
+
          // - content is required
          if (isset($input['content']) && strlen($input['content']) < 1) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
