@@ -30,10 +30,10 @@
  */
 
 namespace tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
 use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy;
 
-class PluginFormcreatorTargetTicket extends CommonTestCase {
+class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
