@@ -122,6 +122,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->addKey($table, 'users_id_validator', 'users_id_validator');
       $this->migration->addKey($table, 'groups_id_validator', 'groups_id_validator');
       $this->migration->changeField($table, 'itemtype', 'itemtype', 'string', ['value' => '']);
+      $this->migration->changeField($table, 'name', 'name', 'string');
 
       $table = 'glpi_plugin_formcreator_sections';
       $DB->update(
