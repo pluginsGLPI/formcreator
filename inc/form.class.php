@@ -2199,11 +2199,6 @@ PluginFormcreatorTranslatableInterface
    public function post_getFromDB() {
       global $TRANSLATE;
 
-      // Set additional data for the API
-      if (isAPI()) {
-         $this->fields += \PluginFormcreatorSection::getFullData($this->fields['id']);
-      }
-
       // Load translation for the current language if different from origianl form's language
       $language = $_SESSION['glpilanguage'];
       $formId = $this->getID();
