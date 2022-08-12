@@ -497,7 +497,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
       'items_id' => $id,
-      'itemtype' => 'Ticket'
+      'itemtype' => Ticket::getType(),
    ], 1);
 }
 
