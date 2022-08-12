@@ -2046,4 +2046,31 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'order' => 'DESC'
       ];
    }
+
+   /**
+    * Get a formanswer from a generated ticket
+    *
+    * @param Ticket|int $item
+    * @return bool
+    */
+   public function getFromDbByTicket($item) {
+      if (($item instanceof Ticket)) {
+         $id = $item->getID();
+      } else if (is_integer($item)) {
+         $id = $item;
+      } else {
+         throw new InvalidArgumentException("$item must be an integer or a " . Ticket::class);
+      }
+
+      return $this->getFromDBByCrit([
+         'id' => new QuerySubQuery([
+            'SELECT' => 'items_id',
+            'FROM'   => Item_Ticket::getTable(),
+            'WHERE'  => [
+               'itemtype' => PluginFormcreatorFormAnswer::getType(),
+               'tickets_id' => $id,
+            ]
+         ])
+      ]);
+   }
 }
