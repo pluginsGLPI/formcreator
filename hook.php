@@ -510,7 +510,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 
    $id = $item->getID();
 
-   // Update status of form answer, if any
+   // Update the formanswer's status (for cases where a form answer has several tickets)
    $formAnswer = new PluginFormcreatorFormAnswer();
    if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
@@ -520,7 +520,6 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       } else {
          $formAnswer->updateStatus($minimalStatus);
       }
-      return;
    }
 
    // delete issue if any
