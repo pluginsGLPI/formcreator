@@ -36,6 +36,7 @@ use PluginFormcreatorForm;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
+use Ticket;
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -905,5 +906,30 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             ],
          ],
       ]);
+   }
+
+   public function testGetFromDbByTicket() {
+      // Create a form answer
+      $targetTicket = $this->getTargetTicket();
+      $form = PluginFormcreatorForm::getByItem($targetTicket);
+      $expected = $this->newTestedInstance();
+      $expected->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($expected->isNewItem())->isFalse();
+
+      $ticket = $expected->targetList[0] ?? null;
+      $this->object($ticket)->isInstanceOf(Ticket::class);
+
+      $instance = $this->newTestedInstance();
+      // Check the method works with an Ticket instance
+      $output = $instance->getFromDbByTicket($ticket);
+      $this->boolean($output)->isTrue();
+      $this->integer($instance->getID())->isEqualTo($expected->getID());
+
+      // Check the method works with a Ticket ID
+      $output = $instance->getFromDbByTicket($ticket->getID());
+      $this->boolean($output)->isTrue();
+      $this->integer($instance->getID())->isEqualTo($expected->getID());
    }
 }
