@@ -344,11 +344,6 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       return;
    }
 
-   if (isset($item->input['items_id'][PluginFormcreatorFormAnswer::getType()])) {
-      // the ticket is associated to a form answer
-      return;
-   }
-
    $requester = $DB->request([
       'SELECT' => 'users_id',
       'FROM' => Ticket_User::getTable(),
@@ -482,15 +477,16 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
    $formAnswer = new PluginFormcreatorFormAnswer();
-   if (! $formAnswer->getFromDbByTicket($item)) {
-      plugin_formcreator_hook_add_ticket($item);
+   if ($formAnswer->getFromDbByTicket($item)) {
+      $formAnswer->createIssue();
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus !== null) {
+         $formAnswer->updateStatus($minimalStatus);
+      }
       return;
    }
 
-   $minimalStatus = $formAnswer->getAggregatedStatus();
-   if ($minimalStatus !== null) {
-      $formAnswer->updateStatus($minimalStatus);
-   }
+   plugin_formcreator_hook_add_ticket($item);
 }
 
 function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
