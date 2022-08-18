@@ -31,6 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class SelectField extends CommonTestCase {
 
@@ -48,7 +49,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -62,7 +63,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -76,7 +77,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '3',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -90,7 +91,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -104,7 +105,7 @@ class SelectField extends CommonTestCase {
                   'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 
@@ -221,9 +222,9 @@ class SelectField extends CommonTestCase {
       $this->string($output)->isEqualTo('Select');
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -267,7 +268,7 @@ class SelectField extends CommonTestCase {
          ],
          [
             'value'     => 'test d\'apostrophe',
-            'expected'  => "test d\'apostrophe",
+            'expected'  => 'test d\'apostrophe',
          ],
       ];
    }
@@ -279,7 +280,12 @@ class SelectField extends CommonTestCase {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -369,6 +375,44 @@ class SelectField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testRegex() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'select',
+         'values'    => 'foo\r\nbar',
+      ]);
+      $instance = $question->getSubField();
+      $instance->deserializeValue('foo');
+
+      $output = $instance->regex('/foo/');
+      $this->boolean($output)->isTrue();
+
+      $output = $instance->regex('/bar/');
+      $this->boolean($output)->isFalse();
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'a (select)',
+            'expected' => 'a (select)',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
       $this->string($output)->isEqualTo($expected);
    }
 }

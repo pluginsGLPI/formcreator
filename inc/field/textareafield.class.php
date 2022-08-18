@@ -32,68 +32,125 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
 use PluginFormcreatorCommon;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer;
 use Html;
 use Session;
 use Toolbox;
+use Document;
+use Glpi\Toolbox\Sanitizer;
+use Glpi\RichText\RichText;
+use Glpi\Application\View\TemplateRenderer;
 
 class TextareaField extends TextField
 {
+   /**@var array $uploadData uploads saved as documents   */
+   private $uploadData = [];
+
    /** @var array uploaded files on form submit */
-   private $uploads = [
-      '_filename' => [],
-      '_prefix_filename' => [],
-      '_tag_filename' => [],
-   ];
+   private $uploads = [];
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
-
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td width="80%" colspan="3">';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => $this->getValueForDesign(),
-         'enable_richtext'  => true,
-         'filecontainer'   => 'default_values_info',
-         'display'          => false,
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->deserializeValue($this->question->fields['default_values']);
+      $parameters = $this->getParameters();
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'question_params' => $parameters,
+         'params' => $options,
       ]);
-      //$additions .= Html::initEditorSystem('default_values', '', false);
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = PluginFormcreatorAbstractField::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
+      global $CFG_GLPI;
+
       if (!$canEdit) {
-         $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
-         return Toolbox::getHtmlToDisplay($value);
+         $value = $this->value;
+         if (version_compare(GLPI_VERSION, '10.0.3') < 0) {
+            // TODO: duplicates Toolbox::convertTagToImage() with simplification and change to build proper URL
+            //       must improve GLPI code
+            $document = new Document();
+            $doc_data = Toolbox::getDocumentsFromTag($value);
+            foreach ($doc_data as $id => $image) {
+               if (!isset($image['tag'])) {
+                  continue;
+               }
+               if (!$document->getFromDB($id) || strpos($document->fields['mime'], 'image/') === false) {
+                  $value = preg_replace(
+                     '/' . Document::getImageTag($image['tag']) . '/',
+                     '',
+                     $value
+                  );
+                  continue;
+               }
+
+               $itil_url_param = null !== $this->form_answer
+                        ? sprintf("&itemtype=%s&items_id=%s", $this->form_answer->getType(), $this->form_answer->getID())
+                        : "";
+               $img = "<img alt='" . $image['tag'] . "' src='" . $CFG_GLPI['root_doc'] .
+                  "/front/document.send.php?docid=" . $id . $itil_url_param . "'/>";
+
+               // 1 - Replace direct tag (with prefix and suffix) by the image
+               $value = preg_replace(
+                  '/' . Document::getImageTag($image['tag']) . '/',
+                  $img,
+                  $value
+               );
+
+               // 2 - Replace img with tag in id attribute by the image
+               $regex = '/<img[^>]+' . preg_quote($image['tag'], '/') . '[^<]+>/im';
+               preg_match_all($regex, $value, $matches);
+               foreach ($matches[0] as $match_img) {
+                  //retrieve dimensions
+                  $width = $height = null;
+                  $attributes = [];
+                  preg_match_all('/(width|height)="([^"]*)"/i', $match_img, $attributes);
+                  if (isset($attributes[1][0])) {
+                      ${$attributes[1][0]} = $attributes[2][0];
+                  }
+                  if (isset($attributes[1][1])) {
+                      ${$attributes[1][1]} = $attributes[2][1];
+                  }
+
+                  if ($width == null || $height == null) {
+                      $path = GLPI_DOC_DIR . "/" . $image['filepath'];
+                      $img_infos  = getimagesize($path);
+                      $width = $img_infos[0];
+                      $height = $img_infos[1];
+                  }
+
+                  // replace image
+                  $new_image =  Html::getImageHtmlTagForDocument(
+                      $id,
+                      $width,
+                      $height,
+                      true,
+                      $itil_url_param
+                  );
+                  if (empty($new_image)) {
+                        $new_image = '#' . $image['tag'] . '#';
+                  }
+                  $value = str_replace(
+                      $match_img,
+                      $new_image,
+                      $value
+                  );
+               }
+
+            }
+         } else {
+            $value = Toolbox::convertTagToImage($this->value, $this->form_answer);
+         }
+
+         return RichText::getEnhancedHtml($value);
       }
 
       $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $value        = nl2br(__($this->value, $domain));
+      $value = $this->value;
       $html = '';
       $html .= Html::textarea([
          'name'              => $fieldName,
@@ -106,7 +163,7 @@ class TextareaField extends TextField
          'enable_fileupload' => false,
          'uploads'           => $this->uploads,
       ]);
-      // The following file upload area is needed to allow embedded pics in the tetarea
+      // The following file upload area is needed to allow embedded pics in the textarea
       $html .=  '<div style="display:none;">';
       Html::file(['editor_id'    => "$fieldName$rand",
                   'filecontainer' => "filecontainer$rand",
@@ -126,41 +183,38 @@ class TextareaField extends TextField
       return __('Textarea', 'formcreator');
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
 
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($this->uploads['_' . $key])) {
-         foreach ($this->uploads['_' . $key] as $id => $filename) {
-            // TODO :replace PluginFormcreatorCommon::getDuplicateOf by Document::getDuplicateOf
-            // when is merged https://github.com/glpi-project/glpi/pull/9335
-            if ($document = PluginFormcreatorCommon::getDuplicateOf(Session::getActiveEntity(), GLPI_TMP_DIR . '/' . $filename)) {
-               $this->value = str_replace('id="' .  $this->uploads['_tag_' . $key][$id] . '"', $document->fields['tag'], $this->value);
-               $this->uploads['_tag_' . $key][$id] = $document->fields['tag'];
-            }
-         }
          $input = [$key => $this->value] + $this->uploads;
-         $input = $this->question->addFiles(
+         $input = $formanswer->addFiles(
             $input,
             [
-               'force_update'  => true,
-               // 'content_field' => $key,
+               'force_update'  => false,
                'content_field' => null,
                'name'          => $key,
             ]
          );
-         $this->value = $input[$key];
-         $this->value = Html::entity_decode_deep($this->value);
-         foreach ($input['_tag'] as $tag) {
+         $input[$key] = $this->value; // Restore the text because we don't want image converted into A + IMG tags
+         // $this->value = $input[$key];
+         $this->value = Sanitizer::unsanitize($this->value);
+         foreach ($input['_tag'] as $docKey => $tag) {
+            $document = new Document();
+            $newTag = $tag;
+            if ($document->getDuplicateOf($formanswer->fields['entities_id'], GLPI_TMP_DIR . '/' . $input['_' . $key][$docKey])) {
+               $newTag = $document->fields['tag'];
+            }
             $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
-            $this->value = preg_replace($regex, "#$tag#", $this->value);
+            $this->value = preg_replace($regex, "#$newTag#", $this->value);
          }
-         $this->value = Html::entities_deep($this->value);
+         $this->value = Sanitizer::sanitize($this->value);
       }
 
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function deserializeValue($value) {
@@ -175,6 +229,10 @@ class TextareaField extends TextField
       }
 
       return $this->value;
+   }
+
+   public function getDocumentsForTarget(): array {
+      return $this->uploadData;
    }
 
    public function isValid(): bool {
@@ -205,7 +263,8 @@ class TextareaField extends TextField
       if (!$success) {
          return [];
       }
-      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input['default_values']));
+
+      $this->value = $input['default_values'];
 
       // Handle uploads
       $key = 'formcreator_field_' . $this->question->getID();
@@ -238,17 +297,14 @@ class TextareaField extends TextField
    public function getValueForTargetText($domain, $richText): ?string {
       $value = $this->value;
       if (!$richText) {
-         $value = Toolbox::unclean_cross_side_scripting_deep($value);
          $value = strip_tags($value);
       }
-      // $value = Toolbox::convertTagToImage($this->value, $this->getQuestion());
-      // $value = Toolbox::getHtmlToDisplay($value);
 
       return $value;
    }
 
    public function equals($value): bool {
-      return $this->value == $value;
+      return $this->value == Sanitizer::unsanitize($value);
    }
 
    public function notEquals($value): bool {
@@ -256,7 +312,7 @@ class TextareaField extends TextField
    }
 
    public function greaterThan($value): bool {
-      return $this->value > $value;
+      return $this->value > Sanitizer::unsanitize($value);
    }
 
    public function lessThan($value): bool {
@@ -264,10 +320,10 @@ class TextareaField extends TextField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
+      return (preg_match(Sanitizer::unsanitize($value), $this->value) === 1) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 

@@ -46,6 +46,7 @@ class RoboFile extends RoboFilePlugin
          '.settings',
          '.project',
          '.buildpath',
+         '.github',
          'tools',
          'tests',
          'screenshot*.png',
@@ -193,11 +194,6 @@ class RoboFile extends RoboFilePlugin
       // Extract from the repo all files we want to have in the redistribuable archive
       $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
 
-      // Add extra files to workdir
-      $success = copy(__DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
-      if (!$success) {
-         throw new RuntimeException("failed to generate Font Awesome resources");
-      }
       // Copy SCSS
       $srcFile = __DIR__ . '/css_compiled/styles.min.css';
       $dstFile = "$archiveWorkdir/$pluginName/css_compiled/styles.min.css";
@@ -233,7 +229,7 @@ class RoboFile extends RoboFilePlugin
       // prepare banned items for regex
       $patterns = [];
       foreach ($this->getBannedFiles() as $bannedItem) {
-         $pattern = "#" . preg_quote("$bannedItem", "#") . "$#";
+         $pattern = "#^" . preg_quote("$bannedItem", "#") . "#";
          $pattern = str_replace("\\?", ".", $pattern);
          $pattern = str_replace("\\*", ".*", $pattern);
          $patterns[] = $pattern;
@@ -286,7 +282,6 @@ class RoboFile extends RoboFilePlugin
     * Update the changelog
     */
    public function updateChangelog() {
-      return;
        exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
       if ($retCode > 0) {
          throw new Exception("Failed to update the changelog");
@@ -306,18 +301,7 @@ class RoboFile extends RoboFilePlugin
    }
 
    public function localesExtract() {
-      $potfile = strtolower("glpi.pot");
-      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/field/*.php install/*.php";
-      // extract locales from source code
-      $command = "xgettext $phpSources -o locales/$potfile -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po";
-      $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
-      $command.= " --keyword=_sx:1c,2,3t --keyword=_nx:1c,2,3,5t";
-      $this->_exec($command);
-      $jsSources = "js/*.js";
-      $command = "xgettext $jsSources -o locales/$potfile -j -L javascript --add-comments=TRANS --from-code=UTF-8 --force-po";
-      $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
-      $command.= " --keyword=_sx:1c,2,3t --keyword=_nx:1c,2,3,5t";
-      $this->_exec($command);
+      $this->_exec('tools/extract_template.sh');
       return $this;
    }
 
@@ -916,7 +900,7 @@ class ConventionalChangelog
       . " ([$hash]($remote/commit/$hash))";
 
       // Search for closed issues
-      $body = explode(PHP_EOL, $commit->body);
+      $body = explode(PHP_EOL, $commit->body ?? '');
       $pattern = '/^((close|closes|fix|fixed) #(?P<id>\\d+)(,\s+)?)/i';
       $commit->close = [];
       foreach ($body as $bodyLine) {

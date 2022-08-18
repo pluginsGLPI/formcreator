@@ -35,9 +35,10 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use Html;
 use User;
-use Toolbox;
 use Session;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 
 /**
  * Actors field is a field which accepts several users. Those users may be
@@ -50,44 +51,15 @@ class ActorField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => Html::entities_deep($this->getValueForDesign()),
-         'cols'             => '50',
-         'display'          => false,
+      $this->question->fields['default_values'] = Html::entities_deep($this->getValueForDesign());
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
       ]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
    }
 
    public static function getName(): string {
@@ -131,13 +103,12 @@ class ActorField extends PluginFormcreatorAbstractField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
 
-      // Value needs to be non empty to allow execition of select2's initSelection
+      // Value needs to be non empty to allow execution of select2's initSelection
       $params = [
-         'specific_tags' => [
-            'multiple' => 'multiple',
-         ],
+         'multiple' => 'multiple',
          'entity_restrict' => -1,
          'itemtype'        => User::getType(),
+         'display_emptychoice' => false,
          'values'          => array_keys($value),
          'valuesnames'     => array_values($value),
          '_idor_token'     => Session::getNewIDORToken(User::getType()),
@@ -155,7 +126,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -213,7 +184,9 @@ class ActorField extends PluginFormcreatorAbstractField
                $value[] = $item;
             } else {
                $user = new User();
-               $user->getFromDB($item);
+               if (!$user->getFromDB($item)) {
+                  continue;
+               }
                $value[] = $user->getFriendlyName();
             }
          }
@@ -251,11 +224,7 @@ class ActorField extends PluginFormcreatorAbstractField
             $user->getFromDB($item);
             if (!$user->isNewItem()) {
                // A user known in the DB
-               if (method_exists($user, 'getFriendlyName')) {
-                  $knownUsers[$user->getID()] = $user->getFriendlyName();
-               } else {
-                  $knownUsers[$user->getID()] = $user->getRawName();
-               }
+               $knownUsers[$user->getID()] = $user->getFriendlyName();
             }
          }
       }
@@ -338,7 +307,10 @@ class ActorField extends PluginFormcreatorAbstractField
       }
 
       $this->value = $parsed;
-      $input['default_values'] = $this->serializeValue();
+      $input['default_values'] = '';
+      if ($this->value !== null && $this->value != '') {
+         $input['default_value'] = json_encode($this->value);
+      }
 
       return $input;
    }
@@ -408,7 +380,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return (preg_grep($value, $this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return false;
    }
 
@@ -422,5 +394,24 @@ class ActorField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getValueForApi() {
+      $value = [];
+      if (is_array($this->value)) {
+         foreach ($this->value as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $value[] = $item;
+            } else {
+               $user = new User();
+               if (!$user->getFromDB($item)) {
+                  continue;
+               }
+               $value[] = [User::class, $item];
+            }
+         }
+      }
+
+      return $value;
    }
 }

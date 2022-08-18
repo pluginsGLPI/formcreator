@@ -31,12 +31,13 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
+class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
 {
    public static function getTypeName($nb = 1) {
       return _n('Target change', 'Target changes', $nb, 'formcreator');
@@ -54,11 +55,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return new Change_Supplier();
    }
 
-   protected function getItem_Item() {
+   public static function getItem_Item(): CommonDBRelation {
       return new Change_Item();
    }
 
-   protected function getTargetItemtypeName(): string {
+   public static function getTargetItemtypeName(): string {
       return Change::class;
    }
 
@@ -84,6 +85,58 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'backoutplancontent',
          'checklistcontent',
       ];
+   }
+
+   public function defineTabs($options = []) {
+      $tab = [];
+      $this->addDefaultFormTab($tab);
+      $this->addStandardTab(__CLASS__, $tab, $options);
+      return $tab;
+   }
+
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      if (!self::canView()) {
+         return '';
+      }
+      switch ($item->getType()) {
+         case __CLASS__ :
+            $tab = [
+               1 => __('Properties', 'formcreator'),
+               2 => __('Actors', 'formcreator'),
+               3 => __('Condition', 'formcreator'),
+            ];
+            // if ((new Plugin)->isActivated('fields')) {
+            //    $tab[4] = __('Fields plugin', 'formcreator');
+            // }
+            return $tab;
+            break;
+      }
+      return '';
+   }
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      switch ($item->getType()) {
+         case self::class:
+            switch ($tabnum) {
+               case 1:
+                  self::showProperties($item);
+                  return true;
+                  break;
+               case 2:
+                  self::showActors($item);
+                  return true;
+                  break;
+               case 3:
+                  self::showConditions($item);
+                  break;
+               // case 4:
+               //    self::showPluginFields($item);
+               //    break;
+            }
+            break;
+      }
+
+      return false;
    }
 
    /**
@@ -162,7 +215,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $containerId;
-      $input['_skip_checks'] = true;
       $input['_skip_create_actors'] = true;
 
       $item = new self();
@@ -178,18 +230,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
             $input['uuid']
          );
       }
-
-      // set template
-      $changeTemplateId = 0;
-      plugin_formcreator_getFromDBByField(
-         $changeTemplate = new ChangeTemplate(),
-         'name',
-         $input['_changetemplate']
-      );
-      if (!$changeTemplate->isNewItem() && $changeTemplate->canViewItem()) {
-         $changeTemplateId = $changeTemplate->getID();
-      }
-      $input['changetemplates_id'] = $changeTemplateId;
 
       // Escape text fields
       foreach (['name'] as $key) {
@@ -249,6 +289,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
 
       // Add or update
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->update($input);
@@ -256,6 +297,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          unset($input['id']);
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
@@ -368,176 +410,82 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
    }
 
    public function showForm($ID, $options = []) {
-      if ($ID == 0) {
-         // Not used for now
-         $title =  __('Add a target ', 'formcreator');
-      } else {
-         $title =  __('Edit a target', 'formcreator');
-      }
-      $rand = mt_rand();
+      $options = [
+         'candel'      => false,
+         'formoptions' => sprintf('data-itemtype="%s"', $this::getType()),
+      ];
+      TemplateRenderer::getInstance()->display('@formcreator/pages/targetchange.html.twig', [
+         'item'   => $this,
+         'params' => $options,
+      ]);
 
-      $form = $this->getForm();
+      $this->getForm()->showTagsList();
 
-      // TODO: remive the fixed width
-      echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_"'
+      return true;
+   }
+
+   public static function showActors(self $item) {
+      $item->showActorsSettings();
+   }
+
+   public static function showProperties(self $item) {
+      echo '<form name="form"'
       . ' method="post"'
       . ' action="' . self::getFormURL() . '"'
       . ' data-itemtype="' . self::class . '"'
       . '>';
 
-      // General information: target_name
-      echo '<table class="tab_cadre_fixe">';
-      echo '<tr><th colspan="2">' . $title . '</th></tr>';
-      echo '<tr>';
-      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      // TODO: remive the fixed width
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
-      echo '</tr>';
-      echo '</table>';
-
-      // change information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"></td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'content',
-         'value'   => $this->fields['content'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Impacts') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'impactcontent',
-         'value'   => $this->fields['impactcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Control list') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'controlistcontent',
-         'value'   => $this->fields['controlistcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'rolloutplancontent',
-         'value'   => $this->fields['rolloutplancontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'    => 'backoutplancontent',
-         'value'   => $this->fields['backoutplancontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo '<td><strong>' . __('Checklist') . ' </strong></td>';
-      echo '<td colspan="3">';
-      echo Html::textarea([
-         'name'   => 'checklistcontent',
-         'value'  => $this->fields['checklistcontent'],
-         'display' => false,
-      ]);
-      echo '</td>';
-      echo '</tr>';
+      echo '<tr><th class="center" colspan="4">' . __('Properties', 'formcreator') . '</th></tr>';
 
       $rand = mt_rand();
-      $this->showDestinationEntitySetings($rand);
+      $item->showDestinationEntitySetings($rand);
 
       echo '<tr>';
-      $this->showTemplateSettings($rand);
-      $this->showDueDateSettings($rand);
+      $item->showTemplateSettings();
+      $item->showDueDateSettings();
       echo '</tr>';
 
-      $this->showSLASettings();
-      $this->showOLASettings();
+      $item->showSLASettings();
+      $item->showOLASettings();
 
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($rand);
+      $item->showCategorySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($rand);
+      $item->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($rand);
+      $item->showPluginTagsSettings($rand);
 
       // -------------------------------------------------------------------------------------------
-      //  Conditions to generate the target
+      // Validation selection
       // -------------------------------------------------------------------------------------------
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo __('Condition to create the target', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
-      $this->showConditionsSettings($rand);
-
-      echo '</table>';
-
-      // Buttons
-      echo '<table class="tab_cadre_fixe">';
+      $item->showValidationSettings($rand);
 
       echo '<tr>';
       echo '<td colspan="4" class="center">';
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo Html::hidden('id', ['value' => $ID]);
-      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
+      echo Html::hidden('id', ['value' => $item->getID()]);
+      echo Html::hidden($formFk, ['value' => $item->fields[$formFk]]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr>';
-      echo '<td colspan="5" class="center">';
+      echo '<td colspan="4" class="center">';
       echo Html::submit(_x('button', 'Save'), ['name' => 'update']);
       echo '</td>';
       echo '</tr>';
 
       echo '</table>';
-
       Html::closeForm();
-
-      $this->showActorsSettings();
-
-      // List of available tags
-
-      $this->showTagsList();
-      echo '</div>';
    }
 
    public function prepareInputForAdd($input) {
@@ -555,11 +503,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     */
    public function prepareInputForUpdate($input) {
       // Control fields values :
-      if (!isset($input['_skip_checks'])
-            || !$input['_skip_checks']) {
-
-         $input['content'] = Html::entity_decode_deep($input['content']);
-
+      if (!$this->skipChecks) {
          if (isset($input['destination_entity'])) {
             switch ($input['destination_entity']) {
                case self::DESTINATION_ENTITY_SPECIFIC :
@@ -575,7 +519,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
                   unset($input['_destination_entity_value_entity']);
                   break;
                default :
-                  $input['destination_entity_value'] = 'NULL';
+                  $input['destination_entity_value'] = 0;
                   break;
             }
          }
@@ -610,36 +554,44 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
             }
          }
 
-         switch ($input['sla_rule']) {
-            case PluginFormcreatorAbstractTarget::SLA_RULE_SPECIFIC:
-               $input['sla_question_tto'] = $input['_sla_specific_tto'];
-               $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
-               break;
-            case PluginFormcreatorAbstractTarget::SLA_RULE_FROM_ANWSER:
-               $input['sla_question_tto'] = $input['_sla_questions_tto'];
-               $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
-               break;
+         if (isset($input['sla_rule'])) {
+            switch ($input['sla_rule']) {
+               case self::SLA_RULE_SPECIFIC:
+                  $input['sla_question_tto'] = $input['_sla_specific_tto'];
+                  $input['sla_question_ttr'] = $input['_sla_specific_ttr'];
+                  break;
+               case self::SLA_RULE_FROM_ANWSER:
+                  $input['sla_question_tto'] = $input['_sla_questions_tto'];
+                  $input['sla_question_ttr'] = $input['_sla_questions_ttr'];
+                  break;
+            }
          }
 
-         switch ($input['ola_rule']) {
-            case PluginFormcreatorAbstractTarget::OLA_RULE_SPECIFIC:
-               $input['ola_question_tto'] = $input['_ola_specific_tto'];
-               $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
-               break;
-            case PluginFormcreatorAbstractTarget::OLA_RULE_FROM_ANWSER:
-               $input['ola_question_tto'] = $input['_ola_questions_tto'];
-               $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
-               break;
+         if (isset($input['ola_rule'])) {
+            switch ($input['ola_rule']) {
+               case self::OLA_RULE_SPECIFIC:
+                  $input['ola_question_tto'] = $input['_ola_specific_tto'];
+                  $input['ola_question_ttr'] = $input['_ola_specific_ttr'];
+                  break;
+               case self::OLA_RULE_FROM_ANWSER:
+                  $input['ola_question_tto'] = $input['_ola_questions_tto'];
+                  $input['ola_question_ttr'] = $input['_ola_questions_ttr'];
+                  break;
+            }
          }
 
          $plugin = new Plugin();
          if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-            $input['tag_questions'] = (!empty($input['_tag_questions']))
-                                       ? implode(',', $input['_tag_questions'])
-                                       : '';
-            $input['tag_specifics'] = (!empty($input['_tag_specifics']))
-                                       ? implode(',', $input['_tag_specifics'])
-                                       : '';
+            if (isset($input['tag_questions'])) {
+               $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                          ? implode(',', $input['_tag_questions'])
+                                          : '';
+            }
+            if (isset($input['tag_specifics'])) {
+               $input['tag_specifics'] = (!empty($input['_tag_specifics']))
+                                          ? implode(',', $input['_tag_specifics'])
+                                          : '';
+            }
          }
       }
 
@@ -671,20 +623,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       return true;
    }
 
-   public function post_addItem() {
-      parent::post_addItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
-         $this->updateConditions($this->input);
-      }
-   }
-
-   public function post_updateItem($history = 1) {
-      parent::post_updateItem();
-      if (!isset($this->input['_skip_checks']) || !$this->input['_skip_checks']) {
-         $this->updateConditions($this->input);
-      }
-   }
-
    protected function getTargetTemplate(array $data): int {
       global $DB;
 
@@ -696,7 +634,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->next()) { // assign change template according to resulting change category
+         if ($row = $rows->current()) { // assign change template according to resulting change category
             return $row[$targetTemplateFk];
          }
       }
@@ -717,7 +655,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
     *
     * @return Change|null generated change
     */
-   public function save(PluginFormcreatorFormAnswer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer): ?CommonDBTM {
       $data   = [];
       $change  = new Change();
       $form    = $formanswer->getForm();
@@ -775,9 +713,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
       $data = $this->setSLA($data, $formanswer);
       $data = $this->setOLA($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
+      $data = $this->setTargetValidation($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
+
+      $data = $this->prepareUploadedFiles($data, $formanswer);
+
+      $this->appendFieldsData($formanswer, $data);
+
+      // Cleanup actors array
+      $data = $this->cleanActors($data);
 
       // Create the target change
       if (!$changeID = $change->add($data)) {
@@ -794,34 +740,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractTarget
          'changes_id'  => $changeID,
       ]);
 
-      $this->attachDocument($formanswer->getID(), Change::class, $changeID);
-
       return $change;
    }
 
-   /**
-    * get all target changes for a form
-    *
-    * @param int $formId
-    * @return array
-    */
-   public function getTargetsForForm($formId) {
-      global $DB;
-
-      $targets = [];
-      $rows = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $formId
-         ],
-      ]);
-      foreach ($rows as $row) {
-         $target = new self();
-         $target->getFromDB($row['id']);
-         $targets[$row['id']] = $target;
-      }
-
-      return $targets;
+   public static function getIcon() {
+      return Change::getIcon();
    }
 }

@@ -30,6 +30,7 @@
  */
 
 use Gregwar\Captcha\CaptchaBuilder;
+use Glpi\Plugin\Hooks;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -99,7 +100,7 @@ class PluginFormcreatorCommon {
          ['name' => ['LIKE', 'Formcreator']]
       );
       if (count($request) === 1) {
-         $row = $request->next();
+         $row = $request->current();
          $requesttypes_id = $row['id'];
       }
 
@@ -122,7 +123,7 @@ class PluginFormcreatorCommon {
          'WHERE'  => $condition,
          'ORDER'  => "$fieldName DESC",
          'LIMIT'  => 1
-      ])->next();
+      ])->current();
 
       if (!isset($line[$fieldName])) {
          return null;
@@ -157,8 +158,10 @@ class PluginFormcreatorCommon {
     *
     * @return array
     */
-   public static function getFontAwesomePictoNames() : array {
-      $list = require_once(GLPI_PLUGIN_DOC_DIR . '/formcreator/' . self::getPictoFilename(GLPI_VERSION));
+   public static function getFontAwesomePictoNames(): array {
+      static $list = null;
+
+      $list = $list ?? require_once(Plugin::getPhpDir('formcreator') . '/data/' . self::getPictoFilename());
       return $list;
    }
 
@@ -168,8 +171,8 @@ class PluginFormcreatorCommon {
     * @param $version string GLPI version
     * @return string
     */
-   public static function getPictoFilename(string $version) : string {
-      return 'font-awesome.php';;
+   public static function getPictoFilename() : string {
+      return 'font-awesome.php';
    }
 
    /**
@@ -177,7 +180,7 @@ class PluginFormcreatorCommon {
     *
     * @param string $name name of the HTML input
     * @param array $options
-    * @return void
+    * @return string
     */
    public static function showFontAwesomeDropdown(string $name, array $options = []) {
       $items = static::getFontAwesomePictoNames();
@@ -187,9 +190,7 @@ class PluginFormcreatorCommon {
          'display_emptychoice' => true,
          'rand'                => mt_rand(),
       ] + $options;
-      if (!isset($options['value'])) {
-         $options['value'] = '';
-      }
+      $options['value'] ?? '';
       Dropdown::showFromArray($name, $items, $options);
 
       // templates for select2 dropdown
@@ -258,20 +259,15 @@ JAVASCRIPT;
     * V = status picked from Validation
     *
     * @param Ticket $item
-    * @return array
+    * @return int
     */
-   public static function getTicketStatusForIssue(Ticket $item) : array {
+   public static function getTicketStatusForIssue(Ticket $item) : int {
       $ticketValidations = (new TicketValidation())->find([
          'tickets_id' => $item->getID(),
       ], [
          'timeline_position ASC'
       ], 1);
-      $user = 0;
       $ticketValidationCount = count($ticketValidations);
-      if ($ticketValidationCount) {
-         $row = array_shift($ticketValidations);
-         $user = $row['users_id_validate'];
-      }
 
       $status = $item->fields['status'];
       if ($ticketValidationCount > 0 && !in_array($item->fields['global_validation'], [TicketValidation::ACCEPTED, TicketValidation::NONE])) {
@@ -289,7 +285,7 @@ JAVASCRIPT;
          }
       }
 
-      return ['status' => $status, 'user' => $user];
+      return (int) $status;
    }
 
    /**
@@ -326,52 +322,43 @@ JAVASCRIPT;
    public static function jsAjaxDropdown($name, $field_id, $url, $params = []) {
       global $CFG_GLPI;
 
-      if (!isset($params['value'])) {
-         $value = 0;
-      } else {
-         $value = $params['value'];
-      }
-      if (!isset($params['value'])) {
-         $valuename = Dropdown::EMPTY_VALUE;
-      } else {
-         $valuename = $params['valuename'];
-      }
-      $on_change = '';
-      if (isset($params["on_change"])) {
-         $on_change = $params["on_change"];
-         unset($params["on_change"]);
-      }
-      $width = '80%';
-      if (isset($params["width"])) {
-         $width = $params["width"];
-         unset($params["width"]);
-      }
+      $default_options = [
+         'value'               => 0,
+         'valuename'           => Dropdown::EMPTY_VALUE,
+         'multiple'            => false,
+         'values'              => [],
+         'valuesnames'         => [],
+         'on_change'           => '',
+         'width'               => '80%',
+         'placeholder'         => '',
+         'display_emptychoice' => false,
+         'specific_tags'       => [],
+         'parent_id_field'     => null,
+         'multiple'            => false,
+      ];
+      $params = array_merge($default_options, $params);
 
-      $placeholder = isset($params['placeholder']) ? $params['placeholder'] : '';
+      $value = $params['value'];
+      $width = $params["width"];
+      $valuename = $params['valuename'];
+      $on_change = $params["on_change"];
+      $placeholder = $params['placeholder'] ?? '';
+      $multiple = $params['multiple'];
+      unset($params["on_change"]);
+      unset($params["width"]);
+
       $allowclear =  "false";
       if (strlen($placeholder) > 0 && !$params['display_emptychoice']) {
          $allowclear = "true";
       }
 
-      unset($params['placeholder']);
-      unset($params['value']);
-      unset($params['valuename']);
-
       $options = [
          'id'        => $field_id,
          'selected'  => $value
       ];
-      if (!empty($params['specific_tags'])) {
-         foreach ($params['specific_tags'] as $tag => $val) {
-            if (is_array($val)) {
-               $val = implode(' ', $val);
-            }
-            $options[$tag] = $val;
-         }
-      }
 
-      // manage multiple select (with multiple values)
-      if (isset($params['values']) && count($params['values'])) {
+       // manage multiple select (with multiple values)
+      if ($params['multiple']) {
          $values = array_combine($params['values'], $params['valuesnames']);
          $options['multiple'] = 'multiple';
          $options['selected'] = $params['values'];
@@ -379,15 +366,25 @@ JAVASCRIPT;
          $values = [];
 
          // simple select (multiple = no)
-         if ((isset($params['display_emptychoice']) && $params['display_emptychoice'])
-             || isset($params['toadd'][$value])
-             || $value > 0) {
-            $values = ["$value" => $valuename];
+         if ($value !== null) {
+               $values = ["$value" => $valuename];
          }
+      }
+      $parent_id_field = $params['parent_id_field'];
+
+      unset($params['placeholder']);
+      unset($params['value']);
+      unset($params['valuename']);
+
+      foreach ($params['specific_tags'] as $tag => $val) {
+         if (is_array($val)) {
+            $val = implode(' ', $val);
+         }
+         $options[$tag] = $val;
       }
 
       // display select tag
-      $output = Html::select($name, $values, $options);
+      $output = '';
 
       $js = "
          var params_$field_id = {";
@@ -403,6 +400,7 @@ JAVASCRIPT;
 
          $('#$field_id').select2({
             width: '$width',
+            multiple: '$multiple',
             placeholder: '$placeholder',
             allowClear: $allowclear,
             minimumInputLength: 0,
@@ -418,7 +416,12 @@ JAVASCRIPT;
                data: function (params) {
                   query = params;
                   return $.extend({}, params_$field_id, {
-                     searchText: params.term,
+                     searchText: params.term,";
+      if ($parent_id_field !== null) {
+         $js .= "
+                     parent_id : document.getElementById('" . $parent_id_field . "').value,";
+      }
+      $js .= "
                      page_limit: ".$CFG_GLPI['dropdown_max'].", // page size
                      page: params.page || 1, // page number
                   });
@@ -478,8 +481,19 @@ JAVASCRIPT;
       }
 
       $js .= " $('label[for=$field_id]').on('click', function(){ $('#$field_id').select2('open'); });";
+      $js .= " $('#$field_id').on('select2:open', function(e){";
+      $js .= "    const search_input = document.querySelector(`.select2-search__field[aria-controls='select2-\${e.target.id}-results']`);";
+      $js .= "    if (search_input) {";
+      $js .= "       search_input.focus();";
+      $js .= "    }";
+      $js .= " });";
 
       $output .= Html::scriptBlock('$(function() {' . $js . '});');
+
+      // display select tag
+      $options['class'] = $params['class'] ?? 'form-select';
+      $output .= Html::select($name, $values, $options);
+
       return $output;
    }
 
@@ -528,45 +542,29 @@ JAVASCRIPT;
       }
    }
 
-   public static function buildFontAwesomeData() {
-      $fontAwesomeDir = GLPI_ROOT . '/public/lib/fortawesome/fontawesome-free/webfonts';
-      $outFile = GLPI_PLUGIN_DOC_DIR . '/formcreator/font-awesome.php';
-      @mkdir(dirname($outFile));
-      if (!is_readable($fontAwesomeDir) || !is_writable(dirname($outFile))) {
-         return false;
-      }
-
-      $faSvgFiles = [
-            'fa' => "$fontAwesomeDir/fa-regular-400.svg",
-            'fab' => "$fontAwesomeDir/fa-brands-400.svg",
-            'fas' => "$fontAwesomeDir/fa-solid-900.svg",
-         ];
-
-      $fanames = [];
-      $searchRegex = '#glyph-name=\"([^\"]*)\"#i';
-      foreach ($faSvgFiles as $key => $svgSource) {
-         $svg = file_get_contents($svgSource);
-         $matches = null;
-         preg_match_all($searchRegex, $svg, $matches);
-         foreach ($matches[1] as $name) {
-            $fanames["$key fa-$name"] = $name;
-         }
-         $list = '<?php' . PHP_EOL . 'return ' . var_export($fanames, true) . ';';
-         $size = file_put_contents($outFile, $list);
-         if ($size != strlen($list)) {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
    /**
     * get path to CSS file
     *
     * @return string
     */
    public static function getCssFilename() : string {
+      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+         return 'css/styles.scss';
+      }
+      $scssFile = Plugin::getPhpDir('formcreator', false) . '/css/styles.scss';
+      $compiled_path =  Plugin::getPhpDir('formcreator') . "/css_compiled/" . basename($scssFile, '.scss') . ".min.css";
+      if (!file_exists($compiled_path)) {
+         $css = Html::compileScss(
+            [
+               'file'    => $scssFile,
+               'nocache' => true,
+               'debug'   => true,
+            ]
+         );
+         if (strlen($css) === @file_put_contents($compiled_path, $css)) {
+            return 'css/styles.scss';
+         }
+      }
       return 'css_compiled/styles.min.css';
    }
 
@@ -578,20 +576,12 @@ JAVASCRIPT;
     */
    public static function checkRegex($regex) {
       // Avoid php notice when validating the regular expression
-      set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) {
+      set_error_handler(function ($errno, $errstr, $errfile = null, $errline = null) {
       });
       $isValid = !(preg_match($regex, null) === false);
       restore_error_handler();
 
       return $isValid;
-   }
-
-   public static function saveLayout() {
-      $_SESSION['plugin_formcreator']['layout_backup'] =  $_SESSION['glpilayout'];
-   }
-
-   public static function restoreLayout() {
-      $_SESSION['glpilayout'] = $_SESSION['plugin_formcreator']['layout_backup'] ?? $_SESSION['glpilayout'];
    }
 
    /**
@@ -603,8 +593,11 @@ JAVASCRIPT;
     * @return array data from documents having tags found
     */
    public static function getDocumentsFromTag(string $content_text): array {
-      preg_match_all('/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/', $content_text,
-                     $matches, PREG_PATTERN_ORDER);
+      preg_match_all(
+         '/'.Document::getImageTag('(([a-z0-9]+|[\.\-]?)+)').'/',
+         $content_text,
+         $matches, PREG_PATTERN_ORDER
+      );
       if (!isset($matches[1]) || count($matches[1]) == 0) {
          return [];
       }
@@ -632,5 +625,222 @@ JAVASCRIPT;
       }
 
       return $document;
+   }
+
+   /**
+    * Get an empty form answer object from Formcreator or Advanced Formcreator
+    * Advanced Formcreator redefines some methods of thos class
+    *
+    * TODO: This method is unful as lon tehre is no dependency injection in
+    * GLPI
+    *
+    * @return PluginFormcreatorFormAnswer
+    */
+   public static function getFormAnswer(): PluginFormcreatorFormAnswer {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         return new PluginAdvformFormAnswer();
+      }
+
+      return new PluginFormcreatorFormAnswer();
+   }
+
+   /**
+    * Get the real itemtype for form answer implementation, depending on the availability of Advanced Formcreator
+    *
+    * @return string
+    */
+   public static function getFormanswerItemtype() {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         return PluginAdvformFormAnswer::class;
+      }
+
+      return PluginFormcreatorFormAnswer::class;
+   }
+
+   public static function getForm() {
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         return new PluginAdvformForm();
+      }
+
+      return new PluginFormcreatorForm();
+   }
+
+   public static function getInterface() {
+      if (Session::getCurrentInterface() == 'helpdesk') {
+         if (plugin_formcreator_replaceHelpdesk()) {
+            return 'servicecatalog';
+         }
+         return 'self-service';
+      }
+      if (!empty($_SESSION['glpiactiveprofile'])) {
+         return 'central';
+      }
+
+      return 'public';
+   }
+
+   public static function header() {
+      switch (self::getInterface()) {
+         case "servicecatalog":
+         case "self-service":
+            return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
+         case "central":
+            return Html::header(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF'],
+               'helpdesk',
+               'PluginFormcreatorFormlist'
+            );
+         case "public":
+         default:
+            Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
+            Html::displayMessageAfterRedirect();
+            return true;
+      }
+   }
+
+   /**
+    * Gets the footer HTML
+    *
+    * @return string HTML to show a footer
+    */
+   public static function footer() {
+      switch (self::getInterface()) {
+         case "servicecatalog";
+         case "self-service";
+            return Html::helpFooter();
+         case "central";
+            return Html::footer();
+         case "public";
+         default:
+            return Html::nullFooter();
+      }
+   }
+
+   /**
+    * remove form answer from associatable items to tickets when viewing a form answer
+    * this removes the button "add a ticket for this item"
+    *
+    * @param array $options
+    * @return void
+    */
+   public static function hookPreShowTab(array $options) {
+      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+         return;
+      }
+
+      $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'] = $_SESSION["glpiactiveprofile"]["helpdesk_item_type"];
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = array_diff(
+         $_SESSION["glpiactiveprofile"]["helpdesk_item_type"],
+         [PluginFormcreatorFormAnswer::getType()]
+      );
+   }
+
+   /**
+   * Restore the associatable items to tickets into the session
+   *
+   * @param array $options
+   * @return void
+   */
+   public static function hookPostShowTab(array $options) {
+      if ($options['item']::getType() != PluginFormcreatorFormAnswer::getType()) {
+         return;
+      }
+
+      $_SESSION["glpiactiveprofile"]["helpdesk_item_type"] = $_SESSION['plugin_formcreator']['helpdesk_item_type_backup'];
+   }
+
+   public static function hookRedefineMenu($menus) {
+      global $DB;
+
+      if (Session::getCurrentInterface() != 'helpdesk') {
+         return $menus;
+      }
+
+      if (plugin_formcreator_replaceHelpdesk() === false) {
+         $newMenu = [];
+         foreach ($menus as $menuKey => $menuItem) {
+            if ($menuKey != 'tickets') {
+               $newMenu[$menuKey] = $menuItem;
+               continue;
+            }
+            $newMenu['seek_assistance'] = [
+               'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
+               'title'   => PluginFormcreatorForm::getTypeName(Session::getPluralNumber()),
+               'icon'    => 'fa-fw ti ti-headset',
+            ];
+            $newMenu[$menuKey] = $menuItem;
+         }
+         return $newMenu;
+      }
+
+      $newMenu = [];
+      $newMenu['seek_assistance'] = [
+         'default' => Plugin::getWebDir('formcreator', false) . '/front/wizard.php',
+         'title'   => __('Seek assistance', 'formcreator'),
+         'icon'    => 'fa-fw ti ti-headset',
+      ];
+      $newMenu['my_assistance_requests'] = [
+         'default' => PluginFormcreatorIssue::getSearchURL(false),
+         'title'   => __('My requests for assistance', 'formcreator'),
+         'icon'    => 'fa-fw ti ti-list',
+      ];
+
+      if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
+         && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
+      ) {
+         $newMenu['faq'] = $menus['faq'];
+         $newMenu['faq']['default'] = Plugin::getWebDir('formcreator', false) . '/front/knowbaseitem.php';
+      }
+      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+         if (isset($menus['reservation'])) {
+            $newMenu['reservation'] = $menus['reservation'];
+         }
+      }
+      $rssFeedTable = RSSFeed::getTable();
+      $criteria = [
+         'SELECT'   => "$rssFeedTable.*",
+         'DISTINCT' => true,
+         'FROM'     => $rssFeedTable,
+         'ORDER'    => "$rssFeedTable.name"
+      ];
+      $criteria = $criteria + RSSFeed::getVisibilityCriteria();
+      $criteria['WHERE']["$rssFeedTable.users_id"] = ['<>', Session::getLoginUserID()];
+      $iterator = $DB->request($criteria);
+      $hasRssFeeds = $iterator->count() > 0;
+
+      if (RSSFeed::canView() && $hasRssFeeds) {
+         $newMenu['feeds'] = [
+            'default' => Plugin::getWebDir('formcreator', false) . '/front/wizardfeeds.php',
+            'title'   => __('Consult feeds', 'formcreator'),
+            'icon'    => 'fa-fw ti ti-rss',
+         ];
+      }
+
+      // Add plugins menus
+      $plugin_menus = $menus['plugins']['content'] ?? [];
+      foreach ($plugin_menus as $menu_name => $menu_data) {
+         $menu_data['default'] = $menu_data['page'] ?? '#';
+         $newMenu[$menu_name] = $menu_data;
+      }
+
+      return $newMenu;
+   }
+
+   /**
+    * Show a mini dashboard
+    *
+    * @return void
+    */
+   public static function showMiniDashboard(): void {
+
+      Plugin::doHook(Hooks::DISPLAY_CENTRAL);
+
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
+         $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+         echo "<div class='formcreator_dashboard_container'>";
+         $dashboard->show(true);
+         echo "</div>";
+      }
    }
 }

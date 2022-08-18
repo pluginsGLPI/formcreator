@@ -57,7 +57,7 @@ register_shutdown_function(function() {
 include (GLPI_ROOT . "/inc/includes.php");
 
 //init cache
-$GLPI_CACHE = Config::getCache('cache_db');
+//$GLPI_CACHE = Config::getCache('cache_db');
 
 // If GLPI debug mode is disabled, atoum cannot produce backtaces
 //\Toolbox::setDebugMode(Session::DEBUG_MODE);

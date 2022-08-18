@@ -1,0 +1,93 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% set bg = '' %}
+{% if item.isDeleted() %}
+   {% set bg = 'asset-deleted' %}
+{% endif %}
+
+<div class="asset {{ bg }}">
+   {{ include('components/form/header.html.twig') }}
+
+   {% set rand = random() %}
+   {% set params  = params ?? [] %}
+   {% set target       = params['target'] ?? item.getFormURL() %}
+   {% set withtemplate = params['withtemplate'] ?? '' %}
+   {% set item_type = item.getType() %}
+   {% set item_has_pictures = item.hasItemtypeOrModelPictures() %}
+
+   <div class="card-body d-flex flex-wrap">
+      <div class="col-12 col-xxl-{{ item_has_pictures ? '9' : '12' }} flex-column">
+         <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
+            <div class="row flex-row align-items-start flex-grow-1">
+               <div class="row flex-row">
+
+                    {{ fields.autoNameField(
+                        'name',
+                        item,
+                        __('Name'),
+                    withtemplate,
+                    { required: true }
+                    ) }}
+
+                    {{ fields.hiddenField('plugin_formcreator_forms_id', item.fields['plugin_formcreator_forms_id'], '', { 'include_field': false }) }}
+
+                    {{ fields.smallTitle(__('Condition to show the question', 'formcreator')) }}
+
+                    {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
+                    {% set parent = item %}
+                    {% set conditions = call('PluginFormcreatorCondition::getConditionsFromItem', [item]) %}
+                    {% for condition in conditions %}
+                        {{ include('@formcreator/components/form/condition.html.twig') }}
+                    {% endfor %}
+               </div> {# .row #}
+            </div> {# .row #}
+         </div> {# .flex-row #}
+      </div>
+
+      {% if item_has_pictures %}
+         <div class="col-12 col-xxl-3 flex-column">
+            <div class="flex-row asset-pictures">
+               {{ include('components/form/pictures.html.twig', {'gallery_type': ''}) }}
+            </div>
+         </div>
+      {% endif %}
+   </div> {# .card-body #}
+
+   {{ include('components/form/buttons.html.twig') }}
+
+   {% if params['formfooter'] == null %}
+      <div class="card-footer mx-n2 mb-n2 mt-4">
+         {{ include('components/form/dates.html.twig') }}
+      </div>
+   {% endif %}
+</div>

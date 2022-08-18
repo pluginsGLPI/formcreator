@@ -39,6 +39,9 @@ use PluginFormcreatorQuestionRegex;
 use PluginFormcreatorCommon;
 use Session;
 use Toolbox;
+use PluginFormcreatorFormAnswer;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class TextField extends PluginFormcreatorAbstractField
 {
@@ -46,43 +49,16 @@ class TextField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
-
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::input(
-         'default_values',
-         [
-            'type'  => 'text',
-            'id'    => 'default_values',
-            'value' => $value,
-         ]
-      );
-      $additions .= '</td>';
-      $additions .= '<td></td>';
-      $additions .= '<td></td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      $parameters = $this->getParameters();
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'question_params' => $parameters,
+         'params' => $options,
+      ]);
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -109,12 +85,12 @@ class TextField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
 
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function deserializeValue($value) {
@@ -132,7 +108,7 @@ class TextField extends PluginFormcreatorAbstractField
    }
 
    public function getValueForTargetText($domain, $richText): ?string {
-      return $this->value;
+      return Sanitizer::unsanitize($this->value);
    }
 
    public function moveUploads() {
@@ -226,7 +202,7 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      $this->value = Toolbox::stripslashes_deep($input[$key]);
+      $this->value = Sanitizer::unsanitize($input[$key]);
       return true;
    }
 
@@ -235,23 +211,21 @@ class TextField extends PluginFormcreatorAbstractField
       $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
       $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
       $regexDoc .= '</small>';
+      $range = new PluginFormcreatorQuestionRange();
+      $range->setField($this, [
+         'fieldName' => 'range',
+         'label'     => __('Range', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      $regex = new PluginFormcreatorQuestionRegex();
+      $regex->setField($this, [
+         'fieldName' => 'regex',
+         'label'     => __('Additional validation', 'formcreator') . $regexDoc,
+         'fieldType' => ['text'],
+      ]);
       return [
-         'regex' => new PluginFormcreatorQuestionRegex(
-            $this,
-            [
-               'fieldName' => 'regex',
-               'label'     => __('Additional validation', 'formcreator') . $regexDoc,
-               'fieldType' => ['text'],
-            ]
-         ),
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'regex' => $regex,
+         'range' => $range,
       ];
    }
 
@@ -275,7 +249,7 @@ class TextField extends PluginFormcreatorAbstractField
       return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -317,5 +291,9 @@ class TextField extends PluginFormcreatorAbstractField
       }
 
       return $strings;
+   }
+
+   public function getValueForApi() {
+      return $this->value;
    }
 }

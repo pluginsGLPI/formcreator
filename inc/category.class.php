@@ -82,11 +82,11 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    /**
-    * @param int $rootId id of the subtree root
-    * @param bool $helpdeskHome
+    * Get the tree of categories
+    *
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) : array {
+   public static function getCategoryTree(): array {
       global $DB;
 
       $cat_table  = PluginFormcreatorCategory::getTable();
@@ -95,12 +95,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $query_faqs = KnowbaseItem::getListRequest([
          'faq'      => '1',
-         'contains' => ''
+         'contains' => '',
+         'knowbaseitemcategories_id' => 0,
       ]);
       // GLPI 9.5 returns an array
       $subQuery = new DBMysqlIterator($DB);
       $subQuery->buildQuery($query_faqs);
-      $query_faqs = $subQuery->getSQL();
 
       $dbUtils = new DbUtils();
       $entityRestrict = $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false);
@@ -109,33 +109,23 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       }
 
       // Selects categories containing forms or sub-categories
-      $categoryFk = self::getForeignKeyField();
-      $count1 = new QuerySubQuery([
-         'COUNT' => 'count',
-         'FROM' => $form_table,
-         'WHERE' => [
-            'is_active'    => '1',
-            'is_deleted'   => '0',
-            "$form_table.plugin_formcreator_categories_id" => new QueryExpression("$cat_table.id"),
-            'language' => [$_SESSION['glpilanguage'], '', '0', null],
-            'OR' => [
-               'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
-               'id' => new QuerySubQuery([
-                  'SELECT' => 'plugin_formcreator_forms_id',
-                  'FROM' => $table_fp,
-                  'WHERE' => ['profiles_id' => $_SESSION['glpiactiveprofile']['id']],
-               ])
-            ]
-         ]
-         + ($helpdeskHome ? ['helpdesk_home' => '1']: [])
-         + $entityRestrict,
-      ]);
+      $categoryFk = PluginFormcreatorCategory::getForeignKeyField();
+
+      // Get base query, add count and category condition
+      $count_forms_criteria = PluginFormcreatorForm::getFormListQuery();
+      $count_forms_criteria['COUNT'] = 'count';
+      $count_forms_criteria['WHERE']["$form_table.$categoryFk"] = new QueryExpression("$cat_table.id");
+
+      $count1 = new QuerySubQuery($count_forms_criteria);
       $count2 = new QuerySubQuery([
          'COUNT' => 'count',
-         'FROM' => (new QueryExpression("($query_faqs) as faqs")),
+         'FROM' => 'glpi_knowbaseitems_knowbaseitemcategories',
          'WHERE' => [
-            [(new QueryExpression("faqs.knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
-            ["faqs.knowbaseitemcategories_id" => ['!=', '0'],],
+            'knowbaseitems_id' => new QuerySubQuery([
+               'SELECT' => 'faqs.id',
+               'FROM' => (new QuerySubQuery($query_faqs, 'faqs'))
+            ]),
+            [(new QueryExpression("knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
          ]
       ]);
       $request = [
@@ -155,10 +145,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $categories = [];
       foreach ($result as $category) {
-         $category['name'] = (new DbUtils)->getTreeLeafValueName($cat_table, $category['id'], false, true);
+         $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
          // Keep the short name only
          // If a symbol > exists in a name, it is saved as an html entity, making the following reliable
-         $split = explode(' > ', $category['name']);
+         $split = explode(' &#62; ', $category['name']);
          $category['name'] = array_pop($split);
          $categories[$category['id']] = $category;
       }
@@ -206,7 +196,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @param int $helpdeskHome
     * @return DBmysqlIterator
     */
-   public static function  getAvailableCategories($helpdeskHome = 1) : DBmysqlIterator {
+   public static function getAvailableCategories($helpdeskHome = 1) : DBmysqlIterator {
       global $DB;
 
       $result = $DB->request(self::getAvailableCategoriesCriterias($helpdeskHome));
@@ -221,32 +211,30 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @return array
     */
    public static function getAvailableCategoriesCriterias($helpdeskHome = 1) : array {
-      $cat_table       = PluginFormcreatorCategory::getTable();
-      $categoryFk      = PluginFormcreatorCategory::getForeignKeyField();
-      $formTable       = PluginFormcreatorForm::getTable();
-      $formRestriction = PluginFormcreatorForm::getFormRestrictionCriterias($formTable);
-
-      $formRestriction["$formTable.helpdesk_home"] = $helpdeskHome;
+      $cat_table   = PluginFormcreatorCategory::getTable();
+      $category_fk = PluginFormcreatorCategory::getForeignKeyField();
+      $form_table  = PluginFormcreatorForm::getTable();
+      $form_ids    = PluginFormcreatorForm::getFormRestrictionSubQuery($helpdeskHome);
 
       return [
-        'SELECT' => [
-           $cat_table => [
+         'SELECT' => [
+            $cat_table => [
               'name', 'id'
-           ]
-        ],
-        'FROM' => $cat_table,
-        'INNER JOIN' => [
-           $formTable => [
-              'FKEY' => [
-                 $cat_table => 'id',
-                 $formTable => $categoryFk
-              ]
-           ]
-        ],
-        'WHERE' => PluginFormcreatorForm::getFormRestrictionCriterias($formTable),
-        'GROUPBY' => [
-           "$cat_table.id"
-        ]
+            ]
+         ],
+         'FROM' => $cat_table,
+         'INNER JOIN' => [
+            $form_table => [
+               'FKEY' => [
+                  $cat_table => 'id',
+                  $form_table => $category_fk
+               ]
+            ]
+         ],
+         'WHERE' => ["$form_table.id" => $form_ids],
+         'GROUPBY' => [
+            "$cat_table.id"
+         ]
       ];
    }
 }

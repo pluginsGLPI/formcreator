@@ -63,7 +63,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          'integer value' => [
@@ -87,7 +87,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          'too low value' => [
@@ -110,7 +110,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The following number must be greater than 3: question',
           ],
          'too high value' => [
@@ -134,7 +134,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '5',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The following number must be lower than 4: question',
          ],
          'float iin range' => [
@@ -158,7 +158,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '3.141592',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          'empty value and regex with backslash' => [
@@ -182,7 +182,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          'value not matching regex' => [
@@ -206,7 +206,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'Specific format does not match: question',
          ],
          'value matching regex' => [
@@ -230,7 +230,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          [
@@ -254,7 +254,7 @@ class FloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
       ];
@@ -301,9 +301,9 @@ class FloatField extends CommonTestCase {
          ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -323,5 +323,29 @@ class FloatField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '3.14',
+            'expected' => '3.14',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

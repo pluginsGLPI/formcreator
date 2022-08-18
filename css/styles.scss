@@ -27,10 +27,6 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-html, body {
-    height: 100%;
-}
-
 @-moz-keyframes ripple {
   0%, 100% {
     opacity: 0;
@@ -79,68 +75,6 @@ html, body {
   }
 }
 
-a.submit_button, input.submit_button {
-   display: inline-block;
-   min-width: 150px !important;
-   height: 21px !important;
-   line-height: 21px !important;
-   margin: 0;
-   padding: 0;
-
-   vertical-align: middle;
-   cursor: pointer;
-   height: auto;
-   font: bold 12px Arial, Helvetica;
-   color: #8f5a0a;
-   background-color: #ffb94b;
-   background-image: -webkit-gradient(linear, left top, left bottom, from(#fddb6f), to(#ffb94b));
-   background-image: -webkit-linear-gradient(top, #fddb6f, #ffb94b);
-   background-image: -moz-linear-gradient(top, #fddb6f, #ffb94b);
-   background-image: -ms-linear-gradient(top, #fddb6f, #ffb94b);
-   background-image: -o-linear-gradient(top, #fddb6f, #ffb94b);
-   background-image: linear-gradient(top, #fddb6f, #ffb94b);
-   white-space: nowrap;
-   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#fddb6f, endColorstr=#ffb94b);
-   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#fddb6f, endColorstr=#ffb94b)";
-   border-radius: 3px;
-   -moz-border-radius: 3px;
-   -webkit-border-radius: 3px;
-   text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-   -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
-   -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
-   box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
-   border-width: 1px;
-   border-style: solid;
-   border-color: #d69e31 #e3a037 #d5982d #e3a037;
-}
-input.submit_button {
-   min-width: 152px !important;
-   height: 23px !important;
-   line-height: 23px !important;
-}
-input.submit_button[disabled] {
-   color: #AAA;
-   background-color: #EEE;
-   border-color: #AAA;
-   font-weight: normal;
-   background-image: initial;
-   cursor: default;
-   filter: none;
-   ms-filter: none;
-}
-input.submit_button:focus {
-   color: #573706;
-   border-color: #a57a26 #a67528 #a67623 #a67528;
-   background-color: #ffaf30;
-   background-image: -webkit-gradient(linear, left top, left bottom, from(#ffcd35), to(#ffaf30));
-   background-image: -webkit-linear-gradient(top, #ffcd35, #ffaf30);
-   background-image: -moz-linear-gradient(top, #ffcd35, #ffaf30);
-   background-image: -ms-linear-gradient(top, #ffcd35, #ffaf30);
-   background-image: -o-linear-gradient(top, #ffcd35, #ffaf30);
-   background-image: linear-gradient(top, #ffcd35, #ffaf30);
-   box-shadow: 0 0 10px rgba(233,175,102,1);
-}
-
 .line0 {
    background-color: #F0F0F0;
 }
@@ -155,12 +89,19 @@ input.submit_button:focus {
  * Form designer
  */
 
+/* modals */
+.modal-dialog .card-header {
+   // Fix ribbon position
+   position: relative;
+}
+
 /* Sections */
-#plugin_formcreator_form.plugin_formcreator_form_design > {
+#plugin_formcreator_form.plugin_formcreator_form_design {
    ol {
       list-style-type: none;
       text-align: left;
       padding-left: 0;
+      margin-top: .5em;
 
       > .plugin_formcreator_section {
          line-height: 32px;
@@ -188,10 +129,8 @@ input.submit_button:focus {
    ol > .plugin_formcreator_section.not-sortable > a {
       padding-left: 15px;
    }
-}
 
-/* questions */
-#plugin_formcreator_form.plugin_formcreator_form_design {
+   /* questions */
    .grid-stack {
       list-style-type: none;
       text-align: left;
@@ -247,12 +186,12 @@ input.submit_button:focus {
       min-width: 20px;
       min-height: 1px;
       font-size: larger;
-   }
 
-   .form_control > i {
-      display: table-cell;
-      vertical-align: middle;
-      height: 32px;
+      > i {
+         display: table-cell;
+         vertical-align: middle;
+         height: 32px;
+      }
    }
 }
 
@@ -269,7 +208,7 @@ input.submit_button:focus {
 .plugin_formcreator_filter_translations {
    position: absolute;
    right: 3%;
-   top: 10px;
+   // top: 10px;
 
    input {
       padding-left: 20px !important;
@@ -281,26 +220,17 @@ input.submit_button:focus {
 /*
 * Form Render
 */
-#plugin_formcreator_form.plugin_formcreator_form > ol {
-   list-style-type: none;
-   text-align: left;
-   padding-left: 0;
-}
-
 #plugin_formcreator_form.plugin_formcreator_form {
+   > ol {
+      list-style-type: none;
+      text-align: left;
+      padding-left: 0;
+   }
 
    [data-itemtype = "PluginFormcreatorQuestion"]:not([hidden]), .plugin_formcreator_gap {
       vertical-align: top;
       display: inline-block;
    }
-}
-
-form#plugin_formcreator_form {
-   max-width: 950px;
-   margin: 10px auto 50px !important;
-   display: block;
-   position: relative;
-   line-height: 1.4em;
 }
 
 .form_answer h1 {
@@ -311,23 +241,29 @@ form#plugin_formcreator_form {
 
 }
 
-#plugin_formcreator_form > {
-   h1 {
+form#plugin_formcreator_form {
+   max-width: 950px;
+   margin: 10px auto 50px !important;
+   display: block;
+   position: relative;
+   line-height: 1.4em;
+}
+
+#plugin_formcreator_form {
+   > h1 {
       text-align: center;
       font-weight: bold;
       font-size: 1.8em;
       margin: 0 0 15px;
    }
 
-   .form_header {
+   > .form_header {
       padding: 10px 15px;
    }
-}
 
-/*
- * Validation header
- */
-#plugin_formcreator_form {
+   /*
+   * Validation header
+   */
    > .refused_header, .accepted_header {
       padding: 10px 15px;
       background: #EED0D0; /*#EEE;*/
@@ -356,7 +292,6 @@ form#plugin_formcreator_form {
 
    > .form_header {
       background: #EEE;
-      /*box-shadow: 2px 2px 2px #CCC;*/
       margin: 0 0 10px;
 
       > h1 {
@@ -365,204 +300,35 @@ form#plugin_formcreator_form {
       }
    }
 
-   [data-itemtype = "PluginFormcreatorSection"] {
-      background: #EEE;
-      /*box-shadow: 2px 2px 2px #CCC;*/
-      margin: 0 0 10px;
+   .form-group {
+      padding: 5px 15px;
 
-      > h2 {
-         background: #1B2F62;
-         color: #FFF;
-         margin:  0 0 10px;
-         padding: 5px 10px;
-         border-bottom: 1px solid #FFF;
-         box-shadow: 2px 2px 2px #CCC;
-         text-align: center;
-         line-height: 24px;
+      > label {
+         display: block;
+         font-size: 1.2em;
+         line-height: 32px;
+         font-weight: bold;
       }
+
+      .form_field {
+         text-align: justify;
+         word-wrap: break-word;
+
+         ul:not(.select2-selection__rendered) {
+            list-style: initial;
+            margin: initial;
+            padding: initial;
+            padding-left: 40px;
+         }
+      }
+   }
+
+   .form-group:after {
+      content: '';
+      display: block;
    }
 }
 
-#plugin_formcreator_form .form-group {
-   padding: 5px 15px;
-}
-
-#plugin_formcreator_form .form-group > label {
-   display: block;
-   font-size: 1.2em;
-   line-height: 32px;
-   font-weight: bold;
-}
-#plugin_formcreator_form .form-group:after {
-   content: '';
-   display: block;
-}
-#plugin_formcreator_form .form-group .form_field > input[type="file"] {
-   height: 32px;
-}
-
-#plugin_formcreator_form .form-group .form_field {
-   text-align: justify;
-   word-wrap: break-word;
-}
-.form_field ul {
-   list-style: initial;
-   margin: initial;
-   padding: initial;
-   padding-left: 40px;
-}
-
-#plugin_formcreator_form .form-group .form_field .select2-container {
-   width: 100% !important;
-}
-
-
-#plugin_formcreator_form .description_field {
-   border-left: 4px solid #999;
-   margin: 10px 15px;
-   word-wrap: break-word;
-}
-
-#plugin_formcreator_form .form-group .form_field > input,
-#plugin_formcreator_form textarea,
-#plugin_formcreator_form select,
-#plugin_formcreator_form .form-group .form_field input.hasDatepicker {
-   background: #FFF;
-   border-radius: 3px;
-   line-height: 18px;
-   min-height: 24px;
-   height: 32px;
-   padding: 1px 10px;
-   margin: 0;
-   width: 100%;
-   color: #333;
-   font-size: 1.1em;
-   box-sizing: border-box;
-}
-#plugin_formcreator_form .form-group .form_field input.hasDatepicker {
-   width: 125px;
-}
-#plugin_formcreator_form .form-group img {
-   vertical-align: middle;
-   margin: 4px;
-}
-#plugin_formcreator_form .select2-container .select2-choice {
-   height: 24px;
-   line-height: 24px;
-   padding-top: 3px;
-   padding-bottom: 3px;
-   width: 637px;
-   max-width: 637px;
-}
-#bloc > #plugin_formcreator_form .select2-container .select2-choice {
-   width: 395px;
-}
-#plugin_formcreator_form .select2-container .select2-choice > .select2-chosen {
-   margin: 1px 0;
-   line-height: 24px;
-   color: #333;
-   font-size: 1.1em;
-}
-.select2-container .select2-choice .select2-arrow b {
-   margin-top: 3px;
-}
-#plugin_formcreator_form textarea:focus,
-#plugin_formcreator_form select:focus,
-#plugin_formcreator_form .form-group .form_field > input:focus
-{
-   border-color: #66afe9;
-   box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-}
-
-#plugin_formcreator_form input[type = checkbox]:focus + label,
-#plugin_formcreator_form input[type = radio].new_radio:focus + label,
-#plugin_formcreator_form input[type = file]:focus {
-   color: #66afe9;
-   color: rgba(102,175,233, 1);
-   border-bottom: #66afe9 dotted 1px !important;
-   border-bottom: rgba(102,175,233,.8) dotted 1px !important;
-}
-
-#plugin_formcreator_form textarea {
-   min-height: 105px;
-}
-
-#plugin_formcreator_form div.checkbox {
-   padding: 5px 0;
-}
-#plugin_formcreator_form div.checkbox label {
-   cursor: pointer;
-}
-#plugin_formcreator_form div.checkbox .form-group-checkbox {
-   margin-right: 4px;
-}
-#plugin_formcreator_form div.checkbox .label-checkbox .box {
-   background-color: #FFF;
-   border: 2px solid #727272;
-}
-
-.plugin_formcreator_form div.radio {
-   padding: 3.7px 0;
-}
-.plugin_formcreator_form div.radio label {
-   cursor: pointer;
-}
-.radios .form-group-radio {
-   position: relative;
-   display: inline-block;
-   width: 16px;
-   height: 16px;
-}
-.radios .form-group-radio + label {
-   margin-left: 7px;
-}
-input[type = radio].new_radio {
-   display: none;
-}
-.label-radio .radio {
-   padding: 2px 0;
-}
-input[type = radio].new_radio + label.label-radio span {
-   display: inline-block;
-   position: absolute;
-   width: 16px;
-   height: 16px;
-}
-input[type = radio].new_radio + label.label-radio .box {
-   background-color: #fff;
-   border: 2px solid #727272;
-   border-radius: 50%;
-}
-input[type = radio].new_radio + label.label-radio .check {
-   left: 4px;
-   top: 4px;
-   width: 0px;
-   height: 0px;
-   opacity: 0;
-}
-input[type = radio].new_radio:checked + label.label-radio .check {
-   border: 6px solid #727272;
-   border-radius: 50%;
-   transition: opacity 0.3s ease;
-   opacity: 1;
-}
-
-
-#plugin_formcreator_form .select2-container-multi .select2-choices  {
-   width: 650px;
-   min-height: 24px;
-   background: #FFF;
-   background: rgba(255, 255, 255, 0.7);
-   border: 1px solid #999;
-   border-radius: 3px;
-   box-sizing: border-box;
-}
-.select2-drop {
-    max-width: 650px;
-}
-#bloc > #plugin_formcreator_form .select2-container-multi .select2-choices  {
-   width: 415px;
-}
 #plugin_formcreator_form .form-group option {
    background: none;
    border: none;
@@ -577,34 +343,17 @@ input[type = radio].new_radio:checked + label.label-radio .check {
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
-}
-#plugin_formcreator_form .form-group > .help-block p {
-   margin: 0;
-   padding: 3px 0;
+
+   p {
+      margin: 0;
+      padding: 3px 0;
+   }
 }
 
-#bloc > #plugin_formcreator_form select {
-   width: 567px;
-}
 #footer-login {
    position: relative !important;
    height: 30px;
    margin: 0 15px 0 0;
-}
-
-#plugin_formcreator_form .liste input[type = text] {
-   width: 100px;
-}
-
-#plugin_formcreator_form .liste span > select {
-   width: 534px;
-}
-
-#bloc > #plugin_formcreator_form .liste input[type = text]  {
-   width: 60px;
-}
-#bloc > #plugin_formcreator_form .liste select  {
-   width: 330px;
 }
 
 .form_description {
@@ -676,7 +425,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    display: none !important;
 }
 
-#footer-login{
+#footer-login {
    display: none;
 }
 
@@ -688,82 +437,43 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    line-height: 31px;
 }
 
-#plugin_formcreator_wizard {
-   position: relative;
-}
-
-
-#formcreator_servicecatalogue {
-   position: absolute;
-   width: 100%;
-   margin-top: 10px;
-}
-
 #formcreator_servicecatalogue_ticket_summary {
    margin: 5px 60px 0 5px;
    height: inherit;
-   position: absolute;
    z-index: 15;
-   left: 150px;
    width: 260px;
-   top: 10px;
    transition: .4s;
    height: 1rem;
-}
 
-.toggle_menu #formcreator_servicecatalogue_ticket_summary {
-   left: 100px;
-}
+   .status {
+      min-width: 2.3rem;
+      display: inline-block;
+      margin-right: 5px;
+      margin-top: -5px;
+      padding: 5px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, .15);
+      vertical-align: top;
+      box-sizing: border-box;
+   }
 
-#formcreator_servicecatalogue_ticket_summary .status {
-   min-width: 2.3rem;
-   display: inline-block;
-   margin-right: 5px;
-   margin-top: -5px;
-   padding: 5px;
-   text-align: center;
-   background-color: rgba(0, 0, 0, .15);
-   vertical-align: top;
-   box-sizing: border-box;
-}
-#formcreator_servicecatalogue_ticket_summary .status:hover {
-   background-color: rgba(0, 0, 0, .3);
-}
-#formcreator_servicecatalogue_ticket_summary .status_number {
-   font-size: 2em;
-}
-#formcreator_servicecatalogue_ticket_summary .status_label {
-   font-size: .7em;
-   display: none;
-}
-#formcreator_servicecatalogue_ticket_summary .status:hover .status_label {
-   display: block;
-   line-height: 0;
-}
-#formcreator_servicecatalogue_ticket_summary .status_incoming,
-#formcreator_servicecatalogue_ticket_summary .status_incoming a {
-   color: #c8ffc8;
-}
-#formcreator_servicecatalogue_ticket_summary .status_waiting,
-#formcreator_servicecatalogue_ticket_summary .status_waiting a {
-   color: #f7c976;
-}
-#formcreator_servicecatalogue_ticket_summary .status_validate,
-#formcreator_servicecatalogue_ticket_summary .status_validate a {
-   color: #9B9BE9;
-}
-#formcreator_servicecatalogue_ticket_summary .status_solved,
-#formcreator_servicecatalogue_ticket_summary .status_solved a {
-   color: #ffffff;
-}
+   .status:hover {
+      background-color: rgba(0, 0, 0, .3);
+   }
 
+   .status_number {
+      font-size: 2em;
+   }
 
-.plugin_formcreator_page #plugin_formcreator_wizard {
-   height: calc(100vh - 28px - 65px);
-}
+   .status_label {
+      font-size: .7em;
+      display: none;
+   }
 
-.plugin_formcreator_marginRight {
-   margin-right: 275px;
+   .status:hover .status_label {
+      display: block;
+      line-height: 0;
+   }
 }
 
 /* SLINKY CSS */
@@ -786,7 +496,7 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    ul,
    li {
       list-style: none;
-      margin: 0;
+      padding-bottom: 10px;
    }
 
    ul {
@@ -796,7 +506,19 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    a {
       display: block;
       border: none;
-      padding: 1em;
+      padding: 10px;
+      height: 40px;
+      span {
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         display: inline-block;
+         width: calc(100% - 20px);
+      }
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: calc(100% - 20px);
    }
 
    li ul {
@@ -824,30 +546,22 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       padding: 1em;
    }
 
-    a.next:after {
+   a.next:after {
       content: '\276f';
-      margin-left: 1em;
       float: right;
    }
 
-    a.back:before {
+   a.back:before {
       content: '\276e';
       margin-right: 1em;
       float: left;
    }
 }
 
-/* KB page and forms page*/
-#plugin_formcreator_kb_categories, #plugin_formcreator_wizard_categories {
-   width: 275px;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   float: left;
-   height: calc(100vh - 28px - 65px);
-   background-color: #f8f7f3;
+#plugin_formcreator_wizard_categories, #plugin_formcreator_kb_categories {
+   max-width: 275px;
+   min-height: calc(100vh - 56px - 80px - 20px - 20px);
    border-right: 1px solid #DDD;
-   position: relative;
 
    div > a {
       display: inline-block;
@@ -856,40 +570,17 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       box-sizing: border-box;
    }
 
-   .slinky-menu {
-      position: absolute;
-      left: 0;
-      right: -1px;
-   }
-
    a {
       background-color: inherit;
-      font-size: 1.2em;
    }
 
-   a[data-category-id]:not([data-parent-category-id="0"])  {
+   a[data-category-id]:not([data-parent-category-id="0"]) {
       margin-left: 20px;
    }
 
    .category_active:not(.next),
    .category_active ~ul .header {
-      border-bottom: 1px dashed #DDD;
       position: relative;
-   }
-
-   .category_active:not(.next):after,
-   .category_active ~ul .header:after {
-      position: absolute;
-      left: calc(100% - 45px);
-      top: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      border-right-color: #FFF;
-      border-width: 23px;
-      margin-top: -23px;
-      z-index: 20;
    }
 
    .category_active:not(.next):before,
@@ -907,45 +598,42 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
       z-index: 20;
    }
 
-   a, h2 {
-      font-size: 1.2em;
-   }
-
-   h2 {
+   .card-title {
       padding: 0.83em 0;
-      border-bottom: 1px solid #DDD;
       margin: 0;
       padding: 14px;
-      color: #000;
-   }
-
-   .header h2 {
-      text-align: left;
-   }
-
-   .header .back {
-      right: 20px;
-      color: #000;
-      left: inherit;
+      font-weight: bolder;
    }
 
    li {
       background-color: inherit;
+      height: 40px;
    }
 }
 
-.plugin_formcreator_card {
-   background: #FFF;
-   border-radius: 2px;
-   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
-               0 3px 1px -2px rgba(0,0,0,.2),
-               0 1px 5px 0 rgba(0,0,0,.12);
+.break-column {
+   flex-basis: 100%;
+   width: 0;
 }
 
-.plugin_formcreator_card::after {
-   content: "";
-   display: block;
-   clear: both;
+#plugin_formcreator_last_req_forms, #plugin_formcreator_val_forms {
+   max-width: 275px;
+   max-height: 300px;
+
+   .card-title {
+      font-weight: bold;
+      padding: 0.83em 0;
+      margin: 0;
+      padding: 14px;
+   }
+
+   .card-body {
+      padding: 4px;
+   }
+
+   li[data-itemtype="PluginFormcreatorFormanswer"] {
+      list-style-type: none;
+   }
 }
 
 #plugin_formcreator_formlist {
@@ -968,14 +656,14 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
 }
 
 .plugin_formcreator_formTile {
-   margin: 0 3px 6px 3px;
+   margin: 0 3px 17px 3px;
    width: 300px;
    display: inline-block;
    vertical-align: top;
    text-align: left;
    overflow: hidden;
    cursor: pointer;
-   border-radius: 0;
+   border-radius: 5px;
    box-sizing: border-box;
    animation-name: fadeInUp ;
    animation-iteration-count: 1;
@@ -990,10 +678,15 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    background-color: #CCC;
 }
 
+.plugin_formcreator_formTile.tile_design_uniform_height {
+   height: 150px;
+   display: inline-block;
+}
+
 a.plugin_formcreator_formTile_title {
-   font-size: 1.1em;
    padding: 10px 40px 15px 10px;
    display: block;
+   font-weight: bold;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
@@ -1019,26 +712,14 @@ a.plugin_formcreator_formTile_title {
    margin: 0 5px;
 }
 
-#plugin_formcreator_lastForms {
-   width: 265px;
-   position: absolute;
-   right: 0;
-   top: 0;
-
-
-   > div {
-      margin-bottom: 10px;
-   }
+#plugin_formcreator_wizard .plugin_formcreator_lists_separator {
+   padding: 0;
 }
 
 #plugin_formcreator_wizard_right {
    min-width: 116px;
    overflow-x: hidden;
    overflow-y: auto;
-   padding: 0 0 3px 23px;
-   margin: -10px 0 -3px -23px;
-   background-color: #FFFFFF;
-   margin-left: 300px;
 }
 
 #plugin_formcreator_wizard_forms {
@@ -1059,20 +740,6 @@ a.plugin_formcreator_formTile_title {
    padding: 10px 0 10px 0;
    box-sizing: border-box;
 
-   input {
-      width: 100%;
-      font-size: 1.4em;
-      padding: 10px 0 10px 10px;
-      box-sizing: border-box;
-      height: 40px;
-      border: 0;
-      border-radius: 0;
-      background-color: inherit;
-      border: 1px solid #C2C2C2;
-      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-      background-color: #F8F8F8;
-   }
-
    input ~ label {
       position: absolute;
       float: left;
@@ -1080,7 +747,6 @@ a.plugin_formcreator_formTile_title {
       top: 34%;
       text-align: center;
       width: 100%;
-      font-size: 1.2em;
       transition:
          background 0.2s,
          color 0.2s,
@@ -1134,43 +800,40 @@ a.plugin_formcreator_formTile_title {
    display: inline-block;
    background-image: url("../pics/search.png");
    position: absolute;
-   top: 23%;
+   top: 39%;
    right: 10px;
 }
 
 #plugin_formcreator_lastForms {
-   .plugin_formcreator_card {
-      .plugin_formcreator_answer {
-         margin: 3px;
-         list-style: none;
-         padding: 0;
-         text-align: left;
-         border-bottom: 1px solid rgba(0,0,0,.1);
-      }
+   .plugin_formcreator_answer {
+      margin: 3px;
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,.1);
+   }
 
-      .plugin_formcreator_answer a {
-         margin: 3px;
-         background-repeat: no-repeat;
-         background-position: left center;
-         padding: 11px 11px 11px 20px;
-      }
+   li a {
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding: 11px;
+   }
 
-      .plugin_formcreator_waiting {
-         background-image: url("../pics/waiting.png");
-      }
+   .plugin_formcreator_waiting {
+      background-image: url("../pics/waiting.png");
+   }
 
-      .plugin_formcreator_refused {
-         background-image: url("../pics/refused.png");
-      }
+   .plugin_formcreator_refused {
+      background-image: url("../pics/refused.png");
+   }
 
-      .plugin_formcreator_accepted {
-         background-image: url("../pics/accepted.png");
-      }
+   .plugin_formcreator_accepted {
+      background-image: url("../pics/accepted.png");
+   }
 
-      > div {
-         border-bottom: 1px solid rgba(0,0,0,.1);
-         padding: 11px;
-      }
+   > div {
+      padding-left:  10px;
+      padding-right: 10px;
    }
 }
 
@@ -1184,32 +847,6 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_heading {
    font-weight: bold;
-}
-
-.plugin_formcreator_sort:hover {
-   opacity: 1;
-   color: #3874BC;
-
-   .radios input[type = radio].new_radio + label:before {
-      background-color: #3874BC;
-      border: 2px solid #3874BC;
-   }
-}
-
-.plugin_formcreator_sort {
-   float: left;
-   opacity: 0.4;
-
-   input {
-      display: inline-block;
-      text-align: left;
-      margin: 0 20px;
-   }
-
-   .radios input[type = radio].new_radio + label {
-      display: inline-block;
-      margin-right: 10px;
-   }
 }
 
 #plugin_formcreator_serviceCatalog #header_top {
@@ -1286,237 +923,6 @@ a.plugin_formcreator_formTile_title {
    margin-left: 53px;
 }
 
-.toggle_menu .formcreator_header_top#header_top {
-   margin-left: 53px;
-   width: calc(100vw - 53px);
-}
-
-
-#plugin_formcreator_serviceCatalog #footer {
-   clear: both;
-   position: fixed;
-   bottom: 0;
-   width:  calc(100% - 10px);
-}
-
-.plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {
-   width: 300px;
-   padding-left: 0; /* Overrides CSS from GLPi */
-   padding-top: 20px;
-   height: 100%;
-   position: relative;
-   text-align: left;
-   transition: .3s;
-}
-
-.plugin_formcreator_services li {
-   padding:  5px 0 5px 13px;
-   width: 100%;
-   line-height: 38px;
-   box-sizing: border-box;
-   clear: left;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_services li a {
-   font-size: 1.2em;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem {
-   background-repeat: no-repeat;
-   background-position: top right;
-   background-color: rgba(0, 0, 0, 0.2);
-   position: relative;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem:after {
-   position: absolute;
-   left: calc(100% - 48px);
-   top: 50%;
-   border: solid transparent;
-   content: " ";
-   height: 0;
-   width: 0;
-   border-right-color: #f8f7f3;
-   border-width: 24px;
-   margin-top: -24px;
-   z-index: 20;
-}
-
-#c_menu.plugin_formcreator_leftMenu li a {
-   color: #FFF;
-}
-
-.plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
-   color: #FFF;
-   height: 35px;
-   line-height: 35px;
-}
-
-
-.plugin_formcreator_threadBrowser {
-   margin: 5px;
-   border-top: 1px dashed #3C5874;
-}
-
-.plugin_formcreator_threadBrowser > div {
-   text-align: center;
-}
-
-.plugin_formcreator_first, .plugin_formcreator_left {
-   float: left;
-   width: 16px;
-   margin: 10px 0;
-}
-
-.plugin_formcreator_right, .plugin_formcreator_last {
-   float: right;
-   width: 16px;
-   margin: 10px 0;
-}
-
-span.fc_list_icon {
-   width: 42px;
-   height: 48px;
-   vertical-align: middle;
-   font-size: 1.7em;
-   color: #FFFFFF;
-   float: left;
-   padding-top: 5px;
-   box-sizing: border-box;
-}
-
-.plugin_formcreator_entityProfile {
-   float: right;
-   width: 190px;
-   height: 40px;
-}
-.plugin_formcreator_entityProfile > li {
-   line-height: normal;
-   top: 20%;
-}
-.plugin_formcreator_entityProfile .select2-container {
-   margin-top: 12px;
-   width: inherit !important;
-}
-.plugin_formcreator_entityProfile .select2-container,
-.plugin_formcreator_entityProfile .entity_select {
-   color:  #FFF;
-   margin: 0 10px 0 0;
-   white-space: nowrap;
-}
-
-.plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
-   margin-bottom: 0;
-}
-
-.plugin_formcreator_leftMenuEnd {
-   clear: both;
-}
-
-#plugin_formcreator_avatar {
-   border: 2px inset white;
-   border-radius: 50%;
-   padding: 2px;
-   float: right;
-   width: 40px;
-   height: 40px;
-}
-
-#plugin_formcreator_avatar img {
-   width: 40px;
-   height: 40px;
-   border-radius: 50%;
-}
-
-.plugin_formcreator_userMenuCell {
-   display: block;
-   position: absolute;
-   z-index: 1000;
-   right: 5px;
-}
-
-.plugin_formcreator_userMenu_icons {
-   float: right;
-   margin: 12px 8px 0 8px;
-}
-
-.plugin_formcreator_userMenu_icons > li {
-   padding: 2px 4px;
-   display: inline-block;
-   font-size: 1.8em;
-}
-
-.plugin_formcreator_userMenu_icons .button-icon {
-   opacity: .6
-}
-
-.plugin_formcreator_userMenu_icons .button-icon:hover {
-   opacity: 1;
-}
-
-#plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
-   display: inline-block;
-   width: 22px;
-}
-
-#plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
-   color: white;
-}
-
-#c_menu #myname {
-   display: inline-block;
-   color: #FFF;
-   margin: 0 !important;
-   height: 40px;
-}
-
-#page.plugin_formcreator_page {
-   margin: 0 0 0 300px;
-   padding: 0;
-   max-height: 100%;
-   top: 0;
-   overflow-y: auto;
-   height: calc(100% - 28px - 65px);
-   min-height: 0;
-   width: calc(100% - 300px);
-   z-index:  0;
-   position: relative;
-   transition: .3s;
-}
-
-#page.plugin_formcreator_container {
-   margin-top: -40px;
-   padding-top: 40px;
-}
-
-.plugin_formcreator_container {
-   vertical-align: top;
-   top: 0;
-   position: fixed;
-   right: 0;
-   left: 0;
-   bottom: 0;
-   margin-bottom: 20px;
-   .plugin_formcreator_leftHeader#header {
-      float: left;
-      height: 100%;
-      position: relative;
-   }
-}
-
-.plugin_formcreator_page .navigationheader .tab_cadre_pager {
-   width: auto;
-}
-
-#searchcriterias {
-   padding-top: 5px;
-}
-
-#page .tab_cadre_pager {
-   width: auto;
-}
-
-
 .tab_cadre_pager, .navigationheader {
    margin-top: 0;
    padding-top: 15px;
@@ -1554,12 +960,12 @@ span.fc_list_icon {
 
 
 /* Active / inactive light for forms */
-.plugin-forcreator-active {
+.plugin-formcreator-active {
    cursor: pointer;
-   color: #009933;
+   color: #009933 !important;
 }
 
-.plugin-forcreator-inactive {
+.plugin-formcreator-inactive {
    cursor: pointer;
    color: #a0a0a0;
 }
@@ -1587,6 +993,7 @@ span.fc_list_icon {
 
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
+
    form#plugin_formcreator_form {
        width: 100%;
    }
@@ -1612,131 +1019,20 @@ span.fc_list_icon {
       width: 100%;
    }
 
-   .plugin_formcreator_marginRight {
-      margin-right: 0;
-   }
-
-   .plugin_formcreator_container .plugin_formcreator_leftHeader#header {
-      width: 100%;
-      height: 70px;
-      position: relative;
-   }
-
-   .formcreator_header_top#header_top {
-      display: none;
-      opacity: 0;
-      animation: fadeOut .3s;
-      background-color: transparent;
-      text-align: left;
-   }
-
-   #header_top .plugin_formcreator_entityProfile .profile-selector {
-      max-width: none;
-      padding: 0 !important;
-   }
-
-   .toggle_menu #c_menu li label {
-      display: inline-block;
-   }
-
-   #formcreator_servicecatalogue_ticket_summary {
-      width: 100%;
-      display: block;
-   }
-
-   .plugin_formcreator_container #footer {
-      display: none;
-   }
-
-   #formcreator-toggle-nav-desktop ~ .formcreator-nav-button {
-      display: none;
-   }
-
-   #formcreator-toggle-nav-responsive ~ .formcreator-nav-button {
-      display: inline-block;
-      position: fixed;
-      top: 1.5rem;
-      right: 1rem;
-      z-index: 2000;
-   }
-
-   #formcreator-toggle-nav-responsive:checked ~ #header #c_menu {
-      transform: translateY(0);
-   }
-   #formcreator-toggle-nav-responsive:checked ~ #header .plugin_formcreator_services {
-      margin-top: 120px;
-   }
-   #formcreator-toggle-nav-responsive:checked ~ #header_top.formcreator_header_top {
-      display: block;
-      position: fixed;
-      z-index: 2000;
-      width: 100%;
-      left: 0;
-      top: 70px;
-      margin: 0;
-      opacity: 1;
-      animation: fadeInd .3s;
-   }
-
-   #myname.plugin_formcreator_myname {
-      margin: 0 85px 0 105px;
-      width: calc(100% - 190px);
-   }
-
-   .plugin_formcreator_userMenu_icons li {
-      padding: 0;
-   }
-
    #searchcriterias .tab_cadre_fixe td {
       padding: 5px 0;
    }
 
-   .plugin_formcreator_container .plugin_formcreator_leftHeader#header #c_menu {
-      position: absolute;
-      transform: translateY(-100%) translateZ(0);
-      transition: transform .2s;
-      will-change: transform;
-      width: 100%;
-      height: 90vh;
-   }
-
-   #page.plugin_formcreator_page {
-      margin: 0;
-      width: 100%;
-      margin-top: 60px;
-      min-height: calc(100% - 100px);
-      overflow-x: hidden;
-   }
-
-   .toggle_menu #page.plugin_formcreator_page {
-      width: 100%;
-      margin-left: 0;
-   }
-
-
-   .plugin_formcreator_page #formcreator_servicecatalogue {
-      width: 100%;
-   }
-
-   #formcreator_servicecatalogue_ticket_summary {
-      left: 100px;
-   }
-
-   #plugin_formcreator_wizard_categories {
+   #plugin_formcreator_wizard_categories, #plugin_formcreator_kb_categories {
       height: inherit;
       width: 100%;
       position: initial;
       float: none;
       min-height: initial;
-   }
 
-   #plugin_formcreator_wizard_categories .slinky-menu {
-      position: static;
-   }
-
-   .plugin_formcreator_page #plugin_formcreator_wizard {
-      width: 100%;
-      height: inherit;
+      .slinky-menu {
+         position: static;
+      }
    }
 
    #plugin_formcreator_wizard_right {
@@ -1745,13 +1041,32 @@ span.fc_list_icon {
       overflow: inherit;
       margin: 0;
    }
+}
 
-   #plugin_formcreator_serviceCatalog #footer {
-      display: none;
+.restricted-form {
+   span {
+      max-width: 400px;
    }
+}
 
-   #debug-float.plugin_formcreator_debug-float {
-      z-index: 1000;
-   }
+/* TODO when the following PR is merged and minimal GLPI version is above the version containing it, remove this CSS */
+/* https://github.com/glpi-project/glpi/pull/11524 */
+.formcreator_dashboard_container .dashboard .big-number .label {
+   font-size: 12px !important;
+}
 
+.plugin_formcreator_sort .fa {
+   padding-left: 5px;
+   color: #717171;
+}
+
+.category-divider {
+   height: 0;
+   margin-bottom: 0.5rem;
+   overflow: hidden;
+   border-top: 1px solid rgba(98, 105, 118, 0.16);
+}
+
+a.category_active span {
+   font-weight: bold;
 }

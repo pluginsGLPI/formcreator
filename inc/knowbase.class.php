@@ -49,42 +49,36 @@ class PluginFormcreatorKnowbase {
    }
 
    public function showServiceCatalog() {
-      echo "<div id='formcreator_servicecatalogue'>";
-
       // show wizard
-      echo '<div id="plugin_formcreator_wizard">';
-      $this->showWizard(true);
+      echo '<div id="plugin_formcreator_wizard" class="card-group">';
+      $this->showWizard();
       echo '</div>';
-
-      echo '</div>'; // formcreator_servicecatalogue
    }
 
-   public function showWizard($service_catalog = false) {
-      echo '<div id="plugin_formcreator_kb_categories">';
-      echo '<div><h2>'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-      echo '<div><a href="#" id="kb_seeall">' . __('see all', 'formcreator') . '</a></div>';
+   public function showWizard() {
+      echo '<div id="plugin_formcreator_kb_categories" class="card">';
+      echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
+      echo '<div class="slinky-menu"></div>';
+      echo '<div><a href="#" id="wizard_seeall">' . __('See all', 'formcreator') . '</a></div>';
       echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard_right">';
+      echo '<div id="plugin_formcreator_wizard_right" class="card">';
+      echo '<div class="card-body">';
 
-      // hook display central (for alert plugin)
-      if ($service_catalog) {
-         echo "<div id='plugin_formcreator_display_central'>";
-         Plugin::doHook('display_central');
-         echo "</div>";
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_VISIBLE) {
+         echo '<div id="plugin_formcreator_searchBar">';
+         $this->showSearchBar();
+         echo '</div>';
       }
-
-      echo '<div id="plugin_formcreator_searchBar">';
-      $this->showSearchBar();
-      echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
+      echo '</div>';
       echo '</div>';
       echo '</div>';
    }
 
    protected function showSearchBar() {
       echo '<form name="plugin_formcreator_search" onsubmit="javascript: return false;" >';
-      echo '<input type="text" name="words" id="plugin_formcreator_search_input" required/>';
+      echo '<input type="text" name="words" id="plugin_formcreator_search_input" required  class="form-control"/>';
       echo '<span id="plugin_formcreator_search_input_bar"></span>';
       echo '<label for="plugin_formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
       echo '</form>';
@@ -111,11 +105,20 @@ class PluginFormcreatorKnowbase {
             [
                'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
                'FROM'   => KnowbaseItem::getTable(),
-               'WHERE'  => [
-                  KnowbaseItem::getTableField($cat_fk) => new QueryExpression(
-                     DB::quoteName(KnowbaseItemCategory::getTableField('id'))
-                  ),
-               ]
+               'LEFT JOIN' => [
+                  KnowbaseItem_KnowbaseItemCategory::getTable() => [
+                     'FKEY' => [
+                           KnowbaseItem::getTable() => 'id',
+                           KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItem::getForeignKeyField(),
+                     ],
+                  ],
+                  KnowbaseItemCategory::getTable() => [
+                     'FKEY' => [
+                        KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItemCategory::getForeignKeyField(),
+                        KnowbaseItemCategory::getTable() => 'id',
+                     ],
+                  ],
+               ],
             ],
             $kbitem_visibility_crit
          ),
@@ -193,20 +196,18 @@ class PluginFormcreatorKnowbase {
       global $DB;
 
       $table_cat          = getTableForItemType('KnowbaseItemCategory');
-      $table_item         = getTableForItemType('KnowbaseItem');
       $selectedCategories = [];
       $selectedCategories = getSonsOf($table_cat, $rootCategory);
       $selectedCategories[$rootCategory] = $rootCategory;
 
-      $query_faqs = KnowbaseItem::getListRequest([
+      $params = [
          'faq'      => '1',
-         'contains' => $keywords,
-      ], 'search');
+         'contains' => $keywords
+      ];
       if (count($selectedCategories) > 0) {
-         $query_faqs['WHERE'][] = [
-            "$table_item.knowbaseitemcategories_id" => $selectedCategories,
-         ];
+         $params['knowbaseitemcategories_id'] = $selectedCategories;
       }
+      $query_faqs = KnowbaseItem::getListRequest($params, 'search');
 
       $formList = [];
       $result_faqs = $DB->request($query_faqs);

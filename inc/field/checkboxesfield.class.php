@@ -37,6 +37,8 @@ use Html;
 use Toolbox;
 use Session;
 use PluginFormcreatorQuestionRange;
+use PluginFormcreatorFormAnswer;
+use Glpi\Application\View\TemplateRenderer;
 
 class CheckboxesField extends PluginFormcreatorAbstractField
 {
@@ -44,59 +46,22 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
 
-      $label = '';
-      $field = '';
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::textarea([
-         'name'             => 'default_values',
-         'id'               => 'default_values',
-         'value'            => Html::entities_deep($this->getValueForDesign()),
-         'cols'             => '50',
-         'display'          => false,
+      $this->question->fields['values'] =  json_decode($this->question->fields['values']);
+      $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
+      $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
+      $this->question->fields['default_values'] = Html::entities_deep($this->getValueForDesign());
+      $this->deserializeValue($this->question->fields['default_values']);
+
+      $parameters = $this->getParameters();
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'question_params' => $parameters,
+         'params' => $options,
       ]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '<label for="values' . $rand . '">';
-      $additions .= __('Values');
-      $additions .= '<small>(' . __('One per line', 'formcreator') . ')</small>';
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $value = json_decode($this->question->fields['values']);
-      if ($value === null) {
-         $value = [];
-      }
-      $additions .= Html::textarea([
-         'name'             => 'values',
-         'id'               => 'values',
-         'value'            => implode("\r\n", $value),
-         'cols'             => '50',
-         'display'          => false,
-      ]);
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -152,12 +117,12 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return __('Checkboxes', 'formcreator');
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
 
-      return Toolbox::addslashes_deep(json_encode($this->value, JSON_OBJECT_AS_ARRAY + JSON_UNESCAPED_UNICODE));
+      return json_encode($this->value, JSON_OBJECT_AS_ARRAY + JSON_UNESCAPED_UNICODE);
    }
 
    public function deserializeValue($value) {
@@ -299,7 +264,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       }
 
       if ($richText) {
-         $value = '<br />' . implode('<br />', $value);
+         $value = '<div>' . implode('</div><div>', $value) . '</div>';
       } else {
          $value = implode(', ', $value);
       }
@@ -318,15 +283,17 @@ class CheckboxesField extends PluginFormcreatorAbstractField
    }
 
    public function getEmptyParameters(): array {
+      $range = new PluginFormcreatorQuestionRange();
+      $range->setField($this, [
+         'fieldName' => 'range',
+         'label'     => [
+            __('Range min', 'formcreator'),
+            __('Range max', 'formcreator'),
+         ],
+         'fieldType' => ['text'],
+      ]);
       return [
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'range' => $range,
       ];
    }
 
@@ -370,7 +337,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       return (preg_grep($value, $this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -411,5 +378,22 @@ class CheckboxesField extends PluginFormcreatorAbstractField
 
       }
       return $strings;
+   }
+
+   public function getValueForApi() {
+      $value = [];
+      $values = $this->getAvailableValues();
+
+      if ($values === null || $this->value === null || count($this->value) === 0) {
+         return '';
+      }
+
+      foreach ($this->value as $input) {
+         if (in_array($input, $values)) {
+            $value[] = $input;
+         }
+      }
+
+      return $value;
    }
 }

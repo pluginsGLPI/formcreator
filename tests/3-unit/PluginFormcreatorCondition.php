@@ -35,7 +35,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
 
-      self::login('glpi', 'glpi');
+      $this->login('glpi', 'glpi');
    }
 
    public function testGetEnumShowLogic() {
@@ -82,14 +82,14 @@ class PluginFormcreatorCondition extends CommonTestCase {
       $this->boolean($condition->isNewItem())->isFalse();
 
       // Check that all conditions are retrieved
-      $output = $condition->getConditionsFromItem($question);
+      $output = \PluginFormcreatorCondition::getConditionsFromItem($question);
       $this->array($output)->hasSize(2);
    }
 
    public function testImport() {
       $question = $this->getQuestion();
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form = \PluginFormcreatorForm::getByItem($question);
       $question2 = $this->getQuestion([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -97,7 +97,7 @@ class PluginFormcreatorCondition extends CommonTestCase {
       $input = [
          'plugin_formcreator_questions_id' => $question2->fields['uuid'],
          'show_value'                      => 'foo',
-         'show_condition'                  => '=',
+         'show_condition'                  => \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
          'show_logic'                      => '1',
          'order'                           => '1',
          'itemtype'                        => \PluginFormcreatorQuestion::class,
@@ -144,11 +144,9 @@ class PluginFormcreatorCondition extends CommonTestCase {
       ]);
       $question2 = $this->getQuestion([
          'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $question2->updateConditions([
          'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
          '_conditions' => [
-            'id' => $question2->getID(),
+            // 'id' => $question2->getID(),
             'plugin_formcreator_questions_id' => [
                $question1->getID(),
             ],

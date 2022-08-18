@@ -31,6 +31,7 @@
 
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -46,8 +47,6 @@ class PluginFormcreatorQuestionRegex
 extends PluginFormcreatorAbstractQuestionParameter
 {
    use PluginFormcreatorTranslatable;
-
-   protected $domId = 'plugin_formcreator_questionRegex';
 
    public static function getTypeName($nb = 0) {
       return _n('Question regular expression', 'Question regular expressions', $nb, 'formcreator');
@@ -73,7 +72,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       return 1;
    }
 
-   public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question) {
+   public function getParameterForm(PluginFormcreatorQuestion $question) {
       // get the name of the HTML input field
       $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
@@ -88,23 +87,21 @@ extends PluginFormcreatorAbstractQuestionParameter
       }
 
       // build HTML code
-      $selector = $this->domId;
-      $out = '';
-      $out.= '<td id="' . $selector . '">' . $this->label . '</td>';
-      $out.= '<td colspan="3"><input type="text" name="'. $name . '[regex]" id="regex" style="width:98%;" value="'.$selected.'" />';
-      $out.= '<em>';
-      $out.= __('Specify the additional validation conditions in the description of the question to help users.', 'formcreator');
-      $out.= '</em></td>';
-
+      $out = TemplateRenderer::getInstance()->render(
+         '@formcreator/questionparameter/regex.html.twig',
+         [
+            'item'   => $this,
+            'label'  => $this->label,
+            'params' => [
+               'name'  => $name,
+            ],
+         ]
+      );
       return $out;
    }
 
    public function post_getEmpty() {
       $this->fields['regex'] = null;
-   }
-
-   public function getJsShowHideSelector() {
-      return "#" . $this->domId;
    }
 
    public function prepareInputForAdd($input) {
@@ -150,10 +147,7 @@ extends PluginFormcreatorAbstractQuestionParameter
 
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB($containerId);
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $question->fields['fieldtype'],
-         $question
-      );
+      $field = $question->getSubField();
 
       $item = $field->getEmptyParameters();
       $item = $item[$input['fieldname']];

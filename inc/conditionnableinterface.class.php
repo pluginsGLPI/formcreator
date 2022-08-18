@@ -41,4 +41,11 @@ interface PluginFormcreatorConditionnableInterface
     * @return boolean true if success, false otherwise
     */
    public function updateConditions($input) : bool;
+
+   /**
+    * get rules for conditions
+    *
+    * @return array
+    */
+   public static function getEnumShowRule(): array;
 }

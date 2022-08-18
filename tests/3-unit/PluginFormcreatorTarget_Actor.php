@@ -63,15 +63,15 @@ class PluginFormcreatorTarget_Actor extends CommonTestCase {
    public function providerGetTypeName() {
       return [
          [
-            'input' => 0,
+            'number' => 0,
             'expected' => 'Target actors',
          ],
          [
-            'input' => 1,
+            'number' => 1,
             'expected' => 'Target actor',
          ],
          [
-            'input' => 2,
+            'number' => 2,
             'expected' => 'Target actors',
          ],
       ];

@@ -30,20 +30,29 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use RuntimeException;
+use Session;
 
 class PluginFormcreatorAnswer extends CommonTestCase {
+   public function beforeTestMethod($method) {
+      switch ($method) {
+         case 'testpost_getFromDB':
+            $this->login('glpi', 'glpi');
+      }
+   }
+
    public function providerGetTypeName() {
       return [
          [
-            'input' => 0,
+            'number' => 0,
             'expected' => 'Answers',
          ],
          [
-            'input' => 1,
+            'number' => 1,
             'expected' => 'Answer',
          ],
          [
-            'input' => 2,
+            'number' => 2,
             'expected' => 'Answers',
          ],
       ];

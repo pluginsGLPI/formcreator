@@ -36,17 +36,22 @@ class PluginFormcreatorUpgradeTo2_12_5 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $this->migration = $migration;
+
+      $this->addUserRecipient();
+   }
+
+   public function addUserRecipient(): void {
+      global $DB;
 
       // Add users_id_recipient
       $table = 'glpi_plugin_formcreator_issues';
-      $this->migration->addField($table, 'users_id_recipient', 'integer');
+      if (!$DB->fieldExists($table, 'users_id_recipient')) {
+         $this->migration->addField($table, 'users_id_recipient', 'integer', ['after' => 'comment']);
+      }
+   }
 
-      // Update issues
-      $this->migration->migrationOneTable($table);
-      $DB->query("TRUNCATE `$table`");
-      PluginFormcreatorIssue::syncIssues();
+   public function isResyncIssuesRequiresd() {
+      return true;
    }
 }

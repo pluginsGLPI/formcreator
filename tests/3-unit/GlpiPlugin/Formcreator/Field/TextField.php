@@ -30,6 +30,7 @@
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class TextField extends CommonTestCase {
 
@@ -58,7 +59,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
          [
@@ -84,7 +85,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too short (minimum 5 characters): question',
          ],
          [
@@ -110,7 +111,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too short (minimum 6 characters): question',
          ],
          [
@@ -136,7 +137,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          [
@@ -162,7 +163,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false,
+            'expectedValidity' => false,
             'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          'regex with escaped chars' => [
@@ -188,7 +189,7 @@ class TextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true,
+            'expectedValidity' => true,
             'expectedMessage' => '',
          ],
       ];
@@ -238,9 +239,9 @@ class TextField extends CommonTestCase {
       $this->string($output)->isEqualTo('Text');
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -252,7 +253,7 @@ class TextField extends CommonTestCase {
          ],
          [
             'value' => "quote ' test",
-            'expected' => "quote \' test",
+            'expected' => "quote ' test",
          ],
       ];
    }
@@ -264,7 +265,12 @@ class TextField extends CommonTestCase {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -300,5 +306,28 @@ class TextField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'this is a text',
+            'expected' => 'this is a text',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

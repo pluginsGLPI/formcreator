@@ -37,9 +37,10 @@ use PluginFormcreatorCommon;
 use Html;
 use Toolbox;
 use Session;
+use PluginFormcreatorFormAnswer;
 use PluginFormcreatorQuestionRange;
 use PluginFormcreatorQuestionRegex;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 
 class FloatField extends PluginFormcreatorAbstractField
 {
@@ -47,39 +48,19 @@ class FloatField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $label = '';
-      $field = '';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
 
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default value');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td id="dropdown_default_value_field">';
-      $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::input('default_values', [
-         'id' => 'default_values',
-         'value' => $value,
+      $parameters = $this->getParameters();
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'question_params' => $parameters,
+         'params' => $options,
       ]);
-      $additions .= '</td>';
-      $additions .= '<td></td>';
-      $additions .= '<td></td>';
-      $additions .= '</tr>';
 
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -104,7 +85,7 @@ class FloatField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -252,23 +233,21 @@ class FloatField extends PluginFormcreatorAbstractField
       $regexDoc .= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
       $regexDoc .= '(' . __('Regular expression', 'formcreator') . ')';
       $regexDoc .= '</small>';
+      $range = new PluginFormcreatorQuestionRange();
+      $range->setField($this, [
+         'fieldName' => 'range',
+         'label'     => __('Range', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      $regex = new PluginFormcreatorQuestionRegex();
+      $regex->setField($this, [
+         'fieldName' => 'regex',
+         'label'     => __('Additional validation', 'formcreator') . $regexDoc,
+         'fieldType' => ['text'],
+      ]);
       return [
-         'regex' => new PluginFormcreatorQuestionRegex(
-            $this,
-            [
-               'fieldName' => 'regex',
-               'label'     => __('Additional validation', 'formcreator') . $regexDoc,
-               'fieldType' => ['text'],
-            ]
-         ),
-         'range' => new PluginFormcreatorQuestionRange(
-            $this,
-            [
-               'fieldName' => 'range',
-               'label'     => __('Range', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'regex' => $regex,
+         'range' => $range,
       ];
    }
 
@@ -290,10 +269,10 @@ class FloatField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
+      return (preg_match($value, $this->value) === 1) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -307,5 +286,9 @@ class FloatField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getValueForApi() {
+      return $this->value;
    }
 }

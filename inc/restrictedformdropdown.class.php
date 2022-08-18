@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @copyright Copyright © 2011 - 2021 Teclib'
+ * @copyright Copyright © 2011 - 2022 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -29,22 +29,21 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-// Check a user is logged in
-if (Session::getLoginUserID() === false) {
-    http_response_code(403);
-    die();
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
 }
-// Immediately close session to allow parallelization
-session_write_close();
 
-$counter = $_GET['counter'] ?? null;
+class PluginFormcreatorRestrictedFormDropdown extends AbstractRightsDropdown
+{
+   protected static function getAjaxUrl(): string {
+      return Plugin::getWebDir('formcreator') . "/ajax/getRestrictedFormDropdownValue.php";
+   }
 
-// Validate parameters
-if (!in_array($counter, [null, 'incoming', 'waiting', 'to_validate', 'solved'])) {
-    http_response_code(400);
-    die();
-};
-
-$status = PluginFormcreatorIssue::getTicketSummary($counter);
-echo json_encode($status);
+   protected static function getTypes(): array {
+      return [
+         User::getType(),
+         Group::getType(),
+         Profile::getType(),
+      ];
+   }
+}

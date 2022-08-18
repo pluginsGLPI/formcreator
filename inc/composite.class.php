@@ -132,7 +132,7 @@ class PluginFormcreatorComposite
                      break;
                   }
                   /** @var PluginFormcreatorQuestion $question */
-                  if (strpos($question->fields['values'], '"itemtype":"Ticket"') === false) {
+                  if (strpos($question->fields['itemtype'], Ticket::class) === false) {
                      break;
                   }
                   $answer = new PluginFormcreatorAnswer();

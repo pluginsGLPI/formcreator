@@ -29,7 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -37,8 +37,19 @@ if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == 'helpdesk') {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
+
+PluginFormcreatorCommon::showMiniDashboard();
+
 $kb = new PluginFormcreatorKnowbase();
 $kb->showServiceCatalog();
 
-PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == 'helpdesk') {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}

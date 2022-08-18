@@ -35,9 +35,10 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use Html;
 use Session;
-use Toolbox;
 use DateTime;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 
 class DatetimeField extends PluginFormcreatorAbstractField
 {
@@ -50,38 +51,15 @@ class DatetimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= Html::showDateTimeField('default_values', ['value' => $value, 'display' => false]);
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $common = parent::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -106,7 +84,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return $this->value;
    }
 
@@ -218,7 +196,7 @@ class DatetimeField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -232,5 +210,9 @@ class DatetimeField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getValueForApi() {
+      return $this->value;
    }
 }

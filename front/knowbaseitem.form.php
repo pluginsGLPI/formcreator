@@ -38,20 +38,31 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 $kb = new KnowbaseItem();
 
-if (isset($_GET["id"])) {
-   $kb->check($_GET["id"], READ);
-
-   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-   $available_options = ['item_itemtype', 'item_items_id', 'id'];
-   $options           = [];
-   foreach ($available_options as $key) {
-      if (isset($_GET[$key])) {
-         $options[$key] = $_GET[$key];
-      }
-   }
-   $_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
-   $kb->showFull($options);
-
-   PluginFormcreatorWizard::footer();
+if (!isset($_GET["id"])) {
+   Html::displayNotFoundError();
 }
+
+$kb->check($_GET["id"], READ);
+
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
+
+$available_options = ['item_itemtype', 'item_items_id', 'id'];
+$options           = [];
+foreach ($available_options as $key) {
+   if (isset($_GET[$key])) {
+      $options[$key] = $_GET[$key];
+   }
+}
+$_SESSION['glpilisturl']['KnowbaseItem'] = Plugin::getWebDir('formcreator') . "/front/wizard.php";
+$kb->showFull($options);
+
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}
+

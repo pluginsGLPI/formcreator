@@ -55,7 +55,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => [],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -77,7 +77,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -99,7 +99,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3'],
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -121,7 +121,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3', '4'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -143,7 +143,7 @@ class MultiSelectField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => ['3', '4', '2', '1', '6'],
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
       ];
 
@@ -175,5 +175,36 @@ class MultiSelectField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => json_encode([
+               'a (multiselect)',
+               'b (multiselect)'
+            ]),
+            'expected' => [
+               'a (multiselect)',
+               'b (multiselect)'
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'values' => '["a (multiselect)","b (multiselect)","c (multiselect)"]'
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }

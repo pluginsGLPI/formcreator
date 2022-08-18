@@ -30,6 +30,7 @@
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class CheckboxesField extends CommonTestCase {
    public function testGetName() {
@@ -148,15 +149,15 @@ class CheckboxesField extends CommonTestCase {
          ],
          [
             'value'     => ['foo'],
-            'expected'  => '[\"foo\"]',
+            'expected'  => '["foo"]',
          ],
          [
             'value'     => ["test d'apostrophe"],
-            'expected'  => '[\"test d\\\'apostrophe\"]',
+            'expected'  => '["test d\'apostrophe"]',
          ],
          [
             'value'     => ['foo', 'bar'],
-            'expected'  => '[\"foo\",\"bar\"]',
+            'expected'  => '["foo","bar"]',
          ],
       ];
    }
@@ -168,7 +169,12 @@ class CheckboxesField extends CommonTestCase {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -265,9 +271,9 @@ class CheckboxesField extends CommonTestCase {
          ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -278,21 +284,21 @@ class CheckboxesField extends CommonTestCase {
                'values' => "[]"
             ]),
             'value' => json_encode(['a']),
-            'expected' => '<br />'
+            'expected' => '<div></div>'
          ],
          [
             'question' => $this->getQuestion([
                'values' => json_encode(['a', 'b', 'c'])
             ]),
             'value' => json_encode(['a']),
-            'expected' => '<br />a'
+            'expected' => '<div>a</div>'
          ],
          [
             'question' => $this->getQuestion([
                'values' => json_encode(['a', 'b', 'c'])
             ]),
             'value' => json_encode(['a', 'c']),
-            'expected' => '<br />a<br />c'
+            'expected' => '<div>a</div><div>c</div>'
          ],
       ];
    }
@@ -349,11 +355,11 @@ class CheckboxesField extends CommonTestCase {
       return [
          [
             'input' => ['a', 'c'],
-            'expected' => '[\"a\",\"c\"]',
+            'expected' => '["a","c"]',
          ],
          [
             'input' => ['a', "test d\'apostrophe"],
-            'expected' => '[\"a\",\"test d\\\'apostrophe\"]',
+            'expected' => '["a","test d\'apostrophe"]',
          ],
       ];
    }
@@ -368,7 +374,12 @@ class CheckboxesField extends CommonTestCase {
          'formcreator_field_' . $question->getID() => $input
       ]);
 
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -451,5 +462,36 @@ class CheckboxesField extends CommonTestCase {
       $instance = $this->newTestedInstance($question);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => json_encode([
+               "a (checkbox)",
+               "c (checkbox)"
+            ]),
+            'expected' => [
+               "a (checkbox)",
+               "c (checkbox)"
+            ]
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'values'    => json_encode(["a (checkbox)","b (checkbox)","c (checkbox)"], JSON_OBJECT_AS_ARRAY)
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }

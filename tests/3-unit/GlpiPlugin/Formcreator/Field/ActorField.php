@@ -31,17 +31,9 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
-
+use PluginFormcreatorFormAnswer;
+use User;
 class ActorField extends CommonTestCase {
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion(['fieldtype' => 'actor']));
-      $output = $instance->getDesignSpecializationField();
-      $this->string($output['label'])->isEqualTo('');
-      $this->string($output['field'])->isEqualTo('');
-      $this->boolean($output['may_be_empty'])->isEqualTo(false);
-      $this->boolean($output['may_be_required'])->isEqualTo(true);
-   }
-
    public function testGetName() {
       $itemtype = $this->getTestedClassName();
       $output = $itemtype::getName();
@@ -64,7 +56,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -77,7 +69,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => [''],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -90,7 +82,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => ['email@something.com'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -103,7 +95,7 @@ class ActorField extends CommonTestCase {
                'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS
             ],
             'expectedValue'   => ['glpi', 'email@something.com'],
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 
@@ -164,7 +156,12 @@ class ActorField extends CommonTestCase {
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -374,9 +371,9 @@ class ActorField extends CommonTestCase {
       )->isInstanceOf(ComparisonException::class);
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isFalse();
    }
 
@@ -450,5 +447,32 @@ class ActorField extends CommonTestCase {
    public function testIsValidValue($instance, $value, $expected) {
       $output = $instance->isValidValue($value);
       $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => json_encode([2, 'email@example.com']),
+            'expected' => [
+               [User::class, 2],
+               'email@example.com',
+            ]
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion();
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }

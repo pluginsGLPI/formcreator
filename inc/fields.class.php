@@ -30,6 +30,7 @@
  */
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use GlpiPlugin\Formcreator\Field\UndefinedField;
 use Xylemical\Expressions\Math\BcMath;
 use Xylemical\Expressions\Context;
 use Xylemical\Expressions\ExpressionFactory;
@@ -107,7 +108,7 @@ class PluginFormcreatorFields
       // Get localized names of field types
       foreach (PluginFormcreatorFields::getClasses() as $field_type => $classname) {
          $classname = self::getFieldClassname($field_type);
-         if ($classname == PluginFormcreatorTagField::class && !$plugin->isActivated('tag')) {
+         if ($classname == UndefinedField::class) {
             continue;
          }
 
@@ -136,6 +137,7 @@ class PluginFormcreatorFields
     * @return  boolean                 If true the question should be visible
     */
    public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
+      /** @var CommonDBTM $item */
       $itemtype = get_class($item);
       $itemId = $item->getID();
       if (!isset(self::$visibility[$itemtype][$itemId])) {
@@ -153,7 +155,8 @@ class PluginFormcreatorFields
       $getParentVisibility = function() use ($item, $fields) {
          // Check if item has a condtionnable visibility parent
          if ($item instanceof CommonDBChild) {
-            if (is_subclass_of($item::$itemtype, PluginFormcreatorConditionnableInterface::class)) {
+            $interfaces = class_implements($item::$itemtype);
+            if (in_array(PluginFormcreatorConditionnableInterface::class, $interfaces)) {
                if ($parent = $item->getItem(true, false)) {
                   $parentItemtype = $parent->getType();
                   $parentId = $parent->getID();
@@ -362,7 +365,7 @@ class PluginFormcreatorFields
     * @return array
     */
    public static function updateVisibility($input) {
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
       $fields = $form->getFields();
       foreach ($fields as $id => $field) {
@@ -407,7 +410,7 @@ class PluginFormcreatorFields
     * @param string $type type of field to test for existence
     * @return boolean
     */
-   public static function fieldTypeExists($type) {
+   public static function fieldTypeExists(string $type): bool {
       $className = self::getFieldClassname($type);
       return is_subclass_of($className, PluginFormcreatorAbstractField::class, true);
    }
@@ -417,10 +420,9 @@ class PluginFormcreatorFields
     *
     * @param string $type type of field to get
     * @param PluginFormcreatorQuestion $question question representing the field
-    * @param array $data additional data
     * @return null|PluginFormcreatorAbstractField
     */
-   public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
+   public static function getFieldInstance(string $type, PluginFormcreatorQuestion $question): ?PluginFormcreatorAbstractField {
       if (!self::fieldTypeExists($type)) {
          return null;
       }

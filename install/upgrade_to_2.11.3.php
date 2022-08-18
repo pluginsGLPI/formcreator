@@ -48,4 +48,8 @@ class PluginFormcreatorUpgradeTo2_11_3 {
       $migration->changeField($table, 'date_creation', 'date_creation', 'datetime'. ' NOT NULL');
       $migration->changeField($table, 'date_mod', 'date_mod', 'datetime'. ' NOT NULL');
    }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
 }

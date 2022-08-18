@@ -31,7 +31,11 @@
 
 namespace tests\units;
 
+use Glpi\Dashboard\Dashboard;
+use Glpi\Dashboard\Item;
+use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Profile;
 
 /**
  * @engine inline
@@ -71,7 +75,7 @@ class Config extends CommonTestCase {
 
       $pluginName = TEST_PLUGIN_NAME;
 
-      $this->given(self::setupGLPIFramework())
+      $this->given($this->setupGLPIFramework())
            ->and($this->boolean($DB->connected)->isTrue());
 
       //Drop plugin configuration if exists
@@ -109,12 +113,16 @@ class Config extends CommonTestCase {
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
-      $this->boolean($plugin->isActivated($pluginName))->isTrue('Cannot enable the plugin');
+      $plugin->init();
+      $messages = $_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR] ?? [];
+      $messages = implode(PHP_EOL, $messages);
+      $this->boolean($plugin->isActivated($pluginName))->isTrue('Cannot enable the plugin: ' . $messages);
 
-      // Check the version saved in configuration
       $this->checkConfig();
-      $this->testPluginName();
+      $this->checkRequestType();
+      $this->checkPluginName();
       $this->checkAutomaticAction();
+      $this->checkDashboard();
    }
 
    public function testUpgradedPlugin() {
@@ -122,22 +130,19 @@ class Config extends CommonTestCase {
 
       $pluginName = TEST_PLUGIN_NAME;
 
-      // Check the version saved in configuration
-      $this->checkConfig();
-      $this->checkFontAwesomeData();
-      $this->testPluginName();
-
       $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
-      while ($fresh_table = $fresh_tables->next()) {
+      foreach ($fresh_tables as $fresh_table) {
          $table = $fresh_table['TABLE_NAME'];
          $this->boolean($this->olddb->tableExists($table, false))
-            ->isTrue("Table $table does not exists in after an upgrade from an old version!");
+            ->isTrue("Table $table does not exist after an upgrade from an old version!");
 
-         $create = $DB->getTableSchema($table);
+         $tableStructure = $DB->query("SHOW CREATE TABLE `$table`")->fetch_row()[1];
+         $create = $this->getTableSchema($table, $tableStructure);
          $fresh = $create['schema'];
          $fresh_idx = $create['index'];
 
-         $update = $this->olddb->getTableSchema($table);
+         $tableStructure = $this->olddb->query("SHOW CREATE TABLE `$table`")->fetch_row()[1];
+         $update = $this->getTableSchema($table, $tableStructure);
          $updated = $update['schema'];
          $updated_idx = $update['index'];
 
@@ -150,11 +155,14 @@ class Config extends CommonTestCase {
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
 
-      $this->testRequestType();
+      $this->checkConfig();
+      $this->checkRequestType();
+      $this->checkPluginName();
       $this->checkAutomaticAction();
+      $this->checkDashboard();
    }
 
-   public function testPluginName() {
+   public function checkPluginName() {
       $plugin = new \Plugin();
       $plugin->getFromDBbyDir(TEST_PLUGIN_NAME);
       $this->string($plugin->fields['name'])->isEqualTo('Form Creator');
@@ -164,13 +172,10 @@ class Config extends CommonTestCase {
       $pluginName = TEST_PLUGIN_NAME;
 
       // Check the version saved in configuration
-      $config = \Config::getConfigurationValues($pluginName);
-      $this->array($config)->isIdenticalTo([
-         'schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION
-      ]);
+      $this->string(\Config::getConfigurationValue($pluginName, 'schema_version'))->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    }
 
-   public function testRequestType() {
+   public function checkRequestType() {
       $requestType = new \RequestType();
       $requestType->getFromDBByCrit(['name' => 'Formcreator']);
       $this->boolean($requestType->isNewItem())->isFalse();
@@ -186,10 +191,128 @@ class Config extends CommonTestCase {
       $this->integer((int) $cronTask->fields['state'])->isEqualTo(0);
    }
 
-   public function checkFontAwesomeData() {
-      $pluginName = TEST_PLUGIN_NAME;
+   /**
+    * Undocumented function
+    *
+    * @param string $table
+    * @param string|null $structure
+    * @return array
+    */
+   public function getTableSchema($table, $structure = null) {
+      global $DB;
 
-      $file = GLPI_ROOT . '/files/_plugins/' . $pluginName . '/font-awesome.php';
-      $this->boolean(is_readable($file))->isTrue();
+      if ($structure === null) {
+         $structure = $DB->query("SHOW CREATE TABLE `$table`")->fetch_row();
+         $structure = $structure[1];
+      }
+
+      //get table index
+      $index = preg_grep(
+         "/^\s\s+?KEY/",
+         array_map(
+            function($idx) { return rtrim($idx, ','); },
+            explode("\n", $structure)
+         )
+      );
+      //get table schema, without index, without AUTO_INCREMENT
+      $structure = preg_replace(
+         [
+            "/\s\s+KEY .*/",
+            "/AUTO_INCREMENT=\d+ /"
+         ],
+         "",
+         $structure
+      );
+      $structure = preg_replace('/,(\s)?$/m', '', $structure);
+      $structure = preg_replace('/ COMMENT \'(.+)\'/', '', $structure);
+
+      $structure = str_replace(
+         [
+            " COLLATE utf8mb4_unicode_ci",
+            " CHARACTER SET utf8mb4",
+            " COLLATE utf8_unicode_ci",
+            " CHARACTER SET utf8",
+            ', ',
+         ], [
+            '',
+            '',
+            '',
+            '',
+            ',',
+         ],
+         trim($structure)
+      );
+
+      //do not check engine nor collation
+      $structure = preg_replace(
+         '/\) ENGINE.*$/',
+         '',
+         $structure
+      );
+
+      //Mariadb 10.2 will return current_timestamp()
+      //while older retuns CURRENT_TIMESTAMP...
+      $structure = preg_replace(
+         '/ CURRENT_TIMESTAMP\(\)/i',
+         ' CURRENT_TIMESTAMP',
+         $structure
+      );
+
+      //Mariadb 10.2 allow default values on longblob, text and longtext
+      $defaults = [];
+      preg_match_all(
+         '/^.+ ((medium|long)?(blob|text)) .+$/m',
+         $structure,
+         $defaults
+      );
+      if (count($defaults[0])) {
+         foreach ($defaults[0] as $line) {
+               $structure = str_replace(
+                  $line,
+                  str_replace(' DEFAULT NULL', '', $line),
+                  $structure
+               );
+         }
+      }
+
+      $structure = preg_replace("/(DEFAULT) ([-|+]?\d+)(\.\d+)?/", "$1 '$2$3'", $structure);
+      //$structure = preg_replace("/(DEFAULT) (')?([-|+]?\d+)(\.\d+)(')?/", "$1 '$3'", $structure);
+
+      // Remove integer display width
+      $structure = preg_replace('/(INT)\(\d+\)/i', '$1', $structure);
+
+      return [
+         'schema' => strtolower($structure),
+         'index'  => $index
+      ];
+   }
+
+   public function checkDashboard() {
+      // Check the dashboard exists
+      $dashboard = new Dashboard();
+      $dashboard->getFromDB('plugin_formcreator_issue_counters');
+      $this->boolean($dashboard->isNewItem())->isFalse();
+
+      // Check rights on the dashboard
+      $right = new Right();
+      $profile = new Profile();
+      $helpdeskProfiles = $profile->find([
+         'interface' => 'helpdesk',
+      ]);
+      foreach ($helpdeskProfiles as $helpdeskProfile) {
+         $rows = $right->find([
+            'dashboards_dashboards_id' => $dashboard->fields['id'],
+            'itemtype'                 => Profile::getType(),
+            'items_id'                 => $helpdeskProfile['id']
+         ]);
+         $this->array($rows)->hasSize(1);
+      }
+
+      // Check there is widgets in the dashboard
+      $dashboardItem = new Item();
+      $rows = $dashboardItem->find([
+         'dashboards_dashboards_id' => $dashboard->fields['id'],
+      ]);
+      $this->array($rows)->hasSize(7);
    }
 }

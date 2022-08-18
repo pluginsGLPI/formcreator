@@ -30,6 +30,7 @@
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class TimeField extends CommonTestCase {
 
@@ -47,7 +48,7 @@ class TimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'question'           => $this->getQuestion([
@@ -61,7 +62,7 @@ class TimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => '08:12',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'question'           => $this->getQuestion([
@@ -75,7 +76,7 @@ class TimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'question'           => $this->getQuestion([
@@ -89,7 +90,7 @@ class TimeField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => '08:12:34',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 
@@ -167,7 +168,12 @@ class TimeField extends CommonTestCase {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -249,9 +255,9 @@ class TimeField extends CommonTestCase {
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -270,5 +276,28 @@ class TimeField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '12:14:50',
+            'expected' => '12:14:50',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

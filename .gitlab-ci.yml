@@ -1,0 +1,55 @@
+image: composer
+
+services:
+  - mysql:latest
+
+variables:
+  DB_HOST: mysql
+  MYSQL_ROOT_USER: root
+  MYSQL_ROOT_PASSWORD: root
+  GLPI_SOURCE: "https://github.com/glpi-project/glpi"
+  GLPI_BRANCH: master
+  CS: "7.4"
+  DB_USER: "glpi"
+  DB_PASSWD: "glpi"
+  DB_NAME: "glpitest"
+  OLD_DB_NAME: "glpiupgradetest"
+  PLUGINNAME: "formcreator"
+  AFTER_SUCCESS_BRANCH: "master"
+  ATOUM_ARG: "--force-terminal --use-dot-report"
+  NOCOVERAGE: "-ncc"
+  COVERAGE: "--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation CommonDBChild"
+  PANTHER_CHROME_DRIVER_BINARY: "chromedriver"
+  SKIP_INIT: "false"
+  SKIP_FRESH_GLPI_INSTALL: "false"
+  SKIP_UPGRADE_GLPI_INSTALL: "false"
+  SKIP_INSTALL_PLUGIN_DEPENDENCIES: "false"
+  SKIP_UPGRADE_TESTS: "false"
+  SKIP_INSTALL_TESTS: "false"
+  SKIP_TESTS: "false"
+  SKIP_FUNCTIONAL_TESTS: "true"
+  SKIP_UNINSTALLL_TESTS: "false"
+  SKIP_LINT_TESTS: "false"
+  SKIP_CS_TESTS: "false"
+  SKIP_PANTHER_INSTALL: "true"
+
+stages:
+  - test
+
+test:
+  image: php:7.4-cli
+  stage: test
+  before_script:
+    - tests/docker_install.sh
+    - tests/yarn.sh
+    - tests/composer.sh
+    - php --version
+    - composer --version
+    - mysql --version
+    - yarn --version
+    - composer install
+
+  variables:
+
+  script:
+    - tests/testall.sh

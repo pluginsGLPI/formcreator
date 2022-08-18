@@ -41,10 +41,10 @@ if (!$question->canCreate()) {
 }
 
 if (!$question->add($_REQUEST)) {
-    http_response_code(400);
+    http_response_code(500);
+    Session::addMessageAfterRedirect(__('Could not add the question', 'formcreator'), false, ERROR);
     exit;
 }
-$question->getFromDB($question->getID()); // To remove if GLPI #9210 merged
 $json = [
     'y'      => $question->fields['row'],
     'x'      => $question->fields['col'],
@@ -52,4 +52,4 @@ $json = [
     'height' => '1',
     'html'   => $question->getDesignHtml(),
 ];
-echo json_encode($json);
+echo json_encode($json, JSON_UNESCAPED_UNICODE);

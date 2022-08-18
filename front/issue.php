@@ -39,28 +39,35 @@ if (!(new Plugin())->isActivated('formcreator')) {
 if (!PluginFormcreatorIssue::canView()) {
    Html::displayRightError();
 }
-if (plugin_formcreator_replaceHelpdesk()) {
-   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   if (Session::getCurrentInterface() == 'helpdesk') {
-      Html::helpHeader(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF']
-      );
-   } else {
-      Html::header(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF'],
-         'helpdesk',
-         'PluginFormcreatorFormlist'
-      );
-   }
+   Html::header(
+      __('Service catalog', 'formcreator'),
+      '',
+      'admin',
+      PluginFormcreatorForm::class
+   );
+}
+
+if (Session::getCurrentInterface() == 'helpdesk') {
+   PluginFormcreatorCommon::showMiniDashboard();
+}
+
+//backup session value
+$save_session_fold_search = $_SESSION['glpifold_search'];
+//hide search if need
+if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
+   $_SESSION['glpifold_search'] = true;
 }
 
 Search::show('PluginFormcreatorIssue');
 
-if (plugin_formcreator_replaceHelpdesk()) {
-   PluginFormcreatorWizard::footer();
+//restore session value
+$_SESSION['glpifold_search'] = $save_session_fold_search;
+
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
 } else {
    Html::footer();
 }

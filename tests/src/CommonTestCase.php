@@ -45,8 +45,6 @@ abstract class CommonTestCase extends atoum
 
       $DB = new DB();
 
-      include_once (GLPI_ROOT . "/inc/timer.class.php");
-
       // Security of PHP_SELF
       $_SERVER['PHP_SELF'] = Html::cleanParametersURL($_SERVER['PHP_SELF']);
 
@@ -227,7 +225,7 @@ abstract class CommonTestCase extends atoum
          'required'                       => '0',
          'show_empty'                     => '0',
          'default_values'                 => '',
-         'desription'                     => '',
+         'description'                    => '',
          'row'                            => '0',
          'col'                            => '0',
          'width'                          => '4',
@@ -288,6 +286,30 @@ abstract class CommonTestCase extends atoum
       return $targetChange;
    }
 
+   protected function getFormAnswer(array $input): ?\PluginFormcreatorFormAnswer {
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->add($input);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+
+      return $formAnswer;
+   }
+
+   protected function getTargetProblem($input = []) {
+      if (!isset($input['name'])) {
+         $input['name'] = $this->getUniqueString();
+      }
+
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input[$formFk])) {
+         $input[$formFk] = $this->getForm()->getID();
+      }
+
+      $targetProblem = new \PluginFormcreatorTargetProblem();
+      $targetProblem->add($input);
+
+      return $targetProblem;
+   }
+
    /**
     * Tests the session has a specific message
     * this may be replaced by a custom asserter for atoum
@@ -332,13 +354,13 @@ abstract class CommonTestCase extends atoum
    }
 
    /**
-    * Undocumented function
+    * Create an item of the given itemtype
     *
-    * @param string $itemtype
+    * @param string $itemtype itemtype to create
     * @param array $input
-    * @return \CommonDBTM|void
+    * @return \CommonDBTM
     */
-   protected function getGlpiCoreItem(string $itemtype, array $input) {
+   protected function getGlpiCoreItem(string $itemtype, array $input = []): \CommonDBTM {
       /** @var \CommonDBTM */
       $item = new $itemtype();
 

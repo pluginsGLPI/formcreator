@@ -38,6 +38,8 @@ use Toolbox;
 use Html;
 use Session;
 use PluginFormcreatorTranslatable;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorFormAnswer;
 
 class DependentField extends PluginFormcreatorAbstractField
 {
@@ -56,31 +58,33 @@ class DependentField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function showForm(array $options): void {
+   }
+
    public function getEmptyParameters(): array {
+      $firstname = new PluginFormcreatorQuestionDependency();
+      $firstname->setField($this, [
+         'fieldName' => 'firstname',
+         'label'     => __('First name field', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      $lastname = new PluginFormcreatorQuestionDependency();
+      $lastname->setField($this, [
+         'fieldName' => 'lastname',
+         'label'     => __('Last name field', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+
       return [
-         'firstname' => new PluginFormcreatorQuestionDependency(
-            $this,
-            [
-               'fieldName' => 'firstname',
-               'label'     => __('First name field', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
-         'lastname' => new PluginFormcreatorQuestionDependency(
-            $this,
-            [
-               'fieldName' => 'lastname',
-               'label'     => __('Last name field', 'formcreator'),
-               'fieldType' => ['text'],
-            ]
-         ),
+         'firstname' => $firstname,
+         'lastname' => $lastname,
       ];
    }
 
    public function prepareQuestionInputForSave($input) {
       $success = true;
       $fieldType = $this->getFieldTypeName();
-      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_1'] === '0') {
+      if ($input['_parameters'][$fieldType]['firstname']['plugin_formcreator_questions_id_2'] === '0') {
          Session::addMessageAfterRedirect(__('No text field selected for firstname', 'formcreator'), false, ERROR);
          $success =  false;
       }
@@ -99,7 +103,7 @@ class DependentField extends PluginFormcreatorAbstractField
       return isset($input['formcreator_field_' . $this->question->getID()]);
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -113,7 +117,7 @@ class DependentField extends PluginFormcreatorAbstractField
          : '';
    }
 
-   public function show($domain, $canEdit = true) {
+   function show(string $domain, bool $canEdit = true): string {
       parent::show($canEdit);
       $questionId = $this->fields['id'];
       $domId = "input[name=\"formcreator_field_$questionId\"]";
@@ -126,7 +130,7 @@ class DependentField extends PluginFormcreatorAbstractField
       }
       $firstnameQuestionId = $parameters['firstname']->getField('plugin_formcreator_questions_id_1');
       $lastnameQuestionId = $parameters['lastname']->getField('plugin_formcreator_questions_id_2');
-      echo Html::scriptBlock("$(function() {
+      return Html::scriptBlock("$(function() {
          plugin_formcreator_field_$questionId()
          $('input[name=\"formcreator_field_$firstnameQuestionId\"]').on('input', plugin_formcreator_field_$questionId)
          $('input[name=\"formcreator_field_$lastnameQuestionId\"]').on('input', plugin_formcreator_field_$questionId)
@@ -253,7 +257,7 @@ class DependentField extends PluginFormcreatorAbstractField
       return preg_match($value, $this->value) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -267,5 +271,9 @@ class DependentField extends PluginFormcreatorAbstractField
 
    public function isVisibleField(): bool {
       return true;
+   }
+
+   public function getValueForApi() {
+      return $this->value;
    }
 }

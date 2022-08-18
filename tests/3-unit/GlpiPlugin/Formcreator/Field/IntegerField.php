@@ -63,7 +63,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -86,7 +86,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -108,7 +108,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -131,7 +131,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '5',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -154,7 +154,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '3.4',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -177,7 +177,7 @@ class IntegerField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '4',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -199,9 +199,8 @@ class IntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '4',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -223,9 +222,8 @@ class IntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '4',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 
@@ -248,9 +246,9 @@ class IntegerField extends CommonTestCase {
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -269,5 +267,30 @@ class IntegerField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '42',
+            'expected' => '42',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'itemtype' => Location::class
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

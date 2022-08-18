@@ -53,12 +53,11 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-   $tree = PluginFormcreatorCategory::getCategoryTree(0, false);
+   $tree = PluginFormcreatorCategory::getCategoryTree();
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
-   $form = new PluginFormcreatorForm();
-   $formList = $form->showFormList($rootCategory, $keywords, $helpdeskHome);
+   $formList = PluginFormcreatorForm::getFormList($rootCategory, $keywords, $helpdeskHome);
    echo json_encode($formList, JSON_UNESCAPED_SLASHES);
 }

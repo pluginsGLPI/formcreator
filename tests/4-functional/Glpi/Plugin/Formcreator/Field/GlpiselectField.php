@@ -53,13 +53,23 @@ class GlpiselectField extends CommonFunctionalTestCase
       );
 
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="glpi_objects"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="dropdown_default_value"]');
+      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="itemtype"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
 
-      $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
-      $browserForm['glpi_objects'] = \Computer::gettype();
+      $this->client->executeScript(
+         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').val("' . \Computer::getType() . '")
+         $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').select2().trigger("change")
+         '
+      );
+      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="default_values"]');
 
       $this->_testQuestionCreated($form, __METHOD__);
+   }
+
+   public function testRenderQuestion() {
+      $this->_testRenderQuestion([
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => \Entity::getType(),
+      ]);
    }
 }

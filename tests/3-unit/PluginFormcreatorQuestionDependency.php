@@ -78,7 +78,7 @@ class PluginFormcreatorQuestionDependency extends CommonTestCase {
          '_parameters' => [
             'dependent' => [
                'firstname' => [
-                  'plugin_formcreator_questions_id_1' => '1',
+                  'plugin_formcreator_questions_id_2' => '1',
                ],
                'lastname' => [
                   'plugin_formcreator_questions_id_2' => '2',
@@ -87,7 +87,7 @@ class PluginFormcreatorQuestionDependency extends CommonTestCase {
          ]
       ]);
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form = \PluginFormcreatorForm::getByItem($question);
       $question2 = $this->getQuestion([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);

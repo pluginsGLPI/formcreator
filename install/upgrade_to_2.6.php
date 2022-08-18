@@ -40,13 +40,8 @@ class PluginFormcreatorUpgradeTo2_6 {
    public function upgrade(Migration $migration) {
       global $DB;
 
-      $migration->displayMessage("Upgrade to schema version 2.6");
-
-      $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
-
       // update questions
       $table = 'glpi_plugin_formcreator_questions';
-      $migration->displayMessage("Upgrade $table");
 
       $rows = $DB->request([
          'SELECT' => ['id', 'values'],
@@ -72,7 +67,6 @@ class PluginFormcreatorUpgradeTo2_6 {
 
       // Update Form Answers
       $table = 'glpi_plugin_formcreator_forms_answers';
-      $migration->displayMessage("Upgrade $table");
 
       $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
       $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
@@ -124,10 +118,14 @@ class PluginFormcreatorUpgradeTo2_6 {
       $migration->dropKey($table, 'plugin_formcreator_question_id');
       $migration->addKey($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id');
 
+      $defaultCharset = DBConnection::getDefaultCharset();
+      $defaultCollation = DBConnection::getDefaultCollation();
+      $defaultKeySign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = 'glpi_plugin_formcreator_items_targettickets';
       if (!$DB->tableExists($table)) {
          $query = "CREATE TABLE `$table` (
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `id` int(11) $defaultKeySign NOT NULL AUTO_INCREMENT,
                   `plugin_formcreator_targettickets_id` int(11) NOT NULL DEFAULT '0',
                   `link` int(11) NOT NULL DEFAULT '0',
                   `itemtype` varchar(255) NOT NULL DEFAULT '',
@@ -136,7 +134,7 @@ class PluginFormcreatorUpgradeTo2_6 {
                   PRIMARY KEY (`id`),
                   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
                   INDEX `item` (`itemtype`,`items_id`)
-                  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                  ) ENGINE=InnoDB DEFAULT CHARSET=$defaultCharset COLLATE=$defaultCollation ROW_FORMAT=DYNAMIC;";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
 
@@ -151,7 +149,6 @@ class PluginFormcreatorUpgradeTo2_6 {
          ]
       ]);
       foreach ($all_targetTickets as $targetTicket) {
-         $targetTicket['_skip_checks'] = true;
          $targetTicket['title'] = $targetTicket['name'];
          $query = "UPDATE $table
                    SET `uuid` = '" . plugin_formcreator_getUuid() . "'
@@ -212,5 +209,9 @@ class PluginFormcreatorUpgradeTo2_6 {
       $migration->addField('glpi_plugin_formcreator_targetchanges', 'category_question', 'integer', ['after' => 'category_rule']);
 
       $migration->executeMigration();
+   }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
    }
 }

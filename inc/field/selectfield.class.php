@@ -36,6 +36,7 @@ use Dropdown;
 use Html;
 use Session;
 use Toolbox;
+use Glpi\Application\View\TemplateRenderer;
 
 class SelectField extends RadiosField
 {
@@ -43,11 +44,17 @@ class SelectField extends RadiosField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $specialization = parent::getDesignSpecializationField();
-      $specialization['may_be_empty'] = true;
-
-      return $specialization;
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->question->fields['values'] =  json_decode($this->question->fields['values']);
+      $this->question->fields['values'] = is_array($this->question->fields['values']) ? $this->question->fields['values'] : [];
+      $this->question->fields['values'] = implode("\r\n", $this->question->fields['values']);
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -122,6 +129,9 @@ class SelectField extends RadiosField
       return $this->value == $value;
    }
 
+   public function regex($value): bool {
+      return preg_match($value, Toolbox::stripslashes_deep($this->value)) ? true : false;
+   }
 
    public function getHtmlIcon(): string {
       return '<i class="fas fa-caret-square-down" aria-hidden="true"></i>';

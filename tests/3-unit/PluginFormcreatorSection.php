@@ -98,6 +98,13 @@ class PluginFormcreatorSection extends CommonTestCase {
       //get section
       $section->getFromDB($sections_id);
 
+      //get max order of sections
+      $max = \PluginFormcreatorCommon::getMax(
+         $section,
+         ['plugin_formcreator_forms_id' => $section->fields['plugin_formcreator_forms_id']],
+         'order'
+      );
+
       //clone it
       $newSection_id = $section->duplicate();
       $this->integer($newSection_id)->isGreaterThan(0);
@@ -108,6 +115,9 @@ class PluginFormcreatorSection extends CommonTestCase {
 
       // check uuid
       $this->string($new_section->getField('uuid'))->isNotEqualTo($section->getField('uuid'));
+
+      // check order
+      $this->integer((int) $new_section->fields['order'])->isEqualTo($max + 1);
 
       // check questions
       $all_questions = $DB->request([
@@ -487,5 +497,40 @@ class PluginFormcreatorSection extends CommonTestCase {
       // check the questions are deleted
       $this->boolean(\PluginFormcreatorQuestion::getById($questions[1]->getID()))->isFalse();
       $this->boolean(\PluginFormcreatorQuestion::getById($questions[2]->getID()))->isFalse();
+   }
+
+   public function testGetSectionsFromForm() {
+      $form = $this->getForm();
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $this->array($output)->hasSize(0);
+
+      $sections = [];
+      $section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+      $sections[] = $section;
+
+      $section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+      $sections[] = $section;
+
+      $output = \PluginFormcreatorSection::getSectionsFromForm($form->getID());
+      $this->array($output)->hasSize(2);
+
+      $found = 0;
+      foreach ($output as $section) {
+         foreach ($sections as $search) {
+            if ($search->getID() == $section->getID()) {
+               $found++;
+            }
+         }
+      }
+      $this->integer($found)->isEqualTo(2);
+
    }
 }

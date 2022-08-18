@@ -30,6 +30,7 @@
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class DateField extends CommonTestCase {
 
@@ -47,7 +48,7 @@ class DateField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'question'           => $this->getQuestion([
@@ -61,7 +62,7 @@ class DateField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => '2018-08-16',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'question'           => $this->getQuestion([
@@ -75,7 +76,7 @@ class DateField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => null,
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'question'           => $this->getQuestion([
@@ -89,7 +90,7 @@ class DateField extends CommonTestCase {
                '_parameters'     => [],
             ]),
             'expectedValue'   => '2018-08-16',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 
@@ -117,9 +118,9 @@ class DateField extends CommonTestCase {
       $this->string($output)->isEqualTo('Date');
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -136,7 +137,12 @@ class DateField extends CommonTestCase {
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -223,5 +229,28 @@ class DateField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '2021-05-11',
+            'expected' => '2021-05-11'
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion();
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

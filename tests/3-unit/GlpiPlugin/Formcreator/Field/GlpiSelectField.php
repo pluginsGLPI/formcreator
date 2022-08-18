@@ -32,6 +32,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Computer;
 
 class GlpiselectField extends CommonTestCase {
 
@@ -72,14 +73,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $user->getID(),
-               'glpi_objects'     => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -87,14 +88,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => '',
-               'glpi_objects'    => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -102,14 +103,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '1',
                'default_values'  => $user->getID(),
-               'glpi_objects'    => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [],
             ],
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -117,14 +118,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '0',
-               'glpi_objects'    => \User::class,
+               'itemtype'        => \User::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [],
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
 
          [
@@ -133,14 +134,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $computer->getID(),
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => $computer->getName(),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -148,14 +149,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -163,14 +164,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => $computer->getID(),
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [],
             ],
             'expectedValue'   => $computer->getName(),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -178,14 +179,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'glpi_objects'    => \Computer::class,
+               'itemtype'        => \Computer::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => false
+            'expectedValidity' => false
          ],
          [
             'fields'          => [
@@ -193,14 +194,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '0',
-               'glpi_objects'     => \Entity::class,
+               'itemtype'         => \Entity::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => (new \Entity())->getFromDB(0),
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
          [
             'fields'          => [
@@ -208,14 +209,14 @@ class GlpiselectField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '-1',
-               'glpi_objects'     => \Entity::class,
+               'itemtype'        => \Entity::class,
                'order'           => '1',
                'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [],
             ],
             'expectedValue'   => '&nbsp;',
-            'expectedIsValid' => true
+            'expectedValidity' => true
          ],
       ];
 
@@ -238,9 +239,9 @@ class GlpiselectField extends CommonTestCase {
       $this->boolean($output)->isEqualTo($expectedValidity);
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isFalse();
    }
 
@@ -253,8 +254,8 @@ class GlpiselectField extends CommonTestCase {
 
       // Create a question glpi Object / computer
       $question = $this->getQuestion([
-         'fieldtype'    => 'glpiselect',
-         'glpi_objects' => \Computer::class,
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => \Computer::class,
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($computer->getID());
@@ -274,8 +275,8 @@ class GlpiselectField extends CommonTestCase {
 
       // Create a question glpi Object / User
       $question = $this->getQuestion([
-         'fieldtype'    => 'glpiselect',
-         'glpi_objects' => \User::class,
+         'fieldtype' => 'glpiselect',
+         'itemtype'  => \User::class,
       ]);
       $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($user->getID());
@@ -294,5 +295,39 @@ class GlpiselectField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      $computer = new Computer();
+      $computer->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => 0,
+      ]);
+      return [
+         [
+            'input'    => $computer->getID(),
+            'expected' => [
+               Computer::class,
+               $computer->getID()
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+         'itemtype' => Computer::class,
+         'values' => '{"entity_restrict":"2"}'
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->array($output)->isEqualTo($expected);
    }
 }

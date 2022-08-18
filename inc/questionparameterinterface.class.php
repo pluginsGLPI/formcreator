@@ -34,18 +34,20 @@ if (!defined('GLPI_ROOT')) {
 
 interface PluginFormcreatorQuestionParameterInterface {
    /**
+    * set field and options related to this question parameter
+    *
+    * @param PluginFormcreatorFieldInterface $field
+    * @param array $options
+    * @return void
+    */
+   public function setField(PluginFormcreatorFieldInterface $field, array $options);
+
+   /**
     * Gets the HTML form part for the parameters
-    * @param PluginFormcreatorForm $form a form used as context when displaying parameters
     * @param PluginFormcreatorQuestion $question question associated to the field, itself associated to the parameter
     * @return string HTML
     */
-   public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question);
-
-   /**
-    * Gets the Js selector containing the parameters to show or hide
-    * @return string JS code
-    */
-   public function getJsShowHideSelector();
+   public function getParameterForm(PluginFormcreatorQuestion $question);
 
    /**
     * Gets the name of the parameter

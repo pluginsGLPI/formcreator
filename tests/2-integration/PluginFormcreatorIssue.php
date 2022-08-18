@@ -33,8 +33,24 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorIssue extends CommonTestCase {
 
+   public function beforeTestMethod($method) {
+      switch ($method) {
+         case 'testAddTicket':
+         case 'testUpdateTicket':
+            $this->login('post-only', 'postonly');
+            break;
+
+         case 'testDeleteTicket':
+            $this->login('glpi', 'glpi');
+            break;
+      }
+   }
+
    public function testAddTicket() {
-      $this->login('post-only', 'postonly');
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = '0';
+
       // Create a form with a target ticket
       $form = $this->getForm();
       $this->getTargetTicket([
@@ -43,7 +59,10 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       // answer the form
       $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([\PluginFormcreatorForm::getForeignKeyField() => $form->getID()]);
+      $formAnswer->add([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
+      ]);
+
       // Get the generated ticket
       $ticket = array_pop($formAnswer->targetList);
       $this->object($ticket);
@@ -63,7 +82,10 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function testUpdateTicket() {
-      $this->login('post-only', 'postonly');
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = '0';
+
       // Create a form with a target ticket
       $form = $this->getForm();
       $this->getTargetTicket([
@@ -104,7 +126,10 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function testDeleteTicket() {
-      $this->login('glpi', 'glpi');
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = '0';
+
       $form = $this->getForm();
       $this->getTargetTicket([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
@@ -112,7 +137,9 @@ class PluginFormcreatorIssue extends CommonTestCase {
 
       // answer the form
       $formAnswer = new \PluginFormcreatorFormAnswer();
-      $formAnswer->add([\PluginFormcreatorForm::getForeignKeyField() => $form->getID()]);
+      $formAnswer->add([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID()
+      ]);
       // Get the generated ticket
       $ticket = array_pop($formAnswer->targetList);
       $this->object($ticket);
@@ -133,6 +160,5 @@ class PluginFormcreatorIssue extends CommonTestCase {
       // Check the issue has been deleted
       $success = $issue->getFromDB($issue->getID());
       $this->boolean($success)->isFalse();
-
    }
 }

@@ -1,0 +1,155 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+{% extends "@formcreator/pages/question.html.twig" %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
+
+{% block questionFields %}
+    {{ formcreatorFields.dropdownDropdownSubType(
+        'itemtype',
+        item.fields['itemtype'],
+        _n('Dropdown', 'Dropdowns', 1),
+        {
+            on_change: 'plugin_formcreator.changeQuestionType(this)',
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+    ) }}
+
+    {{ fields.dropdownYesNo(
+        'required',
+        item.fields['required'],
+        __('Required', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+    ) }}
+
+    {{ fields.dropdownYesNo(
+        'show_empty',
+        item.fields['show_empty'],
+        __('Show empty', 'formcreator'), {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+    ) }}
+
+    {% if item.fields['itemtype'] is defined and item.fields['itemtype'] != '0' %}
+        {{ fields.dropdownField(
+            item.fields['itemtype'],
+            'default_values',
+            item.fields['default_values'],
+            __('Default values'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
+        ) }}
+    {% else %}
+        {{ fields.nullField({
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }) }}
+    {% endif %}
+
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
+
+    {% if item.fields['itemtype'] is defined and item.fields['itemtype'] == 'ITILCategory' %}
+        {{ formcreatorFields.dropdownItilCategoryFilter(
+            'show_ticket_categories',
+            item.fields['_show_ticket_categories'],
+            __('Show ticket categories', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
+        ) }}
+
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
+    {% endif %}
+
+    {# _is_tree is set in the showForm method, and helps to find if the itemtype is a tree #}
+    {% if item.fields['_is_tree'] == '1' %}
+
+        {{ fields.dropdownField(
+            item.fields['itemtype'],
+            'show_tree_root',
+            item.fields['_tree_root'],
+            __('Subtree root', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
+        ) }}
+
+        {{ fields.numberField(
+            'show_tree_depth',
+            item.fields['_show_tree_depth'],
+            __('Limit subtree depth', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
+        ) }}
+
+        {{ fields.dropdownYesNo(
+            'selectable_tree_root',
+            item.fields['_tree_root_selectable'],
+            __('Selectable root', 'formcreator'), {
+                label_class: 'col-xxl-4',
+                input_class: 'col-xxl-8',
+            }
+        ) }}
+
+        {{ fields.nullField({
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }) }}
+    {% endif %}
+
+    {% if item.fields['itemtype'] is defined and item.fields['_is_entity_restrict'] == '1' %}
+        {{ formcreatorFields.dropdownEntityRestrict(
+            'entity_restrict',
+            item.fields['_entity_restrict'],
+            __('Entity restriction', 'formcreator'),
+            {
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }
+        ) }}
+
+        {{ fields.nullField({
+            label_class: 'col-xxl-4',
+            input_class: 'col-xxl-8',
+        }) }}
+    {% endif %}
+{% endblock %}

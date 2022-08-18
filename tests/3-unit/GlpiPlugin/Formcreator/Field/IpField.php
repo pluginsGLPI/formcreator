@@ -47,9 +47,9 @@ class IpField extends CommonTestCase {
       $this->boolean($output)->isTrue();
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -68,15 +68,6 @@ class IpField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
-
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getDesignSpecializationField();
-      $this->string($output['label'])->isEqualTo('');
-      $this->string($output['field'])->isEqualTo('');
-      $this->boolean($output['may_be_empty'])->isEqualTo(false);
-      $this->boolean($output['may_be_required'])->isEqualTo(false);
    }
 
    public function providerEquals() {
@@ -155,5 +146,29 @@ class IpField extends CommonTestCase {
             $instance->lessThan('');
          }
       )->isInstanceOf(ComparisonException::class);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => '127.0.0.1',
+            'expected' => '127.0.0.1',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

@@ -42,21 +42,17 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    if (plugin_formcreator_replaceHelpdesk()) {
       Html::redirect('issue.php');
    } else {
-      Html::helpHeader(
-         __('Form list', 'formcreator'),
-         $_SERVER['PHP_SELF']
-      );
+      Html::helpHeader(__('Form list', 'formcreator'));
    }
 } else {
-   Html::header(
-      __('Form list', 'formcreator'),
-      $_SERVER['PHP_SELF'],
-      'helpdesk',
-      PluginFormcreatorFormlist::class
-   );
+   Html::header(__('Form list', 'formcreator'));
 }
 
-$form = new PluginFormcreatorForm();
+$form = PluginFormcreatorCommon::getForm();
 $form->showList();
 
-Html::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}

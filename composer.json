@@ -6,7 +6,11 @@
     "prefer-stable": true,
     "config": {
       "platform": {
-          "php": "7.2"
+          "php": "7.4"
+      },
+      "allow-plugins": {
+         "allow-plugins.dealerdirect/phpcod": true,
+         "dealerdirect/phpcodesniffer-composer-installer": true
       },
       "optimize-autoloader": true,
       "apcu-autoloader": true
@@ -15,7 +19,8 @@
       "php": ">= 7.2",
       "ext-xml": "*",
       "gregwar/captcha": "^1.1",
-      "xylemical/php-expressions": "^1.0.3"
+      "xylemical/php-expressions": "^1.0.3",
+      "laminas/laminas-eventmanager": "^3.2"
     },
     "require-dev": {
       "ext-bz2": "*",
@@ -37,6 +42,7 @@
     },
     "scripts": {
         "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
+        "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
         "lint": "vendor/bin/parallel-lint --exclude vendor ."
     }
 }

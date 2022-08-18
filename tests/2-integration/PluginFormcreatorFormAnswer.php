@@ -41,7 +41,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       switch ($method) {
          case 'testNotificationFormAnswerCreated':
          case 'testOtherUserValidates':
-            $this->boolean(self::login('glpi', 'glpi', true))->isTrue();
+            $this->boolean($this->login('glpi', 'glpi', true))->isTrue();
             break;
       }
    }
@@ -60,38 +60,6 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       }
    }
 
-   public function providerPrepareInputForAdd() {
-      return [
-         [
-            'input' => [
-               'name'         => 'être ou ne pas être',
-            ],
-         ],
-         [
-            'input' => [
-               'name'         => 'test d\\\'apostrophe',
-            ],
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForAdd
-    * @param array $input
-    */
-   /*
-   public function testPrepareInputForAdd($input) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($input);
-
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $output = $formAnswer->prepareInputForAdd([
-         $form::getForeignKeyField() => $form->getID(),
-      ]);
-      $this->string($output['name'])->isEqualTo($input['name']);
-   }
-   */
-
    public function testNotificationFormAnswerCreated() {
       global $DB, $CFG_GLPI;
 
@@ -109,7 +77,9 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       // Answer the form
       $formAnswer = $this->newTestedInstance();
-      $formAnswer->add(['plugin_formcreator_forms_id' => $form->getID()]);
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID()
+      ]);
 
       // Check a notification was created with the expected template
       $result = $DB->request([
@@ -129,7 +99,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ]
       ]);
       $this->integer($result->count())->isEqualTo(1);
-      $row = $result->next();
+      $row = $result->current();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDBByCrit([
@@ -191,15 +161,15 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             JSON_PRETTY_PRINT));
 
       // Login as other user
-      $this->boolean(self::login($login, 'superadmin', true))->isTrue();
+      $this->boolean($this->login($login, 'superadmin', true))->isTrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
 
       // Login as glpi
-      $this->boolean(self::login('glpi', 'glpi', true))->istrue();
+      $this->boolean($this->login('glpi', 'glpi', true))->istrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
 
       // Login as normal
-      $this->boolean(self::login('normal', 'normal', true))->istrue();
+      $this->boolean($this->login('normal', 'normal', true))->istrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
    }
 }

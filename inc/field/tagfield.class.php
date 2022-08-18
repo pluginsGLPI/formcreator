@@ -33,10 +33,11 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use Dropdown;
+use PluginFormcreatorFormAnswer;
 use PluginTagTag;
 use Session;
-use Toolbox;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 
 class TagField extends DropdownField
@@ -45,19 +46,24 @@ class TagField extends DropdownField
       return class_exists(PluginTagTag::class);
    }
 
-   public function getDesignSpecializationField(): array {
-      $label = '';
-      $field = '';
+   public function showForm(array $options): void {
+      if (!\Plugin::isPluginActive('tag')) {
+         $options['error'] = __('Warning: Tag plugin is disabled or missing', 'formcreator');
+         $template = '@formcreator/field/undefinedfield.html.twig';
+         TemplateRenderer::getInstance()->display($template, [
+            'item' => $this->question,
+            'params' => $options,
+         ]);
+         return;
+      }
 
-      $additions = '';
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -123,7 +129,7 @@ class TagField extends DropdownField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -241,7 +247,7 @@ class TagField extends DropdownField
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return false;
    }
 

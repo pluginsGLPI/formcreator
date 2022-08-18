@@ -50,8 +50,6 @@ extends PluginFormcreatorAbstractQuestionParameter
    /** @var string $fieldtype type of field useable for the dependency */
    protected $fieldType;
 
-   protected $domId = 'plugin_formcreator_questionDependency';
-
    /**
     * @param PluginFormcreatorFieldInterface $field Field
     * @param array $options
@@ -59,8 +57,8 @@ extends PluginFormcreatorAbstractQuestionParameter
     *                - label    : label for the parameter
     *                - fieldType: array of field types the dependency should filter
     */
-   public function __construct(PluginFormcreatorFieldInterface $field, array $options) {
-      parent::__construct($field, $options);
+   public function setField(PluginFormcreatorFieldInterface $field, array $options) {
+      parent::setField($field, $options);
       $this->fieldtype = isset($options['fieldType']) ? $options['fieldType'] : [];
    }
 
@@ -72,7 +70,9 @@ extends PluginFormcreatorAbstractQuestionParameter
       return 0;
    }
 
-   public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question) {
+   public function getParameterForm(PluginFormcreatorQuestion $question) {
+      $form = PluginFormcreatorForm::getByItem($question);
+
       // get questions of type text in the form
       $eligibleQuestions = [];
       $criteria = ['fieldtype' => $this->fieldtype];
@@ -116,10 +116,6 @@ extends PluginFormcreatorAbstractQuestionParameter
       return $out;
    }
 
-   public function getJsShowHideSelector() {
-      return "#" . $this->domId;
-   }
-
    public function prepareInputForAdd($input) {
       $input = parent::prepareInputForAdd($input);
       $input['fieldname'] = $this->fieldName;
@@ -147,10 +143,7 @@ extends PluginFormcreatorAbstractQuestionParameter
 
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB($containerId);
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $question->fields['fieldtype'],
-         $question
-      );
+      $field = $question->getSubField();
 
       $item = $field->getEmptyParameters();
       $item = $item[$input['fieldname']];
@@ -175,6 +168,7 @@ extends PluginFormcreatorAbstractQuestionParameter
       }
 
       // set ID for linked objects
+      /** @var CommonDBTM $linked */
       $linked = $linker->getObject($input['plugin_formcreator_questions_id_2'], PluginFormcreatorQuestion::class);
       if ($linked === false) {
          $linked = new PluginFormcreatorQuestion();

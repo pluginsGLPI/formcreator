@@ -103,7 +103,6 @@ implements PluginFormcreatorExportableInterface
 
       $targetTicketFk = PluginFormcreatorTargetTicket::getForeignKeyField();
       $input[$targetTicketFk] = $containerId;
-      $input['_skip_checks'] = true;
 
       $item = new self;
       // Find an existing target to update, only if an UUID is available
@@ -137,6 +136,7 @@ implements PluginFormcreatorExportableInterface
 
       // Add or update
       $originalId = $input[$idKey];
+      $item->skipChecks = true;
       if ($itemId !== false) {
          $input['id'] = $itemId;
          $item->update($input);
@@ -144,6 +144,7 @@ implements PluginFormcreatorExportableInterface
          unset($input['id']);
          $itemId = $item->add($input);
       }
+      $item->skipChecks = false;
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
          throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));

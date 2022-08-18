@@ -7,9 +7,9 @@ COMPOSER=`which composer`
 # init databases
 init_databases() {
    MYSQL_PASSWD_ARG=''
-   if [ ! $MYSQL_ROOT_PASSWD == '' ]; then MYSQL_PASSWD_ARG="-p$MYSQL_ROOT_PASSWD"; fi
+   if [ ! "$MYSQL_ROOT_PASSWORD" = "" ]; then MYSQL_PASSWD_ARG="-p$MYSQL_ROOT_PASSWORD"; fi
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWD';"
-   mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT USAGE ON *.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWD';"
+   mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT USAGE ON *.* TO '$DB_USER'@'%';"
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "GRANT ALL PRIVILEGES ON $OLD_DB_NAME.* TO '$DB_USER'@'%';"
    mysql -u$MYSQL_ROOT_USER $MYSQL_PASSWD_ARG -h$DB_HOST --execute "FLUSH PRIVILEGES";
@@ -19,14 +19,20 @@ init_databases() {
 # GLPI install
 install_glpi() {
    echo Installing GLPI
-   sudo rm -rf ../glpi
-   git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
-   composer install --no-dev --no-interaction
-   php bin/console dependencies install composer-options=--no-dev
-   php bin/console glpi:system:check_requirements
-   rm .atoum.php
+   rm -rf ../glpi
+   # git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi
+   # cd ../glpi
+   # composer install --no-dev --no-interaction
+   # php bin/console dependencies install composer-options=--no-dev
+   # php bin/console locales:compile
+   # php bin/console glpi:build:compile_scss
+   # php bin/console glpi:system:check_requirements
+   # rm .atoum.php
+   curl $GLPI_PACKAGE_URL --output /tmp/glpi.tar.gz
+   tar xf /tmp/glpi.tar.gz --directory ../
+   cd ../glpi
    mkdir -p tests/files/_cache
-   cp -r ../formcreator plugins/$PLUGINNAME
+   cp -r ../$PLUGINNAME plugins/$PLUGINNAME
 }
 
 
@@ -43,14 +49,24 @@ init_glpi() {
    rm ../../$TEST_GLPI_CONFIG_DIR/config_db.php || true
    echo Installing GLPI on database $1
    mkdir -p ../../$TEST_GLPI_CONFIG_DIR
+   mysql -u$2 -p$3 -h$DB_HOST --execute "CREATE DATABASE \`$1\`;"
    php ../../bin/console glpi:database:install --db-host=$DB_HOST --db-user=$2 --db-password=$3 --db-name=$1 --config-dir=../../$TEST_GLPI_CONFIG_DIR --no-interaction --no-plugins --force
+   # php ../../bin/console glpi:config:set --db-host=$DB_HOST --context=core url_base "http://localhost"
+   # php ../../bin/console glpi:config:set --db-host=$DB_HOST --context=core url_base_api "http://localhost/api"
+   mysql $1 -u$2 -p$3 -h$DB_HOST --execute "UPDATE \`glpi_configs\` SET \`value\`='http://localhost' WHERE \`context\`='core' AND \`name\`='url_base'"
+   mysql $1 -u$2 -p$3 -h$DB_HOST --execute "UPDATE \`glpi_configs\` SET \`value\`='http://localhost/api' WHERE \`context\`='core' AND \`name\`='url_base_api'"
 }
 
 # Plugin upgrade test
 plugin_test_upgrade() {
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_config_2.5.0.sql
    mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME < tests/plugin_formcreator_empty_2.5.0.sql
+   php ../../bin/console glpi:migration:myisam_to_innodb --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
    php ../../bin/console glpi:plugin:install formcreator --username=glpi --config-dir=../../$TEST_GLPI_CONFIG_DIR
+   # Upgrading from < 2.6 will create a MyISAM table, then re-run innoDB migration
+   # php ../../bin/console glpi:migration:myisam_to_innodb --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
+   php ../../bin/console glpi:migration:unsigned_keys    --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
+   php ../../bin/console glpi:migration:utf8mb4          --no-interaction --config-dir=../../$TEST_GLPI_CONFIG_DIR
 }
 
 # Plugin test
@@ -65,8 +81,6 @@ plugin_test() {
 
 plugin_test_functional() {
    if [ "$SKIP_FUNCTIONAL_TESTS" = "true" ]; then echo "skipping functional tests"; return; fi
-   # symfony requires PHP 7.2+, but the project is still compatible with older versions
-   composer global require --dev symfony/panther
    RESOURCE="tests/4-functional"
    if [ "$1" != "" ]; then
       RESOURCE=$1

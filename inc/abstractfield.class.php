@@ -38,28 +38,36 @@ require_once(realpath(dirname(__FILE__) . '/../../../inc/includes.php'));
 
 abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldInterface
 {
-   /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
+   /** @var PluginFormcreatorQuestion $question */
    protected $question = null;
 
    /** @var mixed $answer Value of the field */
    protected $value = null;
 
    /**
+    * the form answer to source the values from
+    *
+    * @var PluginFormcreatorFormAnswer|null
+    */
+   protected ?PluginFormcreatorFormAnswer $form_answer = null;
+
+   /**
     *
     * @param array $question PluginFormcreatorQuestion instance
     */
    public function __construct(PluginFormcreatorQuestion $question) {
-      $this->question  = $question;
+      $this->question = $question;
    }
 
-   public function getDesignSpecializationField(): array {
-      return [
-         'label' => '',
-         'field' => '',
-         'additions' => $this->getParametersHtmlForDesign(),
-         'may_be_empty' => false,
-         'may_be_required' => true,
-      ];
+   public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {
+      $this->form_answer = $form_answer;
+      if ($this->hasInput($this->form_answer->getAnswers())) {
+         // Parse an HTML input
+         $this->parseAnswerValues($this->form_answer->getAnswers());
+      } else {
+         // Deserialize the default value from DB
+         $this->deserializeValue($this->question->fields['default_values']);
+      }
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -76,17 +84,9 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
     * @param string  $domain  Translation domain of the form
     * @param boolean $canEdit is the field editable ?
     */
-   public function show($domain, $canEdit = true) {
+   public function show(string $domain, bool $canEdit = true): string {
       $html = '';
 
-      if ($this->isVisibleField()) {
-         $html .= '<label for="formcreator_field_' . $this->question->getID() . '">';
-         $html .= __($this->getLabel(), $domain);
-         if ($canEdit && $this->question->fields['required']) {
-            $html .= ' <span class="red">*</span>';
-         }
-         $html .= '</label>';
-      }
       if ($this->isEditableField() && !empty($this->question->fields['description'])) {
          $description = $this->question->fields['description'];
          foreach (PluginFormcreatorCommon::getDocumentsFromTag($description) as $document) {
@@ -102,7 +102,21 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $html .= $this->getRenderedHtml($domain, $canEdit);
       $html .= '</div>';
 
-      return $html;
+      // Determine if field is mandatory after generating it's HTML
+      // useful for fields plugin
+      // because fields plugin manage it's own mandatory system and can overload $this->question->fields['required']
+      // when HTML is generated (see $this->getRenderedHtml)
+      $label = '';
+      if ($this->isVisibleField()) {
+         $label .= '<label for="formcreator_field_' . $this->question->getID() . '">';
+         $label .= __($this->getLabel(), $domain);
+         if ($canEdit && $this->question->fields['required']) {
+            $label .= ' <span class="red">*</span>';
+         }
+         $label .= '</label>';
+      }
+
+      return $label.$html;
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -144,8 +158,9 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $values = json_decode($this->question->fields['values']);
       $tab_values = [];
       foreach ($values as $value) {
-         if ((trim($value) != '')) {
-            $tab_values[$value] = $value;
+         $trimmedValue = trim($value);
+         if (($trimmedValue != '')) {
+            $tab_values[$trimmedValue] = $trimmedValue;
          }
       }
       return $tab_values;
@@ -268,44 +283,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          return '';
       }
 
-      $question = new PluginFormcreatorQuestion();
-      $question->getFromDB($this->question->getID());
-      $form = new PluginFormcreatorForm();
-      $form->getByQuestionId($question->getID());
-
-      /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
-      $column = 0;
-      $rowSize = 2;
       $additions = '';
       foreach ($parameters as $parameter) {
-         if ($column == 0) {
-            $additions .= '<tr class="plugin_formcreator_question_specific">';
-         }
-         $parameterSize = 1 + $parameter->getParameterFormSize();
-         if ($column + $parameterSize > $rowSize) {
-            // The parameter needs more room than available in the current row
-            if ($column < $rowSize) {
-               // fill the remaining of the row
-               $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
-               // Close current row and open an new one
-               $additions .= '</tr><tr class="plugin_formcreator_question_specific">';
-               $column = 0;
-            }
-         }
-         $additions .= $parameter->getParameterForm($form, $question);
-         $column += $parameterSize;
-         if ($column == $rowSize) {
-            // Finish the row
-            $additions .= '</tr>';
-            $column = 0;
-         }
+         $additions .= $parameter->getParameterForm($this->question);
       }
-      if ($column < $rowSize) {
-         // fill the remaining of the row
-         $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
-         // Close current row and open an new one
-         $additions .= "</tr>";
-      }
+
       return $additions;
    }
 

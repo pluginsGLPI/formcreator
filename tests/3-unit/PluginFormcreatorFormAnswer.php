@@ -29,9 +29,13 @@
  * ---------------------------------------------------------------------
  */
 namespace tests\units;
+
+use CommonITILObject;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
-
+use PluginFormcreatorTargetTicket;
+use PluginFormcreatorTargetChange;
+use PluginFormcreatorTargetProblem;
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -41,8 +45,110 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          case 'testCanValidate':
          case 'testIsFieldVisible':
          case 'testPost_UpdateItem':
+         case 'testPrepareInputForAdd':
+         case 'testGetTargets':
+         case 'testGetGeneratedTargets':
+         case 'testGetAggregatedStatus':
             $this->login('glpi', 'glpi');
       }
+   }
+
+   public function providerPrepareInputForAdd() {
+      $question = $this->getQuestion(['fieldtype' => 'text']);
+      $form = new PluginFormcreatorForm();
+      $form = \PluginFormcreatorForm::getByItem($question);
+      $this->boolean($form->isNewItem())->isFalse();
+      $success = $form->update([
+         'id' => $form->getID(),
+         'formanswer_name' => '##answer_' . $question->getID() . '##',
+      ]);
+      $this->boolean($success)->isTrue();
+
+      $data = [
+         'form FK required' => [
+            'input' => [],
+            'expected' => false,
+            'expectedMessage' => '',
+         ],
+         'tags parsing in name' => [
+            'input' => [
+               'plugin_formcreator_forms_id' => $form->getID(),
+               'formcreator_field_' . $question->getID() => 'foo',
+            ],
+            'expected' => [
+               'plugin_formcreator_forms_id'             => $form->getID(),
+               'formcreator_field_' . $question->getID() => 'foo',
+               'name'                                    => 'foo',
+               'entities_id'                             => \Session::getActiveEntity(),
+               'is_recursive'                            => 0,
+               'requester_id'                            => \Session::getLoginUserID(),
+               'users_id_validator'                      => 0,
+               'groups_id_validator'                     => 0,
+               'status'                                  => \PluginFormcreatorFormAnswer::STATUS_ACCEPTED,
+               'request_date'                            => $_SESSION['glpi_currenttime'],
+               'comment'                                 => '',
+            ],
+            'expectedMessage' => '',
+         ],
+      ];
+
+      $question = $this->getQuestion(['fieldtype' => 'text']);
+      $form = new PluginFormcreatorForm();
+      $form = \PluginFormcreatorForm::getByItem($question);
+      $this->boolean($form->isNewItem())->isFalse();
+      $user = new \User();
+      $user->getFromDBbyName('tech');
+      $success = $form->update([
+         'id'                  => $form->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users'    => [$user->getID()] // glpi
+      ]);
+      $this->boolean($success)->isTrue();
+
+      $data['unique validator user autoselection'] = [
+         'input' => [
+            'plugin_formcreator_forms_id' => $form->getID(),
+            'formcreator_field_' . $question->getID() => 'foo',
+         ],
+         'expected' => [
+            'plugin_formcreator_forms_id'             => $form->getID(),
+            'formcreator_field_' . $question->getID() => 'foo',
+            'name'                                    => $form->fields['name'],
+            'entities_id'                             => \Session::getActiveEntity(),
+            'is_recursive'                            => 0,
+            'requester_id'                            => \Session::getLoginUserID(),
+            'formcreator_validator'                   => $user::getType() . '_' . $user->getID(),
+            'users_id_validator'                      => $user->getID(),
+            'groups_id_validator'                     => 0,
+            'status'                                  => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+            'request_date'                            => $_SESSION['glpi_currenttime'],
+            'comment'                                 => '',
+         ],
+         'expectedMessage' => '',
+      ];
+
+      return $data;
+   }
+
+   /**
+    * @dataProvider providerPrepareInputForAdd
+    *
+    * @param array $input
+    * @param [type] $expected
+    * @return void
+    */
+   public function testPrepareInputForAdd(array $input, $expected, $expectedMessage) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->prepareInputForAdd($input);
+      if ($expected === false) {
+         $this->boolean($output)->isFalse();
+         if ($expectedMessage != '') {
+            $this->sessionHasMessage($expectedMessage, ERROR);
+         }
+         return;
+      }
+
+      $this->array($output)->isEqualTo($expected);
    }
 
    public function providerGetFullForm() {
@@ -91,7 +197,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       return [
          // fullForm matches all question and section names
          [
-            'answer' => [
+            'answers' => [
                \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'yes',
                'formcreator_field_' . $question2->getID() => 'yes',
@@ -107,7 +213,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ],
          // fullForm matches only visible section names
          [
-            'answer' => [
+            'answers' => [
                \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'no',
                'formcreator_field_' . $question2->getID() => 'yes',
@@ -123,7 +229,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          ],
          // fullForm matches only visible question names
          [
-            'answer' => [
+            'answers' => [
                \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
                'formcreator_field_' . $question1->getID() => 'yes',
                'formcreator_field_' . $question2->getID() => 'no',
@@ -162,7 +268,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       // prepare a form with targets
       $question = $this->getQuestion();
       $form = new \PluginFormcreatorForm();
-      $form->getFromDBByQuestion($question);
+      $form  = \PluginFormcreatorForm::getByItem($question);
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $this->getTargetTicket([
          $formFk => $form->getID(),
@@ -215,74 +321,85 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    }
 
    public function providerCanValidate() {
-      $validatorUserId = 42;
-      $group = new \Group();
-      $group->add([
-         'name' => $this->getUniqueString(),
-      ]);
+      $validatorUserId = 5; // normal
       $form1 = $this->getForm([
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
          '_validator_users' => $validatorUserId
       ]);
+      $this->boolean($form1->isNewItem())->isFalse();
 
-      $form2 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
-         '_validator_groups' => $group->getID()
+      $group = new \Group();
+      $group->add([
+         'name' => $this->getUniqueString(),
       ]);
+      $this->boolean($group->isNewItem())->isFalse();
       $groupUser = new \Group_User();
       $groupUser->add([
          'users_id' => $validatorUserId,
          'groups_id' => $group->getID(),
       ]);
+      $form2 = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
+         '_validator_groups' => $group->getID()
+      ]);
+      $this->boolean($form2->isNewItem())->isFalse();
 
       return [
-         [
-            'right'          => \TicketValidation::VALIDATEINCIDENT,
-            'loginUserId'    => $validatorUserId,
-            'validatorId'    => $validatorUserId,
-            'form'           => $form1,
-            'expected'       => true,
+         'having validate incident right, validator user can validate' => [
+            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $validatorUserId,
+            'userId'    => $validatorUserId,
+            'form'      => $form1,
+            'expected'  => true,
          ],
-         [
-            'right'          => \TicketValidation::VALIDATEINCIDENT,
-            'loginUserId'    => $validatorUserId,
-            'validatorId'    => $group->getID(),
-            'form'           => $form2,
-            'expected'       => true,
+         'having validate incident right, member of a validator group can validate' => [
+            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $group->getID(),
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => true,
          ],
-         [
-            'right'          => \TicketValidation::VALIDATEINCIDENT,
-            'loginUserId'    => $validatorUserId + 1,
-            'validatorId'    => $group->getID(),
-            'form'           => $form2,
-            'expected'       => false,
+         'having validate incident right, not a validator user cannot validate' => [
+            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $group->getID(),
+            'userId'    => 2, // glpi
+            'form'      => $form2,
+            'expected'  => false,
          ],
-         [
-            'right'          => \TicketValidation::VALIDATEREQUEST,
-            'loginUserId'    => $validatorUserId,
-            'validatorId'    => $group->getID(),
-            'form'           => $form2,
-            'expected'       => true,
+         'having validate request right, member of a validator group can validate' => [
+            'right'     => \TicketValidation::VALIDATEREQUEST,
+            'validator' => $group->getID(),
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => true,
          ],
-         [
-            'right'          => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
-            'loginUserId'    => $validatorUserId,
-            'validatorId'    => $group->getID(),
-            'form'           => $form2,
-            'expected'       => true,
+         'having validate request right and validate incident, member of a validator group can validate' => [
+            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $group->getID(),
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => true,
          ],
-         [
-            'right'          => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
-            'loginUserId'    => $validatorUserId + 1,
-            'validatorId'    => $group->getID(),
-            'form'           => $form2,
-            'expected'       => false,
-         ],         [
-            'right'          => 0,
-            'loginUserId'    => $validatorUserId,
-            'validatorId'    => $group->getID(),
-            'form'           => $form2,
-            'expected'       => false,
+         'having validate request right and validate incident, not member of a validator group can validate' => [
+            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'validator' => $group->getID(),
+            'userId'    => 2, // glpi
+            'form'      => $form2,
+            'expected'  => false,
+         ],
+         'having no validation right, member of a validator group cannot validate' => [
+            'right'     => 0,
+            'validator' => $group->getID(),
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => false,
+         ],
+         'having no validation right, a validator user cannot validate' => [
+            'right'     => 0,
+            'validator' => $group->getID(),
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => false,
          ],
       ];
    }
@@ -290,12 +407,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    /**
     * @dataProvider providerCanValidate
     */
-   public function testCanValidate($right, $loginUserId, $validatorId, $form, $expected) {
+   public function testCanValidate($right, $validator, $userId, $form, $expected) {
       // Save answers for a form
       $instance = $this->newTestedInstance();
       $input = [
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator' => $validatorId,
+         'formcreator_validator' => $validator,
       ];
       $fields = $form->getFields();
       foreach ($fields as $id => $question) {
@@ -303,8 +420,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       }
       $formAnswerId = $instance->add($input);
 
-      // test canValidate against user
-      $_SESSION['glpiID'] = $loginUserId;
+      // test canValidate
+      $_SESSION['glpiID'] = $userId;
       $_SESSION['glpiactiveprofile']['ticketvalidation'] = $right;
       $instance = $this->newTestedInstance();
       $instance->getFromDB($formAnswerId);
@@ -411,16 +528,17 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function testPost_UpdateItem() {
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm;
-      $form->getFromDBByQuestion($question);
-      $formValidator = new \PluginFormcreatorForm_Validator();
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype'                    => \User::class,
-         'items_id'                    => \Session::getLoginUserID(),
-      ]);
+      $form = \PluginFormcreatorForm::getByItem($question);
+      // $formValidator = new \PluginFormcreatorForm_Validator();
+      // $formValidator->add([
+      //    'plugin_formcreator_forms_id' => $form->getID(),
+      //    'itemtype'                    => \User::class,
+      //    'items_id'                    => \Session::getLoginUserID(),
+      // ]);
       $form->update([
          'id' => $form->getID(),
          'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users' => \Session::getLoginUserID(),
       ]);
 
       /**
@@ -485,5 +603,307 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
       $this->boolean($answer->isNewItem())->isFalse();
       $this->string($answer->fields['answer'])->isEqualTo('bar');
+   }
+
+   public function testGetTargets() {
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = 0;
+
+      // Prepare test context
+      // A form with 2 targets of each available type
+      // and a form answer for this form
+      $form = $this->getForm();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $targets = [];
+
+      $targets[] = $this->getTargetTicket([
+         $formFk => $form->getID(),
+      ]);
+      $targets[] = $this->getTargetTicket([
+         $formFk => $form->getID(),
+      ]);
+
+      $targets[] = $this->getTargetChange([
+         $formFk => $form->getID(),
+      ]);
+      $targets[] = $this->getTargetChange([
+         $formFk => $form->getID(),
+      ]);
+
+      $targets[] = $this->getTargetProblem([
+         $formFk => $form->getID(),
+      ]);
+      $targets[] = $this->getTargetProblem([
+         $formFk => $form->getID(),
+      ]);
+
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         $formFk => $form->getID(),
+      ]);
+
+      $output = $instance->getGeneratedTargets();
+
+      $this->array($output)->hasSize(count($targets));
+      $typeCount = [
+         \Ticket::getType()  => 0,
+         \Change::getType()  => 0,
+         \Problem::getType() => 0,
+      ];
+      foreach ($output as $generatedTarget) {
+         $typeCount[$generatedTarget::getType()]++;
+      }
+      $this->array($typeCount)->isEqualTo([
+         \Ticket::getType()  => 2,
+         \Change::getType()  => 2,
+         \Problem::getType() => 2,
+      ]);
+   }
+
+   public function testUpdateStatus() {
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = 0;
+
+      // Prepare test context
+      $form = $this->getForm();
+
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+   }
+
+   public function testGetGeneratedTargets() {
+      $form = $this->getForm();
+      $targets = [];
+      $targets[1] = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targets[2] = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targets[3] = $this->getTargetProblem([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $instance = $this->newTestedInstance();
+      $output = $instance->getGeneratedTargets();
+      $this->array($output)->hasSize(0);
+
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $generatedTargets = $instance->targetList;
+
+      $output = $instance->getGeneratedTargets();
+      $this->array($instance->targetList)->hasSize(count($generatedTargets));
+      $this->array($output)->hasSize(3);
+
+      $output = $instance->getGeneratedTargets([PluginFormcreatorTargetTicket::getType()]);
+      $this->array($output)->hasSize(1);
+
+      $output = $instance->getGeneratedTargets([PluginFormcreatorTargetChange::getType()]);
+      $this->array($output)->hasSize(1);
+
+      $output = $instance->getGeneratedTargets([PluginFormcreatorTargetProblem::getType()]);
+      $this->array($output)->hasSize(1);
+   }
+
+   public function testGetAggregatedStatus() {
+      // When no target defined
+      $form = $this->getForm();
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $output = $instance->getAggregatedStatus();
+      $this->variable($output)->isNull();
+
+      // When several targets
+      $form = $this->getForm();
+      $targetTickets = [];
+      for ($i = 1; $i <= 3; $i++) {
+         $targetTickets[$i] = $this->getTargetTicket([
+            'plugin_formcreator_forms_id' => $form->getID(),
+         ]);
+      }
+
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+
+      $tickets = $instance->targetList;
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::INCOMING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::ASSIGNED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::ASSIGNED);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::WAITING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::WAITING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::PLANNED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::WAITING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::WAITING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::INCOMING);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::INCOMING,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::ASSIGNED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::PLANNED,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::PLANNED);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::SOLVED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::SOLVED);
+
+      $tickets[0]->update([
+         'id'     => $tickets[0]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $tickets[1]->update([
+         'id'     => $tickets[1]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $tickets[2]->update([
+         'id'     => $tickets[2]->getID(),
+         'status' => CommonITILObject::CLOSED,
+      ]);
+      $output = $instance->getAggregatedStatus();
+      $this->integer($output)->isEqualTo(CommonITILObject::CLOSED);
+   }
+
+   public function testGetFileProperties() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'file',
+      ]);
+      $form = PluginFormcreatorForm::getByItem($question);
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $fieldKey = 'formcreator_field_' . $question->getID();
+      $filename = '5e5e92ffd9bd91.44444444upload55555555.txt';
+      $tag = '3e29dffe-0237ea21-5e5e7034b1d1a1.33333333';
+      copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         "_${fieldKey}" => [
+            $filename,
+         ],
+         "_prefix_${fieldKey}" => [
+            '5e5e92ffd9bd91.44444444',
+         ],
+         "_tag_${fieldKey}" => [
+            $tag,
+         ],
+      ]);
+
+      $documentItem = new \Document_Item();
+      $documentItem->getFromDBByCrit([
+         'itemtype' => $formAnswer->getType(),
+         'items_id' => $formAnswer->getID(),
+      ]);
+      $this->boolean($documentItem->isNewItem())->isFalse();
+      $document = \Document::getById($documentItem->fields['documents_id']);
+      $output = $formAnswer->getFileProperties();
+      $this->array($output)->isIdenticalTo([
+         '_filename'     => [
+            $question->getID() => [
+               $document->fields['filename'],
+            ],
+         ],
+         '_tag_filename' => [
+            $question->getID() => [
+               $document->fields['tag'],
+            ],
+         ],
+      ]);
    }
 }

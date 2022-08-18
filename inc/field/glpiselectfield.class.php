@@ -34,124 +34,44 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use Html;
 use Session;
+use PluginFormcreatorFormAnswer;
 use Dropdown;
-use User;
-use Group;
-use Ticket;
-use Computer;
-use Monitor;
-use Appliance;
-use Software;
-use NetworkEquipment;
-use Peripheral;
-use Printer;
-use CartridgeItem;
-use ConsumableItem;
-use Phone;
-use Line;
-use Problem;
-use TicketRecurrent;
-use Budget;
-use Supplier;
-use Contact;
-use Contract;
-use Document;
-use Project;
-use Certificate;
 use Entity;
-use Profile;
-use PassiveDCEquipment;
-use PluginAppliancesAppliance;
-use Plugin;
 use CommonTreeDropdown;
-use PluginGenericobjectType;
-use PluginDatabasesDatabase;
+use CommonDBTM;
 
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 
 class GlpiselectField extends DropdownField
 {
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
-
-      $label = '<label for="dropdown_glpi_objects' . $rand . '" id="label_dropdown_values">';
-      $label .= _n('GLPI object', 'GLPI objects', 1, 'formcreator');
-      $label .= '</label>';
-
-      $optgroup = $this->getObjects();
-
-      // Get additional itemtypes from plugins
-      $additionalTypes = Plugin::doHookFunction('formcreator_get_glpi_object_types', []);
-      // Cleanup data from plugins
-      $cleanedAditionalTypes = [];
-      foreach ($additionalTypes as $groupName => $itemtypes) {
-         if (!is_string($groupName)) {
-            continue;
-         }
-         $cleanedAditionalTypes[$groupName] = [];
-         foreach ($itemtypes as $itemtype => $typeName) {
-            if (!class_exists($itemtype)) {
-               continue;
-            }
-            if (array_search($itemtype, $cleanedAditionalTypes[$groupName])) {
-               continue;
-            }
-            $cleanedAditionalTypes[$groupName][$itemtype] = $typeName;
-         }
-      }
-      // Merge new itemtypes to predefined ones
-      $optgroup = array_merge_recursive($optgroup, $cleanedAditionalTypes);
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if ($decodedValues === null) {
-         $itemtype = $this->question->fields['values'];
-      } else {
-         $itemtype = $decodedValues['itemtype'] ?? 0;
+
+      $this->question->fields['_tree_root'] = $decodedValues['show_tree_root'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
+      $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
+      $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
+      $this->question->fields['_is_tree'] = '0';
+      $this->question->fields['_is_entity_restrict'] = '0';
+      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonDBTM::class)) {
+         $item = new $this->question->fields['itemtype'];
+         $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
       }
+      if (isset($this->question->fields['itemtype']) && is_subclass_of($this->question->fields['itemtype'], CommonTreeDropdown::class)) {
+         $this->question->fields['_is_tree'] = '1';
+         // $item = new $this->question->fields['itemtype'];
+         // $this->question->fields['_is_entity_restrict'] = $item->isEntityAssign() ? '1' : '0';
+      }
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
 
-      array_unshift($optgroup, '---');
-      $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
-         'value'     => $itemtype,
-         'rand'      => $rand,
-         'on_change' => 'plugin_formcreator_changeGlpiObjectItemType();',
-         'display'   => false,
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
       ]);
-
-      $root = $decodedValues['show_tree_root'] ?? '0';
-      $maxDepth = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
-      $selectableRoot = $decodedValues['selectable_tree_root'] ?? '0';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td id="dropdown_default_value_field">';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= "<input id='commonTreeDropdownRoot' type='hidden' value='$root'>";
-      $additions .= "<input id='commonTreeDropdownMaxDepth' type='hidden' value='$maxDepth'>";
-      $additions .= "<input id='commonTreeDropdownSelectableRoot' type='hidden' value='$selectableRoot'>";
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-      $additions .= Html::scriptBlock("plugin_formcreator_changeGlpiObjectItemType($rand);");
-
-      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown">';
-      // This row will be generated by an AJAX request
-      $additions .= '</tr>';
-
-      $additions .= $this->getEntityRestrictSettiing();
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => true,
-         'may_be_required' => true,
-      ];
    }
 
    public static function getName(): string {
@@ -168,7 +88,7 @@ class GlpiselectField extends DropdownField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (!isset($input['glpi_objects']) || empty($input['glpi_objects'])) {
+      if (!isset($input['itemtype']) || empty($input['itemtype'])) {
          Session::addMessageAfterRedirect(
             __('The field value is required:', 'formcreator') . ' ' . $input['name'],
             false,
@@ -177,16 +97,14 @@ class GlpiselectField extends DropdownField
          return [];
       }
 
-      $itemtype = $input['glpi_objects'];
-      $input['values'] = [
-         'itemtype' => $itemtype
-      ];
+      $itemtype = $input['itemtype'];
+      $input['itemtype'] = $itemtype;
+      $input['values'] = [];
       // Params for entity restrictables itemtypes
       $input['values']['entity_restrict'] = $input['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       unset($input['entity_restrict']);
 
-      $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
-      unset($input['dropdown_default_value']);
+      $input['default_values'] = $input['default_values'] ?? '';
 
       // Params for CommonTreeDropdown fields
       if (is_a($itemtype, CommonTreeDropdown::class, true)) {
@@ -214,7 +132,7 @@ class GlpiselectField extends DropdownField
 
    public function equals($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtypeForValues($this->question->fields['values']);
+      $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if ($item->isNewId($this->value)) {
          return ($value === '');
@@ -231,7 +149,7 @@ class GlpiselectField extends DropdownField
 
    public function greaterThan($value): bool {
       $value = html_entity_decode($value);
-      $itemtype = $this->getSubItemtypeForValues($this->question->fields['values']);
+      $itemtype = $this->getSubItemtype();
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
          throw new ComparisonException('Item not found for comparison');
@@ -243,62 +161,12 @@ class GlpiselectField extends DropdownField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
-   }
+   // public function regex($value): bool {
+   //    $text = $this->getValueForTargetText('', false);
+   //    return (preg_match($value, $text)) ? true : false;
+   // }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return false;
-   }
-
-   public function getObjects() {
-      $optgroup = [
-         __("Assets") => [
-            Computer::class           => Computer::getTypeName(2),
-            Monitor::class            => Monitor::getTypeName(2),
-            Software::class           => Software::getTypeName(2),
-            NetworkEquipment::class   => Networkequipment::getTypeName(2),
-            Peripheral::class         => Peripheral::getTypeName(2),
-            Printer::class            => Printer::getTypeName(2),
-            CartridgeItem::class      => CartridgeItem::getTypeName(2),
-            ConsumableItem::class     => ConsumableItem::getTypeName(2),
-            Phone::class              => Phone::getTypeName(2),
-            Line::class               => Line::getTypeName(2),
-            PassiveDCEquipment::class => PassiveDCEquipment::getTypeName(2),
-            Appliance::class          => Appliance::getTypeName(2),
-         ],
-         __("Assistance") => [
-            Ticket::class             => Ticket::getTypeName(2),
-            Problem::class            => Problem::getTypeName(2),
-            TicketRecurrent::class    => TicketRecurrent::getTypeName(2)
-         ],
-         __("Management") => [
-            Budget::class             => Budget::getTypeName(2),
-            Supplier::class           => Supplier::getTypeName(2),
-            Contact::class            => Contact::getTypeName(2),
-            Contract::class           => Contract::getTypeName(2),
-            Document::class           => Document::getTypeName(2),
-            Project::class            => Project::getTypeName(2),
-            Certificate::class        => Certificate::getTypeName(2)
-         ],
-         __("Tools") => [
-            Reminder::class           => __("Notes"),
-            RSSFeed::class            => __("RSS feed")
-         ],
-         __("Administration") => [
-            User::class               => User::getTypeName(2),
-            Group::class              => Group::getTypeName(2),
-            Entity::class             => Entity::getTypeName(2),
-            Profile::class            => Profile::getTypeName(2)
-         ],
-      ];
-      if ((new Plugin())->isActivated('appliances')) {
-         $optgroup[__("Assets")][PluginAppliancesAppliance::class] = PluginAppliancesAppliance::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
-      }
-      if ((new Plugin())->isActivated('databases')) {
-         $optgroup[__("Assets")][PluginDatabasesDatabase::class] = PluginDatabasesDatabase::getTypeName(2) . ' (' . _n('Plugin', 'Plugins', 1) . ')';
-      }
-
-      return $optgroup;
    }
 }

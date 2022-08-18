@@ -52,7 +52,5 @@ if (!$question->canDeleteItem()) {
 
 if (!$question->delete(['id' => $questionId])) {
     http_response_code(500);
-    echo __('Error deleting the question', 'formcreator');
-    exit;
 }
 http_response_code(204);

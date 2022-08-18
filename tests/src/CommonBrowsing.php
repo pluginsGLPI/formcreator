@@ -16,6 +16,12 @@ class CommonBrowsing {
    private $selectors = [
       // Selectors available in the header of GLPI (most pages)
       '_header' => [
+         'user icon'                     => 'body > div.page > header > div > div.ms-md-4.d-none.d-lg-block',
+         'user menu'                     => 'div.navbar-nav.flex-row.order-md-last.user-menu > div > a',
+         'entity select dialog'          => '.dropdown-menu.dropdown-menu-end .dropstart + .dropstart a',
+         'entity search input'           => 'input[name="entsearchtext"]',
+         'entity search button'          => 'body > div.page > header > div > div.ms-md-4.d-none.d-lg-block > div > div.navbar-nav.flex-row.order-md-last.user-menu > div > div > div:nth-child(3) > div div > button',
+
          'globalEntitySelect'            => '#global_entity_select',
          'entityTreeView'                => 'ul.jstree-container-ul',
          'entityTreeView-rootEntity'     => 'ul.jstree-container-ul li[aria-labelledby="0r_anchor"]',
@@ -31,23 +37,23 @@ class CommonBrowsing {
       $this->test->crawler = $this->test->client->request('GET', '/');
 
       // screenshot
-      $this->test->client->waitForVisibility('#boxlogin > form');
+      $this->test->client->waitForVisibility('.page-anonymous  form input#login_name');
       $this->test->takeScreenshot();
-      $form = $this->test->crawler->filter('#boxlogin > form')->form();
+      $form = $this->test->crawler->filter('.page-anonymous  form')->form();
 
       // Login as glpi
       $login = $this->test->crawler->filter('input#login_name')->attr('name');
-      $passwd = $this->test->crawler->filter('input#login_password')->attr('name');
+      $passwd = $this->test->crawler->filter('input[type="password"]')->attr('name');
       $form[$login] = $user;
       $form[$passwd] = $password;
       $this->test->crawler = $this->test->client->submit($form);
 
-      $this->test->client->waitFor('#footer');
+      $this->test->client->waitFor('#backtotop'); // back to top button in footer
    }
 
    public function logout() {
       $this->test->crawler = $this->test->client->request('GET', '/front/logout.php?noAUTO=1');
-      $this->test->client->waitFor('#display-login');
+      $this->test->client->waitFor('.page-anonymous');
    }
 
    /**
@@ -57,65 +63,22 @@ class CommonBrowsing {
     * @param bool    $subtree if true, select the subtree of the entity
     */
    public function changeActiveEntity(Entity $entity, bool $subtree) {
-      // Open the entity selection modal
-      $this->test->crawler->filter($this->selectors['_header']['globalEntitySelect'])->link();
-      $this->test->client->executeScript("
-         $('" . $this->selectors['_header']['globalEntitySelect'] . "').click();
-      ");
-      $this->test->client->waitFor($this->selectors['_header']['entityTreeView-rootEntity']);
-
-      // Develop all ancestors to the entity to select
-      $dbUtils = new DbUtils();
-      $ancestors = $dbUtils->getAncestorsOf($entity->getTable(), $entity->getID());
-      foreach ($ancestors as $ancestor) {
-         if ($ancestor == '0') {
-            $ancestor = $ancestor . 'r';
-         }
-         $selector = $this->selectors['_header']['entityTreeView'] . ' li[aria-labelledby="' . $ancestor . '_anchor"] i.jstree-icon.jstree-ocl';
-         $this->test->client->executeScript("
-            $('" . $selector . "').click();
-         ");
-         $this->test->client->waitFor($this->selectors['_header']['entityTreeView'] . ' li[aria-labelledby="' . $ancestor . '_anchor"].jstree-open');
-      }
-
-      // click the entity to activate
-      $id = $entity->getID();
-      if ($id == '0') {
-         $id = $id . 'r';
-      }
-      $selector = $this->selectors['_header']['entityTreeView'] . " a#${id}_anchor";
-      if ($subtree && $entity->haveChildren()) {
-         // select the subtree
-         $selector = $selector . 'i:nth-child(2)';
-      }
-      $this->test->client->executeScript("
-         $('" . $selector . "').click();
-      ");
-      $this->test->crawler = $this->test->client->waitFor($this->selectors['_header']['globalEntitySelect']);
-
-      //Check the entity is the selected one
-      $expectedNnewEntity = $entity->fields['name'];
-      if ($subtree && $entity->haveChildren()) {
-         $expectedNnewEntity .= ' (tree structure)';
-      }
-      $newEntity = $this->test->crawler->filter($this->selectors['_header']['globalEntitySelect'])->text();
-      $this->test->string($newEntity)->isEqualTo($expectedNnewEntity);
+      $this->test->crawler = $this->test->client->request('GET', '/front/central.php?active_entity=' . $entity->getID());
    }
 
    public function openTab($title) {
       // Get the anchor to click
-      $tabNameSelector = '.ui-tabs-tab > a[title="' . $title . '"]';
+      $tabNameSelector = '.nav.nav-tabs a[title="' . $title . '"]';
       $anchor = $this->test->crawler->filter($tabNameSelector);
 
       // Get the ID of the display area of the tab
-      $anchorId = $anchor->attr('id');
-      $tabDisplayId = $this->test->crawler->filter('.ui-tabs-tab[aria-labelledby="' . $anchorId . '"]')->attr('aria-controls');
+      $tabId = $anchor->attr('data-bs-target');
 
       // Click the name of the tab to show it
       $this->test->client->executeScript("
-         $('" . $tabNameSelector . "').click();
+         document.querySelector('" . $tabNameSelector . "').click();
       ");
-      $this->test->client->waitFor('#' . $tabDisplayId . ' > *:not(#loadingtabs)');
+      $this->test->client->waitFor($tabId . ' > *:not(i.fa-spinner)');
 
       // TODO : Check the tab area is now visible
    }
@@ -138,10 +101,11 @@ class CommonBrowsing {
          var exists = $('$slashSelector option[value=\"$htmlValue\"]');
          if (exists.length < 1) {
             var newOption = new Option('$slashName', '$slashValue', true, true);
+            $('$slashSelector').append(newOption)
          } else {
             $('$slashSelector').val('$slashValue');
          }
-         $('$slashSelector').append(newOption).trigger('change');
+         $('$slashSelector').trigger('change');
       ";
       $this->test->client->executeScript($js);
    }

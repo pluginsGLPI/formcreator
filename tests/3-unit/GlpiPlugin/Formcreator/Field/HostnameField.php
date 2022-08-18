@@ -31,6 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class HostnameField extends CommonTestCase {
    public function testIsPrerequisites() {
@@ -50,18 +51,6 @@ class HostnameField extends CommonTestCase {
       $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
-   }
-
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getDesignSpecializationField();
-      $this->array($output)->isIdenticalTo([
-         'label' => '',
-         'field' => '',
-         'additions' => '',
-         'may_be_empty' => false,
-         'may_be_required' => false,
-      ]);
    }
 
    public function providerSerializeValue() {
@@ -85,7 +74,12 @@ class HostnameField extends CommonTestCase {
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -284,5 +278,29 @@ class HostnameField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'hostname',
+            'expected' => 'hostname',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

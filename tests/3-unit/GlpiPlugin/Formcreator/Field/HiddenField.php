@@ -30,6 +30,7 @@
  */
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class HiddenField extends CommonTestCase {
    public function testGetName() {
@@ -44,9 +45,9 @@ class HiddenField extends CommonTestCase {
       $this->boolean($output)->isTrue();
    }
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -83,7 +84,12 @@ class HiddenField extends CommonTestCase {
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -284,12 +290,27 @@ class HiddenField extends CommonTestCase {
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 
-   public function testGetDesignSpecializationField() {
-      $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->getDesignSpecializationField();
-      $this->string($output['label'])->isEqualTo('');
-      $this->string($output['field'])->isEqualTo('');
-      $this->boolean($output['may_be_empty'])->isEqualTo(false);
-      $this->boolean($output['may_be_required'])->isEqualTo(false);
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'hidden text',
+            'expected' => 'hidden text',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

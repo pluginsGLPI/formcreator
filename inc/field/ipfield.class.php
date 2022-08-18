@@ -35,7 +35,9 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use Html;
 use Toolbox;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 
 class IpField extends PluginFormcreatorAbstractField
 {
@@ -43,24 +45,22 @@ class IpField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $common = parent::getDesignSpecializationField();
-      $additions = $common['additions'];
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      return [
-         'label' => '',
-         'field' => '',
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => false,
-      ];
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
 
    public function prepareQuestionInputForSave($input) {
       return $input;
    }
 
-   public function show($domain, $canEdit = true) {
+   public function show(string $domain, bool $canEdit = true): string {
       if (!$canEdit) {
          return '';
       }
@@ -77,7 +77,7 @@ class IpField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -119,7 +119,7 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public static function getName(): string {
-      return _n('IP address', 'Adresses IP', 1);
+      return _n('IP address', 'IP addresses', 1);
    }
 
    public static function canRequire(): bool {
@@ -157,10 +157,10 @@ class IpField extends PluginFormcreatorAbstractField
    }
 
    public function regex($value): bool {
-      return (preg_grep($value, $this->value)) ? true : false;
+      return (preg_match($value, $this->value) === 1) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -174,5 +174,9 @@ class IpField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return false;
+   }
+
+   public function getValueForApi() {
+      return $this->value;
    }
 }

@@ -30,6 +30,8 @@
  */
 
 namespace tests\units;
+
+use Glpi\Dashboard\Dashboard;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class Config extends CommonTestCase
@@ -76,7 +78,7 @@ class Config extends CommonTestCase
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ]
-      ])->next();
+      ])->current();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
       $rows = $DB->request([
@@ -85,16 +87,28 @@ class Config extends CommonTestCase
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ]
-      ])->next();
+      ])->current();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
-      // Check that the requesttype is NOT deleted
-      $requestType = new \RequestType();
-      $requestType->getFromDBByCrit(['name' => 'Formcreator']);
-      $this->boolean($requestType->isNewItem())->isFalse();
+      $this->checkRequestType();
+      $this->checkDashboard();
 
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
+   }
+
+   public function checkDashboard() {
+      // Check the dashboard does not exists
+      $dashboard = new Dashboard();
+      $dashboard->getFromDB('plugin_formcreator_issue_counters');
+      $this->boolean($dashboard->isNewItem())->isTrue();
+   }
+
+   public function checkRequestType() {
+      // request type must persist after uninstall
+      $requestType = new \RequestType();
+      $requestType->getFromDBByCrit(['name' => 'Formcreator']);
+      $this->boolean($requestType->isNewItem())->isFalse();
    }
 }

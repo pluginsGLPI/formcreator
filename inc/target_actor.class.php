@@ -74,7 +74,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          self::ACTOR_TYPE_SUPPLIER               => __('Specific supplier', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_SUPPLIER      => __('Supplier from the question', 'formcreator'),
          self::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
-         self::ACTOR_TYPE_AUTHORS_SUPERVISOR        => __('Form author\'s supervisor', 'formcreator'),
+         self::ACTOR_TYPE_AUTHORS_SUPERVISOR     => __('Form author\'s supervisor', 'formcreator'),
       ];
    }
 
@@ -92,6 +92,39 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
    }
 
    public function prepareInputForAdd($input) {
+      $requiredKeys = ['itemtype', 'items_id', 'actor_role', 'actor_type'];
+      if (count(array_intersect(array_keys($input), $requiredKeys)) < count($requiredKeys)) {
+         Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+         return false;
+      }
+
+      $input['actor_value'] = $input['actor_value_' . $input['actor_type']] ?? 0;
+
+      if (isset($input['use_notification'])) {
+         $input['use_notification'] = ($input['use_notification'] == 0) ? 0 : 1;
+      } else {
+         $input['use_notification'] = 0;
+      }
+
+      switch ($input['actor_type']) {
+         case self::ACTOR_TYPE_PERSON:
+         case self::ACTOR_TYPE_GROUP:
+            if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
+               Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+               return false;
+            }
+            break;
+
+         case self::ACTOR_TYPE_QUESTION_PERSON:
+         case self::ACTOR_TYPE_QUESTION_GROUP:
+         case self::ACTOR_TYPE_QUESTION_ACTORS:
+            if (!isset($input['actor_value']) || $input['actor_value'] == 0) {
+               Session::addMessageAfterRedirect(__('Bad request while adding an actor.', 'formcreator'), false, ERROR);
+               return false;
+            }
+            break;
+
+      }
 
       // generate a unique id
       if (!isset($input['uuid']) || empty($input['uuid'])) {
@@ -126,6 +159,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
             case self::ACTOR_TYPE_QUESTION_PERSON :
             case self::ACTOR_TYPE_QUESTION_GROUP :
             case self::ACTOR_TYPE_QUESTION_SUPPLIER :
+            case self::ACTOR_TYPE_QUESTION_ACTORS :
             case self::ACTOR_TYPE_GROUP_FROM_OBJECT :
             case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :
                /** @var PluginFormcreatorQuestion $question */
@@ -173,6 +207,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          $item->update($input);
       } else {
          unset($input['id']);
+         $input['actor_value_' . $input['actor_type']] = $input['actor_value'];
          $itemId = $item->add($input);
       }
       if ($itemId === false) {
@@ -215,7 +250,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          switch ($target_actor['actor_type']) {
             case self::ACTOR_TYPE_QUESTION_PERSON:
             case self::ACTOR_TYPE_QUESTION_GROUP:
-            case self::ACTOR_TYPE_SUPPLIER:
+            case self::ACTOR_TYPE_QUESTION_SUPPLIER:
             case self::ACTOR_TYPE_QUESTION_ACTORS:
             case self::ACTOR_TYPE_GROUP_FROM_OBJECT:
             case self::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT :

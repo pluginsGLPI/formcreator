@@ -37,22 +37,36 @@ use Document;
 use Html;
 use Toolbox;
 use Session;
+use PluginFormcreatorFormAnswer;
 use PluginFormcreatorForm;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 use PluginFormcreatorSection;
 use PluginFormcreatorQuestion;
+use PluginFormcreatorCommon;
 
 class FileField extends PluginFormcreatorAbstractField
 {
-   /**@var $uploadData array uploads saved as documents   */
+   /**@var array $uploadData uploads saved as documents   */
    private $uploadData = [];
 
-   /** @var $uploads array uploaded files on form submit */
+   /** @var array $uploads uploaded files on form submit */
    private $uploads = [
       '_filename' => [],
       '_prefix_filename' => [],
       '_tag_filename' => [],
    ];
+
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
+   }
 
    public function isPrerequisites(): bool {
       return true;
@@ -68,7 +82,7 @@ class FileField extends PluginFormcreatorAbstractField
          }
          foreach ($answer as $item) {
             if (is_numeric($item) && $doc->getFromDB($item)) {
-               $html .= $doc->getDownloadLink();
+               $html .= $doc->getDownloadLink($this->form_answer);
             }
          }
          return $html;
@@ -82,16 +96,20 @@ class FileField extends PluginFormcreatorAbstractField
       ]);
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return json_encode($this->uploadData, true);
    }
 
    public function deserializeValue($value) {
+      $this->uploadData = [];
+      $this->value = __('No attached document', 'formcreator');
+      if ($value === null) {
+         return;
+      }
       $this->uploadData = json_decode($value, true);
       if ($this->uploadData === null) {
          $this->uploadData = [];
       }
-      $this->value = __('No attached document', 'formcreator');;
       if (count($this->uploadData) > 0) {
          $this->value = __('Attached document', 'formcreator');
       }
@@ -134,7 +152,7 @@ class FileField extends PluginFormcreatorAbstractField
 
       // If the field is required it can't be empty
       $key = '_formcreator_field_' . $this->question->getID();
-      if (($this->isRequired() && count($this->uploads[$key]) < 1)) {
+      if (($this->isRequired() && (!isset($this->uploads[$key]) || count($this->uploads[$key]) < 1))) {
          Session::addMessageAfterRedirect(
             sprintf(__('A required file is missing: %s', 'formcreator'), $this->getLabel()),
             false,
@@ -197,32 +215,8 @@ class FileField extends PluginFormcreatorAbstractField
     * @return integer|NULL
     */
    private function saveDocument($file, $prefix) {
-      $sectionTable = PluginFormcreatorSection::getTable();
-      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-      $questionTable = PluginFormcreatorQuestion::getTable();
-      $formTable = PluginFormcreatorForm::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = new PluginFormcreatorForm();
-      $form->getFromDBByRequest([
-         'LEFT JOIN' => [
-            $sectionTable => [
-               'FKEY' => [
-                  $sectionTable => $formFk,
-                  $formTable => 'id'
-               ]
-            ],
-            $questionTable => [
-               'FKEY' => [
-                  $sectionTable => 'id',
-                  $questionTable => $sectionFk
-               ]
-            ]
-         ],
-         'WHERE' => [
-            "$questionTable.id" => $this->question->getID(),
-         ],
-      ]);
-      if ($form->isNewItem()) {
+      $form = PluginFormcreatorForm::getByItem($this->question);
+      if ($form === null) {
          // A problem occured while finding the form of the field
          return;
       }
@@ -291,7 +285,7 @@ class FileField extends PluginFormcreatorAbstractField
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -305,5 +299,13 @@ class FileField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return true;
+   }
+
+   public function getValueForApi() {
+      $output = [];
+      foreach ($this->uploadData as $documentId) {
+         $output[] = [Document::class, $documentId];
+      }
+      return $output;
    }
 }

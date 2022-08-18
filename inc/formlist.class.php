@@ -46,23 +46,11 @@ class PluginFormcreatorFormList extends CommonGLPI
       return _n('Form', 'Forms', $nb, 'formcreator');
    }
 
-   static function getMenuContent() {
-      $menu = parent::getMenuContent();
-      $menu['title'] = static::getTypeName(2);
-      $menu['page'] = '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php';
-      $menu['icon'] = 'fas fa-edit';
-      $image = '<img src="' . FORMCREATOR_ROOTDOC . '/pics/check.png"
-                  title="' . __('Forms waiting for validation', 'formcreator') . '"
-                  alt="' . __('Forms waiting for validation', 'formcreator') . '">';
-
-      $menu['links']['search'] = PluginFormcreatorFormList::getSearchURL(false);
-      if (PluginFormcreatorForm::canCreate()) {
-         $menu['links']['add'] = PluginFormcreatorForm::getFormURL(false);
-      }
-      $menu['links']['config'] = PluginFormcreatorForm::getSearchURL(false);
-      $menu['links'][$image]   = PluginFormcreatorFormAnswer::getSearchURL(false);
-
-      return $menu;
+   public static function canView() {
+      return (PluginFormcreatorForm::countAvailableForm() > 0);
    }
 
+   public static function getIcon() {
+      return 'fas fa-edit';
+   }
 }

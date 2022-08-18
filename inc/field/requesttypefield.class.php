@@ -35,51 +35,22 @@ namespace GlpiPlugin\Formcreator\Field;
 use Html;
 use Session;
 use Ticket;
+use PluginFormcreatorFormAnswer;
 use Dropdown;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 use PluginFormcreatorAbstractField;
 class RequestTypeField extends SelectField
 {
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
 
-      $label = '';
-      $field = '';
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="dropdown_default_values' . $rand . '">';
-      $additions .= __('Default values');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Ticket::dropdownType(
-         'default_values',
-         [
-            'value'   => $this->value,
-            'rand'    => $rand,
-            'display' => false,
-            'toadd' => [
-               0  => Dropdown::EMPTY_VALUE,
-            ],
-         ]
-      );
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '</tr>';
-
-      $additions .= $this->getParametersHtmlForDesign();
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => true,
-         'may_be_required' => true,
-      ];
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -144,7 +115,7 @@ class RequestTypeField extends SelectField
       return Ticket::getTypes();
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '2';
       }
@@ -172,7 +143,7 @@ class RequestTypeField extends SelectField
 
    public function getValueForTargetText($domain, $richText): ?string {
       $available = $this->getAvailableValues();
-      return $available[$this->value];
+      return $available[$this->value] ?? '';
    }
 
    public function moveUploads() {
@@ -223,7 +194,7 @@ class RequestTypeField extends SelectField
       throw new ComparisonException('Meaningless comparison');
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 

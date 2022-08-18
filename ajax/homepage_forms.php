@@ -30,5 +30,5 @@
  */
 include ('../../../inc/includes.php');
 
-$form = new PluginFormcreatorForm();
+$form = PluginFormcreatorCommon::getForm();
 $form->showForCentral();

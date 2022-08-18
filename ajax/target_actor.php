@@ -31,37 +31,35 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkRight('entity', UPDATE);
-
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+   http_response_code(404);
+   exit();
 }
 
-$formFk = PluginFormcreatorForm::getForeignKeyField();
-if (isset($_POST['profiles_id']) && isset($_POST[$formFk])) {
-   if (isset($_POST['access_rights'])) {
-      $form = new PluginFormcreatorForm();
-      $form->update([
-         'id'            => (int) $_POST[$formFk],
-         'access_rights' => (int) $_POST['access_rights'],
-         'is_captcha_enabled' => $_POST['is_captcha_enabled'],
-      ]);
-   }
+if (!isset($_POST['action'])) {
+   http_response_code(400);
+   die();
+}
 
-   $form_profile = new PluginFormcreatorForm_Profile();
-   $form_profile->deleteByCriteria([
-         $formFk    => (int) $_POST[$formFk],
-   ]);
-
-   foreach ($_POST['profiles_id'] as $profile_id) {
-      if ($profile_id != 0) {
-         $form_profile = new PluginFormcreatorForm_Profile();
-         $form_profile->add([
-               'plugin_formcreator_forms_id' => (int) $_POST[$formFk],
-               'profiles_id'                 => (int) $profile_id,
-         ]);
+switch ($_POST['action']) {
+   case 'add':
+      $actor_value = $_POST['actor_value_' . $_POST['actor_type']] ?? 0;
+      $target_actor = new PluginFormcreatorTarget_Actor();
+      if ($target_actor->add($_POST) === false) {
+         http_response_code(500);
+         Session::addMessageAfterRedirect(__('Failed to add the actor', 'formcreator'), false, ERROR, true);
       }
-   }
+      break;
+
+   case 'delete':
+      $target_actor = new PluginFormcreatorTarget_Actor();
+      $success = $target_actor->delete([
+         'id' => (int) $_POST['id']
+      ]);
+      if (!$success) {
+         http_response_code(400);
+         Session::addMessageAfterRedirect(__('Failed to delete the actor', 'formcreator'), false, ERROR, true);
+      }
+      break;
 }
-Html::back();

@@ -46,31 +46,31 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Create a form with a target ticket
       $form = $this->getForm();
 
-      $targetTicket = new \PluginFormcreatorTargetTicket();
-      $targetTicket->add([
+      $instance = new \PluginFormcreatorTargetTicket();
+      $instance->add([
          'name'                        => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
-      $targetTicket->getFromDB($targetTicket->getID());
-      $this->boolean($targetTicket->isNewItem())->isFalse();
+      $instance->getFromDB($instance->getID());
+      $this->boolean($instance->isNewItem())->isFalse();
 
       // find the actors created by default
       $requesterActor = new \PluginFormcreatorTarget_Actor();
       $observerActor = new \PluginFormcreatorTarget_Actor();
-      $targetTicketId = $targetTicket->getID();
+      $instanceId = $instance->getID();
 
       $requesterActor->getFromDBByCrit([
          'AND' => [
-            'itemtype'   => $targetTicket->getType(),
-            'items_id'   => $targetTicketId,
+            'itemtype'   => $instance->getType(),
+            'items_id'   => $instanceId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([
          'AND' => [
-            'itemtype'   => $targetTicket->getType(),
-            'items_id'   => $targetTicketId,
+            'itemtype'   => $instance->getType(),
+            'items_id'   => $instanceId,
             'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
             'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
          ]
@@ -119,7 +119,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'target_name'           => 'urgency from answer',
          'content'               => '##FULLFORM##',
          'itemtype'              => \PluginFormcreatorTargetTicket::class,
-         'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_ANSWER,
+         'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_ANSWER,
          'urgency_question'      => $question->getID(),
       ]);
       $this->boolean($targetTicket1->isNewItem())->isFalse();
@@ -130,8 +130,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'target_name'           => 'default urgency',
          'content'               => '##FULLFORM##',
          'itemtype'              => \PluginFormcreatorTargetTicket::class,
-         'urgency_rule'          => \PluginFormcreatorAbstractTarget::URGENCY_RULE_NONE,
-         'urgency_question'      => '',
+         'urgency_rule'          => \PluginFormcreatorAbstractItilTarget::URGENCY_RULE_NONE,
+         'urgency_question'      => '0',
       ]);
       $this->boolean($targetTicket2->isNewItem())->isFalse();
 

@@ -32,195 +32,70 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use PluginFormcreatorAbstractField;
 use AuthLDAP;
-use Dropdown;
-use Exception;
-use Entity;
 use Html;
-use QuerySubQuery;
 use Session;
+use PluginFormcreatorFormAnswer;
 use RuleRightParameter;
+use PluginFormcreatorQuestion;
+use Glpi\Application\View\TemplateRenderer;
+use PluginFormcreatorAbstractField;
+use PluginFormcreatorLdapDropdown;
 
 class LdapselectField extends SelectField
 {
-   public function getDesignSpecializationField(): array {
-      $rand = mt_rand();
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $label = '<label for="dropdown_ldap_auth' . $rand . '">';
-      $label .= _n('LDAP directory', 'LDAP directories', 1);
-      $label .= '</label>';
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $this->question->fields['_ldap_auth'] = $decodedValues['ldap_auth'] ?? '';
+      $this->question->fields['_ldap_filter'] = $decodedValues['ldap_filter'] ?? '';
+      $this->question->fields['_ldap_attribute'] = $decodedValues['ldap_attribute'] ?? '';
 
-      $ldap_values = json_decode(plugin_formcreator_decode($this->question->fields['values']), JSON_OBJECT_AS_ARRAY);
-      if ($ldap_values === null) {
-         $ldap_values = [];
-      }
-      $current_entity = Session::getActiveEntity();
-      $auth_ldap_condition = '';
-      if ($current_entity != 0) {
-         $entityTable = Entity::getTable();
-         $auth_ldap_condition = [
-            'glpi_authldaps.id' => new QuerySubQuery([
-               'SELECT' => "$entityTable.authldaps_id",
-               'FROM'   => $entityTable,
-               'WHERE'  => ['id' => $current_entity],
-            ])
-         ];
-      }
-      $field = Dropdown::show(AuthLDAP::class, [
-         'name'      => 'ldap_auth',
-         'condition' => $auth_ldap_condition,
-         'rand'      => $rand,
-         'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
-         'on_change' => 'plugin_formcreator_changeLDAP(this)',
-         'display'   => false,
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
       ]);
-
-      $additions = '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '<label for="ldap_filter">';
-      $additions .= __('Filter', 'formcreator');
-      $additions .= '</label>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= Html::input('ldap_filter', [
-         'id'     => 'ldap_filter',
-         'value'  => (isset($ldap_values['ldap_filter'])) ? $ldap_values['ldap_filter'] : '',
-      ]);
-      $additions .= '</td>';
-
-      $additions .= '<td>';
-      $additions .= '<label for="ldap_attribute">';
-      $additions .= __('Attribute', 'formcreator');
-      $additions .= '</label>';
-      $additions .= '</td>';
-
-      $additions .= '<td>';
-      $additions .= Dropdown::show('RuleRightParameter', [
-         'name'    => 'ldap_attribute',
-         'rand'    => $rand,
-         'value'   => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
-         'display' => false,
-      ]);
-      $additions .= '</td>';
-      $additions .= '</tr>';
-      $additions .= '<tr class="plugin_formcreator_question_specific">';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td colspan="2">&nbsp;</td>';
-      $additions .= '</tr>';
-
-      $common = PluginFormcreatorAbstractField::getDesignSpecializationField();
-      $additions .= $common['additions'];
-
-      return [
-         'label' => $label,
-         'field' => $field,
-         'additions' => $additions,
-         'may_be_empty' => true,
-         'may_be_required' => true,
-      ];
    }
 
-   public function getAvailableValues() {
-      if (empty($this->question->fields['values'])) {
-         return [];
+   public function getRenderedHtml($domain, $canEdit = true): string {
+      if (!$canEdit) {
+         return $this->value . PHP_EOL;
       }
 
-      $ldap_values   = json_decode(plugin_formcreator_decode($this->question->fields['values']));
-      $ldap_dropdown = new RuleRightParameter();
-      if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
-         return [];
+      $html         = '';
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+
+      if (!empty($this->question->fields['values'])) {
+         $options = [
+            'name'      => $fieldName,
+            'value'     => $this->value,
+            'rand'      => $rand,
+            'multiple'  => false,
+            'display'   => false,
+            'condition' => [
+               PluginFormcreatorQuestion::getForeignKeyField() => $this->question->getID()
+            ]
+         ];
+         $html .= PluginFormcreatorLdapDropdown::dropdown($options);
       }
-      $attribute     = [$ldap_dropdown->fields['value']];
+      $html .=  PHP_EOL;
+      $html .=  Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeSelect('$fieldName', '$rand');
+      });");
 
-      $config_ldap = new AuthLDAP();
-      if (!$config_ldap->getFromDB($ldap_values->ldap_auth)) {
-         return [];
-      }
-
-      set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
-
-      try {
-         $tab_values = [];
-
-         $cookie = '';
-         $ds = $config_ldap->connect();
-         ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-         do {
-            if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
-               // phpcs:ignore Generic.PHP.DeprecatedFunctions
-               if (version_compare(PHP_VERSION, '7.3') < 0) {
-                  // phpcs:ignore Generic.PHP.DeprecatedFunctions
-                  ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
-                  $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-               } else {
-                  $controls = [
-                     [
-                        'oid'        => LDAP_CONTROL_PAGEDRESULTS,
-                        'iscritical' => true,
-                        'value'      => [
-                           'size'    => $config_ldap->fields['pagesize'],
-                           'cookie'  => $cookie
-                        ]
-                     ]
-                  ];
-                  $result = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
-                  ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-                  $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
-               }
-            } else {
-               $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-            }
-
-            $limitexceeded = false;
-            if (in_array(ldap_errno($ds), [4, 11])) {
-               // openldap return 4 for Size limit exceeded
-               $limitexceeded = true;
-            }
-
-            $entries = ldap_get_entries($ds, $result);
-            if (in_array(ldap_errno($ds), [4, 11])) {
-               // openldap return 4 for Size limit exceeded
-               $limitexceeded = true;
-            }
-
-            if ($limitexceeded) {
-               Session::addMessageAfterRedirect(__('LDAP size limit exceeded', 'formcreator'), true, WARNING);
-            }
-            array_shift($entries);
-
-            $id = 0;
-            foreach ($entries as $attr) {
-               if (!isset($attr[$attribute[0]]) || in_array($attr[$attribute[0]][0], $tab_values)) {
-                  continue;
-               }
-               $tab_values[$id] = $attr[$attribute[0]][0];
-               $id++;
-            }
-
-            if (AuthLDAP::isLdapPageSizeAvailable($config_ldap) && version_compare(PHP_VERSION, '7.3') < 0) {
-               // phpcs:ignore Generic.PHP.DeprecatedFunctions
-               ldap_control_paged_result_response($ds, $result, $cookie);
-            }
-         } while ($cookie !== null && $cookie != '');
-
-         asort($tab_values);
-         return $tab_values;
-      } catch (Exception $e) {
-         return [];
-      }
-
-      restore_error_handler();
+      return $html;
    }
 
    public static function getName(): string {
       return __('LDAP Select', 'formcreator');
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return $this->value;
    }
 
@@ -252,64 +127,40 @@ class LdapselectField extends SelectField
    }
 
    public function prepareQuestionInputForSave($input) {
-      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-      if (!isset($input['ldap_auth'])) {
+      // Get values already saved for the question
+      $ldap_values = [];
+      if (isset($this->question) && isset($this->question->fields['values'])) {
+         $ldap_values = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      }
+
+      // Get the directory from the browser then from the DB (if editing a question)
+      $ldap_values['ldap_auth'] = $input['ldap_auth'] ?? ($ldap_values['ldap_auth'] ?? null);
+      if ($ldap_values['ldap_auth'] === null) {
          Session::addMessageAfterRedirect(__('LDAP directory not defined!', 'formcreator'), false, ERROR);
          return [];
       }
-
-      $config_ldap = new AuthLDAP();
-      $config_ldap->getFromDB($input['ldap_auth']);
-      if ($config_ldap->isNewItem()) {
+      // Check the directory exists
+      /** @var LdapAuth $config_ldap */
+      $config_ldap = AuthLDAP::getById($ldap_values['ldap_auth']);
+      if (!($config_ldap instanceof AuthLDAP)) {
          Session::addMessageAfterRedirect(__('LDAP directory not found!', 'formcreator'), false, ERROR);
          return [];
       }
 
-      if (!empty($input['ldap_attribute'])) {
-         $ldap_dropdown = new RuleRightParameter();
-         $ldap_dropdown->getFromDB($input['ldap_attribute']);
-         $attribute     = [$ldap_dropdown->fields['value']];
-      } else {
-         $attribute     = [];
-      }
-
-      set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
-
-      try {
-         $cookie = '';
-         $ds = $config_ldap->connect();
-         ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-         if (version_compare(PHP_VERSION, '7.3') < 0) {
-            // phpcs:ignore Generic.PHP.DeprecatedFunctions
-            ldap_control_paged_result($ds, 1, false, $cookie);
-            $result = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-         } else {
-            $controls = [
-               [
-                  'oid'        =>LDAP_CONTROL_PAGEDRESULTS,
-                  'iscritical' => false,
-                  'value'      => [
-                     'size'    => $config_ldap->fields['pagesize'],
-                     'cookie'  => $cookie
-                  ]
-               ]
-            ];
-            $result = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute, 0, -1, -1, LDAP_DEREF_NEVER, $controls);
-            ldap_parse_result($ds, $result, $errcode, $matcheddn, $errmsg, $referrals, $controls);
-            $cookie = $controls[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'] ?? '';
+      $ldap_values['ldap_attribute'] = $input['ldap_attribute'] ?? ($ldap_values['ldap_attribute'] ?? null);
+      if (isset($ldap_values['ldap_attribute'])) {
+         $ldap_dropdown = RuleRightParameter::getById((int) $ldap_values['ldap_attribute']);
+         if (!($ldap_dropdown instanceof RuleRightParameter)) {
+            return [];
          }
-         ldap_get_entries($ds, $result);
-      } catch (Exception $e) {
-         Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
       }
 
-      restore_error_handler();
+      if (isset($input['ldap_filter'])) {
+         $input['ldap_filter'] = html_entity_decode($input['ldap_filter']);
+      }
+      $ldap_values['ldap_filter'] = $input['ldap_filter'] ?? ($ldap_values['ldap_filter'] ?? '');
 
-      $input['values'] = json_encode([
-         'ldap_auth'      => $input['ldap_auth'],
-         'ldap_filter'    => $input['ldap_filter'],
-         'ldap_attribute' => strtolower($input['ldap_attribute']),
-      ], JSON_UNESCAPED_UNICODE);
+      $input['values'] = json_encode($ldap_values, JSON_UNESCAPED_UNICODE);
       unset($input['ldap_auth']);
       unset($input['ldap_filter']);
       unset($input['ldap_attribute']);
@@ -338,6 +189,20 @@ class LdapselectField extends SelectField
       return true;
    }
 
+   public function getTranslatableStrings(array $options = []) : array {
+      $strings = PluginFormcreatorAbstractField::getTranslatableStrings($options);
+
+      $params = [
+         'searchText'      => '',
+         'id'              => '',
+         'is_translated'   => null,
+         'language'        => '', // Mandatory if one of is_translated and is_untranslated is false
+      ];
+      $options = array_merge($params, $options);
+
+      return $strings;
+   }
+
    public function equals($value): bool {
       return $this->value == $value;
    }
@@ -358,7 +223,7 @@ class LdapselectField extends SelectField
       return (preg_grep($value, $this->value)) ? true : false;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return false;
    }
 

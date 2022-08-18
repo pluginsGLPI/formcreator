@@ -36,32 +36,25 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (PluginFormcreatorFormAnswer::canView()) {
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-   } else {
-      if (Session::getCurrentInterface() == 'helpdesk') {
-         Html::helpHeader(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
-      } else {
-         Html::header(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF'],
-            'helpdesk',
-            'PluginFormcreatorFormlist'
-         );
-      }
-   }
-
-   Search::show(PluginFormcreatorFormAnswer::class);
-
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::footer();
-   } else {
-      Html::footer();
-   }
-} else {
+if (!PluginFormcreatorFormAnswer::canView()) {
    Html::displayRightError();
+}
+
+if (Session::getCurrentInterface() == 'helpdesk') {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(
+      __('Form Creator', 'formcreator'),
+      '',
+      'admin',
+      PluginFormcreatorForm::class
+   );
+}
+
+Search::show(PluginFormcreatorCommon::getFormanswerItemtype());
+
+if (Session::getCurrentInterface() == 'helpdesk') {
+   Html::helpFooter();
+} else {
+   Html::footer();
 }

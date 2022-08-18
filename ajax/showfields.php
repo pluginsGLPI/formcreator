@@ -43,33 +43,16 @@ if (!isset($_POST[$formFk])) {
    exit();
 }
 
-$form = new PluginFormcreatorForm();
+$form = PluginFormcreatorCommon::getForm();
 $form->getFromDB((int) $_POST['plugin_formcreator_forms_id']);
 if (!Session::haveRight('entity', UPDATE) && ($form->isDeleted() || $form->fields['is_active'] == '0')) {
    http_response_code(403);
    exit();
 }
 
-if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
-   // form is not public : login required and form must be accessible from the entities of the user
-   if (Session::getLoginUserID() === false || !$form->checkEntity(true)) {
-      http_response_code(403);
-      exit();
-   }
-}
-
-if (!Session::haveRight('entity', UPDATE) && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-   $iterator = $DB->request(PluginFormcreatorForm_Profile::getTable(), [
-      'WHERE' => [
-         'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
-         'plugin_formcreator_forms_id' => $form->getID()
-      ],
-      'LIMIT' => 1
-   ]);
-   if (count($iterator) == 0) {
-      http_response_code(403);
-      exit();
-   }
+if (!$form->canViewForRequest()) {
+   http_response_code(403);
+   exit();
 }
 
 try {

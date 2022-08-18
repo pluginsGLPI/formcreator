@@ -2,6 +2,7 @@
 
 namespace GlpiPlugin\Formcreator\Tests;
 
+use Plugin;
 trait CommonQuestionTest
 {
 
@@ -15,13 +16,12 @@ trait CommonQuestionTest
          'helpdesk_home' => '0',
       ]);
       $this->boolean($section->isNewItem())->isFalse();
-      $form = new \PluginFormcreatorForm();
-      $form->getFromDBBySection($section);
+      $form = \PluginFormcreatorForm::getByItem($section);
       $this->boolean($form->isNewItem())->isFalse();
 
       // navigate to the form designer
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/form.form.php?id=' . $form->getID());
-      $this->client->waitFor('footer');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.form.php?id=' . $form->getID());
+      $this->client->waitFor('[role="tablist"]');
       $this->browsing->openTab('Questions');
       $this->client->waitFor('#plugin_formcreator_form.plugin_formcreator_form_design');
 
@@ -34,8 +34,30 @@ trait CommonQuestionTest
    }
 
    /**
+    * Undocumented function
+    *
+    * @param array  $input  input data to create the question
+    * @return void
+    */
+   public function _testRenderQuestion(array $input) {
+      // Use a clean entity for the tests
+      $this->login('glpi', 'glpi');
+
+      $question = $this->getQuestion($input);
+      $this->boolean($question->isNewItem())->isFalse();
+
+      // navigate to the form designer
+      $form = \PluginFormcreatorForm::getByItem($question);
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.form.php?id=' . $form->getID());
+      $this->browsing->openTab('Preview');
+
+      $this->client->waitForVisibility('form[name="plugin_formcreator_form"] [gs-x][gs-w][data-itemtype][data-id="' . $question->getID() . '"');
+   }
+
+   /**
     * Submit a questin form then check it is created and displayed
     *
+    * @param PluginFormcreatorForm $form
     * @param string $nameField
     * @return void
     */

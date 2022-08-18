@@ -38,7 +38,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-$formanswer = new PluginFormcreatorFormAnswer();
+$formanswer = PluginFormcreatorCommon::getFormAnswer();
 
 if (isset($_POST['update'])) {
    // Edit an existing target ticket
@@ -64,35 +64,29 @@ if (isset($_POST['update'])) {
       $formanswer->redirectToList();
    }
 
+}
+// Show target ticket form
+$formanswer->getFromDB((int) $_GET['id']);
+if (!$formanswer->checkEntity()) {
+   Html::displayRightError();
+}
+
+if (Session::getCurrentInterface() == 'helpdesk') {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
 } else {
-   // Show target ticket form
-   $formanswer->getFromDB((int) $_GET['id']);
-   if (!$formanswer->checkEntity()) {
-      Html::displayRightError();
-   }
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-   } else {
-      if (Session::getCurrentInterface() == 'helpdesk') {
-         Html::helpHeader(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
-      } else {
-         Html::header(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF'],
-            'helpdesk',
-            'PluginFormcreatorFormlist'
-         );
-      }
-   }
+   Html::header(
+      __('Form Creator', 'formcreator'),
+      '',
+      'admin',
+      'PluginFormcreatorForm'
+   );
+}
 
-   $formanswer->display($_REQUEST);
 
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::footer();
-   } else {
-      Html::footer();
-   }
+$formanswer->display($_REQUEST);
+
+if (Session::getCurrentInterface() == 'helpdesk') {
+   Html::helpFooter();
+} else {
+   Html::footer();
 }

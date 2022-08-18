@@ -41,7 +41,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->array($output)->HasKey('uuid');
       $this->string($output['uuid'])->isEqualTo('0000');
 
-      $output = $instance->prepareInputForAdd([]);
+      $output = $instance->prepareInputForAdd(['level' => '1']);
 
       $this->array($output)->HasKey('uuid');
       $this->string($output['uuid']);
@@ -50,6 +50,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
    public function testExport() {
       $user = new \User;
       $user->getFromDBbyName('glpi');
+
       $form = $this->getForm([
          'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
          '_validator_users' => [
@@ -143,11 +144,11 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          'name' => 'user D' . $this->getUniqueString(),
       ]);
 
+      // Add users into groups
       $this->getGlpiCoreItem(\Group_User::class, [
          'users_id' => $userA->getID(),
          'groups_id' => $groupA->getID(),
       ]);
-
       $this->getGlpiCoreItem(\Group_User::class, [
          'users_id' => $userB->getID(),
          'groups_id' => $groupB->getID(),
@@ -163,31 +164,58 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          'itemtype' => $groupB->gettype(),
          'items_id' => $groupB->getID(),
       ]);
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => $userC->gettype(),
-         'items_id' => $userC->getID(),
-      ]);
-      $formValidator->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'itemtype' => $userD->gettype(),
-         'items_id' => $userD->getID(),
-      ]);
+      // $formValidator->add([
+      //    'plugin_formcreator_forms_id' => $form->getID(),
+      //    'itemtype' => $userC->gettype(),
+      //    'items_id' => $userC->getID(),
+      // ]);
+      // $formValidator->add([
+      //    'plugin_formcreator_forms_id' => $form->getID(),
+      //    'itemtype' => $userD->gettype(),
+      //    'items_id' => $userD->getID(),
+      // ]);
 
-      $output = $formValidator->getValidatorsForForm($form, \User::class);
+      // Test when form has users as validators
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
+         '_validator_users'    => [
+            $userC->getID(),
+            $userD->getID(),
+         ]
+      ]);
+      $output = $formValidator->getValidatorsForForm($form);
 
       $this->array($output)
          ->hasKeys([
             $userC->getID(),
             $userD->getID(),
-         ]);
+         ])->hasSize(2);
 
-      $output = $formValidator->getValidatorsForForm($form, \Group::class);
+      // Test when form has groups as validators
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
+         '_validator_groups'    => [
+            $groupA->getID(),
+            $groupB->getID(),
+         ]
+      ]);
+      $output = $formValidator->getValidatorsForForm($form);
 
       $this->array($output)
          ->hasKeys([
             $groupA->getID(),
             $groupB->getID(),
-         ]);
+         ])->hasSize(2);
+
+      // Test when form has no validation
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_NONE,
+      ]);
+      $output = $formValidator->getValidatorsForForm($form);
+      $this->array($output)
+         ->hasSize(0);
    }
 }

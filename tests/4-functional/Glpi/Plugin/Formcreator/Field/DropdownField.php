@@ -53,13 +53,24 @@ class DropdownField extends CommonFunctionalTestCase
       );
 
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="required"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="dropdown_values"]');
-      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="dropdown_default_value"]');
+      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="itemtype"]');
       $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="show_empty"]');
 
-      $browserForm = $this->crawler->filter('form[data-itemtype=PluginFormcreatorQuestion]')->form();
-      $browserForm['dropdown_values'] = \ITILCategory::gettype();
+      // set question itemtype
+      $this->client->executeScript(
+         '$(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').val("' . \ITILCategory::gettype() . '")
+         $(\'form[data-itemtype="PluginFormcreatorQuestion"] [name="itemtype"]\').select2().trigger("change")
+         '
+      );
+      $this->client->waitForVisibility('form[data-itemtype="PluginFormcreatorQuestion"] select[name="default_values"]');
 
       $this->_testQuestionCreated($form, __METHOD__);
+   }
+
+   public function testRenderQuestion() {
+      $this->_testRenderQuestion([
+         'fieldtype' => 'dropdown',
+         'itemtype'  => \Location::getType(),
+      ]);
    }
 }

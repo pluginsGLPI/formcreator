@@ -30,11 +30,10 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Ticket;
 
 class PluginFormcreatorCommon extends CommonTestCase {
    public function beforeTestMethod($method) {
-      global $CFG_GLPI;
-
       switch ($method) {
          case 'testGetTicketStatusForIssue':
             $this->login('glpi', 'glpi');
@@ -197,16 +196,23 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4,
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::NONE;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => $ticketStatus]
+            'expected' => $ticketStatus
          ];
          $data["validation none, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
 
@@ -218,7 +224,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          ]);
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 0, 'status' => $ticketStatus]
+            'expected' => $ticketStatus
          ];
          $data["no validation, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
 
@@ -234,16 +240,23 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4 // Tech,
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::ACCEPTED;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => $ticketStatus]
+            'expected' => $ticketStatus
          ];
          $data["validation accepted, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
       }
@@ -270,16 +283,23 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' =>  4, /* Tech */
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING]
+            'expected' => \PluginFormcreatorFormAnswer::STATUS_WAITING
          ];
          $data["validation waiting, " . \CommonITILValidation::getStatus(\CommonITILValidation::WAITING)] = $dataSet;
       }
@@ -310,7 +330,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $ticket->fields['global_validation'] = \CommonITILValidation::WAITING;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => $ticketStatus]
+            'expected' => $ticketStatus
          ];
          $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
       }
@@ -337,16 +357,23 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4, /* Tech */
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::REFUSED;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => \PluginFormcreatorFormAnswer::STATUS_REFUSED]
+            'expected' => \PluginFormcreatorFormAnswer::STATUS_REFUSED
          ];
          $data["validation refused, " . \CommonITILValidation::getStatus(\CommonITILValidation::REFUSED)] = $dataSet;
       }
@@ -368,16 +395,23 @@ class PluginFormcreatorCommon extends CommonTestCase {
          $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
-         $ticket->update([
-            'id' => $ticket->getID(),
-            'status' => $ticketStatus,
-            '_users_id_assign' => ($ticketStatus > \CommonITILObject::INCOMING) ? 4 /* Tech */ : 0,
-         ]);
+         if ($ticketStatus > \CommonITILObject::INCOMING) {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+               '_users_id_assign' => 4, /* Tech */
+            ]);
+         } else {
+            $ticket->update([
+               'id' => $ticket->getID(),
+               'status' => $ticketStatus,
+            ]);
+         }
          $this->integer((int) $ticket->fields['status'])->isEqualTo($ticketStatus);
          $ticket->fields['global_validation'] = \CommonITILValidation::REFUSED;
          $dataSet = [
             'ticket' => $ticket,
-            'expected' => ['user' => 4, 'status' => $ticketStatus]
+            'expected' => $ticketStatus
          ];
          $data["validation refused, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
       }
@@ -394,7 +428,233 @@ class PluginFormcreatorCommon extends CommonTestCase {
     */
    public function testGetTicketStatusForIssue($ticket, $expected) {
       $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
-      $this->integer((int) $output['status'])->isEqualTo($expected['status']);
-      $this->integer((int) $output['user'])->isEqualTo($expected['user']);
+      $this->integer((int) $output)->isEqualTo($expected);
+   }
+
+   public function testGetFormAnswer() {
+      $output = \PluginFormcreatorCommon::getFormAnswer();
+      $this->string($output->getType())->isEqualTo(\PluginFormcreatorFormAnswer::class);
+   }
+
+   public function testGetFormanswerItemtype() {
+      $output = \PluginFormcreatorCommon::getFormanswerItemtype();
+      $this->string($output)->isEqualTo(\PluginFormcreatorFormAnswer::class);
+   }
+
+   public function testGetInterface() {
+      // test Public access
+      \Session::destroy();
+      $output = \PluginFormcreatorCommon::getInterface();
+      $this->string($output)->isEqualTo('public');
+
+      // test normal interface
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorCommon::getInterface();
+      $this->string($output)->isEqualTo('central');
+
+      // test simplified interface
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => 0]);
+      $entityConfig->update([
+         'id' => $entityConfig->getID(),
+         'replace_helpdesk' => '0',
+      ]);
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorCommon::getInterface();
+      $this->string($output)->isEqualTo('self-service');
+
+      // test service catalog
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => 0]);
+      $entityConfig->update([
+         'id' => $entityConfig->getId(),
+         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
+      ]);
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorCommon::getInterface();
+      $this->string($output)->isEqualTo('servicecatalog');
+
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->update([
+         'id' => $entityConfig->getId(),
+         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_EXTENDED_SERVICE_CATALOG,
+      ]);
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorCommon::getInterface();
+      $this->string($output)->isEqualTo('servicecatalog');
+   }
+
+   public function providerHookRedefineMenu() {
+      global $DB;
+
+      // Create an entity
+      $this->login('glpi', 'glpi');
+      $entity = new \Entity();
+      $entityId = $entity->import([
+         'entities_id' => '0',
+         'name' => __FUNCTION__ . $this->getUniqueString(),
+      ]);
+      // Force creation of the entity config
+      \PluginFormcreatorEntityConfig::getUsedConfig('replace_helpdesk', $entityId);
+
+      // Use an not-self-service account
+      $this->login('glpi', 'glpi');
+
+      // Check the menu is left as is
+      yield [
+         'input'    => \Html::generateMenuSession(true),
+         'expected' => \Html::generateMenuSession(true),
+      ];
+
+      // Check that simplified interface without service catalog) shows "Forms" menu item
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => $entityId]);
+      $this->boolean($entityConfig->isNewItem())->isFalse();
+      $entityConfig->update([
+         'id' => $entityConfig->getID(),
+         'replace_helpdesk' => '0',
+      ]);
+      $this->login('post-only', 'postonly');
+      \Session::changeActiveEntities($entityId);
+
+      yield [
+         'input'    => \Html::generateHelpMenu(),
+         'expected' => [
+            'home' => [
+               'default' => '/front/helpdesk.public.php',
+               'title' => 'Home',
+               'icon' => 'fas fa-home',
+            ],
+            'create_ticket' => [
+               'default' => '/front/helpdesk.public.php?create_ticket=1',
+               'title' => 'Create a ticket',
+               'icon' => 'ti ti-plus',
+            ],
+            'seek_assistance' => [
+               'default' => "plugins/formcreator/front/wizard.php",
+               'title' => 'Forms',
+               'icon' => 'fa-fw ti ti-headset',
+            ],
+            'tickets' => [
+               'default' => '/front/ticket.php',
+               'title' => 'Tickets',
+               'icon' => 'ti ti-alert-circle',
+               'content' => [
+                  'ticket' => [
+                     'links' => [
+                        'search' => '/front/ticket.php',
+                        'lists' => '',
+                        'add' => '/front/helpdesk.public.php?create_ticket=1',
+                     ],
+                  ],
+               ],
+            ],
+            'reservation' => [
+               'default' => '/front/reservationitem.php',
+               'title' => 'Reservations',
+               'icon' => 'ti ti-calendar-event',
+            ],
+            'faq' => [
+               'default' => '/front/helpdesk.faq.php',
+               'title' => 'FAQ',
+               'icon' => 'ti ti-lifebuoy',
+            ],
+         ],
+      ];
+
+      // Check that service catalog enabled does not impacts the menu for Central users
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->getFromDbByCrit(['entities_id' => $entityId]);
+      $this->boolean($entityConfig->isNewItem())->isFalse();
+      $entityConfig->update([
+         'id' => $entityConfig->getID(),
+         'replace_helpdesk' => '1',
+      ]);
+      $this->login('glpi', 'glpi');
+      \Session::changeActiveEntities($entityId);
+
+      yield [
+         'input'    => \Html::generateHelpMenu(),
+         'expected' => \Html::generateHelpMenu(),
+      ];
+
+      $this->login('post-only', 'postonly');
+      \Session::changeActiveEntities($entityId);
+      $DB->truncate(\RSSFeed::getTable());
+      $rssFeeds = (new \RssFeed())->find([1]);
+      $this->integer(count($rssFeeds))->isEqualTo(0);
+      yield [
+         'input' => \Html::generateHelpMenu(),
+         'expected' => [
+            'seek_assistance' =>
+            [
+            'default' => 'plugins/formcreator/front/wizard.php',
+            'title' => 'Seek assistance',
+            'icon' => 'fa-fw ti ti-headset',
+            ],
+            'my_assistance_requests' =>
+            [
+            'default' => '/plugins/formcreator/front/issue.php',
+            'title' => 'My requests for assistance',
+            'icon' => 'fa-fw ti ti-list',
+            ],
+            'reservation' =>
+            [
+            'default' => '/front/reservationitem.php',
+            'title' => 'Reservations',
+            'icon' => 'ti ti-calendar-event',
+            ],
+         ]
+      ];
+
+      $rssFeed = new \RSSFeed();
+      $rssFeed->add([
+         'url' => 'https://localhost/feed/',
+         'is_active' => 1,
+      ]);
+      $this->boolean($rssFeed->isNewItem())->isFalse();
+      $entityRssFeed = new \Entity_RSSFeed();
+      $entityRssFeed->add([
+         'entities_id' => $entityId,
+         'rssfeeds_id' => $rssFeed->getID()
+      ]);
+      $this->boolean($entityRssFeed->isNewItem())->isFalse();
+      yield [
+         'input' => \Html::generateHelpMenu(),
+         'expected' => [
+            'seek_assistance' =>
+            [
+              'default' => 'plugins/formcreator/front/wizard.php',
+              'title' => 'Seek assistance',
+              'icon' => 'fa-fw ti ti-headset',
+            ],
+            'my_assistance_requests' =>
+            [
+              'default' => '/plugins/formcreator/front/issue.php',
+              'title' => 'My requests for assistance',
+              'icon' => 'fa-fw ti ti-list',
+            ],
+            'reservation' =>
+            [
+              'default' => '/front/reservationitem.php',
+              'title' => 'Reservations',
+              'icon' => 'ti ti-calendar-event',
+            ],
+            'feeds' =>
+            [
+              'default' => 'plugins/formcreator/front/wizardfeeds.php',
+              'title' => 'Consult feeds',
+              'icon' => 'fa-fw ti ti-rss',
+            ],
+         ]
+      ];
+   }
+
+   /**
+    * @dataProvider providerHookRedefineMenu
+    */
+   public function testHookRedefineMenu($input, $expected) {
+      $output = \PluginFormcreatorCommon::hookRedefineMenu($input);
+      $this->array($output)->isIdenticalTo($expected);
    }
 }

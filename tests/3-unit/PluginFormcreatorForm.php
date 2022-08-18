@@ -43,7 +43,27 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testDuplicate':
          case 'testCreateValidationNotification':
          case 'testGetTranslatableStrings':
+         case 'testCountAvailableForm':
             $this->login('glpi', 'glpi');
+      }
+
+      switch ($method) {
+         case 'testCreateValidationNotification':
+            \Config::setConfigurationValues(
+               'core',
+               ['use_notifications' => 1, 'notifications_mailing' => 1]
+            );
+      }
+   }
+
+   public function afterTestMethod($method) {
+      parent::afterTestMethod($method);
+      switch ($method) {
+         case 'testCreateValidationNotification':
+            \Config::setConfigurationValues(
+               'core',
+               ['use_notifications' => 0, 'notifications_mailing' => 0]
+            );
       }
    }
 
@@ -174,32 +194,32 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function providerPrepareInputForAdd() {
       return [
-         [
+         'empty name not allowed' => [
             'input' => [
                'name'         => '',
                'description'  => '',
                'content'      => '',
             ],
             'expected' => false, // An empty name should be rejected
-            'message'  => 'The name cannot be empty!',
+            'expectedMessage'  => 'The name cannot be empty!',
          ],
-         [
+         'html entities conversion' => [
             'input' => [
                'name'         => 'être ou ne pas être',
                'description'  => 'être ou ne pas être',
                'content'      => '&lt;p&gt;être ou ne pas être&lt;/p&gt;',
             ],
             'expected' => true,
-            'message' => '',
+            'expectedMessage' => '',
          ],
-         [
+         'quote escaping' => [
             'input' => [
                'name'         => 'test d\\\'apostrophe',
                'description'  => 'test d\\\'apostrophe',
                'content'      => '&lt;p&gt;test d\\\'apostrophe&lt;/p&gt;',
             ],
             'expected' => true,
-            'message' => '',
+            'expectedMessage' => '',
          ],
       ];
    }
@@ -218,14 +238,23 @@ class PluginFormcreatorForm extends CommonTestCase {
          $this->sessionHasMessage($expectedMessage, ERROR);
       } else {
          $this->string($output['name'])->isEqualTo($input['name']);
-         $this->string($output['description'])->isEqualTo($output['description']);
-         $this->string($output['content'])->isEqualTo($output['content']);
+         $this->string($output['description'])->isEqualTo($input['description']);
+         $this->string($output['content'])->isEqualTo($input['content']);
          $this->array($output)->hasKey('uuid');
       }
    }
 
    public function providerPrepareInputForUpdate() {
-      return $this->providerPrepareInputForAdd();
+      $data = $this->providerPrepareInputForAdd();
+      $data['remove name forbidden'] = [
+         'input' => [
+            'name' => '',
+         ],
+         'expected' => false,
+         'expectedMessage'  => 'The name cannot be empty!',
+      ];
+
+      return $data;
    }
 
    /**
@@ -234,17 +263,19 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @param boolean $expected
     */
    public function testPrepareInputForUpdate($input, $expected, $expectedMessage) {
-      $instance = new \PluginFormcreatorForm();
-      $instance->add([
+      $instance = $this->getForm([
          'name' => 'anything',
       ]);
       $output = $instance->prepareInputForUpdate($input);
       if ($expected === false) {
          $this->array($output)->size->isEqualTo(0);
+         if ($expectedMessage != '') {
+            $this->sessionHasMessage($expectedMessage, ERROR);
+         }
       } else {
          $this->string($output['name'])->isEqualTo($input['name']);
-         $this->string($output['description'])->isEqualTo($output['description']);
-         $this->string($output['content'])->isEqualTo($output['content']);
+         $this->string($output['description'])->isEqualTo($input['description']);
+         $this->string($output['content'])->isEqualTo($input['content']);
       }
    }
 
@@ -253,10 +284,12 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $instance->defineTabs();
       $expected = [
          'PluginFormcreatorForm$main' => "Form",
+         'PluginFormcreatorForm_Validator$1' => 'Validators',
          'PluginFormcreatorQuestion$1' => "Questions",
-         'PluginFormcreatorForm_Profile$1' => "Access types",
+         'PluginFormcreatorFormAccessType$1' => "Access types",
          'PluginFormcreatorForm$1' => "Targets",
          'PluginFormcreatorForm$2' => "Preview",
+         'PluginFormcreatorForm$3' => "Form answer properties",
          'PluginFormcreatorFormAnswer$1' => "Form answers",
          'PluginFormcreatorForm_Language$1' => 'Form languages',
          'Log$1' => "Historical",
@@ -277,6 +310,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($output)->isEqualTo([
          1 => 'Targets',
          2 => 'Preview',
+         3 => "Form answer properties"
       ]);
 
       $item = new \User();
@@ -375,18 +409,51 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $form->fields['usage_count'])->isEqualTo(1);
    }
 
-   public function testGetByQuestionId() {
-      $question = $this->getQuestion();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields['plugin_formcreator_sections_id']);
-      $expected = $section->fields['plugin_formcreator_forms_id'];
-      $form = $this->newTestedInstance();
-      $form->getByQuestionId($question->getID());
+   public function providerCreateValidationNotification() {
+      // give email address to users
+      $validator = new \User();
+      $validator->getFromDBbyName('tech');
+      $useremail = new \UserEmail();
+      $useremail->deleteByCriteria([
+         'users_id' => $validator->getID(),
+      ]);
+      $validator->update([
+         'id' => $validator->getID(),
+         '_useremails' => [
+            'tech@localhost.com',
+         ]
+      ]);
 
-      $this->integer((int) $form->getID())->isEqualTo($expected);
+      $requester = new \User();
+      $requester->getFromDBbyName('normal');
+      $useremail = new \UserEmail();
+      $useremail->deleteByCriteria([
+         'users_id' => $requester->getID(),
+      ]);
+      $requester->update([
+         'id' => $requester->getID(),
+         '_useremails' => [
+            'normal@localhost.com',
+         ]
+      ]);
+
+      yield [
+         $requester,
+         $validator,
+         2
+      ];
+
+      yield [
+         $requester,
+         $requester,
+         1
+      ];
    }
 
-   public function testCreateValidationNotification() {
+   /**
+    * @dataProvider providerCreateValidationNotification
+    */
+   public function testCreateValidationNotification(\User $requester, \User $validator, $expectedNotificationCount) {
       global $DB, $CFG_GLPI;
 
       // Enable notifications in GLPI
@@ -394,25 +461,13 @@ class PluginFormcreatorForm extends CommonTestCase {
          'core',
          ['use_notifications' => 1, 'notifications_mailing' => 1]
       );
-      $CFG_GLPI['use_notifications'] = 1;
-      $CFG_GLPI['notifications_mailing'] = 1;
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $_SESSION['glpiID'] = $user->getID();
-      $useremail = new \UserEmail();
-      $useremail->deleteByCriteria([
-         'users_id' => $user->getID(),
-      ]);
-      $user->update([
-         'id' => $_SESSION['glpiID'],
-         '_useremails' => [
-            'glpi@localhost.com',
-         ]
-      ]);
+      // $CFG_GLPI['use_notifications'] = 1;
+      // $CFG_GLPI['notifications_mailing'] = 1;
+
       $form = $this->getForm([
          'name'                  => 'validation notification',
          'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'      => [$_SESSION['glpiID']],
+         '_validator_users'      => [$validator->getID()],
       ]);
       $this->getSection([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
@@ -420,16 +475,15 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $this->login('normal', 'normal');
       $this->disableDebug();
       $formAnswerId = $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => $_SESSION['glpiID'],
+         'formcreator_validator'       => $validator->getType() . '_' . $validator->getID(),
       ]);
       $this->restoreDebug();
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
-      // 1 notification to the validator
-      // 1 notification to the requester
       $foundNotifications = $DB->request([
          'COUNT' => 'cpt',
          'FROM'  => \QueuedNotification::getTable(),
@@ -437,8 +491,8 @@ class PluginFormcreatorForm extends CommonTestCase {
             'itemtype' => \PluginFormcreatorFormAnswer::class,
             'items_id' => $formAnswerId,
          ]
-      ])->next();
-      $this->integer((int) $foundNotifications['cpt'])->isEqualTo(2);
+      ])->current();
+      $this->integer((int) $foundNotifications['cpt'])->isEqualTo($expectedNotificationCount);
    }
 
    public function testExport() {
@@ -474,11 +528,18 @@ class PluginFormcreatorForm extends CommonTestCase {
          'is_default',
          'is_captcha_enabled',
          'show_rule',
+         'formanswer_name',
+         'is_visible',
+         'profiles',
+         'users',
+         'groups',
       ];
       $extraFields = [
          '_entity',
          '_plugin_formcreator_category',
          '_profiles',
+         '_users',
+         '_groups',
          '_sections',
          '_targets',
          '_validators',
@@ -527,49 +588,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          ->size->isEqualTo(count($keys));
    }
 
-   public function testGetInterface() {
-      // test Public access
-      \Session::destroy();
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('public');
-
-      // test normal interface
-      $this->login('glpi', 'glpi');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('central');
-
-      // test simplified interface
-      $entityConfig = new \PluginFormcreatorEntityConfig();
-      $entityConfig->update([
-         'id' => '0',
-         'replace_helpdesk' => '0',
-      ]);
-      $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('self-service');
-
-      // test service catalog
-      $entityConfig = new \PluginFormcreatorEntityConfig();
-      $entityConfig->update([
-         'id' => '0',
-         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
-      ]);
-      $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('servicecatalog');
-
-      $entityConfig = new \PluginFormcreatorEntityConfig();
-      $entityConfig->update([
-         'id' => '0',
-         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_EXTENDED_SERVICE_CATALOG,
-      ]);
-      $this->login('post-only', 'postonly');
-      $output = \PluginFormcreatorForm::getInterface();
-      $this->string($output)->isEqualTo('servicecatalog');
-
-   }
-
-
    public function providerIsPublicAcess() {
       return [
          'not public' => [
@@ -606,29 +624,47 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $instance->isPublicAccess();
       $this->boolean($output)->isEqualTo($expected);
    }
-   public function providerGetFromSection() {
+
+   public function providerGetByItem() {
       $section = $this->getSection();
-      $section->getField(\PluginFormcreatorForm::getForeignKeyField());
+      $question = $this->getQuestion();
+
       $dataset = [
          [
-            'section'  => $section,
-            'expectedId' => true,
+            'item'         => $section,
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => true,
          ],
          [
-            'section'  => new \PluginFormcreatorSection(),
-            'expected' => false,
+            'item'         => new \PluginFormcreatorSection(),
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => false,
+         ],
+         [
+            'item'         => $question,
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => true,
+         ],
+         [
+            'item'         => new \PluginFormcreatorQuestion(),
+            'expectedType' => \PluginFormcreatorForm::getType(),
+            'expected'     => false,
          ],
       ];
       return $dataset;
    }
 
    /**
-    * @dataProvider providerGetFromSection
+    * @dataProvider providerGetByItem
     */
-   public function testgetFormFromSection($section, $expected) {
-      $form = new \PluginFormcreatorForm();
-      $output = $form->getFromDBBySection($section);
-      $this->boolean($output)->isEqualTo($expected);
+   public function testGetByItem($item, $expectedType, $expected) {
+      $output = \PluginFormcreatorForm::getByItem($item);
+      if ($expected === false) {
+         $this->variable($output)->isNull();
+         return;
+      }
+      $this->object($output)->isInstanceOf($expectedType);
+      $this->integer($output->getId())->isEqualTo($expected);
    }
 
    public function testImport() {
@@ -636,7 +672,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $input = [
          'name' => $this->getUniqueString(),
          '_entity' => 'Root entity',
-         'is_recursive' => '1',
+         'is_recursive' => '0',
          'access_rights' => \PluginFormcreatorForm::ACCESS_RESTRICTED,
          'description' => '',
          'content' => '',
@@ -649,6 +685,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'usage_count' => '0',
          'is_default' => '0',
          'show_rule'  => '1',
+         'formanswer_name' => $this->getUniqueString(),
          'uuid' => $uuid,
       ];
 
@@ -1302,5 +1339,105 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testCheckImportVersion($version, $expected) {
       $output = \PluginFormcreatorForm::checkImportVersion($version);
       $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function testAdd() {
+      $instance = $this->newTestedInstance();
+      $instance->add([
+         '_create_empty_section' => true,
+         'name' => 'form with auto created section'
+      ]);
+
+      $this->boolean($instance->isNewItem())->isFalse();
+      $section = new \PluginFormcreatorSection();
+      $rows = $section->find([
+         'plugin_formcreator_forms_id' => $instance->getID(),
+      ]);
+
+      $this->array($rows)->hasSize(1);
+      $row = array_shift($rows);
+      $this->string($row['name'])->isEqualTo(\PluginFormcreatorSection::getTypeName(1));
+   }
+
+   /**
+    *
+    */
+   public function testCountAvailableForm() {
+      global $DB;
+
+      $entity = new \Entity();
+      $entityId = $entity->import([
+         'entities_id' => '0',
+         'name' => $this->getUniqueString()
+      ]);
+
+      $this->boolean(\Session::changeActiveEntities($entityId))->isTrue();
+
+      $form1 = $this->getForm([
+         'name'        => 'form1 testCountAvailableForm',
+         'entities_id' => $entityId,
+         'is_visible'  => 1,
+         'is_deleted'  => 0,
+         'is_active'   => 1,
+         'language'    => ''
+      ]);
+
+      $form2 = $this->getForm([
+         'name'        => 'form2 testCountAvailableForm',
+         'entities_id' => $entityId,
+         'is_visible'  => 1,
+         'is_deleted'  => 0,
+         'is_active'   => 1,
+         'language'    => $_SESSION['glpilanguage'],
+      ]);
+
+      // All nextform should not be counted
+      $form3 = $this->getForm([
+         'name'        => 'form3 testCountAvailableForm',
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 0,
+         'is_active'   => 1,
+         'language'    => '',
+      ]);
+
+      $form4 = $this->getForm([
+         'name'        => 'form4 testCountAvailableForm',
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 0,
+         'is_active'   => 0,
+         'language'    => '',
+      ]);
+
+      $form5 = $this->getForm([
+         'name'        => 'form5 testCountAvailableForm',
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 1,
+         'is_active'   => 0,
+         'language'    => '',
+      ]);
+
+      $form6 = $this->getForm([
+         'name'        => 'form6 testCountAvailableForm',
+         'entities_id' => $entityId,
+         'is_visible'  => 0,
+         'is_deleted'  => 1,
+         'is_active'   => 0,
+         'language'    => 'de_DE',
+      ]);
+
+      $output = \PluginFormcreatorForm::countAvailableForm();
+
+      // Debug information in case test fails
+      if ($output != 2) {
+         $listQuery = \PluginFormcreatorForm::getFormListQuery();
+         $listQuery['SELECT'] = \PluginFormcreatorForm::getTable() . '.name';
+         $result = $DB->request($listQuery);
+         var_dump(iterator_to_array($result));
+      }
+
+      $this->integer($output)->isEqualTo(2);
    }
 }

@@ -42,6 +42,15 @@ if (!isset($_GET["reservationitems_id"])) {
    $_GET["reservationitems_id"] = '';
 }
 
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
+
 Reservation::showCalendar($_GET["reservationitems_id"]);
-PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}

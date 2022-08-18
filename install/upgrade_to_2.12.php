@@ -71,7 +71,7 @@ class PluginFormcreatorUpgradeTo2_12 {
    }
 
    /**
-    * Convert values field of wuestion from form
+    * Convert values field of question from form
     * {"itemtype":"ITILCategory","show_ticket_categories_depth":"0","show_ticket_categories_root":"6354"}
     * to form
     * {"itemtype":"ITILCategory","show_tree_depth":-1,"show_tree_root":false}
@@ -146,5 +146,9 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->changeField($table, 'sub_itemtype', 'itemtype', 'string', ['value' => '']);
       $this->migration->dropKey($table, 'original_id_sub_itemtype');
       $this->migration->addKey($table, ['itemtype', 'items_id'], 'item');
+   }
+
+   public function isResyncIssuesRequiresd() {
+      return false;
    }
 }

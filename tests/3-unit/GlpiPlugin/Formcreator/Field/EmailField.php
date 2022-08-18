@@ -32,6 +32,7 @@
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use PluginFormcreatorFormAnswer;
 
 class EmailField extends CommonTestCase {
 
@@ -50,19 +51,19 @@ class EmailField extends CommonTestCase {
    public function providerParseAnswerValue() {
       return [
          [
-            'input' => 42,
+            'value' => 42,
             'expected' => '',
          ],
          [
-            'input' => '',
+            'value' => '',
             'expected' => '',
          ],
          [
-            'input' => 'foo@bar.baz',
+            'value' => 'foo@bar.baz',
             'expected' => 'foo@bar.baz',
          ],
          [
-            'input' => 'not an email',
+            'value' => 'not an email',
             'expected' => 'not an email',
          ],
       ];
@@ -71,13 +72,18 @@ class EmailField extends CommonTestCase {
    /**
     * @dataProvider providerParseAnswerValue
     */
-   public function testParseAnswerValue($input, $expected) {
+   public function testParseAnswerValue($value, $expected) {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $output = $instance->parseAnswerValues([
-         'formcreator_field_' . $question->getID() => $input
+         'formcreator_field_' . $question->getID() => $value
       ]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -92,15 +98,20 @@ class EmailField extends CommonTestCase {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
       $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
 
       $this->string($output)->isEqualTo($expected ? $value : '');
    }
 
-   public function  testIsAnonymousFormCompatible() {
+   public function  testisPublicFormCompatible() {
       $question = $this->getQuestion();
       $instance = $this->newTestedInstance($question);
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isEqualTo(true);
    }
 
@@ -176,5 +187,29 @@ class EmailField extends CommonTestCase {
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'email@example.com',
+            'expected' => 'email@example.com',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

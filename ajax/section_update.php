@@ -34,20 +34,20 @@ Session::checkRight('entity', UPDATE);
 
 if (!isset($_REQUEST['id'])) {
     http_response_code(400);
+    Session::addMessageAfterRedirect(__('Bad request', 'formcreator'), false, ERROR);
     exit;
 }
 
 $section = new PluginFormcreatorSection();
 if (!$section->canUpdate()) {
     http_response_code(403);
-    echo __('You don\'t have right for this action', 'formcreator');
+    Session::addMessageAfterRedirect(__('You don\'t have right for this action', 'formcreator'), false, ERROR);
     exit;
 }
 
 if (!$section->update($_REQUEST)) {
     http_response_code(500);
-    echo __('Could not update the section', 'formcreator');
+    Session::addMessageAfterRedirect(__('Could not update the section', 'formcreator'), false, ERROR);
     exit;
 }
-$section->getFromDB($section->getID()); // To remove if GLPI #9210 merged
-echo $section->fields['name'];
+echo json_encode(['id' => $section->getID(), 'name' => $section->fields['name']], JSON_UNESCAPED_UNICODE);

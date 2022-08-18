@@ -40,9 +40,21 @@ if (! plugin_formcreator_replaceHelpdesk()) {
    Html::redirect(FORMCREATOR_ROOTDOC . '/front/formlist.php');
 }
 
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
 
-$form = new PluginFormcreatorForm();
+if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
+   PluginFormcreatorCommon::showMiniDashboard();
+}
+
+$form = PluginFormcreatorCommon::getForm();
 $form->showServiceCatalog();
 
-PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}

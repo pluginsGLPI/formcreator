@@ -52,7 +52,7 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
    public function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
 
-      $form = new PluginFormcreatorForm();
+      $form = PluginFormcreatorCommon::getForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
       $link = $CFG_GLPI['url_base'] . $this->obj->getFormURLWithID($this->obj->getID(), false);
 
@@ -104,13 +104,19 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
             $this->addUserByField('requester_id', true);
             break;
          case self::APPROVER :
-            $form = new PluginFormcreatorForm();
-            $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
-            if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER) {
-               $this->addUserByField('users_id_validator', true);
-            } else if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
-               $this->addForGroup(0, $this->obj->fields['groups_id_validator']);
+            $rows = $this->obj->getCurrentApprovers();
+            if (isset($rows[User::getType()])) {
+               foreach (array_keys($rows[User::getType()]) as $userId) {
+                  $this->obj->fields['_users_id_validator'] = $userId;
+                  $this->addUserByField('_users_id_validator', true);
+               }
             }
+            if (isset($rows[Group::getType()])) {
+               foreach (array_keys($rows[Group::getType()]) as $groupId) {
+                  $this->addForGroup(0, $groupId);
+               }
+            }
+            unset($this->obj->fields['_users_id_validator']);
             break;
       }
    }

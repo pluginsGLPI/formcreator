@@ -119,7 +119,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
       \Session::changeActiveEntities($entities_id, true);
 
       //test method
-      $tree = \PluginFormcreatorCategory::getCategoryTree(0, true);
+      $tree = \PluginFormcreatorCategory::getCategoryTree();
       $this->array($tree)
          ->isNotEmpty()
          ->child['subcategories'](function($child) {

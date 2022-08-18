@@ -31,6 +31,7 @@
 
 namespace GlpiPlugin\Formcreator\Field\tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorFormAnswer;
 
 class RadiosField extends CommonTestCase {
    public function testPrepareQuestionInputForSave() {
@@ -81,9 +82,9 @@ class RadiosField extends CommonTestCase {
    }
 
 
-   public function testIsAnonymousFormCompatible() {
+   public function testisPublicFormCompatible() {
       $instance = $this->newTestedInstance($this->getQuestion());
-      $output = $instance->isAnonymousFormCompatible();
+      $output = $instance->isPublicFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
@@ -124,7 +125,7 @@ class RadiosField extends CommonTestCase {
          [
             'instance'  => $instance,
             'value'     => "test d'apostrophe",
-            'expected'  => 'test d\\\'apostrophe',
+            'expected'  => 'test d\'apostrophe',
          ],
       ];
    }
@@ -134,7 +135,12 @@ class RadiosField extends CommonTestCase {
     */
    public function testSerializeValue($instance, $value, $expected) {
       $instance->parseAnswerValues(['formcreator_field_' . $instance->getQuestion()->getID() => $value]);
-      $output = $instance->serializeValue();
+      $form = $this->getForm();
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $output = $instance->serializeValue($formAnswer);
       $this->string($output)->isEqualTo($expected);
    }
 
@@ -325,5 +331,29 @@ class RadiosField extends CommonTestCase {
 
       $output = $instance->notEquals($compare);
       $this->boolean($output)->isEqualTo(!$expected);
+   }
+
+   public function providerGetValueForApi() {
+      return [
+         [
+            'input'    => 'b (radio)',
+            'expected' => 'b (radio)',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForApi
+    *
+    * @return void
+    */
+   public function testGetValueForApi($input, $expected) {
+      $question = $this->getQuestion([
+      ]);
+
+      $instance = $this->newTestedInstance($question);
+      $instance->deserializeValue($input);
+      $output = $instance->getValueForApi();
+      $this->string($output)->isEqualTo($expected);
    }
 }

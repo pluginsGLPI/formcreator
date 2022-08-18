@@ -5,7 +5,7 @@ use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
 
 class Central extends CommonFunctionalTestCase {
    private $selectors = [
-      'formsTab' => '#page > div > div > ul > li > a[title="Forms"]',
+      'formsTab' => '#page ul > li > a[title="Forms"]',
    ];
 
    public function testCentralHasTab() {
@@ -18,8 +18,8 @@ class Central extends CommonFunctionalTestCase {
    }
 
    public function testFormsAreVisible() {
-      // Use a clean entity for the tests
       $this->login('glpi', 'glpi');
+      // Use a clean entity for the tests
       $entity = new \Entity();
       $entityId = $entity->import([
          'name' => $this->getUniqueString(),

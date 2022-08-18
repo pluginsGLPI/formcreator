@@ -42,7 +42,11 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 $rr = new Reservation();
 
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader(__('Service catalog', 'formcreator'));
+} else {
+   Html::header(__('Service catalog', 'formcreator'));
+}
 
 if (isset($_POST["update"])) {
    list($begin_year, $begin_month) = explode("-", $_POST['resa']["begin"]);
@@ -154,4 +158,8 @@ if (isset($_POST["update"])) {
    }
 }
 
-PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
+} else {
+   Html::footer();
+}

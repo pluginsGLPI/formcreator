@@ -39,38 +39,57 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 Session::checkValidSessionId();
 
-// Accessing an issue from a tech profile, redirect to ticket page
+/** @var PluginFormcreatorIssue $issue */
+$issueId = $_REQUEST['id'] ?? null;
+$issue = PluginFormcreatorIssue::getById((int) $issueId);
+if ($issueId === null || !($issue instanceof PluginFormcreatorIssue)) {
+   $header = __('Item not found');
+   if (Session::getCurrentInterface() == "helpdesk") {
+      Html::helpHeader($header);
+   } else {
+      Html::header($header);
+   }
+   Html::displayNotFoundError();
+   if (Session::getCurrentInterface() == "helpdesk") {
+      Html::helpFooter();
+   } else {
+      Html::footer();
+   }
+}
+
+// Accessing an issue from a tech profile, redirect to ticket or formanswer page
 if (isset($_REQUEST['id']) && Session::getCurrentInterface() == 'central') {
-   /** @var PluginFormcreatorIssue $issue */
-   $issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
    $id = $issue->fields['items_id'];
    $itemtype = $issue->fields['itemtype'];
-   Html::redirect($itemtype::getFormUrlWithID($id));
+   Html::redirect($itemtype::getFormURLWithID($id));
 }
 
-// Show issue only if service catalog is enabled
-if (!plugin_formcreator_replaceHelpdesk()) {
-   Html::redirect($CFG_GLPI['root_doc']."/front/helpdesk.public.php");
+$itemtype = $issue->fields['itemtype'];
+
+// Trick to change the displayed id as Html::includeHeader() rely on request data
+$old_id = $_GET['id'];
+$_GET['id'] = $issue->fields['display_id'];
+
+// Specific case, viewing a ticket from a formanswer result
+if ($itemtype == PluginFormcreatorFormAnswer::class && isset($_GET['tickets_id'])) {
+   $itemtype = Ticket::class;
+   $_GET['id'] = "f_$_GET[tickets_id]";
 }
 
-// force layout of glpi
-PluginFormcreatorCommon::saveLayout();
-$_SESSION['glpilayout'] = "lefttab";
-
-PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-
-/** @var PluginFormcreatorIssue $issue */
-$issue = PluginFormcreatorIssue::getById((int) $_REQUEST['id']);
-if ($issue === false) {
-   PluginFormcreatorCommon::restoreLayout();
-   Html::displayNotFoundError();
+$header = $itemtype::getTypeName(1);
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpHeader($header);
+} else {
+   Html::header($header);
 }
+
+// Reset request param in case some other code depends on it
+$_GET['id'] = $old_id;
+
 $issue->display($_REQUEST);
 
-if (plugin_formcreator_replaceHelpdesk()) {
-   PluginFormcreatorWizard::footer();
+if (Session::getCurrentInterface() == "helpdesk") {
+   Html::helpFooter();
 } else {
    Html::footer();
 }
-
-PluginFormcreatorCommon::restoreLayout();

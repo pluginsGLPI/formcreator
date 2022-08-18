@@ -31,7 +31,7 @@
 namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonFunctionalTestCase;
-use Facebook\WebDriver\Remote\DriverCommand;
+use Plugin;
 
 class PluginFormcreatorForm extends CommonFunctionalTestCase
 {
@@ -71,8 +71,8 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       // Select the entity for the test
       $this->browsing->changeActiveEntity($entity, true);
 
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
-      $this->client->waitFor('footer');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
+      $this->client->waitFor('#backtotop');
       // Forms are loaded with AJAX
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $this->client->waitForVisibility($formTileSelector);
@@ -111,7 +111,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
 
       // View the form's tile
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
       $this->client->waitForVisibility($formTileSelector);
       $this->takeScreenshot();
 
@@ -170,7 +170,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
 
       // View the form's tile
       $formIconSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"] i';
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
       $this->client->waitForVisibility($formIconSelector);
       $this->takeScreenshot();
 
@@ -241,7 +241,7 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       // Select the entity for the test
       $this->browsing->changeActiveEntity($entity, true);
 
-      $this->crawler = $this->client->request('GET', '/plugins/formcreator/front/formlist.php');
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/wizard.php');
       $formTileSelector = 'div[data-itemtype="PluginFormcreatorForm"][data-id="' . $form->getID() . '"]';
       $this->client->waitForVisibility($formTileSelector);
       $this->takeScreenshot();
@@ -253,8 +253,14 @@ class PluginFormcreatorForm extends CommonFunctionalTestCase
       $this->boolean($success)->isTrue();
 
       $this->crawler = $this->client->reload();
-      $this->client->waitForVisibility('#plugin_formcreator_formlist');
+      $this->client->waitForVisibility('#plugin_formcreator_wizard_forms');
       $output = $this->crawler->filter($formTileSelector);
       $this->integer(count($output))->isEqualTo(0);
+   }
+
+   public function testAcessToIssuesFromAdmin() {
+      $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/form.php');
+      $href = '/' . Plugin::getWebDir('formcreator', false) . '/front/issue.php';
+      $this->client->waitForVisibility('header li.nav-item a[href="' . $href . '"]');
    }
 }

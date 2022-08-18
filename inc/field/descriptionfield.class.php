@@ -33,9 +33,13 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
+use Html;
 use Session;
 use Toolbox;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\Toolbox\Sanitizer;
 
 class DescriptionField extends PluginFormcreatorAbstractField
 {
@@ -43,25 +47,24 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function getDesignSpecializationField(): array {
-      $common = parent::getDesignSpecializationField();
-      $additions = $common['additions'];
+   public function showForm(array $options): void {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      return [
-         'label' => '',
-         'field' => '',
-         'additions' => $additions,
-         'may_be_empty' => false,
-         'may_be_required' => false,
-      ];
+      $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
+      $this->deserializeValue($this->question->fields['default_values']);
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+      ]);
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
       $value = Toolbox::convertTagToImage(__($this->question->fields['description'], $domain), $this->getQuestion());
+      $value = Sanitizer::unsanitize($value);
       return nl2br(html_entity_decode($value));
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return '';
    }
 
@@ -76,10 +79,10 @@ class DescriptionField extends PluginFormcreatorAbstractField
    public function getValueForTargetText($domain, $richText): ?string {
       $text = $this->question->fields['description'];
       if (!$richText) {
-         $text = nl2br(strip_tags(html_entity_decode(__($text, $domain))));
+         $text = Sanitizer::unsanitize(strip_tags(html_entity_decode(__($text, $domain))));
       }
 
-      return $text;
+      return Sanitizer::unsanitize(__($text, $domain));
    }
 
    public function moveUploads() {
@@ -149,7 +152,7 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return true;
    }
 
-   public function isAnonymousFormCompatible(): bool {
+   public function isPublicFormCompatible(): bool {
       return true;
    }
 
@@ -163,5 +166,9 @@ class DescriptionField extends PluginFormcreatorAbstractField
 
    public function isEditableField(): bool {
       return false;
+   }
+
+   public function getValueForApi() {
+      return $this->question->fields['description'];
    }
 }
