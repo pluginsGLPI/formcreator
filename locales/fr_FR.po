@@ -6,9 +6,9 @@
 # Translators:
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2021
 # Tiago Graça, 2021
+# tguichard25 <t.guichard@mut25.fr>, 2021
 # 06c8e5f1ec78ded2ceb41498ec52b068, 2022
 # gerald antoniolli <deeper26@gmail.com>, 2022
-# tguichard25 <t.guichard@mut25.fr>, 2022
 # Legastelois François <flegastelois@teclib.com>, 2022
 # Johan Cwiklinski, 2022
 # Thierry Bugier <tbugier@teclib.com>, 2022
@@ -1330,7 +1330,7 @@ msgstr "Utilisateur GLPI authentifié"
 
 #: inc/form.class.php:68 inc/form.class.php:440
 msgid "Restricted access"
-msgstr "Droits restreints (profils)"
+msgstr "Droits restreints"
 
 #: inc/form.class.php:122
 msgid "Answers waiting for validation"
@@ -1419,7 +1419,7 @@ msgstr "Que recherchez-vous ?"
 #: inc/form.class.php:892
 #, php-format
 msgid "My %1$d last forms (requester)"
-msgstr "Mes %1$dderniers formulaires (demandeur)"
+msgstr "Mes %1$d derniers formulaires (demandeur)"
 
 #: inc/form.class.php:895
 msgid "No form posted yet"
