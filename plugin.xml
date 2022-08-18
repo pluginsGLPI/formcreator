@@ -59,44 +59,9 @@ Features
    </authors>
    <versions>
       <version>
-         <num>2.13.0-rc.2</num>
+         <num>2.13.0</num>
          <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-rc.2/glpi-formcreator-2.13.0-rc.2.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-rc.1</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-rc.1/glpi-formcreator-2.13.0-rc.1.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-beta.2</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-beta.2/glpi-formcreator-2.13.0-beta.2.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-beta.1</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-beta.1/glpi-formcreator-2.13.0-beta.1.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-alpha.4</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-alpha.4/glpi-formcreator-2.13.0-alpha.4.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-alpha.3</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-alpha.3/glpi-formcreator-2.13.0-alpha.3.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-alpha.2</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-alpha.2/glpi-formcreator-2.13.0-alpha.2.tar.bz2</download_url>
-      </version>
-      <version>
-         <num>2.13.0-alpha.1</num>
-         <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-alpha.1/glpi-formcreator-2.13.0-alpha.1.tar.bz2</download_url>
+         <download_url>https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0/glpi-formcreator-2.13.0.tar.bz2</download_url>
       </version>
       <version>
          <num>2.12.5</num>
