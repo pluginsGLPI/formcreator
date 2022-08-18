@@ -1,3 +1,42 @@
+<a name="2.13.0"></a>
+## [2.13.0](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-rc.2..2.13.0) (2022-08-18)
+
+
+### Bug Fixes
+
+*  cannot delete a ticket from service catalog ([acec9bb8](https://github.com/pluginsGLPI/formcreator/commit/acec9bb8))
+* **abstractitiltarget:** alternative email lost if no requester user ([78fd8450](https://github.com/pluginsGLPI/formcreator/commit/78fd8450))
+* **abstracttarget:** uuid should not be updated ([b1e492d3](https://github.com/pluginsGLPI/formcreator/commit/b1e492d3))
+* **checkboxesfield:** avoid HTML br tag ([c3a60bbb](https://github.com/pluginsGLPI/formcreator/commit/c3a60bbb))
+* **condition:** compatibility with Advanced forms validation ([6685b943](https://github.com/pluginsGLPI/formcreator/commit/6685b943))
+* **descriptinfield:** conversion to target requires escaping ([b79cfa95](https://github.com/pluginsGLPI/formcreator/commit/b79cfa95))
+* **filefield:** mandatory check may cause exception ([3f711a54](https://github.com/pluginsGLPI/formcreator/commit/3f711a54))
+* **form:** PHP warning ([844ef96c](https://github.com/pluginsGLPI/formcreator/commit/844ef96c))
+* **form:** bad URL when using advanced form validation plugin ([adb9fba5](https://github.com/pluginsGLPI/formcreator/commit/adb9fba5))
+* **formanswer:** grid style updated for current version of gridstack ([85b6a686](https://github.com/pluginsGLPI/formcreator/commit/85b6a686))
+* **formanswer:** select inherited class if needed ([955dc969](https://github.com/pluginsGLPI/formcreator/commit/955dc969))
+* **formanswer:** update gridstack css ([70deaa06](https://github.com/pluginsGLPI/formcreator/commit/70deaa06))
+* **glpiselectfield:** missing entity restrict ([40c9ab73](https://github.com/pluginsGLPI/formcreator/commit/40c9ab73))
+* **install:** prevent useless warnings ([001d12f5](https://github.com/pluginsGLPI/formcreator/commit/001d12f5))
+* **install:** use modern settings for tables ([f04e4181](https://github.com/pluginsGLPI/formcreator/commit/f04e4181))
+* **issue:** remove duplicate item in status dropdown ([27f9f313](https://github.com/pluginsGLPI/formcreator/commit/27f9f313))
+* **ldapselectfield:** log LDAP error instead of showing it to user ([e170dc6f](https://github.com/pluginsGLPI/formcreator/commit/e170dc6f))
+* **ldapselectfield:** no translation for items ([d170c79c](https://github.com/pluginsGLPI/formcreator/commit/d170c79c))
+* **targetticket:** prevent exception in inconsistent target ticket ([ba6ed88e](https://github.com/pluginsGLPI/formcreator/commit/ba6ed88e))
+* **textarea:** on change event broken ([9fb70edb](https://github.com/pluginsGLPI/formcreator/commit/9fb70edb))
+* **textarea:** rn chars added between lines ([66571b80](https://github.com/pluginsGLPI/formcreator/commit/66571b80))
+* **textarea, entityconfig:** embedded image question description (#2901) ([0d78db1a](https://github.com/pluginsGLPI/formcreator/commit/0d78db1a))
+* **textareafield:** embedded image upload broken ([d58075cd](https://github.com/pluginsGLPI/formcreator/commit/d58075cd))
+* **textareafield:** missing escape before compare ([ba78e935](https://github.com/pluginsGLPI/formcreator/commit/ba78e935))
+
+
+### Features
+
+* **formanswer:** order formanswers by date desc ([7fdeda51](https://github.com/pluginsGLPI/formcreator/commit/7fdeda51))
+* **ldapselectfield:** lazy loading ([bffcb5b7](https://github.com/pluginsGLPI/formcreator/commit/bffcb5b7))
+
+
+
 <a name="2.13.0-rc.2"></a>
 ## [2.13.0-rc.2](https://github.com/pluginsGLPI/formcreator/compare/2.13.0-rc.1..2.13.0-rc.2) (2022-07-20)
 

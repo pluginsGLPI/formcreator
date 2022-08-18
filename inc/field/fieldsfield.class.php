@@ -39,6 +39,7 @@ use Dropdown;
 use DbUtils;
 use Plugin;
 use Session;
+use PluginFormcreatorFormAnswer;
 use Html;
 use OperatingSystem;
 use PluginFieldsDropdown;
@@ -392,7 +393,7 @@ class FieldsField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       return $this->value;
    }
 

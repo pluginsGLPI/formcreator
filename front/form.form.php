@@ -126,52 +126,6 @@ if (isset($_POST['add'])) {
    $form->importJson($_REQUEST);
    Html::back();
 
-} else if (isset($_POST['submit_formcreator'])) {
-   // Save form to target
-   if (!$form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
-      Html::back();
-   }
-
-   // If user is not authenticated, create temporary user
-   if (!isset($_SESSION['glpiname'])) {
-      $_SESSION['glpiname'] = 'formcreator_temp_user';
-   }
-
-   // Save form
-   $formAnswer = PluginFormcreatorCommon::getFormAnswer();
-   if ($formAnswer->add($_POST) === false) {
-      Html::back();
-   }
-   $form->increaseUsageCount();
-
-   if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
-      // Form was saved by an annymous user
-      unset($_SESSION['glpiname']);
-      // don't show notifications
-      unset($_SESSION['MESSAGE_AFTER_REDIRECT']);
-      Html::redirect('formdisplay.php?answer_saved');
-   }
-
-   // redirect to created item
-   if ($_SESSION['glpibackcreated']) {
-      if (count($formAnswer->targetList) == 1) {
-         $target = current($formAnswer->targetList);
-         Html::redirect($target->getFormURLWithID($target->getID()));
-      }
-      Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
-   }
-
-   if (plugin_formcreator_replaceHelpdesk()) {
-      // Form was saved from the service catalog
-      Html::redirect('issue.php');
-   }
-   if (strpos($_SERVER['HTTP_REFERER'], 'formdisplay.php') !== false) {
-      // Form was saved from helpdesk (assistance > forms)
-      Html::redirect('formlist.php');
-   }
-   // Form was saved from preview tab, go back to the preview
-   Html::back();
-
 } else {
    // Show forms form
    Session::checkRight(PluginFormcreatorForm::$rightname, READ);

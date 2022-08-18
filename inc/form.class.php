@@ -954,11 +954,8 @@ PluginFormcreatorTranslatableInterface
       if (file_exists($phpfile)) {
          $TRANSLATE->addTranslationFile('phparray', $phpfile, $domain, $_SESSION['glpilanguage']);
       }
-      if (!isset($_SESSION['formcreator']['data'])) {
-         $_SESSION['formcreator']['data'] = [];
-      }
+
       $formanswer = new PluginFormcreatorFormAnswer();
-      $formanswer->loadAnswersFromSession();
       TemplateRenderer::getInstance()->display('@formcreator/pages/userform.html.twig', [
          'item'    => $this,
          'options' => [
@@ -970,8 +967,6 @@ PluginFormcreatorTranslatableInterface
                               && $this->fields['is_captcha_enabled'] != '0'),
          ]
       ]);
-      // Delete saved answers if any
-      unset($_SESSION['formcreator']['data']);
    }
 
    /**
@@ -2161,11 +2156,6 @@ PluginFormcreatorTranslatableInterface
 
    public function post_getFromDB() {
       global $TRANSLATE;
-
-      // Set additional data for the API
-      if (isAPI()) {
-         $this->fields += \PluginFormcreatorSection::getFullData($this->fields['id']);
-      }
 
       // Load translation for the current language if different from origianl form's language
       $language = $_SESSION['glpilanguage'];

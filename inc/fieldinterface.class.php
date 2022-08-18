@@ -91,7 +91,7 @@ interface PluginFormcreatorFieldInterface
     *
     * @return string JSON encoded string
     */
-   public function serializeValue(): string;
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string;
 
    /**
     * Deserialize a JSON encoded value or default value

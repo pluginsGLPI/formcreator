@@ -36,6 +36,7 @@ use PluginFormcreatorAbstractField;
 use Html;
 use User;
 use Session;
+use PluginFormcreatorFormAnswer;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
 
@@ -125,7 +126,7 @@ class ActorField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }
@@ -306,7 +307,10 @@ class ActorField extends PluginFormcreatorAbstractField
       }
 
       $this->value = $parsed;
-      $input['default_values'] = $this->serializeValue();
+      $input['default_values'] = '';
+      if ($this->value !== null && $this->value != '') {
+         $input['default_value'] = json_encode($this->value);
+      }
 
       return $input;
    }

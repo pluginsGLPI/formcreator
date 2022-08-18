@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer;
 use Html;
 use Toolbox;
 use Session;
@@ -154,13 +155,11 @@ class DropdownField extends PluginFormcreatorAbstractField
             $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? 2;
             switch ($decodedValues['entity_restrict']) {
                case self::ENTITY_RESTRICT_FORM:
-                  $form = PluginFormcreatorForm::getByItem($this->getQuestion());
                   $currentEntity = $form->fields['entities_id'];
                   $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
                   break;
 
                case self::ENTITY_RESTRICT_BOTH:
-                  $form = PluginFormcreatorForm::getByItem($this->getQuestion());
                   $currentEntity = [$currentEntity, $form->fields['entities_id']];
                   $ancestorEntities = array_merge($ancestorEntities, getAncestorsOf(Entity::getTable(), $currentEntity));
                   break;
@@ -388,7 +387,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       return $html;
    }
 
-   public function serializeValue(): string {
+   public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {
       if ($this->value === null || $this->value === '') {
          return '';
       }

@@ -900,7 +900,7 @@ class ConventionalChangelog
       . " ([$hash]($remote/commit/$hash))";
 
       // Search for closed issues
-      $body = explode(PHP_EOL, $commit->body);
+      $body = explode(PHP_EOL, $commit->body ?? '');
       $pattern = '/^((close|closes|fix|fixed) #(?P<id>\\d+)(,\s+)?)/i';
       $commit->close = [];
       foreach ($body as $bodyLine) {

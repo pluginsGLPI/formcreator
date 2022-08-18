@@ -1410,7 +1410,37 @@ var plugin_formcreator = new function() {
       });
    };
 
-   this.submitUserForm = function (event) {
+   this.submitUserForm = function () {
+      var form     = document.querySelector('form[data-itemtype]');
+      var data     = new FormData(form);
+      data.append('submit_formcreator', '');
+      $.post({
+         url: formcreatorRootDoc + '/ajax/formanswer.php',
+         processData: false,
+         contentType: false,
+         data: data,
+         dataType: 'json'
+      }).done(function (data) {
+         if (typeof(data.redirect) == 'string') {
+            window.location = data.redirect;
+         }
+      }).fail(function (xhr, data) {
+         if (xhr.responseText == '' || typeof(xhr.responseJSON.message) == 'undefined') {
+            displayAjaxMessageAfterRedirect();
+            return;
+         }
+         var display_container = ($('#messages_after_redirect').length  == 0);
+         var html = xhr.responseJSON.message;
+         if (display_container) {
+            $('body').append(html);
+         } else {
+            $('#messages_after_redirect').append(html);
+            initMessagesAfterRedirectToasts();
+         }
+      });
+   };
+
+   this.submitUserFormByKeyPress = function (event) {
       var keyPressed = event.keyCode || event.which;
       if (keyPressed === 13 && $('[name="submit_formcreator"]').is(':hidden')) {
          event.preventDefault();

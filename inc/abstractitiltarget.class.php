@@ -29,9 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
-use GlpiPlugin\Formcreator\Field\FileField;
+use GlpiPlugin\Formcreator\Field\TextareaField;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -2316,28 +2315,21 @@ SCRIPT;
       return $data;
    }
 
-   /**
-    * Emulate file uploads for documents provided to file questions
-    *
-    * @param array $data
-    * @param PluginFormcreatorFormAnswer $formanswer a form answer
-    * @return array input $data updated with (fake) file uploads
-    */
-   protected function prepareUploadedFiles(array $data, $formanswer): array {
+   protected function prepareUploadsFromTextarea(array $data, PluginFormcreatorFormAnswer $formanswer): array {
       $saved_documents = $formanswer->getFileProperties();
 
       if ($saved_documents) {
          foreach ($formanswer->getForm()->getFields() as $questionId => $field) {
-            if (!($field instanceOf FileField)) {
+            if (!($field instanceOf TextareaField)) {
                continue;
             }
-            if (!isset($saved_documents["_filename"][$questionId])) {
+            if (!isset($saved_documents["_content"][$questionId])) {
                continue;
             }
-            $data["_filename"] = array_merge($data["_filename"], $saved_documents["_filename"][$questionId] ?? []);
-            $data["_tag_filename"] = array_merge($data["_tag_filename"], $saved_documents["_tag_filename"][$questionId] ?? []);
+            $data["_content"] = array_merge($data["_content"], $saved_documents["_content"][$questionId] ?? []);
+            $data["_tag_content"] = array_merge($data["_tag_content"], $saved_documents["_tag_content"][$questionId] ?? []);
 
-            foreach ($saved_documents["_filename"][$questionId] as $key => $filename) {
+            foreach ($saved_documents["_content"][$questionId] as $key => $filename) {
                $uploaded_filename = $formanswer->getFileName($questionId, $key);
                if ($uploaded_filename != '') {
                   copy(GLPI_DOC_DIR . '/' . $uploaded_filename, GLPI_TMP_DIR . '/' . $filename);
@@ -2346,12 +2338,12 @@ SCRIPT;
          }
       } else {
          foreach ($formanswer->getForm()->getFields() as $questionId => $field) {
-            if (!($field instanceOf FileField)) {
+            if (!($field instanceOf TextareaField)) {
                continue;
             }
-            $data["_filename"] = array_merge($data["_filename"], $formanswer->input["_formcreator_field_" . $questionId]);
-            $data["_prefix_filename"] = array_merge($data["_prefix_filename"], $formanswer->input["_prefix_formcreator_field_" . $questionId]);
-            $data["_tag_filename"] = array_merge($data["_tag_filename"], $formanswer->input["_tag_formcreator_field_" . $questionId]);
+            $data["_content"] = array_merge($data["_content"], $formanswer->input["_formcreator_field_" . $questionId]);
+            $data["_prefix_content"] = array_merge($data["_prefix_content"], $formanswer->input["_prefix_formcreator_field_" . $questionId]);
+            $data["_tag_content"] = array_merge($data["_tag_content"], $formanswer->input["_tag_formcreator_field_" . $questionId]);
             foreach ($formanswer->input["_formcreator_field_" . $questionId] as $key => $filename) {
                $uploaded_filename = $formanswer->getFileName($questionId, $key);
                if ($uploaded_filename != '') {
@@ -2359,6 +2351,65 @@ SCRIPT;
                }
             }
          }
+      }
+
+      return $data;
+   }
+
+   /**
+    * Emulate file uploads for documents provided to file questions
+    *
+    * @param array $data
+    * @return array input $data updated with (fake) file uploads
+    */
+   protected function prepareUploadedFiles(array $data): array {
+      $data['_filename'] = [];
+      $data['_prefix_filename'] = [];
+      $data['_tag_filename'] = [];
+
+      // emulate file uploads of inline images
+      // TODO: replace PluginFormcreatorCommon::getDocumentsFromTag by Toolbox::getDocumentsFromTag
+      // when is merged https://github.com/glpi-project/glpi/pull/9335
+      foreach (PluginFormcreatorCommon::getDocumentsFromTag($data['content']) as $document) {
+         $prefix = uniqid('', true);
+         $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
+         if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+            continue;
+         }
+
+         // Formanswers answers contains document tags to allow
+         // Replace them with a IMG tag similar to those found after pasting an
+         // image in a textarea
+         // <img id="..." src="blob:http://..." data-upload_id=".." />
+         // the attribute id is requires to let GLPI process the upload properly
+         $img = "<img id='" . $document['tag'] . "' src='' />";
+         $data['content'] = preg_replace(
+            '/' . Document::getImageTag($document['tag']) . '/',
+            Sanitizer::sanitize($img),
+            $data['content']
+         );
+
+         $data['_filename'][] = $filename;
+         $data['_prefix_filename'][] = $prefix;
+         $data['_tag_filename'][] = $document['tag'];
+      }
+
+      // emulate file upload
+      foreach (array_keys($this->attachedDocuments) as $documentId) {
+         $document = new Document();
+         if (!$document->getFromDB($documentId)) {
+            continue;
+         }
+
+         $prefix = uniqid('', true);
+         $filename = $prefix . $document->fields['filename'];
+         if (!copy(GLPI_DOC_DIR . '/' . $document->fields['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+            continue;
+         }
+
+         $data['_filename'][] = $filename;
+         $data['_prefix_filename'][] = $prefix;
+         $data['_tag_filename'][] = $document->fields['tag'];
       }
 
       return $data;

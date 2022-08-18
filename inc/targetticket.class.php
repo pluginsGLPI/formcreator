@@ -32,7 +32,6 @@
 use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
-use GlpiPlugin\Formcreator\Field\DropdownField;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -928,24 +927,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       }
       if (count($this->assignedGroups['_groups_id_assign']) > 0) {
          $data = $this->assignedGroups + $data;
-      }
-
-      // emulate file uploads of inline images
-      $data['_content'] = [];
-      $data['_prefix_content'] = [];
-      $data['_tag_content'] = [];
-      // TODO: replace PluginFormcreatorCommon::getDocumentsFromTag by Toolbox::getDocumentsFromTag
-      // when is merged https://github.com/glpi-project/glpi/pull/9335
-      foreach (PluginFormcreatorCommon::getDocumentsFromTag($data['content']) as $document) {
-         $prefix = uniqid('', true);
-         $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
-         if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
-            continue;
-         }
-
-         $data['_content'][] = $filename;
-         $data['_prefix_content'][] = $prefix;
-         $data['_tag_content'][] = $document['tag'];
       }
 
       $data = $this->prepareUploadedFiles($data, $formanswer);
