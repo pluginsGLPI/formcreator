@@ -32,6 +32,10 @@ class PluginFormcreatorUpgradeTo2_13_1 {
    /** @var Migration */
    protected $migration;
 
+   public function isResyncIssuesRequired() {
+      return false;
+   }
+
    /**
     * @param Migration $migration
     */
@@ -48,8 +52,8 @@ class PluginFormcreatorUpgradeTo2_13_1 {
       $table = 'glpi_plugin_formcreator_targettickets';
       $DB->update(
          $table,
-         ['users_id_validator' => '0'],
-         ['users_id_validator' => null]
+         ['category_question' => '0'],
+         ['category_question' => null]
       );
       $this->migration->changeField($table, 'category_question', 'category_question', $unsignedIntType, ['after' => 'category_rule']);
    }

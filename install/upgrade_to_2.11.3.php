@@ -49,7 +49,7 @@ class PluginFormcreatorUpgradeTo2_11_3 {
       $migration->changeField($table, 'date_mod', 'date_mod', 'datetime'. ' NOT NULL');
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return false;
    }
 }

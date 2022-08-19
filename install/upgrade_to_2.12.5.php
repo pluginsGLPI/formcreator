@@ -51,7 +51,7 @@ class PluginFormcreatorUpgradeTo2_12_5 {
       }
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return true;
    }
 }

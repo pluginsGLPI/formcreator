@@ -199,6 +199,8 @@ class PluginFormcreatorInstall {
          return false;
       }
 
+      $this->resyncIssues = false;
+
       ob_start();
       try {
          while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
@@ -294,7 +296,9 @@ class PluginFormcreatorInstall {
       $upgradeStep = new $updateClass();
       $upgradeStep->upgrade($this->migration);
       $this->migration->executeMigration();
-      $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequiresd();
+      if (method_exists($upgradeStep, 'isResyncIssuesRequired')) {
+         $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequired();
+      }
    }
 
    /**

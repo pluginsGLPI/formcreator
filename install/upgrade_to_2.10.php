@@ -73,7 +73,7 @@ class PluginFormcreatorUpgradeTo2_10 {
       $migration->addKey($table, 'groups_id_validator');
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return false;
    }
 }

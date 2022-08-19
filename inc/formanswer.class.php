@@ -41,6 +41,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $dohistory  = true;
    public $usenotepad = true;
    public $usenotepadrights = true;
+   protected static $showTitleInNavigationHeader = true;
 
    /**
     * Generated targets after creation of a form answer
@@ -520,10 +521,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $editMode = !isset($options['edit']) ? false : ($options['edit'] != '0');
 
       // form title
-      echo "<h1 class='form-title'>";
-      echo $this->fields['name'] . "&nbsp;";
-      echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
-      echo '</h1>';
+      if (version_compare(GLPI_VERSION, '10.0.3') < 0) {
+         echo "<h1 class='form-title'>";
+         echo $this->fields['name'] . "&nbsp;";
+         echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
+         echo '</h1>';
+      }
 
       // Form Header
       if (!empty($form->fields['content']) || !empty($form->getExtraHeader())) {
