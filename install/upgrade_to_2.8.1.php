@@ -40,7 +40,7 @@ class PluginFormcreatorUpgradeTo2_8_1 {
       $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id', 'value' => '']);
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return true;
    }
 }

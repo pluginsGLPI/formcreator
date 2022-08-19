@@ -77,7 +77,7 @@ class PluginFormcreatorUpgradeTo2_12_1 {
       $this->migration->changeField($table, 'description', 'description', 'MEDIUMTEXT');
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return false;
    }
 }

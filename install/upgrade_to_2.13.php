@@ -510,7 +510,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->changeField($table, 'status', 'status', 'string', ['value' => '']);
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return false;
    }
 
