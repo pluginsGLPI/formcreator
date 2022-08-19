@@ -32,6 +32,10 @@ class PluginFormcreatorUpgradeTo2_13_1 {
    /** @var Migration */
    protected $migration;
 
+   public function isResyncIssuesRequiresd() {
+      return false;
+   }
+
    /**
     * @param Migration $migration
     */
