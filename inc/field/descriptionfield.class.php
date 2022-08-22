@@ -61,7 +61,8 @@ class DescriptionField extends PluginFormcreatorAbstractField
    public function getRenderedHtml($domain, $canEdit = true): string {
       $value = Toolbox::convertTagToImage(__($this->question->fields['description'], $domain), $this->getQuestion());
       $value = Sanitizer::unsanitize($value);
-      return nl2br(html_entity_decode($value));
+      $value = '<div class="plugin_formcreator_description">' . $value . '</div>';
+      return $value;
    }
 
    public function serializeValue(PluginFormcreatorFormAnswer $formanswer): string {

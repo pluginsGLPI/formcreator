@@ -379,6 +379,16 @@ form#plugin_formcreator_form {
    width: 48px;
 }
 
+.plugin_formcreator_description {
+   table {
+      border-width: 1px;
+
+      tr, td {
+         border-width: 1px;
+      }
+   }
+}
+
 /* CONDITIONS */
 
 .div_show_condition_field, .div_show_condition_operator,
