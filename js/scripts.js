@@ -741,9 +741,7 @@ var plugin_formcreator = new function() {
       tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/question_add.php',
-         data: new FormData(form),
-         processData: false,
-         contentType: false,
+         data: $(form).serializeArray(),
          dataType: 'json',
       }).fail(function(data) {
          displayAjaxMessageAfterRedirect();
@@ -1004,9 +1002,7 @@ var plugin_formcreator = new function() {
       tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/section_add.php',
-         processData: false,
-         contentType: false,
-         data: new FormData(form),
+         data: $(form).serializeArray(),
          dataType: 'json'
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
@@ -1031,9 +1027,7 @@ var plugin_formcreator = new function() {
       tinyMCE.triggerSave();
       $.post({
          url: formcreatorRootDoc + '/ajax/section_update.php',
-         processData: false,
-         contentType: false,
-         data: new FormData(form),
+         data: $(form).serializeArray(),
          dataType: 'json'
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
@@ -1338,14 +1332,12 @@ var plugin_formcreator = new function() {
    this.addActor = function (item) {
       var form = item.closest('form');
       var target = form.closest('[data-itemtype][data-id]');
-      var data = new FormData(form);
-      data.append('action', 'add');
-      data.append('itemtype', target.getAttribute('data-itemtype'));
-      data.append('items_id', target.getAttribute('data-id'));
+      var data = $(form).serializeArray();
+      data.push({name: 'action', value: 'add'});
+      data.push({name: 'itemtype', value: target.getAttribute('data-itemtype')});
+      data.push({name: 'items_id', value: target.getAttribute('data-id')});
       $.post({
          url: formcreatorRootDoc + '/ajax/target_actor.php',
-         processData: false,
-         contentType: false,
          data: data
       }).fail(function () {
          displayAjaxMessageAfterRedirect();
@@ -1360,12 +1352,10 @@ var plugin_formcreator = new function() {
       if (document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]')) {
          questionId = document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').value;
       }
-      var data = new FormData(form);
-      data.append('id', questionId);
+      var data = $(form).serializeArray();
+      data.push({name: 'id', value: questionId});
       $.post({
          url: formcreatorRootDoc + '/ajax/question_design.php',
-         processData: false,
-         contentType: false,
          data: data,
       }).done(function(response) {
          try {
@@ -1383,12 +1373,10 @@ var plugin_formcreator = new function() {
 
    this.submitUserForm = function () {
       var form     = document.querySelector('form[data-itemtype]');
-      var data     = new FormData(form);
-      data.append('submit_formcreator', '');
+      var data = $(form).serializeArray();
+      data.push({name: 'submit_formcreator', value: ''});
       $.post({
          url: formcreatorRootDoc + '/ajax/formanswer.php',
-         processData: false,
-         contentType: false,
          data: data,
          dataType: 'json'
       }).done(function (data) {
@@ -1420,6 +1408,25 @@ var plugin_formcreator = new function() {
 
       return true;
    };
+
+   this.addEmptyCondition = function (target) {
+      var form     = target.closest('form[data-itemtype]');
+      var itemtype = form.getAttribute('data-itemtype');
+      var id       = form.getAttribute('data-id') || null;
+      var data     = $(form).serializeArray();
+      data.push({name: 'itemtype', value: itemtype});
+      data.push({name: 'items_id', value: id});
+      $.post({
+         url: formcreatorRootDoc + '/ajax/condition.php',
+         data: data,
+      }).done(function (data) {
+         target.closest('div.row').after(document.createRange().createContextualFragment(data));
+      });
+   }
+
+   this.removeNextCondition = function (target) {
+      target.closest('div.row').remove();
+   }
 }
 
 // === TARGETS ===
@@ -1596,31 +1603,10 @@ function plugin_formcreator_toggleCondition(target) {
       form.find(selector).hide();
    } else {
       if (form.find(selector).length < 1) {
-         plugin_formcreator_addEmptyCondition(target);
+         plugin_formcreator.addEmptyCondition(target);
       }
       form.find(selector).show();
    }
-}
-
-function plugin_formcreator_addEmptyCondition(target) {
-   var form     = target.closest('form[data-itemtype]');
-   var itemtype = form.getAttribute('data-itemtype');
-   var id       = form.getAttribute('data-id') || null;
-   var data     = new FormData(form);
-   data.append('itemtype', itemtype);
-   data.append('items_id', id);
-   $.post({
-      url: formcreatorRootDoc + '/ajax/condition.php',
-      processData: false,
-      contentType: false,
-      data: data,
-   }).done(function (data) {
-      target.closest('div.row').after(document.createRange().createContextualFragment(data));
-   });
-}
-
-function plugin_formcreator_removeNextCondition(target) {
-   target.closest('div.row').remove();
 }
 
 // === FIELDS ===

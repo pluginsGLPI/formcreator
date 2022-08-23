@@ -86,12 +86,12 @@
                 {{ fields.textField('_conditions[show_value][]', condition.fields['show_value']|verbatim_value, '', options) }}
 
                 <div class="col-12 col-sm-1 mb-3">
-                    <button class="btn btn-primary me-2" type="button" name="add" onclick="plugin_formcreator_addEmptyCondition(this, '', '')">
+                    <button class="btn btn-primary me-2" type="button" name="add" onclick="plugin_formcreator.addEmptyCondition(this, '', '')">
                         <i class="fas fa-plus-circle" style="cursor: pointer;"></i>
                     </button>
                 </div>
                 <div class="col-12 col-sm-1 mb-3">
-                    <button class="btn btn-primary me-2" type="button" name="add" onclick="plugin_formcreator_removeNextCondition(this, '', '')">
+                    <button class="btn btn-primary me-2" type="button" name="add" onclick="plugin_formcreator.removeNextCondition(this, '', '')">
                         <i class="fas fa-minus-circle" style="cursor: pointer;"></i>
                     </button>
                 </div>
