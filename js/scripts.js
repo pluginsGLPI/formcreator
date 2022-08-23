@@ -1373,6 +1373,7 @@ var plugin_formcreator = new function() {
 
    this.submitUserForm = function () {
       var form     = document.querySelector('form[data-itemtype]');
+      this.disableFormButton(form);
       var data = $(form).serializeArray();
       data.push({name: 'submit_formcreator', value: ''});
       $.post({
@@ -1383,9 +1384,11 @@ var plugin_formcreator = new function() {
          if (typeof(data.redirect) == 'string') {
             window.location = data.redirect;
          }
+         plugin_formcreator.enableFormButton(form);
       }).fail(function (xhr, data) {
          if (xhr.responseText == '' || typeof(xhr.responseJSON.message) == 'undefined') {
             displayAjaxMessageAfterRedirect();
+            plugin_formcreator.enableFormButton(form);
             return;
          }
          var display_container = ($('#messages_after_redirect').length  == 0);
@@ -1396,8 +1399,17 @@ var plugin_formcreator = new function() {
             $('#messages_after_redirect').append(html);
             initMessagesAfterRedirectToasts();
          }
+         plugin_formcreator.enableFormButton(form);
       });
    };
+
+   this.disableFormButton = function (form) {
+      form.querySelectorAll('[type="submit"').forEach( (item) => { item.setAttribute('disabled', '1'); } );
+   }
+
+   this.enableFormButton = function (form) {
+      form.querySelectorAll('[type="submit"').forEach( (item) => { item.removeAttribute('disabled'); } );
+   }
 
    this.submitUserFormByKeyPress = function (event) {
       var keyPressed = event.keyCode || event.which;
