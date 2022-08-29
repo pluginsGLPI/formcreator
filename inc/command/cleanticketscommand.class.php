@@ -178,7 +178,7 @@ class CleanTicketsCommand extends Command
             '<br />',
          ];
          $replace = [
-            '&lt;div&gt;&lt;/div&gt;',
+            '&lt;br /&gt;',
          ];
          $row['content'] = str_replace($pattern, $replace, $row['content']);
          // Direct write to the table to avoid alteration of other fields
