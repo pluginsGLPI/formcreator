@@ -121,7 +121,7 @@ class Composite
                   ]);
                   break;
 
-               case PluginFormcreatorTargetTicket::class:
+               case TargetTicket::class:
                   $ticket = null;
                   if (isset($this->targets[TargetTicket::class][$row['items_id']])) {
                      $ticket = $this->targets[TargetTicket::class][$row['items_id']];
