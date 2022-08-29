@@ -104,14 +104,6 @@ PluginFormcreatorExportableInterface
       return $input;
    }
 
-   public function prepareInputForUpdate($input) {
-      $level = $input['level'] ?? $this->fields['level'];
-
-      if ($level < 1) {
-         return false;
-      }
-   }
-
    public function showForForm(PluginFormcreatorForm $item, $options = []) {
       global $DB, $CFG_GLPI;
 

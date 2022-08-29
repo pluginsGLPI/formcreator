@@ -95,7 +95,9 @@ class PluginFormcreatorLinker
          $this->imported[$object->getType()] = [];
       }
       if (isset($this->imported[$object->getType()][$originalId])) {
-         throw new ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
+         // throw new ImportFailureException(sprintf('Attempt to create twice the item "%1$s" with original ID "%2$s"', $object->getType(), $originalId));
+         // Object already added
+         return;
       }
       $this->imported[$object->getType()][$originalId] = $object;
       $this->progress++;
