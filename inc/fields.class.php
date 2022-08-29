@@ -202,7 +202,7 @@ class PluginFormcreatorFields
 
             default:
                // This should not happen : inconsistency in the database
-               Toolbox::logError("Inconsistency detected in conditions: show rule set but no condition found, $itemtype ID=$itemId");
+               trigger_error("Inconsistency detected in conditions: show rule set but no condition found, $itemtype ID=$itemId", E_USER_WARNING);
                self::$visibility[$itemtype][$itemId] = $getParentVisibility();
                return self::$visibility[$itemtype][$itemId];
                break;

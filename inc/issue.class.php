@@ -924,21 +924,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
          case "glpi_plugin_formcreator_issues.name":
             $name = $data[$num][0]['name'];
             $subItemtype = $data['raw']['itemtype'];
+            $content = '';
             switch ($subItemtype) {
                case Ticket::class:
                   $ticket = new Ticket();
-                  $ticket->getFromDB($id);
+                  if (!$ticket->getFromDB($id)) {
+                     trigger_error(sprintf("Ticket ID %s not found", $id), E_USER_WARNING);
+                     break;
+                  }
                   $content = $ticket->fields['content'];
                   break;
 
                case PluginFormcreatorFormAnswer::class:
                   $formAnswer = PluginFormcreatorCommon::getFormAnswer();
-                  $formAnswer->getFromDB($id);
+                  if (!$formAnswer->getFromDB($id)) {
+                     trigger_error(sprintf("Formanswer ID %s not found", $id), E_USER_WARNING);
+                     break;
+                  }
                   $content = $formAnswer->parseTags($formAnswer->getFullForm());
                   break;
-
-               default:
-                  $content = '';
             }
             $link = self::getFormURLWithID($data['id']);
 

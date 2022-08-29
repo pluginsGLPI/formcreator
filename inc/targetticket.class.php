@@ -1169,11 +1169,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             if (isset($type['answer']) && ctype_digit($type['answer'])) {
                $type = $type['answer'];
             } else {
-               // Invalid value. Maybe the questin is not compatible.
+               // Invalid value. Maybe the question is not compatible.
                trigger_error(sprintf("Attempt to set the type of a ticket from an incompatible question. Check the target ticket %s of the form ID=%s",
                   $this->fields['name'],
                   $this->getForm()->getID()
-               ));
+               ), E_USER_ERROR);
                $type = null;
             }
             break;
@@ -1306,7 +1306,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             $associateQuestion = $this->fields['associate_question'];
             $question = new PluginFormcreatorQuestion();
             if (!$question->getFromDB($associateQuestion)) {
-               Toolbox::logError(sprintf("Question ID %s not found and should be used in target ticket ID %s", $associateQuestion, $this-getID()));
+               trigger_error(sprintf("Question ID %s not found and should be used in target ticket ID %s", $associateQuestion, $this->getID()), E_USER_ERROR);
                break;
             }
             /** @var  GlpiPlugin\Formcreator\Field\DropdownField */

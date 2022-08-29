@@ -86,12 +86,7 @@ class Config extends CommonTestCase {
       // Drop tables of the plugin if they exist
       $query = "SHOW TABLES";
       $result = $DB->query($query);
-      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
-         $fa = 'fetchArray';
-      } else {
-         $fa = 'fetch_array';
-      }
-      while ($data = $DB->$fa($result)) {
+      while ($data = $DB->fetchArray($result)) {
          if (strstr($data[0], "glpi_plugin_$pluginName") !== false) {
             $DB->query("DROP TABLE " . $data[0]);
          }
@@ -104,6 +99,7 @@ class Config extends CommonTestCase {
       // Since GLPI 9.4 plugins list is cached
       $plugin->checkStates(true);
       $plugin->getFromDBbyDir($pluginName);
+      $this->boolean($plugin->isNewItem())->isFalse();
 
       // Install the plugin
       ob_start(function($in) { return $in; });
