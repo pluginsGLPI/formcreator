@@ -115,7 +115,10 @@ class PluginFormcreatorComposite
                   break;
 
                case PluginFormcreatorTargetTicket::class:
-                  $ticket = $this->targets['PluginFormcreatorTargetTicket'][$row['items_id']];
+                  $ticket = null;
+                  if (isset($this->targets['PluginFormcreatorTargetTicket'][$row['items_id']])) {
+                     $ticket = $this->targets['PluginFormcreatorTargetTicket'][$row['items_id']];
+                  }
                   if ($ticket !== null) {
                      $this->ticket_ticket->add([
                         'link' => $row['link'],
