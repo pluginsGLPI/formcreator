@@ -85,7 +85,7 @@ implements ExportableInterface
       $linkedItem = new $linkedItemtype();
       $linkedItemId = $item_targetTicket['items_id'];
       $identifierColumn = 'id';
-      if (strpos($item_targetTicket['itemtype'], '') === 0) {
+      if (strpos($item_targetTicket['itemtype'], 'GlpiPlugin\\Formcreator') === 0) {
          $identifierColumn = 'uuid';
       }
       $linkedItem->getFromDBByCrit([
@@ -127,7 +127,7 @@ implements ExportableInterface
       $linkedItemId = $input['items_id'];
       $linkedItem = $linker->findObject($linkedItemtype, $linkedItemId, $idKey);
       if ($linkedItem->isNewItem()) {
-         if (strpos($linkedItemtype, '') === 0) {
+         if (strpos($linkedItemtype, 'GlpiPlugin\\Formcreator') === 0) {
             // the linnked object belongs to the plugin, maybe the item will be imported later
             $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
             return false;
@@ -137,7 +137,7 @@ implements ExportableInterface
       }
 
       // Linked object found
-      if (strpos($linkedItemtype, 'PluginFormcreator') === 0) {
+      if (strpos($linkedItemtype, 'GlpiPlugin\\Formcreator') === 0) {
          // replace UUID with ID of the found object
          $input['items_id'] = $linkedItem->getID();
       }

@@ -140,7 +140,7 @@ class Linker
     * @return CommonDBTM
     */
    public function findObject($itemtype, $id, $idField) {
-      if (!strpos($itemtype, '') === 0) {
+      if (!strpos($itemtype, 'GlpiPlugin\\Formcreator') === 0) {
          // The itemtype is not part of Formcreator
          // Cannot use uuid column
          $idField = 'id';
