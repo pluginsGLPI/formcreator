@@ -44,8 +44,6 @@ register_shutdown_function(function() {
    }
 });
 
-
-
 // Giving --debug argument to atoum will be detected by GLPI too
 // the error handler in Toolbox may output to stdout a message and break process communication
 // in atoum
