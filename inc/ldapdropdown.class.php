@@ -190,6 +190,6 @@ class PluginFormcreatorLdapDropdown extends CommonGLPI
       if (0 === error_reporting()) {
          return false;
       }
-        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+      throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
    }
 }
