@@ -43,6 +43,11 @@ class DescriptionField extends PluginFormcreatorAbstractField
       return true;
    }
 
+   public function show($domain, $canEdit = true) {
+
+      return '<div class="description_field">' . $this->getRenderedHtml($domain, $canEdit) . '</div>';
+   }
+
    public function getDesignSpecializationField(): array {
       $common = parent::getDesignSpecializationField();
       $additions = $common['additions'];

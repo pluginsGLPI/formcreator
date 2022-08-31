@@ -2808,4 +2808,57 @@ PluginFormcreatorTranslatableInterface
       }
       return \Locale::lookup($availableLanguages, $_SESSION['glpilanguage'], false, $defaultLanguage);
    }
+
+      /**
+    * Can the current user show the form to fill an assistance request
+    *
+    * @return boolean true if the user can use the form
+    */
+    public function canViewForRequest(): bool {
+      global $PLUGIN_HOOKS;
+
+      if ($this->isNewItem()) {
+         return false;
+      }
+
+      // Public forms -> always visible
+      if ($this->fields['access_rights'] == self::ACCESS_PUBLIC) {
+         return true;
+      }
+
+      // Restricted and private forms -> Check session
+      if (Session::getLoginUserID() === false || !$this->checkEntity(true)) {
+         return false;
+      }
+
+      // Form administrators can always access any forms
+      if (self::canCreate()) {
+         return true;
+      }
+
+      // Check restrictions if needed
+      if ($this->fields['access_rights'] == self::ACCESS_RESTRICTED
+         && !PluginFormcreatorFormAccessType::canSeeRestrictedForm($this)
+      ) {
+         return false;
+      }
+
+      // Check plugins restrictions
+      if (isset($PLUGIN_HOOKS['formcreator_restrict_form'])) {
+         foreach ($PLUGIN_HOOKS['formcreator_restrict_form'] as $plugin => $callable) {
+            // Skip if invalid hook
+            if (!is_callable($callable)) {
+               trigger_error("formcreator_restrict_form[$plugin]: not a callable", E_USER_WARNING);
+               continue;
+            }
+
+            if (!call_user_func($callable, $this)) {
+               return false;
+            }
+         }
+      }
+
+      // All checks were succesful, display form
+      return true;
+   }
 }

@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use Glpi\Toolbox\Sanitizer;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -88,9 +90,7 @@ class PluginFormcreatorTranslation
       if (!$formLanguage->getFromDB($formLanguageId)) {
          return [];
       }
-      if (!isset($post['searchText'])) {
-         $post['searchText'] = '';
-      }
+      $post['searchText'] = $post['searchText'] ?? '';
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);

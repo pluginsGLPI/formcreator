@@ -96,7 +96,7 @@ implements PluginFormcreatorExportableInterface
       return $item_targetTicket;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0, $dryRun = false) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       if (!isset($input['uuid']) && !isset($input['id'])) {
          throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
@@ -120,19 +120,17 @@ implements PluginFormcreatorExportableInterface
       }
 
       // set ID for linked objects
-      if (!$dryRun) {
-         $linkedItemtype = $input['itemtype'];
-         $linkedItemId = $input['items_id'];
-         $linkedItem = $linker->findObject($linkedItemtype, $linkedItemId, $idKey);
-         if ($linkedItem->isNewItem()) {
-            if (strpos($linkedItemtype, 'PluginFormcreator') === 0) {
-               // the linnked object belongs to the plugin, maybe the item will be imported later
-               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-               return false;
-            }
-            // linked item is not an object of Formcreator, it will not be imported
-            throw new ImportFailureException('Failed to find a linked object to a target ticket');
+      $linkedItemtype = $input['itemtype'];
+      $linkedItemId = $input['items_id'];
+      $linkedItem = $linker->findObject($linkedItemtype, $linkedItemId, $idKey);
+      if ($linkedItem->isNewItem()) {
+         if (strpos($linkedItemtype, 'PluginFormcreator') === 0) {
+            // the linnked object belongs to the plugin, maybe the item will be imported later
+            $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+            return false;
          }
+         // linked item is not an object of Formcreator, it will not be imported
+         throw new ImportFailureException('Failed to find a linked object to a target ticket');
       }
 
       // Add or update

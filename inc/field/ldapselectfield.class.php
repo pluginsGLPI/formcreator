@@ -41,6 +41,8 @@ use Html;
 use QuerySubQuery;
 use Session;
 use RuleRightParameter;
+use PluginFormcreatorQuestion;
+use PluginFormcreatorLdapDropdown;
 
 class LdapselectField extends SelectField
 {
@@ -55,6 +57,7 @@ class LdapselectField extends SelectField
       if ($ldap_values === null) {
          $ldap_values = [];
       }
+
       $current_entity = Session::getActiveEntity();
       $auth_ldap_condition = '';
       if ($current_entity != 0) {
@@ -122,6 +125,37 @@ class LdapselectField extends SelectField
          'may_be_empty' => true,
          'may_be_required' => true,
       ];
+   }
+
+   public function getRenderedHtml($domain, $canEdit = true): string {
+      if (!$canEdit) {
+         return $this->value . PHP_EOL;
+      }
+
+      $html         = '';
+      $id           = $this->question->getID();
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+
+      if (!empty($this->question->fields['values'])) {
+         $options = [
+            'name'      => $fieldName,
+            'value'     => $this->value,
+            'rand'      => $rand,
+            'multiple'  => false,
+            'display'   => false,
+            'condition' => [
+               PluginFormcreatorQuestion::getForeignKeyField() => $this->question->getID()
+            ]
+         ];
+         $html .= PluginFormcreatorLdapDropdown::dropdown($options);
+      }
+      $html .=  PHP_EOL;
+      $html .=  Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeSelect('$fieldName', '$rand');
+      });");
+
+      return $html;
    }
 
    public function getAvailableValues() {
