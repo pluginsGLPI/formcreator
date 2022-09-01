@@ -1953,13 +1953,13 @@ PluginFormcreatorTranslatableInterface
       echo '</table>';
       echo '<br />';
       echo Html::scriptBlock('function showDescription(id, img){
-         if(i.alt == "+") {
-            i.alt = "-";
-            i.class = "class="fas fa-minus-circle"";
+         if(img.alt == "+") {
+            img.alt = "-";
+            img.class = "class=\"fas fa-minus-circle\"";
             document.getElementById("desc" + id).style.display = "table-row";
          } else {
-            i.alt = "+";
-            i.src = "class="fas fa-plus-circle"";
+            img.alt = "+";
+            img.src = "class=\"fas fa-plus-circle\"";
             document.getElementById("desc" + id).style.display = "none";
          }
       }');
