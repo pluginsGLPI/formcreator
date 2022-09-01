@@ -29,9 +29,9 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Command;
+use GlpiPlugin\Formcreator\Common;
 
 include ('../../../inc/includes.php');
 
-$form = Command::getForm();
+$form = Common::getForm();
 $form->showForCentral();
