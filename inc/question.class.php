@@ -52,7 +52,7 @@ PluginFormcreatorTranslatableInterface
    static public $items_id = 'plugin_formcreator_sections_id';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
-   private $field = null;
+   private ?PluginFormcreatorFieldInterface $field = null;
 
    private $skipChecks = false;
 
