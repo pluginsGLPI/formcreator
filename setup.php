@@ -344,7 +344,6 @@ function plugin_formcreator_hook(): void {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
             $CFG_GLPI['javascript']['self-service']['none'] = [
                'dashboard',
                'gridstack'
