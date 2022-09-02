@@ -30,7 +30,6 @@
  */
 
 use GlpiPlugin\Formcreator\Common;
-use GlpiPlugin\Formcreator\EntityConfig;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\Issue;
 

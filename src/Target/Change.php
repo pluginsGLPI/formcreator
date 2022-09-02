@@ -51,7 +51,6 @@ use GlpiPlugin\Formcreator\Question;
 use GlpiPlugin\Formcreator\Target_Actor;
 use Html;
 use ITILCategory;
-use Plugin;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {

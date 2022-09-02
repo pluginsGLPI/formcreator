@@ -49,6 +49,7 @@ class UpgradeTo2_14 {
       $this->migration = $migration;
 
       $this->addTargetContract();
+      $this->normalizeForeignKeys();
       $this->namespacize();
       $this->addTtoToIssues();
       $this->addRights();
@@ -94,6 +95,10 @@ class UpgradeTo2_14 {
       );
    }
 
+   public function normalizeForeignKeys() {
+
+   }
+
    public function namespacize() {
       global $DB;
 
@@ -114,12 +119,29 @@ class UpgradeTo2_14 {
       }
 
       // Same for some foreign keys
-      // $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
+      $this->migration->renameItemtype('PluginFormcreatorItem_TargetTicket', 'GlpiPlugin\\Formcreator\\Item_TargetTicket');
       $table = (new DbUtils())->getTableForItemType(Item_TargetTicket::class);
-      // $this->migration->changeField($table, 'plugin_formcreator_targettickets_id', 'plugin_formcreator_targets_tickets_id', $unsignedIntType);
-      // column plugin_formcreator_targettickets_id was renamed by Migration::renameItemtype()
       $this->migration->dropKey($table, 'plugin_formcreator_targettickets_id');
       $this->migration->addKey($table, 'plugin_formcreator_targets_tickets_id');
+
+      // Ensure that the itemtypes are up to date in the whole DB
+      $this->migration->renameItemtype('PluginFormcreatorForm', 'GlpiPlugin\\Formcreator\\Form');
+      $this->migration->renameItemtype('PluginFormcreatorSection', 'GlpiPlugin\\Formcreator\\Section');
+      $this->migration->renameItemtype('PluginFormcreatorQuestion', 'GlpiPlugin\\Formcreator\\Question');
+      $this->migration->renameItemtype('PluginFormcreatorQuestionDependency', 'GlpiPlugin\\Formcreator\\QuestionDependency');
+      $this->migration->renameItemtype('PluginFormcreatorQuestionRegex', 'GlpiPlugin\\Formcreator\\QuestionRegex');
+      $this->migration->renameItemtype('PluginFormcreatorQuestionRange', 'GlpiPlugin\\Formcreator\\QuestionRange');
+      $this->migration->renameItemtype('PluginFormcreatorQuestion', 'GlpiPlugin\\Formcreator\\Question');
+      $this->migration->renameItemtype('PluginFormcreatorAnswer', 'GlpiPlugin\\Formcreator\\Answer');
+      $this->migration->renameItemtype('PluginFormcreatorCategory', 'GlpiPlugin\\Formcreator\\Category');
+      $this->migration->renameItemtype('PluginFormcreatorEntityConfig', 'GlpiPlugin\\Formcreator\\EntityConfig');
+      $this->migration->renameItemtype('PluginFormcreatorForm_Profile', 'GlpiPlugin\\Formcreator\\Form_Profile');
+      $this->migration->renameItemtype('PluginFormcreatorForm_User', 'GlpiPlugin\\Formcreator\\Form_User');
+      $this->migration->renameItemtype('PluginFormcreatorForm_Group', 'GlpiPlugin\\Formcreator\\Form_Group');
+      $this->migration->renameItemtype('PluginFormcreatorForm_Validator', 'GlpiPlugin\\Formcreator\\Form_Validator');
+      $this->migration->renameItemtype('PluginFormcreatorForm_Language', 'GlpiPlugin\\Formcreator\\Form_Language');
+      $this->migration->renameItemtype('PluginFormcreatorCondition', 'GlpiPlugin\\Formcreator\\Condition');
+      $this->migration->renameItemtype('PluginFormcreatorIssue', 'GlpiPlugin\\Formcreator\\Issue');
    }
 
    public function addTtoToIssues() {
