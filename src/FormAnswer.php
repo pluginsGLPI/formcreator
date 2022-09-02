@@ -53,6 +53,7 @@ use NotificationEvent;
 use Plugin;
 use PluginAdvformFormAnswer;
 use PluginAdvformFormAnswerValidation;
+use QuerySubQuery;
 use Search;
 use Session;
 use Ticket;
@@ -1398,7 +1399,7 @@ class FormAnswer extends CommonDBTM
          ]
       ]);
 
-      $issue = new PluginFormcreatorIssue();
+      $issue = new Issue();
       if ($rows->count() != 1) {
          // There is no or several tickets for this form answer
          // The issue must be created from this form answer
@@ -2002,7 +2003,7 @@ class FormAnswer extends CommonDBTM
       } else if (is_integer($item)) {
          $id = $item;
       } else {
-         throw new \GlpiPlugin\Formcreator\InvalidArgumentException("$item must be an integer or a " . Ticket::class);
+         throw new \InvalidArgumentException("$item must be an integer or a " . Ticket::class);
       }
 
       return $this->getFromDBByCrit([
@@ -2010,7 +2011,7 @@ class FormAnswer extends CommonDBTM
             'SELECT' => 'items_id',
             'FROM'   => Item_Ticket::getTable(),
             'WHERE'  => [
-               'itemtype' => PluginFormcreatorFormAnswer::getType(),
+               'itemtype' => self::getType(),
                'tickets_id' => $id,
             ]
          ])

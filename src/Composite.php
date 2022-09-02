@@ -108,7 +108,7 @@ class Composite
             ],
             'FROM'   => $this->item_targetTicket->getTable(),
             'WHERE'  => [
-               'plugin_formcreator_targettickets_id' => $targetId
+               TargetTicket::getForeignKeyField() => $targetId
             ]
          ]);
          foreach ($rows as $row) {

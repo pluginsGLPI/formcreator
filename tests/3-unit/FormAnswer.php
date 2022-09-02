@@ -46,7 +46,15 @@ use GlpiPlugin\Formcreator\Target\Change as TargetChange;
 use GlpiPlugin\Formcreator\Target\Problem as TargetProblem;
 use GlpiPlugin\Formcreator\Target\Ticket as TargetTicket;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Group;
+use Group_User;
+use Item_Ticket;
+use Problem;
+use Session;
 use Ticket;
+use TicketValidation;
+use Toolbox;
+use User;
 
 class FormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -853,7 +861,7 @@ class FormAnswer extends CommonTestCase {
    public function testGetFromDbByTicket() {
       // Create a form answer
       $targetTicket = $this->getTargetTicket();
-      $form = PluginFormcreatorForm::getByItem($targetTicket);
+      $form = Form::getByItem($targetTicket);
       $expected = $this->newTestedInstance();
       $expected->add([
          'plugin_formcreator_forms_id' => $form->getID(),

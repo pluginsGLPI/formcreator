@@ -31,6 +31,7 @@
 
 namespace tests\units;
 
+use GlpiPlugin\Formcreator\EntityConfig;
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item;
 use Glpi\Dashboard\Right;
@@ -39,7 +40,6 @@ use GlpiPlugin\Formcreator\Issue;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Profile;
 use ProfileRight;
-use PluginFormcreatorEntityconfig;
 
 /**
  * @engine inline
@@ -195,7 +195,7 @@ class Config extends CommonTestCase {
    }
 
    public function checkEntityConfig() {
-      $entityConfig = new PluginFormcreatorEntityconfig();
+      $entityConfig = new EntityConfig();
       $entityConfig->getFromDBByCrit([
          'entities_id' => 0
       ]);

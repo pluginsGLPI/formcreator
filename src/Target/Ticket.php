@@ -53,7 +53,6 @@ use Item_Ticket;
 use ITILCategory;
 use ITILFollowup;
 use Location;
-use Plugin;
 use Session;
 use Supplier_Ticket;
 use Ticket as GlpiTicket;
