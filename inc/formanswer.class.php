@@ -504,8 +504,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
     /**
     * Can the current user validate the form ?
+    *
+    * @return bool
     */
    public function canValidate(): bool {
+      global $DB;
+
       if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
          $formAnswer = new PluginAdvformFormAnswer();
          $formAnswer->getFromDB($this->getID());
@@ -519,7 +523,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form = $this->getForm();
       switch ($form->fields['validation_required']) {
          case PluginFormcreatorForm_Validator::VALIDATION_USER:
-            return (Session::getLoginUserID() == $this->fields['users_id_validator']);
+            if (Session::getLoginUserID() == $this->fields['users_id_validator']) {
+               // The current user is a valdiator
+               return true;
+            }
+            if (ValidatorSubstitute::isUserSubstituteOf(Session::getLoginUserID(), $this->fields['users_id_validator'])) {
+               // The curent user is a substitute of the validator user
+               return true;
+            }
             break;
 
          case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
@@ -527,7 +538,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                Session::getLoginUserID(),
                ['glpi_groups.id' => $this->fields['groups_id_validator']]
             );
-            return (count($groupList) > 0);
+            if (count($groupList) > 0) {
+               // The current user is a member of a validator group
+               return true;
+            }
+
             break;
       }
 
