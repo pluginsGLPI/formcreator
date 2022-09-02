@@ -451,7 +451,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 
    // No issue linked to the ticket,
    // then find the form answer linked to the ticket
-   $formAnswer = new FormAnswer();
+   $formAnswer = Common::getFormAnswer();
    if (!$formAnswer->getFromDbByTicket($id)) {
       // Should not happen as one and only one form answer shall be linked to a ticket
       // If several formanswer found, the previous getFromDBByCrit() logs an error
@@ -474,7 +474,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    $id = $item->getID();
 
    // Update the formanswer's status (for cases where a form answer has several tickets)
-   $formAnswer = new FormAnswer();
+   $formAnswer = Common::getFormAnswer();
    if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus === null) {
@@ -495,7 +495,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
-   $formAnswer = new FormAnswer();
+   $formAnswer = Common::getFormAnswer();
    if ($formAnswer->getFromDbByTicket($item)) {
       $formAnswer->createIssue();
       $minimalStatus = $formAnswer->getAggregatedStatus();
@@ -516,7 +516,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
    $id = $item->getID();
 
    // Update the formanswer's status (for cases where a form answer has several tickets)
-   $formAnswer = new FormAnswer();
+   $formAnswer = Common::getFormAnswer();
    if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus === null) {
