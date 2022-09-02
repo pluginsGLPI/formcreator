@@ -1949,17 +1949,18 @@ PluginFormcreatorTranslatableInterface
          echo '<td><div>' . __($row['description'], $domain) . '&nbsp;</div></td>';
          echo '</tr>';
       }
-
       echo '</table>';
-      echo '<br />';
-      echo Html::scriptBlock('function showDescription(id, img){
-         if(img.alt == "+") {
-            img.alt = "-";
-            img.class = "class=\"fas fa-minus-circle\"";
+
+      echo Html::scriptBlock('function showDescription(id, img) {
+         if(img.getAttribute("alt") == "+") {
+            img.setAttribute("alt", "-");
+            img.classList.remove("fa-plus-circle");
+            img.classList.add("fa-minus-circle");
             document.getElementById("desc" + id).style.display = "table-row";
          } else {
-            img.alt = "+";
-            img.src = "class=\"fas fa-plus-circle\"";
+            img.setAttribute("alt", "+");
+            img.classList.remove("fa-minus-circle");
+            img.classList.add("fa-plus-circle");
             document.getElementById("desc" + id).style.display = "none";
          }
       }');
