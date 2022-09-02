@@ -344,11 +344,6 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       return;
    }
 
-   if (isset($item->input['items_id'][PluginFormcreatorFormAnswer::getType()])) {
-      // the ticket is associated to a form answer
-      return;
-   }
-
    $requester = $DB->request([
       'SELECT' => 'users_id',
       'FROM' => Ticket_User::getTable(),
@@ -452,17 +447,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
    // No issue linked to the ticket,
    // then find the form answer linked to the ticket
    $formAnswer = new PluginFormcreatorFormAnswer();
-   $formAnswer->getFromDBByCrit([
-      'id' => new QuerySubQuery([
-         'SELECT' => 'items_id',
-         'FROM'   => Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype' => PluginFormcreatorFormAnswer::getType(),
-            'tickets_id' => $id,
-         ]
-      ])
-   ]);
-   if ($formAnswer->isNewItem()) {
+   if ($formAnswer->getFromDbByTicket($id)) {
       // Should not happen as one and only one form answer shall be linked to a ticket
       // If several formanswer found, the previous getFromDBByCrit() logs an error
       return;
@@ -483,19 +468,9 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 
    $id = $item->getID();
 
-   // find a formanswer linked to the ticket
+   // Update the formanswer's status (for cases where a form answer has several tickets)
    $formAnswer = new PluginFormcreatorFormAnswer();
-   $formAnswer->getFromDBByCrit([
-      'id' => new QuerySubQuery([
-         'SELECT' => 'items_id',
-         'FROM'   => Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype' => PluginFormcreatorFormAnswer::getType(),
-            'tickets_id' => $id,
-         ]
-      ])
-   ]);
-   if (!$formAnswer->isNewItem()) {
+   if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus === null) {
          // There is no more ticket in the form anwer
@@ -503,10 +478,9 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
       } else {
          $formAnswer->updateStatus($minimalStatus);
       }
-      return;
    }
 
-   // delete issue
+   // Delete the issue
    // TODO: add is_deleted column to issue ?
    $issue = new PluginFormcreatorIssue();
    $issue->deleteByCriteria([
@@ -517,25 +491,16 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
    $formAnswer = new PluginFormcreatorFormAnswer();
-   $formAnswer->getFromDBByCrit([
-      'id' => new QuerySubQuery([
-         'SELECT' => 'items_id',
-         'FROM'   => Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype' => PluginFormcreatorFormAnswer::getType(),
-            'tickets_id' => $item->getID(),
-         ]
-      ])
-   ]);
-   if ($formAnswer->isNewItem()) {
-      plugin_formcreator_hook_add_ticket($item);
+   if ($formAnswer->getFromDbByTicket($item)) {
+      $formAnswer->createIssue();
+      $minimalStatus = $formAnswer->getAggregatedStatus();
+      if ($minimalStatus !== null) {
+         $formAnswer->updateStatus($minimalStatus);
+      }
       return;
    }
 
-   $minimalStatus = $formAnswer->getAggregatedStatus();
-   if ($minimalStatus !== null) {
-      $formAnswer->updateStatus($minimalStatus);
-   }
+   plugin_formcreator_hook_add_ticket($item);
 }
 
 function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
@@ -545,19 +510,9 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 
    $id = $item->getID();
 
-   // Update status of form answer, if any
+   // Update the formanswer's status (for cases where a form answer has several tickets)
    $formAnswer = new PluginFormcreatorFormAnswer();
-   $formAnswer->getFromDBByCrit([
-      'id' => new QuerySubQuery([
-         'SELECT' => 'items_id',
-         'FROM'   => Item_Ticket::getTable(),
-         'WHERE'  => [
-            'itemtype' => PluginFormcreatorFormAnswer::getType(),
-            'tickets_id' => $id,
-         ]
-      ])
-   ]);
-   if (!$formAnswer->isNewItem()) {
+   if ($formAnswer->getFromDbByTicket($id)) {
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus === null) {
          // There is no more ticket in the form anwer
@@ -565,7 +520,6 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       } else {
          $formAnswer->updateStatus($minimalStatus);
       }
-      return;
    }
 
    // delete issue if any

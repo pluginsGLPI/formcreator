@@ -1097,7 +1097,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             return;
          }
       }
-      $this->createIssue();
+      if ($this->input['status'] != self::STATUS_REFUSED) {
+         $this->createIssue();
+      }
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus !== null) {
          $this->updateStatus($minimalStatus);
@@ -1341,13 +1343,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
    }
 
-   private function createIssue() {
+   public function createIssue() {
       global $DB;
-
-      $issue = new PluginFormcreatorIssue();
-      if ($this->input['status'] == self::STATUS_REFUSED) {
-         return;
-      }
 
       // If cannot get itemTicket from DB it happens either
       // when no item exist
@@ -1372,6 +1369,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'items_id' => $this->getID(),
          ]
       ]);
+
+      $issue = new PluginFormcreatorIssue();
       if ($rows->count() != 1) {
          // There is no or several tickets for this form answer
          // The issue must be created from this form answer
@@ -2069,5 +2068,32 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'sort' => 6, // See self::rawSearchOptions()
          'order' => 'DESC'
       ];
+   }
+
+   /**
+    * Get a formanswer from a generated ticket
+    *
+    * @param Ticket|int $item
+    * @return bool
+    */
+   public function getFromDbByTicket($item) {
+      if (($item instanceof Ticket)) {
+         $id = $item->getID();
+      } else if (is_integer($item)) {
+         $id = $item;
+      } else {
+         throw new InvalidArgumentException("$item must be an integer or a " . Ticket::class);
+      }
+
+      return $this->getFromDBByCrit([
+         'id' => new QuerySubQuery([
+            'SELECT' => 'items_id',
+            'FROM'   => Item_Ticket::getTable(),
+            'WHERE'  => [
+               'itemtype' => PluginFormcreatorFormAnswer::getType(),
+               'tickets_id' => $id,
+            ]
+         ])
+      ]);
    }
 }

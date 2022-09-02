@@ -490,6 +490,21 @@ function plugin_formcreator_redirect() {
 
       Html::redirect($issue->getFormURLWithID($issue->getID()) . '&tickets_id=' . $itemTicket->fields['tickets_id']);
    }
+
+   $pages = [
+      'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
+      'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
+      'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
+   ];
+   foreach ($pages as $srcPage => $dstPage) {
+      if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
+         if ($srcPage == 'front/reservationitem.php') {
+            $_SESSION['plugin_formcreator']['redirected']['POST'] = $_POST;
+         }
+         Html::redirect($dstPage);
+         break;
+      }
+   }
 }
 
 function plugin_formcreator_options() {
