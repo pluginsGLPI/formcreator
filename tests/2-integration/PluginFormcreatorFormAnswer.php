@@ -30,6 +30,9 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorForm_Validator;
+use Search;
+use TicketValidation;
 
 /**
  * The methods conflict when running in parallel
@@ -171,5 +174,134 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       // Login as normal
       $this->boolean($this->login('normal', 'normal', true))->istrue();
       $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
+   }
+
+   public function testSearchMyLastAnswersAsRequester() {
+      // Create a form
+      $this->login('glpi', 'glpi');
+      $form = $this->getForm();
+
+      // Add some form answers
+      $userName = $this->getUniqueString();
+      $this->getUser($userName);
+      $this->login($userName, 'p@ssw0rd');
+
+      $formAnswers = [];
+      $formAnswer1 = $this->newTestedInstance();
+      $formAnswers[] = $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $formAnswer2 = $this->newTestedInstance();
+      $formAnswers[] = $formAnswer2->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      // Search for answers
+      $criteria = [
+         'criteria' => [
+            0 => [
+               'field'      => 4,
+               'searchtype' => 'equals',
+               'value'      => 'myself',
+            ],
+         ],
+         'sort' => [
+            0 => 6
+         ],
+         'order' => [
+            0 => 'DESC'
+         ],
+      ];
+      $showColumns = [
+         2, // id
+         1, // name
+         6, // request date
+         8, // status
+      ];
+      $backupListLimit = $_SESSION['glpilist_limit'];
+      $_SESSION['glpilist_limit'] = 5;
+      $search = Search::getDatas($this->getTestedClassName(), $criteria, $showColumns);
+      $_SESSION['glpilist_limit'] = $backupListLimit;
+
+      // Check the count of result matches the expected count
+      foreach ($search['data']['items'] as $id => $order) {
+         $this->boolean(in_array($id, $formAnswers))->isTrue();
+      }
+      $this->integer(count($search['data']['items']))->isEqualTo(count($formAnswers));
+   }
+
+   public function testGetMyLastAnswersAsValidator() {
+      // Create a form
+      $this->login('glpi', 'glpi');
+      $user = $this->getUser($this->getUniqueString(), 'p@ssw0rd', 'Technician');
+      $validatorId = $user->getID();
+      $form = $this->getForm([
+         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users' => $validatorId,
+      ]);
+
+      // Add some form answers
+      $this->login('normal', 'normal');
+      $formAnswers = [];
+      $formAnswer1 = $this->newTestedInstance();
+      $formAnswers[] = $formAnswer1->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_validator'       => $validatorId,
+      ]);
+      $formAnswer2 = $this->newTestedInstance();
+      $formAnswers[] = $formAnswer2->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_validator'       => $validatorId,
+      ]);
+
+      // Give validate right for the test
+      // $_SESSION["glpiactiveprofile"][TicketValidation::$rightname] = TicketValidation::VALIDATEINCIDENT;
+      $criteria = [
+         'criteria' => [
+            0 => [
+               'field'      => 5,
+               'searchtype' => 'equals',
+               'value'      => 'myself',
+            ],
+            1 => [
+               'link'       => 'OR',
+               'field'      => 7,
+               'searchtype' => 'equals',
+               'value'      => 'mygroups',
+            ],
+         ],
+         'sort' => [
+            0 => 6
+         ],
+         'order' => [
+            0 => 'DESC'
+         ],
+      ];
+      $showColumns = [
+         2, // id
+         1, // name
+         6, // request date
+         8, // status
+      ];
+      $backupListLimit = $_SESSION['glpilist_limit'];
+      $_SESSION['glpilist_limit'] = 5;
+      $search = Search::getDatas($this->getTestedClassName(), $criteria, $showColumns);
+      $_SESSION['glpilist_limit'] = $backupListLimit;
+
+      // Check the requester does not has his forms in list to validate
+      foreach ($search['data']['items'] as $id => $order) {
+         $this->boolean(in_array($id, $formAnswers))->isTrue();
+      }
+
+      $this->login($user->fields['name'], 'p@ssw0rd');
+      $backupListLimit = $_SESSION['glpilist_limit'];
+      $_SESSION['glpilist_limit'] = 5;
+      $search = Search::getDatas($this->getTestedClassName(), $criteria, $showColumns);
+      $_SESSION['glpilist_limit'] = $backupListLimit;
+
+      // Check the validator does not has the forms in list to validate
+      foreach ($search['data']['items'] as $id => $order) {
+         $this->boolean(in_array($id, $formAnswers))->isTrue();
+      }
    }
 }
