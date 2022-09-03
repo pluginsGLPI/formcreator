@@ -887,7 +887,6 @@ PluginFormcreatorTranslatableInterface
 
    protected function showMyLastForms() : void {
       $limit = 5;
-      $userId = Session::getLoginUserID();
       echo '<div id="plugin_formcreator_last_req_forms" class="card">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $formAnswer = PluginFormcreatorCommon::getFormAnswer();
@@ -919,10 +918,18 @@ PluginFormcreatorTranslatableInterface
          }
          echo '</ul>';
          echo '<div class="text-center  card-footer">';
-         $criteria = 'criteria[0][field]=4'
-         . '&criteria[0][searchtype]=equals'
-         . '&criteria[0][value]=' . $userId;
-         echo '<a href="formanswer.php?' . $criteria . '">';
+         $criteria = [
+            'criteria' => [
+               0 => [
+                  'field'      => 4,
+                  'searchtype' => 'equals',
+                  'value'      => 'myself',
+               ],
+            ]
+         ];
+         $criteria = Toolbox::append_params($criteria, '&amp;');
+         $formanswerUrl = PluginFormcreatorFormAnswer::getSearchURL();
+         echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -937,6 +944,7 @@ PluginFormcreatorTranslatableInterface
 
       echo '<div id="plugin_formcreator_val_forms" class="card mt-0 mt-sm-2">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
+      $userId = Session::getLoginUserID();
       $groupList = Group_User::getUserGroups($userId);
       $groupIdList = [];
       foreach ($groupList as $group) {
@@ -970,15 +978,23 @@ PluginFormcreatorTranslatableInterface
          }
          echo '</ul>';
          echo '<div class="text-center card-footer">';
-         $criteria = 'criteria[0][field]=5'
-                     . '&criteria[0][searchtype]=equals'
-                     . '&criteria[0][value]=' . $userId;
-         $criteria.= "&criteria[1][link]=OR"
-                     . "&criteria[1][field]=7"
-                     . "&criteria[1][searchtype]=equals"
-                     . "&criteria[1][value]=mygroups";
-
-         echo '<a href="formanswer.php?' . $criteria . '">';
+         $criteria = [
+            'criteria' => [
+                  0 => [
+                  'field'      => 5,
+                  'searchtype' => 'equals',
+                  'value'      => 'myself',
+               ],
+               1 => [
+                  'link'       => 'OR',
+                  'field'      => 7,
+                  'searchtype' => 'equals',
+                  'value'      => 'mygroups',
+               ],
+            ],
+         ];
+         $criteria = Toolbox::append_params($criteria, '&amp;');
+         echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
          echo __('All my forms (validator)', 'formcreator');
          echo '</a>';
          echo '</div>';
