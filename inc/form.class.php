@@ -836,18 +836,41 @@ PluginFormcreatorTranslatableInterface
 
    protected function showMyLastForms() : void {
       $limit = 5;
-      $userId = Session::getLoginUserID();
       echo '<div id="plugin_formcreator_last_req_forms" class="card">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
-      $formAnswer = PluginFormcreatorCommon::getFormAnswer();
-      $result = $formAnswer::getMyLastAnswersAsRequester($limit);
-      if ($result->count() == 0) {
+      $criteria = [
+         'criteria' => [
+            0 => [
+               'field'      => 4,
+               'searchtype' => 'equals',
+               'value'      => 'myself',
+            ],
+         ],
+         'sort' => [
+            0 => 6
+         ],
+         'order' => [
+            0 => 'DESC'
+         ],
+      ];
+      $showColumns = [
+         2, // id
+         1, // name
+         6, // request date
+         8, // status
+      ];
+      $backupListLimit = $_SESSION['glpilist_limit'];
+      $_SESSION['glpilist_limit'] = 5;
+      $search = Search::getDatas(PluginFormcreatorFormAnswer::class, $criteria, $showColumns);
+      $_SESSION['glpilist_limit'] = $backupListLimit;
+      if ($search['data']['count'] == 0) {
          echo '<div class="card-body text-center text-muted">'.__('No form posted yet', 'formcreator').'</div>';
       } else {
          echo '<div class="card-body">';
          echo '<ul class="list-group">';
-         foreach ($result as $formAnswer) {
-            switch ($formAnswer['status']) {
+         foreach ($search['data']['rows'] as $formAnswer) {
+            $rawKeyBase = 'ITEM_' . PluginFormcreatorFormAnswer::class;
+            switch ($formAnswer['raw']["${rawKeyBase}_8"]) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
                   $status = CommonITILObject::WAITING;
                   break;
@@ -858,20 +881,19 @@ PluginFormcreatorTranslatableInterface
                   $status = CommonITILObject::ACCEPTED;
                   break;
                default:
-                  $status = $formAnswer['status'];
+                  $status = $formAnswer['raw']["${rawKeyBase}_8"];
             }
             $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
-            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["${rawKeyBase}_2"] . '">';
+            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["${rawKeyBase}_2"] .'">'. $formAnswer['raw']["${rawKeyBase}_1"] .'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["${rawKeyBase}_6"]).'</span>';
             echo '</li>';
          }
          echo '</ul>';
          echo '<div class="text-center  card-footer">';
-         $criteria = 'criteria[0][field]=4'
-         . '&criteria[0][searchtype]=equals'
-         . '&criteria[0][value]=' . $userId;
-         echo '<a href="formanswer.php?' . $criteria . '">';
+         $criteria = Toolbox::append_params($criteria, '&amp;');
+         $formanswerUrl = PluginFormcreatorFormAnswer::getSearchURL();
+         echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -886,19 +908,38 @@ PluginFormcreatorTranslatableInterface
 
       echo '<div id="plugin_formcreator_val_forms" class="card mt-0 mt-sm-2">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
-      $groupList = Group_User::getUserGroups($userId);
-      $groupIdList = [];
-      foreach ($groupList as $group) {
-         $groupIdList[] = $group['id'];
-      }
-      $result = PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator($limit);
-      if ($result->count() == 0) {
+      $criteria = [
+         'criteria' => [
+            0 => [
+               'field'      => 5,
+               'searchtype' => 'equals',
+               'value'      => 'myself',
+            ],
+            1 => [
+               'link'       => 'OR',
+               'field'      => 7,
+               'searchtype' => 'equals',
+               'value'      => 'mygroups',
+            ],
+         ],
+         'sort' => [
+            0 => 6
+         ],
+         'order' => [
+            0 => 'DESC'
+         ],
+      ];
+      $backupListLimit = $_SESSION['glpilist_limit'];
+      $_SESSION['glpilist_limit'] = 5;
+      $search = Search::getDatas(PluginFormcreatorFormAnswer::class, $criteria, $showColumns);
+      $_SESSION['glpilist_limit'] = $backupListLimit;
+      if ($search['data']['count'] == 0) {
          echo '<div class="card-body text-center text-muted" >'.__('No form waiting for validation', 'formcreator').'</div>';
       } else {
          echo '<div class="card-body">';
          echo '<ul class="list-group">';
-         foreach ($result as $formAnswer) {
-            switch ($formAnswer['status']) {
+         foreach ($search['data']['rows'] as $formAnswer) {
+            switch ($formAnswer['raw']["${rawKeyBase}_8"]) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
                   $status = CommonITILObject::WAITING;
                   break;
@@ -909,25 +950,18 @@ PluginFormcreatorTranslatableInterface
                   $status = CommonITILObject::ACCEPTED;
                   break;
                default:
-                  $status = $formAnswer['status'];
+                  $status = $formAnswer['raw']["${rawKeyBase}_8"];
             }
             $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="' . $formAnswer['id'] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='.$formAnswer['id'].'">'.$formAnswer['name'].'</a>';
-            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['request_date']).'</span>';
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["${rawKeyBase}_2"] . '">';
+            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["${rawKeyBase}_2"] .'">'. $formAnswer['raw']["${rawKeyBase}_1"] .'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["${rawKeyBase}_6"]).'</span>';
             echo '</li>';
          }
          echo '</ul>';
          echo '<div class="text-center card-footer">';
-         $criteria = 'criteria[0][field]=5'
-                     . '&criteria[0][searchtype]=equals'
-                     . '&criteria[0][value]=' . $userId;
-         $criteria.= "&criteria[1][link]=OR"
-                     . "&criteria[1][field]=7"
-                     . "&criteria[1][searchtype]=equals"
-                     . "&criteria[1][value]=mygroups";
-
-         echo '<a href="formanswer.php?' . $criteria . '">';
+         $criteria = Toolbox::append_params($criteria, '&amp;');
+         echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
          echo __('All my forms (validator)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -1913,17 +1947,18 @@ PluginFormcreatorTranslatableInterface
          echo '<td><div>' . __($row['description'], $domain) . '&nbsp;</div></td>';
          echo '</tr>';
       }
-
       echo '</table>';
-      echo '<br />';
-      echo Html::scriptBlock('function showDescription(id, img){
-         if(i.alt == "+") {
-            i.alt = "-";
-            i.class = "class="fas fa-minus-circle"";
+
+      echo Html::scriptBlock('function showDescription(id, img) {
+         if(img.getAttribute("alt") == "+") {
+            img.setAttribute("alt", "-");
+            img.classList.remove("fa-plus-circle");
+            img.classList.add("fa-minus-circle");
             document.getElementById("desc" + id).style.display = "table-row";
          } else {
-            i.alt = "+";
-            i.src = "class="fas fa-plus-circle"";
+            img.setAttribute("alt", "+");
+            img.classList.remove("fa-minus-circle");
+            img.classList.add("fa-plus-circle");
             document.getElementById("desc" + id).style.display = "none";
          }
       }');

@@ -856,6 +856,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       );
       $data['name'] = Toolbox::addslashes_deep($data['name']);
       $data['name'] = $formanswer->parseTags($data['name'], $this);
+      $data['date'] = $_SESSION['glpi_currenttime'];
 
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],

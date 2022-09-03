@@ -77,15 +77,7 @@ $(function() {
    });
 
    if (location.pathname.indexOf("helpdesk.public.php") != -1) {
-      $('.ui-tabs-panel:visible').ready(function() {
-         showHomepageFormList();
-      });
-
-      $('#tabspanel + div.ui-tabs').on("tabsload", function(event, ui) {
-         showHomepageFormList();
-      });
-
-      showHomepageFormList();
+      plugin_formcreator.showHomepageFormList();
 
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
       updateCategoriesView();
@@ -148,20 +140,6 @@ $(function() {
       });
    }
 });
-
-function showHomepageFormList() {
-   if ($('#plugin_formcreatorHomepageForms').length) {
-      return;
-   }
-
-   $.get({
-      url: formcreatorRootDoc + '/ajax/homepage_forms.php',
-   }).done(function(response){
-      if (!$('#plugin_formcreatorHomepageForms').length) {
-         $('.central > tbody:first').first().prepend(response);
-      }
-   });
-}
 
 function updateCategoriesView() {
    $.post({
@@ -527,6 +505,21 @@ var plugin_formcreator = new function() {
    this.changingItemId = 0;
    this.questionsColumns = 4; // @see PluginFormcreatorSection::COLUMNS
    this.dirty = false;
+
+
+   this.showHomepageFormList = function () {
+      if ($('#plugin_formcreatorHomepageForms').length) {
+         return;
+      }
+
+      $.get({
+         url: formcreatorRootDoc + '/ajax/homepage_forms.php',
+      }).done(function(response){
+         // $('.central').first().prepend(response);
+         var card = $(response);
+         $('table.central').append(card)
+      });
+   }
 
    this.setupGridStack = function(group) {
       var that = this;

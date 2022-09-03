@@ -2307,7 +2307,7 @@ SCRIPT;
       }
 
       // Manage special values
-      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
+      if (!isset($predefined_fields['date']) || isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
          $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
       }
 
