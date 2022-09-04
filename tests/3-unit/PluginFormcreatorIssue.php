@@ -94,8 +94,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket2->fields['users_id_recipient'],
                'date_creation' => $ticket2->fields['date'],
                'date_mod'      => $ticket2->fields['date_mod'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
             ]
          ]
       ];
@@ -270,8 +268,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'        => $formAnswer->fields['requester_id'],
                'date_creation'       => $formAnswer->fields['request_date'],
                'date_mod'            => $formAnswer->fields['request_date'],
-               'users_id_validator'  => '4', // Tech
-               'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -302,8 +298,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               'users_id_validator'  => '4', // Tech
-               'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -345,8 +339,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               'users_id_validator'  => '4', // Tech
-               'groups_id_validator' => '0',
             ],
          ],
       ];

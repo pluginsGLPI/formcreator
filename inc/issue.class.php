@@ -102,8 +102,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'entities_id         as entities_d',
                'is_recursive        as is_recursive',
                'requester_id        as requester_id',
-               'users_id_validator  as users_id_validator',
-               'groups_id_validator as groups_id_validator',
+               // 'users_id_validator  as users_id_validator',
+               // 'groups_id_validator as groups_id_validator',
                'comment             as comment',
                'requester_id        as users_id_recipient'
             ],
@@ -142,16 +142,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             new QueryExpression("CONCAT('t_', `$ticketTable`.`id`) as `display_id`"),
             "$ticketTable.id as items_id",
             new QueryExpression("'" . Ticket::getType() . "' as `itemtype`"),
-            new QueryExpression("IF(`$ticketValidationTable`.`status` IS NULL,
+            new QueryExpression("IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
                `$ticketTable`.`status`,
-               IF(`$ticketTable`.`global_validation` IN ('" . CommonITILValidation::NONE . "', '" . CommonITILValidation::ACCEPTED . "'),
+               IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "'),
                   `$ticketTable`.`status`,
-                  IF(`$ticketTable`.`status` IN ('" . CommonITILObject::SOLVED . "', '" . CommonITILObject::CLOSED . "'),
-                     `$ticketTable`.`status`,
-                     IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
-                        '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
-                        '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
-                     )
+                  IF(`$ticketTable`.`global_validation` = '" . CommonITILValidation::WAITING . "',
+                     '" . PluginFormcreatorFormAnswer::STATUS_WAITING . "',
+                     '" . PluginFormcreatorFormAnswer::STATUS_REFUSED . "'
                   )
                )
             ) AS `status`"),
@@ -161,9 +158,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'entities_id                              as entities_id'
             ],
             new QueryExpression('0                       as is_recursive'),
-            "$ticketUserTable.users_id                   as requester_id",
-            new QueryExpression("IF(`$ticketValidationTable`.`users_id_validate` IS NULL, 0, `$ticketValidationTable`.`users_id_validate`)  as users_id_validator"),
-            new QueryExpression('0                       as groups_id_validator'),
+            new QueryExpression("COALESCE(`$ticketUserTable`.`users_id`, 0) as `requester_id`"),
+            // new QueryExpression("COALESCE(`$ticketValidationTable`.`users_id_validate`, 0) as `users_id_validator`"),
+            // new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
             'users_id_recipient                          as users_id_recipient'
          ],
@@ -499,7 +496,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'name'               => __('Name'),
          'datatype'           => 'itemlink',
          'massiveaction'      => false,
-         'forcegroupby'       => true,
          'additionalfields'   => [
             '0'                  => 'display_id'
          ]
@@ -583,12 +579,21 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $newtab = [
          'id'                 => '9',
-         'table'              => 'glpi_users',
+         'table'              => User::getTable(),
          'field'              => 'name',
          'linkfield'          => 'users_id_validator',
          'name'               => __('Form approver', 'formcreator'),
          'datatype'           => 'dropdown',
-         'massiveaction'      => false
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'beforejoin'          => [
+               'table'                => PluginFormcreatorFormAnswer::getTable(),
+               'joinparams'           => [
+                  'jointype'          => 'itemtype_item_revert',
+                  'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+               ]
+            ],
+         ],
       ];
       if (!Session::isCron() // no filter for cron
           && Session::getCurrentInterface() == 'helpdesk') {
@@ -613,12 +618,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'name',
          'linkfield'          => 'users_id_validate',
          'name'               => __('Ticket approver', 'formcreator'),
-         'datatype'           => 'dropdown',
+         'datatype'           => 'itemlink',
          'right'              => [
             '0'                  => 'validate_request',
             '1'                  => 'validate_incident'
          ],
-         'forcegroupby'       => false,
+         'forcegroupby'       => true,
          'massiveaction'      => false,
          'joinparams'         => [
             'beforejoin'         => [
@@ -636,6 +641,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ]
          ]
       ];
+      if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+         $newtab['linkfield'] = 'items_id_target';
+         $newtab['condition'] = [
+            'REFTABLE.itemtype_target' => User::class,
+         ];
+      }
       if (!Session::isCron() // no filter for cron
           && Session::getCurrentInterface() == 'helpdesk') {
          $newtab['right']       = 'id';
@@ -648,7 +659,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'name',
          'name'               => __('Technician'),
          'datatype'           => 'dropdown',
-         'forcegroupby'       => true,
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
@@ -685,12 +695,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false,
          'nodisplay'          => $hide_technician,
          'nosearch'           => $hide_technician,
+         'condition'          => ['is_assign' => 1],
          'joinparams'         => [
-            'temoin' => true,
             'beforejoin'         => [
                'table'              => Group_Ticket::getTable(),
                'joinparams'         => [
-                  'condition'          => "AND NEWTABLE.`type` = '2'", // Assign
+                  'condition'          => [
+                     'NEWTABLE.type' => CommonITILActor::ASSIGN,
+                  ],
                   'jointype'           => 'child',
                   'beforejoin'         => [
                      'table'              => Ticket::getTable(),
@@ -706,12 +718,21 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $tab[] = [
          'id'                 => '16',
-         'table'              => 'glpi_groups',
+         'table'              => Group::getTable(),
          'field'              => 'completename',
+         'linkfield'          => 'groups_id_validator',
          'name'               => __('Form approver group', 'formcreator'),
          'datatype'           => 'itemlink',
          'massiveaction'      => false,
-         'linkfield'          => 'groups_id_validator',
+         'joinparams'         => [
+            'beforejoin'          => [
+               'table'                => PluginFormcreatorFormAnswer::getTable(),
+               'joinparams'           => [
+                  'jointype'          => 'itemtype_item_revert',
+                  'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+               ]
+            ],
+         ],
       ];
 
       return $tab;
