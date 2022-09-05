@@ -887,6 +887,7 @@ PluginFormcreatorTranslatableInterface
 
    protected function showMyLastForms() : void {
       $limit = 5;
+      $formanswerUrl = PluginFormcreatorFormAnswer::getSearchURL();
       echo '<div id="plugin_formcreator_last_req_forms" class="card">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $criteria = [
@@ -943,7 +944,6 @@ PluginFormcreatorTranslatableInterface
          echo '</ul>';
          echo '<div class="text-center  card-footer">';
          $criteria = Toolbox::append_params($criteria, '&amp;');
-         $formanswerUrl = PluginFormcreatorFormAnswer::getSearchURL();
          echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
