@@ -447,7 +447,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
    // No issue linked to the ticket,
    // then find the form answer linked to the ticket
    $formAnswer = new PluginFormcreatorFormAnswer();
-   if ($formAnswer->getFromDbByTicket($id)) {
+   if (!$formAnswer->getFromDbByTicket($id)) {
       // Should not happen as one and only one form answer shall be linked to a ticket
       // If several formanswer found, the previous getFromDBByCrit() logs an error
       return;
