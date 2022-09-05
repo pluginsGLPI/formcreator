@@ -9,7 +9,10 @@
           "php": "7.2"
       },
       "optimize-autoloader": true,
-      "apcu-autoloader": true
+      "apcu-autoloader": true,
+      "allow-plugins": {
+         "dealerdirect/phpcodesniffer-composer-installer": true
+      }
   },
   "require": {
       "php": ">= 7.2",
