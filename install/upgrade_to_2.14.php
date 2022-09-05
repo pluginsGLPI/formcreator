@@ -46,7 +46,6 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addEntityOption();
    }
 
-
    public function addEntityOption() {
       global $DB;
       $table = 'glpi_plugin_formcreator_entityconfigs';
@@ -56,7 +55,6 @@ class PluginFormcreatorUpgradeTo2_14 {
          $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `home_page`= 1 WHERE `entities_id` = 0");
       }
    }
-
 
    public function addTtoToIssues() {
         $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
