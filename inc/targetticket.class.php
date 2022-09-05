@@ -663,20 +663,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                   $input['location_question'] = '0';
             }
          }
-
-         $plugin = new Plugin();
-         if ($plugin->isActivated('tag')) {
-            if (isset($input['tag_questions'])) {
-               $input['tag_questions'] = (!empty($input['_tag_questions']))
-                                          ? implode(',', $input['_tag_questions'])
-                                          : '';
-            }
-            if (isset($input['tag_specifics'])) {
-               $input['tag_specifics'] = (!empty($input['_tag_specifics']))
-                                       ? implode(',', $input['_tag_specifics'])
-                                       : '';
-            }
-         }
       }
 
       if (isset($input['_linktype']) && isset($input['_link_itemtype'])) {
