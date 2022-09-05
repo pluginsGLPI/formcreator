@@ -43,7 +43,20 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addPropertiesToCategories();
        $this->addTargetActorUnicity();
        $this->addTargetContract();
+       $this->addEntityOption();
    }
+
+
+   public function addEntityOption() {
+      global $DB;
+      $table = 'glpi_plugin_formcreator_entityconfigs';
+
+      if (!$DB->fieldExists($table, 'home_page')) {
+         $this->migration->addField($table, 'home_page', 'integer', ['after' => 'tile_design', 'value' => '-2']);
+         $this->migration->addPostQuery("UPDATE `glpi_plugin_formcreator_entityconfigs` SET `home_page`= 1 WHERE `entities_id` = 0");
+      }
+   }
+
 
    public function addTtoToIssues() {
         $table = (new DBUtils())->getTableForItemType(PluginFormcreatorIssue::class);
