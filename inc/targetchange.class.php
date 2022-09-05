@@ -581,12 +581,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorAbstractItilTarget
          }
 
          if (Plugin::isPluginActive('tag')) {
-            if (isset($input['tag_questions'])) {
+            if (isset($input['_tag_questions'])) {
                $input['tag_questions'] = (!empty($input['_tag_questions']))
                                           ? implode(',', $input['_tag_questions'])
                                           : '';
             }
-            if (isset($input['tag_specifics'])) {
+            if (isset($input['_tag_specifics'])) {
                $input['tag_specifics'] = (!empty($input['_tag_specifics']))
                                           ? implode(',', $input['_tag_specifics'])
                                           : '';
