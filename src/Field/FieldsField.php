@@ -535,7 +535,7 @@ class FieldsField extends AbstractField
       $field_name = $decodedValues['dropdown_fields_field'] ?? '';
       $dropdown_field_name = "plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns_id" ?? '';
 
-      //computer default value
+      // compute default value
       $field = new PluginFieldsField();
       $field->getFromDbByCrit(['name' => $field_name]);
       if ($field->fields['type'] == 'dropdown') {
