@@ -688,7 +688,7 @@ PluginFormcreatorExportableInterface
             continue;
          }
          $validatorId = $validator->getID();
-         $validators["${itemtype}_${validatorId}"] = $validator->getFriendlyName();
+         $validators["{$itemtype}_{$validatorId}"] = $validator->getFriendlyName();
          $lastValidatorId = $validatorId;
          $lastValidatorItemtype = $itemtype;
       }
@@ -702,7 +702,7 @@ PluginFormcreatorExportableInterface
       if ($totalCount == 1) {
          reset($validators);
          $validatorId = key($validators);
-         return Html::hidden('formcreator_validator', ['value' => "${lastValidatorItemtype}_${lastValidatorId}"]);
+         return Html::hidden('formcreator_validator', ['value' => "{$lastValidatorItemtype}_{$lastValidatorId}"]);
       }
 
       $out = '';

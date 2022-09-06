@@ -88,10 +88,10 @@ abstract class CommonTestCase extends atoum
       $class = static::class;
       $class = str_replace('\\', '_', $class);
       if ($fileSqlContent != '') {
-         rename(GLPI_LOG_DIR."/sql-errors.log", GLPI_LOG_DIR."/sql-errors__${class}__$method.log");
+         rename(GLPI_LOG_DIR."/sql-errors.log", GLPI_LOG_DIR."/sql-errors__{$class}__$method.log");
       }
       if ($fileSqlContent != '') {
-         rename(GLPI_LOG_DIR."/php-errors.log", GLPI_LOG_DIR."/php-errors__${class}__$method.log");
+         rename(GLPI_LOG_DIR."/php-errors.log", GLPI_LOG_DIR."/php-errors__{$class}__$method.log");
       }
 
       // Reset log files
