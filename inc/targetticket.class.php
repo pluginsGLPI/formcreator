@@ -1462,6 +1462,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          'category_rule'      => ['values' => self::CATEGORY_RULE_ANSWER, 'field' => 'category_question'],
          'associate_rule'     => ['values' => self::ASSOCIATE_RULE_ANSWER, 'field' => 'associate_question'],
          'location_rule'      => ['values' => self::LOCATION_RULE_ANSWER, 'field' => 'location_question'],
+         'contract_rule'      => ['values' => self::CONTRACT_RULE_ANSWER, 'field' => 'contract_question'],
          'destination_entity' => [
             'values' => [
                self::DESTINATION_ENTITY_ENTITY,
