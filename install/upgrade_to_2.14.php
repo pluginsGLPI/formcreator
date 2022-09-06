@@ -140,4 +140,45 @@ class PluginFormcreatorUpgradeTo2_14 {
       $this->migration->addField($table, 'contract_rule', 'integer', ['after' => 'location_question', 'value' => '1']);
       $this->migration->addField($table, 'contract_question', $unsignedIntType, ['after' => 'contract_rule']);
    }
+
+   public function normalizeTargetForeignKeys() {
+      global $DB;
+
+      $tables = [
+         'glpi_plugin_formcreator_targettickets' => [
+            'type_question' => 'plugin_formcreator_questions_id_type',
+            'due_date_question' => 'plugin_formcreator_questions_id_due_date',
+            'urgency_question' => 'plugin_formcreator_questions_id_urgency',
+            'category_question' => 'plugin_formcreator_questions_id_category',
+            'associate_question' => 'plugin_formcreator_questions_id_associate',
+            'location_question' => 'plugin_formcreator_questions_id_location',
+            'contract_question' => 'plugin_formcreator_questions_id_contract',
+            'sla_question_tto' => 'plugin_formcreator_questions_id_sla_tto',
+            'sla_question_ttr' => 'plugin_formcreator_questions_id_sla_ttr',
+            'ola_question_tto' => 'plugin_formcreator_questions_id_ola_tto',
+            'ola_question_ttr' => 'plugin_formcreator_questions_id_ola_ttr',
+         ],
+         'glpi_plugin_formcreator_targetchanges' => [
+            'due_date_question' => 'plugin_formcreator_questions_id_due_date',
+            'urgency_question' => 'plugin_formcreator_questions_id_urgency',
+            'category_question' => 'plugin_formcreator_questions_id_category',
+            'sla_question_tto' => 'plugin_formcreator_questions_id_sla_tto',
+            'sla_question_ttr' => 'plugin_formcreator_questions_id_sla_ttr',
+            'ola_question_tto' => 'plugin_formcreator_questions_id_ola_tto',
+            'ola_question_ttr' => 'plugin_formcreator_questions_id_ola_ttr',
+         ],
+         'glpi_plugin_formcreator_targetproblems' => [
+            'urgency_question' => 'plugin_formcreator_questions_id_urgency',
+            'category_question' => 'plugin_formcreator_questions_id_category',
+         ],
+      ];
+
+      $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
+      foreach ($tables as $table => $columns) {
+         foreach ($columns as $old_name => $new_name) {
+            $DB->queryOrDie("UPDATE `$table` SET `$old_name` = 0 WHERE `$old_name` IS NULL");
+            $this->migration->changeField($table, $old_name, $new_name, $unsignedIntType);
+         }
+      }
+   }
 }
