@@ -359,6 +359,7 @@ function plugin_formcreator_hook(): void {
    }
 
    $PLUGIN_HOOKS['dashboard_cards']['formcreator'] = 'plugin_formcreator_hook_dashboard_cards';
+   $PLUGIN_HOOKS['tag_get_blacklisted_types']['formcreator'] = 'plugin_formcreator_hook_tag_blacklisted_types';
 
    if (Session::getLoginUserID() === false) {
       return;
