@@ -546,7 +546,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $input['source_rule'] = self::REQUESTSOURCE_SPECIFIC;
       }
       $input['source_question'] = 0;
-      if ($input['source_rule'] == self::REQUESTTYPE_SPECIFIC) {
+      if ($input['source_rule'] == self::REQUESTSOURCE_SPECIFIC) {
          $input['source_question'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
       }
       return $input;
