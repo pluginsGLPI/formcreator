@@ -55,7 +55,7 @@ class PluginFormcreatorUpgradeTo2_14 {
          'integer', [
             'after' => 'tile_design',
             'value' => '-2',
-            'update' => '1',
+            'update' => '0',
             'condition' => 'WHERE `entities_id` = 0'
          ]
       );
