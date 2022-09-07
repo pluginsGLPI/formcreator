@@ -121,7 +121,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          'replace_helpdesk' => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
-         'homepage'       => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
+         'homepage'         => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
 
