@@ -843,7 +843,7 @@ JAVASCRIPT;
       }
    }
 
-   public static function showGenericSearchIssueIfNeeded(): void {
+   public static function showGenericSearchIssue(): void {
       //backup session value
       $save_session_fold_search = $_SESSION['glpifold_search'];
       //hide search if need
