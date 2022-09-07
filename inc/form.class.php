@@ -584,13 +584,29 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function showServiceCatalog() : void {
+      $need_request_list = false;
+      if (PluginFormcreatorEntityconfig::getUsedConfig('home_page', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_FORM_AND_REQUEST) {
+         $need_request_list = true;
+      }
+
       echo '<div id="plugin_formcreator_wizard" class="card-group">';
-      $this->showWizard();
+      $this->showWizard($need_request_list);
       echo '</div>';
+
+      if ($need_request_list) {
+         echo "<br/>";
+         echo "<br/>";
+         PluginFormcreatorCommon::showGenericSearchIssue();
+      }
    }
 
-   public function showWizard() : void {
-      echo '<div id="plugin_formcreator_wizard_categories" class="card">';
+   public function showWizard(bool $need_request_list = false) : void {
+      $class = "";
+      if ($need_request_list) {
+         $class = "plugin_formcreator_merge_with_request";
+      }
+
+      echo '<div id="plugin_formcreator_wizard_categories" class="card '.$class.'">';
 
       echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
       echo '<div class="category-divider"></div>';

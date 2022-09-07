@@ -842,4 +842,18 @@ JAVASCRIPT;
          echo "</div>";
       }
    }
+
+   public static function showGenericSearchIssue(): void {
+      //backup session value
+      $save_session_fold_search = $_SESSION['glpifold_search'];
+      //hide search if need
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
+         $_SESSION['glpifold_search'] = true;
+      }
+
+      Search::show(PluginFormcreatorIssue::class);
+
+      //restore session value
+      $_SESSION['glpifold_search'] = $save_session_fold_search;
+   }
 }

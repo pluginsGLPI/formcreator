@@ -622,6 +622,10 @@ tr[data-itemtype="PluginFormcreatorCondition"] ~ tr[data-itemtype="PluginFormcre
    }
 }
 
+.plugin_formcreator_merge_with_request {
+   min-height : unset !important;
+}
+
 .break-column {
    flex-basis: 100%;
    width: 0;
