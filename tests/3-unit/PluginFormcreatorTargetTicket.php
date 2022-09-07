@@ -736,6 +736,8 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'urgency_question' => '0',
          'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
          'location_question' => '0',
+         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+         'contract_question' => '0',
          'validation_followup' => '1',
          'destination_entity' => '0',
          'destination_entity_value' => '0',
