@@ -942,11 +942,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ],
                   'beforejoin'         => [
                      'table'              => User::getTable(),
-                     'linkfield'          => 'items_id_target',
+                     'linkfield'          => ((version_compare(GLPI_VERSION, '10.1') >= 0) ? 'items_id_target' : 'users_id_validate'),
                      'joinparams'             => [
-                        'condition'                  => [
+                        'condition'                  => ((version_compare(GLPI_VERSION, '10.1') >= 0) ? [
                            'REFTABLE.itemtype_target' => User::class,
-                        ],
+                        ] : ''),
                         'beforejoin'             => [
                            'table'                  => TicketValidation::getTable(),
                            'linkfield'              => 'items_id',
