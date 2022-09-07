@@ -37,6 +37,7 @@ use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Profile;
 use ProfileRight;
+use PluginFormcreatorEntityconfig;
 
 /**
  * @engine inline
@@ -159,6 +160,7 @@ class Config extends CommonTestCase {
       $this->checkAutomaticAction();
       $this->checkDashboard();
       $this->checkRights();
+      $this->checkEntityConfig();
    }
 
    public function checkPluginName() {
@@ -183,11 +185,36 @@ class Config extends CommonTestCase {
    public function checkAutomaticAction() {
       $cronTask = new \CronTask();
       $cronTask->getFromDBByCrit([
-         'itemtype' => 'PluginFormcreatorISsue',
+         'itemtype' => 'PluginFormcreatorIssue',
          'name'     => 'SyncIssues'
       ]);
       $this->boolean($cronTask->isNewItem())->isFalse();
       $this->integer((int) $cronTask->fields['state'])->isEqualTo(0);
+   }
+
+   public function checkEntityConfig() {
+      $entityConfig = new PluginFormcreatorEntityconfig();
+      $entityConfig->getFromDBByCrit([
+         'entities_id' => 0
+      ]);
+      $this->boolean($entityConfig->isNewItem())->isFalse();
+      $expected = [
+         'entities_id' => 0,
+         'replace_helpdesk' => 0,
+         'default_form_list_mode' => 0,
+         'sort_order' => 0,
+         'is_kb_separated' => 0,
+         'is_search_visible' => 0,
+         'is_dashboard_visible' => 1,
+         'is_header_visible' => 0,
+         'is_search_issue_visible' => 1,
+         'tile_design' => 0,
+         'home_page' => 1,
+         'header' => null,
+      ];
+      $fields = $entityConfig->fields;
+      unset($fields['id']);
+      $this->array($fields)->isIdenticalTo($expected);
    }
 
    /**

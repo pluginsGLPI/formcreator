@@ -47,14 +47,13 @@ class PluginFormcreatorUpgradeTo2_14 {
    }
 
    public function addEntityOption() {
-      global $DB;
       $table = 'glpi_plugin_formcreator_entityconfigs';
 
       $this->migration->addField(
-         $table, 
-         'home_page', 
+         $table,
+         'home_page',
          'integer', [
-            'after' => 'tile_design', 
+            'after' => 'tile_design',
             'value' => '-2',
             'update' => '1',
             'condition' => 'WHERE `entities_id` = 0'
