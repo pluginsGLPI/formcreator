@@ -54,7 +54,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    PluginFormcreatorCommon::showMiniDashboard();
 }
 
-PluginFormcreatorCommon::showGenericSearchIssueIfNeeded();
+PluginFormcreatorCommon::showGenericSearchIssue();
 
 if (Session::getCurrentInterface() == "helpdesk") {
    Html::helpFooter();
