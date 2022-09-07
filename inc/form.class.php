@@ -596,7 +596,7 @@ PluginFormcreatorTranslatableInterface
       if ($need_request_list) {
          echo "<br/>";
          echo "<br/>";
-         PluginFormcreatorCommon::showGenericSearchIssueIfNeeded();
+         PluginFormcreatorCommon::showGenericSearchIssue();
       }
    }
 
