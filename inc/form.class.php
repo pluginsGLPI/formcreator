@@ -653,7 +653,6 @@ PluginFormcreatorTranslatableInterface
       echo Html::scriptblock("$(function() {
          plugin_formcreator.updateWizardFormsView();
       });");
-
    }
 
    /**
