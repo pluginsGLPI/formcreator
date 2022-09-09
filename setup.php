@@ -525,7 +525,7 @@ function plugin_formcreator_getSchemaPath(string $version = null): ?string {
    preg_match('/^(\d+\.\d+\.\d+)/', $version, $matches);
    $version = $matches[1];
 
-   return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
+   return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_{$version}_empty.sql";
 }
 
 /**

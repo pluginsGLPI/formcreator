@@ -778,14 +778,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $targetTemplateFk = $targetItemtype::getForeignKeyField();
       if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([
-            'SELECT' => ["${targetTemplateFk}_incident", "${targetTemplateFk}_demand"],
+            'SELECT' => ["{$targetTemplateFk}_incident", "{$targetTemplateFk}_demand"],
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
          if ($row = $rows->current()) { // assign ticket template according to resulting ticket category and ticket type
             return ($data['type'] == Ticket::INCIDENT_TYPE
-                    ? $row["${targetTemplateFk}_incident"]
-                    : $row["${targetTemplateFk}_demand"]);
+                    ? $row["{$targetTemplateFk}_incident"]
+                    : $row["{$targetTemplateFk}_demand"]);
          }
       }
 
