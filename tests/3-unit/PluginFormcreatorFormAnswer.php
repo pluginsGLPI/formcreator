@@ -805,13 +805,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
       $formAnswer = $this->getFormAnswer([
          'plugin_formcreator_forms_id' => $form->getID(),
-         "_${fieldKey}" => [
+         "_{$fieldKey}" => [
             $filename,
          ],
-         "_prefix_${fieldKey}" => [
+         "_prefix_{$fieldKey}" => [
             '5e5e92ffd9bd91.44444444',
          ],
-         "_tag_${fieldKey}" => [
+         "_tag_{$fieldKey}" => [
             $tag,
          ],
       ]);

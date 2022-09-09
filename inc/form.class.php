@@ -887,7 +887,7 @@ PluginFormcreatorTranslatableInterface
          echo '<div class="card-body">';
          echo '<ul class="list-group">';
          foreach ($search['data']['rows'] as $formAnswer) {
-            switch ($formAnswer['raw']["${rawKeyBase}_8"]) {
+            switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
                   $status = CommonITILObject::WAITING;
                   break;
@@ -898,12 +898,12 @@ PluginFormcreatorTranslatableInterface
                   $status = CommonITILObject::ACCEPTED;
                   break;
                default:
-                  $status = $formAnswer['raw']["${rawKeyBase}_8"];
+                  $status = $formAnswer['raw']["{$rawKeyBase}_8"];
             }
             $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["${rawKeyBase}_2"] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["${rawKeyBase}_2"] .'">'. $formAnswer['raw']["${rawKeyBase}_1"] .'</a>';
-            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["${rawKeyBase}_6"]).'</span>';
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["{$rawKeyBase}_2"] . '">';
+            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["{$rawKeyBase}_2"] .'">'. $formAnswer['raw']["{$rawKeyBase}_1"] .'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["{$rawKeyBase}_6"]).'</span>';
             echo '</li>';
          }
          echo '</ul>';
@@ -955,7 +955,7 @@ PluginFormcreatorTranslatableInterface
          echo '<div class="card-body">';
          echo '<ul class="list-group">';
          foreach ($search['data']['rows'] as $formAnswer) {
-            switch ($formAnswer['raw']["${rawKeyBase}_8"]) {
+            switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
                case PluginFormcreatorFormAnswer::STATUS_WAITING:
                   $status = CommonITILObject::WAITING;
                   break;
@@ -966,12 +966,12 @@ PluginFormcreatorTranslatableInterface
                   $status = CommonITILObject::ACCEPTED;
                   break;
                default:
-                  $status = $formAnswer['raw']["${rawKeyBase}_8"];
+                  $status = $formAnswer['raw']["{$rawKeyBase}_8"];
             }
             $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["${rawKeyBase}_2"] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["${rawKeyBase}_2"] .'">'. $formAnswer['raw']["${rawKeyBase}_1"] .'</a>';
-            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["${rawKeyBase}_6"]).'</span>';
+            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["{$rawKeyBase}_2"] . '">';
+            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["{$rawKeyBase}_2"] .'">'. $formAnswer['raw']["{$rawKeyBase}_1"] .'</a>';
+            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["{$rawKeyBase}_6"]).'</span>';
             echo '</li>';
          }
          echo '</ul>';
@@ -2364,7 +2364,7 @@ PluginFormcreatorTranslatableInterface
       if ($language == '') {
          $language = $_SESSION['glpilanguage'];
       }
-      return "form_${id}_${language}";
+      return "form_{$id}_{$language}";
    }
 
    /**

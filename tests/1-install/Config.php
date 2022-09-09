@@ -129,7 +129,7 @@ class Config extends CommonTestCase {
 
       $pluginName = TEST_PLUGIN_NAME;
 
-      $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
+      $fresh_tables = $DB->listTables("glpi_plugin_{$pluginName}_%");
       foreach ($fresh_tables as $fresh_table) {
          $table = $fresh_table['TABLE_NAME'];
          $this->boolean($this->olddb->tableExists($table, false))

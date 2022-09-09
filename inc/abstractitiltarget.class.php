@@ -2227,7 +2227,7 @@ SCRIPT;
             if (is_array($data["$actorType"])) {
                if (count($data["$actorType"]) < 1) {
                   unset($data["$actorType"]);
-                  unset($data["${actorType}_notif"]);
+                  unset($data["{$actorType}_notif"]);
                } else {
                   $cleaned = [];
                   $cleaned_notif = [];
@@ -2236,17 +2236,17 @@ SCRIPT;
                         continue;
                      }
                      $cleaned[] = $actor;
-                     $cleaned_notif['use_notification'][] = $data["${actorType}_notif"]['use_notification'][$key];
-                     $cleaned_notif['alternative_email'][] = $data["${actorType}_notif"]['alternative_email'][$key];
+                     $cleaned_notif['use_notification'][] = $data["{$actorType}_notif"]['use_notification'][$key];
+                     $cleaned_notif['alternative_email'][] = $data["{$actorType}_notif"]['alternative_email'][$key];
                   }
                   $data["$actorType"] = $cleaned;
-                  $data["${actorType}_notif"] = $cleaned_notif;
+                  $data["{$actorType}_notif"] = $cleaned_notif;
                }
             } else {
                if ($data["$actorType"] == 0) {
-                  if (isset($data["${actorType}_notif"]) && count($data["${actorType}_notif"]) < 1) {
+                  if (isset($data["{$actorType}_notif"]) && count($data["{$actorType}_notif"]) < 1) {
                      unset($data["$actorType"]);
-                     unset($data["${actorType}_notif"]);
+                     unset($data["{$actorType}_notif"]);
                   }
                }
             }
