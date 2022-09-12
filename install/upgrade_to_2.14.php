@@ -65,7 +65,7 @@ class PluginFormcreatorUpgradeTo2_14 {
          'is_category_visible',
          'integer', [
             'after' => 'home_page',
-            'value' => '1',
+            'value' => '-2',
             'update' => '0',
             'condition' => 'WHERE `entities_id` = 0'
          ]
