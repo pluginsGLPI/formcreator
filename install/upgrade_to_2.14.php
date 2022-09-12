@@ -66,7 +66,7 @@ class PluginFormcreatorUpgradeTo2_14 {
          'integer', [
             'after' => 'home_page',
             'value' => '-2',
-            'update' => '0',
+            'update' => '1',
             'condition' => 'WHERE `entities_id` = 0'
          ]
       );
