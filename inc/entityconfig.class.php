@@ -72,6 +72,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_HOME_PAGE_ONLY_FORM = 0;
    const CONFIG_HOME_PAGE_FORM_AND_REQUEST = 1;
 
+   const CONFIG_CATEGORY_HIDDEN = 0;
+   const CONFIG_CATEGORY_VISIBLE = 1;
+
 
    /**
     * @var bool $dohistory maintain history
@@ -166,6 +169,14 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          self::CONFIG_PARENT                       => __('Inheritance of the parent entity'),
          self::CONFIG_HOME_PAGE_ONLY_FORM          => __('Only forms', 'formcreator'),
          self::CONFIG_HOME_PAGE_FORM_AND_REQUEST   => __('Forms and list of requests', 'formcreator'),
+      ];
+   }
+
+   public static function getEnumCategoryVisibility() : array {
+      return [
+         self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         self::CONFIG_CATEGORY_VISIBLE => __('Visible', 'formcreator'),
+         self::CONFIG_CATEGORY_HIDDEN  => __('Hidden', 'formcreator'),
       ];
    }
 
@@ -414,6 +425,22 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('home_page', $elements, ['value' => $this->fields['home_page']]);
       if ($this->fields['home_page'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('home_page', $entityId);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
+      // category visibility
+      $elements = self::getEnumCategoryVisibility();
+      if ($entityId == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Category', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_category_visible', $elements, ['value' => $this->fields['is_category_visible']]);
+      if ($this->fields['is_category_visible'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_category_visible', $entityId);
          echo '<br>';
          Entity::inheritedValue($elements[$tid], true);
       }

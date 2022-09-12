@@ -210,6 +210,7 @@ class Config extends CommonTestCase {
          'is_search_issue_visible' => 1,
          'tile_design' => 0,
          'home_page' => 0,
+         'is_category_visible' => 1,
          'header' => null,
       ];
       $fields = $entityConfig->fields;

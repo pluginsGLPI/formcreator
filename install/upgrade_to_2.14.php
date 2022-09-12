@@ -59,6 +59,17 @@ class PluginFormcreatorUpgradeTo2_14 {
             'condition' => 'WHERE `entities_id` = 0'
          ]
       );
+
+      $this->migration->addField(
+         $table,
+         'is_category_visible',
+         'integer', [
+            'after' => 'home_page',
+            'value' => '1',
+            'update' => '0',
+            'condition' => 'WHERE `entities_id` = 0'
+         ]
+      );
    }
 
    public function addTtoToIssues() {
