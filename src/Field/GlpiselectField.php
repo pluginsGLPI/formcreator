@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Field;
 
 use CommonDBTM;
 use CommonTreeDropdown;
+use GlpiPlugin\Formcreator\QuestionFilter;
 use Dropdown;
 use Entity;
 use Glpi\Application\View\TemplateRenderer;
@@ -65,8 +66,10 @@ class GlpiselectField extends DropdownField
       $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
 
+      $parameters = $this->getParameters();
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
+         'question_params' => $parameters,
          'params' => $options,
       ]);
    }
@@ -121,6 +124,18 @@ class GlpiselectField extends DropdownField
 
    public static function canRequire(): bool {
       return true;
+   }
+
+   public function getEmptyParameters(): array {
+      $filter = new QuestionFilter();
+      $filter->setField($this, [
+         'fieldName' => 'filter',
+         'label'     => __('Filter', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      return [
+         'filter' => $filter,
+      ];
    }
 
    public function getAvailableValues(): array {

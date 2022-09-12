@@ -361,6 +361,16 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
   INDEX `plugin_formcreator_questions_id_2` (`plugin_formcreator_questions_id_2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `glpi_plugin_formcreator_questionfilters` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_questions_id` int unsigned NOT NULL DEFAULT '0',
+  `filter` mediumtext COLLATE utf8mb4_unicode_ci,
+  `fieldname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `id`                                int unsigned  NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_questions_id`   int unsigned  NOT NULL DEFAULT '0',
