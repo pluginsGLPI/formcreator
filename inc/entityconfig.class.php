@@ -174,7 +174,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public static function getEnumCategoryVisibility() : array {
       return [
-         self::CONFIG_PARENT            => __('Inheritance of the parent entity'),
+         self::CONFIG_PARENT           => __('Inheritance of the parent entity'),
          self::CONFIG_CATEGORY_VISIBLE => __('Visible', 'formcreator'),
          self::CONFIG_CATEGORY_HIDDEN  => __('Hidden', 'formcreator'),
       ];
