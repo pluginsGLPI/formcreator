@@ -135,3 +135,9 @@
         }) }}
     {% endif %}
 {% endblock %}
+
+{% block questionParameters %}
+    {% for parameter in question_params %}
+        {{ parameter.getParameterForm(item)|raw }}
+    {% endfor %}
+{% endblock %}

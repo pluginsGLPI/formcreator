@@ -397,6 +397,11 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
+      if (isset($input['criteria']['filter'])) {
+         $itemtype = $input['fieldtype'] ?? '';
+         $input['_parameters'][$itemtype] = $input['criteria'];
+      }
+
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
 
@@ -445,7 +450,10 @@ PluginFormcreatorTranslatableInterface
     * @array return the modified $input array
     */
    public function prepareInputForUpdate($input) {
-      // global $DB;
+      if (isset($input['criteria']['filter'])) {
+         $itemtype = $input['fieldtype'] ?? $this->fields['fieldtype'];
+         $input['_parameters'][$itemtype] = $input['criteria'];
+      }
 
       if (!$this->skipChecks) {
          if (!isset($input['plugin_formcreator_sections_id'])) {
@@ -582,12 +590,8 @@ PluginFormcreatorTranslatableInterface
       if (!isset($this->fields['fieldtype'])) {
          return;
       }
-      $fieldType = $this->fields['fieldtype'];
 
-      // The fieldtype may change
-      if (isset($input['fieldtype'])) {
-         $fieldType = $input['fieldtype'];
-      }
+      $fieldType = $input['fieldtype'] ?? $this->fields['fieldtype'];
 
       $this->loadField($fieldType);
       $this->field->updateParameters($this, $input);

@@ -251,7 +251,6 @@ class FloatField extends PluginFormcreatorAbstractField
       ];
    }
 
-
    public function equals($value): bool {
       return ((float) $this->value) === ((float) $value);
    }
