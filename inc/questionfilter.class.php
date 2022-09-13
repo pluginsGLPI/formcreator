@@ -121,8 +121,8 @@ extends PluginFormcreatorAbstractQuestionParameter
 
    public function pre_updateInDB()
    {
-      if (isset($this->input['filter'])) {
-         $this->input['filter'] = json_encode($this->input['filter']);
+      if (isset($this->fields['filter'])) {
+         $this->fields['filter'] = json_encode($this->fields['filter']);
       }
    }
 
@@ -131,6 +131,20 @@ extends PluginFormcreatorAbstractQuestionParameter
       $input['fieldname'] = $this->fieldName;
 
       return $input;
+   }
+
+   public function post_updateItem($history = 1)
+   {
+      // filter was encoded in JSON in pre_updateInDB. Re-decode it again
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   private function encodeFilter() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   private function decodeFilter() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
    }
 
    public function getFieldName() {

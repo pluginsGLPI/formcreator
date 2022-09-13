@@ -27,19 +27,12 @@
  # @link      http://plugins.glpi-project.org/#/plugin/formcreator
  # ---------------------------------------------------------------------
  #}
+{% extends "generic_show_form.html.twig" %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
-
-{% block parameters %}
-    {% if (question.fields['itemtype']|length != null) %}
-        {% set options = {
-            showbookmark: false,
-            showreset: false,
-            prefix_crit: '[filter][filter]',
-            criteria: item.fields.filter,
-        } %}
-        {# criteria: item.fields.filter|merge({ reset: 'reset' }), #}
-        {# criteria: item.fields.filter, #}
-        {# criteria: item.fields.filter|merge({ itemtype: question.fields['itemtype'] }), #}
-        {{ call('Search::showGenericSearch', [question.fields['itemtype'], options]) }}
-    {% endif %}
+{% block form_fields %}
+    {% for parameter in question_params %}
+        {{ parameter.getParameterForm(item)|raw }}
+    {% endfor %}
 {% endblock %}

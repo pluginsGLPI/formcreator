@@ -51,6 +51,8 @@ PluginFormcreatorTranslatableInterface
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
+   public $taborientation  = 'horizontal';
+
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private ?PluginFormcreatorFieldInterface $field = null;
 
@@ -115,8 +117,23 @@ PluginFormcreatorTranslatableInterface
             $number = $count['cpt'];
          }
          return self::createTabEntry(self::getTypeName($number), $number);
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         return $item->field->getTabNameForItem($this);
       }
       return '';
+   }
+
+   public function defineTabs($options = []) {
+      $tabs = [];
+      $this->addDefaultFormTab($tabs);
+      if ($this->loadField($this->fields['fieldtype'])) {
+         foreach ($this->field->getTabNameForItem($this) as $tabName) {
+            // $this->field->defineExtraTabs($tabs, $options);
+            $this->addStandardTab(self::class, $tabs, $options);
+         }
+      }
+      $this->addStandardTab(Log::class, $tabs, $options);
+      return $tabs;
    }
 
    /**
@@ -133,6 +150,9 @@ PluginFormcreatorTranslatableInterface
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
          static::showForForm($item, $withtemplate);
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         $item->loadField($item->fields['fieldtype']);
+         $item->field->displayTabContentForItem($item, $tabnum);
       }
    }
 
@@ -733,6 +753,7 @@ PluginFormcreatorTranslatableInterface
          TemplateRenderer::getInstance()->display($template, [
             'item' => $this,
             'params' => $options,
+            'no_header' => true,
          ]);
          return true;
       }

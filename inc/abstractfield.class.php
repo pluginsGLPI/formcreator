@@ -59,6 +59,15 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $this->question = $question;
    }
 
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool
+   {
+      return false;
+   }
+
    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {
       $this->form_answer = $form_answer;
       if ($this->hasInput($this->form_answer->getAnswers())) {
