@@ -32,6 +32,7 @@
 
 namespace GlpiPlugin\Formcreator;
 
+use CommonGLPI;
 use Html;
 use Toolbox;
 
@@ -56,6 +57,14 @@ abstract class AbstractField implements FieldInterface
     */
    public function __construct(Question $question) {
       $this->question = $question;
+   }
+
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      return false;
    }
 
    public function setFormAnswer(FormAnswer $form_answer): void {

@@ -59,6 +59,7 @@ class FloatField extends AbstractField
          'item' => $this->question,
          'question_params' => $parameters,
          'params' => $options,
+         'no_header' => true,
       ]);
 
    }

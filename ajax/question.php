@@ -45,4 +45,5 @@ if ($question_id == 0) {
 } else {
    $question->getFromDB($question_id);
 }
-$question->showForm($question_id);
+// $question->showForm($question_id);
+$question->display(['show_nav_header' => false]);

@@ -90,6 +90,9 @@ TranslatableInterface
    static public $itemtype = Section::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
+
+   public $taborientation  = 'horizontal';
+
    /** @var FieldInterface|null $field a field describing the question denpending on its field type  */
    private ?FieldInterface $field = null;
 
@@ -154,8 +157,23 @@ TranslatableInterface
             $number = $count['cpt'];
          }
          return self::createTabEntry(self::getTypeName($number), $number);
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         return $item->field->getTabNameForItem($this);
       }
       return '';
+   }
+
+   public function defineTabs($options = []) {
+      $tabs = [];
+      $this->addDefaultFormTab($tabs);
+      if ($this->loadField($this->fields['fieldtype'])) {
+         foreach ($this->field->getTabNameForItem($this) as $tabName) {
+            // $this->field->defineExtraTabs($tabs, $options);
+            $this->addStandardTab(self::class, $tabs, $options);
+         }
+      }
+      $this->addStandardTab(Log::class, $tabs, $options);
+      return $tabs;
    }
 
    /**
@@ -172,6 +190,9 @@ TranslatableInterface
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       if ($item instanceof Form) {
          static::showForForm($item, $withtemplate);
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         $item->loadField($item->fields['fieldtype']);
+         $item->field->displayTabContentForItem($item, $tabnum);
       }
    }
 
@@ -772,6 +793,7 @@ TranslatableInterface
          TemplateRenderer::getInstance()->display($template, [
             'item' => $this,
             'params' => $options,
+            'no_header' => true,
          ]);
          return true;
       }

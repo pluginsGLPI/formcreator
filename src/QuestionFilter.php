@@ -31,8 +31,6 @@
 
 namespace GlpiPlugin\Formcreator;
 
-use GlpiPlugin\Formcreator\Exception\ImportFailureException;
-use GlpiPlugin\Formcreator\Exception\ExportFailureException;
 use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
@@ -109,22 +107,19 @@ extends AbstractQuestionParameter
       $this->fields['filter'] = '[]';
    }
 
-   public function post_getFromDB()
-   {
+   public function post_getFromDB() {
       $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
    }
 
-   public function pre_addInDB()
-   {
+   public function pre_addInDB() {
       if (isset($this->input['filter'])) {
          $this->input['filter'] = json_encode($this->input['filter']);
       }
    }
 
-   public function pre_updateInDB()
-   {
-      if (isset($this->input['filter'])) {
-         $this->input['filter'] = json_encode($this->input['filter']);
+   public function pre_updateInDB() {
+      if (isset($this->fields['filter'])) {
+         $this->fields['filter'] = json_encode($this->fields['filter']);
       }
    }
 
@@ -135,13 +130,26 @@ extends AbstractQuestionParameter
       return $input;
    }
 
+   public function post_updateItem($history = 1) {
+      // filter was encoded in JSON in pre_updateInDB. Re-decode it again
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   private function encodeFilter() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   private function decodeFilter() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
    public function getFieldName() {
       return $this->fieldName;
    }
 
    public function export(bool $remove_uuid = false) : array {
       if ($this->isNewItem()) {
-         throw new ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
+         throw new \GlpiPlugin\Formcreator\Exception\ExportFailureException(sprintf(__('Cannot export an empty object: %s', 'formcreator'), $this->getTypeName()));
       }
 
       $parameter = $this->fields;
@@ -163,7 +171,7 @@ extends AbstractQuestionParameter
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
-         throw new ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf('UUID or ID is mandatory for %1$s', static::getTypeName(1)));
       }
 
       $questionFk = Question::getForeignKeyField();
@@ -206,7 +214,7 @@ extends AbstractQuestionParameter
       }
       if ($itemId === false) {
          $typeName = strtolower(self::getTypeName());
-         throw new ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
+         throw new \GlpiPlugin\Formcreator\Exception\ImportFailureException(sprintf(__('Failed to add or update the %1$s %2$s', 'formceator'), $typeName, $input['name']));
       }
 
       // add the question to the linker

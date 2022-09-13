@@ -33,16 +33,24 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use CommonDBTM;
+use CommonGLPI;
 use CommonTreeDropdown;
-use GlpiPlugin\Formcreator\QuestionFilter;
 use Dropdown;
 use Entity;
 use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Formcreator\QuestionFilter;
 use Html;
 use Session;
 
 class GlpiselectField extends DropdownField
 {
+
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [
+         __('Search filter', 'formcreator'),
+      ];
+   }
+
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
@@ -71,7 +79,25 @@ class GlpiselectField extends DropdownField
          'item' => $this->question,
          'question_params' => $parameters,
          'params' => $options,
+         'no_header' => true,
       ]);
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.filter.html.twig';
+      $parameters = $this->getParameters();
+      $options = [];
+      $options['candel'] = false;
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+         'question_params' => $parameters,
+         'no_header' => true,
+      ]);
+
+      return true;
    }
 
    public static function getName(): string {
