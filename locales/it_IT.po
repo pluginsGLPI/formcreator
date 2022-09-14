@@ -23,13 +23,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: it_IT\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: hook.php:68 inc/category.class.php:50 inc/form.class.php:217
 msgid "Form category"
 msgid_plural "Form categories"
 msgstr[0] "Categoria del modulo"
 msgstr[1] "Categorie del modulo"
+msgstr[2] "Categorie del modulo"
 
 #: hook.php:548 setup.php:284 ajax/homepage_link.php:36
 #: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:745
@@ -39,6 +40,7 @@ msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Modulo"
 msgstr[1] "Moduli"
+msgstr[2] "Moduli"
 
 #: hook.php:590
 msgid "Cancel my ticket"
@@ -288,6 +290,7 @@ msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categoria"
 msgstr[1] "Categorie"
+msgstr[2] "Categorie"
 
 #: inc/abstracttarget.class.php:1195 inc/abstracttarget.class.php:1232
 #: inc/abstracttarget.class.php:1310 inc/abstracttarget.class.php:1438
@@ -297,6 +300,7 @@ msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Domanda"
 msgstr[1] "Domande"
+msgstr[2] "Domande"
 
 #: inc/abstracttarget.class.php:1233
 msgid "Urgency "
@@ -344,6 +348,7 @@ msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Risposta"
 msgstr[1] "Risposte"
+msgstr[2] "Risposte"
 
 #: inc/abstracttarget.class.php:1697 inc/question.class.php:777
 #: inc/section.class.php:64
@@ -351,6 +356,7 @@ msgid "Section"
 msgid_plural "Sections"
 msgstr[0] "Sezioni"
 msgstr[1] "Sezioni"
+msgstr[2] "Sezioni"
 
 #: inc/abstracttarget.class.php:1701
 msgid "Full form"
@@ -418,6 +424,7 @@ msgid "Condition"
 msgid_plural "Conditions"
 msgstr[0] "Condizione"
 msgstr[1] "Condizioni"
+msgstr[2] "Condizioni"
 
 #: inc/condition.class.php:103
 msgid "is visible"
@@ -537,6 +544,7 @@ msgid "Header"
 msgid_plural "Headers"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/entityconfig.class.php:306
 msgid "Display search field"
@@ -611,6 +619,7 @@ msgid "Target"
 msgid_plural "Targets"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/form.class.php:707 inc/form_language.class.php:334
 #: inc/form_language.class.php:373
@@ -800,12 +809,14 @@ msgid "Form language"
 msgid_plural "Form languages"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/form_language.class.php:69 inc/form_language.class.php:345
 msgid "Translation"
 msgid_plural "Translations"
 msgstr[0] "Traduzione"
 msgstr[1] "Traduzioni"
+msgstr[2] "Traduzioni"
 
 #: inc/form_language.class.php:116
 msgid "The language must be associated to a form!"
@@ -844,6 +855,7 @@ msgid "Access type"
 msgid_plural "Access types"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/form_profile.class.php:101
 msgid "Link to the form"
@@ -874,6 +886,7 @@ msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/formanswer.class.php:207 inc/issue.class.php:586
 msgid "Form approver"
@@ -961,6 +974,7 @@ msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/issue.class.php:53
 msgid "Update issue data from tickets and form answers"
@@ -979,6 +993,7 @@ msgid "Composite ticket relation"
 msgid_plural "Composite ticket relations"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/knowbase.class.php:89
 msgid "Please, describe your need here"
@@ -986,7 +1001,7 @@ msgstr "Descrivete la vostra necessità"
 
 #: inc/linker.class.php:78
 msgid "Importing"
-msgstr ""
+msgstr "Importazione"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
@@ -1103,12 +1118,14 @@ msgid "Question dependency"
 msgid_plural "Question dependencies"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/questionrange.class.php:53
 msgid "Question range"
 msgid_plural "Question ranges"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/questionrange.class.php:63
 msgid "Minimum range"
@@ -1131,6 +1148,7 @@ msgid "Question regular expression"
 msgid_plural "Question regular expressions"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/questionregex.class.php:63 inc/field/floatfield.class.php:253
 #: inc/field/textfield.class.php:236
@@ -1178,12 +1196,14 @@ msgid "Target actor"
 msgid_plural "Target actors"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/targetchange.class.php:42 inc/targetchange.class.php:402
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/targetchange.class.php:245 inc/targetticket.class.php:1231
 #, php-format
@@ -1237,6 +1257,7 @@ msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/targetticket.class.php:94
 msgid "None"
@@ -1357,6 +1378,7 @@ msgid "Actor"
 msgid_plural "Actors"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/field/actorfield.class.php:267 inc/field/checkboxesfield.class.php:210
 #: inc/field/datefield.class.php:138 inc/field/datetimefield.class.php:140
@@ -1364,7 +1386,7 @@ msgstr[1] ""
 #: inc/field/selectfield.class.php:97
 #, php-format
 msgid "A required field is empty: %s"
-msgstr ""
+msgstr "Un campo obbligatorio risulta non compilato: %s"
 
 #: inc/field/actorfield.class.php:277
 #, php-format
@@ -1374,7 +1396,7 @@ msgstr "Valore non valido: %s"
 #: inc/field/actorfield.class.php:300
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr ""
+msgstr "Utente non trovato o e-mail non valida :%s"
 
 #: inc/field/checkboxesfield.class.php:152
 msgid "Checkboxes"
@@ -1481,7 +1503,7 @@ msgstr "Limite dell'entità"
 #: inc/field/emailfield.class.php:108
 #, php-format
 msgid "This is not a valid e-mail: %s"
-msgstr ""
+msgstr "Non è un'email valida: %s"
 
 #: inc/field/filefield.class.php:94
 msgid "No attached document"
@@ -1532,6 +1554,7 @@ msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "Oggetto di GLPI"
 msgstr[1] "Oggetti di GLPI"
+msgstr[2] "Oggetti di GLPI"
 
 #: inc/field/integerfield.class.php:58
 #, php-format
@@ -1552,7 +1575,7 @@ msgstr "Attributo"
 
 #: inc/field/ldapselectfield.class.php:191
 msgid "LDAP size limit exceeded"
-msgstr ""
+msgstr "I limiti di dimensione di LDAP sono stati superati"
 
 #: inc/field/ldapselectfield.class.php:220
 msgid "LDAP Select"
@@ -1591,6 +1614,7 @@ msgid "Tag"
 msgid_plural "Tags"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: inc/field/textareafield.class.php:126
 msgid "Textarea"
@@ -1612,7 +1636,7 @@ msgstr "Testo"
 
 #: inc/field/timefield.class.php:155
 msgid "Time"
-msgstr ""
+msgstr "Ora"
 
 #: install/install.php:275
 msgid "A form has been created"

@@ -6,15 +6,16 @@
 # Translators:
 # Dominique Depireux <ddepireux@environnement.brussels>, 2021
 # Glenn Franssen <github@glennfrn.nl>, 2021
+# Chris Gralike, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-14 09:05+0200\n"
+"POT-Creation-Date: 2022-02-23 08:44+0100\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Glenn Franssen <github@glennfrn.nl>, 2021\n"
+"Last-Translator: Chris Gralike, 2022\n"
 "Language-Team: Dutch (Netherlands) (https://www.transifex.com/teclib/teams/28042/nl_NL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,20 +29,20 @@ msgid_plural "Form categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:560 setup.php:267 ajax/homepage_link.php:36
-#: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:721
-#: inc/form.class.php:2179 inc/formanswer.class.php:187
-#: inc/formlist.class.php:46
+#: hook.php:548 setup.php:284 ajax/homepage_link.php:36
+#: inc/entityconfig.class.php:69 inc/form.class.php:104 inc/form.class.php:745
+#: inc/form.class.php:2220 inc/formanswer.class.php:187
+#: inc/formlist.class.php:46 inc/field/dropdownfield.class.php:72
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:602
+#: hook.php:590
 msgid "Cancel my ticket"
 msgstr ""
 
-#: setup.php:257 inc/form.class.php:111 inc/formlist.class.php:55
+#: setup.php:274 inc/form.class.php:111 inc/formlist.class.php:55
 #: inc/formlist.class.php:56
 msgid "Forms waiting for validation"
 msgstr "Formulieren wachten op goedkeuring"
@@ -52,7 +53,7 @@ msgstr ""
 
 #: ajax/commontree.php:59
 msgid "Selectable"
-msgstr ""
+msgstr "Selecteerbaar"
 
 #: ajax/commontree.php:74
 msgid "Limit subtree depth"
@@ -62,333 +63,340 @@ msgstr ""
 msgid "No limit"
 msgstr "Geen limit"
 
-#: ajax/question_delete.php:48 ajax/question_duplicate.php:49
+#: ajax/question_delete.php:42 ajax/question_move.php:45
+#: ajax/question_toggle_required.php:49 ajax/question_update.php:45
+msgid "Question not found"
+msgstr "Vraag niet gevonden"
+
+#: ajax/question_delete.php:49 ajax/question_duplicate.php:49
 #: ajax/question_move.php:50 ajax/question_toggle_required.php:55
 #: ajax/question_update.php:51 ajax/section_add.php:38
 #: ajax/section_delete.php:50 ajax/section_duplicate.php:50
 #: ajax/section_move.php:55 ajax/section_update.php:43
 msgid "You don't have right for this action"
+msgstr "Geen rechten om actie uit te voeren"
+
+#: ajax/question_delete.php:55
+msgid "Error deleting the question"
 msgstr ""
 
 #: ajax/question_duplicate.php:43
 msgid "Source question not found"
-msgstr ""
-
-#: ajax/question_move.php:45 ajax/question_toggle_required.php:49
-#: ajax/question_update.php:45
-msgid "Question not found"
-msgstr ""
+msgstr "Bronvraag niet gevonden"
 
 #: ajax/question_move.php:73
 msgid "Could not move some questions"
-msgstr ""
+msgstr "Kon de vraag niet verplaatsen"
 
 #: ajax/question_update.php:36
 msgid "Bad request"
-msgstr ""
+msgstr "Ongelding verzoek"
 
 #: ajax/section_add.php:44
 msgid "Could not add the section"
-msgstr ""
+msgstr "Kon de selectie niet toevoegen"
 
 #: ajax/section_delete.php:44 ajax/section_duplicate.php:44
 #: ajax/section_move.php:49
 msgid "Source section not found"
-msgstr ""
+msgstr "Bronselectie niet gevonden"
 
 #: ajax/section_delete.php:56
 msgid "Could not delete the section"
-msgstr ""
+msgstr "Kon de sectie niet verwijderen"
 
 #: ajax/section_duplicate.php:56
 msgid "Could not duplicate the section"
-msgstr ""
+msgstr "Kon de sectie niet dupliceren"
 
 #: ajax/section_move.php:66
 msgid "Could not move the section"
-msgstr ""
+msgstr "Kon de sectie niet verplaatsen"
 
 #: ajax/section_update.php:49
 msgid "Could not update the section"
-msgstr ""
+msgstr "Kon de sectie niet bijwerken"
 
 #: front/form.php:44 front/formanswer.form.php:78 front/formanswer.form.php:83
 #: front/formanswer.php:45 front/formanswer.php:50 front/issue.php:47
 #: front/issue.php:52 front/targetchange.form.php:76
-#: front/targetticket.form.php:76 inc/form.class.php:2245
-#: inc/form.class.php:2252
+#: front/targetticket.form.php:76 inc/form.class.php:2293
+#: inc/form.class.php:2300
 msgid "Form Creator"
 msgstr "Formcreator"
 
 #: front/formanswer.form.php:74 front/formanswer.php:41
-#: front/issue.form.php:53 front/issue.php:43 front/knowbaseitem.form.php:44
+#: front/issue.form.php:60 front/issue.php:43 front/knowbaseitem.form.php:44
 #: front/knowbaseitem.php:40 front/reservation.form.php:45
 #: front/reservation.php:45 front/reservationitem.php:41 front/wizard.php:43
-#: front/wizardfeeds.php:45 inc/form.class.php:2240
+#: front/wizardfeeds.php:45 inc/form.class.php:2288
 msgid "Service catalog"
 msgstr "Service Catalogus"
 
-#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2242
+#: front/formlist.php:46 front/formlist.php:52 inc/form.class.php:2290
 msgid "Form list"
 msgstr "Formulieren lijst"
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
-msgstr ""
+msgstr "Parameter"
 
 #: inc/abstractquestionparameter.class.php:99
 msgid "Field name"
-msgstr ""
+msgstr "Veldnaam"
 
-#: inc/abstracttarget.class.php:186
+#: inc/abstracttarget.class.php:208
 msgid "Current active entity"
 msgstr "Huidige actieve entiteit"
 
-#: inc/abstracttarget.class.php:187
+#: inc/abstracttarget.class.php:209
 msgid "Default requester user's entity"
 msgstr "Aanvragers standaard entiteit "
 
-#: inc/abstracttarget.class.php:188
+#: inc/abstracttarget.class.php:210
 msgid "First dynamic requester user's entity (alphabetical)"
 msgstr "Eerste dynamische gebruikers entiteit (alfabet)"
 
-#: inc/abstracttarget.class.php:189
+#: inc/abstracttarget.class.php:211
 msgid "Last dynamic requester user's entity (alphabetical)"
 msgstr "Laatste dynamische gebruikers entiteit (alfabet)"
 
-#: inc/abstracttarget.class.php:190
+#: inc/abstracttarget.class.php:212
 msgid "The form entity"
 msgstr "Formulier entiteit"
 
-#: inc/abstracttarget.class.php:191
+#: inc/abstracttarget.class.php:213
 msgid "Default entity of the validator"
 msgstr "Standaard entiteit van validatiegever"
 
-#: inc/abstracttarget.class.php:192
+#: inc/abstracttarget.class.php:214
 msgid "Specific entity"
 msgstr "Specifieke entiteit"
 
-#: inc/abstracttarget.class.php:193
+#: inc/abstracttarget.class.php:215
 msgid "Default entity of a user type question answer"
 msgstr "Standaard entiteit van een gebruiker type antwoord"
 
-#: inc/abstracttarget.class.php:194
+#: inc/abstracttarget.class.php:216
 msgid "From a GLPI object > Entity type question answer"
 msgstr "Van een GLPI object -> Entiteit type vraag"
 
-#: inc/abstracttarget.class.php:201
+#: inc/abstracttarget.class.php:223
 msgid "Tags from questions"
 msgstr "Tags van vragen"
 
-#: inc/abstracttarget.class.php:202
+#: inc/abstracttarget.class.php:224
 msgid "Specific tags"
 msgstr "Specifieke tags"
 
-#: inc/abstracttarget.class.php:203
+#: inc/abstracttarget.class.php:225
 msgid "Tags from questions and specific tags"
 msgstr "Tags van vragen en specifieke tags"
 
-#: inc/abstracttarget.class.php:204
+#: inc/abstracttarget.class.php:226
 msgid "Tags from questions or specific tags"
 msgstr "Tags van vragen of specifieke tags"
 
-#: inc/abstracttarget.class.php:210
+#: inc/abstracttarget.class.php:232
 msgid "equals to the answer to the question"
 msgstr "Gelijk aan antwoord op deze vraag"
 
-#: inc/abstracttarget.class.php:211
+#: inc/abstracttarget.class.php:233
 msgid "calculated from the ticket creation date"
 msgstr "Uitgerekend vanaf datum aanmaak ticket"
 
-#: inc/abstracttarget.class.php:212
+#: inc/abstracttarget.class.php:234
 msgid "calculated from the answer to the question"
 msgstr "Uitgerekend vanaf antwoord op deze vraag"
 
-#: inc/abstracttarget.class.php:218
+#: inc/abstracttarget.class.php:240
 msgid "SLA from template or none"
 msgstr ""
 
-#: inc/abstracttarget.class.php:219
+#: inc/abstracttarget.class.php:241
 msgid "Specific SLA"
 msgstr ""
 
-#: inc/abstracttarget.class.php:220 inc/abstracttarget.class.php:228
-#: inc/abstracttarget.class.php:236 inc/abstracttarget.class.php:244
-#: inc/abstracttarget.class.php:253 inc/targetchange.class.php:49
-#: inc/targetchange.class.php:57 inc/targetticket.class.php:88
-#: inc/targetticket.class.php:97
+#: inc/abstracttarget.class.php:242 inc/abstracttarget.class.php:250
+#: inc/abstracttarget.class.php:258 inc/abstracttarget.class.php:266
+#: inc/abstracttarget.class.php:275 inc/targetticket.class.php:96
+#: inc/targetticket.class.php:105
 msgid "Equals to the answer to the question"
 msgstr "Gelijk aan antwoord op deze vraag"
 
-#: inc/abstracttarget.class.php:226
+#: inc/abstracttarget.class.php:248
 msgid "OLA from template or none"
 msgstr ""
 
-#: inc/abstracttarget.class.php:227
+#: inc/abstracttarget.class.php:249
 msgid "Specific OLA"
 msgstr ""
 
-#: inc/abstracttarget.class.php:234
+#: inc/abstracttarget.class.php:256
 msgid "Urgency from template or Medium"
 msgstr "Urgentie van template of gemiddeld"
 
-#: inc/abstracttarget.class.php:235 inc/targetchange.class.php:48
+#: inc/abstracttarget.class.php:257
 msgid "Specific urgency"
 msgstr "Specifieke urgentie"
 
-#: inc/abstracttarget.class.php:242
+#: inc/abstracttarget.class.php:264
 msgid "Category from template or none"
 msgstr "Categorie van template of geen"
 
-#: inc/abstracttarget.class.php:243 inc/targetchange.class.php:56
+#: inc/abstracttarget.class.php:265
 msgid "Specific category"
 msgstr "Specifieke categorie"
 
-#: inc/abstracttarget.class.php:245 inc/targetticket.class.php:89
+#: inc/abstracttarget.class.php:267 inc/targetticket.class.php:97
 msgid "Last valid answer"
 msgstr ""
 
-#: inc/abstracttarget.class.php:251
+#: inc/abstracttarget.class.php:273
 msgid "Location from template or none"
 msgstr "Locatie van template of geen"
 
-#: inc/abstracttarget.class.php:252
+#: inc/abstracttarget.class.php:274
 msgid "Specific location"
 msgstr "Specifieke locatie"
 
-#: inc/abstracttarget.class.php:880
+#: inc/abstracttarget.class.php:919
 msgid "User type question"
 msgstr "Gebruikers type vraag"
 
-#: inc/abstracttarget.class.php:881
+#: inc/abstracttarget.class.php:920
 msgid "Entity type question"
 msgstr "Entiteit type vraag"
 
-#: inc/abstracttarget.class.php:1017
+#: inc/abstracttarget.class.php:1060
 msgid "SLA (TTO/TTR)"
 msgstr ""
 
-#: inc/abstracttarget.class.php:1018 inc/abstracttarget.class.php:1089
+#: inc/abstracttarget.class.php:1061 inc/abstracttarget.class.php:1132
 msgid "Question (TTO/TTR)"
 msgstr ""
 
-#: inc/abstracttarget.class.php:1088
+#: inc/abstracttarget.class.php:1131
 msgid "OLA (TTO/TTR)"
 msgstr ""
 
-#: inc/abstracttarget.class.php:1137 inc/abstracttarget.class.php:1151
-#: inc/form.class.php:805 inc/knowbase.class.php:64
+#: inc/abstracttarget.class.php:1180 inc/abstracttarget.class.php:1194
+#: inc/form.class.php:829 inc/knowbase.class.php:64
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/abstracttarget.class.php:1152 inc/abstracttarget.class.php:1188
-#: inc/abstracttarget.class.php:1266 inc/abstracttarget.class.php:1394
-#: inc/abstracttarget.class.php:1650 inc/question.class.php:62
-#: inc/targetticket.class.php:968 inc/targetticket.class.php:1007
+#: inc/abstracttarget.class.php:1195 inc/abstracttarget.class.php:1232
+#: inc/abstracttarget.class.php:1310 inc/abstracttarget.class.php:1438
+#: inc/abstracttarget.class.php:1694 inc/question.class.php:62
+#: inc/targetticket.class.php:941 inc/targetticket.class.php:980
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/abstracttarget.class.php:1189
+#: inc/abstracttarget.class.php:1233
 msgid "Urgency "
 msgstr "Urgentie"
 
-#: inc/abstracttarget.class.php:1219
+#: inc/abstracttarget.class.php:1263
 msgid "Ticket tags"
 msgstr "Ticket tags"
 
-#: inc/abstracttarget.class.php:1267
+#: inc/abstracttarget.class.php:1311
 msgid "Tags"
 msgstr "Tags"
 
-#: inc/abstracttarget.class.php:1352
+#: inc/abstracttarget.class.php:1396
 msgid "Actors"
-msgstr ""
+msgstr "Uitvoerende"
 
-#: inc/abstracttarget.class.php:1395
+#: inc/abstracttarget.class.php:1439
 msgid "Location "
 msgstr "Locatie"
 
-#: inc/abstracttarget.class.php:1521
+#: inc/abstracttarget.class.php:1565
 msgid "A target must be associated to a form."
 msgstr ""
 
-#: inc/abstracttarget.class.php:1526
+#: inc/abstracttarget.class.php:1570
 msgid "A target must be associated to an existing form."
 msgstr ""
 
-#: inc/abstracttarget.class.php:1531
+#: inc/abstracttarget.class.php:1575
 msgid "Name is required."
 msgstr ""
 
-#: inc/abstracttarget.class.php:1558 inc/form.class.php:1407
+#: inc/abstracttarget.class.php:1602 inc/form.class.php:1437
 #: inc/form_language.class.php:108
 msgid "The name cannot be empty!"
 msgstr "De naam kan niet leeg zijn"
 
-#: inc/abstracttarget.class.php:1564
+#: inc/abstracttarget.class.php:1608
 msgid "The description cannot be empty!"
 msgstr "De omschrijving kan niet leeg zijn"
 
-#: inc/abstracttarget.class.php:1652 inc/answer.class.php:66
+#: inc/abstracttarget.class.php:1696 inc/answer.class.php:66
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/abstracttarget.class.php:1653 inc/question.class.php:728
+#: inc/abstracttarget.class.php:1697 inc/question.class.php:777
 #: inc/section.class.php:64
 msgid "Section"
 msgid_plural "Sections"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/abstracttarget.class.php:1657
+#: inc/abstracttarget.class.php:1701
 msgid "Full form"
 msgstr "Volledig formulier"
 
-#: inc/abstracttarget.class.php:1831
+#: inc/abstracttarget.class.php:1875
 msgid "Add"
-msgstr ""
+msgstr "Toevoegen"
 
-#: inc/abstracttarget.class.php:1833
+#: inc/abstracttarget.class.php:1877
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: inc/abstracttarget.class.php:2002 inc/target_actor.class.php:65
+#: inc/abstracttarget.class.php:2173 inc/target_actor.class.php:66
 msgid "Form author"
-msgstr ""
+msgstr "Formulier auteur"
 
-#: inc/abstracttarget.class.php:2005 inc/target_actor.class.php:66
+#: inc/abstracttarget.class.php:2176 inc/target_actor.class.php:67
 msgid "Form validator"
 msgstr "Formulier validatiegever"
 
-#: inc/abstracttarget.class.php:2015 inc/target_actor.class.php:68
+#: inc/abstracttarget.class.php:2186 inc/target_actor.class.php:69
 msgid "Person from the question"
 msgstr "Persoon van vraag"
 
-#: inc/abstracttarget.class.php:2026 inc/target_actor.class.php:70
+#: inc/abstracttarget.class.php:2197 inc/target_actor.class.php:71
 msgid "Group from the question"
 msgstr "Groep van deze vraag"
 
-#: inc/abstracttarget.class.php:2032
+#: inc/abstracttarget.class.php:2203
 msgid "Group from the object"
 msgstr ""
 
-#: inc/abstracttarget.class.php:2038
+#: inc/abstracttarget.class.php:2209
 msgid "Tech group from the object"
 msgstr ""
 
-#: inc/abstracttarget.class.php:2044 inc/target_actor.class.php:75
+#: inc/abstracttarget.class.php:2215 inc/target_actor.class.php:76
 msgid "Actors from the question"
 msgstr "Actors van deze vraag"
 
-#: inc/abstracttarget.class.php:2055 inc/target_actor.class.php:74
+#: inc/abstracttarget.class.php:2226 inc/target_actor.class.php:75
 msgid "Supplier from the question"
 msgstr "Leverancier van deze vraag"
+
+#: inc/abstracttarget.class.php:2230 inc/target_actor.class.php:77
+msgid "Form author's supervisor"
+msgstr "Formulier auteur toezichthouder"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -397,10 +405,13 @@ msgstr "Kennisdatabank categorie"
 #: inc/common.class.php:228
 msgid "You cannot delete this issue. Maybe it is taken into account."
 msgstr ""
+"U kunt dit probleem niet verwijderen. Wellicht is het reeds in overweging "
+"genomen."
 
 #: inc/common.class.php:233
 msgid "Failed to delete this issue. An internal error occured."
 msgstr ""
+"Probleem kon niet verwijderd worden. Er is een interne fout opgetreden."
 
 #: inc/condition.class.php:64
 msgid "Condition"
@@ -414,11 +425,11 @@ msgstr ""
 
 #: inc/condition.class.php:104
 msgid "is not visible"
-msgstr ""
+msgstr "Is niet zichtbaar"
 
 #: inc/condition.class.php:105
 msgid "regular expression matches"
-msgstr ""
+msgstr "Reguliere expressie komt overeen"
 
 #: inc/condition.class.php:116
 msgid "Always displayed"
@@ -432,27 +443,33 @@ msgstr "Verborgen tenzij"
 msgid "Displayed unless"
 msgstr "Laten zien behalve als"
 
-#: inc/condition.class.php:177 inc/form.class.php:2074
-#: inc/form_language.class.php:538 inc/form_profile.class.php:228
-#: inc/form_validator.class.php:110 inc/item_targetticket.class.php:149
-#: inc/question.class.php:943 inc/questiondependency.class.php:202
+#: inc/condition.class.php:177 inc/form.class.php:2115
+#: inc/form_language.class.php:537 inc/form_profile.class.php:228
+#: inc/form_validator.class.php:112 inc/item_targetticket.class.php:149
+#: inc/question.class.php:992 inc/questiondependency.class.php:202
 #: inc/questionrange.class.php:204 inc/questionregex.class.php:191
-#: inc/section.class.php:343 inc/target_actor.class.php:176
-#: inc/targetchange.class.php:248 inc/targetticket.class.php:1261
+#: inc/section.class.php:344 inc/target_actor.class.php:180
+#: inc/targetchange.class.php:261 inc/targetticket.class.php:1247
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
-msgstr ""
+msgstr "Het toevoegen of bijwerken van %1$s %2$s is gefaald"
 
-#: inc/condition.class.php:199 inc/form.class.php:1775
-#: inc/form_language.class.php:554 inc/form_profile.class.php:245
-#: inc/form_validator.class.php:134 inc/item_targetticket.class.php:64
-#: inc/question.class.php:992 inc/questiondependency.class.php:217
+#: inc/condition.class.php:199 inc/form.class.php:1816
+#: inc/form_language.class.php:553 inc/form_profile.class.php:245
+#: inc/form_validator.class.php:136 inc/item_targetticket.class.php:64
+#: inc/question.class.php:1041 inc/questiondependency.class.php:217
 #: inc/questionrange.class.php:136 inc/questionregex.class.php:123
-#: inc/section.class.php:368 inc/target_actor.class.php:197
-#: inc/targetchange.class.php:103 inc/targetticket.class.php:1300
+#: inc/section.class.php:369 inc/target_actor.class.php:201
+#: inc/targetchange.class.php:95 inc/targetticket.class.php:1286
 #, php-format
 msgid "Cannot export an empty object: %s"
-msgstr ""
+msgstr "Kan een leeg object niet exporteren: %s"
+
+#: inc/conditionnabletrait.class.php:70 inc/field/floatfield.class.php:212
+#: inc/field/integerfield.class.php:111 inc/field/textareafield.class.php:202
+#: inc/field/textfield.class.php:202
+msgid "The regular expression is invalid"
+msgstr "The reguliere expressie is invalide"
 
 #: inc/entityconfig.class.php:78
 msgid "GLPi's helpdesk"
@@ -476,68 +493,68 @@ msgstr "Sorteer op alfabet"
 
 #: inc/entityconfig.class.php:95
 msgid "Merged with Forms"
-msgstr ""
+msgstr "Samengevoegd met formulieren"
 
 #: inc/entityconfig.class.php:96
 msgid "Distinct menu entry"
-msgstr ""
+msgstr "Unieke menuingang"
 
 #: inc/entityconfig.class.php:103 inc/entityconfig.class.php:111
 msgid "Visible"
-msgstr ""
+msgstr "Zichtbaar"
 
 #: inc/entityconfig.class.php:104 inc/entityconfig.class.php:112
 msgid "Hidden"
-msgstr ""
+msgstr "Verborgen"
 
-#: inc/entityconfig.class.php:161
+#: inc/entityconfig.class.php:165
 msgid "Helpdesk"
 msgstr "Helpdesk"
 
-#: inc/entityconfig.class.php:169 inc/entityconfig.class.php:277
+#: inc/entityconfig.class.php:173 inc/entityconfig.class.php:276
 msgid "Helpdesk mode"
 msgstr "Helpdesk modus"
 
-#: inc/entityconfig.class.php:186 inc/entityconfig.class.php:287
+#: inc/entityconfig.class.php:189 inc/entityconfig.class.php:286
 msgid "Sort order"
-msgstr ""
+msgstr "Sorteervolgorde"
 
-#: inc/entityconfig.class.php:203 inc/entityconfig.class.php:297
+#: inc/entityconfig.class.php:205 inc/entityconfig.class.php:296
 msgid "Knowledge base"
-msgstr ""
+msgstr "Kennisbank"
 
-#: inc/entityconfig.class.php:219
+#: inc/entityconfig.class.php:220
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
 #: inc/entityconfig.class.php:236
 msgid "Header message"
-msgstr ""
+msgstr "Kopbericht"
 
-#: inc/entityconfig.class.php:249 inc/entityconfig.class.php:327
-#: inc/form.class.php:226 inc/form.class.php:464
+#: inc/entityconfig.class.php:248 inc/entityconfig.class.php:326
+#: inc/form.class.php:226 inc/form.class.php:468
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/entityconfig.class.php:307
+#: inc/entityconfig.class.php:306
 msgid "Display search field"
-msgstr ""
+msgstr "Zoekveld tonen"
 
-#: inc/entityconfig.class.php:317
+#: inc/entityconfig.class.php:316
 msgid "Display header"
-msgstr ""
+msgstr "Kopteksten tonen"
 
-#: inc/form.class.php:63 inc/form.class.php:361
+#: inc/form.class.php:63 inc/form.class.php:365
 msgid "Public access"
 msgstr "Publieke toegang"
 
-#: inc/form.class.php:64 inc/form.class.php:365
+#: inc/form.class.php:64 inc/form.class.php:369
 msgid "Private access"
 msgstr "Private toegang"
 
-#: inc/form.class.php:65 inc/form.class.php:369
+#: inc/form.class.php:65 inc/form.class.php:373
 msgid "Restricted access"
 msgstr "Beperkte toegang"
 
@@ -547,234 +564,238 @@ msgstr "Importeer formulieren"
 
 #: inc/form.class.php:191
 msgid "Homepage"
-msgstr ""
+msgstr "Hoofdpagina"
 
 #: inc/form.class.php:204
 msgid "Access"
-msgstr ""
+msgstr "Toegang"
 
 #: inc/form.class.php:248
 msgid "Icon"
-msgstr ""
+msgstr "Icoon"
 
 #: inc/form.class.php:256
 msgid "Icon color"
-msgstr ""
+msgstr "Icoonkleur"
 
-#: inc/form.class.php:264 inc/form.class.php:443
+#: inc/form.class.php:264 inc/form.class.php:447
 msgid "Background color"
-msgstr ""
+msgstr "Achtergrondkleur"
 
-#: inc/form.class.php:316 inc/form.class.php:377 inc/form.class.php:458
+#: inc/form.class.php:316 inc/form.class.php:381 inc/form.class.php:462
 msgid "All langages"
 msgstr "Alle talen"
 
-#: inc/form.class.php:428
+#: inc/form.class.php:432
 msgid "Direct access on homepage"
 msgstr "Meteen toegang op homepage"
 
-#: inc/form.class.php:436
+#: inc/form.class.php:440
 msgid "Form icon"
 msgstr ""
 
-#: inc/form.class.php:476
+#: inc/form.class.php:480
 msgid "Need to be validate?"
 msgstr "Valideren?"
 
-#: inc/form.class.php:633
+#: inc/form.class.php:657
 msgid "Default form in service catalog"
 msgstr "Standaard formulier in service catalogus"
 
-#: inc/form.class.php:645
+#: inc/form.class.php:669
 msgid "To delete this form you must delete all its answers first."
 msgstr ""
 
-#: inc/form.class.php:657 inc/form.class.php:714
+#: inc/form.class.php:681 inc/form.class.php:738
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/form.class.php:683 inc/form_language.class.php:335
-#: inc/form_language.class.php:374
+#: inc/form.class.php:707 inc/form_language.class.php:334
+#: inc/form_language.class.php:373
 msgid "Delete"
 msgstr "Verwijder"
 
-#: inc/form.class.php:696 inc/form.class.php:2408
+#: inc/form.class.php:720 inc/form.class.php:2456
 msgid "Add a target"
-msgstr ""
+msgstr "Doel toevoegen"
 
-#: inc/form.class.php:806 inc/knowbase.class.php:65
+#: inc/form.class.php:830 inc/knowbase.class.php:65
 msgid "see all"
 msgstr "Zie alles"
 
-#: inc/form.class.php:1122
+#: inc/form.class.php:1152
 msgid "What are you looking for?"
-msgstr ""
+msgstr "Wat zoekt u?"
 
-#: inc/form.class.php:1130
+#: inc/form.class.php:1160
 #, php-format
 msgid "My %1$d last forms (requester)"
-msgstr ""
+msgstr "Mijn %1$d laatste formulieren (verzoeker)"
 
-#: inc/form.class.php:1133
+#: inc/form.class.php:1163
 msgid "No form posted yet"
 msgstr "Geen formulieren gepost"
 
-#: inc/form.class.php:1156
+#: inc/form.class.php:1186
 msgid "All my forms (requester)"
 msgstr "Al mijn formulieren (aanvrager)"
 
-#: inc/form.class.php:1166
+#: inc/form.class.php:1194
 #, php-format
 msgid "My %1$d last forms (validator)"
-msgstr ""
+msgstr "Mijn %1$d laatste formilieren (validator)"
 
-#: inc/form.class.php:1174
+#: inc/form.class.php:1202
 msgid "No form waiting for validation"
 msgstr "Geen formulieren wachten op validatie"
 
-#: inc/form.class.php:1203
+#: inc/form.class.php:1231
 msgid "All my forms (validator)"
 msgstr "Al mijn formulieren (validatie)"
 
-#: inc/form.class.php:1323 inc/form.class.php:1324
+#: inc/form.class.php:1353 inc/form.class.php:1354
 msgid "Are you a robot ?"
 msgstr ""
 
-#: inc/form.class.php:1365
+#: inc/form.class.php:1395
 msgid "Validation"
-msgstr ""
+msgstr "Validatie"
 
-#: inc/form.class.php:1367
+#: inc/form.class.php:1397
 msgid "Choose a validator"
 msgstr "Kies een validator"
 
-#: inc/form.class.php:1472
+#: inc/form.class.php:1509
 #, php-format
 msgid "The question %s is not compatible with public forms"
-msgstr ""
+msgstr "De vraag 1%s is niet toepasbaar in publieke formulieren"
 
-#: inc/form.class.php:1607
+#: inc/form.class.php:1647
 msgid "Errored duplicate"
-msgstr ""
+msgstr "foutief duplicaat"
 
-#: inc/form.class.php:1618
+#: inc/form.class.php:1658
 msgid "Duplicate"
 msgstr "Dupliceren"
 
-#: inc/form.class.php:1683
+#: inc/form.class.php:1723
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulier gedupliceerd: 1%s"
 
-#: inc/form.class.php:1694
+#: inc/form.class.php:1734
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulier verplaatst: 1%s"
 
-#: inc/form.class.php:1830
+#: inc/form.class.php:1871
 msgid "Upload of JSON files not allowed."
-msgstr ""
+msgstr "Het uploaden van JSON bestanden is niet toegestaan"
 
-#: inc/form.class.php:1833
+#: inc/form.class.php:1874
 msgid "You may allow JSON files right now."
-msgstr ""
+msgstr "U kunt nu JSON bestanden toestaan "
 
-#: inc/form.class.php:1834
+#: inc/form.class.php:1875
 msgctxt "button"
 msgid "Create"
-msgstr ""
+msgstr "Creëren "
 
-#: inc/form.class.php:1837 inc/form.class.php:1848
+#: inc/form.class.php:1878 inc/form.class.php:1889
 msgid "Please contact your GLPI administrator."
-msgstr ""
+msgstr "Neem contact op met uw GLPI beheerder"
 
-#: inc/form.class.php:1838 inc/form.class.php:1849
+#: inc/form.class.php:1879 inc/form.class.php:1890
 msgctxt "button"
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
-#: inc/form.class.php:1841
+#: inc/form.class.php:1882
 msgid "Upload of JSON files not enabled."
-msgstr ""
+msgstr "Uploaden van JSON bestanden is uitgeschakeld"
 
-#: inc/form.class.php:1844 inc/form.class.php:1847
+#: inc/form.class.php:1885 inc/form.class.php:1888
 msgid "You may enable JSON files right now."
-msgstr ""
+msgstr "U kunt nu JSON bestanden toestaan."
 
-#: inc/form.class.php:1845
+#: inc/form.class.php:1886
 msgctxt "button"
 msgid "Enable"
-msgstr ""
+msgstr "Inschakelen"
 
-#: inc/form.class.php:1911
+#: inc/form.class.php:1952
 msgid "Forms import impossible, the file is empty"
-msgstr ""
+msgstr "Formulier importeren niet mogelijk, het bestand is leeg"
 
-#: inc/form.class.php:1915 inc/form.class.php:1919
+#: inc/form.class.php:1956 inc/form.class.php:1960
 msgid "Forms import impossible, the file seems corrupt"
-msgstr ""
+msgstr "Formulieren importeren niet mogelijk, het bestand lijkt corrupt. "
 
-#: inc/form.class.php:1925
+#: inc/form.class.php:1966
 msgid "Forms import impossible, the file was generated with another version"
 msgstr ""
+"Formulieren importeren niet mogelijk, het bestand was gegenereerd met een "
+"andere productversie."
 
-#: inc/form.class.php:1932
+#: inc/form.class.php:1973
 msgid ""
 "The file does not specifies the schema version. It was probably generated "
 "with a version older than 2.10. Giving up."
 msgstr ""
+"Het bestand heeft geen schemaversie gespecificeerd. Het bestand is "
+"waarschijnlijk aangemaakt met een versie ouder dan 2.10. "
 
-#: inc/form.class.php:1958
+#: inc/form.class.php:1999
 #, php-format
 msgid "Failed to import %s"
-msgstr ""
+msgstr "Het importeren van %s is mislukt."
 
-#: inc/form.class.php:1963
+#: inc/form.class.php:2004
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formulieren succesvol geïmporteerd van 1%s"
 
-#: inc/form.class.php:2029
+#: inc/form.class.php:2070
 #, php-format
 msgid "The form %1$s already exists and is in an unmodifiable entity."
-msgstr ""
+msgstr "Formulier %1$s bestaat al en betreft een niet te wijzigen entiteit"
 
-#: inc/form.class.php:2037
+#: inc/form.class.php:2078
 #, php-format
 msgid "The entity %1$s is required for the form %2$s."
-msgstr ""
+msgstr "De entiteit %1$s is noodzakelijk voor formulier %2$s"
 
-#: inc/form.class.php:2114
+#: inc/form.class.php:2155
 msgid "Failed to create JSON document type"
 msgstr "Het is niet gelukt om een JSON document type te maken"
 
-#: inc/form.class.php:2121
+#: inc/form.class.php:2162
 msgid "JSON document type not found"
 msgstr "JSON document type is niet gevonden"
 
-#: inc/form.class.php:2128
+#: inc/form.class.php:2169
 msgid "Failed to update JSON document type"
 msgstr "Het is niet gelukt om het JSON document type te updaten"
 
-#: inc/form.class.php:2148
+#: inc/form.class.php:2189
 msgid "Forms without category"
 msgstr "Formulieren zonder categorie"
 
-#: inc/form.class.php:2171
+#: inc/form.class.php:2212
 msgid "No form available"
-msgstr ""
+msgstr "Geenm formulier beschikbaar"
 
-#: inc/form.class.php:2450
+#: inc/form.class.php:2498
 msgid "Unsupported target type."
-msgstr ""
+msgstr "Niet ondersteund doeltype."
 
-#: inc/form.class.php:2473
+#: inc/form.class.php:2521
 msgid "Unsuported target type."
 msgstr ""
 
-#: inc/form.class.php:2512
+#: inc/form.class.php:2560
 msgid "plugin_formcreator_load_check"
 msgstr ""
 
@@ -784,7 +805,7 @@ msgid_plural "Form languages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/form_language.class.php:69 inc/form_language.class.php:346
+#: inc/form_language.class.php:69 inc/form_language.class.php:345
 msgid "Translation"
 msgid_plural "Translations"
 msgstr[0] ""
@@ -792,31 +813,35 @@ msgstr[1] ""
 
 #: inc/form_language.class.php:116
 msgid "The language must be associated to a form!"
-msgstr ""
+msgstr "De taal moet zijn toegewezen aan een formulier!"
 
-#: inc/form_language.class.php:246 inc/form_language.class.php:281
+#: inc/form_language.class.php:246 inc/form_language.class.php:280
 msgid "Add a translation"
-msgstr ""
+msgstr "Vertaling toevoegen"
 
-#: inc/form_language.class.php:309 inc/form_language.class.php:311
+#: inc/form_language.class.php:308 inc/form_language.class.php:310
 msgid "New translation"
-msgstr ""
+msgstr "Nieuwe vertaling"
 
-#: inc/form_language.class.php:314
+#: inc/form_language.class.php:313
 msgid "Filter list"
-msgstr ""
+msgstr "Filterlijst"
 
-#: inc/form_language.class.php:319 inc/form_language.class.php:411
+#: inc/form_language.class.php:318 inc/form_language.class.php:410
 msgid "No translation found"
-msgstr ""
+msgstr "Geen vertaling gevonden"
 
-#: inc/form_language.class.php:324
+#: inc/form_language.class.php:323
 msgid "Do you want to delete the selected items?"
-msgstr ""
+msgstr "Wilt u de geselecteerde onderdelen verwijderen? "
 
-#: inc/form_language.class.php:345
+#: inc/form_language.class.php:344
 msgid "Original string"
-msgstr ""
+msgstr "Originele tekenreeks"
+
+#: inc/form_language.class.php:396
+msgid "Add a new language"
+msgstr "Nieuwe taal toevoegen"
 
 #: inc/form_profile.class.php:48 inc/form_profile.class.php:87
 msgid "Access type"
@@ -831,111 +856,112 @@ msgstr "Link naar het formulier"
 #: inc/form_profile.class.php:114
 msgid "Please activate the form to view the link"
 msgstr ""
+"Activeer alstublieft het formulier om de verwijziging te kunnen bekijken."
 
 #: inc/form_profile.class.php:122
 msgid "Enable captcha"
-msgstr ""
+msgstr "Captcha inschakelen"
 
 #: inc/formanswer.class.php:62
 msgid "Waiting"
-msgstr ""
+msgstr "Wachtend"
 
-#: inc/formanswer.class.php:63 inc/issue.class.php:635
+#: inc/formanswer.class.php:63 inc/issue.class.php:731
 msgid "Refused"
-msgstr ""
+msgstr "Geweigerd"
 
 #: inc/formanswer.class.php:64
 msgid "Accepted"
-msgstr ""
+msgstr "Accepteren"
 
-#: inc/formanswer.class.php:164 inc/issue.class.php:629
+#: inc/formanswer.class.php:164 inc/issue.class.php:725
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/formanswer.class.php:207 inc/issue.class.php:505
+#: inc/formanswer.class.php:207 inc/issue.class.php:586
 msgid "Form approver"
-msgstr ""
+msgstr "Goedkeurder"
 
-#: inc/formanswer.class.php:226 inc/issue.class.php:612
+#: inc/formanswer.class.php:226 inc/issue.class.php:708
 msgid "Form approver group"
-msgstr ""
+msgstr "Goedkeurder groep"
 
-#: inc/formanswer.class.php:504
+#: inc/formanswer.class.php:496
 msgid "Print this form"
 msgstr "Dit formulier printen"
 
-#: inc/formanswer.class.php:525
+#: inc/formanswer.class.php:517
 msgid "Form accepted by validator."
 msgstr "Formulier geaccepteerd door validator."
 
-#: inc/formanswer.class.php:527
+#: inc/formanswer.class.php:519
 msgid "Form successfully saved."
 msgstr "Formulier succesvol bewaard."
 
-#: inc/formanswer.class.php:591 inc/notificationtargetformanswer.class.php:79
+#: inc/formanswer.class.php:583 inc/notificationtargetformanswer.class.php:79
 msgid "Requester"
 msgstr "Aanvrager"
 
-#: inc/formanswer.class.php:606
+#: inc/formanswer.class.php:598
 msgid "Comment"
 msgstr "Commentaar"
 
-#: inc/formanswer.class.php:611
+#: inc/formanswer.class.php:603
 msgid "Required if refused"
 msgstr "Verplicht als het geweigerd wordt"
 
-#: inc/formanswer.class.php:617
+#: inc/formanswer.class.php:609
 msgid "Refuse"
 msgstr "Geweigerd"
 
-#: inc/formanswer.class.php:625
+#: inc/formanswer.class.php:617
 msgid "Edit answers"
-msgstr ""
+msgstr "Wijzig antwoorden"
+
+#: inc/formanswer.class.php:623
+msgid "Cancel edition"
+msgstr "Annuleer editie"
 
 #: inc/formanswer.class.php:631
-msgid "Cancel edition"
-msgstr ""
-
-#: inc/formanswer.class.php:639
 msgid "Accept"
 msgstr "Accepteren"
 
-#: inc/formanswer.class.php:656
+#: inc/formanswer.class.php:648
 msgid "Refused comment is required!"
 msgstr "Geweigerd. Commentaar is verplicht!"
 
-#: inc/formanswer.class.php:741
+#: inc/formanswer.class.php:733
 msgid "You are not the validator of these answers"
 msgstr "Jij bent niet de validatie gever van deze antwoorden"
 
-#: inc/formanswer.class.php:826 inc/formanswer.class.php:1014
-#: inc/formanswer.class.php:1057
+#: inc/formanswer.class.php:829 inc/formanswer.class.php:1018
+#: inc/formanswer.class.php:1065
 msgid "The form has been successfully saved!"
 msgstr "Het formulier is succesvol bewaard"
 
-#: inc/formanswer.class.php:883 inc/formanswer.class.php:885
+#: inc/formanswer.class.php:886 inc/formanswer.class.php:888
 msgid "Form data"
 msgstr "Formulier data"
 
-#: inc/formanswer.class.php:1001 inc/formanswer.class.php:1044
+#: inc/formanswer.class.php:1005 inc/formanswer.class.php:1052
 msgid "Cannot generate targets!"
 msgstr "Kan het doel niet genereren"
 
-#: inc/formanswer.class.php:1155
-msgid "No turing test set"
-msgstr ""
-
 #: inc/formanswer.class.php:1160
+msgid "No turing test set"
+msgstr "Geen turing test set"
+
+#: inc/formanswer.class.php:1165
 msgid "You failed the Turing test"
-msgstr ""
+msgstr "U heeft de Turing test niet doorstaan"
 
-#: inc/formanswer.class.php:1178
+#: inc/formanswer.class.php:1183
 msgid "You must select validator!"
-msgstr ""
+msgstr "U moet een validatie kiezen!"
 
-#: inc/issue.class.php:40 inc/issue.class.php:408
+#: inc/issue.class.php:40 inc/issue.class.php:489
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] ""
@@ -945,13 +971,13 @@ msgstr[1] ""
 msgid "Update issue data from tickets and form answers"
 msgstr "Update problemen data van tickets en formulier antwoorden"
 
-#: inc/issue.class.php:529
+#: inc/issue.class.php:612
 msgid "Ticket approver"
-msgstr ""
+msgstr "Ticket goedkeurder"
 
-#: inc/issue.class.php:634
+#: inc/issue.class.php:730
 msgid "Not validated"
-msgstr ""
+msgstr "Niet gevalideerd"
 
 #: inc/item_targetticket.class.php:52
 msgid "Composite ticket relation"
@@ -965,25 +991,25 @@ msgstr "Vul hier je zoektermen in"
 
 #: inc/linker.class.php:78
 msgid "Importing"
-msgstr ""
+msgstr "Importeren"
 
 #: inc/notificationtargetformanswer.class.php:43
 msgid "The form as been saved"
 msgstr "Het formulier is bewaard"
 
-#: inc/notificationtargetformanswer.class.php:44 install/install.php:283
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:281
 msgid "A form need to be validate"
 msgstr "Een formulier heeft validatie nodig"
 
-#: inc/notificationtargetformanswer.class.php:45 install/install.php:289
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:287
 msgid "The form is refused"
 msgstr "Het formulier is geweigerd"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:295
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:293
 msgid "The form is accepted"
 msgstr "Het formulier is geaccepteerd"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:301
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:299
 msgid "The form is deleted"
 msgstr "Het formulier is verwijderd"
 
@@ -1015,7 +1041,7 @@ msgstr "Validatie link"
 msgid "Request #"
 msgstr "Aanvraag #"
 
-#: inc/question.class.php:179 inc/section.class.php:421
+#: inc/question.class.php:179 inc/section.class.php:422
 msgid "Add a section"
 msgstr "Voeg een gedeelte toe"
 
@@ -1023,9 +1049,9 @@ msgstr "Voeg een gedeelte toe"
 msgid "Show submit button"
 msgstr ""
 
-#: inc/question.class.php:238 inc/section.class.php:553
+#: inc/question.class.php:238 inc/section.class.php:554
 msgid "Count of conditions"
-msgstr ""
+msgstr "Aantal condities"
 
 #: inc/question.class.php:327 inc/section.class.php:96
 #: inc/section.class.php:134
@@ -1043,37 +1069,37 @@ msgstr "Gedeelte is verplicht"
 #: inc/question.class.php:354
 #, php-format
 msgid "Field type %1$s is not available for question %2$s."
-msgstr ""
+msgstr "Veldtype %1$s is niet beschikbaar voor vraag %2$s."
 
 #: inc/question.class.php:367
 msgid "This type of question is not compatible with public forms."
-msgstr ""
+msgstr "Dit vraagtype is niet geschikt voor publieke formulieren."
 
 #: inc/question.class.php:376
 msgid "This type of question requires parameters"
-msgstr ""
+msgstr "Dit vraagtype vereist parameters."
 
 #: inc/question.class.php:382
 msgid "A parameter is missing for this question type"
-msgstr ""
+msgstr "Er ontbreekt een parameter voor dit vraagtype."
 
-#: inc/question.class.php:685 inc/section.class.php:592
+#: inc/question.class.php:734 inc/section.class.php:593
 msgid "Add a question"
 msgstr "Voeg een vraag toe"
 
-#: inc/question.class.php:688
+#: inc/question.class.php:737
 msgid "Edit a question"
 msgstr "Bewerk een vraag"
 
-#: inc/question.class.php:781
+#: inc/question.class.php:830
 msgid "Required"
 msgstr "Verplicht"
 
-#: inc/question.class.php:798
+#: inc/question.class.php:847
 msgid "Show empty"
 msgstr "Laat leeg zien"
 
-#: inc/question.class.php:841
+#: inc/question.class.php:890
 msgid "Condition to show the question"
 msgstr ""
 
@@ -1091,11 +1117,11 @@ msgstr[1] ""
 
 #: inc/questionrange.class.php:63
 msgid "Minimum range"
-msgstr ""
+msgstr "Minimaal bereik"
 
 #: inc/questionrange.class.php:72
 msgid "maximum range"
-msgstr ""
+msgstr "Maximaal bereik"
 
 #: inc/questionrange.class.php:105
 msgid "Min"
@@ -1111,8 +1137,8 @@ msgid_plural "Question regular expressions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/questionregex.class.php:63 inc/field/floatfield.class.php:252
-#: inc/field/textfield.class.php:235
+#: inc/questionregex.class.php:63 inc/field/floatfield.class.php:253
+#: inc/field/textfield.class.php:236
 msgid "Regular expression"
 msgstr "Reguliere expressie"
 
@@ -1124,164 +1150,160 @@ msgstr ""
 "Specificeer de additionele validatie condities in de omschrijving van de "
 "vraag om gebruikers te helpen"
 
-#: inc/section.class.php:424
+#: inc/section.class.php:425
 msgid "Edit a section"
 msgstr "Bewerk een gedeelte"
 
-#: inc/section.class.php:451
+#: inc/section.class.php:452
 msgid "Condition to show the section"
 msgstr ""
 
-#: inc/target_actor.class.php:67
+#: inc/target_actor.class.php:68
 msgid "Specific person"
 msgstr "Specifiek persoon"
 
-#: inc/target_actor.class.php:69
+#: inc/target_actor.class.php:70
 msgid "Specific group"
 msgstr "Specifieke groep"
 
-#: inc/target_actor.class.php:71
-msgid "Group from an object"
-msgstr ""
-
 #: inc/target_actor.class.php:72
-msgid "Tech group from an object"
-msgstr ""
+msgid "Group from an object"
+msgstr "Groep afkomstig uit een object"
 
 #: inc/target_actor.class.php:73
+msgid "Tech group from an object"
+msgstr "Tech groep afkomstig uit een object"
+
+#: inc/target_actor.class.php:74
 msgid "Specific supplier"
 msgstr "Specifieke leverancier"
 
-#: inc/target_actor.class.php:89
+#: inc/target_actor.class.php:91
 msgid "Target actor"
 msgid_plural "Target actors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/targetchange.class.php:42 inc/targetchange.class.php:389
+#: inc/targetchange.class.php:42 inc/targetchange.class.php:402
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/targetchange.class.php:47
-msgid "Medium"
-msgstr "Gemiddeld"
-
-#: inc/targetchange.class.php:55 inc/targetticket.class.php:86
-msgid "None"
-msgstr "Geen"
-
-#: inc/targetchange.class.php:232 inc/targetticket.class.php:1245
+#: inc/targetchange.class.php:245 inc/targetticket.class.php:1231
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
 "a parameter of the target"
 msgstr ""
 
-#: inc/targetchange.class.php:288 inc/targetchange.class.php:392
+#: inc/targetchange.class.php:301 inc/targetchange.class.php:405
 msgid "Change title"
 msgstr "Verander titel"
 
-#: inc/targetchange.class.php:298 inc/targetticket.class.php:127
+#: inc/targetchange.class.php:311 inc/targetticket.class.php:135
 msgid "Content"
-msgstr ""
+msgstr "Inhoud"
 
-#: inc/targetchange.class.php:308
+#: inc/targetchange.class.php:321
 msgid "Impact"
-msgstr ""
+msgstr "Gevolgen"
 
-#: inc/targetchange.class.php:318
+#: inc/targetchange.class.php:331
 msgid "Control list"
-msgstr ""
+msgstr "control lijst"
 
-#: inc/targetchange.class.php:328
-msgid "Rollout plan"
-msgstr ""
+#: inc/targetchange.class.php:341
+msgid "Deployment plan"
+msgstr "deployment plan"
 
-#: inc/targetchange.class.php:338
+#: inc/targetchange.class.php:351
 msgid "Backup plan"
-msgstr ""
+msgstr "backup plan"
 
-#: inc/targetchange.class.php:348
+#: inc/targetchange.class.php:361
 msgid "Check list"
-msgstr ""
+msgstr "checklist"
 
-#: inc/targetchange.class.php:360 inc/targetticket.class.php:145
+#: inc/targetchange.class.php:373 inc/targetticket.class.php:153
 msgid "Add a target "
 msgstr ""
 
-#: inc/targetchange.class.php:362 inc/targetticket.class.php:147
+#: inc/targetchange.class.php:375 inc/targetticket.class.php:155
 msgid "Edit a target"
 msgstr ""
 
-#: inc/targetchange.class.php:493 inc/targetticket.class.php:258
+#: inc/targetchange.class.php:506 inc/targetticket.class.php:266
 msgid "Condition to create the target"
 msgstr ""
 
-#: inc/targetticket.class.php:52 inc/targetticket.class.php:174
+#: inc/targetticket.class.php:52 inc/targetticket.class.php:182
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/targetticket.class.php:87
+#: inc/targetticket.class.php:94
+msgid "None"
+msgstr "Geen"
+
+#: inc/targetticket.class.php:95
 msgid "Specific asset"
 msgstr ""
 
-#: inc/targetticket.class.php:95
+#: inc/targetticket.class.php:103
 msgid "Default or from a template"
 msgstr ""
 
-#: inc/targetticket.class.php:96
+#: inc/targetticket.class.php:104
 msgid "Specific type"
 msgstr ""
 
-#: inc/targetticket.class.php:117 inc/targetticket.class.php:177
+#: inc/targetticket.class.php:125 inc/targetticket.class.php:185
 msgid "Ticket title"
 msgstr "Ticket titel"
 
-#: inc/targetticket.class.php:247
+#: inc/targetticket.class.php:255
 msgid "Add validation message as first ticket followup"
 msgstr "Voeg validatie bericht toe als eerste opvolging"
 
-#: inc/targetticket.class.php:301
+#: inc/targetticket.class.php:309
 msgid "Link to an other ticket"
 msgstr "Link aan een ander ticket"
 
-#: inc/targetticket.class.php:310
+#: inc/targetticket.class.php:318
 msgid "An other destination of this form"
 msgstr "Een ander doel van dit formulier"
 
-#: inc/targetticket.class.php:311
+#: inc/targetticket.class.php:319
 msgid "An existing ticket"
 msgstr "Een bestaand ticket"
 
-#: inc/targetticket.class.php:596
+#: inc/targetticket.class.php:628
 msgid "Invalid link type"
 msgstr "Invalide link type"
 
-#: inc/targetticket.class.php:612
+#: inc/targetticket.class.php:648
 msgid "Invalid linked item type"
 msgstr "Invalide gelinkt item type. "
 
-#: inc/targetticket.class.php:625
+#: inc/targetticket.class.php:661
 msgid "Linked item does not exists"
 msgstr "Gelinkt item bestaat niet"
 
-#: inc/targetticket.class.php:638
+#: inc/targetticket.class.php:674
 msgid "Failed to link the item"
 msgstr "Gefaald om item te linken"
 
-#: inc/targetticket.class.php:868 install/install.php:296
+#: inc/targetticket.class.php:840 install/install.php:294
 msgid "Your form has been accepted by the validator"
 msgstr "Je formulier is geaccepteerd door de validator"
 
-#: inc/targetticket.class.php:969
+#: inc/targetticket.class.php:942
 msgid "Type "
 msgstr ""
 
-#: inc/targetticket.class.php:1008
+#: inc/targetticket.class.php:981
 msgid "Item "
 msgstr ""
 
@@ -1289,15 +1311,15 @@ msgstr ""
 msgid "No more string to translate"
 msgstr ""
 
-#: inc/translation.class.php:218
+#: inc/translation.class.php:220
 msgid "Language not found."
 msgstr ""
 
-#: inc/translation.class.php:223
+#: inc/translation.class.php:225
 msgid "Form not found."
 msgstr ""
 
-#: inc/translation.class.php:236
+#: inc/translation.class.php:238
 msgid "Failed to add the translation."
 msgstr ""
 
@@ -1321,11 +1343,11 @@ msgstr "Reserveer een item"
 msgid "Consult feeds"
 msgstr "Consult feeds"
 
-#: inc/wizard.class.php:260
+#: inc/wizard.class.php:253
 msgid "To validate"
 msgstr "Om te valideren"
 
-#: inc/wizard.class.php:270
+#: inc/wizard.class.php:261
 msgid "Closed"
 msgstr "Gesloten"
 
@@ -1343,120 +1365,132 @@ msgstr[1] ""
 
 #: inc/field/actorfield.class.php:267 inc/field/checkboxesfield.class.php:210
 #: inc/field/datefield.class.php:138 inc/field/datetimefield.class.php:140
-#: inc/field/floatfield.class.php:142 inc/field/radiosfield.class.php:234
+#: inc/field/floatfield.class.php:143 inc/field/radiosfield.class.php:234
 #: inc/field/selectfield.class.php:97
 #, php-format
 msgid "A required field is empty: %s"
-msgstr ""
+msgstr "Een vereist veld is leeg: %s"
 
 #: inc/field/actorfield.class.php:277
 #, php-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Ongeldige waarde: %s"
 
 #: inc/field/actorfield.class.php:300
 #, php-format
 msgid "User not found or invalid email address: %s"
-msgstr ""
+msgstr "Gebruiker niet gevonden of ongeldig emailadres: %s "
 
 #: inc/field/checkboxesfield.class.php:152
 msgid "Checkboxes"
-msgstr ""
+msgstr "Checkboxes"
 
 #: inc/field/checkboxesfield.class.php:247
 #, php-format
 msgid "The following question needs at least %d answers"
-msgstr ""
+msgstr "De volgende vraag dient minimaal %d antwoorden te bevatten."
 
 #: inc/field/checkboxesfield.class.php:253
 #, php-format
 msgid "The following question does not accept more than %d answers"
-msgstr ""
+msgstr "De volgende vraag accepteert niet meer dan %d antwoorden."
 
 #: inc/field/checkboxesfield.class.php:265
-#: inc/field/glpiselectfield.class.php:149 inc/field/radiosfield.class.php:156
+#: inc/field/glpiselectfield.class.php:173 inc/field/radiosfield.class.php:156
 msgid "The field value is required:"
 msgstr "Veldgegevens zijn verplicht:"
 
-#: inc/field/checkboxesfield.class.php:326 inc/field/floatfield.class.php:267
-#: inc/field/textfield.class.php:250
+#: inc/field/checkboxesfield.class.php:326 inc/field/floatfield.class.php:268
+#: inc/field/textfield.class.php:251
 msgid "Range"
 msgstr "Range"
 
 #: inc/field/datetimefield.class.php:161
 msgid "Date & time"
-msgstr ""
+msgstr "Datum & tijd"
 
-#: inc/field/descriptionfield.class.php:106
+#: inc/field/descriptionfield.class.php:108
 msgid "A description field should have a description:"
-msgstr ""
+msgstr "Het beschrijvingsveld dient een beschrijving te bevatten:"
 
-#: inc/field/dropdownfield.class.php:84
+#: inc/field/dropdownfield.class.php:71
+msgid "User"
+msgstr "Gebruiker"
+
+#: inc/field/dropdownfield.class.php:73
+msgid "User and form"
+msgstr "Gebruiker en formulier"
+
+#: inc/field/dropdownfield.class.php:104
 msgid "SLA"
-msgstr ""
+msgstr "SLA"
 
-#: inc/field/dropdownfield.class.php:85
+#: inc/field/dropdownfield.class.php:105
 msgid "OLA"
-msgstr ""
+msgstr "OLA"
 
-#: inc/field/dropdownfield.class.php:118
+#: inc/field/dropdownfield.class.php:138
 msgid "Show ticket categories"
 msgstr "Laat ticket categorieën zien"
 
-#: inc/field/dropdownfield.class.php:123 inc/field/dropdownfield.class.php:125
+#: inc/field/dropdownfield.class.php:143 inc/field/dropdownfield.class.php:145
 msgid "Request categories"
 msgstr "Aanvraag categorieën "
 
-#: inc/field/dropdownfield.class.php:124 inc/field/dropdownfield.class.php:125
+#: inc/field/dropdownfield.class.php:144 inc/field/dropdownfield.class.php:145
 msgid "Incident categories"
 msgstr "Incident categorieën "
 
-#: inc/field/dropdownfield.class.php:126
+#: inc/field/dropdownfield.class.php:146
 msgid "Change categories"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:154
+#: inc/field/dropdownfield.class.php:177
 msgid "Type"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:159
+#: inc/field/dropdownfield.class.php:182
 msgid "Time to own"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:160
+#: inc/field/dropdownfield.class.php:183
 msgid "Time to resolve"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:448
-#: inc/field/ldapselectfield.class.php:230
+#: inc/field/dropdownfield.class.php:554
+#: inc/field/ldapselectfield.class.php:239
 #: inc/field/requesttypefield.class.php:189 inc/field/tagfield.class.php:157
-#: inc/field/textareafield.class.php:163 inc/field/textfield.class.php:148
+#: inc/field/textareafield.class.php:184 inc/field/textfield.class.php:149
 #: inc/field/timefield.class.php:139 inc/field/urgencyfield.class.php:193
 msgid "A required field is empty:"
 msgstr "Een verplicht veld is leeg:"
 
-#: inc/field/dropdownfield.class.php:475
+#: inc/field/dropdownfield.class.php:581
 msgid "Invalid value for "
-msgstr ""
+msgstr "Onjuiste waarde voor"
 
-#: inc/field/dropdownfield.class.php:487
+#: inc/field/dropdownfield.class.php:593
 #, php-format
 msgid "The field value is required: %s"
 msgstr ""
 
-#: inc/field/dropdownfield.class.php:503
+#: inc/field/dropdownfield.class.php:609
 #, php-format
 msgid "Invalid dropdown type: %s"
-msgstr ""
+msgstr "Ongeldige dropdowntype: %s"
+
+#: inc/field/dropdownfield.class.php:965
+msgid "Entity restriction"
+msgstr "Entiteitbeperking"
 
 #: inc/field/emailfield.class.php:108
 #, php-format
 msgid "This is not a valid e-mail: %s"
-msgstr ""
+msgstr "Dit is een ongeldig emailadres: %s"
 
 #: inc/field/filefield.class.php:94
 msgid "No attached document"
-msgstr ""
+msgstr "Geen gekoppeld document"
 
 #: inc/field/filefield.class.php:96 inc/field/filefield.class.php:258
 #: inc/field/filefield.class.php:265
@@ -1466,106 +1500,96 @@ msgstr "Bijgevoegde document"
 #: inc/field/filefield.class.php:139
 #, php-format
 msgid "A required file is missing: %s"
-msgstr ""
+msgstr "Een vereist bestand ontbreekt: %s"
 
-#: inc/field/floatfield.class.php:159
+#: inc/field/floatfield.class.php:160
 #, php-format
 msgid "This is not a number: %s"
-msgstr ""
+msgstr "Dit is geen cijfer: %s "
 
-#: inc/field/floatfield.class.php:173 inc/field/integerfield.class.php:69
-#: inc/field/textfield.class.php:169
+#: inc/field/floatfield.class.php:174 inc/field/integerfield.class.php:70
+#: inc/field/textfield.class.php:170
 #, php-format
 msgid "Specific format does not match: %s"
-msgstr ""
+msgstr "Een specifiek formaat komt niet overeen: %s"
 
-#: inc/field/floatfield.class.php:184 inc/field/integerfield.class.php:83
+#: inc/field/floatfield.class.php:185 inc/field/integerfield.class.php:84
 #, php-format
 msgid "The following number must be greater than %d: %s"
-msgstr ""
+msgstr "Het volgende getal moet groter zijn dan %d : %s"
 
-#: inc/field/floatfield.class.php:190 inc/field/integerfield.class.php:89
+#: inc/field/floatfield.class.php:191 inc/field/integerfield.class.php:90
 #, php-format
 msgid "The following number must be lower than %d: %s"
-msgstr ""
+msgstr "Het volgende getal moet lager zijn dan %d : %s"
 
-#: inc/field/floatfield.class.php:200
+#: inc/field/floatfield.class.php:201
 msgid "Float"
-msgstr ""
+msgstr "Kommagetal"
 
-#: inc/field/floatfield.class.php:211 inc/field/integerfield.class.php:110
-#: inc/field/textareafield.class.php:181 inc/field/textfield.class.php:201
-msgid "The regular expression is invalid"
-msgstr "The reguliere expressie is invalide"
-
-#: inc/field/floatfield.class.php:259 inc/field/textfield.class.php:242
+#: inc/field/floatfield.class.php:260 inc/field/textfield.class.php:243
 msgid "Additional validation"
 msgstr "Additionele validatie"
 
 #: inc/field/glpiselectfield.class.php:78
-#: inc/field/glpiselectfield.class.php:134
+#: inc/field/glpiselectfield.class.php:158
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/field/glpiselectfield.class.php:276
-#: inc/field/glpiselectfield.class.php:280
-msgid "Objects management"
-msgstr ""
-
-#: inc/field/integerfield.class.php:57
+#: inc/field/integerfield.class.php:58
 #, php-format
 msgid "This is not an integer: %s"
-msgstr ""
+msgstr "Dit is geen cijfer: %s"
 
-#: inc/field/integerfield.class.php:99
+#: inc/field/integerfield.class.php:100
 msgid "Integer"
-msgstr ""
+msgstr "Cijfer"
 
-#: inc/field/ldapselectfield.class.php:73
+#: inc/field/ldapselectfield.class.php:82
 msgid "Filter"
 msgstr "Filteren"
 
-#: inc/field/ldapselectfield.class.php:85
+#: inc/field/ldapselectfield.class.php:94
 msgid "Attribute"
 msgstr "Attribuut"
 
-#: inc/field/ldapselectfield.class.php:183
+#: inc/field/ldapselectfield.class.php:191
 msgid "LDAP size limit exceeded"
-msgstr ""
+msgstr "LDAP limiet overschreden "
 
-#: inc/field/ldapselectfield.class.php:211
+#: inc/field/ldapselectfield.class.php:220
 msgid "LDAP Select"
-msgstr ""
+msgstr "LDAP selectie"
 
-#: inc/field/ldapselectfield.class.php:248
+#: inc/field/ldapselectfield.class.php:257
 msgid "LDAP directory not defined!"
-msgstr ""
+msgstr "LDAP map niet gedefinieerd!"
 
-#: inc/field/ldapselectfield.class.php:255
+#: inc/field/ldapselectfield.class.php:264
 msgid "LDAP directory not found!"
-msgstr ""
+msgstr "LDAP map niet gevonden"
 
-#: inc/field/ldapselectfield.class.php:277
+#: inc/field/ldapselectfield.class.php:303
 msgid "Cannot recover LDAP informations!"
-msgstr ""
+msgstr "Kan de LDAP informatie niet herstellen!"
 
 #: inc/field/multiselectfield.class.php:86
 msgid "Multiselect"
-msgstr ""
+msgstr "Multieselect"
 
 #: inc/field/radiosfield.class.php:150
 msgid "Radios"
-msgstr ""
+msgstr "Selectieknoppen"
 
 #: inc/field/requesttypefield.class.php:115
 msgid "Request type"
-msgstr ""
+msgstr "Verzoektype"
 
 #: inc/field/selectfield.class.php:90
 msgid "Select"
-msgstr ""
+msgstr "Selectie"
 
 #: inc/field/tagfield.class.php:191
 msgid "Tag"
@@ -1573,37 +1597,37 @@ msgid_plural "Tags"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/field/textareafield.class.php:124
+#: inc/field/textareafield.class.php:126
 msgid "Textarea"
-msgstr ""
+msgstr "Tekstveld"
 
-#: inc/field/textfield.class.php:178
+#: inc/field/textfield.class.php:179
 #, php-format
 msgid "The text is too short (minimum %d characters): %s"
-msgstr ""
+msgstr "De tekst is te kort (er zijn minimaal %d karakters vereist): %s"
 
-#: inc/field/textfield.class.php:183
+#: inc/field/textfield.class.php:184
 #, php-format
 msgid "The text is too long (maximum %d characters): %s"
-msgstr ""
+msgstr "De tekst is te lang (er zijn maximaal %d karakters toegestaan): %s"
 
-#: inc/field/textfield.class.php:191
+#: inc/field/textfield.class.php:192
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
 #: inc/field/timefield.class.php:155
 msgid "Time"
-msgstr ""
+msgstr "Tijd"
 
-#: install/install.php:277
+#: install/install.php:275
 msgid "A form has been created"
 msgstr "Een formulier is gemaakt"
 
-#: install/install.php:278
+#: install/install.php:276
 msgid "Your request has been saved"
 msgstr "Je verzoek is bewaard"
 
-#: install/install.php:279
+#: install/install.php:277
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
@@ -1613,11 +1637,11 @@ msgstr ""
 "##formcreator.request_id## en aan de helpdesk toegekend.\\nJe kunt hier je "
 "ticket volgen:\\n##formcreator.validation_link## "
 
-#: install/install.php:284
+#: install/install.php:282
 msgid "A form from GLPI need to be validate"
 msgstr "Een formulier van GLPI heeft validatie nodig"
 
-#: install/install.php:285
+#: install/install.php:283
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
@@ -1626,11 +1650,11 @@ msgstr ""
 "Hallo, \\nJe bent uitgekozen om een formulier van GLPI te valideren. \\nJe "
 "kunt hier het forumulier bekijken\\n##formcreator.validation_link##"
 
-#: install/install.php:290
+#: install/install.php:288
 msgid "Your form has been refused by the validator"
 msgstr "Je formulier is geweigerd door de validator"
 
-#: install/install.php:291
+#: install/install.php:289
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1640,7 +1664,7 @@ msgstr ""
 "Hallo,\\nHet spijt ons om je te moeten informeren dat je formulier geweigerd is door de validatiegever. Met deze reden:\n"
 "\\n##formcreator.validation_comment##\\n\\nJe kunt nog steeds het formulieren wijzigen en opnieuw invoeren met deze link:\\n##formcreator.validation_link##"
 
-#: install/install.php:297
+#: install/install.php:295
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
@@ -1648,11 +1672,11 @@ msgstr ""
 "Hallo,\\nWe willen je laten weten dat je formulier geaccepteerd is door de "
 "validatiegever.\\nJe aanvraag zal binnenkort uitgevoerd worden."
 
-#: install/install.php:302
+#: install/install.php:300
 msgid "Your form has been deleted by an administrator"
 msgstr "Je formulier is verwijderd door de administrator"
 
-#: install/install.php:303
+#: install/install.php:301
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
@@ -1661,30 +1685,30 @@ msgstr ""
 "behandeling genomen zal worden, omdat een administrator je aanvraag heeft "
 "verwijderd. "
 
-#: install/install.php:525 install/upgrade_to_2.5.php:409
+#: install/install.php:523 install/upgrade_to_2.5.php:409
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator: Sync service catalogus problemen"
 
-#: js/scripts.js.php:361
+#: js/scripts.js:349
 msgid "No form found. Please choose a form below instead"
 msgstr "Geen formulier gevonden. Selecteer een formulier"
 
-#: js/scripts.js.php:384 js/scripts.js.php:405
+#: js/scripts.js:372 js/scripts.js:393
 msgid "An error occured while querying forms"
 msgstr "Er is een fout opgetreden terwijl we de formulieren opvroegen"
 
-#: js/scripts.js.php:467
+#: js/scripts.js:455
 msgid "No form yet in this category"
 msgstr "Geen formulier in deze categorie"
 
-#: js/scripts.js.php:743
+#: js/scripts.js:731
 msgid "Are you sure you want to delete this question?"
 msgstr "Weet je zeker dat je deze vraag wilt verwijderen?"
 
-#: js/scripts.js.php:947
+#: js/scripts.js:932
 msgid "Are you sure you want to delete this section?"
 msgstr "Weet je zeker dat je dit gedeelte wilt verwijderen?"
 
-#: js/scripts.js.php:1239
+#: js/scripts.js:1318
 msgid "Are you sure you want to delete this destination:"
 msgstr "Weet je zeker dat je deze bestemming wilt verwijderen:"

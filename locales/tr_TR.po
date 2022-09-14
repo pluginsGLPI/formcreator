@@ -1126,8 +1126,8 @@ msgstr "En büyük"
 #: inc/questionregex.class.php:53
 msgid "Question regular expression"
 msgid_plural "Question regular expressions"
-msgstr[0] "Soru kuralları ifadesi"
-msgstr[1] "Soru kuralları ifadeleri"
+msgstr[0] "Soru kurallı ifadesi"
+msgstr[1] "Soru kurallı ifadeleri"
 
 #: inc/questionregex.class.php:63 inc/field/floatfield.class.php:253
 #: inc/field/textfield.class.php:236

@@ -5,7 +5,7 @@
 # 
 # Translators:
 # Daniel Bonet <canosis@gmail.com>, 2021
-# Nuria Costa <nuria.costa@uvic.cat>, 2021
+# Nuria Costa <nuria.costa@uvic.cat>, 2022
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-23 08:44+0100\n"
 "PO-Revision-Date: 2021-06-14 06:58+0000\n"
-"Last-Translator: Nuria Costa <nuria.costa@uvic.cat>, 2021\n"
+"Last-Translator: Nuria Costa <nuria.costa@uvic.cat>, 2022\n"
 "Language-Team: Catalan (Spain) (https://www.transifex.com/teclib/teams/28042/ca_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,7 @@ msgstr "Subtree root"
 
 #: ajax/commontree.php:59
 msgid "Selectable"
-msgstr ""
+msgstr "Seleccionable"
 
 #: ajax/commontree.php:74
 msgid "Limit subtree depth"
@@ -138,11 +138,11 @@ msgstr "Llista de formularis"
 
 #: inc/abstractquestionparameter.class.php:92
 msgid "Parameter"
-msgstr ""
+msgstr "Paràmetre"
 
 #: inc/abstractquestionparameter.class.php:99
 msgid "Field name"
-msgstr ""
+msgstr "Nom del camp"
 
 #: inc/abstracttarget.class.php:208
 msgid "Current active entity"
@@ -395,7 +395,7 @@ msgstr "Proveïdor d'una pregunta"
 
 #: inc/abstracttarget.class.php:2230 inc/target_actor.class.php:77
 msgid "Form author's supervisor"
-msgstr ""
+msgstr "Supervisor de l'autor del formulari"
 
 #: inc/category.class.php:72
 msgid "Knowbase category"
@@ -459,7 +459,7 @@ msgstr "No s'ha pogut afegir o actualitzar %1$s%2$s"
 #: inc/targetchange.class.php:95 inc/targetticket.class.php:1286
 #, php-format
 msgid "Cannot export an empty object: %s"
-msgstr ""
+msgstr "No es pot exportar un objecte buit: %s"
 
 #: inc/conditionnabletrait.class.php:70 inc/field/floatfield.class.php:212
 #: inc/field/integerfield.class.php:111 inc/field/textareafield.class.php:202
@@ -497,11 +497,11 @@ msgstr "Entrada de menú diferent"
 
 #: inc/entityconfig.class.php:103 inc/entityconfig.class.php:111
 msgid "Visible"
-msgstr ""
+msgstr "Visible"
 
 #: inc/entityconfig.class.php:104 inc/entityconfig.class.php:112
 msgid "Hidden"
-msgstr ""
+msgstr "Ocult"
 
 #: inc/entityconfig.class.php:165
 msgid "Helpdesk"
@@ -521,11 +521,11 @@ msgstr "Base de coneixements"
 
 #: inc/entityconfig.class.php:220
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: inc/entityconfig.class.php:236
 msgid "Header message"
-msgstr ""
+msgstr "Missatge de capçalera"
 
 #: inc/entityconfig.class.php:248 inc/entityconfig.class.php:326
 #: inc/form.class.php:226 inc/form.class.php:468
@@ -536,11 +536,11 @@ msgstr[1] ""
 
 #: inc/entityconfig.class.php:306
 msgid "Display search field"
-msgstr ""
+msgstr "Mostra el camp de cerca"
 
 #: inc/entityconfig.class.php:316
 msgid "Display header"
-msgstr ""
+msgstr "Mostra la capçalera"
 
 #: inc/form.class.php:63 inc/form.class.php:365
 msgid "Public access"
@@ -623,7 +623,7 @@ msgstr "Veure tots els formularis"
 
 #: inc/form.class.php:1152
 msgid "What are you looking for?"
-msgstr ""
+msgstr "Què vols buscar?"
 
 #: inc/form.class.php:1160
 #, php-format
@@ -794,7 +794,7 @@ msgstr "Tipus d'objectiu no suportat."
 
 #: inc/form.class.php:2560
 msgid "plugin_formcreator_load_check"
-msgstr ""
+msgstr "plugin_formcreator_load_check"
 
 #: inc/form_language.class.php:51
 msgid "Form language"
@@ -810,35 +810,35 @@ msgstr[1] ""
 
 #: inc/form_language.class.php:116
 msgid "The language must be associated to a form!"
-msgstr ""
+msgstr "L'idioma s'ha d'associar a un formulari!"
 
 #: inc/form_language.class.php:246 inc/form_language.class.php:280
 msgid "Add a translation"
-msgstr ""
+msgstr "Afegir una traducció"
 
 #: inc/form_language.class.php:308 inc/form_language.class.php:310
 msgid "New translation"
-msgstr ""
+msgstr "Nova traducció"
 
 #: inc/form_language.class.php:313
 msgid "Filter list"
-msgstr ""
+msgstr "Llista de filtres"
 
 #: inc/form_language.class.php:318 inc/form_language.class.php:410
 msgid "No translation found"
-msgstr ""
+msgstr "No s'ha trobat cap traducció"
 
 #: inc/form_language.class.php:323
 msgid "Do you want to delete the selected items?"
-msgstr ""
+msgstr "Vols eliminar els elements seleccionats?"
 
 #: inc/form_language.class.php:344
 msgid "Original string"
-msgstr ""
+msgstr "Text original"
 
 #: inc/form_language.class.php:396
 msgid "Add a new language"
-msgstr ""
+msgstr "Afegeix un idioma nou"
 
 #: inc/form_profile.class.php:48 inc/form_profile.class.php:87
 msgid "Access type"
@@ -914,11 +914,11 @@ msgstr "Denegar"
 
 #: inc/formanswer.class.php:617
 msgid "Edit answers"
-msgstr ""
+msgstr "Edita respostes"
 
 #: inc/formanswer.class.php:623
 msgid "Cancel edition"
-msgstr ""
+msgstr "Cancel·la l'edició"
 
 #: inc/formanswer.class.php:631
 msgid "Accept"
@@ -1114,11 +1114,11 @@ msgstr[1] ""
 
 #: inc/questionrange.class.php:63
 msgid "Minimum range"
-msgstr ""
+msgstr "Interval mínim"
 
 #: inc/questionrange.class.php:72
 msgid "maximum range"
-msgstr ""
+msgstr "Interval màxim"
 
 #: inc/questionrange.class.php:105
 msgid "Min"
@@ -1202,27 +1202,27 @@ msgstr "Canvia el títol"
 
 #: inc/targetchange.class.php:311 inc/targetticket.class.php:135
 msgid "Content"
-msgstr ""
+msgstr "Contingut"
 
 #: inc/targetchange.class.php:321
 msgid "Impact"
-msgstr ""
+msgstr "Impacte"
 
 #: inc/targetchange.class.php:331
 msgid "Control list"
-msgstr ""
+msgstr "Llista de control"
 
 #: inc/targetchange.class.php:341
 msgid "Deployment plan"
-msgstr ""
+msgstr "Pla de desplegament"
 
 #: inc/targetchange.class.php:351
 msgid "Backup plan"
-msgstr ""
+msgstr "Pla de còpia de seguretat"
 
 #: inc/targetchange.class.php:361
 msgid "Check list"
-msgstr ""
+msgstr "Llista de comprovació"
 
 #: inc/targetchange.class.php:373 inc/targetticket.class.php:153
 msgid "Add a target "
@@ -1308,19 +1308,19 @@ msgstr "Ítem"
 
 #: inc/translation.class.php:157
 msgid "No more string to translate"
-msgstr ""
+msgstr "Ni hi ha cadenes per ttraduir"
 
 #: inc/translation.class.php:220
 msgid "Language not found."
-msgstr ""
+msgstr "Idioma no trobat"
 
 #: inc/translation.class.php:225
 msgid "Form not found."
-msgstr ""
+msgstr "Formulari no trobat"
 
 #: inc/translation.class.php:238
 msgid "Failed to add the translation."
-msgstr ""
+msgstr "No s'ha pogut afegir la traducció."
 
 #: inc/wizard.class.php:100 inc/wizard.class.php:101
 msgid "Seek assistance"
@@ -1414,11 +1414,11 @@ msgstr "El camp Descripció hauria de tenir una descripció:"
 
 #: inc/field/dropdownfield.class.php:71
 msgid "User"
-msgstr ""
+msgstr "Usuari"
 
 #: inc/field/dropdownfield.class.php:73
 msgid "User and form"
-msgstr ""
+msgstr "Usuari i formulari"
 
 #: inc/field/dropdownfield.class.php:104
 msgid "SLA"
@@ -1480,7 +1480,7 @@ msgstr "El tipus de desplegable no és vàlid: %s"
 
 #: inc/field/dropdownfield.class.php:965
 msgid "Entity restriction"
-msgstr ""
+msgstr "Restricció d'entitat"
 
 #: inc/field/emailfield.class.php:108
 #, php-format
@@ -1556,7 +1556,7 @@ msgstr "Atribut"
 
 #: inc/field/ldapselectfield.class.php:191
 msgid "LDAP size limit exceeded"
-msgstr ""
+msgstr "S'ha superat el límit de mida LDAP"
 
 #: inc/field/ldapselectfield.class.php:220
 msgid "LDAP Select"
