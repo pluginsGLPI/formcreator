@@ -44,7 +44,7 @@ class PluginFormcreatorForm_Profile extends PluginFormcreatorRestrictedFormCrite
     *
     * @param PluginFormcreatorForm $form The given form
     *
-    * @return bool True if there is a match, the user is whitelisted
+    * @return QuerySubQuery Whitelist criteria
     */
    public static function getListCriteriaSubQuery(): QuerySubQuery {
       // Allow only the current user active profile
@@ -52,7 +52,7 @@ class PluginFormcreatorForm_Profile extends PluginFormcreatorRestrictedFormCrite
          'SELECT' => static::$items_id_1,
          'FROM'   => self::getTable(),
          'WHERE'  => [
-            static::$items_id_2 => $_SESSION['glpiactiveprofile']['id']
+            static::$items_id_2 => ($_SESSION['glpiactiveprofile']['id'] ?? -1)
          ]
       ]);
    }
