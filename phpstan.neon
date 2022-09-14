@@ -1,0 +1,7 @@
+parameters:
+  level: 3
+  scanDirectories:
+    - ../../src
+    - ../../inc
+  paths:
+    - inc

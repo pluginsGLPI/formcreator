@@ -53,8 +53,8 @@ class RoboFile extends RoboFilePlugin
          'RoboFile*.php',
          'plugin.xml',
          'phpunit.xml.*',
+         'phpstan.neon',
          '.travis.yml',
-         'save.sql',
    ];
 
    protected function getProjectPath() {
