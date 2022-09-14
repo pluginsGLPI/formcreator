@@ -33,7 +33,8 @@
       "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
       "phpcsstandards/phpcsutils": "^1.0@alpha",
       "scssphp/scssphp": "^1.5",
-      "symfony/panther": "^1.1"
+      "symfony/panther": "^1.1",
+      "phpstan/phpstan": "^1.8"
     },
     "autoload-dev": {
         "psr-4": {
@@ -43,6 +44,7 @@
     "scripts": {
         "cs": "vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
         "cbf": "vendor/bin/phpcbf -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php install/ inc/ front/ ajax/ tests/ RoboFile.php",
-        "lint": "vendor/bin/parallel-lint --exclude vendor ."
+        "lint": "vendor/bin/parallel-lint --exclude vendor .",
+        "stan": "vendor/bin/phpstan analyze -c phpstan.neon"
     }
 }
