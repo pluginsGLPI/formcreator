@@ -57,15 +57,17 @@ class ActorField extends PluginFormcreatorAbstractField
       // Convert default values to text
       $items = json_decode($this->question->fields['default_values'], true);
       $this->question->fields['default_values'] = [];
-      foreach ($items as $item) {
-         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-            $this->question->fields['default_values'][] = $item;
-         } else if (!empty($item)) {
-            $user = new User();
-            $user->getFromDB($item);
-            if (!$user->isNewItem()) {
-               // A user known in the DB
-               $this->question->fields['default_values'][] = $user->fields['name'];
+      if (is_array($items)) {
+         foreach ($items as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $this->question->fields['default_values'][] = $item;
+            } else if (!empty($item)) {
+               $user = new User();
+               $user->getFromDB($item);
+               if (!$user->isNewItem()) {
+                  // A user known in the DB
+                  $this->question->fields['default_values'][] = $user->fields['name'];
+               }
             }
          }
       }
