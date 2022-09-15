@@ -6,6 +6,7 @@ use Html;
 use DB;
 use Auth;
 use atoum;
+use Ticket;
 
 abstract class CommonTestCase extends atoum
 {
@@ -364,6 +365,8 @@ abstract class CommonTestCase extends atoum
       /** @var \CommonDBTM */
       $item = new $itemtype();
 
+      $this->handleDeprecations($itemtype, $input);
+
       // assign entity
       if ($item->isEntityAssign()) {
          $entity = 0;
@@ -397,5 +400,34 @@ abstract class CommonTestCase extends atoum
       $this->boolean($item->isNewItem())->isFalse($this->getSessionMessage());
 
       return $item;
+   }
+
+   /**
+    * Handle deprecations in GLPI
+    * Helps to make unit tests without deprecations warnings, accross 2 version of GLPI
+    *
+    * @param string $itemtype
+    * @param array $input
+    * @return void
+    */
+   private function handleDeprecations($itemtype, &$input): void {
+      switch ($itemtype) {
+         case Ticket::class:
+            if (version_compare(GLPI_VERSION, '10.1') < 0) {
+               break;
+            }
+            // in GLPI 10.1
+            if (isset($input['users_id_validate'])) {
+               if (!is_array($input['users_id_validate'])) {
+                  $input['users_id_validate'] = [$input['users_id_validate']];
+               }
+               foreach ($input['users_id_validate'] as $validator_user) {
+                  $input['itemtype_target'] = User::class;
+                  $input['items_id_target'] = $validator_user;
+               }
+               unset($input['users_id_validate']);
+            }
+            break;
+      }
    }
 }
