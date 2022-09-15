@@ -1370,6 +1370,7 @@ var plugin_formcreator = new function() {
       if (document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]')) {
          questionId = document.querySelector('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"] [name="id"]').value;
       }
+      tinyMCE.triggerSave();
       var data = new FormData(form);
       data.append('id', questionId);
       $.post({
