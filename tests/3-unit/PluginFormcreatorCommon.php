@@ -214,7 +214,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => $ticketStatus
          ];
-         $data["validation none, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+         yield $dataSet;
 
          $ticket = new \Ticket();
          $ticket->add([
@@ -258,7 +258,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => $ticketStatus
          ];
-         $data["validation accepted, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+         yield $dataSet;
       }
 
       // Build test cases for 2nd column of tabhe in docblock of
@@ -301,7 +301,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => \PluginFormcreatorFormAnswer::STATUS_WAITING
          ];
-         $data["validation waiting, " . \CommonITILValidation::getStatus(\CommonITILValidation::WAITING)] = $dataSet;
+         yield $dataSet;
       }
 
       $expectedStatus = [
@@ -332,7 +332,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => $ticketStatus
          ];
-         $data["validation waiting, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+         yield $dataSet;
       }
 
       // Build test cases for 3rd column of tabhe in docblock of
@@ -375,7 +375,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => \PluginFormcreatorFormAnswer::STATUS_REFUSED
          ];
-         $data["validation refused, " . \CommonITILValidation::getStatus(\CommonITILValidation::REFUSED)] = $dataSet;
+         yield $dataSet;
       }
 
       $expectedStatus = [
@@ -413,10 +413,8 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'ticket' => $ticket,
             'expected' => $ticketStatus
          ];
-         $data["validation refused, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
+         yield $dataSet;
       }
-
-      return $data;
    }
 
    /**
