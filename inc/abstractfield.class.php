@@ -63,8 +63,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       return [];
    }
 
-   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool
-   {
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
       return false;
    }
 
