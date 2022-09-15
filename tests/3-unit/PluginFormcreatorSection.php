@@ -32,36 +32,6 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorSection extends CommonTestCase {
-   public function setup() {
-      // instanciate classes
-      $form           = new \PluginFormcreatorForm;
-      $form_section   = new \PluginFormcreatorSection;
-      $form_question  = new \PluginFormcreatorQuestion;
-
-      // create objects
-      $forms_id = $form->add([
-         'name'                => "test clone form",
-         'is_active'           => true,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
-      ]);
-
-      $sections_id = $form_section->add([
-         'name'                        => "test clone section",
-         'plugin_formcreator_forms_id' => $forms_id
-      ]);
-
-      $form_question->add([
-         'name'                           => "test clone question 1",
-         'fieldtype'                      => 'text',
-         'plugin_formcreator_sections_id' => $sections_id
-      ]);
-      $form_question->add([
-         'name'                           => "test clone question 2",
-         'fieldtype'                      => 'textarea',
-         'plugin_formcreator_sections_id' => $sections_id
-      ]);
-   }
-
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       switch ($method) {
@@ -83,17 +53,27 @@ class PluginFormcreatorSection extends CommonTestCase {
       $question  = new \PluginFormcreatorQuestion;
 
       // create objects
-      $forms_id = $form->add(['name'                => "test clone form",
-                                   'is_active'           => true,
-                                   'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
-      $sections_id = $section->add(['name'                        => "test clone section",
-                                         'plugin_formcreator_forms_id' => $forms_id]);
-      $question->add(['name'                           => "test clone question 1",
-                                             'fieldtype'                      => 'text',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
-      $question->add(['name'                           => "test clone question 2",
-                                             'fieldtype'                      => 'textarea',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
+      $forms_id = $form->add([
+         'name'                => "test clone form",
+         'is_active'           => true,
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+      ]);
+      $sections_id = $section->add([
+         'name'                        => "test clone section",
+         'plugin_formcreator_forms_id' => $forms_id
+      ]);
+      $question->add([
+         'name'                           => "test clone question 1",
+         'fieldtype'                      => 'text',
+         'plugin_formcreator_sections_id' => $sections_id,
+         'default_values'                 => '',
+      ]);
+      $question->add([
+         'name'                           => "test clone question 2",
+         'fieldtype'                      => 'textarea',
+         'plugin_formcreator_sections_id' => $sections_id,
+         'default_values'                 => '',
+      ]);
 
       //get section
       $section->getFromDB($sections_id);
