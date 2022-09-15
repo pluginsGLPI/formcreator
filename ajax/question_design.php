@@ -54,12 +54,10 @@ $values = [];
 //compute question->fields from $_REQUEST (by comparing key)
 //add other keys to 'values' key
 foreach ($_REQUEST as $request_key => $request_value) {
-   foreach (array_keys($question->fields) as $key) {
-      if ($key == $request_key) {
-         $question->fields[$key] = $_REQUEST[$key];
-      } else {
-         $values[$request_key] = $request_value;
-      }
+   if (isset($question->fields[$request_key])) {
+      $question->fields[$request_key] = $_REQUEST[$request_key];
+   } else {
+      $values[$request_key] = $request_value;
    }
 }
 
