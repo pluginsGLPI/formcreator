@@ -1,5 +1,5 @@
 {
-    "schema_version": 2.13,
+    "schema_version": 2.14,
     "forms": [
         {
             "name": "form with all question types",
@@ -126,8 +126,9 @@
                             "required": 0,
                             "show_empty": 0,
                             "default_values": 0,
-                            "values": "{\"itemtype\":\"Location\",\"show_ticket_categories_depth\":\"0\",\"show_ticket_categories_root\":\"0\"}",
+                            "values": "{\"show_ticket_categories_depth\":\"0\",\"show_ticket_categories_root\":\"0\"}",
                             "description": "dropdown description",
+                            "itemtype": "Location",
                             "row": 5,
                             "col": 0,
                             "width": 4,
@@ -204,7 +205,8 @@
                             "required": 0,
                             "show_empty": 0,
                             "default_values": 0,
-                            "values": "Computer",
+                            "values": "",
+                            "itemtype": "Computer",
                             "description": "GLPI object description",
                             "row": 9,
                             "col": 0,
