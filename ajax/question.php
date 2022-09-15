@@ -31,7 +31,6 @@
 
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\Question;
-use GlpiPlugin\Formcreator\Section;
 
 include ('../../../inc/includes.php');
 Session::checkRight(Form::$rightname, UPDATE);
@@ -39,11 +38,13 @@ Session::checkRight(Form::$rightname, UPDATE);
 $question_id = $_REQUEST['id'] ?? 0;
 $question = new Question();
 if ($question_id == 0) {
-   $question->getEmpty();
-   $sectionFk = Section::getForeignKeyField();
-   $question->fields[$sectionFk] = (int) $_REQUEST[$sectionFk];
+   $sectionFk = Question::$items_id;
+   // $question->showForm($question_id);
+   $question->display([
+      'show_nav_header' => false,
+      $sectionFk => (int) $_REQUEST[$sectionFk],
+   ]);
 } else {
    $question->getFromDB($question_id);
+   $question->display(['show_nav_header' => false]);
 }
-// $question->showForm($question_id);
-$question->display(['show_nav_header' => false]);

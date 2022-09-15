@@ -32,7 +32,5 @@
 {% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
 
 {% block form_fields %}
-    {% for parameter in question_params %}
-        {{ parameter.getParameterForm(item)|raw }}
-    {% endfor %}
+    {{ question_params.filter.getParameterForm(item)|raw }}
 {% endblock %}

@@ -788,6 +788,16 @@ TranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', str_replace('\\', '_', self::getType()), $this->getID());
 
+      // $options may contain values from a form (i.e. changing the question field type)
+      foreach ($options as $request_key => $request_value) {
+         if (isset($this->fields[$request_key])) {
+            $this->fields[$request_key] = $_REQUEST[$request_key];
+         } else {
+            $values[$request_key] = $request_value;
+         }
+      }
+      $this->fields['values'] = json_encode($values);
+
       $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [

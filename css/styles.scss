@@ -1085,3 +1085,8 @@ a.plugin_formcreator_formTile_title {
 a.category_active span, a.category_active + ul > li:first-child > a {
    font-weight: bold;
 }
+
+// Avoid overflow when showing search filter in question designer
+.modal-content [data-itemtype="PluginFormcreatorQuestion"] .d-flex.flex-row {
+   overflow-x: auto;
+}
