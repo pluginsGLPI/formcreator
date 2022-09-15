@@ -35,11 +35,13 @@ namespace GlpiPlugin\Formcreator\Field;
 use PluginFormcreatorAbstractField;
 use PluginFormcreatorForm;
 use PluginFormcreatorFormAnswer;
+use PluginFormcreatorQuestionFilter;
 use Html;
 use Toolbox;
 use Session;
 use DBUtils;
 use Dropdown;
+use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
@@ -74,6 +76,40 @@ class DropdownField extends PluginFormcreatorAbstractField
          self::ENTITY_RESTRICT_FORM =>  PluginFormcreatorForm::getTypeName(1),
          self::ENTITY_RESTRICT_BOTH =>  __('User and form', 'formcreator'),
       ];
+   }
+
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [
+         1 => __('Search filter', 'formcreator'),
+      ];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      switch ($tabnum) {
+         case 1:
+            $this->showFilter();
+            return true;
+      }
+
+      return false;
+   }
+
+   protected function showFilter() {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.filter.html.twig';
+      $parameters = $this->getParameters();
+      $options = [];
+      $options['candel'] = false;
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+         'question_params' => $parameters,
+         'no_header' => true,
+      ]);
+
+      return true;
    }
 
    public function isPrerequisites(): bool {
@@ -628,6 +664,18 @@ class DropdownField extends PluginFormcreatorAbstractField
 
    public static function canRequire(): bool {
       return true;
+   }
+
+   public function getEmptyParameters(): array {
+      $filter = new PluginFormcreatorQuestionFilter();
+      $filter->setField($this, [
+         'fieldName' => 'filter',
+         'label'     => __('Filter', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      return [
+         'filter' => $filter,
+      ];
    }
 
    /**

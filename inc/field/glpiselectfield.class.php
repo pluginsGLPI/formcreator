@@ -47,13 +47,6 @@ use Glpi\Application\View\TemplateRenderer;
 
 class GlpiselectField extends DropdownField
 {
-
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
-      return [
-         1 => __('Search filter', 'formcreator'),
-      ];
-   }
-
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
@@ -94,29 +87,6 @@ class GlpiselectField extends DropdownField
       }
 
       return false;
-   }
-
-   private function showFilter() {
-      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.filter.html.twig';
-      $parameters = $this->getParameters();
-      $options = [];
-      $options['candel'] = false;
-      $options['target'] = "javascript:;";
-      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
-      // $options['addbuttons'] = [
-      //    'preview' => [
-      //       'type' => 'button',
-      //       'text' => __('Preview', 'formcreator'),
-      //    ],
-      // ];
-      TemplateRenderer::getInstance()->display($template, [
-         'item' => $this->question,
-         'params' => $options,
-         'question_params' => $parameters,
-         'no_header' => true,
-      ]);
-
-      return true;
    }
 
    public static function getName(): string {
@@ -169,18 +139,6 @@ class GlpiselectField extends DropdownField
 
    public static function canRequire(): bool {
       return true;
-   }
-
-   public function getEmptyParameters(): array {
-      $filter = new PluginFormcreatorQuestionFilter();
-      $filter->setField($this, [
-         'fieldName' => 'filter',
-         'label'     => __('Filter', 'formcreator'),
-         'fieldType' => ['text'],
-      ]);
-      return [
-         'filter' => $filter,
-      ];
    }
 
    public function getAvailableValues(): array {

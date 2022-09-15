@@ -228,7 +228,14 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
             'fieldname'                         => $fieldname,
          ]);
          if ($parameter->isNewItem()) {
+            // Create the missing parameter with defaults
             $parameter->getEmpty();
+            $parameter_input = array_merge($parameter->fields, [
+               PluginFormcreatorQuestion::getForeignKeyField() => $this->question->getID(),
+               'fieldname' => $fieldname,
+            ]);
+            unset($parameter_input['id']);
+            $parameter->add($parameter_input);
          }
       }
 
@@ -249,19 +256,15 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
    public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {
       $fieldTypeName = $this->getFieldTypeName();
-      if (!isset($input['_parameters'][$fieldTypeName])) {
-         return;
-      }
 
       foreach ($this->getParameters() as $fieldName => $parameter) {
-         if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
-            continue;
-         }
-         $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
+         $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName] ?? [];
          $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
+         $parameterInput = array_merge($parameter->fields, $parameterInput);
          if ($parameter->isNewItem()) {
             // In case of the parameter vanished in DB, just recreate it
             unset($parameterInput['id']);
+            unset($parameterInput['uuid']); // uuid must be set automatically
             $parameter->add($parameterInput);
          } else {
             $parameterInput['id'] = $parameter->getID();
