@@ -39,13 +39,5 @@
             criteria: item.fields.filter,
         } %}
         {{ call('Search::showGenericSearch', [question.fields['itemtype'], options]) }}
-        {# {{ call(
-            'Search::showList', [
-                question.fields.itemtype,
-                item.fields.filter
-            ]
-        ) }} #}
-        <div id="plugin_formcreator_question_filter_preview">
-        </div>
     {% endif %}
 {% endblock %}

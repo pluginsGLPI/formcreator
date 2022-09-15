@@ -32,42 +32,38 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
+use Html;
+use Toolbox;
+use Session;
+use DBUtils;
+use Dropdown;
+use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
-use DbUtils;
-use Dropdown;
 use Entity;
-use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Formcreator\AbstractField;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\QuestionFilter;
+use GlpiPlugin\Formcreator\Exception\ComparisonException;
+use Glpi\Application\View\TemplateRenderer;
 use Group;
 use Group_Ticket;
 use Group_User;
-use Html;
 use ITILCategory;
 use OLA;
 use Profile_User;
+use QueryExpression;
 use QuerySubQuery;
 use QueryUnion;
-<<<<<<< HEAD:src/Field/DropdownField.php
 use Search;
-use Session;
 use SLA;
 use Ticket;
 use Ticket_User;
-use Toolbox;
 use User;
 
 class DropdownField extends AbstractField
-=======
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
-use QueryExpression;
-
-class DropdownField extends PluginFormcreatorAbstractField
->>>>>>> 5c1e8f8f (WIP):inc/field/dropdownfield.class.php
 {
 
    const ENTITY_RESTRICT_USER = 1;
@@ -80,6 +76,40 @@ class DropdownField extends PluginFormcreatorAbstractField
          self::ENTITY_RESTRICT_FORM =>  Form::getTypeName(1),
          self::ENTITY_RESTRICT_BOTH =>  __('User and form', 'formcreator'),
       ];
+   }
+
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [
+         1 => __('Search filter', 'formcreator'),
+      ];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      switch ($tabnum) {
+         case 1:
+            $this->showFilter();
+            return true;
+      }
+
+      return false;
+   }
+
+   protected function showFilter() {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.filter.html.twig';
+      $parameters = $this->getParameters();
+      $options = [];
+      $options['candel'] = false;
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+         'question_params' => $parameters,
+         'no_header' => true,
+      ]);
+
+      return true;
    }
 
    public function isPrerequisites(): bool {
@@ -634,6 +664,18 @@ class DropdownField extends PluginFormcreatorAbstractField
 
    public static function canRequire(): bool {
       return true;
+   }
+
+   public function getEmptyParameters(): array {
+      $filter = new PluginFormcreatorQuestionFilter();
+      $filter->setField($this, [
+         'fieldName' => 'filter',
+         'label'     => __('Filter', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      return [
+         'filter' => $filter,
+      ];
    }
 
    /**

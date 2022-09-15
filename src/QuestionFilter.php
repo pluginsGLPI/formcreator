@@ -104,7 +104,7 @@ extends AbstractQuestionParameter
    }
 
    public function post_getEmpty() {
-      $this->fields['filter'] = '[]';
+      $this->fields['filter'] = [];
    }
 
    public function post_getFromDB() {

@@ -414,23 +414,6 @@ TranslatableInterface
          return [];
       }
 
-      // Check the parameters are provided
-      $parameters = $this->field->getEmptyParameters();
-      if (count($parameters) > 0) {
-         if (!isset($input['_parameters'][$input['fieldtype']])) {
-            // This should not happen
-            Session::addMessageAfterRedirect(__('This type of question requires parameters', 'formcreator'), false, ERROR);
-            return [];
-         }
-         foreach ($parameters as $parameter) {
-            if (!isset($input['_parameters'][$input['fieldtype']][$parameter->getFieldName()])) {
-               // This should not happen
-               Session::addMessageAfterRedirect(__('A parameter is missing for this question type', 'formcreator'), false, ERROR);
-               return [];
-            }
-         }
-      }
-
       $input = $this->field->prepareQuestionInputForSave($input);
       if ($input === false || !is_array($input)) {
          // Invalid data
@@ -921,6 +904,9 @@ TranslatableInterface
       if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
+            if (!isset($input['_parameters'][$input['fieldtype']][$fieldName])) {
+               continue;
+            }
             if (is_array($input['_parameters'][$input['fieldtype']][$fieldName])) {
                /** @var ExportableInterface $parameter */
                $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);

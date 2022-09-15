@@ -90,6 +90,12 @@ TranslatableInterface
       return $input;
    }
 
+   public function prepareInputForUpdate($input) {
+      unset($input['uuid']);
+
+      return $input;
+   }
+
    public function rawSearchOptions() {
       $tab = [];
       $tab[] = [
