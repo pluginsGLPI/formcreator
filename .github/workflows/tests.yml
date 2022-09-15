@@ -6,6 +6,7 @@ on:
 env:
   GLPI_SOURCE: "https://github.com/glpi-project/glpi"
   GLPI_PACKAGE_URL_BASE: "https://nightly.glpi-project.org/glpi"
+  GLPI_PACKAGE: "10.0.tar.gz"
   CS: 7.4
   DB_HOST: 127.0.0.1
   MYSQL_ROOT_USER: root

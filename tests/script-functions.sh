@@ -20,6 +20,7 @@ init_databases() {
 install_glpi() {
    echo Installing GLPI
    rm -rf ../glpi
+<<<<<<< HEAD
    if [ "$GLPI_USE_REPO" = "true" ]; then
       git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi
       cd ../glpi
@@ -36,6 +37,20 @@ install_glpi() {
       ls -l /tmp/glpi.tar.gz
       tar xf /tmp/glpi.tar.gz --directory ../
    fi
+=======
+   # git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi
+   # cd ../glpi
+   # composer install --no-dev --no-interaction
+   # php bin/console dependencies install composer-options=--no-dev
+   # php bin/console locales:compile
+   # php bin/console glpi:build:compile_scss
+   # php bin/console glpi:system:check_requirements
+   # rm .atoum.php
+   GLPI_PACKAGE_URL=$GLPI_PACKAGE_URL_BASE/$GLPI_PACKAGE
+   echo Downloading $GLPI_PACKAGE_URL
+   curl $GLPI_PACKAGE_URL --output /tmp/glpi.tar.gz
+   tar xf /tmp/glpi.tar.gz --directory ../
+>>>>>>> ea3aabd5f (ci: have an env var for base URL to download GLPI)
    cd ../glpi
 
    patch_glpi
