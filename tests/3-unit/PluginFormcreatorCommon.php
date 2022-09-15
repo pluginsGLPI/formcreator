@@ -184,8 +184,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
       ];
       foreach ($expectedStatus as $ticketStatus) {
          // generate tickets with a validation
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \Ticket::getStatus($ticketStatus),
             'status'  =>  \CommonITILObject::INCOMING,
@@ -228,8 +227,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          ];
          $data["no validation, " . \Ticket::getStatus($ticketStatus)] = $dataSet;
 
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \Ticket::getStatus($ticketStatus),
             'status'  =>  \CommonITILObject::INCOMING,
@@ -271,8 +269,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
       ];
       foreach ($expectedStatus as $ticketStatus) {
          // generate tickets with a validation
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \CommonITILValidation::getStatus(\CommonITILValidation::WAITING),
             'status'  =>  \CommonITILObject::INCOMING,
@@ -309,8 +306,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          \Ticket::CLOSED,
       ];
       foreach ($expectedStatus as $ticketStatus) {
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \Ticket::getStatus($ticketStatus),
             'status'  =>  \CommonITILObject::INCOMING,
@@ -345,8 +341,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
       ];
       foreach ($expectedStatus as $ticketStatus) {
          // generate tickets with a validation
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \CommonITILValidation::getStatus(\CommonITILValidation::REFUSED),
             'status'  =>  \CommonITILObject::INCOMING,
@@ -383,8 +378,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          \Ticket::CLOSED,
       ];
       foreach ($expectedStatus as $ticketStatus) {
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \Ticket::getStatus($ticketStatus),
             'status'  =>  \CommonITILObject::INCOMING,
