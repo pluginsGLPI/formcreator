@@ -50,7 +50,7 @@ class GlpiselectField extends DropdownField
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
       return [
-         __('Search filter', 'formcreator'),
+         1 => __('Search filter', 'formcreator'),
       ];
    }
 
@@ -87,12 +87,28 @@ class GlpiselectField extends DropdownField
    }
 
    public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      switch ($tabnum) {
+         case 1:
+            $this->showFilter();
+            return true;
+      }
+
+      return false;
+   }
+
+   private function showFilter() {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.filter.html.twig';
       $parameters = $this->getParameters();
       $options = [];
       $options['candel'] = false;
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+      // $options['addbuttons'] = [
+      //    'preview' => [
+      //       'type' => 'button',
+      //       'text' => __('Preview', 'formcreator'),
+      //    ],
+      // ];
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
          'params' => $options,

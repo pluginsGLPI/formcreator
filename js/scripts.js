@@ -1014,6 +1014,10 @@ var plugin_formcreator = new function() {
       });
    };
 
+   this.showSearchFilter = function () {
+      // document.querySelector('#plugin_formcreator_filter_preview');
+   };
+
    this.addSection = function (event) {
       var form = event.target;
       var that = this;
@@ -1389,7 +1393,7 @@ var plugin_formcreator = new function() {
             // We cannot use document.querySelector here
             $('form[name="asset_form"][data-itemtype="PluginFormcreatorQuestion"]')
             .closest('div.asset')
-            .replaceWith(response);
+            .html(response);
          } catch (e) {
             console.log('Plugin Formcreator: Failed to get subtype fields');
             return;

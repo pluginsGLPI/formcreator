@@ -59,6 +59,8 @@ use QuerySubQuery;
 use QueryUnion;
 use GlpiPlugin\Formcreator\Exception\ComparisonException;
 use Glpi\Application\View\TemplateRenderer;
+use QueryExpression;
+
 class DropdownField extends PluginFormcreatorAbstractField
 {
 
@@ -330,7 +332,14 @@ class DropdownField extends PluginFormcreatorAbstractField
          $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
       }
 
-      $dparams['condition'] = $dparams_cond_crit;
+      // search filter
+      $search_filter = $this->buildSearchFilter();
+      $dparams['condition']['LEFT JOIN'] = $search_filter['LEFT JOIN'];
+      $dparams['condition']['WHERE'] = [];
+      if (count($dparams_cond_crit) > 0) {
+         $dparams['condition']['WHERE'][] = $dparams_cond_crit;
+      }
+      $dparams['condition']['WHERE'][] = new QueryExpression($search_filter['WHERE']);
 
       $dparams['display_emptychoice'] = false;
       if ($itemtype != Entity::class) {
@@ -353,6 +362,83 @@ class DropdownField extends PluginFormcreatorAbstractField
       }
 
       return $dparams;
+   }
+
+   /**
+    * get all JOINS required for a search by the itemtype and the search criterias
+    *
+    * @return string
+    */
+   private function buildSearchFilter(): array {
+      $parameters = $this->getParameters();
+      $filter = $parameters['filter']->fields['filter'];
+
+      // @see Search::getDatas
+      $itemtype = $this->question->fields['itemtype'];
+      $data = Search::prepareDatasForSearch($itemtype, $filter);
+
+      $blacklist_tables = [];
+      $orig_table = Search::getOrigTableName($itemtype);
+      if (isset($CFG_GLPI['union_search_type'][$itemtype])) {
+          $itemtable          = $CFG_GLPI['union_search_type'][$itemtype];
+          $blacklist_tables[] = $orig_table;
+      } else {
+          $itemtable = $orig_table;
+      }
+
+      $already_link_tables = [];
+      // Put reference table
+      array_push($already_link_tables, $itemtable);
+
+      $default_join = Search::addDefaultJoin($itemtype, $itemtable, $already_link_tables);
+
+      $searchopt        = &Search::getOptions($itemtype);
+      foreach ($data['tocompute'] as $val) {
+         if (!in_array($searchopt[$val]["table"], $blacklist_tables)) {
+             $all_joins = $default_join . Search::addLeftJoin(
+                 $data['itemtype'],
+                 $itemtable,
+                 $already_link_tables,
+                 $searchopt[$val]["table"],
+                 $searchopt[$val]["linkfield"],
+                 0,
+                 0,
+                 $searchopt[$val]["joinparams"],
+                 $searchopt[$val]["field"]
+             );
+         }
+      }
+
+      $select = '';
+      Search::constructAdditionalSqlForMetacriteria($filter, $select, $all_joins, $already_link_tables, $data);
+
+      // we have all JOINS in a string.
+      // Trying now to convert them into a Query Builder compatible array
+
+      $joins = explode('LEFT JOIN', trim($all_joins));
+      $join_array = [];
+      foreach ($joins as $join) {
+         $join = trim($join);
+         if ($join == '') {
+            continue;
+         }
+         list($table, $join_condition) = explode('ON', $join, 2);
+         // $table may contain an alias expression
+         // $join_condition is the join condition in round brackets (included)
+         $table = str_replace('`', '', trim($table)); // also remove backquotes
+         $join_condition = trim($join_condition);
+         $join_array[$table] = [
+            new QueryExpression(($join_condition)),
+         ];
+      }
+
+      $where = Search::addDefaultWhere($itemtype);
+      $where .= Search::constructCriteriaSQL($filter, $data, $searchopt);
+
+      return [
+         'LEFT JOIN' => $join_array,
+         'WHERE'     => $where,
+      ];
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
