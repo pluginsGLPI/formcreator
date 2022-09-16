@@ -847,37 +847,11 @@ PluginFormcreatorTranslatableInterface
       // add the question to the linker
       $linker->addObject($originalId, $item);
 
-      // Import conditions
-      if (isset($input['_conditions'])) {
-         foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
-         }
-      }
-
-      // Import parameters
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $item
-      );
-      if (isset($input['_parameters'])) {
-         $parameters = $field->getParameters();
-         foreach ($parameters as $fieldName => $parameter) {
-            if (!isset($input['_parameters'][$input['fieldtype']][$fieldName])) {
-               continue;
-            }
-            if (is_array($input['_parameters'][$input['fieldtype']][$fieldName])) {
-               /** @var PluginFormcreatorExportableInterface $parameter */
-               $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
-            } else {
-               // Import data incomplete, parameter not defined
-               // Adding an empty parameter (assuming the question is actually added or updated in DB)
-               $parameterInput = $parameter->fields;
-               $parameterInput['plugin_formcreator_questions_id'] = $itemId;
-               unset($parameterInput['id']);
-               $parameter->add($parameterInput);
-            }
-         }
-      }
+      $subItems = [
+         '_parameters' => PluginFormcreatorQuestion::getTargetTypes(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -885,6 +859,7 @@ PluginFormcreatorTranslatableInterface
    public static function countItemsToImport(array $input) : int {
       // TODO: need improvement to handle parameters
       $subItems = [
+         '_parameters' => PluginFormcreatorQuestion::getTargetTypes(),
          '_conditions' => PluginFormcreatorCondition::class,
       ];
 
@@ -902,20 +877,12 @@ PluginFormcreatorTranslatableInterface
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       unset($export[$sectionFk]);
 
-      // get question conditions
-      $export['_conditions'] = [];
-      $all_conditions = PluginFormcreatorCondition::getConditionsFromItem($this);
-      foreach ($all_conditions as $condition) {
-         $export['_conditions'][] = $condition->export($remove_uuid);
-      }
+      $subItems = [
+         '_parameters' => PluginFormcreatorQuestion::getTargetTypes(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
-      // get question parameters
-      $export['_parameters'] = [];
-      $this->loadField($this->fields['fieldtype']);
-      $parameters = $this->field->getParameters();
-      foreach ($parameters as $fieldname => $parameter) {
-         $export['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
-      }
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -1286,5 +1253,26 @@ PluginFormcreatorTranslatableInterface
             'data-itemtype' => $itemtype
          ],
       ] + $options);
+   }
+
+   /**
+    * Get supported question parameters
+    *
+    * @return array
+    */
+    public static function getTargetTypes() : array {
+      global $PLUGIN_HOOKS;
+
+      $parameters = [
+         PluginFormcreatorQuestionFilter::class,
+         PluginFormcreatorQuestionRange::class,
+         PluginFormcreatorQuestionRegex::class,
+      ];
+
+      foreach ($PLUGIN_HOOKS['formcreator_add_parameters'] ?? [] as $plugin_parameters) {
+         array_push($parameters, ...$plugin_parameters);
+      }
+
+      return $parameters;
    }
 }
