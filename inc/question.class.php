@@ -334,13 +334,6 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      // - field type is required
-      if (isset($input['fieldtype'])
-          && empty($input['fieldtype'])) {
-         Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
-         return [];
-      }
-
       // - section is required
       if (isset($input['plugin_formcreator_sections_id'])
           && empty($input['plugin_formcreator_sections_id'])) {
@@ -456,6 +449,11 @@ PluginFormcreatorTranslatableInterface
       if (isset($input['criteria']['filter'])) {
          $itemtype = $input['fieldtype'] ?? $this->fields['fieldtype'];
          $input['_parameters'][$itemtype] = $input['criteria'];
+      }
+
+      if (isset($input['fieldtype']) && $input['fieldtype'] != $this->fields['fieldtype']) {
+         Session::addMessageAfterRedirect(__('The field type cannot be changed. Delete then recreate the question.', 'formcreator'), false, ERROR);
+         return [];
       }
 
       if (!$this->skipChecks) {
