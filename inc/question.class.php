@@ -883,7 +883,6 @@ PluginFormcreatorTranslatableInterface
       ];
       $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
-
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
@@ -1260,13 +1259,13 @@ PluginFormcreatorTranslatableInterface
     *
     * @return array
     */
-    public static function getTargetTypes() : array {
+   public static function getTargetTypes() : array {
       global $PLUGIN_HOOKS;
 
       $parameters = [
-         PluginFormcreatorQuestionFilter::class,
-         PluginFormcreatorQuestionRange::class,
-         PluginFormcreatorQuestionRegex::class,
+        PluginFormcreatorQuestionFilter::class,
+        PluginFormcreatorQuestionRange::class,
+        PluginFormcreatorQuestionRegex::class,
       ];
 
       foreach ($PLUGIN_HOOKS['formcreator_add_parameters'] ?? [] as $plugin_parameters) {
