@@ -370,12 +370,15 @@ class DropdownField extends AbstractField
 
       // search filter
       $search_filter = $this->buildSearchFilter();
-      $dparams['condition']['LEFT JOIN'] = $search_filter['LEFT JOIN'];
-      $dparams['condition']['WHERE'] = [];
+      if (count($search_filter['LEFT JOIN']) > 0) {
+         $dparams['condition']['LEFT JOIN'] = $search_filter['LEFT JOIN'];
+      }
       if (count($dparams_cond_crit) > 0) {
          $dparams['condition']['WHERE'][] = $dparams_cond_crit;
       }
-      $dparams['condition']['WHERE'][] = new QueryExpression($search_filter['WHERE']);
+      if ($search_filter['WHERE'] != "") {
+         $dparams['condition']['WHERE'][] = new QueryExpression($search_filter['WHERE']);
+      }
 
       $dparams['display_emptychoice'] = false;
       if ($itemtype != Entity::class) {
