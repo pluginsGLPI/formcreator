@@ -228,14 +228,8 @@ abstract class AbstractField implements FieldInterface
             'fieldname'                         => $fieldname,
          ]);
          if ($parameter->isNewItem()) {
-            // Create the missing parameter with defaults
+            // Create the missing parameter with defaults, but do not create it in DB
             $parameter->getEmpty();
-            $parameter_input = array_merge($parameter->fields, [
-               PluginFormcreatorQuestion::getForeignKeyField() => $this->question->getID(),
-               'fieldname' => $fieldname,
-            ]);
-            unset($parameter_input['id']);
-            $parameter->add($parameter_input);
          }
       }
 
@@ -258,7 +252,10 @@ abstract class AbstractField implements FieldInterface
       $fieldTypeName = $this->getFieldTypeName();
 
       foreach ($this->getParameters() as $fieldName => $parameter) {
-         $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName] ?? [];
+         if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
+            continue;
+         }
+         $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
          $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
          $parameterInput = array_merge($parameter->fields, $parameterInput);
          if ($parameter->isNewItem()) {
