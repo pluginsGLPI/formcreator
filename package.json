@@ -1,7 +1,6 @@
 {
     "dependencies": {
-        "jquery-slinky": "^4.1",
-        "masonry-layout": "^4.2"
+        "jquery-slinky": "^4.1"
     },
     "devDependencies": {
         "conventional-changelog-cli": "^2.0",
@@ -14,5 +13,5 @@
             "tag": true
         }
     },
-    "version": "2.13.0"
+    "version": "2.13.1"
 }

@@ -107,7 +107,7 @@ class FileField extends PluginFormcreatorAbstractField
          return;
       }
       $this->uploadData = json_decode($value, true);
-      if ($this->uploadData === null) {
+      if (!is_array($this->uploadData)) {
          $this->uploadData = [];
       }
       if (count($this->uploadData) > 0) {

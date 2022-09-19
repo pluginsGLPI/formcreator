@@ -28,46 +28,33 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_13_1 {
+   /** @var Migration */
+   protected $migration;
 
-include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
+   public function isResyncIssuesRequired() {
+      return false;
+   }
 
-if (!isset($_REQUEST['id'])) {
-   http_response_code(400);
-   exit();
-}
-if (!isset($_REQUEST['fieldtype'])) {
-   http_response_code(400);
-   exit();
-}
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      $this->migration = $migration;
+      $this->schemaFixes();
+   }
 
-$question = new PluginFormcreatorQuestion();
-$question->getEmpty();
-if (!$question->isNewID((int) $_REQUEST['id']) && !$question->getFromDB((int) $_REQUEST['id'])) {
-   http_response_code(400);
-   exit();
-}
+   public function schemaFixes() {
+      global $DB;
 
-// Modify the question to reflect changes in the form
-$question->fields['plugin_formcreator_sections_id'] = (int) $_REQUEST['plugin_formcreator_sections_id'];
-$values = [];
-//compute question->fields from $_REQUEST (by comparing key)
-//add other keys to 'values' key
-foreach ($_REQUEST as $request_key => $request_value) {
-   if (isset($question->fields[$request_key])) {
-      $question->fields[$request_key] = $_REQUEST[$request_key];
-   } else {
-      $values[$request_key] = $request_value;
+      $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
+
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $DB->update(
+         $table,
+         ['category_question' => '0'],
+         ['category_question' => null]
+      );
+      $this->migration->changeField($table, 'category_question', 'category_question', $unsignedIntType, ['after' => 'category_rule']);
    }
 }
-
-$question->fields['values'] = json_encode($values);
-$field = PluginFormcreatorFields::getFieldInstance(
-   $_REQUEST['fieldtype'],
-   $question
-);
-$question->fields['fieldtype'] = '';
-if ($field !== null) {
-   $question->fields['fieldtype'] = $_REQUEST['fieldtype'];
-}
-$question->showForm($question->getID());

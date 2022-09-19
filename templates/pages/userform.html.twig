@@ -68,7 +68,7 @@
                         {% if section.fields['name'] == '' %}
                             ({{ sectionId }})
                         {% else %}
-                            {{ __(section.fields['name'], options.domain) }}
+                            {{ call('Glpi\\Toolbox\\Sanitizer::unsanitize', [__(section.fields['name'], options.domain)]) }}
                         {% endif %}
                     </h2>
                 </div>

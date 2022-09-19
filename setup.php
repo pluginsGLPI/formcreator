@@ -33,7 +33,7 @@ use Glpi\Plugin\Hooks;
 
 global $CFG_GLPI;
 // Version of the plugin (major.minor.bugfix)
-define('PLUGIN_FORMCREATOR_VERSION', '2.13.0');
+define('PLUGIN_FORMCREATOR_VERSION', '2.13.1');
 // Schema version of this version (major.minor only)
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.13');
 // is or is not an official release of the plugin
@@ -344,7 +344,6 @@ function plugin_formcreator_hook(): void {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/masonry-layout/dist/masonry.pkgd.min.js';
             $CFG_GLPI['javascript']['self-service']['none'] = [
                'dashboard',
                'gridstack'
@@ -488,6 +487,21 @@ function plugin_formcreator_redirect() {
 
       Html::redirect($issue->getFormURLWithID($issue->getID()) . '&tickets_id=' . $itemTicket->fields['tickets_id']);
    }
+
+   $pages = [
+      'front/reservationitem.php' => FORMCREATOR_ROOTDOC . '/front/reservationitem.php',
+      'front/helpdesk.faq.php' => FORMCREATOR_ROOTDOC . '/front/wizard.php',
+      'front/ticket.php' => FORMCREATOR_ROOTDOC . '/front/issue.php',
+   ];
+   foreach ($pages as $srcPage => $dstPage) {
+      if (strpos($_SERVER['REQUEST_URI'], $srcPage) !== false && strpos($_SERVER['REQUEST_URI'], $dstPage) === false) {
+         if ($srcPage == 'front/reservationitem.php') {
+            $_SESSION['plugin_formcreator']['redirected']['POST'] = $_POST;
+         }
+         Html::redirect($dstPage);
+         break;
+      }
+   }
 }
 
 function plugin_formcreator_options() {
@@ -511,7 +525,7 @@ function plugin_formcreator_getSchemaPath(string $version = null): ?string {
    preg_match('/^(\d+\.\d+\.\d+)/', $version, $matches);
    $version = $matches[1];
 
-   return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_${version}_empty.sql";
+   return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_{$version}_empty.sql";
 }
 
 /**

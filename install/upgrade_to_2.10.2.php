@@ -39,7 +39,7 @@ class PluginFormcreatorUpgradeTo2_10_2 {
       $this->migration = $migration;
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return true;
    }
 }

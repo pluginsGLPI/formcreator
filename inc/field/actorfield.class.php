@@ -54,8 +54,25 @@ class ActorField extends PluginFormcreatorAbstractField
    public function showForm(array $options): void {
       $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.html.twig';
 
-      $this->question->fields['default_values'] = Html::entities_deep($this->getValueForDesign());
-      $this->deserializeValue($this->question->fields['default_values']);
+      // Convert default values to text
+      $items = json_decode($this->question->fields['default_values'], true);
+      $this->question->fields['default_values'] = [];
+      if (is_array($items)) {
+         foreach ($items as $item) {
+            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+               $this->question->fields['default_values'][] = $item;
+            } else if (!empty($item)) {
+               $user = new User();
+               $user->getFromDB($item);
+               if (!$user->isNewItem()) {
+                  // A user known in the DB
+                  $this->question->fields['default_values'][] = $user->fields['name'];
+               }
+            }
+         }
+      }
+      $this->question->fields['default_values'] = implode('\r\n', $this->question->fields['default_values']);
+
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
          'params' => $options,
@@ -309,7 +326,7 @@ class ActorField extends PluginFormcreatorAbstractField
       $this->value = $parsed;
       $input['default_values'] = '';
       if ($this->value !== null && $this->value != '') {
-         $input['default_value'] = json_encode($this->value);
+         $input['default_values'] = json_encode($this->value);
       }
 
       return $input;

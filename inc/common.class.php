@@ -833,7 +833,6 @@ JAVASCRIPT;
     * @return void
     */
    public static function showMiniDashboard(): void {
-
       Plugin::doHook(Hooks::DISPLAY_CENTRAL);
 
       if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {

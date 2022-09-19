@@ -139,7 +139,7 @@ class PluginFormcreatorLdapDropdown extends CommonGLPI
             $limitexceeded = in_array(ldap_errno($ds), [4, 11]);
 
             if ($limitexceeded) {
-               Toolbox::logError("LDAP size limit exceeded");
+               trigger_error("LDAP size limit exceeded", E_USER_WARNING);
             }
 
             unset($entries['count']);
@@ -190,6 +190,6 @@ class PluginFormcreatorLdapDropdown extends CommonGLPI
       if (0 === error_reporting()) {
          return false;
       }
-        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+      throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
    }
 }

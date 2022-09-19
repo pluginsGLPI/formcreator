@@ -138,6 +138,36 @@ class PluginFormcreatorUpgradeTo2_13 {
          ['destination_entity_value' => '0'],
          ['destination_entity_value' => null]
       );
+      $DB->update(
+         $table,
+         ['sla_question_tto' => '0'],
+         ['sla_question_tto' => null]
+      );
+      $DB->update(
+         $table,
+         ['sla_question_ttr' => '0'],
+         ['sla_question_ttr' => null]
+      );
+      $DB->update(
+         $table,
+         ['ola_question_tto' => '0'],
+         ['ola_question_tto' => null]
+      );
+      $DB->update(
+         $table,
+         ['ola_question_ttr' => '0'],
+         ['ola_question_ttr' => null]
+      );
+      $DB->update(
+         $table,
+         ['sla_rule' => '0'],
+         ['sla_rule' => null]
+      );
+      $DB->update(
+         $table,
+         ['ola_rule' => '0'],
+         ['ola_rule' => null]
+      );
       $this->migration->changeField($table, 'validation_followup', 'validation_followup', 'bool', ['after' => 'urgency_question', 'value' => '1']);
       $this->migration->changeField($table, 'destination_entity', 'destination_entity', 'integer', ['after' => 'validation_followup', 'value' => '1']);
       $this->migration->changeField($table, 'destination_entity_value', 'destination_entity_value', $unsignedIntType, ['after' => 'destination_entity', 'default' => '1']);
@@ -480,7 +510,7 @@ class PluginFormcreatorUpgradeTo2_13 {
       $this->migration->changeField($table, 'status', 'status', 'string', ['value' => '']);
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return false;
    }
 

@@ -77,6 +77,7 @@ class PluginFormcreatorInstall {
       '2.12'   => '2.12.1',
       '2.12.1' => '2.12.5',
       '2.12.5' => '2.13',
+      '2.13'   => '2.13.1',
    ];
 
    protected bool $resyncIssues = false;
@@ -196,6 +197,8 @@ class PluginFormcreatorInstall {
          return false;
       }
 
+      $this->resyncIssues = false;
+
       ob_start();
       while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
          $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
@@ -272,7 +275,9 @@ class PluginFormcreatorInstall {
       $upgradeStep = new $updateClass();
       $upgradeStep->upgrade($this->migration);
       $this->migration->executeMigration();
-      $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequiresd();
+      if (method_exists($upgradeStep, 'isResyncIssuesRequired')) {
+         $this->resyncIssues = $this->resyncIssues || $upgradeStep->isResyncIssuesRequired();
+      }
    }
 
    /**

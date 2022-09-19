@@ -41,6 +41,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $dohistory  = true;
    public $usenotepad = true;
    public $usenotepadrights = true;
+   protected static $showTitleInNavigationHeader = true;
 
    /**
     * Generated targets after creation of a form answer
@@ -522,10 +523,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $editMode = !isset($options['edit']) ? false : ($options['edit'] != '0');
 
       // form title
-      echo "<h1 class='form-title'>";
-      echo $this->fields['name'] . "&nbsp;";
-      echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
-      echo '</h1>';
+      if (version_compare(GLPI_VERSION, '10.0.3') < 0) {
+         echo "<h1 class='form-title'>";
+         echo $this->fields['name'] . "&nbsp;";
+         echo '<i class="pointer print_button fas fa-print" title="' . __("Print this form", 'formcreator') . '" onclick="window.print();"></i>';
+         echo '</h1>';
+      }
 
       // Form Header
       if (!empty($form->fields['content']) || !empty($form->getExtraHeader())) {
@@ -1099,7 +1102,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             return;
          }
       }
-      $this->createIssue();
+      if ($this->input['status'] != self::STATUS_REFUSED) {
+         $this->createIssue();
+      }
       $minimalStatus = $formAnswer->getAggregatedStatus();
       if ($minimalStatus !== null) {
          $this->updateStatus($minimalStatus);
@@ -1343,13 +1348,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
    }
 
-   private function createIssue() {
+   public function createIssue() {
       global $DB;
-
-      $issue = new PluginFormcreatorIssue();
-      if ($this->input['status'] == self::STATUS_REFUSED) {
-         return;
-      }
 
       // If cannot get itemTicket from DB it happens either
       // when no item exist
@@ -1374,6 +1374,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'items_id' => $this->getID(),
          ]
       ]);
+
+      $issue = new PluginFormcreatorIssue();
       if ($rows->count() != 1) {
          // There is no or several tickets for this form answer
          // The issue must be created from this form answer
@@ -1539,114 +1541,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'requester_id'       => $ticketUserRow['users_id'],
          'comment'            => addslashes($ticket->fields['content']),
       ]);
-   }
-
-   /**
-    * @param int $limit The N last answers found
-    * @return DBMysqlIterator
-    */
-   public static function getMyLastAnswersAsRequester($limit = 5) {
-      global $DB;
-
-      $formAnswerTable = self::getTable();
-      $formTable = PluginFormcreatorForm::getTable();
-      $request = [
-         'SELECT' => [
-            $formTable => ['name'],
-            $formAnswerTable => ['id', 'status', 'request_date'],
-         ],
-         'FROM' => $formTable,
-         'INNER JOIN' => [
-            $formAnswerTable => [
-               'FKEY' => [
-                  $formTable => 'id',
-                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
-               ]
-            ]
-         ],
-         'WHERE' => [
-            "$formAnswerTable.requester_id" => Session::getLoginUserID(),
-            "$formTable.is_deleted" => 0,
-         ],
-         'ORDER' => [
-            "$formAnswerTable.status ASC",
-            "$formAnswerTable.request_date DESC",
-         ],
-         'LIMIT' => $limit,
-      ];
-
-      return $DB->request($request);
-   }
-
-   /**
-    * @param int $limit The N last answers found
-    * @return DBMysqlIterator
-    */
-   public static function getMyLastAnswersAsValidator($limit = 5) : DBMysqlIterator {
-      global $DB;
-
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         return PluginAdvformFormAnswer::getMyLastAnswersAsValidator($limit);
-      }
-
-      $userId = Session::getLoginUserID();
-      $groupList = Group_User::getUserGroups($userId);
-      $groupIdList = [];
-      foreach ($groupList as $group) {
-         $groupIdList[] = $group['id'];
-      }
-
-      $formAnswerTable = self::getTable();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $formTable = PluginFormcreatorForm::getTable();
-      $validatorTable = PluginFormcreatorForm_Validator::getTable();
-      $where = [
-         'OR' => [
-            [
-               'AND' => [
-                  "$validatorTable.itemtype" => User::class,
-                  "$validatorTable.items_id" => $userId,
-               ]
-            ],
-         ]
-      ];
-      if (count($groupIdList) > 0) {
-         $where['OR'][] = [
-            'AND' => [
-               "$validatorTable.itemtype" => Group::class,
-               "$validatorTable.items_id" => $groupIdList,
-            ]
-         ];
-      }
-      $request = [
-         'SELECT' => [
-            $formTable => ['name'],
-            $formAnswerTable => ['id', 'status', 'request_date'],
-         ],
-         'FROM' => $formTable,
-         'INNER JOIN' => [
-            $formAnswerTable => [
-               'FKEY' => [
-                  $formTable => 'id',
-                  $formAnswerTable => PluginFormcreatorForm::getForeignKeyField(),
-               ]
-            ],
-            $validatorTable => [
-               'FKEY' => [
-                  $validatorTable => $formFk,
-                  $formTable => 'id'
-               ]
-            ]
-         ],
-         'WHERE' => $where,
-         'ORDER' => [
-            "$formAnswerTable.status ASC",
-            "$formAnswerTable.request_date DESC",
-         ],
-         'LIMIT' => $limit,
-      ];
-
-      return $DB->request($request);
    }
 
    /**
@@ -2043,5 +1937,32 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'sort' => 6, // See self::rawSearchOptions()
          'order' => 'DESC'
       ];
+   }
+
+   /**
+    * Get a formanswer from a generated ticket
+    *
+    * @param Ticket|int $item
+    * @return bool
+    */
+   public function getFromDbByTicket($item) {
+      if (($item instanceof Ticket)) {
+         $id = $item->getID();
+      } else if (is_integer($item)) {
+         $id = $item;
+      } else {
+         throw new InvalidArgumentException("$item must be an integer or a " . Ticket::class);
+      }
+
+      return $this->getFromDBByCrit([
+         'id' => new QuerySubQuery([
+            'SELECT' => 'items_id',
+            'FROM'   => Item_Ticket::getTable(),
+            'WHERE'  => [
+               'itemtype' => PluginFormcreatorFormAnswer::getType(),
+               'tickets_id' => $id,
+            ]
+         ])
+      ]);
    }
 }

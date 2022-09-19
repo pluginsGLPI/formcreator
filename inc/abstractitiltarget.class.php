@@ -1554,6 +1554,19 @@ SCRIPT;
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
+
+         if (Plugin::isPluginActive('tag')) {
+            if (isset($input['_tag_questions'])) {
+               $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                          ? implode(',', $input['_tag_questions'])
+                                          : '';
+            }
+            if (isset($input['_tag_specifics'])) {
+               $input['tag_specifics'] = (!empty($input['_tag_specifics']))
+                                       ? implode(',', $input['_tag_specifics'])
+                                       : '';
+            }
+         }
       }
 
       if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
@@ -2164,7 +2177,7 @@ SCRIPT;
             if (is_array($data["$actorType"])) {
                if (count($data["$actorType"]) < 1) {
                   unset($data["$actorType"]);
-                  unset($data["${actorType}_notif"]);
+                  unset($data["{$actorType}_notif"]);
                } else {
                   $cleaned = [];
                   $cleaned_notif = [];
@@ -2173,17 +2186,17 @@ SCRIPT;
                         continue;
                      }
                      $cleaned[] = $actor;
-                     $cleaned_notif['use_notification'][] = $data["${actorType}_notif"]['use_notification'][$key];
-                     $cleaned_notif['alternative_email'][] = $data["${actorType}_notif"]['alternative_email'][$key];
+                     $cleaned_notif['use_notification'][] = $data["{$actorType}_notif"]['use_notification'][$key];
+                     $cleaned_notif['alternative_email'][] = $data["{$actorType}_notif"]['alternative_email'][$key];
                   }
                   $data["$actorType"] = $cleaned;
-                  $data["${actorType}_notif"] = $cleaned_notif;
+                  $data["{$actorType}_notif"] = $cleaned_notif;
                }
             } else {
                if ($data["$actorType"] == 0) {
-                  if (isset($data["${actorType}_notif"]) && count($data["${actorType}_notif"]) < 1) {
+                  if (isset($data["{$actorType}_notif"]) && count($data["{$actorType}_notif"]) < 1) {
                      unset($data["$actorType"]);
-                     unset($data["${actorType}_notif"]);
+                     unset($data["{$actorType}_notif"]);
                   }
                }
             }
@@ -2255,7 +2268,7 @@ SCRIPT;
       }
 
       // Manage special values
-      if (isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
+      if (!isset($predefined_fields['date']) || isset($predefined_fields['date']) && $predefined_fields['date'] == 'NOW') {
          $predefined_fields['date'] = $_SESSION['glpi_currenttime'];
       }
 

@@ -541,7 +541,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
          $input['source_rule'] = self::REQUESTSOURCE_SPECIFIC;
       }
       $input['source_question'] = 0;
-      if ($input['source_rule'] == self::REQUESTTYPE_SPECIFIC) {
+      if ($input['source_rule'] == self::REQUESTSOURCE_SPECIFIC) {
          $input['source_question'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
       }
       return $input;
@@ -663,20 +663,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                   $input['location_question'] = '0';
             }
          }
-
-         $plugin = new Plugin();
-         if ($plugin->isActivated('tag')) {
-            if (isset($input['tag_questions'])) {
-               $input['tag_questions'] = (!empty($input['_tag_questions']))
-                                          ? implode(',', $input['_tag_questions'])
-                                          : '';
-            }
-            if (isset($input['tag_specifics'])) {
-               $input['tag_specifics'] = (!empty($input['_tag_specifics']))
-                                       ? implode(',', $input['_tag_specifics'])
-                                       : '';
-            }
-         }
       }
 
       if (isset($input['_linktype']) && isset($input['_link_itemtype'])) {
@@ -792,14 +778,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $targetTemplateFk = $targetItemtype::getForeignKeyField();
       if ($targetItemtype::isNewID($this->fields[$targetTemplateFk]) && !ITILCategory::isNewID($data['itilcategories_id'])) {
          $rows = $DB->request([
-            'SELECT' => ["${targetTemplateFk}_incident", "${targetTemplateFk}_demand"],
+            'SELECT' => ["{$targetTemplateFk}_incident", "{$targetTemplateFk}_demand"],
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
          if ($row = $rows->current()) { // assign ticket template according to resulting ticket category and ticket type
             return ($data['type'] == Ticket::INCIDENT_TYPE
-                    ? $row["${targetTemplateFk}_incident"]
-                    : $row["${targetTemplateFk}_demand"]);
+                    ? $row["{$targetTemplateFk}_incident"]
+                    : $row["{$targetTemplateFk}_demand"]);
          }
       }
 
@@ -836,6 +822,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       );
       $data['name'] = Toolbox::addslashes_deep($data['name']);
       $data['name'] = $formanswer->parseTags($data['name'], $this);
+      $data['date'] = $_SESSION['glpi_currenttime'];
 
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],
@@ -1071,11 +1058,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             if (isset($type['answer']) && ctype_digit($type['answer'])) {
                $type = $type['answer'];
             } else {
-               // Invalid value. Maybe the questin is not compatible.
+               // Invalid value. Maybe the question is not compatible.
                trigger_error(sprintf("Attempt to set the type of a ticket from an incompatible question. Check the target ticket %s of the form ID=%s",
                   $this->fields['name'],
                   $this->getForm()->getID()
-               ));
+               ), E_USER_ERROR);
                $type = null;
             }
             break;
@@ -1208,7 +1195,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             $associateQuestion = $this->fields['associate_question'];
             $question = new PluginFormcreatorQuestion();
             if (!$question->getFromDB($associateQuestion)) {
-               Toolbox::logError(sprintf("Question ID %s not found and should be used in target ticket ID %s", $associateQuestion, $this-getID()));
+               trigger_error(sprintf("Question ID %s not found and should be used in target ticket ID %s", $associateQuestion, $this->getID()), E_USER_ERROR);
                break;
             }
             /** @var  GlpiPlugin\Formcreator\Field\DropdownField */

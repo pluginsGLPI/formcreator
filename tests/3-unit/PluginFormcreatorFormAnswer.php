@@ -36,6 +36,7 @@ use PluginFormcreatorForm;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
+use Ticket;
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -430,76 +431,6 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $this->boolean($output)->isEqualTo($expected);
    }
 
-   public function testGetMyLastAnswersAsRequester() {
-      // Create a form
-      $this->login('glpi', 'glpi');
-      $form = $this->getForm();
-
-      // Add some form answers
-      $userName = $this->getUniqueString();
-      $this->getUser($userName);
-      $this->login($userName, 'p@ssw0rd');
-
-      $formAnswers = [];
-      $formAnswer1 = $this->newTestedInstance();
-      $formAnswers[] = $formAnswer1->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-      $formAnswer2 = $this->newTestedInstance();
-      $formAnswers[] = $formAnswer2->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-      ]);
-
-      // Check the count of result matches the expected count
-      $output = \PluginFormcreatorFormAnswer::getMyLastAnswersAsRequester();
-      foreach ($output as $row) {
-         $this->boolean(in_array($row['id'], $formAnswers))->isTrue();
-      }
-      $this->integer(count($output))->isEqualTo(count($formAnswers));
-   }
-
-   public function testGetMyLastAnswersAsValidator() {
-      // Create a form
-      $this->login('glpi', 'glpi');
-      $user = $this->getUser($this->getUniqueString(), 'p@ssw0rd', 'Technician');
-      $validatorId = $user->getID();
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users' => $validatorId,
-      ]);
-
-      // Add some form answers
-      $this->login('normal', 'normal');
-      $formAnswers = [];
-      $formAnswer1 = $this->newTestedInstance();
-      $formAnswers[] = $formAnswer1->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => $validatorId,
-      ]);
-      $formAnswer2 = $this->newTestedInstance();
-      $formAnswers[] = $formAnswer2->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'formcreator_validator'       => $validatorId,
-      ]);
-
-      // Check the requester does not has his forms in list to validate
-      $output = \PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator();
-      foreach ($output as $row) {
-         $this->boolean(in_array($row['id'], $formAnswers))->isFalse();
-      }
-
-      $this->login($user->fields['name'], 'p@ssw0rd');
-      // Check the validator does not has the forms in list to validate
-      $output = \PluginFormcreatorFormAnswer::getMyLastAnswersAsValidator();
-      foreach ($output as $row) {
-         $this->boolean(in_array($row['id'], $formAnswers))->isTrue();
-      }
-   }
-
-   public function testDeserialiseAnswers() {
-
-   }
-
    public function testIsFieldVisible() {
       $instance = $this->newTestedInstance();
 
@@ -874,13 +805,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       copy(dirname(__DIR__) . '/fixture/upload.txt', GLPI_TMP_DIR . '/' . $filename);
       $formAnswer = $this->getFormAnswer([
          'plugin_formcreator_forms_id' => $form->getID(),
-         "_${fieldKey}" => [
+         "_{$fieldKey}" => [
             $filename,
          ],
-         "_prefix_${fieldKey}" => [
+         "_prefix_{$fieldKey}" => [
             '5e5e92ffd9bd91.44444444',
          ],
-         "_tag_${fieldKey}" => [
+         "_tag_{$fieldKey}" => [
             $tag,
          ],
       ]);
@@ -905,5 +836,30 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
             ],
          ],
       ]);
+   }
+
+   public function testGetFromDbByTicket() {
+      // Create a form answer
+      $targetTicket = $this->getTargetTicket();
+      $form = PluginFormcreatorForm::getByItem($targetTicket);
+      $expected = $this->newTestedInstance();
+      $expected->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($expected->isNewItem())->isFalse();
+
+      $ticket = $expected->targetList[0] ?? null;
+      $this->object($ticket)->isInstanceOf(Ticket::class);
+
+      $instance = $this->newTestedInstance();
+      // Check the method works with an Ticket instance
+      $output = $instance->getFromDbByTicket($ticket);
+      $this->boolean($output)->isTrue();
+      $this->integer($instance->getID())->isEqualTo($expected->getID());
+
+      // Check the method works with a Ticket ID
+      $output = $instance->getFromDbByTicket($ticket->getID());
+      $this->boolean($output)->isTrue();
+      $this->integer($instance->getID())->isEqualTo($expected->getID());
    }
 }

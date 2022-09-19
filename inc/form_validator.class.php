@@ -104,14 +104,6 @@ PluginFormcreatorExportableInterface
       return $input;
    }
 
-   public function prepareInputForUpdate($input) {
-      $level = $input['level'] ?? $this->fields['level'];
-
-      if ($level < 1) {
-         return false;
-      }
-   }
-
    public function showForForm(PluginFormcreatorForm $item, $options = []) {
       global $DB, $CFG_GLPI;
 
@@ -696,7 +688,7 @@ PluginFormcreatorExportableInterface
             continue;
          }
          $validatorId = $validator->getID();
-         $validators["${itemtype}_${validatorId}"] = $validator->getFriendlyName();
+         $validators["{$itemtype}_{$validatorId}"] = $validator->getFriendlyName();
          $lastValidatorId = $validatorId;
          $lastValidatorItemtype = $itemtype;
       }
@@ -710,7 +702,7 @@ PluginFormcreatorExportableInterface
       if ($totalCount == 1) {
          reset($validators);
          $validatorId = key($validators);
-         return Html::hidden('formcreator_validator', ['value' => "${lastValidatorItemtype}_${lastValidatorId}"]);
+         return Html::hidden('formcreator_validator', ['value' => "{$lastValidatorItemtype}_{$lastValidatorId}"]);
       }
 
       $out = '';

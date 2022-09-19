@@ -148,7 +148,7 @@ class PluginFormcreatorUpgradeTo2_12 {
       $this->migration->addKey($table, ['itemtype', 'items_id'], 'item');
    }
 
-   public function isResyncIssuesRequiresd() {
+   public function isResyncIssuesRequired() {
       return false;
    }
 }
