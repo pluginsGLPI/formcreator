@@ -211,7 +211,7 @@ class Config extends CommonTestCase {
          'tile_design' => 0,
          'home_page' => 0,
          'is_category_visible' => 1,
-         'is_folded_menu' => 0
+         'is_folded_menu' => 0,
          'header' => null,
       ];
       $fields = $entityConfig->fields;
