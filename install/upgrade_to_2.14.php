@@ -70,6 +70,17 @@ class PluginFormcreatorUpgradeTo2_14 {
             'condition' => 'WHERE `entities_id` = 0'
          ]
       );
+
+      $this->migration->addField(
+         $table,
+         'is_folded_menu',
+         'integer', [
+            'after' => 'is_category_visible',
+            'value' => '-2',
+            'update' => '0',
+            'condition' => 'WHERE `entities_id` = 0'
+         ]
+      );
    }
 
    public function addTtoToIssues() {

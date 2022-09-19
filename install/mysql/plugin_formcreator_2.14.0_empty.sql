@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `tile_design`             int(11) NOT NULL DEFAULT '-2',
   `home_page`               int(11) NOT NULL DEFAULT '-2',
   `is_category_visible`     int(11) NOT NULL DEFAULT '-2',
+  `is_folded_menu`          int(11) NOT NULL DEFAULT '-2',
   `header`                  text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`entities_id`)

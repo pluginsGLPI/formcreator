@@ -93,6 +93,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          'sort_order'          => \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL,
          'home_page'           => \PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_ONLY_FORM,
          'is_category_visible' => \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE,
+         'is_folded_menu'      => \PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED,
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
 
@@ -104,6 +105,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          'sort_order'          => \PluginFormcreatorEntityconfig::CONFIG_SORT_ALPHABETICAL,
          'home_page'           => \PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_ONLY_FORM,
          'is_category_visible' => \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE,
+         'is_folded_menu'      => \PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED,
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
 
@@ -115,6 +117,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          'sort_order'          => \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY,
          'home_page'           => \PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_FORM_AND_REQUEST,
          'is_category_visible' => \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_HIDDEN,
+         'is_folded_menu'      => \PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_UNFOLDED,
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
 
@@ -126,6 +129,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          'sort_order'          => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
          'homepage'            => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
          'is_category_visible' => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
+         'is_folded_menu'      => \PluginFormcreatorEntityconfig::CONFIG_PARENT,
       ]);
       $this->boolean($instance->isNewItem())->isFalse();
 
@@ -140,6 +144,8 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_ONLY_FORM);
       $output = $instance::getUsedConfig('is_category_visible', $entityId1);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE);
+      $output = $instance::getUsedConfig('is_folded_menu', $entityId1);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED);
 
       $output = $instance::getUsedConfig('replace_helpdesk', $entityId2);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG);
@@ -151,6 +157,8 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_FORM_AND_REQUEST);
       $output = $instance::getUsedConfig('is_category_visible', $entityId2);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_CATEGORY_HIDDEN);
+      $output = $instance::getUsedConfig('is_folded_menu', $entityId2);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_UNFOLDED);
 
       $output = $instance::getUsedConfig('replace_helpdesk', $entityId3);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_EXTENDED_SERVICE_CATALOG);
@@ -162,6 +170,8 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_ONLY_FORM);
       $output = $instance::getUsedConfig('is_category_visible', $entityId3);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE);
+      $output = $instance::getUsedConfig('is_folded_menu', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED);
 
       // Check change on parent entity propagates to child with inherited settings
       $instance = $this->newTestedInstance();
@@ -172,6 +182,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          'is_kb_separated'  => \PluginFormcreatorEntityconfig::CONFIG_KB_DISTINCT,
          'sort_order'       => \PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY,
          'home_page'       => \PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_ONLY_FORM,
+         'is_folded_menu'       => \PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED,
       ]);
 
       $output = $instance::getUsedConfig('replace_helpdesk', $entityId3);
@@ -182,6 +193,8 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_SORT_POPULARITY);
       $output = $instance::getUsedConfig('home_page', $entityId3);
       $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_ONLY_FORM);
+      $output = $instance::getUsedConfig('is_folded_menu', $entityId3);
+      $this->integer((int) $output)->isEqualTo(\PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED);
    }
 
    public function testGetEnumHelpdeskMode() {
@@ -247,12 +260,22 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
          \PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_FORM_AND_REQUEST   => __('Forms and list of requests', 'formcreator'),
       ]);
    }
+
    public function getEnumCategoryVisibility() {
       $output = \PluginFormcreatorEntityconfig::getEnumHomePage();
       $this->array($output)->isEqualTo([
          \PluginFormcreatorEntityconfig::CONFIG_PARENT            => __('Inheritance of the parent entity'),
-         \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE => __('Visible', 'formcreator'),
-         \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_HIDDEN  => __('Hidden', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE  => __('Visible', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_CATEGORY_HIDDEN   => __('Hidden', 'formcreator'),
+      ]);
+   }
+
+   public function getEnumLeftMenuVisibility() {
+      $output = \PluginFormcreatorEntityconfig::getEnumHomePage();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorEntityconfig::CONFIG_PARENT              => __('Inheritance of the parent entity'),
+         \PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLED     => __('Folded', 'formcreator'),
+         \PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_UNFOLED   => __('Unfolded', 'formcreator'),
       ]);
    }
 }
