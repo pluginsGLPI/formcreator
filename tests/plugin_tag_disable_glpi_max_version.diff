@@ -1,0 +1,13 @@
+diff --git a/setup.php b/setup.php
+index 4321663..d72ad86 100644
+--- a/setup.php
++++ b/setup.php
+@@ -157,8 +157,6 @@ function plugin_version_tag() {
+       'requirements'   => [
+          'glpi' => [
+             'min' => PLUGIN_TAG_MIN_GLPI,
+-            'max' => PLUGIN_TAG_MAX_GLPI,
+-            'dev' => true, //Required to allow 9.2-dev
+          ]
+       ]
+    ];
