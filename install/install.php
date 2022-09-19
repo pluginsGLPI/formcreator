@@ -369,7 +369,7 @@ class PluginFormcreatorInstall {
 
       /** Value -2 is "inheritance from parent" @see PluginFormcreatorEntityconfig::CONFIG_PARENT */
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
-                  (entities_id, replace_helpdesk, default_form_list_mode, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible, is_search_issue_visible, tile_design, home_page, is_category_visible)
+                  (entities_id, replace_helpdesk, default_form_list_mode, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible, is_search_issue_visible, tile_design, home_page, is_category_visible, is_folded_menu)
                SELECT ent.id,
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
@@ -381,7 +381,8 @@ class PluginFormcreatorInstall {
                   IF(ent.id = 0, 1, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
-                  IF(ent.id = 0, 1, -2)
+                  IF(ent.id = 0, 1, -2),
+                  IF(ent.id = 0, 0, -2)
                 FROM glpi_entities ent
                 LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
                   ON ent.id = conf.entities_id
