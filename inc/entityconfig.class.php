@@ -184,7 +184,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public static function getEnumLeftMenuVisibility() : array {
       return [
-         self::CONFIG_PARENT              => __('Inheritance of the parent entity'),
+         self::CONFIG_PARENT               => __('Inheritance of the parent entity'),
          self::CONFIG_LEFT_MENU_FOLDED     => __('Folded', 'formcreator'),
          self::CONFIG_LEFT_MENU_UNFOLDED   => __('Unfolded', 'formcreator'),
       ];
