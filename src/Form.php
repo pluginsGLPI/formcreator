@@ -1501,7 +1501,11 @@ TranslatableInterface
       // remove non needed keys
       unset($export['plugin_formcreator_categories_id'],
             $export['entities_id'],
-            $export['usage_count']);
+            $export['usage_count'],
+            $export['users'],
+            $export['groups'],
+            $export['profiles'],
+         );
 
       $subItems = [
          '_profiles'     => Form_Profile::class,
