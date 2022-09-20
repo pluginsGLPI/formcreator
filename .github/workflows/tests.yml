@@ -47,7 +47,7 @@ jobs:
           - php-versions: 8.1
             glpi-branch: main
             glpi-package: main.tar.gz
-            glpi-use-repo: true
+            # glpi-use-repo: true
 
     services:
       db:
