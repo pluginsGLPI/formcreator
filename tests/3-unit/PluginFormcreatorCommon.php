@@ -31,6 +31,7 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Ticket;
+use User;
 
 class PluginFormcreatorCommon extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -192,7 +193,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'validatortype' => User::class,
             'users_id_validate' => [4], // Tech
          ]);
-         $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
          if ($ticketStatus > \CommonITILObject::INCOMING) {
@@ -215,8 +215,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
          ];
          yield $dataSet;
 
-         $ticket = new \Ticket();
-         $ticket->add([
+         $ticket = $this->getGlpiCoreItem(Ticket::class, [
             'name' => 'a ticket',
             'content' => "should be " . \Ticket::getStatus($ticketStatus),
             'status'  =>  $ticketStatus,
@@ -235,7 +234,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'validatortype' => User::class,
             'users_id_validate' => [4], // Tech
          ]);
-         $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
          if ($ticketStatus > \CommonITILObject::INCOMING) {
@@ -277,7 +275,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'validatortype' => User::class,
             'users_id_validate' => [4], // Tech
          ]);
-         $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
          if ($ticketStatus > \CommonITILObject::INCOMING) {
@@ -314,7 +311,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'validatortype' => User::class,
             'users_id_validate' => [4], // Tech
          ]);
-         $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
          $ticket->update([
@@ -349,7 +345,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'validatortype' => User::class,
             'users_id_validate' => [4], // Tech
          ]);
-         $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
          if ($ticketStatus > \CommonITILObject::INCOMING) {
@@ -386,7 +381,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'validatortype' => User::class,
             'users_id_validate' => [4], // Tech
          ]);
-         $this->boolean($ticket->isNewItem())->isFalse();
          // Creating a ticket directly with status solved or closed
          // will prevent credation of ticketvalidation item
          if ($ticketStatus > \CommonITILObject::INCOMING) {

@@ -38,7 +38,7 @@
         {% if item.fields['name'] is empty %}
             {% set name = '(' ~ item.fields['id'] ~ ')' %}
         {% else %}
-            {% set name = item.fields['name'] %}
+            {% set name = call('Glpi\\Toolbox\\Sanitizer::unsanitize', [item.fields['name']]) %}
         {% endif %}
         <span data-field="name">{{ name }}</span>
     </a>

@@ -5,7 +5,7 @@ on:
 
 env:
   GLPI_SOURCE: "https://github.com/glpi-project/glpi"
-  GLPI_PACKAGE_URL: "https://nightly.glpi-project.org/glpi/10.0.tar.gz"
+  GLPI_PACKAGE_URL_BASE: "https://nightly.glpi-project.org/glpi"
   CS: 7.4
   DB_HOST: 127.0.0.1
   MYSQL_ROOT_USER: root
@@ -14,8 +14,8 @@ env:
   DB_NAME: glpitest
   OLD_DB_NAME: glpiupgradetest
   PLUGINNAME: formcreator
-  PLUGIN_FIELDS_REF: 1.14.0
-  PLUGIIN_TAG_REF: 2.9.0
+  PLUGIN_FIELDS_REF: 1.17.3
+  PLUGIIN_TAG_REF: 2.9.2
   AFTER_SUCCESS_BRANCH: master
   ATOUM_ARG: --force-terminal --use-dot-report
   NOCOVERAGE: -ncc
@@ -41,11 +41,17 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.4, 8.1]
-        env:
-          - { GLPI_BRANCH: 10.0/bugfixes }
+        glpi-branch: [10.0/bugfixes]
+        glpi-package: [10.0.tar.gz]
+        include:
+          - php-versions: 8.1
+            glpi-branch: main
+            glpi-package: main.tar.gz
+            # glpi-use-repo: true
+
     services:
       db:
-        image: mariadb:10.2
+        image: mariadb:10.3
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
@@ -84,8 +90,11 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
       - name: "Run tests"
-        env: ${{matrix.env}}
         run: |
+          GLPI_BRANCH=${{ matrix.glpi-branch }}
+          GLPI_PACKAGE=${{ matrix.glpi-package }}
+          GLPI_USE_REPO=${{ matrix.glpi-use-repo }}
+          sudo apt install patchutils -y
           . ./tests/script-functions.sh
           . ./tests/script-specific-functions.sh
           $SKIP_INIT || init_databases

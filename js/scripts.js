@@ -215,6 +215,9 @@ function updateKbCategoriesView() {
             $(this).addClass('category_active');
          }
       );
+
+      //preselect see all
+      $('#wizard_seeall').click();
    });
 }
 

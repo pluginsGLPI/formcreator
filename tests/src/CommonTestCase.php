@@ -421,9 +421,12 @@ abstract class CommonTestCase extends atoum
                if (!is_array($input['users_id_validate'])) {
                   $input['users_id_validate'] = [$input['users_id_validate']];
                }
+               $input['_validation_targets'] = [];
                foreach ($input['users_id_validate'] as $validator_user) {
-                  $input['itemtype_target'] = User::class;
-                  $input['items_id_target'] = $validator_user;
+                  $input['_validation_targets'][] = [
+                     'itemtype_target' => User::class,
+                     'items_id_target' => $validator_user,
+                  ];
                }
                unset($input['users_id_validate']);
             }
