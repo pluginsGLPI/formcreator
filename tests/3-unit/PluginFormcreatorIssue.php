@@ -31,6 +31,7 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Ticket;
 
 class PluginFormcreatorIssue extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -45,8 +46,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetsyncIssuesRequest_simpleTicket() {
-      $ticket = new \Ticket();
-      $ticket->add([
+      $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'simple ticket',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING,
@@ -63,8 +63,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->boolean($ticket->isNewItem())->isFalse();
       $ticket->getFromDB($ticket->getID());
 
-      $ticket2 = new \Ticket();
-      $ticket2->add([
+      $ticket2 = $this->getGlpiCoreItem(Ticket::class, [
          'name' => '',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING,
@@ -288,8 +287,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetsyncIssuesRequest_ticketUnderValidation() {
-      $ticket = new \Ticket();
-      $ticket->add([
+      $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'a ticket',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING,
@@ -329,8 +327,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetsyncIssuesRequest_validatedTicket() {
-      $ticket = new \Ticket();
-      $ticket->add([
+      $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'a ticket',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING,
@@ -528,8 +525,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function testUpdateDateModOnNewFollowup() {
-      $ticket = new \Ticket();
-      $ticket->add([
+      $ticket = $this->getGlpiCoreItem(Ticket::class, [
          'name' => 'ticket',
          'content' => 'foo',
       ]);

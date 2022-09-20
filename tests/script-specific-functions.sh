@@ -12,11 +12,13 @@ install_plugin_dependencies() {
 
     git clone --depth 1 -b $PLUGIN_FIELDS_REF https://github.com/pluginsGLPI/fields plugins/fields
     cd plugins/fields
+    patch -p1 < ../formcreator/tests/plugin_fields_disable_glpi_max_version.diff
     composer install --no-dev --no-interaction
     cd ../..
 
     git clone --depth 1 -b $PLUGIIN_TAG_REF https://github.com/pluginsGLPI/tag plugins/tag
     cd plugins/tag
+    patch -p1 < ../formcreator/tests/plugin_tag_disable_glpi_max_version.diff
     composer install --no-dev --no-interaction
     cd ../..
 

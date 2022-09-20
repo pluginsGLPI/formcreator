@@ -1,0 +1,13 @@
+diff --git a/setup.php b/setup.php
+index 2df7edc..efd9331 100644
+--- a/setup.php
++++ b/setup.php
+@@ -202,8 +202,6 @@ function plugin_version_fields()
+         'requirements'   => [
+             'glpi' => [
+                 'min' => PLUGIN_FIELDS_MIN_GLPI,
+-                'max' => PLUGIN_FIELDS_MAX_GLPI,
+-                'dev' => true, //Required to allow 9.2-dev
+             ]
+         ]
+     ];
