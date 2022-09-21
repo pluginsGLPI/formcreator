@@ -48,7 +48,8 @@ install_glpi() {
 # Apply patches to GLPI
 #
 patch_glpi() {
-   :
+   cp -r ../$PLUGINNAME/tests/glpi_migration_patch.diff /tmp/glpi_migration_patch.diff
+   filterdiff -p1 -x tests/* -x .github/* < /tmp/glpi_migration_patch.diff | patch -p1
 }
 
 
