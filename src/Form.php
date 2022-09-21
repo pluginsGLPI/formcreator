@@ -53,6 +53,7 @@ use Plugin;
 use QueryExpression;
 use QuerySubQuery;
 use Session;
+use Search;
 use Toolbox;
 use User;
 
@@ -912,14 +913,9 @@ TranslatableInterface
          echo '<div class="card-body">';
          echo '<ul class="list-group">';
          foreach ($search['data']['rows'] as $formAnswer) {
-<<<<<<< HEAD:inc/form.class.php
-            switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
-               case PluginFormcreatorFormAnswer::STATUS_WAITING:
-=======
             $rawKeyBase = 'ITEM_' . FormAnswer::class;
-            switch ($formAnswer['raw']["${rawKeyBase}_8"]) {
+            switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
                case FormAnswer::STATUS_WAITING:
->>>>>>> a94797ed7 (refactor: move classes to src folder, move targets to dedicated namespace):src/Form.php
                   $status = CommonITILObject::WAITING;
                   break;
                case FormAnswer::STATUS_REFUSED:
