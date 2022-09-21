@@ -312,6 +312,9 @@ class Install {
       if (isCommandLine()) {
          $this->migration->addNewMessageArea("Upgrade to $toVersion");
       }
+      if (!class_exists($updateClass)) {
+         throw new \RuntimeException("Missing upgrade step to: ", $toVersion);
+      }
       $upgradeStep = new $updateClass();
       $upgradeStep->upgrade($this->migration);
       $this->migration->executeMigration();
