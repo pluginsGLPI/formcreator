@@ -240,6 +240,9 @@ class Install {
             false,
             ERROR
          );
+         if (isCommandLine()) {
+            echo $e->getMessage() . PHP_EOL;
+         }
          return false;
       }
       $this->migration->executeMigration();
