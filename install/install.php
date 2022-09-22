@@ -849,6 +849,22 @@ class PluginFormcreatorInstall {
       }
 
       if (count($differences) > 0) {
+         foreach ($differences as $table_name => $difference) {
+            $message = null;
+            switch ($difference['type']) {
+               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_ALTERED_TABLE:
+                  $message = sprintf(__('Table schema differs for table "%s".'), $table_name);
+                  break;
+               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_MISSING_TABLE:
+                  $message = sprintf(__('Table "%s" is missing.'), $table_name);
+                  break;
+               case DatabaseSchemaIntegrityChecker::RESULT_TYPE_UNKNOWN_TABLE:
+                  $message = sprintf(__('Unknown table "%s" has been found in database.'), $table_name);
+                  break;
+            }
+            echo $message . PHP_EOL;
+            echo $difference['diff'] . PHP_EOL;
+         }
          return false;
       }
 
