@@ -66,7 +66,7 @@
       {
          label_class: 'col-xxl-4',
          input_class: 'col-xxl-8',
-         disabled: (not item.isNewItem())
+         disabled: not item.isNewItem()
       }
    ) }}
 
@@ -124,14 +124,5 @@
          {% block questionParameters %}
          {% endblock %}
       {% endif %}
-
-      {{ fields.smallTitle(__('Condition to show the question', 'formcreator')) }}
-
-      {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
-      {% set parent = item %}
-      {% set conditions = call('GlpiPlugin\\Formcreator\\Condition::getConditionsFromItem', [item]) %}
-      {% for condition in conditions %}
-         {{ include('@formcreator/components/form/condition.html.twig') }}
-      {% endfor %}
    {% endif %}
 {% endblock %}

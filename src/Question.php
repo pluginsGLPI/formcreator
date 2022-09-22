@@ -50,6 +50,7 @@ use Entity;
 use Glpi\Application\View\TemplateRenderer;
 use Group;
 use Line;
+use Log;
 use Monitor;
 use NetworkEquipment;
 use OLA;
@@ -167,11 +168,10 @@ TranslatableInterface
       $this->addDefaultFormTab($tabs);
       if ($this->loadField($this->fields['fieldtype'])) {
          foreach ($this->field->getTabNameForItem($this) as $tabName) {
-            // $this->field->defineExtraTabs($tabs, $options);
             $this->addStandardTab(self::class, $tabs, $options);
          }
       }
-      // $this->addStandardTab(Log::class, $tabs, $options);
+      $this->addStandardTab(Log::class, $tabs, $options);
       return $tabs;
    }
 
@@ -368,15 +368,21 @@ TranslatableInterface
       // - name is required
       if (isset($input['name'])) {
          if (empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
+            Session::addMessageAfterRedirect(__('The title is required.', 'formcreator'), false, ERROR);
             return [];
          }
+      }
+
+      // - changing field type is not allowed
+      if (!$this->isNewItem() && isset($input['fieldtype'])) {
+         Session::addMessageAfterRedirect(__('The field type cannot change.', 'formcreator'), false, ERROR);
+         return [];
       }
 
       // - section is required
       if (isset($input['plugin_formcreator_sections_id'])
           && empty($input['plugin_formcreator_sections_id'])) {
-         Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
+         Session::addMessageAfterRedirect(__('The section is required.', 'formcreator'), false, ERROR);
          return [];
       }
 
@@ -769,7 +775,7 @@ TranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', str_replace('\\', '_', self::getType()), $this->getID());
 
-      // $options may contain values from a form (i.e. changing the question field type)
+      // $options may contain values from a form
       foreach ($options as $request_key => $request_value) {
          if (isset($this->fields[$request_key])) {
             $this->fields[$request_key] = $_REQUEST[$request_key];
@@ -779,6 +785,15 @@ TranslatableInterface
       }
       $this->fields['values'] = json_encode($values);
 
+      if (!$this->isNewItem()) {
+         $options['addbuttons'] = [
+            'apply' => [
+               'type' => 'button',
+               'text' => __('Apply', 'formcreator'),
+               'onclick' => 'plugin_formcreator.editQuestion(this)',
+            ],
+         ];
+      }
       $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [

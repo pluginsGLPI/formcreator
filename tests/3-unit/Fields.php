@@ -276,7 +276,6 @@ class Fields extends CommonTestCase {
       }
       $input = [
          'id'        => $question->getID(),
-         'fieldtype' => 'text',
          'show_rule' => $show_rule,
          'default_values' => '',
          '_parameters'     => [

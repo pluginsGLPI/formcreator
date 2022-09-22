@@ -38,7 +38,7 @@ Session::checkRight(Form::$rightname, UPDATE);
 $question_id = $_REQUEST['id'] ?? 0;
 $question = new Question();
 if ($question_id == 0) {
-   $sectionFk = PluginFormcreatorQuestion::$items_id;
+   $sectionFk = Question::$items_id;
    $question->display([
       'show_nav_header' => false,
       $sectionFk => (int) $_REQUEST[$sectionFk],

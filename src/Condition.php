@@ -36,6 +36,10 @@ use CommonDBTM;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Question;
+use GlpiPlugin\Formcreator\Section;
+
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -316,7 +320,8 @@ class Condition extends CommonDBChild implements ExportableInterface
       /** @var CommonDBTM $item */
       if ($item instanceof Form) {
          return [];
-      } else if ($item instanceof Section) {
+      }
+      if ($item instanceof Section) {
          if ($item->isNewItem()) {
             $formFk = Form::getForeignKeyField();
             $sectionsGenerator = Section::getSectionsFromForm($item->fields[$formFk]);
@@ -336,7 +341,7 @@ class Condition extends CommonDBChild implements ExportableInterface
             return [Question::getTable() . '.' . $sectionFk => ['<>', $item->getID()]];
       } else if ($item instanceof Question) {
          if (!$item->isNewItem()) {
-            return [Question::getTable() . '.id' => ['<>', $item->getID()]];
+            return [Question::getTableField('id') => ['<>', $item->getID()]];
          }
       }
       if (in_array($item::getType(), Form::getTargetTypes())) {
