@@ -31,7 +31,6 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
-use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetProblemDummy;
 
 class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
 
