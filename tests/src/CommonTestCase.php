@@ -443,8 +443,7 @@ abstract class CommonTestCase extends atoum
     *
     * @return mixed
     */
-   protected function callPrivateMethod($instance, string $methodName, ...$args)
-   {
+   protected function callPrivateMethod($instance, string $methodName, ...$args) {
       $method = new \ReflectionMethod($instance, $methodName);
       $method->setAccessible(true);
 
