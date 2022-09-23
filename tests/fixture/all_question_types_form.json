@@ -483,7 +483,13 @@
                             "_parameters": {
                                 "PluginFormcreatorQuestionFilter": [],
                                 "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "PluginFormcreatorQuestionRegex": [
+                                    {
+                                        "regex": "/foo/",
+                                        "fieldname": "regex",
+                                        "uuid": "ccea03e5-5249058e-6329b473978177.97758563"
+                                    }
+                                ]
                             },
                             "_conditions": []
                         },

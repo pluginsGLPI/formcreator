@@ -960,12 +960,12 @@ class Question extends CommonTestCase {
                ],
                'text' =>
                [
-                  'b371eae37f18f0b6125002999b2404ba' => 'text description',
+                  '27493ccd62c9eb496b3973fa87ec5f57' => '&#60;p&#62;text description&#60;/p&#62;',
                ],
                'id' =>
                [
                   '6fd6eacf3005974a7489a199ed7b45ee' => 'itemlink',
-                  'b371eae37f18f0b6125002999b2404ba' => 'text',
+                  '27493ccd62c9eb496b3973fa87ec5f57' => 'text',
                ]
             ]
          ],
