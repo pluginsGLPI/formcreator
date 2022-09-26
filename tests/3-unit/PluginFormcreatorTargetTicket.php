@@ -31,7 +31,6 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
-use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy;
 
 class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
@@ -1697,12 +1696,6 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     *
     */
    public function testSetTargetLocation($instance, $formanswer, $expected) {
-      // Substitute a dummy class to access protected / private methods
-      $dummyInstance = $this->newTestedInstance();
-      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
-      $instance->getFromDB($instance->getID());
-      $dummyInstance->fields = $instance->fields;
-
       \PluginFormcreatorFields::resetVisibilityCache();
       $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
       $output = $this->callPrivateMethod($instance, 'setTargetLocation', $data, $formanswer);
@@ -1715,13 +1708,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       $form1 = $this->getForm();
 
-      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
          \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
          'content' => '##FULLFORM',
-         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+         'contract_rule' => $testedClass::CONTRACT_RULE_NONE,
          'contract_question' => '0',
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
@@ -1769,7 +1763,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype'                      => 'glpiselect',
          'itemtype'                       => $validItemtype
       ]);
-      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1983,17 +1977,9 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     *
     */
    public function testSetTargetContract($instance, $formanswer, $expected) {
-      // Substitute a dummy class to access protected / private methods
-      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
-      $dummyInstance = new $dummyItemtype();
-      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
-      $instance->getFromDB($instance->getID());
-      $dummyInstance->fields = $instance->fields;
-
       \PluginFormcreatorFields::resetVisibilityCache();
-      $data = $dummyInstance->publicGetDefaultData($formanswer);
-      $output = $dummyInstance->publicSetTargetContract($data, $formanswer);
-
+      $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
+      $output = $this->callPrivateMethod($instance, 'setTArgetContract', $data, $formanswer);
       $this->integer((int) $output['_contracts_id'])->isEqualTo($expected);
    }
 }
