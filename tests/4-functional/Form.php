@@ -78,7 +78,7 @@ class Form extends CommonFunctionalTestCase
 
       $testedClass = $this->getTestedClassName();
       $this->crawler = $this->client->request('GET', '/' . Plugin::getWebDir('formcreator', false) . '/front/formlist.php');
-      $this->client->waitFor('#backtotop');
+      // $this->client->waitFor('#backtotop');
       // Forms are loaded with AJAX
       $formTileSelector = 'div[data-itemtype="' . str_replace('\\', '_', $testedClass) . '"][data-id="' . $form->getID() . '"]';
       $this->client->waitForVisibility($formTileSelector);

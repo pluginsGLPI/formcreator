@@ -3,7 +3,6 @@
 namespace GlpiPlugin\Formcreator\Tests;
 
 use atoum;
-use Ticket;
 use Auth;
 use DB;
 use GlpiPlugin\Formcreator\Condition;
@@ -16,6 +15,7 @@ use GlpiPlugin\Formcreator\Target\Problem as TargetProblem;
 use GlpiPlugin\Formcreator\Target\Ticket as TargetTicket;
 use Html;
 use Session;
+use Ticket;
 
 abstract class CommonTestCase extends atoum
 {

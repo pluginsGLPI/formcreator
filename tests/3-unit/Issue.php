@@ -30,6 +30,7 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator;
+
 use CommonITILActor;
 use DBmysqlIterator;
 use GlpiPlugin\Formcreator\Form;

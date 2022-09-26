@@ -30,7 +30,6 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator\Target;
-use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
 
 use Computer;
 use Contract;
@@ -46,7 +45,6 @@ use GlpiPlugin\Formcreator\Linker;
 use GlpiPlugin\Formcreator\Section;
 use GlpiPlugin\Formcreator\Target_Actor;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Tests\TargetTicketDummy;
 use Group_Ticket;
 use Item_Ticket;
 use ITILCategory;
@@ -273,7 +271,7 @@ class Ticket extends CommonTestCase {
    public function testGetTargetItemtypeName() {
       $instance = $this->newTestedInstance();
       $output = $this->callPrivateMethod($instance, 'getTargetItemtypeName');
-      $this->string($output)->isEqualTo(Ticket::class);
+      $this->string($output)->isEqualTo(GlpiTicket::class);
    }
 
    /**
@@ -777,7 +775,7 @@ class Ticket extends CommonTestCase {
          'urgency_question' => '0',
          'location_rule' => $testedClass::LOCATION_RULE_NONE,
          'location_question' => '0',
-         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+         'contract_rule' => $testedClass::CONTRACT_RULE_NONE,
          'contract_question' => '0',
          'validation_followup' => '1',
          'destination_entity' => '0',
@@ -1068,6 +1066,7 @@ class Ticket extends CommonTestCase {
 
       // Prepare target ticket
       $instance = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1131,6 +1130,7 @@ class Ticket extends CommonTestCase {
          'itemtype'                       => $validItemtype
       ]);
       $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1792,7 +1792,6 @@ class Ticket extends CommonTestCase {
    public function providerSetTargetContract_lastItem() {
       // Prepare form
       $validItemtype = Contract::class;
-      $invalidItemtype = Monitor::getType();
 
       $item1 = new $validItemtype();
       $item1->add([
@@ -1819,6 +1818,7 @@ class Ticket extends CommonTestCase {
          'itemtype'                       => $validItemtype
       ]);
       $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',

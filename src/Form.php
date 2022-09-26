@@ -52,8 +52,8 @@ use MassiveAction;
 use Plugin;
 use QueryExpression;
 use QuerySubQuery;
-use Session;
 use Search;
+use Session;
 use Toolbox;
 use User;
 
@@ -620,7 +620,7 @@ TranslatableInterface
       if ($need_request_list) {
          echo "<br/>";
          echo "<br/>";
-         PluginFormcreatorCommon::showGenericSearchIssue();
+         Common::showGenericSearchIssue();
       }
    }
 
@@ -630,7 +630,7 @@ TranslatableInterface
          $class = "plugin_formcreator_merge_with_request";
       }
 
-      if (PluginFormcreatorEntityconfig::getUsedConfig('is_category_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_CATEGORY_VISIBLE) {
+      if (EntityConfig::getUsedConfig('is_category_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_CATEGORY_VISIBLE) {
          echo '<div id="plugin_formcreator_wizard_categories" class="card '.$class.'">';
 
          echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
@@ -878,8 +878,8 @@ TranslatableInterface
 
    protected function showMyLastForms() : void {
       $limit = 5;
-      $formanswerUrl = PluginFormcreatorFormAnswer::getSearchURL();
-      $rawKeyBase = 'ITEM_' . PluginFormcreatorFormAnswer::class;
+      $formanswerUrl = FormAnswer::getSearchURL();
+      $rawKeyBase = 'ITEM_' . FormAnswer::class;
       echo '<div id="plugin_formcreator_last_req_forms" class="card">';
       echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
       $criteria = [

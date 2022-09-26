@@ -31,10 +31,10 @@
 
 namespace tests\units;
 
-use GlpiPlugin\Formcreator\EntityConfig;
 use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item;
 use Glpi\Dashboard\Right;
+use GlpiPlugin\Formcreator\EntityConfig;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\Issue;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
