@@ -31,7 +31,6 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
-use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetProblemDummy;
 
 class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
 
@@ -168,44 +167,44 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
    }
 
    public function testGetItem_User() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetItem_User();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_User');
       $this->object($output)->isInstanceOf(\Problem_User::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Group() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetItem_Group();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_Group');
       $this->object($output)->isInstanceOf(\Group_Problem::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Supplier() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetItem_Supplier();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_Supplier');
       $this->object($output)->isInstanceOf(\Problem_Supplier::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Item() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetItem_Item();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_Item');
       $this->object($output)->isInstanceOf(\Item_Problem::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetCategoryFilter() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetCategoryFilter();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getCategoryFilter');
       $this->array($output)->isEqualTo([
          'is_problem' => 1,
       ]);
    }
 
    public function testGetTaggableFields() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetTaggableFields();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getTaggableFields');
       $this->array($output)->isEqualTo([
          'target_name',
          'content',
@@ -216,8 +215,8 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
    }
 
    public function testGetTargetItemtypeName() {
-      $instance = new PluginFormcreatorTargetProblemDummy();
-      $output = $instance->publicGetTargetItemtypeName();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getTargetItemtypeName');
       $this->string($output)->isEqualTo(\Problem::class);
    }
 
@@ -238,7 +237,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
       ]);
 
       // Use a dummy class to access protected methods
-      $instance = new PluginFormcreatorTargetProblemDummy();
+      $instance = $this->newTestedInstance();
       $instance->getFromDB($targetProblem->getID());
 
       // Test current entity of the requester
@@ -267,7 +266,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
       ]);
       $formAnswer->getFromDB($formAnswer->getID());
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's entity
@@ -290,7 +289,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
       ]);
       \Session::changeActiveEntities($entityId);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
       // Test requester's first entity (alphanumeric order)
@@ -334,7 +333,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's last entity (alphanumeric order)
@@ -356,7 +355,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
          'entities_id' => $entityId,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test specific entity
@@ -383,7 +382,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test form's entity
@@ -413,7 +412,7 @@ class PluginFormcreatorTargetProblem extends CommonTargetTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
    }
 

@@ -182,36 +182,36 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function testGetItem_User() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetItem_User();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_User');
       $this->object($output)->isInstanceOf(\Ticket_User::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Group() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetItem_Group();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_Group');
       $this->object($output)->isInstanceOf(\Group_Ticket::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Supplier() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetItem_Supplier();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_Supplier');
       $this->object($output)->isInstanceOf(\Supplier_Ticket::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetItem_Item() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetItem_Item();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getItem_Item');
       $this->object($output)->isInstanceOf(\Item_Ticket::class);
       $this->boolean($output->isNewItem())->isTrue();
    }
 
    public function testGetCategoryFilter() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetCategoryFilter();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getCategoryFilter');
       $this->array($output)->isEqualTo([
          'OR' => [
             'is_request'  => 1,
@@ -221,8 +221,8 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function testGetTaggableFields() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetTaggableFields();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getTaggableFields');
       $this->array($output)->isEqualTo([
          'target_name',
          'content',
@@ -230,8 +230,8 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function testGetTargetItemtypeName() {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicGetTargetItemtypeName();
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'getTargetItemtypeName');
       $this->string($output)->isEqualTo(\Ticket::class);
    }
 
@@ -316,7 +316,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
 
       // Use a dummy class to access protected methods
-      $instance = new PluginFormcreatorTargetTicketDummy();
+      $instance = $this->newTestedInstance();
       $instance->getFromDB($targetTicket->getID());
 
       // Test current entity of the requester
@@ -339,7 +339,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
       $formAnswer->getFromDB($formAnswer->getID());
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's entity
@@ -355,7 +355,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
       \Session::changeActiveEntities($entityId);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
       // Test requester's first entity (alphanumeric order)
@@ -396,7 +396,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's last entity (alphanumeric order)
@@ -415,7 +415,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'entities_id' => $entityId,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test specific entity
@@ -438,7 +438,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test form's entity
@@ -465,7 +465,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
    }
 
@@ -565,18 +565,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     */
    public function testSetTargetType(\PluginFormcreatorTargetTicket $originalInstance, $formAnswerId, $expected) {
       // reload the instance with the helper class
-      $instance = new PluginFormcreatorTargetTicketDummy();
+      $instance = $this->newTestedInstance();
       $instance->getFromDB($originalInstance->getID());
 
       // load the form answer
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDB($formAnswerId);
 
-      $output = $instance->publicSetTargetType(
-         [
-         ],
-         $formAnswer
-      );
+      $output = $this->callPrivateMethod($instance, 'setTargetType', [], $formAnswer);
       $this->integer((int) $output['type'])->isEqualTo($expected);
    }
 
@@ -641,11 +637,11 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @dataProvider providerPrepareTemplate
     */
    public function testPrepareTemplate($template, $formAnswer, $expected) {
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $output = $instance->publicPrepareTemplate($template, $formAnswer);
+      $instance = $this->newTestedInstance();
+      $output = $this->callPrivateMethod($instance, 'prepareTemplate', $template, $formAnswer);
       $this->string($output)->isEqualTo($expected[0]);
 
-      $output = $instance->publicPrepareTemplate($template, $formAnswer, true);
+      $output = $this->callPrivateMethod($instance, 'prepareTemplate', $template, $formAnswer, true);
       $this->string($output)->isEqualTo($expected[1]);
    }
 
@@ -780,7 +776,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->boolean($formanswer->isNewItem())->isFalse();
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = $this->newTestedInstance();
       $targetTicket->add([
          'name' => 'target ticket',
          'target_name' => 'target ticket',
@@ -988,16 +984,9 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @dataProvider providerSetTargetCategory
     */
    public function testSetTargetCategory($instance, $formanswer, $expected) {
-      // Substitute a dummy class to access protected / private methods
-      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
-      $dummyInstance = new $dummyItemtype();
-      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
-      $instance->getFromDB($instance->getID());
-      $dummyInstance->fields = $instance->fields;
-
       \PluginFormcreatorFields::resetVisibilityCache();
-      $data = $dummyInstance->publicGetDefaultData($formanswer);
-      $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
+      $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
+      $output = $this->callPrivateMethod($instance, 'setTargetCategory', $data, $formanswer);
 
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }
@@ -1030,7 +1019,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $this->boolean($formAnswer->isNewItem())->isFalse();
 
       // Prepare target ticket
-      $instance = new PluginFormcreatorTargetTicketDummy();
+      $instance = $this->newTestedInstance();
       $instance->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1093,7 +1082,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype'                      => 'glpiselect',
          'itemtype'                       => $validItemtype
       ]);
-      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1123,7 +1112,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'itemtype'                       => $invalidItemtype
       ]);
 
-      $instance2 = new PluginFormcreatorTargetTicketDummy();
+      $instance2 = $this->newTestedInstance();
       $instance2->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1154,7 +1143,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype'                      => 'glpiselect',
          'itemtype'                       => $invalidItemtype
       ]);
-      $instance3 = new PluginFormcreatorTargetTicketDummy();
+      $instance3 = $this->newTestedInstance();
       $instance3->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1188,7 +1177,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'itemtype'                       => $validItemtype
       ]);
 
-      $instance4 = new PluginFormcreatorTargetTicketDummy();
+      $instance4 = $this->newTestedInstance();
       $instance4->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1270,7 +1259,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @dataProvider providerSetTargetAssociatedItem
     */
    public function testSetTargetAssociatedItem($instance, $formanswer, $expected) {
-      $output = $instance->publicSetTargetAssociatedItem([], $formanswer);
+      $output = $this->callPrivateMethod($instance, 'setTargetAssociatedItem', [], $formanswer);
       if ($expected !== null) {
          $this->array($output['items_id'])->isIdenticalTo($expected);
       } else {
@@ -1375,7 +1364,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       $form1 = $this->getForm();
 
-      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1 = new PluginFormcreatorTargetTicket();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1429,7 +1418,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype'                      => 'dropdown',
          'itemtype'                       => $validItemtype
       ]);
-      $instance1 = new PluginFormcreatorTargetTicketDummy();
+      $instance1 = new PluginFormcreatorTargetTicket();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1518,15 +1507,8 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @dataProvider providerSetRequestSource
     */
    public function testSetRequestSource($instance, $formanswer, $expected): void {
-      // Substitute a dummy class to access protected / private methods
-      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
-      $dummyInstance = new $dummyItemtype();
-      /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
-      $instance->getFromDB($instance->getID());
-      $dummyInstance->fields = $instance->fields;
-
-      $data = $dummyInstance->publicGetDefaultData($formanswer);
-      $output = $dummyInstance->publicSetTargetCategory($data, $formanswer);
+      $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
+      $output = $this->callPrivateMethod($instance, 'setTargetCategory', $data, $formanswer);
       $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected);
    }
 
@@ -1716,15 +1698,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     */
    public function testSetTargetLocation($instance, $formanswer, $expected) {
       // Substitute a dummy class to access protected / private methods
-      $dummyItemtype = 'GlpiPlugin\Formcreator\Tests\\' . $this->getTestedClassName() . 'Dummy';
-      $dummyInstance = new $dummyItemtype();
+      $dummyInstance = $this->newTestedInstance();
       /**@var \GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy  */
       $instance->getFromDB($instance->getID());
       $dummyInstance->fields = $instance->fields;
 
       \PluginFormcreatorFields::resetVisibilityCache();
-      $data = $dummyInstance->publicGetDefaultData($formanswer);
-      $output = $dummyInstance->publicSetTargetLocation($data, $formanswer);
+      $data = $this->callPrivateMethod($instance, 'getDefaultData', $formanswer);
+      $output = $this->callPrivateMethod($instance, 'setTargetLocation', $data, $formanswer);
 
       $this->integer((int) $output['locations_id'])->isEqualTo($expected);
    }
