@@ -30,14 +30,12 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator\Target;
-use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
 
 use Entity;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Linker;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Tests\TargetProblemDummy;
 use Group_Problem;
 use Item_Problem;
 use Problem_Supplier;

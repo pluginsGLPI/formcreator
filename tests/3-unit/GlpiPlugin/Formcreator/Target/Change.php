@@ -30,7 +30,6 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator\Target;
-use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
 
 use Change as GlpiChange;
 use Change_Group;
@@ -42,7 +41,6 @@ use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Linker;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Tests\TargetChangeDummy;
 use Profile;
 use Profile_User;
 use Session;

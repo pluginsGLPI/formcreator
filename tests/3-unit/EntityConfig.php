@@ -30,17 +30,20 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorEntityconfig extends CommonTestCase {
+use Entity;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Ticket;
+
+class EntityConfig extends CommonTestCase {
    public function providerGetTabNameForItem() {
       return [
          [
-            new \Entity,
+            new Entity,
             ['1' => 'Forms'],
          ],
          [
-            new \Ticket,
+            new Ticket,
             [],
          ]
       ];
@@ -60,7 +63,7 @@ class PluginFormcreatorEntityconfig extends CommonTestCase {
 
       // Create an entity with 2 sub entities
       $base = 'Root entity > ' . $this->getUniqueString();
-      $entity = new \Entity();
+      $entity = new Entity();
       $entityId = $entity->add([
          'name' => $this->getUniqueString(),
          'entities_id' => '0',
