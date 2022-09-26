@@ -1,0 +1,48 @@
+{% if (options.is_category_visible) %}
+<div id="plugin_formcreator_wizard_categories" class="card {{ options.need_request_list ? 'plugin_formcreator_merge_with_request' : '' }}">
+    <div><h2 class="card-title">{{ "PluginFormcreatorCategory"|itemtype_name }}</h2></div>
+    <div class="category-divider"></div>
+    <div class="slinky-menu"></div>
+    <div><a href="#" id="wizard_seeall">{{ __('See all', 'formcreator') }}</a></div>
+</div>
+{% endif %}
+<div id="plugin_formcreator_wizard_right" class="card">
+    <div class="card-body">
+        {% if (options.is_header_visible) %}
+            <div id="plugin_formcreator_header">'
+                {{ item.showHeader() }}
+            </div>
+        {% endif %}
+        {% if (options.is_search_visible) %}
+            <div id="plugin_formcreator_searchBar">'
+                {{ item.showSearchBar() }}
+            </div>
+        {% endif %}
+        <div class="plugin_formcreator_sort">
+            <span class="radios">
+                {% set selected = (options.sort_order == constant('GlpiPlugin\\Formcreator\\EntityConfig::CONFIG_SORT_POPULARITY') ? 'checked="checked"' : '') %}
+                <input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" {{ selected }} onclick="showTiles(tiles)"/>
+                <label for="plugin_formcreator_mostPopular">
+                    <a title="{{ options.sort_setting[constant('GlpiPlugin\\Formcreator\\EntityConfig::CONFIG_SORT_POPULARITY')] }}">&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a>
+                </label>
+            </span>
+
+            &nbsp;
+
+            <span class="radios">
+                {% set selected = (options.sort_order == constant('GlpiPlugin\\Formcreator\\EntityConfig::CONFIG_SORT_ALPHABETICAL') ? 'checked="checked"' : '') %}
+                <input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" {{ selected }} onclick="showTiles(tiles)"/>
+                <label for="plugin_formcreator_mostPopular">
+                    <a title="{{ options.sort_setting[constant('GlpiPlugin\\Formcreator\\EntityConfig::CONFIG_SORT_ALPHABETICAL')] }}">&nbsp;<i class="fa fa-arrow-down-a-z" aria-hidden="true"></i></a>
+                </label>
+            </span>
+        </div>
+        <div id="plugin_formcreator_wizard_forms">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function() {
+    plugin_formcreator.updateWizardFormsView();
+});
+</script>
