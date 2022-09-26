@@ -730,7 +730,7 @@ TranslatableInterface
 
       $formList = [];
       foreach ($result_forms as $form) {
-         // load thanguage for the form, if any
+         // load language for the form, if any
          $domain = self::getTranslationDomain($form['id']);
          $phpfile = self::getTranslationFile($form['id'], $_SESSION['glpilanguage']);
          if (file_exists($phpfile)) {
@@ -753,25 +753,7 @@ TranslatableInterface
       if (EntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) != EntityConfig::CONFIG_KB_DISTINCT
          && Session::haveRight('knowbase', KnowbaseItem::READFAQ)
       ) {
-         // Find FAQ entries
-         $params = [
-            'faq'      => '1',
-            'contains' => $keywords
-         ];
-         $params['knowbaseitemcategories_id'] = 0;
-         if (count($selectedCategories) > 0) {
-            $iterator = $DB->request($table_cat, [
-               'WHERE' => [
-                  'id' => $selectedCategories
-               ]
-            ]);
-            $kbcategories = [];
-            foreach ($iterator as $kbcat) {
-               $kbcategories[] = $kbcat['knowbaseitemcategories_id'];
-            }
-            $params['knowbaseitemcategories_id'] = $kbcategories;
-         }
-         $query_faqs = KnowbaseItem::getListRequest($params);
+         $query_faqs = self::getFaqQuery($selectedCategories, $keywords);
 
          $result_faqs = $DB->request($query_faqs);
          foreach ($result_faqs as $faq) {
@@ -2596,5 +2578,32 @@ TranslatableInterface
       }
 
       return $extra_header;
+   }
+
+   /**
+    * Get query builder array to find Knowledge base items merged with forms
+    *
+    * @param array $selectedCategories categories to search for
+    * @param string $keywords filter keywords
+    * @return array query builder array
+    */
+   private static function getFaqQuery(array $selectedCategories, string $keywords): array {
+      // Find FAQ entries
+      $params = [
+         'faq'      => '1',
+         'contains' => $keywords
+      ];
+      $params['knowbaseitemcategories_id'] = 0;
+      if (count($selectedCategories) > 0) {
+         $params['knowbaseitemcategories_id'] = new QuerySubQuery([
+            'SELECT' => 'knowbaseitemcategories_id',
+            'FROM' => PluginFormcreatorCategory::getTable(),
+            'WHERE' => [
+               'id' => $selectedCategories
+            ]
+         ]);
+      }
+
+      return KnowbaseItem::getListRequest($params);
    }
 }
