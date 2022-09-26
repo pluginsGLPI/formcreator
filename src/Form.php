@@ -609,7 +609,7 @@ TranslatableInterface
 
    public function showServiceCatalog() : void {
       $need_request_list = false;
-      if (PluginFormcreatorEntityconfig::getUsedConfig('home_page', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_HOME_PAGE_FORM_AND_REQUEST) {
+      if (Entityconfig::getUsedConfig('home_page', Session::getActiveEntity()) == Entityconfig::CONFIG_HOME_PAGE_FORM_AND_REQUEST) {
          $need_request_list = true;
       }
 
@@ -625,60 +625,19 @@ TranslatableInterface
    }
 
    public function showWizard(bool $need_request_list = false) : void {
-      $class = "";
-      if ($need_request_list) {
-         $class = "plugin_formcreator_merge_with_request";
-      }
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form.wizard.html.twig', [
+         'item' => $this,
+         'options' => [
+            'ned_request_list'    => $need_request_list,
+            'is_category_visible' => Entityconfig::getUsedConfig('is_category_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_CATEGORY_VISIBLE,
+            'is_header_visible'   => Entityconfig::getUsedConfig('is_header_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_HEADER_VISIBLE,
+            'is_search_visible'   => Entityconfig::getUsedConfig('is_search_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_SEARCH_VISIBLE,
+            'sort_setting'        => EntityConfig::getEnumSort(),
+            'sort_order'          => Entityconfig::getUsedConfig('sort_order', Session::getActiveEntity()),
+         ],
+      ]);
 
-      if (EntityConfig::getUsedConfig('is_category_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_CATEGORY_VISIBLE) {
-         echo '<div id="plugin_formcreator_wizard_categories" class="card '.$class.'">';
-
-         echo '<div><h2 class="card-title">'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
-         echo '<div class="category-divider"></div>';
-         echo '<div class="slinky-menu"></div>';
-         echo '<div><a href="#" id="wizard_seeall">' . __('See all', 'formcreator') . '</a></div>';
-         echo '</div>';
-      }
-
-      echo '<div id="plugin_formcreator_wizard_right" class="card">';
-      echo '<div class="card-body">';
-
-      if (EntityConfig::getUsedConfig('is_header_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_HEADER_VISIBLE) {
-         echo '<div id="plugin_formcreator_header">';
-         $this->showHeader();
-         echo '</div>';
-      }
-      if (EntityConfig::getUsedConfig('is_search_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_SEARCH_VISIBLE) {
-         echo '<div id="plugin_formcreator_searchBar">';
-         $this->showSearchBar();
-         echo '</div>';
-      }
-      $sort_settings = EntityConfig::getEnumSort();
-      echo '<div class="plugin_formcreator_sort">';
-      echo '<span class="radios">';
-      $sort_order = EntityConfig::getUsedConfig('sort_order', Session::getActiveEntity());
-      $selected = $sort_order == EntityConfig::CONFIG_SORT_POPULARITY ? 'checked="checked"' : '';
-      echo '<input type="radio" class="-check-input" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" '.$selected.' onclick="showTiles(tiles)"/>';
-      echo '<label for="plugin_formcreator_mostPopular">';
-      echo '<a title="' . $sort_settings[EntityConfig::CONFIG_SORT_POPULARITY] . '">&nbsp;<i class="fa fa-star" aria-hidden="true"></i></a>';
-      echo '</label>';
-      echo '</span>';
-      echo '&nbsp;';
-      echo '<span class="radios">';
-      $selected = $sort_order == EntityConfig::CONFIG_SORT_ALPHABETICAL ? 'checked="checked"' : '';
-      echo '<input type="radio" class="-check-input" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" '.$selected.' onclick="showTiles(tiles)"/>';
-      echo '<label for="plugin_formcreator_alphabetic">';
-      echo '<a title="' . $sort_settings[EntityConfig::CONFIG_SORT_ALPHABETICAL] . '">&nbsp;<i class="fa fa-arrow-down-a-z"></i></a>';
-      echo '</label>';
-      echo '</span>';
-      echo '</div>';
-      echo '<div id="plugin_formcreator_wizard_forms">';
-      echo '</div>';
-      echo '</div>';
-      echo '</div>';
-      echo Html::scriptblock("$(function() {
-         plugin_formcreator.updateWizardFormsView();
-      });");
+      return;
    }
 
    /**
@@ -928,7 +887,7 @@ TranslatableInterface
                   $status = $formAnswer['raw']["{$rawKeyBase}_8"];
             }
             $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="' . str_replace('\\', '_', Form::getType()) . '" data-id="'  . $formAnswer['raw']["{$rawKeyBase}_2"] . '">';
+            echo '<li data-itemtype="' . str_replace('\\', '_', FormAnswer::getType()) . '" data-id="'  . $formAnswer['raw']["{$rawKeyBase}_2"] . '">';
             echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["{$rawKeyBase}_2"] .'">'. $formAnswer['raw']["{$rawKeyBase}_1"] .'</a>';
             echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["{$rawKeyBase}_6"]).'</span>';
             echo '</li>';
