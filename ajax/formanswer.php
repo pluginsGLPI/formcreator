@@ -101,6 +101,7 @@ if ($_SESSION['glpibackcreated']) {
             'redirect' => $formAnswer->getFormURLWithID($formAnswer->getID()),
          ], JSON_FORCE_OBJECT
       );
+      die();
    }
    echo json_encode(
       [
