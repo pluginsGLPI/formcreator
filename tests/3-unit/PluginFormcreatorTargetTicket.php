@@ -30,8 +30,10 @@
  */
 
 namespace tests\units;
+use PluginFormcreatorForm_Validator;
 use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
 use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy;
+use User;
 
 class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
@@ -469,11 +471,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form1 = new \PluginFormcreatorForm();
       $form1 = \PluginFormcreatorForm::getByItem($question1);
-      $form1->update([
-         'id' => $form1->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [2] // Glpi user
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'itemtype'         => User::class,
+         'users_id'         => 2 // Glpi user
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
+
       $targetTicket1 = $this->getTargetTicket([
          $formFk     => $form1->getID(),
          'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
@@ -486,11 +491,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form2 = new \PluginFormcreatorForm();
       $form2 = \PluginFormcreatorForm::getByItem($question2);
-      $form2->update([
-         'id' => $form2->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [2] // Glpi user
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form2->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => 2 // Glpi user
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
+
       $targetTicket2 = $this->getTargetTicket([
          $formFk     => $form2->getID(),
          'type_rule' => \PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER,

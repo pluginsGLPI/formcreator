@@ -453,6 +453,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
     /**
     * Can the current user validate the form ?
+    * @return bool
     */
    public function canValidate(): bool {
       if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
@@ -465,19 +466,29 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $form = $this->getForm();
-      switch ($form->fields['validation_required']) {
-         case PluginFormcreatorForm_Validator::VALIDATION_USER:
-            return (Session::getLoginUserID() == $this->fields['users_id_validator']);
-            break;
+      if (!User::isNewId($this->fields['users_id_validator'])) {
+         if (Session::getLoginUserID() == $this->fields['users_id_validator']) {
+            // The current user is a valdiator
+            return true;
+         }
+         $user = User::getById(Session::getLoginUserID());
+         if (($user instanceof User)) {
+            if ($user->isSubstituteOf($this->fields['users_id_validator'])) {
+               // The curent user is a substitute of the validator user
+               return true;
+            }
+         }
+      }
 
-         case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
-            $groupList = Group_User::getUserGroups(
-               Session::getLoginUserID(),
-               ['glpi_groups.id' => $this->fields['groups_id_validator']]
-            );
-            return (count($groupList) > 0);
-            break;
+      if (!Group::isNewID($this->fields['groups_id_validator'])) {
+         $groupList = Group_User::getUserGroups(
+            Session::getLoginUserID(),
+            ['glpi_groups.id' => $this->fields['groups_id_validator']]
+         );
+         if (count($groupList) > 0) {
+            // The current user is a member of a validator group
+            return true;
+         }
       }
 
       return false;
@@ -509,7 +520,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $style.= "</style>";
       echo $style;
 
-      $formUrl = static::getFormURL(); // May be called from iinherited classes
+      $formUrl = static::getFormURL(); // May be called from inherited classes
       $formName = 'plugin_formcreator_form';
       echo '<form name="' . $formName . '" method="post" role="form" enctype="multipart/form-data"'
       . ' class="plugin_formcreator_form"'
@@ -619,8 +630,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       echo Dropdown::getDropdownName('glpi_users', $this->fields['requester_id']);
       echo '</div>';
 
-      // Display submit button
       if (($this->fields['status'] == self::STATUS_REFUSED) && (Session::getLoginUserID() == $this->fields['requester_id'])) {
+         // Display submit button
          echo '<div class="form-group">';
          echo '<div class="center">';
          echo Html::submit(__('Save'), ['name' => 'save_formanswer']);
@@ -718,6 +729,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       if ($form->validationRequired()) {
          if (($validator = $this->getUniqueValidator($form)) !== null) {
+            if (in_array(PluginFormcreatorSpecificValidator::class, class_implements($validator))) {
+               if ($validator->MayBeResolvedIntoOneValidator()) {
+                  $validator = $validator->getOneValidator(Session::getLoginUserID());
+               } else {
+                  unset($input['formcreator_validator']);
+               }
+            }
             $input['formcreator_validator'] = $validator->getType() . '_' . $validator->getID();
          }
       }
@@ -827,18 +845,24 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * return the validator user or group if it is the ony choice for the requester
     *
     * @param PluginFormcreatorForm $form Form to search the unique validator
-    * @return null|User|Group
+    * @return null|User|Group|PluginFormcreatorSpecificValidator
     */
    protected function getUniqueValidator(PluginFormcreatorForm $form): ?CommonDBTM {
-      $validValidators = PluginFormcreatorForm_Validator::getValidatorsForForm(
+      $all_validators = PluginFormcreatorForm_Validator::getValidatorsForForm(
          $form
       );
 
-      if (count($validValidators) != 1) {
+      if (count($all_validators) != 1) {
+         // not one type of validators
          return null;
       }
 
-      return array_pop($validValidators);
+      $validators = array_pop($all_validators);
+      if (count($validators) != 1) {
+         // not one validator of the only itemtype
+         return null;
+      }
+      return array_pop($validators);
    }
 
    /**
@@ -1626,32 +1650,33 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $input['status'] = self::STATUS_ACCEPTED;
       if (isset($input['formcreator_validator'])) {
-         switch ($this->getForm()->fields['validation_required']) {
-            case PluginFormcreatorForm::VALIDATION_USER:
-               $validatorItem = explode('_', $input['formcreator_validator']);
-               if ($validatorItem[0] != User::class) {
-                  break;
+         $validatorItem = explode('_', $input['formcreator_validator']);
+         if (in_array($validatorItem[0], [User::class, PluginFormcreatorSupervisorValidator::class])) {
+            if ($validatorItem[1] == 'supervisor') {
+               // Find the supervisor of the current user
+               if (($current_user_id = Session::getLoginUserID()) !== false) {
+                  $current_user = User::getById($current_user_id);
+                  if ($current_user instanceof User) {
+                     if (!User::isNewID($current_user->fields['users_id_supervisor'])) {
+                        $usersIdValidator = $current_user->fields['users_id_supervisor'];
+                     }
+                  }
                }
+            } else {
                $usersIdValidator = (int) $validatorItem[1];
-               if (Session::getLoginUserID(true) == $usersIdValidator) {
-                  // The requester is the validator. No need to validate
-                  break;
-               }
+            }
+            if (Session::getLoginUserID(true) != $usersIdValidator) {
+               // The requester is not the validator. Validation needed
                $input['status'] = self::STATUS_WAITING;
-               break;
+            }
+         }
 
-            case PluginFormcreatorForm::VALIDATION_GROUP:
-               $validatorItem = explode('_', $input['formcreator_validator']);
-               if ($validatorItem[0] != Group::class) {
-                  break;
-               }
-               $groupIdValidator = (int) $validatorItem[1];
-               if (Session::getLoginUserID(true) !== false && in_array($groupIdValidator, $_SESSION['glpigroups'])) {
-                  // The requester is a member of the validator group
-                  break;
-               }
+         if (in_array($validatorItem[0], [Group::class])) {
+            $groupIdValidator = (int) $validatorItem[1];
+            if (Session::getLoginUserID(true) !== false && !in_array($groupIdValidator, $_SESSION['glpigroups'])) {
+               // The requester is not a member of the validator group. Validation needed
                $input['status'] = self::STATUS_WAITING;
-               break;
+            }
          }
       }
 

@@ -29,37 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+interface PluginFormcreatorSpecificValidator {
+    public function MayBeResolvedIntoOneValidator(): bool;
 
-Session::checkRight('entity', UPDATE);
-
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+    public function getOneValidator($current_user_id): ?CommonDBTM;
 }
-
-if (!isset($_POST['plugin_formcreator_forms_id'])) {
-   // should not happen
-   Html::back();
-}
-$item = new PluginFormcreatorForm_Validator();
-if (isset($_POST['add'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   // $input = $_POST;
-   // $input['id'] = (int) $_POST['plugin_formcreator_forms_id'];
-   // unset($input['plugin_formcreator_forms_id']);
-   // $form->update($input);
-   $form = PluginFormcreatorForm::getById($_POST['plugin_formcreator_forms_id']);
-   unset($_POST['uuid']);
-   if ($newID = $item->add($_POST)) {
-      if ($_SESSION['glpibackcreated']) {
-         Html::redirect($form->getLinkURL());
-      }
-   }
-   Html::back();
-} else if (isset($_POST['delete'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
-   $item->delete($_POST);
-   Html::back();
-}
-Html::back();

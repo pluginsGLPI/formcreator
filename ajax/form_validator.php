@@ -31,35 +31,30 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkRight('entity', UPDATE);
-
 // Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!Plugin::isPluginActive('formcreator')) {
+    http_response_code(404);
+    die();
 }
 
-if (!isset($_POST['plugin_formcreator_forms_id'])) {
-   // should not happen
-   Html::back();
-}
+if (!isset($_REQUEST['id']) || !isset($_REQUEST['action'])) {
+    http_response_code(400);
+   die();
+ }
+
 $item = new PluginFormcreatorForm_Validator();
-if (isset($_POST['add'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   // $input = $_POST;
-   // $input['id'] = (int) $_POST['plugin_formcreator_forms_id'];
-   // unset($input['plugin_formcreator_forms_id']);
-   // $form->update($input);
-   $form = PluginFormcreatorForm::getById($_POST['plugin_formcreator_forms_id']);
-   unset($_POST['uuid']);
-   if ($newID = $item->add($_POST)) {
-      if ($_SESSION['glpibackcreated']) {
-         Html::redirect($form->getLinkURL());
-      }
-   }
-   Html::back();
-} else if (isset($_POST['delete'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
-   $item->delete($_POST);
-   Html::back();
+
+if ($_POST['action'] == 'delete') {
+    if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
+        http_response_code(403);
+        die();
+    }
+    if (!$item->delete($_POST)) {
+        http_response_code(500);
+        die();
+    }
+    http_response_code(204);
+    die();
 }
-Html::back();
+
+http_response_code(400);
