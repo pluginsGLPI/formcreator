@@ -18,6 +18,7 @@
             "is_default": 0,
             "is_captcha_enabled": 0,
             "show_rule": 1,
+            "plugin_formcreator_forms_id": 0,
             "formanswer_name": "formanswer title",
             "is_visible": 1,
             "uuid": "3a905a97-4e912b5c-601ab759aae279.33523157",

@@ -70,6 +70,18 @@ if ($formAnswer->add($_POST) === false) {
 }
 $form->increaseUsageCount();
 
+if ($form->fields['plugin_formcreator_forms_id'] > 0) {
+   $nextForm = new PluginFormcreatorForm();
+   if ($nextForm->getFromDB($form->fields['plugin_formcreator_forms_id']) && $nextForm->fields['is_active'] == 1) {
+      echo json_encode(
+         [
+            'redirect' => 'formdisplay.php?id=' . $form->fields['plugin_formcreator_forms_id'],
+         ], JSON_FORCE_OBJECT
+      );
+      die();
+   }
+}
+
 if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
    // Form was saved by an annymous user
    unset($_SESSION['glpiname']);

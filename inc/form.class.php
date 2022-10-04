@@ -1533,6 +1533,17 @@ PluginFormcreatorTranslatableInterface
          $export['_plugin_formcreator_category'] = $formCategory->fields['completename'];
       }
 
+      // replace form next id
+      if ($export['plugin_formcreator_forms_id'] > 0) {
+         $nextForm = new self();
+         if (!$nextForm->getFromDB($export['plugin_formcreator_forms_id'])) {
+            // Error : next form missing in DB
+            $export['plugin_formcreator_forms_id'] = '';
+         } else {
+            $export['plugin_formcreator_forms_id'] = $nextForm->fields['uuid'];
+         }
+      }
+
       // remove non needed keys
       unset($export['plugin_formcreator_categories_id'],
             $export['entities_id'],
@@ -1688,6 +1699,7 @@ PluginFormcreatorTranslatableInterface
          $linker->initProgressBar();
 
          $success = true;
+         $linker->reset();
          foreach ($forms_toimport['forms'] as $form) {
             $linker->reset();
             set_time_limit(30);
@@ -1805,6 +1817,25 @@ PluginFormcreatorTranslatableInterface
          ]);
       }
       $input[$formCategoryFk] = $formCategoryId;
+
+      // Import form next
+      $formNextFk = PluginFormcreatorForm::getForeignKeyField();
+      $formNextId = 0;
+      if ($input[$formNextFk] != '') {
+         $formNext = $linker->getObject($input[$formNextFk], PluginFormcreatorForm::class);
+         if ($formNext === false) {
+            $formNext = new PluginFormcreatorForm();
+            $formNext->getFromDBByCrit([
+               'uuid' => $input[$formNextFk],
+            ]);
+            if ($formNext->isNewItem()) {
+               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+               return false;
+            }
+         }
+         $formNextId = $formNext->getID();
+         $input[$formNextFk] = $formNextId;
+      }
 
       // Escape text fields
       foreach (['name', 'description', 'content', 'formanswer_name'] as $key) {
