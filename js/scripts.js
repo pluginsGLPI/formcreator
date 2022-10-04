@@ -1381,10 +1381,6 @@ var plugin_formcreator = new function() {
       var form     = document.querySelector('form[data-itemtype]');
       var data     = new FormData(form);
       data.append('submit_formcreator', '');
-
-      // Disable submit button
-      $(form).find("button[type=submit]").prop('disabled', true);
-
       $.post({
          url: formcreatorRootDoc + '/ajax/formanswer.php',
          processData: false,
@@ -1408,9 +1404,6 @@ var plugin_formcreator = new function() {
             $('#messages_after_redirect').append(html);
             initMessagesAfterRedirectToasts();
          }
-      }).always(function (data) {
-         // Enable submit button
-         $(form).find("button[type=submit]").prop('disabled', false);
       });
    };
 
