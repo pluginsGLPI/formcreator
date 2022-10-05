@@ -912,7 +912,7 @@ class FormAnswer extends CommonDBTM
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
 
-      foreach($this->targetList as $target) {
+      foreach ($this->targetList as $target) {
          Session::addMessageAfterRedirect(sprintf(__('Item sucessfully added: %s (%s: %s)', 'formcreator'), $target->getName(), $target->getTypeName(1), $target->getID()), false, INFO);
       }
 
