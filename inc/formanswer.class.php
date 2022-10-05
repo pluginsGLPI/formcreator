@@ -888,8 +888,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
 
+      /** @var CommonDBTM $target */
       foreach ($this->targetList as $target) {
-         Session::addMessageAfterRedirect(sprintf(__('Item sucessfully added: %s (%s: %s)', 'formcreator'), $target->getName(), $target->getTypeName(1), $target->getID()), false, INFO);
+         // TRANS: %1$s is the name of the target, %2$s is the type of the target, %3$s is the ID of the target in a HTML hyperlink
+         $targetUrl = '<a href="' . $target->getFormURLWithID($target->getID()) . '">' . $target->getID() . '</a>';
+         Session::addMessageAfterRedirect(sprintf(__('Item sucessfully added: %1$s (%2$s: %3$s)', 'formcreator'), $target->getName(), $target->getTypeName(1), $targetUrl), false, INFO);
       }
 
       unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
