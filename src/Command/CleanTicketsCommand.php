@@ -31,13 +31,12 @@
 
 namespace GlpiPlugin\Formcreator\Command;
 
+use Item_Ticket;
+use PluginFormcreatorFormAnswer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Ticket;
-use Item_Ticket;
-use PluginFormcreatorFormAnswer;
-use Glpi\Toolbox\Sanitizer;
 
 class CleanTicketsCommand extends Command
 {
