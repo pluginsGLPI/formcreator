@@ -825,7 +825,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       $data['date'] = $_SESSION['glpi_currenttime'];
 
       $data['content'] = $this->prepareTemplate(
-         $this->fields['content'],
+         $this->fields['content'] ?? '',
          $formanswer,
          $richText
       );
