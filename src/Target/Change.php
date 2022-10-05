@@ -661,7 +661,7 @@ class Change extends AbstractItilTarget
       ];
       foreach ($changeFields as $changeField) {
          $data[$changeField] = $this->prepareTemplate(
-            $this->fields[$changeField],
+            $this->fields[$changeField] ?? '',
             $formanswer,
             $changeField == 'content' // only content supports rich text
          );

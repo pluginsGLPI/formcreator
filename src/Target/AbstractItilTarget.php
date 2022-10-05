@@ -2273,9 +2273,6 @@ SCRIPT;
                   $cleaned = [];
                   $cleaned_notif = [];
                   foreach ($data["$actorType"] as $key => $actor) {
-                     if ($actor == 0) {
-                        continue;
-                     }
                      $cleaned[] = $actor;
                      $cleaned_notif['use_notification'][] = $data["{$actorType}_notif"]['use_notification'][$key];
                      $cleaned_notif['alternative_email'][] = $data["{$actorType}_notif"]['alternative_email'][$key];

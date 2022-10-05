@@ -911,6 +911,11 @@ class FormAnswer extends CommonDBTM
       $generatedTargets->buildCompositeRelations();
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
+
+      foreach($this->targetList as $target) {
+         Session::addMessageAfterRedirect(sprintf(__('Item sucessfully added: %s (%s: %s)', 'formcreator'), $target->getName(), $target->getTypeName(1), $target->getID()), false, INFO);
+      }
+
       unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
       return $success;
    }

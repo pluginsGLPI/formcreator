@@ -206,7 +206,7 @@ class Problem extends AbstractItilTarget {
       ];
       foreach ($problemFields as $problemFields) {
          $data[$problemFields] = $this->prepareTemplate(
-            $this->fields[$problemFields],
+            $this->fields[$problemFields] ?? '',
             $formanswer,
             $problemFields == 'content' // only content supports rich text
          );
