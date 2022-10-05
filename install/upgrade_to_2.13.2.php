@@ -29,18 +29,22 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_13_2 {
-	/** @var Migration */
+   /** @var Migration */
    protected $migration;
 
-	/**
+   /**
     * @param Migration $migration
     */
-	 public function upgrade(Migration $migration) {
+   public function upgrade(Migration $migration) {
       $this->migration = $migration;
 
       $table = 'glpi_plugin_formcreator_forms';
 
       // Change default value in DB
       $this->migration->addField($table, 'plugin_formcreator_forms_id', 'integer', ['after' => 'show_rule']);
+   }
+
+   public function isResyncIssuesRequired() {
+      return false;
    }
 }
