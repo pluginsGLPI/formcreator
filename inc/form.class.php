@@ -1063,7 +1063,35 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
+      //Check form redirect
+      $used_id = [];
+      if ($input['plugin_formcreator_forms_id'] > 0) {
+         $used_id[] = $input['plugin_formcreator_forms_id'];
+         $loop = self::checkLoop($input['plugin_formcreator_forms_id'], $used_id);
+         if ($loop) {
+            Session::addMessageAfterRedirect(
+               __('A loop is generated!', 'formcreator'),
+               false,
+               ERROR
+            );
+            return [];
+         }
+      }
+
       return $input;
+   }
+
+   public function checkLoop($form_id, $flow) {
+      $form = new self();
+      if ($form->getFromDB($form_id) && $form->fields['plugin_formcreator_forms_id'] > 0) {
+         if (in_array($form->fields['plugin_formcreator_forms_id'], $flow)) {
+            return true;
+         } else {
+            $flow[] = $form->fields['plugin_formcreator_forms_id'];
+            return self::checkLoop($form->fields['plugin_formcreator_forms_id'], $flow);
+         }
+      }
+      return false;
    }
 
    /**
@@ -1190,6 +1218,22 @@ PluginFormcreatorTranslatableInterface
 
          if (!$this->checkValidators($input)) {
             $input['validation_required'] = self::VALIDATION_NONE;
+         }
+      }
+
+      //Check form redirect
+      $used_id = [];
+      if ($input['plugin_formcreator_forms_id'] > 0) {
+         $used_id[] = $input['id'];
+         $used_id[] = $input['plugin_formcreator_forms_id'];
+         $loop = self::checkLoop($input['plugin_formcreator_forms_id'], $used_id);
+         if ($loop) {
+            Session::addMessageAfterRedirect(
+               __('A loop is generated!', 'formcreator'),
+               false,
+               ERROR
+            );
+            return [];
          }
       }
 
