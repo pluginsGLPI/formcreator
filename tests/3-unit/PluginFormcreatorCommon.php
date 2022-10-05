@@ -590,6 +590,11 @@ class PluginFormcreatorCommon extends CommonTestCase {
             'title' => 'Reservations',
             'icon' => 'ti ti-calendar-event',
             ],
+            'savedsearch' => [
+               'default' => '/front/savedsearch.php',
+               'title' => 'Saved searches',
+               'icon' => 'fa-fw ti ti-star',
+            ],
          ]
       ];
 
@@ -608,29 +613,30 @@ class PluginFormcreatorCommon extends CommonTestCase {
       yield [
          'input' => \Html::generateHelpMenu(),
          'expected' => [
-            'seek_assistance' =>
-            [
+            'seek_assistance' => [
               'default' => 'plugins/formcreator/front/wizard.php',
               'title' => 'Seek assistance',
               'icon' => 'fa-fw ti ti-headset',
             ],
-            'my_assistance_requests' =>
-            [
+            'my_assistance_requests' => [
               'default' => '/plugins/formcreator/front/issue.php',
               'title' => 'My requests for assistance',
               'icon' => 'fa-fw ti ti-list',
             ],
-            'reservation' =>
-            [
+            'reservation' => [
               'default' => '/front/reservationitem.php',
               'title' => 'Reservations',
               'icon' => 'ti ti-calendar-event',
             ],
-            'feeds' =>
-            [
+            'feeds' => [
               'default' => 'plugins/formcreator/front/wizardfeeds.php',
               'title' => 'Consult feeds',
               'icon' => 'fa-fw ti ti-rss',
+            ],
+            'savedsearch' => [
+               'default' => '/front/savedsearch.php',
+               'title' => 'Saved searches',
+               'icon' => 'fa-fw ti ti-star',
             ],
          ]
       ];

@@ -817,6 +817,12 @@ JAVASCRIPT;
          ];
       }
 
+      $newMenu['savedsearch'] = [
+         'default' => '/front/savedsearch.php',
+         'title'   => SavedSearch::getTypeName(Session::getPluralNumber()),
+         'icon'    => 'fa-fw ti ti-star',
+      ];
+
       // Add plugins menus
       $plugin_menus = $menus['plugins']['content'] ?? [];
       foreach ($plugin_menus as $menu_name => $menu_data) {
