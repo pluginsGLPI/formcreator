@@ -1033,6 +1033,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
    protected function setTargetSource(array $data, PluginFormcreatorFormAnswer $formanswer): array {
       switch ($this->fields['source_rule']) {
+         case self::REQUESTSOURCE_NONE:
+            $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+            break;
+
          case self::REQUESTSOURCE_FORMCREATOR:
             $data['requesttypes_id'] = $this->fields['source_question'];
             break;
