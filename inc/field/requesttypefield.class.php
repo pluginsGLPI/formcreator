@@ -174,19 +174,33 @@ class RequestTypeField extends SelectField
 
    public function equals($value): bool {
       $available = $this->getAvailableValues();
+      if (!isset($available[$this->value])) {
+         return false;
+      }
       return strcasecmp($available[$this->value], $value) === 0;
    }
 
    public function notEquals($value): bool {
+      $available = $this->getAvailableValues();
+      if (!isset($available[$this->value])) {
+         return false;
+      }
       return !$this->equals($value);
    }
 
    public function greaterThan($value): bool {
       $available = $this->getAvailableValues();
+      if (!isset($available[$this->value])) {
+         return false;
+      }
       return strcasecmp($available[$this->value], $value) > 0;
    }
 
    public function lessThan($value): bool {
+      $available = $this->getAvailableValues();
+      if (!isset($available[$this->value])) {
+         return false;
+      }
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
