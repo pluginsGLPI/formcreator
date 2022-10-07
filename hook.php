@@ -117,7 +117,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
          }
          break;
 
-      case PluginFormcreatorFormAnswer::class:
+      case FormAnswer::class:
          if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
          }
@@ -135,7 +135,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
 function plugin_formcreator_addDefaultWhere($itemtype) {
    $currentUser = Session::getLoginUserID();
    switch ($itemtype) {
-      case PluginFormcreatorIssue::class:
+      case Issue::class:
          if (Session::haveRight(Entity::$rightname, UPDATE)) {
             // The user is a Formcreator administrator
             return '';
@@ -607,7 +607,7 @@ function plugin_formcreator_dynamicReport($params) {
       case FormAnswer::class;
          if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
             if (strpos($url['path'],
-                       Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {
+                       Toolbox::getItemTypeFormURL(Form::class)) !== false) {
                parse_str($url['query'], $query);
                if (isset($query['id'])) {
                   $item = Common::getForm();

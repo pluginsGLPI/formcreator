@@ -105,7 +105,7 @@ if (isset($_POST['add'])) {
       Form::getTypeName(2),
       $_SERVER['PHP_SELF'],
       'admin',
-      'PluginFormcreatorForm',
+      Form::class,
       'option'
    );
 
@@ -119,7 +119,7 @@ if (isset($_POST['add'])) {
       Form::getTypeName(2),
       $_SERVER['PHP_SELF'],
       'admin',
-      'PluginFormcreatorForm',
+      Form::class,
       'option'
    );
 

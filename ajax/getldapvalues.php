@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+ use GlpiPlugin\Formcreator\LdapDropdown;
+
 include ('../../../inc/includes.php');
 
 if (!defined('GLPI_ROOT')) {
@@ -44,4 +46,4 @@ if (!Plugin::isPluginActive('formcreator')) {
 }
 
 Session::checkLoginUser();
-echo PluginFormcreatorLdapDropdown::getDropdownValue($_POST);
+echo LdapDropdown::getDropdownValue($_POST);

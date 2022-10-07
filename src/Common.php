@@ -36,6 +36,7 @@ use CommonITILValidation;
 use Document;
 use Dropdown;
 use Glpi\Dashboard\Grid;
+use GlpiPlugin\Formcreator\Issue;
 use Glpi\Plugin\Hooks;
 use Gregwar\Captcha\CaptchaBuilder;
 use Html;
@@ -874,7 +875,7 @@ JAVASCRIPT;
          $_SESSION['glpifold_search'] = true;
       }
 
-      Search::show(PluginFormcreatorIssue::class);
+      Search::show(Issue::class);
 
       //restore session value
       $_SESSION['glpifold_search'] = $save_session_fold_search;

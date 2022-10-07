@@ -66,7 +66,7 @@ if (isset($_POST['add'])) {
    if (!$formLanguage->getFromDB($_GET['id'])) {
       $_SESSION['glpilisturl'][$formLanguage::getType()] = Html::getBackUrl();
    } else {
-      $_SESSION['glpilisturl'][$formLanguage::getType()] = Form::getFormURLWithID($formLanguage->fields[PluginFormcreatorForm::getForeignKeyField()]);
+      $_SESSION['glpilisturl'][$formLanguage::getType()] = Form::getFormURLWithID($formLanguage->fields[Form::getForeignKeyField()]);
    }
    $formLanguage->display([
       'ids' => $_GET['id'],

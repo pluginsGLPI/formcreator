@@ -2,7 +2,7 @@
 
 namespace GlpiPlugin\Formcreator\Tests;
 
-use PluginFormcreatorForm;
+use GlpiPlugin\Formcreator\Form;
 
 abstract class CommonTargetTestCase extends CommonTestCase
 {
@@ -16,7 +16,7 @@ abstract class CommonTargetTestCase extends CommonTestCase
        $instance = $this->newTestedInstance();
        $input = [
           'name' => 'foo',
-          PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+          Form::getForeignKeyField() => $form->getID(),
        ];
        $output = $instance->prepareInputForAdd($input);
        $this->string($output['uuid'])->isNotEmpty();
@@ -25,7 +25,7 @@ abstract class CommonTargetTestCase extends CommonTestCase
        $instance = $this->newTestedInstance();
        $input = [
           'name' => 'foo',
-          PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+          Form::getForeignKeyField() => $form->getID(),
           'uuid' => 'bar',
        ];
        $output = $instance->prepareInputForAdd($input);
@@ -40,7 +40,7 @@ abstract class CommonTargetTestCase extends CommonTestCase
        $instance = $this->newTestedInstance();
        $input = [
            'name' => 'foo',
-           PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+           Form::getForeignKeyField() => $form->getID(),
        ];
        $instance->add($input);
 

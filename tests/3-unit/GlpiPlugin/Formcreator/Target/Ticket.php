@@ -1413,7 +1413,7 @@ class Ticket extends CommonTestCase {
 
       $form1 = $this->getForm();
 
-      $instance1 = new PluginFormcreatorTargetTicket();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1467,7 +1467,7 @@ class Ticket extends CommonTestCase {
          'fieldtype'                      => 'dropdown',
          'itemtype'                       => $validItemtype
       ]);
-      $instance1 = new PluginFormcreatorTargetTicket();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',

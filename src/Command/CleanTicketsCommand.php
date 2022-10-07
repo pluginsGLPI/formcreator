@@ -32,7 +32,7 @@
 namespace GlpiPlugin\Formcreator\Command;
 
 use Item_Ticket;
-use PluginFormcreatorFormAnswer;
+use GlpiPluginF\ormcreator\FormAnswer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -85,7 +85,7 @@ class CleanTicketsCommand extends Command
                   $itemTicketTable => Ticket::getForeignKeyField(),
                ],
                'AND' => [
-                  "$itemTicketTable.itemtype" => PluginFormcreatorFormAnswer::getType(),
+                  "$itemTicketTable.itemtype" => FormAnswer::getType(),
                ]
             ],
          ],
@@ -152,7 +152,7 @@ class CleanTicketsCommand extends Command
                   $itemTicketTable => Ticket::getForeignKeyField(),
                ],
                'AND' => [
-                  "$itemTicketTable.itemtype" => PluginFormcreatorFormAnswer::getType(),
+                  "$itemTicketTable.itemtype" => FormAnswer::getType(),
                ]
             ],
          ],

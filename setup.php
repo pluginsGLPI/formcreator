@@ -466,7 +466,7 @@ function plugin_formcreator_redirect() {
       }
 
       // When an ticket has a matching issue (it means that the ticket is the only generated ticket)
-      $issue = new PluginFormcreatorIssue();
+      $issue = new Issue();
       $issues = $issue->find([
          'itemtype' => Ticket::class,
          'items_id'  => (int) $_GET['id']
@@ -480,7 +480,7 @@ function plugin_formcreator_redirect() {
       // When no or several tickets matches an issue, rely use the Form Answer
       $itemTicket = new Item_Ticket();
       $itemTicket->getFromDBByCrit([
-         'itemtype' => PluginFormcreatorFormAnswer::class,
+         'itemtype' => FormAnswer::class,
          'tickets_id'  => (int) $_GET['id']
       ]);
       if ($itemTicket->isNewItem()) {
@@ -489,7 +489,7 @@ function plugin_formcreator_redirect() {
       }
 
       $issue->getFromDBByCrit([
-         'itemtype' => PluginFormcreatorFormAnswer::class,
+         'itemtype' => FormAnswer::class,
          'items_id'  => $itemTicket->fields['items_id']
       ]);
       if ($issue->isNewItem()) {

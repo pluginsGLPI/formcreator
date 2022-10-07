@@ -28,6 +28,9 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+use GlpiPlugin\Formcreator\Common;
+use GlpiPlugin\Formcreator\Form;
+use GlpiPlugin\Formcreator\Issue;
 
 include ('../../../inc/includes.php');
 
@@ -42,7 +45,7 @@ if (!isset($_POST['submit_formcreator']) || !isset($_POST['plugin_formcreator_fo
    die();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = Common::getForm();
 if (!$form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
    http_response_code(500);
    die();
@@ -54,7 +57,7 @@ if (!isset($_SESSION['glpiname'])) {
 }
 
 // Save form
-$formAnswer = PluginFormcreatorCommon::getFormAnswer();
+$formAnswer = Common::getFormAnswer();
 if ($formAnswer->add($_POST) === false) {
    http_response_code(400);
    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
@@ -105,7 +108,7 @@ if ($_SESSION['glpibackcreated']) {
    }
    echo json_encode(
       [
-         'redirect' => (new PluginFormcreatorForm())->getFormURLWithID($formAnswer->fields['plugin_formcreator_forms_id']),
+         'redirect' => (new Form())->getFormURLWithID($formAnswer->fields['plugin_formcreator_forms_id']),
       ], JSON_FORCE_OBJECT
    );
    die();
@@ -115,7 +118,7 @@ if (plugin_formcreator_replaceHelpdesk()) {
    // Form was saved from the service catalog
    echo json_encode(
       [
-         'redirect' => PluginFormcreatorIssue::getSearchURL(),
+         'redirect' => Issue::getSearchURL(),
       ], JSON_FORCE_OBJECT
    );
    die();

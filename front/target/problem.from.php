@@ -85,7 +85,7 @@ if (isset($_POST['update'])) {
       __('Form Creator', 'formcreator'),
       $_SERVER['PHP_SELF'],
       'admin',
-      'PluginFormcreatorForm'
+      Form::class
    );
 
    $targetProblem->getFromDB((int) $_REQUEST['id']);
