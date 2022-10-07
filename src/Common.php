@@ -36,7 +36,6 @@ use CommonITILValidation;
 use Document;
 use Dropdown;
 use Glpi\Dashboard\Grid;
-use GlpiPlugin\Formcreator\Issue;
 use Glpi\Plugin\Hooks;
 use Gregwar\Captcha\CaptchaBuilder;
 use Html;

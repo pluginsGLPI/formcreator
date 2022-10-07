@@ -31,8 +31,8 @@
 
 namespace GlpiPlugin\Formcreator\Command;
 
-use Item_Ticket;
 use GlpiPluginF\ormcreator\FormAnswer;
+use Item_Ticket;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
