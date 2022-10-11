@@ -86,8 +86,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
+               // 'users_id_validator'  => '0',
+               // 'groups_id_validator' => '0',
             ],
          ],
          'simpleTicket_without_name' => [
@@ -127,8 +127,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $formAnswer->fields['requester_id'],
                'date_creation' => $formAnswer->fields['request_date'],
                'date_mod'      => $formAnswer->fields['request_date'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
+               // 'users_id_validator'  => '0',
+               // 'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -191,7 +191,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
       $ticket2 = array_shift($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+      $this->object($ticket2)->isInstanceOf(\Ticket::getType());
 
       return [
          'formAnswerWithOneTicket' => [
@@ -205,8 +205,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
+               // 'users_id_validator'  => '0',
+               // 'groups_id_validator' => '0',
             ],
          ],
          'formAnswer With One Ticket Having several validators' => [
@@ -258,8 +258,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $formAnswer->fields['requester_id'],
                'date_creation' => $formAnswer->fields['request_date'],
                'date_mod'      => $formAnswer->fields['request_date'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
+               // 'users_id_validator'  => '0',
+               // 'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -296,8 +296,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $formAnswer->fields['requester_id'],
                'date_creation' => $formAnswer->fields['request_date'],
                'date_mod'      => $formAnswer->fields['request_date'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
+               // 'users_id_validator'  => '0',
+               // 'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -370,7 +370,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'name'    => 'a ticket',
          'content' => 'foo',
          'status'  =>  \Ticket::INCOMING,
-         '_add_validation' => '0',
+         '_add_validation' => ['0'],
          'validatortype' => User::class,
          'users_id_validate' => [4], // Tech
       ]);
@@ -490,8 +490,8 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
+               // 'users_id_validator'  => '0',
+               // 'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -501,12 +501,15 @@ class PluginFormcreatorIssue extends CommonTestCase {
       return array_merge(
          $this->providerGetsyncIssuesRequest_simpleTicket(),
          $this->providerGetsyncIssuesRequest_simpleFormanswers(),
-         $this->providerGetSyncIssuesRequest_formAnswerWithOneTicket(),
          $this->providerGetSyncIssuesRequest_formAnswerWithSeveralTickets(),
          $this->providerGetSyncIssuesRequest_formanswerUnderValidation(),
          $this->providerGetsyncIssuesRequest_ticketUnderValidation(),
          $this->providerGetsyncIssuesRequest_validatedTicket(),
-         $this->providerGetSyncIssuesRequest_FormAnswerWithSeveralRequesters()
+         $this->providerGetSyncIssuesRequest_FormAnswerWithSeveralRequesters(),
+         // This provider uses rules, keep it at last
+         // because SingletonRuleList provides rules and maintans a cache
+         // that we cannot reset. Disabling or removing rules will not work
+         $this->providerGetSyncIssuesRequest_formAnswerWithOneTicket(),
       );
    }
 
