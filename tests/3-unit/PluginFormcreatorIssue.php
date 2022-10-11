@@ -509,7 +509,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
          // This provider uses rules, keep it at last
          // because SingletonRuleList provides rules and maintans a cache
          // that we cannot reset. Disabling or removing rules will not work
-         $this->providerGetSyncIssuesRequest_formAnswerWithOneTicket(),
+         $this->providerGetSyncIssuesRequest_formAnswerWithOneTicket()
       );
    }
 
