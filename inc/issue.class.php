@@ -192,12 +192,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $ticketUserTable => $ticketFk,
                ],
             ],
-            $ticketValidationTable => [
-               'FKEY' => [
-                  $ticketTable => 'id',
-                  $ticketValidationTable => $ticketFk,
-               ],
-            ],
+            // $ticketValidationTable => [
+            //    'FKEY' => [
+            //       $ticketTable => 'id',
+            //       $ticketValidationTable => $ticketFk,
+            //    ],
+            // ],
          ],
          'WHERE' => [
             "$ticketTable.is_deleted" => 0,
@@ -213,7 +213,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'INNER JOIN' => [$itemTicketTable => $query2['LEFT JOIN'][$itemTicketTable]],
          'LEFT JOIN'  => [
             $query2['LEFT JOIN'][0], // This is the TABLE => [...] subquery
-            $ticketValidationTable => $query2['LEFT JOIN'][$ticketValidationTable],
+            // $ticketValidationTable => $query2['LEFT JOIN'][$ticketValidationTable],
          ],
          'WHERE'      => $query2['WHERE'],
          'GROUPBY'    => ["$itemTicketTable.items_id"],

@@ -216,7 +216,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'items_id'      => $ticket2->getID(),
                'display_id'    => 't_' . $ticket2->getID(),
                'name'          => $ticket2->fields['name'],
-               'status'        => CommonITILObject::ASSIGNED,
+               'status'        => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'requester_id'  => $ticket2->fields['users_id_recipient'],
                'date_creation' => $ticket2->fields['date'],
                'date_mod'      => $ticket2->fields['date_mod'],
