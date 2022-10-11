@@ -197,13 +197,16 @@ class PluginFormcreatorKnowbase {
 
       $table_cat          = getTableForItemType('KnowbaseItemCategory');
       $selectedCategories = [];
-      $selectedCategories = getSonsOf($table_cat, $rootCategory);
-      $selectedCategories[$rootCategory] = $rootCategory;
+      if ($rootCategory != 0) {
+         $selectedCategories = getSonsOf($table_cat, $rootCategory);
+         $selectedCategories[$rootCategory] = $rootCategory;
+      }
 
       $params = [
          'faq'      => '1',
          'contains' => $keywords
       ];
+      $params['knowbaseitemcategories_id'] = 0;
       if (count($selectedCategories) > 0) {
          $params['knowbaseitemcategories_id'] = $selectedCategories;
       }

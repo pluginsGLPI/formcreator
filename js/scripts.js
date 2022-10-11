@@ -1420,7 +1420,14 @@ var plugin_formcreator = new function() {
             window.location = data.redirect;
          }
       }).fail(function (xhr, data) {
-         if (xhr.responseText == '' || typeof(xhr.responseJSON.message) == 'undefined') {
+         if (xhr.responseText == '') {
+            displayAjaxMessageAfterRedirect();
+            return;
+         }
+         if (typeof(xhr.responseJSON) == 'undefined') {
+            alert(i18n.textdomain('formcreator').__('An internal error occurred. Please report it to administrator.', 'formcreator'));
+         }
+         if (typeof(xhr.responseJSON.message) == 'undefined') {
             displayAjaxMessageAfterRedirect();
             return;
          }
