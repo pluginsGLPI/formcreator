@@ -105,7 +105,7 @@ class PluginFormcreatorKnowbase {
             [
                'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
                'FROM'   => KnowbaseItem::getTable(),
-               'LEFT JOIN' => [
+               'INNER JOIN' => [
                   KnowbaseItem_KnowbaseItemCategory::getTable() => [
                      'FKEY' => [
                            KnowbaseItem::getTable() => 'id',
