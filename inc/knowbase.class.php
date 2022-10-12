@@ -112,13 +112,12 @@ class PluginFormcreatorKnowbase {
                            KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItem::getForeignKeyField(),
                      ],
                   ],
-                  KnowbaseItemCategory::getTable() => [
-                     'FKEY' => [
-                        KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItemCategory::getForeignKeyField(),
-                        KnowbaseItemCategory::getTable() => 'id',
-                     ],
-                  ],
                ],
+               'WHERE'  => [
+                  KnowbaseItem_KnowbaseItemCategory::getTableField($cat_fk) => new QueryExpression(
+                      $DB->quoteName(KnowbaseItemCategory::getTableField('id'))
+                  ),
+              ]
             ],
             $kbitem_visibility_crit
          ),
