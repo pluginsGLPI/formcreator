@@ -117,7 +117,7 @@ class PluginFormcreatorKnowbase {
                   KnowbaseItem_KnowbaseItemCategory::getTableField($cat_fk) => new QueryExpression(
                       $DB->quoteName(KnowbaseItemCategory::getTableField('id'))
                   ),
-              ]
+               ]
             ],
             $kbitem_visibility_crit
          ),
