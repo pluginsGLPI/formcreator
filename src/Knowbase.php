@@ -109,6 +109,7 @@ class Knowbase {
 
       $kbitem_visibility_crit = KnowbaseItem::getVisibilityCriteria(true);
 
+      // This subquery may be obtained from GLPI's KnowbaseItem::getVisibilityCriteria()()
       $items_subquery = new QuerySubQuery(
          array_merge_recursive(
             [
