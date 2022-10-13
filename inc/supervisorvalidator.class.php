@@ -38,31 +38,31 @@
 class PluginFormcreatorSupervisorValidator extends CommonDBTM
 implements PluginFormcreatorSpecificValidator
 {
-    protected static $notable = true;
+   protected static $notable = true;
 
-    public static function getTypeName($nb = 0) {
-        return _n('Requester supervisor', 'Requester supervisors', $nb, 'formcreator');
-    }
+   public static function getTypeName($nb = 0) {
+       return _n('Requester supervisor', 'Requester supervisors', $nb, 'formcreator');
+   }
 
-    public function getID() {
-        return 'supervisor';
-    }
+   public function getID() {
+       return 'supervisor';
+   }
 
-    public function computeFriendlyName() {
-        return __('My supervisor', 'formcreator');
-    }
+   public function computeFriendlyName() {
+       return __('My supervisor', 'formcreator');
+   }
 
-    public function MayBeResolvedIntoOneValidator(): bool {
-        return true;
-    }
+   public function MayBeResolvedIntoOneValidator(): bool {
+       return true;
+   }
 
-    public function getOneValidator($current_user_id): ?CommonDBTM {
-        $user = new User();
-        $user->getFromDB($current_user_id);
-        $supervisor = User::getById($user->fields['users_id_supervisor']);
-        if (!($supervisor instanceof User)) {
-            return null;
-        }
-        return $supervisor;
-    }
+   public function getOneValidator($current_user_id): ?CommonDBTM {
+       $user = new User();
+       $user->getFromDB($current_user_id);
+       $supervisor = User::getById($user->fields['users_id_supervisor']);
+      if (!($supervisor instanceof User)) {
+          return null;
+      }
+       return $supervisor;
+   }
 }

@@ -30,7 +30,7 @@
  */
 
 interface PluginFormcreatorSpecificValidator {
-    public function MayBeResolvedIntoOneValidator(): bool;
+   public function MayBeResolvedIntoOneValidator(): bool;
 
-    public function getOneValidator($current_user_id): ?CommonDBTM;
+   public function getOneValidator($current_user_id): ?CommonDBTM;
 }

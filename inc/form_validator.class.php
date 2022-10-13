@@ -171,9 +171,10 @@ PluginFormcreatorExportableInterface
       Dropdown::showFromArray(
          'itemtype',
          $availableTypes, [
-         'value'     =>  $selectedType,
-         'on_change' => 'plugin_formcreator.changeValidators(this.value)'
-      ]);
+            'value'     =>  $selectedType,
+            'on_change' => 'plugin_formcreator.changeValidators(this.value)'
+         ]
+      );
       echo '</td>';
       echo '<td colspan="2">';
 
@@ -731,7 +732,7 @@ PluginFormcreatorExportableInterface
     * @return array
     */
    public static function getAllValidators(PluginFormcreatorForm $form, bool $count = false): array {
-      if ($form->isNewItem())  {
+      if ($form->isNewItem()) {
          return [];
       }
 

@@ -33,28 +33,28 @@ include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 if (!Plugin::isPluginActive('formcreator')) {
-    http_response_code(404);
-    die();
+   http_response_code(404);
+   die();
 }
 
 if (!isset($_REQUEST['id']) || !isset($_REQUEST['action'])) {
-    http_response_code(400);
+   http_response_code(400);
    die();
- }
+}
 
 $item = new PluginFormcreatorForm_Validator();
 
 if ($_POST['action'] == 'delete') {
-    if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
-        http_response_code(403);
-        die();
-    }
-    if (!$item->delete($_POST)) {
-        http_response_code(500);
-        die();
-    }
-    http_response_code(204);
-    die();
+   if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
+      http_response_code(403);
+      die();
+   }
+   if (!$item->delete($_POST)) {
+      http_response_code(500);
+      die();
+   }
+   http_response_code(204);
+   die();
 }
 
 http_response_code(400);
