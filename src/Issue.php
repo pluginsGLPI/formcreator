@@ -432,7 +432,7 @@ class Issue extends CommonDBTM {
             $date2    = strtotime($satisfaction->fields['date_begin']);
             if (($duration == 0)
                 || (strtotime("now") - $date2) <= $duration*DAY_TIMESTAMP) {
-               $satisfaction->showForm($item->getID());
+               $satisfaction->showSatisactionForm($item);
             } else {
                echo "<p class='center b'>".__('Satisfaction survey expired')."</p>";
             }
