@@ -137,16 +137,18 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
                0,
                $issueSo[30]['joinparams']
             );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[31]['table'],
-               'users_id_substitute',
-               0,
-               0,
-               $issueSo[31]['joinparams']
-            );
+            if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+               $join .= Search::addLeftJoin(
+                  $itemtype,
+                  $ref_table,
+                  $already_link_tables,
+                  $issueSo[31]['table'],
+                  'users_id_substitute',
+                  0,
+                  0,
+                  $issueSo[31]['joinparams']
+               );
+            }
          }
          break;
 
