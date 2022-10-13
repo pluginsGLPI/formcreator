@@ -2814,7 +2814,7 @@ PluginFormcreatorTranslatableInterface
     *
     * @return boolean true if the user can use the form
     */
-   public function canViewForRequest(): bool {
+    public function canViewForRequest(): bool {
       global $PLUGIN_HOOKS;
 
       if ($this->isNewItem()) {
@@ -2838,7 +2838,7 @@ PluginFormcreatorTranslatableInterface
 
       // Check restrictions if needed
       if ($this->fields['access_rights'] == self::ACCESS_RESTRICTED
-        && !PluginFormcreatorFormAccessType::canSeeRestrictedForm($this)
+         && !PluginFormcreatorFormAccessType::canSeeRestrictedForm($this)
       ) {
          return false;
       }
