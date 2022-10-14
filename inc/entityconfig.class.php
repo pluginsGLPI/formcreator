@@ -472,7 +472,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       $tab[] = [
          'id'              => '8',
          'table'           => self::getTable(),
-         'name'            => __('Header', 'formcreator'),
+         'name'            => _n('Header', 'Headers', 1, 'formcreator'),
          'field'           => 'header',
          'datatype'        => 'text',
          'nosearch'        => true,

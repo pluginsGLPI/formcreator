@@ -171,7 +171,7 @@ PluginFormcreatorTranslatableInterface
          'id'                 => '5',
          'table'              => 'glpi_entities',
          'field'              => 'completename',
-         'name'               => __('Entity'),
+         'name'               => Entity::getTypeName(1),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
@@ -227,7 +227,7 @@ PluginFormcreatorTranslatableInterface
          'id'                 => '10',
          'table'              => PluginFormcreatorCategory::getTable(),
          'field'              => 'name',
-         'name'               => __('Form category', 'formcreator'),
+         'name'               => PluginFormcreatorCategory::getTypeName(1),
          'datatype'           => 'dropdown',
          'massiveaction'      => true
       ];
@@ -500,7 +500,7 @@ PluginFormcreatorTranslatableInterface
       echo '<table class="tab_cadrehov">';
       echo '<tr>';
       echo '<th>'._n('Target', 'Targets', 2, 'formcreator').'</th>';
-      echo '<th>'.__('Type', 'formcreator').'</th>';
+      echo '<th>'._n('Type', 'Types', 1).'</th>';
       echo '<th class="right">'.__('Actions', 'formcreator').'</th>';
       echo '</tr>';
 
