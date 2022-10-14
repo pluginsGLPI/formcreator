@@ -577,7 +577,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
             $tab = [
                1 => __('Properties', 'formcreator'),
                2 => __('Actors', 'formcreator'),
-               3 => __('Condition', 'formcreator'),
+               3 => PluginFormcreatorCondition::getTypeName(1),
             ];
             // if ((new Plugin)->isActivated('fields')) {
             //    $tab[4] = __('Fields plugin', 'formcreator');
