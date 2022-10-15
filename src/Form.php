@@ -629,9 +629,9 @@ TranslatableInterface
          'item' => $this,
          'options' => [
             'ned_request_list'    => $need_request_list,
-            'is_category_visible' => Entityconfig::getUsedConfig('is_category_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_CATEGORY_VISIBLE,
-            'is_header_visible'   => Entityconfig::getUsedConfig('is_header_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_HEADER_VISIBLE,
-            'is_search_visible'   => Entityconfig::getUsedConfig('is_search_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_SEARCH_VISIBLE,
+            'is_category_visible' => EntityConfig::getUsedConfig('is_category_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_CATEGORY_VISIBLE,
+            'is_header_visible'   => EntityConfig::getUsedConfig('is_header_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_HEADER_VISIBLE,
+            'is_search_visible'   => EntityConfig::getUsedConfig('is_search_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_SEARCH_VISIBLE,
             'sort_setting'        => EntityConfig::getEnumSort(),
             'sort_order'          => Entityconfig::getUsedConfig('sort_order', Session::getActiveEntity()),
          ],
