@@ -86,7 +86,7 @@ class Target_Actor extends CommonDBChild implements ExportableInterface
 
    static function getEnumRole() {
       return [
-         self::ACTOR_ROLE_REQUESTER => __('Requester'),
+         self::ACTOR_ROLE_REQUESTER => _n('Requester', 'Requesters', 1),
          self::ACTOR_ROLE_OBSERVER  => __('Observer'),
          self::ACTOR_ROLE_ASSIGNED  => __('Assigned to'),
          // TODO : support ACTOR_ROLE_SUPPLIER

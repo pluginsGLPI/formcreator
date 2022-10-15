@@ -455,7 +455,7 @@ class EntityConfig extends CommonDBTM {
          unset($elements[self::CONFIG_PARENT]);
       }
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Category', 'formcreator')."</td>";
+      echo "<td>".Category::getTypeName(1)."</td>";
       echo "<td>";
       Dropdown::showFromArray('is_category_visible', $elements, ['value' => $this->fields['is_category_visible']]);
       if ($this->fields['is_category_visible'] == self::CONFIG_PARENT) {
@@ -561,7 +561,7 @@ class EntityConfig extends CommonDBTM {
       $tab[] = [
          'id'              => '8',
          'table'           => self::getTable(),
-         'name'            => __('Header', 'formcreator'),
+         'name'            => _n('Header', 'Headers', 1, 'formcreator'),
          'field'           => 'header',
          'datatype'        => 'text',
          'nosearch'        => true,

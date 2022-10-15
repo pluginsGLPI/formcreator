@@ -41,8 +41,8 @@ class EntityFilter
 
    public static function getEnumEntityRestriction() {
       return [
-         self::ENTITY_RESTRICT_USER =>  __('User', 'formcreator'),
-         self::ENTITY_RESTRICT_FORM =>  __('Form', 'formcreator'),
+         self::ENTITY_RESTRICT_USER =>  User::getTypeName(1),
+         self::ENTITY_RESTRICT_FORM =>  Form::getTypeName(1),
          self::ENTITY_RESTRICT_BOTH =>  __('User and form', 'formcreator'),
       ];
    }

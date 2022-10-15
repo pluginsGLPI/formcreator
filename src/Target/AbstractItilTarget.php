@@ -34,6 +34,7 @@ namespace GlpiPlugin\Formcreator\Target;
 use CommonDBRelation;
 use CommonITILActor;
 use CommonITILValidation;
+use Contract;
 use DbUtils;
 use Document;
 use Document_Item;
@@ -999,7 +1000,7 @@ TranslatableInterface
 
    protected function showCategorySettings($rand) {
       echo '<tr>';
-      echo '<td width="15%">' . __('Category', 'formcreator') . '</td>';
+      echo '<td width="15%">' . Category::getTypeName(1) . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
          'category_rule',
@@ -1013,8 +1014,8 @@ TranslatableInterface
       echo Html::scriptBlock("plugin_formcreator_changeCategory($rand);");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
-      echo '<span id="category_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="category_specific_title" style="display: none">' . Category::getTypeName(1) . '</span>';
+      echo '<span id="category_question_title" style="display: none">' . Question::getTypeName(1) . '</span>';
       echo '</td>';
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
@@ -1051,7 +1052,7 @@ TranslatableInterface
       echo Html::scriptBlock("plugin_formcreator_changeUrgency($rand);");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="urgency_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="urgency_question_title" style="display: none">' . Question::getTypeName(1) . '</span>';
       echo '<span id="urgency_specific_title" style="display: none">' . __('Urgency ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
@@ -1259,7 +1260,7 @@ SCRIPT;
       echo Html::scriptBlock("plugin_formcreator_change_location($rand)");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="location_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="location_question_title" style="display: none">' . Question::getTypeName(1) . '</span>';
       echo '<span id="location_specific_title" style="display: none">' . __('Location ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
@@ -1326,8 +1327,8 @@ SCRIPT;
       echo Html::scriptBlock("plugin_formcreator_change_contract($rand)");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="contract_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
-      echo '<span id="contract_specific_title" style="display: none">' . __('Contract ', 'formcreator') . '</span>';
+      echo '<span id="contract_question_title" style="display: none">' . Question::getTypeName(1) . '</span>';
+      echo '<span id="contract_specific_title" style="display: none">' . Contract::getTypeName(1) . '</span>';
       echo '</td>';
       echo '<td width="25%">';
 
@@ -1382,7 +1383,7 @@ SCRIPT;
 
       $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER || $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP ? "" : "display: none";
       echo "<span id='commonitil_validation_from_question_title' style='$display'>";
-      echo __('Question', 'formcreator');
+      echo Question::getTypeName(1);
       echo "</span>";
 
       echo '</td>';

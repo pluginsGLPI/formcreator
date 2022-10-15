@@ -195,7 +195,7 @@ TranslatableInterface
          'id'                 => '5',
          'table'              => 'glpi_entities',
          'field'              => 'completename',
-         'name'               => __('Entity'),
+         'name'               => Entity::getTypeName(1),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
@@ -251,7 +251,7 @@ TranslatableInterface
          'id'                 => '10',
          'table'              => Category::getTable(),
          'field'              => 'name',
-         'name'               => __('Form category', 'formcreator'),
+         'name'               => Category::getTypeName(1),
          'datatype'           => 'dropdown',
          'massiveaction'      => true
       ];
@@ -2597,7 +2597,7 @@ TranslatableInterface
       if (count($selectedCategories) > 0) {
          $params['knowbaseitemcategories_id'] = new QuerySubQuery([
             'SELECT' => 'knowbaseitemcategories_id',
-            'FROM' => PluginFormcreatorCategory::getTable(),
+            'FROM' => Category::getTable(),
             'WHERE' => [
                'id' => $selectedCategories
             ]

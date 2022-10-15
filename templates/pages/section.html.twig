@@ -61,7 +61,7 @@
 
                     {{ fields.hiddenField('plugin_formcreator_forms_id', item.fields['plugin_formcreator_forms_id'], '', { 'include_field': false }) }}
 
-                    {{ fields.smallTitle(__('Condition to show the question', 'formcreator')) }}
+                    {{ fields.smallTitle(__('Condition to show the section', 'formcreator')) }}
 
                     {{ fields.dropdownArrayField('show_rule', item.fields['show_rule'], item.getEnumShowrule(), '', { 'no_label': true, 'on_change': 'plugin_formcreator_toggleCondition(this);' }) }}
                     {% set parent = item %}

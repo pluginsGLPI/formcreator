@@ -351,7 +351,7 @@ implements ExportableInterface
       $header = '<tr>';
       $header.= '<th>' . Html::getCheckAllAsCheckbox("translation_list$rand", $rand) . '</th>';
       $header.= '<th>' . __('Original string', 'formcreator') . '</th>';
-      $header.= '<th>' . __('Translation', 'formcreator') . '</th>';
+      $header.= '<th>' . Translation::getTypeName(1) . '</th>';
       $header.= '</tr>';
       echo $header;
       echo '</thead>';

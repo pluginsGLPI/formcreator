@@ -585,7 +585,7 @@ class Issue extends CommonDBTM {
          'id'                 => '3',
          'table'              => self::getTable(),
          'field'              => 'itemtype',
-         'name'               => __('Type'),
+         'name'               => _n('Type', 'Types', 1),
          'searchtype'         => [
             '0'                  => 'equals',
             '1'                  => 'notequals'
@@ -628,7 +628,7 @@ class Issue extends CommonDBTM {
          'id'                 => '7',
          'table'              => 'glpi_entities',
          'field'              => 'completename',
-         'name'               => __('Entity'),
+         'name'               => _n('Entity', 'Entities', 1),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
@@ -638,7 +638,7 @@ class Issue extends CommonDBTM {
          'table'              => 'glpi_users',
          'field'              => 'name',
          'linkfield'          => 'requester_id',
-         'name'               => __('Requester'),
+         'name'               => _n('Requester', 'Requesters', 1),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
