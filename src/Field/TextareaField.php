@@ -172,7 +172,7 @@ class TextareaField extends TextField
                   'display'       => false]);
       $html .=  '</div>';
       $html .= Html::scriptBlock("$(function() {
-         InitializeTextarea('$fieldName', '$rand');
+         pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
       });");
 
       return $html;

@@ -108,7 +108,7 @@ class CheckboxesField extends AbstractField
          $html .= '</div>';
       }
       $html .= Html::scriptBlock("$(function() {
-         InitializeCheckboxes('$fieldName', '$rand');
+         pluginFormcreatorInitializeCheckboxes('$fieldName', '$rand');
       });");
 
       return $html;

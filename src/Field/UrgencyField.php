@@ -74,7 +74,7 @@ class UrgencyField extends AbstractField
       ]);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
-         InitializeUrgency('$fieldName', '$rand');
+         pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
       });");
 
       return $html;

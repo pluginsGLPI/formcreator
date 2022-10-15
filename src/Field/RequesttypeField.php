@@ -76,7 +76,7 @@ class RequestTypeField extends SelectField
       $html .= Ticket::dropdownType($fieldName, $options);
       $html .=  PHP_EOL;
       $html .=  Html::scriptBlock("$(function() {
-         InitializeRequestType('$fieldName', '$rand');
+         pluginFormcreatorInitializeRequestType('$fieldName', '$rand');
       });");
 
       return $html;

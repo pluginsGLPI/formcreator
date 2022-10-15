@@ -67,7 +67,7 @@ class EmailField extends TextField
          'value' => $defaultValue,
       ]);
       $html .= Html::scriptBlock("$(function() {
-         InitializeEmail('$fieldName', '$rand');
+         pluginFormcreatorInitializeEmail('$fieldName', '$rand');
       });");
 
       return $html;

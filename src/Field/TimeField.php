@@ -72,7 +72,7 @@ class TimeField extends AbstractField
          'display' => false,
       ]);
       $html .= Html::scriptBlock("$(function() {
-         InitializeTime('$fieldName', '$rand');
+         pluginFormcreatorInitializeTime('$fieldName', '$rand');
       });");
 
       return $html;

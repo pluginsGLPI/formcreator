@@ -69,7 +69,7 @@ class MultiselectField extends CheckboxesField
       }
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
-         InitializeMultiselect('$fieldName', '$rand');
+         pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
       });");
 
       return $html;

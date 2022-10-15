@@ -87,7 +87,7 @@ class SelectField extends RadiosField
       }
       $html .=  PHP_EOL;
       $html .=  Html::scriptBlock("$(function() {
-         InitializeSelect('$fieldName', '$rand');
+         pluginFormcreatorInitializeSelect('$fieldName', '$rand');
       });");
 
       return $html;

@@ -79,7 +79,7 @@ class FloatField extends AbstractField
          'value' => $defaultValue
       ]);
       $html .= Html::scriptBlock("$(function() {
-         InitializeField('$fieldName', '$rand');
+         pluginFormcreatorInitializeField('$fieldName', '$rand');
       });");
 
       return $html;

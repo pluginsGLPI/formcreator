@@ -137,7 +137,7 @@ class ActorField extends AbstractField
          $params
       );
       $html .= Html::scriptBlock("$(function() {
-         InitializeActor('$fieldName', '$rand');
+         pluginFormcreatorInitializeActor('$fieldName', '$rand');
       });");
 
       return $html;

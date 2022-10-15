@@ -77,7 +77,7 @@ class DatetimeField extends AbstractField
          'display' => false,
       ]);
       $html .= Html::scriptBlock("$(function() {
-         InitializeDate('$fieldName', '$rand');
+         pluginFormcreatorInitializeDate('$fieldName', '$rand');
       });");
 
       return $html;

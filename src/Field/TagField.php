@@ -123,7 +123,7 @@ class TagField extends DropdownField
       ]);
       $html .= PHP_EOL;
       $html .= Html::scriptBlock("$(function() {
-         InitializeTag('$fieldName', '$rand');
+         pluginFormcreatorInitializeTag('$fieldName', '$rand');
       });");
 
       return $html;

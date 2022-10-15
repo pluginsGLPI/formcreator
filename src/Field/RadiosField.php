@@ -100,7 +100,7 @@ class RadiosField extends AbstractField
          $html .= '</div>';
       }
       $html .= Html::scriptBlock("$(function() {
-         InitializeRadios('$fieldName', '$rand');
+         pluginFormcreatorInitializeRadios('$fieldName', '$rand');
       });");
 
       return $html;
