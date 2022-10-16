@@ -91,6 +91,8 @@ TranslatableInterface
    static public $itemtype = Section::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
+   public $dohistory = true;
+
    public $taborientation  = 'horizontal';
 
    /** @var FieldInterface|null $field a field describing the question denpending on its field type  */

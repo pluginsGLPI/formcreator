@@ -963,9 +963,19 @@ var plugin_formcreator = new function() {
          dialogclass: 'modal-xl',
          url: formcreatorRootDoc + '/ajax/question.php',
          autoShow: true,
+         show: function() {
+            // Bind events for historical tab to the modal
+            $('.modal-body').on('glpi.tab.loaded', function(event) {
+               bindShowFiltersBtn(event.target);
+               bindFilterChange(event.target);
+            });
+            // Trigger the loaded tab event
+            $('.modal-body').trigger('glpi.tab.loaded');
+         },
          params: {
             id: questionId,
-            plugin_formcreator_sections_id: sectionId
+            plugin_formcreator_sections_id: sectionId,
+            show_nav_header:  true
          }
       });
    };
