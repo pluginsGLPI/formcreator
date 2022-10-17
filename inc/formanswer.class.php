@@ -206,7 +206,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'id'                 => '3',
          'table'              => 'glpi_plugin_formcreator_forms',
          'field'              => 'name',
-         'name'               => __('Form', 'formcreator'),
+         'name'               => PluginFormcreatorForm::getTypeName(1),
          'searchtype'         => 'contains',
          'datatype'           => 'string',
          'massiveaction'      => false
@@ -216,7 +216,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'id'                 => '4',
          'table'              => 'glpi_users',
          'field'              => 'name',
-         'name'               => __('Requester'),
+         'name'               => _n('Requester', 'Requesters', 1),
          'datatype'           => 'itemlink',
          'massiveaction'      => false,
          'linkfield'          => 'requester_id'
@@ -610,7 +610,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       //add requester info
       echo '<div class="form-group">';
-      echo '<label for="requester">' . __('Requester', 'formcreator') . '</label>';
+      echo '<label for="requester">' . _n('Requester', 'Requesters', 1) . '</label>';
       echo Dropdown::getDropdownName('glpi_users', $this->fields['requester_id']);
       echo '</div>';
 

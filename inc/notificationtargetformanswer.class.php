@@ -76,8 +76,8 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
       $tags = [
          'formcreator.form_id'            => __('Form #', 'formcreator'),
          'formcreator.form_name'          => __('Form name', 'formcreator'),
-         'formcreator.form_requester'     => __('Requester', 'formcreator'),
-         'formcreator.form_validator'     => __('Validator', 'formcreator'),
+         'formcreator.form_requester'     => _n('Requester', 'Requesters', 1),
+         'formcreator.form_validator'     => _x('tag', 'Validator', 'formcreator'),
          'formcreator.form_creation_date' => __('Creation date'),
          'formcreator.form_full_answers'  => __('Full form answers', 'formcreator'),
          'formcreator.validation_comment' => __('Refused comment', 'formcreator'),

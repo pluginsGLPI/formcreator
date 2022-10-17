@@ -536,7 +536,15 @@ class FieldsField extends PluginFormcreatorAbstractField
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $field_name = $decodedValues['dropdown_fields_field'] ?? '';
       $dropdown_field_name = "plugin_fields_" . $decodedValues['dropdown_fields_field'] . "dropdowns_id" ?? '';
-      $value = '';
+
+      // compute default value
+      $field = new PluginFieldsField();
+      $field->getFromDbByCrit(['name' => $field_name]);
+      if ($field->fields['type'] == 'dropdown') {
+         $value = 0;
+      } else {
+         $value = '';
+      }
 
       if (isset($input[$field_name])) {
          $value = $input[$field_name];

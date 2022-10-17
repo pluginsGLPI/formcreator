@@ -171,7 +171,7 @@ PluginFormcreatorTranslatableInterface
          'id'                 => '5',
          'table'              => 'glpi_entities',
          'field'              => 'completename',
-         'name'               => __('Entity'),
+         'name'               => Entity::getTypeName(1),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
@@ -227,7 +227,7 @@ PluginFormcreatorTranslatableInterface
          'id'                 => '10',
          'table'              => PluginFormcreatorCategory::getTable(),
          'field'              => 'name',
-         'name'               => __('Form category', 'formcreator'),
+         'name'               => PluginFormcreatorCategory::getTypeName(1),
          'datatype'           => 'dropdown',
          'massiveaction'      => true
       ];

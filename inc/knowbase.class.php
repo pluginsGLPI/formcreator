@@ -100,25 +100,25 @@ class PluginFormcreatorKnowbase {
 
       $kbitem_visibility_crit = KnowbaseItem::getVisibilityCriteria(true);
 
+      // This subquery may be obtained from GLPI's KnowbaseItem::getVisibilityCriteria()()
       $items_subquery = new QuerySubQuery(
          array_merge_recursive(
             [
                'SELECT' => ['COUNT DISTINCT' => KnowbaseItem::getTableField('id') . ' as cpt'],
                'FROM'   => KnowbaseItem::getTable(),
-               'LEFT JOIN' => [
+               'INNER JOIN' => [
                   KnowbaseItem_KnowbaseItemCategory::getTable() => [
                      'FKEY' => [
                            KnowbaseItem::getTable() => 'id',
                            KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItem::getForeignKeyField(),
                      ],
                   ],
-                  KnowbaseItemCategory::getTable() => [
-                     'FKEY' => [
-                        KnowbaseItem_KnowbaseItemCategory::getTable() => KnowbaseItemCategory::getForeignKeyField(),
-                        KnowbaseItemCategory::getTable() => 'id',
-                     ],
-                  ],
                ],
+               'WHERE'  => [
+                  KnowbaseItem_KnowbaseItemCategory::getTableField($cat_fk) => new QueryExpression(
+                      $DB->quoteName(KnowbaseItemCategory::getTableField('id'))
+                  ),
+               ]
             ],
             $kbitem_visibility_crit
          ),

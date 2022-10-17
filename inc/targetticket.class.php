@@ -132,7 +132,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
             $tab = [
                1 => __('Properties', 'formcreator'),
                2 => __('Actors', 'formcreator'),
-               3 => __('Condition', 'formcreator'),
+               3 => PluginFormcreatorCondition::getTypeName(1),
             ];
             // if (Plugin::isPluginActive('fields')) {
             //    $tab[4] = __('Fields plugin', 'formcreator');
@@ -1201,7 +1201,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       echo Html::scriptBlock("plugin_formcreator_changeRequestType($rand);");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="requesttype_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="requesttype_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
       echo '<span id="requesttype_specific_title" style="display: none">' . __('Type ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
@@ -1240,7 +1240,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       echo Html::scriptBlock("plugin_formcreator_change_associate($rand)");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="plugin_formcreator_associate_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="plugin_formcreator_associate_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
       echo '<span id="plugin_formcreator_associate_specific_title" style="display: none">' . __('Item ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';

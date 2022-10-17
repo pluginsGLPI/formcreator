@@ -1406,7 +1406,7 @@ var plugin_formcreator = new function() {
    };
 
    this.submitUserForm = function () {
-      var form     = document.querySelector('form[data-itemtype]');
+      var form     = document.querySelector('form[role="form"][data-itemtype]');
       var data     = new FormData(form);
       data.append('submit_formcreator', '');
       $.post({

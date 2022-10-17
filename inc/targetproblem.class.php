@@ -356,7 +356,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->next()) {
+         if ($row = $rows->current()) {
             // assign problem template according to resulting problem category
             return $row[$targetTemplateFk];
          }
@@ -576,7 +576,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
             $tab = [
                1 => __('Properties', 'formcreator'),
                2 => __('Actors', 'formcreator'),
-               3 => __('Condition', 'formcreator'),
+               3 => PluginFormcreatorCondition::getTypeName(1),
             ];
             // if (Plugin::isPluginActive('fields')) {
             //    $tab[4] = __('Fields plugin', 'formcreator');

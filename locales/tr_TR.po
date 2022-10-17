@@ -467,7 +467,7 @@ msgstr "görüntüle"
 #: inc/field/fieldsfield.class.php:388
 #, php-format
 msgid "Field '%1$s' type not implemented yet !"
-msgstr "'%1$s' aşan türü henüz kullanıma sunulmamış!"
+msgstr "'%1$s' alan türü henüz kullanıma sunulmamış!"
 
 #: inc/field/fieldsfield.class.php:465
 msgid "Some numeric fields contains non numeric values"

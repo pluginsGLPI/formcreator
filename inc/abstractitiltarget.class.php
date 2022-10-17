@@ -963,7 +963,7 @@ PluginFormcreatorTranslatableInterface
 
    protected function showCategorySettings($rand) {
       echo '<tr>';
-      echo '<td width="15%">' . __('Category', 'formcreator') . '</td>';
+      echo '<td width="15%">' . PluginFormcreatorCategory::getTypeName(1) . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
          'category_rule',
@@ -977,8 +977,8 @@ PluginFormcreatorTranslatableInterface
       echo Html::scriptBlock("plugin_formcreator_changeCategory($rand);");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
-      echo '<span id="category_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="category_specific_title" style="display: none">' . PluginFormcreatorCategory::getTypeName(1) . '</span>';
+      echo '<span id="category_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
       echo '</td>';
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
@@ -1015,7 +1015,7 @@ PluginFormcreatorTranslatableInterface
       echo Html::scriptBlock("plugin_formcreator_changeUrgency($rand);");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="urgency_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="urgency_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
       echo '<span id="urgency_specific_title" style="display: none">' . __('Urgency ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
@@ -1223,7 +1223,7 @@ SCRIPT;
       echo Html::scriptBlock("plugin_formcreator_change_location($rand)");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="location_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="location_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
       echo '<span id="location_specific_title" style="display: none">' . __('Location ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
@@ -1346,7 +1346,7 @@ SCRIPT;
 
       $display = $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_USER || $validation_rule == self::COMMONITIL_VALIDATION_RULE_ANSWER_GROUP ? "" : "display: none";
       echo "<span id='commonitil_validation_from_question_title' style='$display'>";
-      echo __('Question', 'formcreator');
+      echo PluginFormcreatorQuestion::getTypeName(1);
       echo "</span>";
 
       echo '</td>';
