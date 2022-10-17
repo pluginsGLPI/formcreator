@@ -122,7 +122,7 @@ class RadiosField extends PluginFormcreatorAbstractField
                $html .= '<span class="form-group-radio">';
                $html .= Html::input($fieldName, [
                   'type'    => 'radio',
-                  'class'   => 'new_radio form-control',
+                  'class'   => 'form-check-input form-control',
                   'id'      => $domId . '_' . $i,
                   'value'   => $value
                ] + $checked);
