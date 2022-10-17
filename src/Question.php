@@ -1243,6 +1243,7 @@ TranslatableInterface
          __("Assistance") => [
             Ticket::class             => Ticket::getTypeName(2),
             Problem::class            => Problem::getTypeName(2),
+            Change::class             => Change::getTypeName(2),
             TicketRecurrent::class    => TicketRecurrent::getTypeName(2)
          ],
          __("Management") => [
