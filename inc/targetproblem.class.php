@@ -357,7 +357,7 @@ class PluginFormcreatorTargetProblem extends PluginFormcreatorAbstractItilTarget
             'FROM'   => ITILCategory::getTable(),
             'WHERE'  => ['id' => $data['itilcategories_id']]
          ]);
-         if ($row = $rows->next()) {
+         if ($row = $rows->current()) {
             // assign problem template according to resulting problem category
             return $row[$targetTemplateFk];
          }
