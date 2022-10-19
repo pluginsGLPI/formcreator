@@ -437,7 +437,7 @@ PluginFormcreatorTranslatableInterface
     * find all actors and prepare data for the ticket being created
     */
    protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormAnswer $formanswer) {
-      global $DB;
+      global $DB, $PLUGIN_HOOKS;
 
       $rows = $DB->request([
          'FROM'   => PluginFormcreatorTarget_Actor::getTable(),
@@ -584,6 +584,26 @@ PluginFormcreatorTranslatableInterface
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
                foreach ($userIds as $userId) {
                   $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_SUPPLIER, $userId, $notify);
+               }
+               break;
+            default:
+               foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
+                  foreach($classes as $plugin_target) {
+                     if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
+                        continue;
+                     }
+                     if ($actor['actor_type']== $plugin_target::getId()) {
+                        $value = $plugin_target::getActorId($formanswer, $actor['actor_value']);
+                        if ($value) {
+                           if ($plugin_target::getActorType() == PluginFormcreatorPluginTarget::ACTOR_TYPE_USER){
+                              $this->addActor($actor['actor_role'], $value, $notify);
+                           } else if (PluginFormcreatorPluginTarget::ACTOR_TYPE_GROUP) {
+                              $this->addGroupActor($actor['actor_role'], $value);
+                           }
+                        }
+                        break 2;
+                     }
+                  }
                }
                break;
          }
@@ -1760,7 +1780,7 @@ SCRIPT;
     * @return void
     */
    protected function showActorSettingsForType($actorType, array $actors) {
-      global $DB;
+      global $DB, $PLUGIN_HOOKS;
 
       $itemActor = new PluginFormcreatorTarget_Actor();
       $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
@@ -1799,7 +1819,7 @@ SCRIPT;
          ]
       );
 
-      echo '<div id="block_' . $type . '_user" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON . '">';
       User::dropdown([
          'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
          'right' => 'all',
@@ -1807,13 +1827,13 @@ SCRIPT;
       ]);
       echo '</div>';
 
-      echo '<div id="block_' . $type . '_group" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP . '">';
       Group::dropdown([
          'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
       ]);
       echo '</div>';
 
-      echo '<div id="block_' . $type . '_question_user" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON . '">';
       // find already used items
       $request = $DB->request([
          'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -1850,7 +1870,7 @@ SCRIPT;
       );
       echo '</div>';
 
-      echo '<div id="block_' . $type . '_question_group" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP . '">';
       // find already used items
       $request = $DB->request([
          'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -1880,7 +1900,7 @@ SCRIPT;
       );
       echo '</div>';
 
-      echo '<div id="block_' . $type . '_group_from_object" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" .  PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP_FROM_OBJECT . '">';
       // find already used items
       $request = $DB->request([
          'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -1909,7 +1929,7 @@ SCRIPT;
       );
       echo '</div>';
 
-      echo '<div id="block_' . $type . '_tech_group_from_object" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_TECH_GROUP_FROM_OBJECT . '">';
       // find already used items
       $request = $DB->request([
          'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -1938,7 +1958,7 @@ SCRIPT;
       );
       echo '</div>';
 
-      echo '<div id="block_' . $type . '_question_actors" style="display:none">';
+      echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS . '">';
        // find already used items
       $request = $DB->request([
          'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -1968,7 +1988,7 @@ SCRIPT;
       echo '</div>';
 
       if ($actorType == CommonITILActor::ASSIGN) {
-         echo '<div id="block_' . $type . '_supplier" style="display:none">';
+         echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER . '">';
          // find already used items
          $request = $DB->request([
             'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -1990,7 +2010,7 @@ SCRIPT;
          ]);
          echo '</div>';
 
-         echo '<div id="block_' . $type . '_question_supplier" style="display:none">';
+         echo '<div style="display:none" data-actor-type="' . $type . "_" . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER . '">';
          // find already used items
          $request = $DB->request([
             'FROM'  => PluginFormcreatorTarget_Actor::getTable(),
@@ -2021,6 +2041,19 @@ SCRIPT;
          echo '</div>';
       }
 
+      foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
+         foreach($classes as $plugin_target) {
+            if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
+               continue;
+            }
+
+            // Show custom form
+            echo '<div style="display:none" data-actor-type="' . $type . "_" . $plugin_target::getId() . '">';
+            echo $plugin_target::getForm($this->getForm());
+            echo '</div>';
+         }
+      }
+
       echo '<div>';
       echo __('Email followup');
       Dropdown::showYesNo('use_notification', 1);
@@ -2035,11 +2068,11 @@ SCRIPT;
 
       Html::closeForm();
 
-      $img_user     = '<i class="fas fa-user" alt="' . __('User') . '" title="' . __('User') . '" width="20"></i>';
-      $img_group    = '<i class="fas fa-users" alt="' . __('Group') . '" title="' . __('Group') . '" width="20"></i>';
-      $img_supplier = '<i class="fas fa-suitcase" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20"></i>';
-      $img_mail     = '<i class="fas fa-envelope pointer"  title="' . __('Email followup') . ' ' . __('Yes') . '" width="20"></i>';
-      $img_nomail   = '<i class="fas fa-envelope pointer" title="' . __('Email followup') . ' ' . __('No') . '" width="20"></i>';
+      $img_user     = static::getUserImage();
+      $img_group    = static::getGroupImage();
+      $img_supplier = static::getSupplierImage();
+      $img_mail     = static::getMailImage();
+      $img_nomail   = static::getNoMailImage();
 
       foreach ($actors[$actorRole] as $id => $values) {
          echo '<div data-itemtype="PluginFormcreatorTarget_Actor" data-id="' . $id . '">';
@@ -2103,6 +2136,20 @@ SCRIPT;
                break;
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_AUTHORS_SUPERVISOR :
                echo $img_user . ' <b>' . __('Form author\'s supervisor', 'formcreator') . '</b>';
+               break;
+            default:
+               foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
+                  foreach($classes as $plugin_target) {
+                     if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
+                        continue;
+                     }
+
+                     if ($values['actor_type'] == $plugin_target::getId()) {
+                        echo $plugin_target::getDisplayedValue($values['actor_value']);
+                        break 2;
+                     }
+                  }
+               }
                break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
@@ -2416,5 +2463,30 @@ SCRIPT;
       }
 
       return $targets;
+   }
+
+   public static function getUserImage()
+   {
+      return '<i class="fas fa-user" alt="' . __('User') . '" title="' . __('User') . '" width="20"></i>';
+   }
+
+   public static function getGroupImage()
+   {
+      return  '<i class="fas fa-users" alt="' . __('Group') . '" title="' . __('Group') . '" width="20"></i>';
+   }
+
+   public static function getSupplierImage()
+   {
+      return '<i class="fas fa-suitcase" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20"></i>';
+   }
+
+   public static function getMailImage()
+   {
+      return '<i class="fas fa-envelope pointer"  title="' . __('Email followup') . ' ' . __('Yes') . '" width="20"></i>';
+   }
+
+   public static function getNoMailImage()
+   {
+      return '<i class="fas fa-envelope pointer" title="' . __('Email followup') . ' ' . __('No') . '" width="20"></i>';
    }
 }
