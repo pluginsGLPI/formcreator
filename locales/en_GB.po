@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glpi 101\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-17 11:39+0200\n"
-"PO-Revision-Date: 2022-10-17 11:39+0200\n"
+"POT-Creation-Date: 2022-10-31 14:41+0100\n"
+"PO-Revision-Date: 2022-10-31 14:41+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -393,7 +393,7 @@ msgstr "Change categories"
 msgid "All"
 msgstr "All"
 
-#: src/Filter/EntityFilter.php:46 src/Field/DropdownField.php:73
+#: src/Filter/EntityFilter.php:48 src/Field/DropdownField.php:73
 msgid "User and form"
 msgstr "User and form"
 
@@ -2257,7 +2257,7 @@ msgstr "A parameter is missing for this question type"
 msgid "Service levels"
 msgstr "Service levels"
 
-#: src/Question.php:1229 src/Question.php:1269 src/Question.php:1272
+#: src/Question.php:1229 src/Question.php:1270 src/Question.php:1273
 msgid "Assets"
 msgstr "Assets"
 
@@ -2265,27 +2265,27 @@ msgstr "Assets"
 msgid "Assistance"
 msgstr "Assistance"
 
-#: src/Question.php:1248
+#: src/Question.php:1249
 msgid "Management"
 msgstr "Management"
 
-#: src/Question.php:1257
+#: src/Question.php:1258
 msgid "Tools"
 msgstr "Tools"
 
-#: src/Question.php:1258
+#: src/Question.php:1259
 msgid "Notes"
 msgstr "Notes"
 
-#: src/Question.php:1259
+#: src/Question.php:1260
 msgid "RSS feed"
 msgstr "RSS feed"
 
-#: src/Question.php:1261
+#: src/Question.php:1262
 msgid "Administration"
 msgstr "Administration"
 
-#: src/Question.php:1269 src/Question.php:1272
+#: src/Question.php:1270 src/Question.php:1273
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] "Plugin"
@@ -2374,11 +2374,15 @@ msgstr "Add translations"
 msgid "An error occured while querying forms"
 msgstr "An error occured while querying forms"
 
-#: js/scripts.js:1455
+#: js/scripts.js:1451 entrée standard:139
+msgid "Send"
+msgstr "Send"
+
+#: js/scripts.js:1460
 msgid "An internal error occurred. Please report it to administrator."
 msgstr "An internal error occurred. Please report it to administrator."
 
-#: js/scripts.js:1486
+#: js/scripts.js:1491
 msgid "Are you sure you want to delete this target:"
 msgstr "Are you sure you want to delete this target:"
 
@@ -2432,10 +2436,6 @@ msgstr "Default form in service catalog"
 #: entrée standard:113 standard:114
 msgid "Are you a robot ?"
 msgstr "Are you a robot ?"
-
-#: entrée standard:139
-msgid "Send"
-msgstr "Send"
 
 #: entrée standard:64
 msgid "Condition to show the section"
