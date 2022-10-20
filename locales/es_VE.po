@@ -1020,7 +1020,16 @@ msgstr "¡Comentario denegado es requerido!"
 msgid "You are not the validator of these answers"
 msgstr "No eres el validador de estas respuestas"
 
+<<<<<<< HEAD
 #: inc/formanswer.class.php:956 inc/formanswer.class.php:958
+=======
+#: inc/formanswer.class.php:895
+#, php-format
+msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
+msgstr "Elemento agregado con éxito: %1$s (%2$s: %3$s)"
+
+#: inc/formanswer.class.php:977 inc/formanswer.class.php:979
+>>>>>>> origin/support/2.13.0
 msgid "Form data"
 msgstr "Datos del formulario"
 
@@ -2210,6 +2219,7 @@ msgstr "Agrupar desde el objeto"
 msgid "Tech group from the object"
 msgstr "Grupo técnico del objeto"
 
+<<<<<<< HEAD
 #: install/install.php:133
 msgid ""
 "Upgrade tables to innoDB; run php bin/console "
@@ -2217,6 +2227,12 @@ msgid ""
 msgstr ""
 "Actualizar tablas a innoDB; ejecute php bin/console "
 "glpi:migration:myisam_to_innodb"
+=======
+#: install/install.php:130
+#, php-format
+msgid "Upgrade tables to innoDB; run %s"
+msgstr "Actualizar tablas a innoDB; corra %s"
+>>>>>>> origin/support/2.13.0
 
 #: install/install.php:174
 #, php-format
@@ -2224,10 +2240,49 @@ msgid ""
 "A fatal error occured in the upgrade from %s! Upgrade aborted. Please check "
 "logs to fix the problem then try again."
 msgstr ""
+<<<<<<< HEAD
 "¡Ocurrió un error fatal en la actualización de %s! Actualización cancelada. "
 "Verifique los registros para solucionar el problema y vuelva a intentarlo."
 
 #: install/install.php:349
+=======
+"El esquema de la base de datos no es coherente con el Formcreator %s "
+"instalado. Para ver los registros, ejecute el comando %s"
+
+#: install/install.php:169
+#, php-format
+msgid "To ignore the inconsistencies and upgrade anyway run %s"
+msgstr ""
+"Para ignorar las inconsistencias y actualizar de todos modos, ejecute %s"
+
+#: install/install.php:187
+msgid ""
+"Upgrade from version older than 2.5.0 is no longer supported. Please upgrade"
+" to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
+" GLPI 10 or later and Formcreator 2.13 or later."
+msgstr ""
+"Ya no se admite la actualización desde una versión anterior a la 2.5.0. "
+"Actualice a GLPI 9.5.7, actualice Formcreator a la versión 2.12.5, luego "
+"actualice nuevamente a GLPI 10 o posterior y Formcreator 2.13 o posterior."
+
+#: install/install.php:239
+#, php-format
+msgid ""
+"The database schema is not consistent with the installed Formcreator %s. To "
+"see the logs enable the plugin and run the command %s"
+msgstr ""
+"El esquema de la base de datos no es coherente con el Formcreator %s "
+"instalado. Para ver los registros, habilite el complemento y ejecute el "
+"comando %s"
+
+#: install/install.php:250
+msgid "The tables of the plugin passed the schema integrity check."
+msgstr ""
+"Las tablas del complemento pasaron la verificación de integridad del "
+"esquema."
+
+#: install/install.php:402
+>>>>>>> origin/support/2.13.0
 msgid "A form has been created"
 msgstr "El formulario ha sido creado"
 
@@ -2301,7 +2356,30 @@ msgstr ""
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Servicio de Sincronización del catálogo de asuntos"
 
+<<<<<<< HEAD
 #: hook.php:305
+=======
+#: install/install.php:842
+msgid "Failed to check the sanity of the tables!"
+msgstr "¡No se pudo verificar la integridad de las tablas!"
+
+#: install/install.php:856
+#, php-format
+msgid "Table schema differs for table \"%s\"."
+msgstr "El esquema de tabla difiere para la tabla \"%s\"."
+
+#: install/install.php:859
+#, php-format
+msgid "Table \"%s\" is missing."
+msgstr "Falta la tabla \"%s\"."
+
+#: install/install.php:862
+#, php-format
+msgid "Unknown table \"%s\" has been found in database."
+msgstr "Se ha encontrado la tabla desconocida \"%s\" en la base de datos."
+
+#: hook.php:317
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Duplicate"
 msgstr "Duplicado"
@@ -2370,7 +2448,15 @@ msgstr "Agregar traducciones"
 msgid "An error occured while querying forms"
 msgstr "Se ha producido un error al consultar formularios"
 
+<<<<<<< HEAD
 #: js/scripts.js:1418
+=======
+#: js/scripts.js:1400
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "Ha ocurrido un error interno. Por favor reportarlo al administrador."
+
+#: js/scripts.js:1441
+>>>>>>> origin/support/2.13.0
 msgid "Are you sure you want to delete this target:"
 msgstr "¿Está seguro de que desea eliminar este objetivo?:"
 

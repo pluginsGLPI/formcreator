@@ -1000,7 +1000,16 @@ msgstr "Red açıklaması zorunludur!"
 msgid "You are not the validator of these answers"
 msgstr "Bu yanıtların değerlendireni değilsiniz"
 
+<<<<<<< HEAD
 #: inc/formanswer.class.php:956 inc/formanswer.class.php:958
+=======
+#: inc/formanswer.class.php:895
+#, php-format
+msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
+msgstr "Öge eklendi: %1$s (%2$s: %3$s)"
+
+#: inc/formanswer.class.php:977 inc/formanswer.class.php:979
+>>>>>>> origin/support/2.13.0
 msgid "Form data"
 msgstr "Form verileri"
 
@@ -2164,6 +2173,7 @@ msgstr "Nesneden grup"
 msgid "Tech group from the object"
 msgstr "Nesneden teknik grup"
 
+<<<<<<< HEAD
 #: install/install.php:133
 msgid ""
 "Upgrade tables to innoDB; run php bin/console "
@@ -2171,6 +2181,12 @@ msgid ""
 msgstr ""
 "Tabloları innoDB olarak değiştirmek için php bin/console "
 "glpi:migration:myisam_to_innodb komutunu yürütün"
+=======
+#: install/install.php:130
+#, php-format
+msgid "Upgrade tables to innoDB; run %s"
+msgstr "Tabloları innoDB biçimine dönüştürün. Şunu çalıştırın %s"
+>>>>>>> origin/support/2.13.0
 
 #: install/install.php:174
 #, php-format
@@ -2178,11 +2194,49 @@ msgid ""
 "A fatal error occured in the upgrade from %s! Upgrade aborted. Please check "
 "logs to fix the problem then try again."
 msgstr ""
+<<<<<<< HEAD
 "%s sürümünden güncellenirken ciddi bir sorun çıktı! Güncelleme işlemi iptal "
 "edildi. Lütfen sorunu çözmek için günlük kayıtlarına bakın ve ardından "
 "yeniden deneyin."
 
 #: install/install.php:349
+=======
+"Veritabanı şeması kurulu Formcreator %s uygulama eki ile uyumlu değil. "
+"Günlük kayıtlarını görüntülemek için şu komutu yürütün %s"
+
+#: install/install.php:169
+#, php-format
+msgid "To ignore the inconsistencies and upgrade anyway run %s"
+msgstr ""
+"Uyumsuzluğu yok saymak ve her durumda güncellemek için şunu çalıştırın %s"
+
+#: install/install.php:187
+msgid ""
+"Upgrade from version older than 2.5.0 is no longer supported. Please upgrade"
+" to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
+" GLPI 10 or later and Formcreator 2.13 or later."
+msgstr ""
+"2.5.0 sürümünden önceki sürümlerden yükseltme artık desteklenmiyor. Lütfen "
+"GLPI uygulamasını 9.5.7 sürümüne ve Formcreator uygulama ekini 2.12.5 "
+"sürümüne yükseltin. Ardından GLPI uygulamasını 10 ya da üzerindeki bir "
+"sürüme ve Formcreator uygulama ekini 2.13 ya da üzerindeki bir sürüme "
+"yükseltin."
+
+#: install/install.php:239
+#, php-format
+msgid ""
+"The database schema is not consistent with the installed Formcreator %s. To "
+"see the logs enable the plugin and run the command %s"
+msgstr ""
+"Veritabanı şeması kurulu Formcreator %s ile uyumlu değil. Günlük kayıtlarını"
+" görüntülemek için uygulama ekini etkinleştirin ve şu komutu yürütün %s"
+
+#: install/install.php:250
+msgid "The tables of the plugin passed the schema integrity check."
+msgstr "Uygulama ekinin tabloları şema bütünlüğü denetimini geçti."
+
+#: install/install.php:402
+>>>>>>> origin/support/2.13.0
 msgid "A form has been created"
 msgstr "Bir form eklendi"
 
@@ -2254,7 +2308,30 @@ msgstr ""
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Eşitleme hizmeti katalog sorunları"
 
+<<<<<<< HEAD
 #: hook.php:305
+=======
+#: install/install.php:842
+msgid "Failed to check the sanity of the tables!"
+msgstr "Tabloların sağlıklı olup olmadığı denetlenemedi!"
+
+#: install/install.php:856
+#, php-format
+msgid "Table schema differs for table \"%s\"."
+msgstr "\"%s\" tablosunun tablo şeması farklı."
+
+#: install/install.php:859
+#, php-format
+msgid "Table \"%s\" is missing."
+msgstr "\"%s\" tablosu eksik."
+
+#: install/install.php:862
+#, php-format
+msgid "Unknown table \"%s\" has been found in database."
+msgstr "Veritabanında ne olduğu bilinmeyen \"%s\" tablosu bulundu."
+
+#: hook.php:317
+>>>>>>> origin/support/2.13.0
 msgctxt "button"
 msgid "Duplicate"
 msgstr "Kopyala"
@@ -2321,7 +2398,15 @@ msgstr "Çeviriler ekle"
 msgid "An error occured while querying forms"
 msgstr "Formlar alınırken bir sorun çıktı"
 
+<<<<<<< HEAD
 #: js/scripts.js:1418
+=======
+#: js/scripts.js:1400
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "Bir sorun çıktı. Lütfen bu durumu BT yöneticinize bildirin."
+
+#: js/scripts.js:1441
+>>>>>>> origin/support/2.13.0
 msgid "Are you sure you want to delete this target:"
 msgstr "Bu hedefi silmek istediğinize emin misiniz:"
 
