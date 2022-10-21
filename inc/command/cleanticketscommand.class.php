@@ -53,6 +53,7 @@ class CleanTicketsCommand extends Command
 
       $this->fixBadForm_1($input, $output);
       $this->fixBadForm_2($input, $output);
+      $this->fixBadForm_3($input, $output);
 
       $output->writeln('<info>Done.</info>');
       return 0;
@@ -102,7 +103,7 @@ class CleanTicketsCommand extends Command
          return 0;
       }
 
-      $output->write("<info>-> Found $count tickets to clean</info>");
+      $output->write("<info>-> Found $count tickets to clean (double encoded < and > signs)</info>");
       $output->writeln("");
       $output->write("<info>-> Cleaning tickets...</info>");
       $output->writeln("");
@@ -130,7 +131,7 @@ class CleanTicketsCommand extends Command
    }
 
    /**
-    * remove HTML tag <br />
+    * replace litteral HTML tag <br /> with &lt;br /&gt;
     *
     * @param InputInterface $input
     * @param OutputInterface $output
@@ -142,7 +143,7 @@ class CleanTicketsCommand extends Command
       // Search tickets having HTML tags <br />
       $itemTicketTable = Item_Ticket::getTable();
       $ticketTable = Ticket::getTable();
-      $pattern = 'br /';
+      $pattern = '<br />';
       $tickets = $DB->request([
          'SELECT' => [$ticketTable => [Ticket::getIndexName(), 'content']],
          'FROM' => $ticketTable,
@@ -158,7 +159,7 @@ class CleanTicketsCommand extends Command
             ],
          ],
          'WHERE' => [
-            "$ticketTable.content" => ['LIKE', '%' . $pattern . '%'], // Matches bad encoding for '<'
+            "$ticketTable.content" => ['LIKE', '%' . $pattern . '%'], // Matches bad encoding for 'br /'
          ],
       ]);
 
@@ -169,7 +170,7 @@ class CleanTicketsCommand extends Command
          return 0;
       }
 
-      $output->write("<info>-> Found $count tickets to clean</info>");
+      $output->write("<info>-> Found $count tickets to clean (literal BR tag)</info>");
       $output->writeln("");
       $output->write("<info>-> Cleaning tickets...</info>");
       $output->writeln("");
@@ -177,9 +178,102 @@ class CleanTicketsCommand extends Command
          $pattern = [
             '<br />',
          ];
-         $replace = [
-            '&lt;br /&gt;',
+         // Determine if we must use legacy or new encoding
+         // @see Sanitizer::sanitize()
+         $replace = null;
+         if (strpos($row['content'], '&lt;') !== false && strpos($row['content'], '#60;') === false) {
+            $replace = [
+               '&lt;br /&gt;',
+            ];
+         } else if (strpos($row['content'], '#60') !== false && strpos($row['content'], '&lt;') === false) {
+            $replace = [
+               '&#60;br /&#62;',
+            ];
+         }
+         if ($replace === null) {
+            $output->write("<error>-> Unable to determine the encoding type of ticket ID: " . $row['id']. "</error>");
+            continue;
+         }
+         $row['content'] = str_replace($pattern, $replace, $row['content']);
+         // Direct write to the table to avoid alteration of other fields
+         $DB->update(
+            $ticketTable,
+            [
+               'content' => $DB->escape($row['content'])
+            ],
+            [
+               'id' => $row['id'],
+            ]
+         );
+      }
+   }
+
+   /**
+    * replace litteral HTML tag > with #38;
+    * This may happen when a question gives the path to an item of a CommonTreeObject
+    * entities, locations, ...
+    *
+    * @param InputInterface $input
+    * @param OutputInterface $output
+    * @return void
+    */
+   protected function fixBadForm_3(InputInterface $input, OutputInterface $output) {
+      global $DB;
+
+      // Search tickets having HTML tags <br />
+      $itemTicketTable = Item_Ticket::getTable();
+      $ticketTable = Ticket::getTable();
+      $pattern = ' > '; // greater than sign with a space before and after
+      $tickets = $DB->request([
+         'SELECT' => [$ticketTable => [Ticket::getIndexName(), 'content']],
+         'FROM' => $ticketTable,
+         'INNER JOIN' => [
+            $itemTicketTable => [
+               'FKEY' => [
+                  $ticketTable => Ticket::getIndexName(),
+                  $itemTicketTable => Ticket::getForeignKeyField(),
+               ],
+               'AND' => [
+                  "$itemTicketTable.itemtype" => PluginFormcreatorFormAnswer::getType(),
+               ]
+            ],
+         ],
+         'WHERE' => [
+            "$ticketTable.content" => ['LIKE', '%' . $pattern . '%'],
+         ],
+      ]);
+
+      $count = $tickets->count();
+      if ($count < 1) {
+         $output->writeln('<info>-> No ticket to fix.</info>');
+         $output->writeln("");
+         return 0;
+      }
+
+      $output->write("<info>-> Found $count tickets to clean (litteral > sign)</info>");
+      $output->writeln("");
+      $output->write("<info>-> Cleaning tickets...</info>");
+      $output->writeln("");
+      foreach ($tickets as $row) {
+         $pattern = [
+            ' > ',
          ];
+         // Determine if we must use legacy or new encoding
+         // @see Sanitizer::sanitize()
+         $replace = null;
+         if (strpos($row['content'], '&lt;') !== false && strpos($row['content'], '#60;') === false) {
+            $replace = [
+               ' &gt; ',
+            ];
+         } else if (strpos($row['content'], '#60') !== false && strpos($row['content'], '&lt;') === false) {
+            $replace = [
+               ' &#38; ',
+            ];
+         }
+         if ($replace === null) {
+            $output->write("<error>-> Unable to determine the encoding type of ticket ID: " . $row['id']. "</error>");
+            continue;
+         }
          $row['content'] = str_replace($pattern, $replace, $row['content']);
          // Direct write to the table to avoid alteration of other fields
          $DB->update(
