@@ -180,6 +180,7 @@ class CleanTicketsCommand extends Command
          ];
          // Determine if we must use legacy or new encoding
          // @see Sanitizer::sanitize()
+         $replace = null;
          if (strpos($row['content'], '&lt;') !== false && strpos($row['content'], '#60;') === false) {
             $replace = [
                '&lt;br /&gt;',
@@ -188,6 +189,10 @@ class CleanTicketsCommand extends Command
             $replace = [
                '&#60;br /&#62;',
             ];
+         }
+         if ($replace === null) {
+            $output->write("<error>-> Unable to determine the encoding type of ticket ID: " . $row['id']. "</error>");
+            continue;
          }
          $row['content'] = str_replace($pattern, $replace, $row['content']);
          // Direct write to the table to avoid alteration of other fields
