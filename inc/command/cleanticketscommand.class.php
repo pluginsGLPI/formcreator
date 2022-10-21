@@ -258,9 +258,22 @@ class CleanTicketsCommand extends Command
          $pattern = [
             ' > ',
          ];
-         $replace = [
-            ' #38; ',
-         ];
+         // Determine if we must use legacy or new encoding
+         // @see Sanitizer::sanitize()
+         $replace = null;
+         if (strpos($row['content'], '&lt;') !== false && strpos($row['content'], '#60;') === false) {
+            $replace = [
+               ' &gt; ',
+            ];
+         } else if (strpos($row['content'], '#60') !== false && strpos($row['content'], '&lt;') === false) {
+            $replace = [
+               ' &#38; ',
+            ];
+         }
+         if ($replace === null) {
+            $output->write("<error>-> Unable to determine the encoding type of ticket ID: " . $row['id']. "</error>");
+            continue;
+         }
          $row['content'] = str_replace($pattern, $replace, $row['content']);
          // Direct write to the table to avoid alteration of other fields
          $DB->update(
