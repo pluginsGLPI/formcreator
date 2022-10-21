@@ -217,7 +217,7 @@ class CleanTicketsCommand extends Command
     * @param OutputInterface $output
     * @return void
     */
-    protected function fixBadForm_3(InputInterface $input, OutputInterface $output) {
+   protected function fixBadForm_3(InputInterface $input, OutputInterface $output) {
       global $DB;
 
       // Search tickets having HTML tags <br />
