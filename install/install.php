@@ -159,7 +159,7 @@ class PluginFormcreatorInstall {
                $message = sprintf(
                   __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
                   $oldVersion,
-                  'bin/console glpi:plugin:install formcreator -f'
+                  'bin/console glpi:database:check_schema_integrity -p formcreator'
                );
                if (!isCommandLine()) {
                   Session::addMessageAfterRedirect($message, false, ERROR);
