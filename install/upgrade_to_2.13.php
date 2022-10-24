@@ -168,6 +168,16 @@ class PluginFormcreatorUpgradeTo2_13 {
          ['ola_rule' => '0'],
          ['ola_rule' => null]
       );
+      $DB->update(
+         $table,
+         ['tag_questions' => ''],
+         ['tag_questions' => null]
+      );
+      $DB->update(
+         $table,
+         ['tag_specifics' => ''],
+         ['tag_specifics' => null]
+      );
       $this->migration->changeField($table, 'validation_followup', 'validation_followup', 'bool', ['after' => 'urgency_question', 'value' => '1']);
       $this->migration->changeField($table, 'destination_entity', 'destination_entity', 'integer', ['after' => 'validation_followup', 'value' => '1']);
       $this->migration->changeField($table, 'destination_entity_value', 'destination_entity_value', $unsignedIntType, ['after' => 'destination_entity', 'default' => '1']);

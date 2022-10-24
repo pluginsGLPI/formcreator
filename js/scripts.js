@@ -1420,6 +1420,11 @@ var plugin_formcreator = new function() {
             window.location = data.redirect;
          }
       }).fail(function (xhr, data) {
+         $(form).find('[type="submit"]')
+            .html(i18n.textdomain('formcreator').__('Send', 'formcreator'))
+            .off('click');
+         $(form).removeAttr('data-submitted');
+
          if (xhr.responseText == '') {
             displayAjaxMessageAfterRedirect();
             return;
