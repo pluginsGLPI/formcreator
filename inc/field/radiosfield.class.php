@@ -205,7 +205,6 @@ class RadiosField extends PluginFormcreatorAbstractField
       if ($value == '') {
          return true;
       }
-      $value = Toolbox::stripslashes_deep($value);
       $value = trim($value);
       return in_array($value, $this->getAvailableValues());
    }
