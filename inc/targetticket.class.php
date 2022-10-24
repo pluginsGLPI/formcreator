@@ -49,7 +49,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
    const REQUESTTYPE_ANSWER = 2;
 
    const REQUESTSOURCE_NONE = 0;
-   const REQUESTSOURCE_SPECIFIC = 1;
+   const REQUESTSOURCE_FORMCREATOR = 1;
 
    public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
@@ -104,7 +104,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
    public static function getEnumRequestSourceRule(): array {
       return [
          self::REQUESTSOURCE_NONE      => __('Source from template or user default or GLPI default', 'formcreator'),
-         self::REQUESTSOURCE_SPECIFIC  => __('Formcreator', 'formcreator'),
+         self::REQUESTSOURCE_FORMCREATOR  => __('Formcreator', 'formcreator'),
       ];
    }
 
@@ -538,10 +538,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
       }
 
       if (!isset($input['source_rule'])) {
-         $input['source_rule'] = self::REQUESTSOURCE_SPECIFIC;
+         $input['source_rule'] = self::REQUESTSOURCE_FORMCREATOR;
       }
       $input['source_question'] = 0;
-      if ($input['source_rule'] == self::REQUESTSOURCE_SPECIFIC) {
+      if ($input['source_rule'] == self::REQUESTSOURCE_FORMCREATOR) {
          $input['source_question'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
       }
       return $input;
@@ -631,7 +631,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
                case self::REQUESTSOURCE_NONE:
                   $input['source_question'] = 0;
                   break;
-               case self::REQUESTSOURCE_SPECIFIC:
+               case self::REQUESTSOURCE_FORMCREATOR:
                   $input['source_question'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
                   break;
             }
@@ -1033,7 +1033,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorAbstractItilTarget
 
    protected function setTargetSource(array $data, PluginFormcreatorFormAnswer $formanswer): array {
       switch ($this->fields['source_rule']) {
-         case self::REQUESTSOURCE_SPECIFIC:
+         case self::REQUESTSOURCE_NONE:
+            $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+            break;
+
+         case self::REQUESTSOURCE_FORMCREATOR:
             $data['requesttypes_id'] = $this->fields['source_question'];
             break;
       }
