@@ -187,7 +187,6 @@ class CheckboxesField extends PluginFormcreatorAbstractField
          return true;
       }
 
-      $value = Toolbox::stripslashes_deep($value);
       foreach ($value as $item) {
          if (trim($item) == '') {
             return false;
