@@ -8,7 +8,7 @@
 # gerald antoniolli <deeper26@gmail.com>, 2021
 # Tiago Graça, 2021
 # tguichard25 <t.guichard@mut25.fr>, 2021
-# Alexandre Delaunay <delaunay.alexandre@gmail.com>, 2021
+# alexandre delaunay <delaunay.alexandre@gmail.com>, 2021
 # 06c8e5f1ec78ded2ceb41498ec52b068, 2021
 # Thierry Bugier <tbugier@teclib.com>, 2022
 # 
