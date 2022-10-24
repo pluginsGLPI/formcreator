@@ -99,37 +99,54 @@ class CheckboxesField extends CommonTestCase {
             ]
          ],
       ]));
-      return [
-         [
-            'instance' => $instance,
-            'value'    => '',
-            'expected' => true,
+      yield [
+         'instance' => $instance,
+         'value'    => '',
+         'expected' => true,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => [],
+         'expected' => true,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => ['1'],
+         'expected' => true,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => ['1', '4'],
+         'expected' => true,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => ['1', '9'],
+         'expected' => false,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => ['9'],
+         'expected' => false,
+      ];
+
+      // values are escaped by GLPI, then backslashes are doubled
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'fieldtype' => 'checkboxes',
+         'values'    => implode('\r\n', ['X:\\\\path\\\\to\\\\file', 'nothing']),
+         '_parameters'        => [
+            'checkboxes'         => [
+               'range'              => [
+                  'range_min'          => '',
+                  'range_max'          => '',
+               ]
+            ]
          ],
-         [
-            'instance' => $instance,
-            'value'    => [],
-            'expected' => true,
-         ],
-         [
-            'instance' => $instance,
-            'value'    => ['1'],
-            'expected' => true,
-         ],
-         [
-            'instance' => $instance,
-            'value'    => ['1', '4'],
-            'expected' => true,
-         ],
-         [
-            'instance' => $instance,
-            'value'    => ['1', '9'],
-            'expected' => false,
-         ],
-         [
-            'instance' => $instance,
-            'value'    => ['9'],
-            'expected' => false,
-         ],
+      ]));
+      yield [
+         'instance' => $instance,
+         'value'    => ['X:\\path\\to\\file'],
+         'expected' => true,
       ];
    }
 

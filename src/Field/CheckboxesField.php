@@ -188,7 +188,6 @@ class CheckboxesField extends AbstractField
          return true;
       }
 
-      $value = Toolbox::stripslashes_deep($value);
       foreach ($value as $item) {
          if (trim($item) == '') {
             return false;

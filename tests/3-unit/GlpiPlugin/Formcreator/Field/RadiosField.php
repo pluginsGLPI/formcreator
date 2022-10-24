@@ -102,6 +102,55 @@ class RadiosField extends CommonTestCase {
       $this->boolean($output)->isTrue();
    }
 
+   public function providerIsValidValue() {
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'fieldtype' => 'radios',
+         'values'    => implode('\r\n', ['1', '2', '3', '4']),
+      ]));
+      yield [
+         'instance' => $instance,
+         'value'    => '',
+         'expected' => true,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => '1',
+         'expected' => true,
+      ];
+      yield [
+         'instance' => $instance,
+         'value'    => '9',
+         'expected' => false,
+      ];
+
+      // values are escaped by GLPI, then backslashes are doubled
+      $instance = $this->newTestedInstance($this->getQuestion([
+         'fieldtype' => 'radios',
+         'values'    => implode('\r\n', ['X:\\\\path\\\\to\\\\file', 'nothing']),
+         '_parameters'        => [
+            'checkboxes'         => [
+               'range'              => [
+                  'range_min'          => '',
+                  'range_max'          => '',
+               ]
+            ]
+         ],
+      ]));
+      yield [
+         'instance' => $instance,
+         'value'    => 'X:\\path\\to\\file',
+         'expected' => true,
+      ];
+   }
+
+   /**
+    * @dataProvider providerIsValidValue
+    */
+   public function testIsValidValue($instance, $value, $expected) {
+      $output = $instance->isValidValue($value);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
    public function providerSerializeValue() {
       $question = $this->getQuestion([
          'fieldtype' => 'radios',
