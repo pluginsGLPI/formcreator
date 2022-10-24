@@ -301,21 +301,21 @@ class CheckboxesField extends CommonTestCase {
                'values' => "[]"
             ]),
             'value' => json_encode(['a']),
-            'expected' => '<p></p>'
+            'expected' => ''
          ],
          [
             'question' => $this->getQuestion([
                'values' => json_encode(['a', 'b', 'c'])
             ]),
             'value' => json_encode(['a']),
-            'expected' => '<p>a</p>'
+            'expected' => 'a'
          ],
          [
             'question' => $this->getQuestion([
                'values' => json_encode(['a', 'b', 'c'])
             ]),
             'value' => json_encode(['a', 'c']),
-            'expected' => '<p>a</p><p>c</p>'
+            'expected' => 'a<br />c'
          ],
       ];
    }
