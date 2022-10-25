@@ -1313,7 +1313,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
                'content' => '##FULLFORM##',
                'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
                'type_question' => \Ticket::INCIDENT_TYPE,
-               'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_SPECIFIC,
+               'source_rule'   => \PluginFormcreatorTargetTicket::REQUESTSOURCE_FORMCREATOR,
                'source_question' => $sourceId,
             ],
             'message' => null,
@@ -1481,7 +1481,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'name' => 'target ticket',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
-         'source_rule' => \PluginFormcreatorTargetTicket::REQUESTSOURCE_SPECIFIC,
+         'source_rule' => \PluginFormcreatorTargetTicket::REQUESTSOURCE_FORMCREATOR,
          'source_question' => \PluginFormcreatorCommon::getFormcreatorRequestTypeId(),
       ]);
       $this->boolean($targetTicket->isNewItem())->isFalse();

@@ -263,7 +263,7 @@ class CheckboxesField extends PluginFormcreatorAbstractField
       }
 
       if ($richText) {
-         $value = '<p>' . implode('</p><p>', $value) . '</p>';
+         $value = implode('<br />', $value);
       } else {
          $value = implode(', ', $value);
       }
