@@ -682,7 +682,11 @@ JAVASCRIPT;
       switch (self::getInterface()) {
          case "servicecatalog":
          case "self-service":
-            return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
+            return Html::helpHeader(
+               __('Form list', 'formcreator'),
+               'seek_assistance',
+               PluginFormcreatorForm::class
+            );
          case "central":
             return Html::header(
                __('Form Creator', 'formcreator'),
