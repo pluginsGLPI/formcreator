@@ -42,7 +42,11 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    if (plugin_formcreator_replaceHelpdesk()) {
       Html::redirect('issue.php');
    } else {
-      Html::helpHeader(__('Form list', 'formcreator'));
+      Html::helpHeader(
+         __('Form list', 'formcreator'),
+         'seek_assistance',
+         PluginFormcreatorForm::class
+      );
    }
 } else {
    Html::header(__('Form list', 'formcreator'));
