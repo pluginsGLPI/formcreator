@@ -30,6 +30,7 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorIssue;
 use Ticket;
 use User;
 
@@ -572,23 +573,29 @@ class PluginFormcreatorCommon extends CommonTestCase {
       yield [
          'input' => \Html::generateHelpMenu(),
          'expected' => [
-            'seek_assistance' =>
-            [
-            'default' => 'plugins/formcreator/front/wizard.php',
-            'title' => 'Seek assistance',
-            'icon' => 'fa-fw ti ti-headset',
+            'seek_assistance' => [
+               'default' => 'plugins/formcreator/front/wizard.php',
+               'title' => 'Seek assistance',
+               'icon' => 'fa-fw ti ti-headset',
             ],
-            'my_assistance_requests' =>
-            [
-            'default' => '/plugins/formcreator/front/issue.php',
-            'title' => 'My requests for assistance',
-            'icon' => 'fa-fw ti ti-list',
+            'my_assistance_requests' => [
+               'default' => '/plugins/formcreator/front/issue.php',
+               'title' => 'My requests for assistance',
+               'icon' => 'fa-fw ti ti-list',
+               'content' => [
+                  PluginFormcreatorIssue::class => [
+                     'title' => __('My requests for assistance', 'formcreator'),
+                     'icon'  => 'fa-fw ti ti-list',
+                     'links'   => [
+                        'lists' => '',
+                     ],
+                  ],
+               ],
             ],
-            'reservation' =>
-            [
-            'default' => '/front/reservationitem.php',
-            'title' => 'Reservations',
-            'icon' => 'ti ti-calendar-event',
+            'reservation' => [
+               'default' => '/front/reservationitem.php',
+               'title' => 'Reservations',
+               'icon' => 'ti ti-calendar-event',
             ],
          ]
       ];
@@ -619,6 +626,15 @@ class PluginFormcreatorCommon extends CommonTestCase {
               'default' => '/plugins/formcreator/front/issue.php',
               'title' => 'My requests for assistance',
               'icon' => 'fa-fw ti ti-list',
+              'content' => [
+                  PluginFormcreatorIssue::class => [
+                     'title' => __('My requests for assistance', 'formcreator'),
+                     'icon'  => 'fa-fw ti ti-list',
+                     'links'   => [
+                        'lists' => '',
+                     ],
+                  ],
+               ],
             ],
             'reservation' =>
             [
