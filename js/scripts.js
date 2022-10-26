@@ -683,6 +683,7 @@ var plugin_formcreator = new function() {
       if (typeof(id) === 'undefined') {
          return;
       }
+      var that = this;
       if (confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this question?', 'formcreator'))) {
          jQuery.ajax({
          url: formcreatorRootDoc + '/ajax/question_delete.php',
@@ -697,6 +698,7 @@ var plugin_formcreator = new function() {
             var gridstack = container.gridstack;
             var row = $(item).attr('data-gs-y');
             gridstack.removeWidget(item);
+            that.resetTabs();
          });
       }
    };
