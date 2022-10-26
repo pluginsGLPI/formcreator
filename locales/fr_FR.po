@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2021
 # Tiago Graça, 2021
@@ -12,7 +12,7 @@
 # tguichard25 <t.guichard@mut25.fr>, 2022
 # 06c8e5f1ec78ded2ceb41498ec52b068, 2022
 # Thierry Bugier <tbugier@teclib.com>, 2022
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -2435,7 +2435,7 @@ msgstr "Êtes-vous un robot ?"
 
 #: entrée standard:139
 msgid "Send"
-msgstr "EnvoyerEnvoyer"
+msgstr "Envoyer"
 
 #: entrée standard:64
 msgid "Condition to show the section"
