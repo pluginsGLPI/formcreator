@@ -294,16 +294,12 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `entities_id`           int unsigned  NOT NULL DEFAULT '0',
   `is_recursive`          tinyint(1)    NOT NULL DEFAULT '0',
   `requester_id`          int unsigned  NOT NULL DEFAULT '0',
-  `users_id_validator`    int unsigned  NOT NULL DEFAULT '0',
-  `groups_id_validator`   int unsigned  NOT NULL DEFAULT '0',
   `comment`               longtext,
   `users_id_recipient`    int unsigned  NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `item` (`itemtype`, `items_id`),
   INDEX `entities_id` (`entities_id`),
-  INDEX `requester_id` (`requester_id`),
-  INDEX `users_id_validator` (`users_id_validator`),
-  INDEX `groups_id_validator` (`groups_id_validator`)
+  INDEX `requester_id` (`requester_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
   `id`                                  int unsigned NOT NULL AUTO_INCREMENT,
