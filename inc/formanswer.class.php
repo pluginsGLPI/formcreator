@@ -726,6 +726,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Validation of answers failed
          return false;
       }
+      if (!$this->validateCaptcha($input)) {
+         // Captcha verification failed
+         return false;
+      }
+      if (!$this->validateValidator($input)) {
+         // Validator requirement failed
+         return false;
+      }
 
       $input['name'] = $DB->escape($this->parseTags($form->fields['formanswer_name']));
 
@@ -783,7 +791,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          if ($input['status'] != self::STATUS_REFUSED) {
-            // The requester mai edit his answers
+            // The requester may edit his answers
             // or the validator accepts the answers and may edit the requester's answers
 
             // check if the input contains answers to validate
@@ -799,9 +807,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
-      if (!$skipValidation && !$this->validateFormAnswer($input, false)) {
-         // Validation of answers failed
-         return false;
+      if (!$skipValidation) {
+         if (!$this->validateFormAnswer($input)) {
+            // Validation of answers failed
+            return false;
+         }
+         if (!$this->validateCaptcha($input)) {
+            // Captcha verification failed
+            return false;
+         }
       }
 
       return $input;
@@ -1257,13 +1271,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Validates answers of a form
     *
     * @param array $input fields from the HTML form
-    * @param bolean $checkValidator True if validator input must be checked
     * @return boolean true if answers are valid, false otherwise
     */
-   protected function validateFormAnswer($input, $checkValidator = true) {
-      // Find the form the requester is answering to
-      $form = PluginFormcreatorCommon::getForm();
-      $form->getFromDB($input['plugin_formcreator_forms_id']);
+   protected function validateFormAnswer($input) {
       $this->getQuestionFields($input['plugin_formcreator_forms_id']);
 
       // Parse form answers
@@ -1274,18 +1284,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       // any invalid field will invalidate the answers
       $this->isAnswersValid = !in_array(false, $fieldValidities, true);
-
-      // check captcha if any
-      if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC && $form->fields['is_captcha_enabled'] != '0') {
-         if (!isset($_SESSION['plugin_formcreator']['captcha'])) {
-            Session::addMessageAfterRedirect(__('No turing test set', 'formcreator'));
-            $this->isAnswersValid = false;
-         }
-         $this->isAnswersValid = PluginFormcreatorCommon::checkCaptcha($input['plugin_formcreator_captcha_id'], $input['plugin_formcreator_captcha']);
-         if (!$this->isAnswersValid) {
-            Session::addMessageAfterRedirect(__('You failed the Turing test', 'formcreator'));
-         }
-      }
 
       if ($this->isAnswersValid) {
          foreach ($this->questionFields as $id => $field) {
@@ -1298,12 +1296,26 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
-      if ($form->validationRequired() && $checkValidator) {
-         $this->validateValidator($input);
-      }
-
       if (!$this->isAnswersValid) {
          return false;
+      }
+
+      return true;
+   }
+
+   public function validateCaptcha(array $input): bool {
+      $form = $this->getForm($input['plugin_formcreator_forms_id']);
+      if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC && $form->fields['is_captcha_enabled'] != '0') {
+         if (!isset($_SESSION['plugin_formcreator']['captcha'])) {
+            Session::addMessageAfterRedirect(__('No turing test set', 'formcreator'));
+            $this->isAnswersValid = false;
+            return false;
+         }
+         $this->isAnswersValid = PluginFormcreatorCommon::checkCaptcha($input['plugin_formcreator_captcha_id'], $input['plugin_formcreator_captcha']);
+         if (!$this->isAnswersValid) {
+            Session::addMessageAfterRedirect(__('You failed the Turing test', 'formcreator'));
+            return false;
+         }
       }
 
       return true;
@@ -1317,11 +1329,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    protected function validateValidator(array $input): bool {
       // Find the form the requester is answering to
-      $form = PluginFormcreatorCommon::getForm();
-      $form->getFromDB($input['plugin_formcreator_forms_id']);
+      $form = $this->getForm($input['plugin_formcreator_forms_id']);
+      if (!$form->validationRequired()) {
+         return true;
+      }
 
       // Check required_validator
-      if ($form->validationRequired() && empty($input['formcreator_validator'])) {
+      if (empty($input['formcreator_validator'])) {
          // Check if only one validator of level 1 is available
          Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
          $this->isAnswersValid = false;
