@@ -105,8 +105,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
                'entities_id         as entities_d',
                'is_recursive        as is_recursive',
                'requester_id        as requester_id',
-               // 'users_id_validator  as users_id_validator',
-               // 'groups_id_validator as groups_id_validator',
                'comment             as comment',
                'requester_id        as users_id_recipient'
             ],
@@ -162,8 +160,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
             ],
             new QueryExpression('0                       as is_recursive'),
             new QueryExpression("COALESCE(`$ticketUserTable`.`users_id`, 0) as `requester_id`"),
-            // new QueryExpression("COALESCE(`$ticketValidationTable`.`users_id_validate`, 0) as `users_id_validator`"),
-            // new QueryExpression('0                       as groups_id_validator'),
             "$ticketTable.content                        as comment",
             'users_id_recipient                          as users_id_recipient'
          ],
@@ -195,12 +191,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $ticketUserTable => $ticketFk,
                ],
             ],
-            // $ticketValidationTable => [
-            //    'FKEY' => [
-            //       $ticketTable => 'id',
-            //       $ticketValidationTable => $ticketFk,
-            //    ],
-            // ],
          ],
          'WHERE' => [
             "$ticketTable.is_deleted" => 0,
