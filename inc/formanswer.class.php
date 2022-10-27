@@ -1418,8 +1418,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'entities_id'        => $this->fields['entities_id'],
             'is_recursive'       => $this->fields['is_recursive'],
             'requester_id'       => $this->fields['requester_id'],
-            'users_id_validator' => $this->fields['users_id_validator'],
-            'groups_id_validator'=> $this->fields['groups_id_validator'],
             'comment'            => '',
          ]);
 
@@ -1522,8 +1520,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'entities_id'        => $this->fields['entities_id'],
             'is_recursive'       => $this->fields['is_recursive'],
             'requester_id'       => $this->fields['requester_id'],
-            'users_id_validator' => $this->fields['users_id_validator'],
-            'groups_id_validator'=> $this->fields['groups_id_validator'],
             'comment'            => '',
          ]);
 
