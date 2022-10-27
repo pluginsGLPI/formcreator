@@ -1273,7 +1273,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param array $input fields from the HTML form
     * @return boolean true if answers are valid, false otherwise
     */
-   protected function validateFormAnswer($input) {
+   protected function validateFormAnswer($input): bool {
       $this->getQuestionFields($input['plugin_formcreator_forms_id']);
 
       // Parse form answers
@@ -1303,6 +1303,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return true;
    }
 
+   /**
+    * Check the captcha is resolved by the user
+    *
+    * @param array $input
+    * @return boolean
+    */
    public function validateCaptcha(array $input): bool {
       $form = $this->getForm($input['plugin_formcreator_forms_id']);
       if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC && $form->fields['is_captcha_enabled'] != '0') {
