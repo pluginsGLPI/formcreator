@@ -79,6 +79,7 @@ class PluginFormcreatorInstall {
       '2.12.5' => '2.13',
       '2.13'   => '2.13.1',
       '2.13.1' => '2.14',
+      '2.13.3' => '2.14',
    ];
 
    protected bool $resyncIssues = false;

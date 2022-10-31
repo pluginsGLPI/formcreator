@@ -522,7 +522,6 @@ JAVASCRIPT;
       }
 
       $result = strtolower($_SESSION['plugin_formcreator']['captcha'][$captchaId]['phrase']) == strtolower((string) $challenge);
-      unset($_SESSION['plugin_formcreator']['captcha'][$captchaId]);
 
       return $result;
    }
