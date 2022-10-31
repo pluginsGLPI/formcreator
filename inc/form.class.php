@@ -556,9 +556,10 @@ PluginFormcreatorTranslatableInterface
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
+         $nb = $_SESSION['glpishow_count_on_tabs'] ? $item->countTargets() : 0;
          return [
             1 => self::createTabEntry(
-               _n('Target', 'Targets', Session::getPluralNumber(), 'formcreator'),
+               _n('Target', 'Targets', $nb, 'formcreator'),
                $item->countTargets()
             ),
             2 => __('Preview'),
