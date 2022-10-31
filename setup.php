@@ -163,7 +163,6 @@ function plugin_init_formcreator() {
       }
    }
 
-   // Html::requireJs('gridstack');
    $CFG_GLPI['javascript']['admin'][strtolower(PluginFormcreatorForm::class)] = ['gridstack'];
    $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorFormlist::class)] = ['gridstack'];
    $CFG_GLPI['javascript']['helpdesk'][strtolower(PluginFormcreatorIssue::class)] = ['photoswipe'];
@@ -383,7 +382,6 @@ function plugin_formcreator_hook(): void {
 function plugin_formcreator_registerClasses() {
    // Load menu entries if user is logged in and if he has access to at least one form
    if (Session::getLoginUserID() !== false) {
-
       Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
    }
    Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
