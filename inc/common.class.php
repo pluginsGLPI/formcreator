@@ -848,7 +848,7 @@ JAVASCRIPT;
       Plugin::doHook(Hooks::DISPLAY_CENTRAL);
 
       if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-         $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+         $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 1, 'mini_core');
          echo "<div class='formcreator_dashboard_container'>";
          $dashboard->show(true);
          echo "</div>";
