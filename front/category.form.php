@@ -31,9 +31,12 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkRight("entity", UPDATE);
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+    Html::displayNotFoundError();
+}
 
-Plugin::load('formcreator', true);
+Session::checkRight('entity', UPDATE);
 
 $dropdown = new PluginFormcreatorCategory();
 
