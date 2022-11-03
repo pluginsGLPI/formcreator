@@ -1,0 +1,65 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% if total_count < 1 %}
+   <div class="alert alert-info">
+      {{ __('No form answer yet', 'formcreator') }}
+   </div>
+{% else %}
+   {% set criteria = '?criteria[0][field]=3&criteria[0][searchtype]=equals&criteria[0][value]=' ~ form.getID() ~ '' %}
+   <div class="center my-4">
+      {{ __('%s latest items', 'formcreator')|format(total_count) }}
+      <a href="{{ 'PluginFormcreatorFormAnswer'|itemtype_search_path ~ criteria }}">{{ __('See all', 'formcreator') }}</a>
+   </div>
+   <div class="table-responsive">
+      <table class="table table-hover">
+         <thead>
+            <tr>
+               <th>{{ __('ID') }}</th>
+               <th>{{ __('Name') }}</th>
+               <th>{{ __('Form') }}</th>
+               <th>{{ __('Requester', 'Requesters', 1) }}</th>
+               <th>{{ __('Creation date') }}</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for row in form_answers %}
+               <tr>
+                  <td>{{ row.id }}</td>
+                  <td>{{ get_item_link('PluginFormcreatorFormAnswer', row.id) }}</a></td>
+                  <td>{{ row.form_name }}</td>
+                  <td>{{ row.requester_name }}</td>
+                  <td>{{ row.request_date }}</td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+{% endif %}
