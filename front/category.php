@@ -31,7 +31,10 @@
 
 include ('../../../inc/includes.php');
 
-Plugin::load('formcreator', true);
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+    Html::displayNotFoundError();
+}
 
 $dropdown = new PluginFormcreatorCategory();
 include (GLPI_ROOT . "/front/dropdown.common.php");
