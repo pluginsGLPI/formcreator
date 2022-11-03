@@ -340,16 +340,28 @@ function plugin_formcreator_hook(): void {
          if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
                || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
-               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/knowbaseitem.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $CFG_GLPI['javascript']['self-service']['none'] = [
+            $CFG_GLPI['javascript']['seek_assistance'][PluginFormcreatorForm::class] = [
                'dashboard',
                'gridstack'
             ];
          }
          if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
-            $CFG_GLPI['javascript']['self-service']['none'] = [
+            $CFG_GLPI['javascript']['my_assistance_requests'][PluginFormcreatorIssue::class] = [
+               'dashboard',
+               'gridstack'
+            ];
+         }
+         if (strpos($_SERVER['REQUEST_URI'], 'formdisplay.php') !== false) {
+            $CFG_GLPI['javascript']['seek_assistance'][PluginFormcreatorForm::class] = [
+               'dashboard',
+               'gridstack'
+            ];
+         }
+         if (strpos($_SERVER['REQUEST_URI'], 'knowbaseitem.php') !== false) {
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
+            $CFG_GLPI['javascript']['faq'][PluginFormcreatorForm::class] = [
                'dashboard',
                'gridstack'
             ];
@@ -364,6 +376,7 @@ function plugin_formcreator_hook(): void {
    }
 
    $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = PluginFormcreatorFormlist::class;
+   $PLUGIN_HOOKS['menu_toadd']['formcreator']['my_assistance_requests'] = PluginFormcreatorIssue::class;
 
    // Massive Action definition
    $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;

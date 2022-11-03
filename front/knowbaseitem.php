@@ -38,7 +38,11 @@ if (!$plugin->isActivated('formcreator')) {
 }
 
 if (Session::getCurrentInterface() == 'helpdesk') {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+   Html::helpHeader(
+      __('Service catalog', 'formcreator'),
+      'faq',
+      PluginFormcreatorForm::class
+   );
 } else {
    Html::header(__('Service catalog', 'formcreator'));
 }

@@ -682,7 +682,11 @@ JAVASCRIPT;
       switch (self::getInterface()) {
          case "servicecatalog":
          case "self-service":
-            return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
+            return Html::helpHeader(
+               __('Form list', 'formcreator'),
+               'seek_assistance',
+               PluginFormcreatorForm::class
+            );
          case "central":
             return Html::header(
                __('Form Creator', 'formcreator'),
@@ -783,6 +787,15 @@ JAVASCRIPT;
          'default' => PluginFormcreatorIssue::getSearchURL(false),
          'title'   => __('My requests for assistance', 'formcreator'),
          'icon'    => 'fa-fw ti ti-list',
+         'content' => [
+            PluginFormcreatorIssue::class => [
+               'title' => __('My requests for assistance', 'formcreator'),
+               'icon'  => 'fa-fw ti ti-list',
+               'links'   => [
+                  'lists' => '',
+               ],
+            ],
+         ],
       ];
 
       if (PluginFormcreatorEntityConfig::getUsedConfig('is_kb_separated', Session::getActiveEntity()) == PluginFormcreatorEntityConfig::CONFIG_KB_DISTINCT
@@ -839,7 +852,11 @@ JAVASCRIPT;
       Plugin::doHook(Hooks::DISPLAY_CENTRAL);
 
       if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_DASHBOARD_VISIBLE) {
-         $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+         if (version_compare(GLPI_VERSION, '10.0.3') > 0) {
+            $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 1, 'mini_core');
+         } else {
+            $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+         }
          echo "<div class='formcreator_dashboard_container'>";
          $dashboard->show(true);
          echo "</div>";
