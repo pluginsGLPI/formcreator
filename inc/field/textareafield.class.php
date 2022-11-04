@@ -191,6 +191,15 @@ class TextareaField extends TextField
       $key = 'formcreator_field_' . $this->question->getID();
       if (isset($this->uploads['_' . $key])) {
          $input = [$key => $this->value] + $this->uploads;
+         // for each uploaded document, check if it already exists in DB
+         foreach ($this->uploads['_tag_' . $key] as $docKey => $tag) {
+            $document = new Document();
+            $newTag = $tag;
+            if ($document->getDuplicateOf($formanswer->fields['entities_id'], GLPI_TMP_DIR . '/' . $input['_' . $key][$docKey])) {
+               $newTag = $document->fields['tag'];
+            }
+            $this->uploads['dedup'][$tag] = $newTag;
+         }
          $input = $formanswer->addFiles(
             $input,
             [
@@ -203,11 +212,7 @@ class TextareaField extends TextField
          // $this->value = $input[$key];
          $this->value = Sanitizer::unsanitize($this->value);
          foreach ($input['_tag'] as $docKey => $tag) {
-            $document = new Document();
-            $newTag = $tag;
-            if ($document->getDuplicateOf($formanswer->fields['entities_id'], GLPI_TMP_DIR . '/' . $input['_' . $key][$docKey])) {
-               $newTag = $document->fields['tag'];
-            }
+            $newTag = $this->uploads['dedup'][$tag];
             $regex = '/<img[^>]+' . preg_quote($tag, '/') . '[^<]+>/im';
             $this->value = preg_replace($regex, "#$newTag#", $this->value);
          }

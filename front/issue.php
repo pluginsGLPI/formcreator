@@ -40,7 +40,11 @@ if (!PluginFormcreatorIssue::canView()) {
    Html::displayRightError();
 }
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+   Html::helpHeader(
+      __('Service catalog', 'formcreator'),
+      'my_assistance_requests',
+      PluginFormcreatorIssue::class
+   );
 } else {
    Html::header(
       __('Service catalog', 'formcreator'),

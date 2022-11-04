@@ -32,6 +32,12 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Ticket;
+use PluginFormcreatorFormAnswer;
+use RuleAction;
+use User;
+use Rule;
+use RuleCriteria;
+use CommonITILObject;
 
 class PluginFormcreatorIssue extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -109,8 +115,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket2->fields['users_id_recipient'],
                'date_creation' => $ticket2->fields['date'],
                'date_mod'      => $ticket2->fields['date_mod'],
-               'users_id_validator'  => '0',
-               'groups_id_validator' => '0',
             ]
          ]
       ];
@@ -145,6 +149,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetSyncIssuesRequest_formAnswerWithOneTicket() {
+      // case 1
       $form = $this->getForm();
       $targetTicket1 = new \PluginFormcreatorTargetTicket();
       $targetTicket1->add([
@@ -162,6 +167,46 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $ticket = array_shift($formAnswer->targetList);
       $this->object($ticket)->isInstanceOf(\Ticket::getType());
 
+      // case 2
+      // Add business rules to add 2 validators
+      $rule = $this->getGlpiCoreItem(Rule::class, [
+         'sub_type'  => RuleTicket::class,
+         'name'      => 'add validators',
+         'match'     => 'AND',
+         'is_active' => 1,
+         'condition' => 1,
+      ]);
+      $ruleCriteria = $this->getGlpiCoreItem(RuleCriteria::class, [
+         $rule::getForeignKeyField() => $rule->getID(),
+         'criteria'                  => '_groups_id_of_requester',
+         'condition'                 => 1,
+         'pattern'                   => User::getIdByName('normal'),
+      ]);
+      $ruleAction = $this->getGlpiCoreItem(RuleAction::class, [
+         $rule::getForeignKeyField() => $rule->getID(),
+         'action_type'               => 'add_validation',
+         'field'                     => 'users_id_validate',
+         'value'                     => User::getIdByName('glpi'),
+      ]);
+      $ruleAction = $this->getGlpiCoreItem(RuleAction::class, [
+         $rule::getForeignKeyField() => $rule->getID(),
+         'action_type'               => 'add_validation',
+         'field'                     => 'users_id_validate',
+         'value'                     => User::getIdByName('normal'),
+      ]);
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $rule->update([
+         'id' => $rule->getID(),
+         'is_active' => 0,
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $formAnswer->getFromDB($formAnswer->getID());
+      $ticket2 = array_shift($formAnswer->targetList);
+      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+
       return [
          'formAnswerWithOneTicket' => [
             'item' => $ticket,
@@ -174,6 +219,19 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
+            ],
+         ],
+         'formAnswer With One Ticket Having several validators' => [
+            'item' => $ticket2,
+            'expected' => [
+               'itemtype'      => \Ticket::getType(),
+               'items_id'      => $ticket2->getID(),
+               'display_id'    => 't_' . $ticket2->getID(),
+               'name'          => $ticket2->fields['name'],
+               'status'        => CommonITILObject::ASSIGNED,
+               'requester_id'  => $ticket2->fields['users_id_recipient'],
+               'date_creation' => $ticket2->fields['date'],
+               'date_mod'      => $ticket2->fields['date_mod'],
             ],
          ],
       ];
@@ -279,8 +337,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'        => $formAnswer->fields['requester_id'],
                'date_creation'       => $formAnswer->fields['request_date'],
                'date_mod'            => $formAnswer->fields['request_date'],
-               //'users_id_validator'  => '4', // Tech
-               //'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -319,8 +375,6 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               // 'users_id_validator'  => '4', // Tech
-               // 'groups_id_validator' => '0',
             ],
          ],
       ];
@@ -358,6 +412,26 @@ class PluginFormcreatorIssue extends CommonTestCase {
          'status' => \TicketValidation::ACCEPTED
       ]);
 
+      $ticket2 = $this->getGlpiCoreItem(Ticket::class, [
+         'name'    => 'a ticket',
+         'content' => 'foo',
+         'status'  =>  \Ticket::INCOMING,
+         '_add_validation' => '0',
+         'validatortype' => User::class,
+         'users_id_validate' => [User::getIdByName('tech'), User::getIdByName('normal')], // Tech
+         '_actors' => [
+            'requester' => [
+               0 => ['itemtype' => \User::class,
+                  'items_id' => User::getIdByName('glpi'), // glpi
+                  'use_notification' => 1,
+                  'alternative_email' => '',
+               ]
+            ]
+         ]
+      ]);
+      $this->boolean($ticket2->isNewItem())->isFalse();
+      $ticket2->getFromDB($ticket2->getID());
+
       return [
          'validatedTicket' => [
             'item' => $ticket,
@@ -370,10 +444,21 @@ class PluginFormcreatorIssue extends CommonTestCase {
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
-               // 'users_id_validator'  => '4', // Tech
-               // 'groups_id_validator' => '0',
             ],
          ],
+         'ticket with multiple validators' => [
+            'item' => $ticket2,
+            'expected' => [
+               'itemtype'      => \Ticket::getType(),
+               'items_id'      => $ticket2->getID(),
+               'display_id'    => 't_' . $ticket2->getID(),
+               'name'          => $ticket2->fields['name'],
+               'status'        => PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'requester_id'  => $ticket2->fields['users_id_recipient'],
+               'date_creation' => $ticket2->fields['date'],
+               'date_mod'      => $ticket2->fields['date_mod'],
+            ],
+         ]
       ];
    }
 

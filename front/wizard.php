@@ -41,7 +41,11 @@ if (! plugin_formcreator_replaceHelpdesk()) {
 }
 
 if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+   Html::helpHeader(
+      __('Service catalog', 'formcreator'),
+      'seek_assistance',
+      PluginFormcreatorForm::class
+   );
 } else {
    Html::header(__('Service catalog', 'formcreator'));
 }

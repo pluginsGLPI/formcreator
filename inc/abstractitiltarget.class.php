@@ -2383,7 +2383,7 @@ SCRIPT;
       foreach (PluginFormcreatorCommon::getDocumentsFromTag($data['content']) as $document) {
          $prefix = uniqid('', true);
          $filename = $prefix . 'image_paste.' . pathinfo($document['filename'], PATHINFO_EXTENSION);
-         if (!copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
+         if (!@copy(GLPI_DOC_DIR . '/' . $document['filepath'], GLPI_TMP_DIR . '/' . $filename)) {
             continue;
          }
 
