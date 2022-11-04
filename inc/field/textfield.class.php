@@ -226,7 +226,7 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      $this->value = Toolbox::stripslashes_deep($input[$key]);
+      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input[$key]));
       return true;
    }
 
