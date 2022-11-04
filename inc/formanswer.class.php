@@ -527,9 +527,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                // The current user is a valdiator
                return true;
             }
-            if (ValidatorSubstitute::isUserSubstituteOf(Session::getLoginUserID(), $this->fields['users_id_validator'])) {
-               // The curent user is a substitute of the validator user
-               return true;
+            if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+               $user = User::getById(Session::getLoginUserID());
+               if ($user instanceof User && $user->isSubstituteOf($this->fields['users_id_validator'])) {
+                  // The curent user is a substitute of the validator user
+                  return true;
+               }
             }
             break;
 

@@ -905,67 +905,67 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'additionalfields'   => ['status']
       ];
 
-      $tab[] = [
-         'id'                 => '30',
-         'table'              => User::getTable(),
-         'field'              => 'name',
-         'linkfield'          => 'users_id_substitute',
-         'name'               => __('Approver substitute'),
-         'datatype'           => 'itemlink',
-         'forcegroupby'       => true,
-         'massiveaction'      => false,
-         'joinparams' => [
-            'beforejoin'         => [
-               'table'           => ValidatorSubstitute::getTable(),
-               'joinparams'         => [
-                  'jointype'           => 'child',
-                  'condition'          => [
-                     // same condition on search option 31, but with swapped expression
-                     // This workarounds identical complex join ID if a search use both search options 195 and 197
-                     [
-                        'OR' => [
-                           [
-                              'REFTABLE.substitution_start_date' => null,
-                           ], [
-                              'REFTABLE.substitution_start_date' => ['<=', $_SESSION['glpi_currenttime']],
+      if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+         $tab[] = [
+            'id'                 => '30',
+            'table'              => User::getTable(),
+            'field'              => 'name',
+            'linkfield'          => 'users_id_substitute',
+            'name'               => __('Approver substitute'),
+            'datatype'           => 'itemlink',
+            'forcegroupby'       => true,
+            'massiveaction'      => false,
+            'joinparams' => [
+               'beforejoin'         => [
+                  'table'           => ValidatorSubstitute::getTable(),
+                  'joinparams'         => [
+                     'jointype'           => 'child',
+                     'condition'          => [
+                        // same condition on search option 31, but with swapped expression
+                        // This workarounds identical complex join ID if a search use both search options 195 and 197
+                        [
+                           'OR' => [
+                              [
+                                 'REFTABLE.substitution_start_date' => null,
+                              ], [
+                                 'REFTABLE.substitution_start_date' => ['<=', $_SESSION['glpi_currenttime']],
+                              ],
                            ],
-                        ],
-                     ], [
-                        'OR' => [
-                           [
-                              'REFTABLE.substitution_end_date' => null,
-                           ], [
-                              'REFTABLE.substitution_end_date' => ['>=', $_SESSION['glpi_currenttime']],
-                           ],
-                        ],
-                     ]
-                  ],
-                  'beforejoin'         => [
-                     'table'              => User::getTable(),
-                     'linkfield'          => ((version_compare(GLPI_VERSION, '10.1') >= 0) ? 'items_id_target' : 'users_id_validate'),
-                     'joinparams'             => [
-                        'condition'                  => ((version_compare(GLPI_VERSION, '10.1') >= 0) ? [
-                           'REFTABLE.itemtype_target' => User::class,
-                        ] : ''),
-                        'beforejoin'             => [
-                           'table'                  => TicketValidation::getTable(),
-                           'linkfield'              => 'items_id',
-                           'joinparams'             => [
-                              'jointype'               => 'child',
-                              'beforejoin'             => [
-                                 'table'               => Ticket::getTable(),
-                                 'joinparams'              => [],
+                        ], [
+                           'OR' => [
+                              [
+                                 'REFTABLE.substitution_end_date' => null,
+                              ], [
+                                 'REFTABLE.substitution_end_date' => ['>=', $_SESSION['glpi_currenttime']],
                               ],
                            ],
                         ]
+                     ],
+                     'beforejoin'         => [
+                        'table'              => User::getTable(),
+                        'linkfield'          => 'items_id_target',
+                        'joinparams'             => [
+                           'condition'                  => [
+                              'REFTABLE.itemtype_target' => User::class,
+                           ],
+                           'beforejoin'             => [
+                              'table'                  => TicketValidation::getTable(),
+                              'linkfield'              => 'items_id',
+                              'joinparams'             => [
+                                 'jointype'               => 'child',
+                                 'beforejoin'             => [
+                                    'table'               => Ticket::getTable(),
+                                    'joinparams'              => [],
+                                 ],
+                              ],
+                           ]
+                        ]
                      ]
                   ]
-               ]
-            ],
-         ]
-      ];
+               ],
+            ]
+         ];
 
-      if (version_compare(GLPI_VERSION, '10.1') >= 0) {
          $tab[] = [
             'id'                 => '31',
             'table'              => User::getTable(),
