@@ -28,44 +28,27 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class UpgradeTo2_13_3 {
+   /** @var Migration */
+   protected $migration;
 
-use GlpiPlugin\Formcreator\Common;
-use GlpiPlugin\Formcreator\Form;
-use GlpiPlugin\Formcreator\Issue;
+   public function isResyncIssuesRequired() {
+      return true;
+   }
 
-require_once ('../../../inc/includes.php');
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      $this->migration = $migration;
+      $this->dropIssuesValidators();
+   }
 
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
-
-if (!Issue::canView()) {
-   Html::displayRightError();
-}
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpHeader(
-      __('Service catalog', 'formcreator'),
-      'my_assistance_requests',
-      PluginFormcreatorIssue::class
-   );
-} else {
-   Html::header(
-      __('Service catalog', 'formcreator'),
-      '',
-      'admin',
-      Form::class
-   );
-}
-
-if (Session::getCurrentInterface() == 'helpdesk') {
-   Common::showMiniDashboard();
-}
-
-Common::showGenericSearchIssue();
-
-if (Session::getCurrentInterface() == "helpdesk") {
-   Html::helpFooter();
-} else {
-   Html::footer();
+   public function dropIssuesValidators() {
+      $table = 'glpi_plugin_formcreator_issues';
+      $this->migration->dropKey($table, 'users_id_validator');
+      $this->migration->dropKey($table, 'groups_id_validator');
+      $this->migration->dropField($table, 'users_id_validator');
+      $this->migration->dropField($table, 'groups_id_validator');
+   }
 }

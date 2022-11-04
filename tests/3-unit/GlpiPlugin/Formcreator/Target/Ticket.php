@@ -1363,7 +1363,7 @@ class Ticket extends CommonTestCase {
                'content' => '##FULLFORM##',
                'type_rule'     => $testedClass::REQUESTTYPE_SPECIFIC,
                'type_question' => GlpiTicket::INCIDENT_TYPE,
-               'source_rule'   => $testedClass::REQUESTSOURCE_SPECIFIC,
+               'source_rule'   => $testedClass::REQUESTSOURCE_FORMCREATOR,
                'source_question' => $sourceId,
             ],
             'message' => null,
@@ -1533,7 +1533,7 @@ class Ticket extends CommonTestCase {
          'name' => 'target ticket',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
-         'source_rule' => $testedClass::REQUESTSOURCE_SPECIFIC,
+         'source_rule' => $testedClass::REQUESTSOURCE_FORMCREATOR,
          'source_question' => Common::getFormcreatorRequestTypeId(),
       ]);
       $this->boolean($targetTicket->isNewItem())->isFalse();

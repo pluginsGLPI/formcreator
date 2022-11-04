@@ -264,7 +264,7 @@ class CheckboxesField extends AbstractField
       }
 
       if ($richText) {
-         $value = '<p>' . implode('</p><p>', $value) . '</p>';
+         $value = implode('<br />', $value);
       } else {
          $value = implode(', ', $value);
       }

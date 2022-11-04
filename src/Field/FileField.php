@@ -126,8 +126,7 @@ class FileField extends AbstractField
          return;
       }
       $answer_value = [];
-      $index = 0;
-      foreach ($this->uploads["_$key"] as $document) {
+      foreach ($this->uploads["_$key"] as $index => $document) {
          $document = Toolbox::stripslashes_deep($document);
          if (is_file(GLPI_TMP_DIR . '/' . $document)) {
             $prefix = $this->uploads['_prefix_formcreator_field_' . $this->question->getID()][$index];

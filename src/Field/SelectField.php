@@ -116,7 +116,6 @@ class SelectField extends RadiosField
       if ($value == '0') {
          return true;
       }
-      $value = Toolbox::stripslashes_deep($value);
       $value = trim($value);
       return in_array($value, $this->getAvailableValues());
    }

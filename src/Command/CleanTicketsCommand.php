@@ -233,7 +233,7 @@ class CleanTicketsCommand extends Command
                   $itemTicketTable => Ticket::getForeignKeyField(),
                ],
                'AND' => [
-                  "$itemTicketTable.itemtype" => PluginFormcreatorFormAnswer::getType(),
+                  "$itemTicketTable.itemtype" => FormAnswer::getType(),
                ]
             ],
          ],

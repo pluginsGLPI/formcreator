@@ -97,7 +97,8 @@ class Install {
       '2.12.1' => '2.12.5',
       '2.12.5' => '2.13',
       '2.13'   => '2.13.1',
-      '2.13.1' => '2.14',
+      '2.13.1' => '2.13.3',
+      '2.13.3' => '2.14',
    ];
 
    protected bool $resyncIssues = false;
@@ -180,7 +181,7 @@ class Install {
                $message = sprintf(
                   __('The database schema is not consistent with the installed Formcreator %s. To see the logs run the command %s', 'formcreator'),
                   $oldVersion,
-                  'bin/console glpi:plugin:install formcreator -f'
+                  'bin/console glpi:database:check_schema_integrity -p formcreator'
                );
                if (!isCommandLine()) {
                   Session::addMessageAfterRedirect($message, false, ERROR);
@@ -316,7 +317,7 @@ class Install {
          $this->migration->addNewMessageArea("Upgrade to $toVersion");
       }
       if (!class_exists($updateClass)) {
-         throw new \RuntimeException("Missing upgrade step to: ", $toVersion);
+         throw new \RuntimeException("Missing upgrade step to: " . $toVersion);
       }
       $upgradeStep = new $updateClass();
       $upgradeStep->upgrade($this->migration);
