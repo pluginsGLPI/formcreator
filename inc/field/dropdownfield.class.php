@@ -432,9 +432,28 @@ class DropdownField extends PluginFormcreatorAbstractField
       $default_join = Search::addDefaultJoin($itemtype, $itemtable, $already_link_tables);
 
       $searchopt        = &Search::getOptions($itemtype);
+
+      $criteria_joins = '';
+      foreach ($filter as $criteria) {
+         $field_id = $criteria['field'];
+         // Find joins for each criteria
+         $criteria_joins .= Search::addLeftJoin(
+            $itemtype,
+            $itemtable,
+            $already_link_tables,
+            $searchopt[$field_id]['table'],
+            $searchopt[$field_id]['linkfield'],
+            0,
+            0,
+            $searchopt[$field_id]['joinparams']
+         );
+      }
+
+      $all_joins = $default_join . $criteria_joins;
+
       foreach ($data['tocompute'] as $val) {
          if (!in_array($searchopt[$val]["table"], $blacklist_tables)) {
-             $all_joins = $default_join . Search::addLeftJoin(
+             $all_joins .= Search::addLeftJoin(
                  $data['itemtype'],
                  $itemtable,
                  $already_link_tables,
