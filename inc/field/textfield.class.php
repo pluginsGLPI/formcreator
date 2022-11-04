@@ -226,7 +226,11 @@ class TextField extends PluginFormcreatorAbstractField
          return false;
       }
 
-      $this->value = Toolbox::stripslashes_deep(str_replace('\r\n', "\r\n", $input[$key]));
+      if (version_compare(GLPI_VERSION, '9.5.10', '>=')) {
+         $input[$key] = str_replace('\r\n', "\r\n", $input[$key]);
+      }
+
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 
