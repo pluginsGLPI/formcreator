@@ -99,6 +99,7 @@ class Install {
       '2.13'   => '2.13.1',
       '2.13.1' => '2.13.3',
       '2.13.3' => '2.14',
+      '2.14'   => '2.15',
    ];
 
    protected bool $resyncIssues = false;
