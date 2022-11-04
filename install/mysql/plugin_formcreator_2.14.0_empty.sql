@@ -373,7 +373,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionfilters` (
   `uuid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `id`                                int unsigned  NOT NULL AUTO_INCREMENT,
