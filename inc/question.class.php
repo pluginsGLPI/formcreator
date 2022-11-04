@@ -132,7 +132,7 @@ PluginFormcreatorTranslatableInterface
             $this->addStandardTab(self::class, $tabs, $options);
          }
       }
-      $this->addStandardTab(Log::class, $tabs, $options);
+      // $this->addStandardTab(Log::class, $tabs, $options);
       return $tabs;
    }
 
