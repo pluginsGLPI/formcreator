@@ -37,6 +37,7 @@ use Entity;
 use Entity_RSSFeed;
 use GlpiPlugin\Formcreator\EntityConfig;
 use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\Issue;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Html;
 use RSSFeed;
@@ -614,7 +615,7 @@ class Common extends CommonTestCase {
                'title' => 'My requests for assistance',
                'icon' => 'fa-fw ti ti-list',
                'content' => [
-                  PluginFormcreatorIssue::class => [
+                  Issue::class => [
                      'title' => __('My requests for assistance', 'formcreator'),
                      'icon'  => 'fa-fw ti ti-list',
                      'links'   => [
@@ -631,11 +632,15 @@ class Common extends CommonTestCase {
          ]
       ];
 
-      $rssFeed = new RSSFeed();
-      $rssFeed->add([
+      // Workaround HTTP request to the RSS url when using RSSFeed->add()
+      $DB->insert(RSSFeed::getTable(), [
+         'name' => 'RSS feed',
          'url' => 'https://localhost/feed/',
          'is_active' => 1,
       ]);
+      $rssFeed = new RSSFeed();
+      $rssFeed->getFromDB($DB->insertId());
+
       $this->boolean($rssFeed->isNewItem())->isFalse();
       $entityRssFeed = new Entity_RSSFeed();
       $entityRssFeed->add([
@@ -658,7 +663,7 @@ class Common extends CommonTestCase {
               'title' => 'My requests for assistance',
               'icon' => 'fa-fw ti ti-list',
               'content' => [
-                  PluginFormcreatorIssue::class => [
+                  Issue::class => [
                      'title' => __('My requests for assistance', 'formcreator'),
                      'icon'  => 'fa-fw ti ti-list',
                      'links'   => [

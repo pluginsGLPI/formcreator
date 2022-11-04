@@ -241,7 +241,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 }
 
 function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $searchtype) {
-   $searchopt = &Search::getOptions($itemtype);
+   $searchopt = Search::getOptions($itemtype);
    $table     = $searchopt[$ID]["table"];
    $field     = $searchopt[$ID]["field"];
 

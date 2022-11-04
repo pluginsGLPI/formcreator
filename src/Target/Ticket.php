@@ -1171,7 +1171,7 @@ class Ticket extends AbstractItilTarget
    protected function setTargetSource(array $data, FormAnswer $formanswer): array {
       switch ($this->fields['source_rule']) {
          case self::REQUESTSOURCE_NONE:
-            $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+            $data['requesttypes_id'] = Common::getFormcreatorRequestTypeId();
             break;
 
          case self::REQUESTSOURCE_FORMCREATOR:
@@ -1283,7 +1283,7 @@ class Ticket extends AbstractItilTarget
       echo Html::scriptBlock("plugin_formcreator_change_associate($rand)");
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="plugin_formcreator_associate_question_title" style="display: none">' . PluginFormcreatorQuestion::getTypeName(1) . '</span>';
+      echo '<span id="plugin_formcreator_associate_question_title" style="display: none">' . Question::getTypeName(1) . '</span>';
       echo '<span id="plugin_formcreator_associate_specific_title" style="display: none">' . __('Item ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';

@@ -704,7 +704,7 @@ JAVASCRIPT;
             return Html::helpHeader(
                __('Form list', 'formcreator'),
                'seek_assistance',
-               PluginFormcreatorForm::class
+               Form::class
             );
          case "central":
             return Html::header(
@@ -807,7 +807,7 @@ JAVASCRIPT;
          'title'   => __('My requests for assistance', 'formcreator'),
          'icon'    => 'fa-fw ti ti-list',
          'content' => [
-            PluginFormcreatorIssue::class => [
+            Issue::class => [
                'title' => __('My requests for assistance', 'formcreator'),
                'icon'  => 'fa-fw ti ti-list',
                'links'   => [

@@ -356,26 +356,26 @@ function plugin_formcreator_hook(): void {
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
                || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $CFG_GLPI['javascript']['seek_assistance'][PluginFormcreatorForm::class] = [
+            $CFG_GLPI['javascript']['seek_assistance'][Form::class] = [
                'dashboard',
                'gridstack'
             ];
          }
          if (strpos($_SERVER['REQUEST_URI'], 'issue.php') !== false) {
-            $CFG_GLPI['javascript']['my_assistance_requests'][PluginFormcreatorIssue::class] = [
+            $CFG_GLPI['javascript']['my_assistance_requests'][Issue::class] = [
                'dashboard',
                'gridstack'
             ];
          }
          if (strpos($_SERVER['REQUEST_URI'], 'formdisplay.php') !== false) {
-            $CFG_GLPI['javascript']['seek_assistance'][PluginFormcreatorForm::class] = [
+            $CFG_GLPI['javascript']['seek_assistance'][Form::class] = [
                'dashboard',
                'gridstack'
             ];
          }
          if (strpos($_SERVER['REQUEST_URI'], 'knowbaseitem.php') !== false) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['formcreator'][] = 'lib/jquery-slinky/dist/slinky.min.js';
-            $CFG_GLPI['javascript']['faq'][PluginFormcreatorForm::class] = [
+            $CFG_GLPI['javascript']['faq'][Form::class] = [
                'dashboard',
                'gridstack'
             ];
@@ -559,8 +559,8 @@ function plugin_formcreator_getSchemaPath(string $version = null): ?string {
  * Detect a versin change and save the previous version in the DB
  *
  * Used to proceed a DB sanity check before an upgrade
- * @see PluginFormcreatorInstall::upgrade
- * @see PluginFormcreatorInstall::checkSchema
+ * @see GlpiPlugin\Formcreator\Install::upgrade
+ * @see GlpiPlugin\Formcreator\Install::checkSchema
  *
  * @return void
  */

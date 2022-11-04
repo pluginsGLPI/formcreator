@@ -69,7 +69,7 @@ class DropdownField extends AbstractField
    public function getEnumEntityRestriction() {
       return [
          self::ENTITY_RESTRICT_USER =>  User::getTypeName(1),
-         self::ENTITY_RESTRICT_FORM =>  PluginFormcreatorForm::getTypeName(1),
+         self::ENTITY_RESTRICT_FORM =>  Form::getTypeName(1),
          self::ENTITY_RESTRICT_BOTH =>  __('User and form', 'formcreator'),
       ];
    }

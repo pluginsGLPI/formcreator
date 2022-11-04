@@ -47,7 +47,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
       Html::helpHeader(
          __('Form list', 'formcreator'),
          'seek_assistance',
-         PluginFormcreatorForm::class
+         Form::class
       );
    }
 } else {

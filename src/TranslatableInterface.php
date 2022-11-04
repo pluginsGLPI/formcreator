@@ -45,7 +45,7 @@ interface TranslatableInterface
     * @param array $options
     *
     * @return array strings array of translatable strings and medatadata
-    *                       [PluginFormcreatotrForm][name] => [
+    *                       ['GlpiPlugin\Formcreator\Form'][name] => [
     *                                                          'datatype' => 'text'|'string',
     *                                                          'string'   => 'string to translate'
     *                                                         ]

@@ -30,7 +30,6 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator;
-use PluginFormcreatorFormAnswer;
 use RuleAction;
 use Rule;
 use RuleCriteria;
@@ -84,7 +83,7 @@ class Issue extends CommonTestCase {
          'status'  =>  Ticket::INCOMING,
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
+               0 => ['itemtype' => User::class,
                   'items_id' => 2, // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
@@ -203,7 +202,7 @@ class Issue extends CommonTestCase {
          'field'                     => 'users_id_validate',
          'value'                     => User::getIdByName('normal'),
       ]);
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new FormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -214,7 +213,7 @@ class Issue extends CommonTestCase {
       $this->boolean($formAnswer->isNewItem())->isFalse();
       $formAnswer->getFromDB($formAnswer->getID());
       $ticket2 = array_shift($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+      $this->object($ticket)->isInstanceOf(Ticket::getType());
 
       return [
          'formAnswerWithOneTicket' => [
@@ -233,7 +232,7 @@ class Issue extends CommonTestCase {
          'formAnswer With One Ticket Having several validators' => [
             'item' => $ticket2,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket2->getID(),
                'display_id'    => 't_' . $ticket2->getID(),
                'name'          => $ticket2->fields['name'],
@@ -302,7 +301,7 @@ class Issue extends CommonTestCase {
 
       /** @var Ticket */
       $ticket = array_pop($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::class);
+      $this->object($ticket)->isInstanceOf(Ticket::class);
       return [
          'formAnswerWithOneTickets' => [
             'item' => $formAnswer,
@@ -361,7 +360,7 @@ class Issue extends CommonTestCase {
          'users_id_validate' => [4], // Tech
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
+               0 => ['itemtype' => User::class,
                   'items_id' => 2, // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
@@ -424,13 +423,13 @@ class Issue extends CommonTestCase {
       $ticket2 = $this->getGlpiCoreItem(Ticket::class, [
          'name'    => 'a ticket',
          'content' => 'foo',
-         'status'  =>  \Ticket::INCOMING,
+         'status'  =>  Ticket::INCOMING,
          '_add_validation' => '0',
          'validatortype' => User::class,
          'users_id_validate' => [User::getIdByName('tech'), User::getIdByName('normal')], // Tech
          '_actors' => [
             'requester' => [
-               0 => ['itemtype' => \User::class,
+               0 => ['itemtype' => User::class,
                   'items_id' => User::getIdByName('glpi'), // glpi
                   'use_notification' => 1,
                   'alternative_email' => '',
@@ -445,11 +444,11 @@ class Issue extends CommonTestCase {
          'validatedTicket' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
-               'status'        => \Ticket::INCOMING,
+               'status'        => Ticket::INCOMING,
                'requester_id'  => $ticket->fields['users_id_recipient'],
                'date_creation' => $ticket->fields['date'],
                'date_mod'      => $ticket->fields['date_mod'],
@@ -458,11 +457,11 @@ class Issue extends CommonTestCase {
          'ticket with multiple validators' => [
             'item' => $ticket2,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket2->getID(),
                'display_id'    => 't_' . $ticket2->getID(),
                'name'          => $ticket2->fields['name'],
-               'status'        => PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status'        => FormAnswer::STATUS_WAITING,
                'requester_id'  => $ticket2->fields['users_id_recipient'],
                'date_creation' => $ticket2->fields['date'],
                'date_mod'      => $ticket2->fields['date_mod'],
@@ -509,12 +508,12 @@ class Issue extends CommonTestCase {
       $formAnswer->getFromDB($formAnswer->getID());
 
       $ticket = array_shift($formAnswer->targetList);
-      $this->object($ticket)->isInstanceOf(\Ticket::getType());
+      $this->object($ticket)->isInstanceOf(Ticket::getType());
       return [
          'formAnswerWithSeveralRequesters' => [
             'item' => $ticket,
             'expected' => [
-               'itemtype'      => \Ticket::getType(),
+               'itemtype'      => Ticket::getType(),
                'items_id'      => $ticket->getID(),
                'display_id'    => 't_' . $ticket->getID(),
                'name'          => $ticket->fields['name'],
@@ -595,7 +594,7 @@ class Issue extends CommonTestCase {
       if ($item->getType() == FormAnswer::class) {
          $unwantedItems = $DB->request([
             'SELECT' => ['tickets_id'],
-            'FROM' => \Item_Ticket::getTable(),
+            'FROM' => Item_Ticket::getTable(),
             'WHERE' => [
                'itemtype'   => FormAnswer::getType(),
                'items_id' => $item->getID(),
@@ -628,7 +627,7 @@ class Issue extends CommonTestCase {
 
       $issue = $this->newTestedInstance();
       $issue->getFromDBByCrit([
-         'itemtype'  => \Ticket::getType(),
+         'itemtype'  => Ticket::getType(),
          'items_id'  => $ticket->getID(),
       ]);
       $this->boolean($issue->isNewItem())->isFalse();
@@ -652,7 +651,7 @@ class Issue extends CommonTestCase {
 
       $issue = $this->newTestedInstance();
       $issue->getFromDBByCrit([
-         'itemtype' => \Ticket::getType(),
+         'itemtype' => Ticket::getType(),
          'items_id' => $ticket->getID(),
       ]);
       $this->string($issue->fields['date_creation'])->isEqualTo($creationDate);

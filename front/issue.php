@@ -47,7 +47,7 @@ if (Session::getCurrentInterface() == "helpdesk") {
    Html::helpHeader(
       __('Service catalog', 'formcreator'),
       'my_assistance_requests',
-      PluginFormcreatorIssue::class
+      Issue::class
    );
 } else {
    Html::header(

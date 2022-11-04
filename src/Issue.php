@@ -647,10 +647,10 @@ class Issue extends CommonDBTM {
             'massiveaction'      => false,
             'joinparams'         => [
                'beforejoin'          => [
-                  'table'                => PluginFormcreatorFormAnswer::getTable(),
+                  'table'                => FormAnswer::getTable(),
                   'joinparams'           => [
                      'jointype'          => 'itemtype_item_revert',
-                     'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     'specific_itemtype'  => FormAnswer::class,
                   ]
                ],
             ],
@@ -790,10 +790,10 @@ class Issue extends CommonDBTM {
             'massiveaction'      => false,
             'joinparams'         => [
                'beforejoin'          => [
-                  'table'                => PluginFormcreatorFormAnswer::getTable(),
+                  'table'                => FormAnswer::getTable(),
                   'joinparams'           => [
                      'jointype'          => 'itemtype_item_revert',
-                     'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     'specific_itemtype'  => FormAnswer::class,
                   ]
                ],
             ],
