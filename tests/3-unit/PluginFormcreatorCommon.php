@@ -31,6 +31,7 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorIssue;
+use RSSFeed;
 use Ticket;
 use User;
 
