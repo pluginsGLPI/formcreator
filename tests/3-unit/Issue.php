@@ -30,11 +30,9 @@
  */
 
 namespace tests\units\GlpiPlugin\Formcreator;
-use RuleAction;
-use Rule;
-use RuleCriteria;
-use CommonITILObject;
+
 use CommonITILActor;
+use CommonITILObject;
 use DBmysqlIterator;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\FormAnswer;
@@ -43,6 +41,9 @@ use GlpiPlugin\Formcreator\Target_Actor;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Item_Ticket;
 use ITILFollowup;
+use Rule;
+use RuleAction;
+use RuleCriteria;
 use Ticket;
 use TicketValidation;
 use User;

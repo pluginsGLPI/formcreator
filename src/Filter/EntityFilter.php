@@ -32,8 +32,8 @@
 namespace GlpiPlugin\Formcreator\Filter;
 
 use Dropdown;
-use User;
 use GlpiPlugin\Formcreator\Form;
+use User;
 
 class EntityFilter
 {

@@ -35,7 +35,6 @@ use CommonDBTM;
 use CommonITILValidation;
 use Document;
 use Dropdown;
-use Glpi\Dashboard\Grid;
 use Glpi\Plugin\Hooks;
 use Gregwar\Captcha\CaptchaBuilder;
 use Html;

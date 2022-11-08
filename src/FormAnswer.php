@@ -54,7 +54,6 @@ use Plugin;
 use PluginAdvformFormAnswer;
 use PluginAdvformFormAnswerValidation;
 use QuerySubQuery;
-use Search;
 use Session;
 use Ticket;
 use Ticket_Ticket;
