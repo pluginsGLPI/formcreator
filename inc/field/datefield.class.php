@@ -147,7 +147,9 @@ class DateField extends PluginFormcreatorAbstractField
          $answer = $this->value;
       }
       $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $answerDatetime->setTime(0, 0, 0, 0);
       $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      $compareDatetime->setTime(0, 0, 0, 0);
       return $answerDatetime == $compareDatetime;
    }
 
@@ -162,7 +164,9 @@ class DateField extends PluginFormcreatorAbstractField
          $answer = $this->value;
       }
       $answerDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $answer);
+      $answerDatetime->setTime(0, 0, 0, 0);
       $compareDatetime = DateTime::createFromFormat(self::DATE_FORMAT, $value);
+      $compareDatetime->setTime(0, 0, 0, 0);
       return $answerDatetime > $compareDatetime;
    }
 

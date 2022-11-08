@@ -31,6 +31,7 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorIssue;
+use RSSFeed;
 use Ticket;
 use User;
 
@@ -600,11 +601,15 @@ class PluginFormcreatorCommon extends CommonTestCase {
          ]
       ];
 
-      $rssFeed = new \RSSFeed();
-      $rssFeed->add([
+      // Workaround HTTP request to the RSS url when using RSSFeed->add()
+      $DB->insert(RSSFeed::getTable(), [
+         'name' => 'RSS feed',
          'url' => 'https://localhost/feed/',
          'is_active' => 1,
       ]);
+      $rssFeed = new RSSFeed();
+      $rssFeed->getFromDB($DB->insertId());
+
       $this->boolean($rssFeed->isNewItem())->isFalse();
       $entityRssFeed = new \Entity_RSSFeed();
       $entityRssFeed->add([
