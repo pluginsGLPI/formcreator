@@ -33,7 +33,10 @@ use GlpiPlugin\Formcreator\Category;
 
 include ('../../../inc/includes.php');
 
-Plugin::load('formcreator', true);
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+    Html::displayNotFoundError();
+}
 
 $dropdown = new Category();
 include (GLPI_ROOT . "/front/dropdown.common.php");

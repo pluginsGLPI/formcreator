@@ -1720,11 +1720,8 @@ function pluginFormcreatorInitializeCheckboxes(fieldName, rand) {
  * Initialize a date field
  */
 function pluginFormcreatorInitializeDate(fieldName, rand) {
-   var field = $('[name="_' + fieldName + '"]');
+   var field = $('[name="' + fieldName + '"]');
    field.on("change", function() {
-      plugin_formcreator.showFields($(field[0].form));
-   });
-   $('#resetdate' + rand).on("click", function() {
       plugin_formcreator.showFields($(field[0].form));
    });
 }

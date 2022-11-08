@@ -34,9 +34,12 @@ use GlpiPlugin\Formcreator\Form;
 
 include ('../../../inc/includes.php');
 
-Session::checkRight(Form::$rightname, UPDATE);
+// Check if plugin is activated...
+if (!(new Plugin())->isActivated('formcreator')) {
+    Html::displayNotFoundError();
+}
 
-Plugin::load('formcreator', true);
+Session::checkRight(Form::$rightname, UPDATE);
 
 $dropdown = new Category();
 

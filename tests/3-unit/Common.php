@@ -39,7 +39,6 @@ use GlpiPlugin\Formcreator\EntityConfig;
 use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\Issue;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use Html;
 use RSSFeed;
 use Session;
 use Ticket;
