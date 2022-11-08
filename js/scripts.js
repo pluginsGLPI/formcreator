@@ -843,16 +843,19 @@ var plugin_formcreator = new function() {
    };
 
    this.showFields = function (form) {
+      var data = form.serializeArray();
+      data = this.serializeForAjax(form);
+
       $.ajax({
          url: formcreatorRootDoc + '/ajax/showfields.php',
          type: "POST",
-         data: form.serializeArray()
+         dataType: 'json',
+         data: data
       }).done(function(response){
          try {
-            var itemToShow = JSON.parse(response);
-            var questionToShow = itemToShow['PluginFormcreatorQuestion'];
-            var sectionToShow = itemToShow['PluginFormcreatorSection'];
-            var submitButtonToShow = itemToShow['PluginFormcreatorForm'];
+            var questionToShow = response['PluginFormcreatorQuestion'];
+            var sectionToShow = response['PluginFormcreatorSection'];
+            var submitButtonToShow = response['PluginFormcreatorForm'];
          } catch (e) {
             // Do nothing for now
          }
@@ -1462,6 +1465,18 @@ var plugin_formcreator = new function() {
 
       return true;
    };
+
+   /**
+    * Serialize a form without its csrf token
+    * @param {*} form
+    * @returns
+    */
+   this.serializeForAjax = function (form) {
+      var serialized = form.serializeArray()
+      return serialized.filter( function( item ) {
+         return item.name != '_glpi_csrf_token';
+      });
+   }
 }
 
 // === TARGETS ===
