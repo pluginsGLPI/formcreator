@@ -6,7 +6,7 @@ on:
 env:
   GLPI_SOURCE: "https://github.com/glpi-project/glpi"
   GLPI_PACKAGE_URL_BASE: "https://nightly.glpi-project.org/glpi"
-  CS: 7.4
+  CS: 8.1
   DB_HOST: 127.0.0.1
   MYSQL_ROOT_USER: root
   DB_USER: glpi
@@ -40,14 +40,9 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        php-versions: [7.4, 8.1]
-        glpi-branch: [10.0/bugfixes]
-        glpi-package: [10.0.tar.gz]
-        include:
-          - php-versions: 8.1
-            glpi-branch: main
-            glpi-package: main.tar.gz
-            # glpi-use-repo: true
+        php-versions: [8.1]
+        glpi-branch: [main]
+        glpi-package: [main.tar.gz]
 
     services:
       db:
