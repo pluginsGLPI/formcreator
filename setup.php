@@ -81,6 +81,7 @@ function plugin_version_formcreator() {
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
       'license'        => '<a href="' . $webDir . '/LICENSE.md" target="_blank">GPLv2</a>',
       'requirements'   => [
+         'php'            => '8.0.2',
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
          ]

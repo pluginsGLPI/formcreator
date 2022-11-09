@@ -119,8 +119,9 @@ class UpgradeTo2_15 {
       }
 
       // Same for some foreign keys
-      $this->migration->renameItemtype('PluginFormcreatorItem_TargetTicket', 'GlpiPlugin\\Formcreator\\Item_TargetTicket');
       $table = (new DbUtils())->getTableForItemType(Item_TargetTicket::class);
+      $this->migration->changeField($table, 'plugin_formcreator_targettickets_id', 'plugin_formcreator_targets_tickets_id', 'integer');
+      $this->migration->migrationOneTable($table);
       $this->migration->dropKey($table, 'plugin_formcreator_targettickets_id');
       $this->migration->addKey($table, 'plugin_formcreator_targets_tickets_id');
 
@@ -141,6 +142,8 @@ class UpgradeTo2_15 {
       $this->migration->renameItemtype('PluginFormcreatorForm_Validator', 'GlpiPlugin\\Formcreator\\Form_Validator');
       $this->migration->renameItemtype('PluginFormcreatorForm_Language', 'GlpiPlugin\\Formcreator\\Form_Language');
       $this->migration->renameItemtype('PluginFormcreatorCondition', 'GlpiPlugin\\Formcreator\\Condition');
+      // Task will be recreated at the end of upgrade, with the new class name
+      CronTask::unregister('formcreator');
       $this->migration->renameItemtype('PluginFormcreatorIssue', 'GlpiPlugin\\Formcreator\\Issue');
    }
 
@@ -233,7 +236,7 @@ class UpgradeTo2_15 {
    }
 
    public function addTargetContract() {
-      $table = 'glpi_plugin_formcreator_targettickets';
+      $table = 'glpi_plugin_formcreator_targets_tickets';
       $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
 
       $this->migration->addField($table, 'contract_rule', 'integer', ['after' => 'location_question', 'value' => '1']);

@@ -35,6 +35,7 @@ use Appliance;
 use Budget;
 use CartridgeItem;
 use Certificate;
+use Change;
 use CommonDBChild;
 use CommonDBTM;
 use CommonGLPI;
