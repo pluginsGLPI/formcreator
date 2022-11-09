@@ -48,13 +48,10 @@ class UpgradeTo2_15 {
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
 
-      $this->addTargetContract();
       $this->normalizeForeignKeys();
       $this->namespacize();
       $this->addTtoToIssues();
       $this->addRights();
-      $this->addPropertiesToCategories();
-      $this->addTargetActorUnicity();
       $this->addEntityOption();
    }
 
@@ -120,8 +117,6 @@ class UpgradeTo2_15 {
 
       // Same for some foreign keys
       $table = (new DbUtils())->getTableForItemType(Item_TargetTicket::class);
-      $this->migration->changeField($table, 'plugin_formcreator_targettickets_id', 'plugin_formcreator_targets_tickets_id', 'integer');
-      $this->migration->migrationOneTable($table);
       $this->migration->dropKey($table, 'plugin_formcreator_targettickets_id');
       $this->migration->addKey($table, 'plugin_formcreator_targets_tickets_id');
 
@@ -192,54 +187,5 @@ class UpgradeTo2_15 {
 
    public function isResyncIssuesRequiresd() {
       return true;
-   }
-
-   public function addPropertiesToCategories() {
-      global $DB;
-
-      $table = (new DbUtils())->getTableForItemType(Category::class);
-      $this->migration->addField($table, 'icon', 'string', ['after' => 'knowbaseitemcategories_id']);
-      $this->migration->addField($table, 'icon_color', 'string', ['after' => 'icon']);
-      if (!$DB->fieldExists($table, 'background_color')) {
-         $this->migration->addField($table, 'background_color', 'string', ['after' => 'icon_color']);
-         $this->migration->addPostQuery("UPDATE `$table` SET background_color=''");
-      }
-   }
-
-   public function addTargetActorUnicity() {
-      /** @var DBmysql $DB */
-      global $DB;
-
-      $table = (new DbUtils())->getTableForItemType(Target_Actor::class);
-      $unicity = [
-         'itemtype',
-         'items_id',
-         'actor_role',
-         'actor_type',
-         'actor_value'
-      ];
-
-      // Clean existing duplicates
-      $DB->queryOrDie("DELETE `t1` FROM `$table` `t1`
-         INNER JOIN `$table` `t2`
-         WHERE
-            t1.id < t2.id AND
-            t1.itemtype = t2.itemtype
-            AND t1.items_id = t2.items_id
-            AND t1.actor_role = t2.actor_role
-            AND t1.actor_type = t2.actor_type
-            AND t1.actor_value = t2.actor_value"
-      );
-
-      // Set unicity
-      $this->migration->addKey($table, $unicity, 'unicity', 'UNIQUE');
-   }
-
-   public function addTargetContract() {
-      $table = 'glpi_plugin_formcreator_targets_tickets';
-      $unsignedIntType = "INT UNSIGNED NOT NULL DEFAULT '0'";
-
-      $this->migration->addField($table, 'contract_rule', 'integer', ['after' => 'location_question', 'value' => '1']);
-      $this->migration->addField($table, 'contract_question', $unsignedIntType, ['after' => 'contract_rule']);
    }
 }

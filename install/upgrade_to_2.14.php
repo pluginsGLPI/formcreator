@@ -28,7 +28,10 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_14 {
+
+use GlpiPlugin\Formcreator\Form;
+
+class UpgradeTo2_14 {
    /** @var Migration */
    protected $migration;
 
@@ -113,7 +116,7 @@ class PluginFormcreatorUpgradeTo2_14 {
             $profile['id'],
             [
                Entity::$rightname,
-               PluginFormcreatorForm::$rightname,
+               Form::$rightname,
             ]
          );
          if (($rights[Entity::$rightname] & (UPDATE + CREATE + DELETE + PURGE)) == 0) {
@@ -121,7 +124,7 @@ class PluginFormcreatorUpgradeTo2_14 {
          }
          $right = READ + UPDATE + CREATE + DELETE + PURGE;
          ProfileRight::updateProfileRights($profile['id'], [
-            PluginFormcreatorForm::$rightname => $right,
+            Form::$rightname => $right,
          ]);
       }
    }
