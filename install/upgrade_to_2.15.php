@@ -29,14 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-use GlpiPlugin\Formcreator\Category;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\Issue;
 use GlpiPlugin\Formcreator\Item_TargetTicket;
 use GlpiPlugin\Formcreator\Target\Change as TargetChange;
 use GlpiPlugin\Formcreator\Target\Problem as TargetProblem;
 use GlpiPlugin\Formcreator\Target\Ticket as TargetTicket;
-use GlpiPlugin\Formcreator\Target_Actor;
 
 class UpgradeTo2_15 {
    /** @var Migration */
