@@ -903,7 +903,7 @@ JAVASCRIPT;
     * @param string $itemtype
     * @return string
     */
-   public function transformItemtypeForHtml(string $itemtype): string {
+   public static function transformItemtypeForHtml(string $itemtype): string {
       return str_replace('\\', '_', $itemtype);
    }
 }

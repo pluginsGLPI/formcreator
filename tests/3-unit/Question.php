@@ -1046,8 +1046,8 @@ class Question extends CommonTestCase {
       ]);
       $this->boolean($question->isNewItem())->isFalse();
       $output = $question->getTranslatableStrings();
-      //if ($questionType == 'float') $this->dumpOnFailure($output);
-      $this->array($output)->isIdenticalTo($expected);
+      if ($questionType == 'textarea') $this->dumpOnFailure($output);
+      $this->array($output)->isIdenticalTo($expected, "fail :" . $questionType);
    }
 
    public function testSetRequired() {

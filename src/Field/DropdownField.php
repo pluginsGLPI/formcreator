@@ -32,25 +32,23 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
-use Html;
-use Toolbox;
-use Session;
-use DBUtils;
-use Dropdown;
 use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
+use DBUtils;
+use Dropdown;
 use Entity;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Formcreator\AbstractField;
+use GlpiPlugin\Formcreator\Common;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\FormAnswer;
 use GlpiPlugin\Formcreator\QuestionFilter;
-use GlpiPlugin\Formcreator\Exception\ComparisonException;
-use Glpi\Application\View\TemplateRenderer;
 use Group;
 use Group_Ticket;
 use Group_User;
+use Html;
 use ITILCategory;
 use OLA;
 use Profile_User;
@@ -58,9 +56,11 @@ use QueryExpression;
 use QuerySubQuery;
 use QueryUnion;
 use Search;
+use Session;
 use SLA;
 use Ticket;
 use Ticket_User;
+use Toolbox;
 use User;
 
 class DropdownField extends AbstractField
@@ -100,7 +100,7 @@ class DropdownField extends AbstractField
       $options = [];
       $options['candel'] = false;
       $options['target'] = "javascript:;";
-      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', Common::transformItemtypeForHtml($this->question::getType()), $this->question->getID());
 
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
@@ -670,7 +670,7 @@ class DropdownField extends AbstractField
    }
 
    public function getEmptyParameters(): array {
-      $filter = new PluginFormcreatorQuestionFilter();
+      $filter = new QuestionFilter();
       $filter->setField($this, [
          'fieldName' => 'filter',
          'label'     => __('Filter', 'formcreator'),

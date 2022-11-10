@@ -157,7 +157,7 @@ TranslatableInterface
             $number = $count['cpt'];
          }
          return self::createTabEntry(self::getTypeName($number), $number);
-      } else if ($item instanceof PluginFormcreatorQuestion) {
+      } else if ($item instanceof Question) {
          return $item->field->getTabNameForItem($this);
       }
       return '';
@@ -172,7 +172,7 @@ TranslatableInterface
             $this->addStandardTab(self::class, $tabs, $options);
          }
       }
-      $this->addStandardTab(Log::class, $tabs, $options);
+      // $this->addStandardTab(Log::class, $tabs, $options);
       return $tabs;
    }
 
@@ -190,7 +190,7 @@ TranslatableInterface
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       if ($item instanceof Form) {
          static::showForForm($item, $withtemplate);
-      } else if ($item instanceof PluginFormcreatorQuestion) {
+      } else if ($item instanceof Question) {
          $item->loadField($item->fields['fieldtype']);
          $item->field->displayTabContentForItem($item, $tabnum);
       }
@@ -1303,9 +1303,9 @@ TranslatableInterface
       global $PLUGIN_HOOKS;
 
       $parameters = [
-        PluginFormcreatorQuestionFilter::class,
-        PluginFormcreatorQuestionRange::class,
-        PluginFormcreatorQuestionRegex::class,
+        QuestionFilter::class,
+        QuestionRange::class,
+        QuestionRegex::class,
       ];
 
       foreach ($PLUGIN_HOOKS['formcreator_add_parameters'] ?? [] as $plugin_parameters) {

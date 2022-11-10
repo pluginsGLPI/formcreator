@@ -1,5 +1,5 @@
 {
-    "schema_version": 2.14,
+    "schema_version": 2.15,
     "forms": [
         {
             "name": "form with all question types",
@@ -48,9 +48,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601ab77b79a509.18118712",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -69,9 +69,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601ab79bbba0a0.19857797",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -90,9 +90,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601ab7a834e3f5.07106804",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -111,9 +111,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601ab7b1c8d7c1.11667479",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -132,9 +132,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abdb2063f79.46605588",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -153,9 +153,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abdfdcc8fd1.84035821",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -174,9 +174,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe0815b000.17364810",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -195,9 +195,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe14968c26.35804626",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -216,9 +216,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe1cc21963.97578386",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -237,9 +237,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe330f0302.22202879",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -258,9 +258,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe457b0777.64285141",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -279,9 +279,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe4fdd6ad8.76787569",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -300,9 +300,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe59431976.94731515",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -321,9 +321,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe61c401a3.03952564",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -342,9 +342,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abe7b71f9e5.56305216",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -363,9 +363,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf00962273.46958603",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -384,9 +384,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf0fde29b8.16357890",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -405,9 +405,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf1c415458.16937803",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -426,9 +426,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf36511874.97759648",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -447,8 +447,8 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf5c404b15.55917287",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [
                                     {
                                         "range_min": 0,
                                         "range_max": 0,
@@ -456,7 +456,7 @@
                                         "uuid": "ccea03e5-5249058e-6329b473992b15.13945786"
                                     }
                                 ],
-                                "PluginFormcreatorQuestionRegex": [
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": [
                                     {
                                         "regex": "/foo/",
                                         "fieldname": "regex",
@@ -481,9 +481,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf68a16b61.05105004",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": [
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": [
                                     {
                                         "regex": "/foo/",
                                         "fieldname": "regex",
@@ -508,9 +508,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf775fbe74.36590864",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         },
@@ -529,9 +529,9 @@
                             "show_rule": 1,
                             "uuid": "3a905a97-4e912b5c-601abf85964995.42495152",
                             "_parameters": {
-                                "PluginFormcreatorQuestionFilter": [],
-                                "PluginFormcreatorQuestionRange": [],
-                                "PluginFormcreatorQuestionRegex": []
+                                "GlpiPlugin\\Formcreator\\QuestionFilter": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRange": [],
+                                "GlpiPlugin\\Formcreator\\QuestionRegex": []
                             },
                             "_conditions": []
                         }
@@ -541,9 +541,9 @@
             ],
             "_conditions": [],
             "_targets": {
-                "PluginFormcreatorTargetTicket": [],
-                "PluginFormcreatorTargetChange": [],
-                "PluginFormcreatorTargetProblem": []
+                "GlpiPlugin\\Formcreator\\Target\\Ticket": [],
+                "GlpiPlugin\\Formcreator\\Target\\Change": [],
+                "GlpiPlugin\\Formcreator\\Target\\Problem": []
             },
             "_validators": [],
             "_translations": []
