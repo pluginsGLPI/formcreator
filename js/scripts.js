@@ -1812,10 +1812,28 @@ function pluginFormcreatorInitializeTag(fieldName, rand) {
  * Initialize a textarea field
  */
 function pluginFormcreatorInitializeTextarea(fieldName, rand) {
-   var field = $('[name="' + fieldName + '"]');
-   field.on("change", function(e) {
-      plugin_formcreator.showFields($(field[0].form));
-   });
+   if (tinyMCE.majorVersion < 5) {
+      var field = $('[name="' + fieldName + '"]');
+      field.on("change", function(e) {
+         plugin_formcreator.showFields($(field[0].form));
+      });
+   } else {
+      var i = 0;
+      var e;
+      while (e = tinymce.get(i++)) {
+         var field = $('[name="' + fieldName + '"]');
+         var form = field[0].form;
+         if (e.formElement != form) {
+            continue;
+         }
+         // https://stackoverflow.com/a/63342064
+         e.on('input NodeChange', function(e) {
+            tinyMCE.triggerSave();
+            plugin_formcreator.showFields($(form));
+         });
+         return;
+     }
+   }
 }
 
 /**
