@@ -334,9 +334,9 @@ function plugin_formcreator_MassiveActions($itemtype) {
    switch ($itemtype) {
       case Form::class:
          return [
-            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
-            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
-            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
+            $itemtype . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
+            $itemtype . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
+            $itemtype . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
          ];
    }
    return [];
