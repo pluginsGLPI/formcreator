@@ -116,7 +116,7 @@ jobs:
       matrix:
         php-versions: [8.1]
         env:
-          - { GLPI_BRANCH: 10.0/bugfixes }
+          - { GLPI_BRANCH: main }
     name: "Code quality"
     runs-on: "ubuntu-latest"
     steps:
