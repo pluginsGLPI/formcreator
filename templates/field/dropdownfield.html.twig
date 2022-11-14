@@ -99,6 +99,25 @@
     }) }}
     {% endif %}
 
+    {% if item.fields['itemtype'] is defined and (item.fields['itemtype'] == 'SLA' or item.fields['itemtype'] == 'OLA' ) %}
+        {# keys are SLM:TTR, SLM::TTO #}
+        {{ fields.dropdownArrayField(
+            '_show_service_level_types',
+            item.fields['_show_service_level_types'],
+            {
+                0: __('Time to resolve', 'formcreator'),
+                1: __('Time to own', 'formcreator'),
+            },
+            __('Type', 'formcreator')
+        ) }}
+
+     {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
+    {% endif %}
+
+
     {# _is_tree is set in the showForm method, and helps to find if the itemtype is a tree #}
     {% if item.fields['_is_tree'] == '1' %}
 
