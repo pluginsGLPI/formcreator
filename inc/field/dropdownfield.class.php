@@ -54,6 +54,7 @@ use Ticket;
 use Ticket_User;
 use Search;
 use SLA;
+use SLM;
 use OLA;
 use QuerySubQuery;
 use QueryUnion;
@@ -89,6 +90,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
       $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_show_ticket_categories'] = isset($decodedValues['show_ticket_categories']) ? $decodedValues['show_ticket_categories'] : 'both';
+      $this->question->fields['_show_service_level_types'] = isset($decodedValues['show_service_level_types']) ? $decodedValues['show_service_level_types'] : SLM::TTO;
       $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
@@ -514,8 +516,8 @@ class DropdownField extends PluginFormcreatorAbstractField
       } else if ($input['itemtype'] == SLA::getType()
          || $input['itemtype'] == OLA::getType()
       ) {
-         $input['values']['show_service_level_types'] = $input['show_service_level_types'];
-         unset($input['show_service_level_types']);
+         $input['values']['show_service_level_types'] = $input['_show_service_level_types'];
+         unset($input['_show_service_level_types']);
       }
 
       // Params for entity restrictables itemtypes
