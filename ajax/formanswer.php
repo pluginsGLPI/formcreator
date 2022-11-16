@@ -75,7 +75,7 @@ if ($form->fields['plugin_formcreator_forms_id'] > 0) {
    if ($nextForm->getFromDB($form->fields['plugin_formcreator_forms_id']) && $nextForm->fields['is_active'] == 1) {
       echo json_encode(
          [
-            'redirect' => 'formdisplay.php?id=' . $form->fields['plugin_formcreator_forms_id'],
+            'redirect' => 'formdisplay.php?id=' . $nextForm->getID(),
          ], JSON_FORCE_OBJECT
       );
       die();

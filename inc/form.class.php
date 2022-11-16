@@ -1580,10 +1580,8 @@ PluginFormcreatorTranslatableInterface
       // replace form next id
       if ($export['plugin_formcreator_forms_id'] > 0) {
          $nextForm = new self();
-         if (!$nextForm->getFromDB($export['plugin_formcreator_forms_id'])) {
-            // Error : next form missing in DB
-            $export['plugin_formcreator_forms_id'] = '';
-         } else {
+         $export['plugin_formcreator_forms_id'] = '';
+         if ($nextForm->getFromDB($export['plugin_formcreator_forms_id'])) {
             $export['plugin_formcreator_forms_id'] = $nextForm->fields['uuid'];
          }
       }
