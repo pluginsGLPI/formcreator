@@ -624,6 +624,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorItem_TargetTicket',
          'PluginFormcreatorIssue',
          'PluginFormcreatorQuestionDependency',
+         'PluginFormcreatorQuestionFilter',
          'PluginFormcreatorQuestionRange',
          'PluginFormcreatorQuestionRegex',
          'PluginFormcreatorForm_Language',
