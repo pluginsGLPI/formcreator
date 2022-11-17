@@ -840,6 +840,10 @@ JAVASCRIPT;
          $_SESSION['glpifold_menu'] = 1;
       }
 
+      if (PluginFormcreatorEntityconfig::getUsedConfig('is_folded_menu', Session::getActiveEntity()) == PluginFormcreatorEntityconfig::CONFIG_LEFT_MENU_FOLDED) {
+         $_SESSION['glpifold_menu'] = 1;
+      }
+
       return $newMenu;
    }
 

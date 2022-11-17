@@ -51,6 +51,8 @@ PluginFormcreatorTranslatableInterface
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
+   public $taborientation  = 'horizontal';
+
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private ?PluginFormcreatorFieldInterface $field = null;
 
@@ -115,8 +117,23 @@ PluginFormcreatorTranslatableInterface
             $number = $count['cpt'];
          }
          return self::createTabEntry(self::getTypeName($number), $number);
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         return $item->field->getTabNameForItem($this);
       }
       return '';
+   }
+
+   public function defineTabs($options = []) {
+      $tabs = [];
+      $this->addDefaultFormTab($tabs);
+      if ($this->loadField($this->fields['fieldtype'])) {
+         foreach ($this->field->getTabNameForItem($this) as $tabName) {
+            // $this->field->defineExtraTabs($tabs, $options);
+            $this->addStandardTab(self::class, $tabs, $options);
+         }
+      }
+      // $this->addStandardTab(Log::class, $tabs, $options);
+      return $tabs;
    }
 
    /**
@@ -133,6 +150,9 @@ PluginFormcreatorTranslatableInterface
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
          static::showForForm($item, $withtemplate);
+      } else if ($item instanceof PluginFormcreatorQuestion) {
+         $item->loadField($item->fields['fieldtype']);
+         $item->field->displayTabContentForItem($item, $tabnum);
       }
    }
 
@@ -314,13 +334,6 @@ PluginFormcreatorTranslatableInterface
          }
       }
 
-      // - field type is required
-      if (isset($input['fieldtype'])
-          && empty($input['fieldtype'])) {
-         Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
-         return [];
-      }
-
       // - section is required
       if (isset($input['plugin_formcreator_sections_id'])
           && empty($input['plugin_formcreator_sections_id'])) {
@@ -354,23 +367,6 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
-      // Check the parameters are provided
-      $parameters = $this->field->getEmptyParameters();
-      if (count($parameters) > 0) {
-         if (!isset($input['_parameters'][$input['fieldtype']])) {
-            // This should not happen
-            Session::addMessageAfterRedirect(__('This type of question requires parameters', 'formcreator'), false, ERROR);
-            return [];
-         }
-         foreach ($parameters as $parameter) {
-            if (!isset($input['_parameters'][$input['fieldtype']][$parameter->getFieldName()])) {
-               // This should not happen
-               Session::addMessageAfterRedirect(__('A parameter is missing for this question type', 'formcreator'), false, ERROR);
-               return [];
-            }
-         }
-      }
-
       $input = $this->field->prepareQuestionInputForSave($input);
       if ($input === false || !is_array($input)) {
          // Invalid data
@@ -397,6 +393,11 @@ PluginFormcreatorTranslatableInterface
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
+      if (isset($input['criteria']['filter'])) {
+         $itemtype = $input['fieldtype'] ?? '';
+         $input['_parameters'][$itemtype] = $input['criteria'];
+      }
+
       if (!$this->skipChecks) {
          $input = $this->checkBeforeSave($input);
 
@@ -445,7 +446,15 @@ PluginFormcreatorTranslatableInterface
     * @array return the modified $input array
     */
    public function prepareInputForUpdate($input) {
-      // global $DB;
+      if (isset($input['criteria']['filter'])) {
+         $itemtype = $input['fieldtype'] ?? $this->fields['fieldtype'];
+         $input['_parameters'][$itemtype] = $input['criteria'];
+      }
+
+      if (isset($input['fieldtype']) && $input['fieldtype'] != $this->fields['fieldtype']) {
+         Session::addMessageAfterRedirect(__('The field type cannot be changed. Delete then recreate the question.', 'formcreator'), false, ERROR);
+         return [];
+      }
 
       if (!$this->skipChecks) {
          if (!isset($input['plugin_formcreator_sections_id'])) {
@@ -582,12 +591,8 @@ PluginFormcreatorTranslatableInterface
       if (!isset($this->fields['fieldtype'])) {
          return;
       }
-      $fieldType = $this->fields['fieldtype'];
 
-      // The fieldtype may change
-      if (isset($input['fieldtype'])) {
-         $fieldType = $input['fieldtype'];
-      }
+      $fieldType = $input['fieldtype'] ?? $this->fields['fieldtype'];
 
       $this->loadField($fieldType);
       $this->field->updateParameters($this, $input);
@@ -724,11 +729,22 @@ PluginFormcreatorTranslatableInterface
       $options['target'] = "javascript:;";
       $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', self::getType(), $this->getID());
 
+      // $options may contain values from a form (i.e. changing the question field type)
+      foreach ($options as $request_key => $request_value) {
+         if (isset($this->fields[$request_key])) {
+            $this->fields[$request_key] = $_REQUEST[$request_key];
+         } else {
+            $values[$request_key] = $request_value;
+         }
+      }
+      $this->fields['values'] = json_encode($values);
+
       $template = '@formcreator/field/undefinedfield.html.twig';
       if (!$this->loadField($this->fields['fieldtype'])) {
          TemplateRenderer::getInstance()->display($template, [
             'item' => $this,
             'params' => $options,
+            'no_header' => true,
          ]);
          return true;
       }
@@ -831,34 +847,11 @@ PluginFormcreatorTranslatableInterface
       // add the question to the linker
       $linker->addObject($originalId, $item);
 
-      // Import conditions
-      if (isset($input['_conditions'])) {
-         foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorCondition::import($linker, $condition, $itemId);
-         }
-      }
-
-      // Import parameters
-      $field = PluginFormcreatorFields::getFieldInstance(
-         $input['fieldtype'],
-         $item
-      );
-      if (isset($input['_parameters'])) {
-         $parameters = $field->getParameters();
-         foreach ($parameters as $fieldName => $parameter) {
-            if (is_array($input['_parameters'][$input['fieldtype']][$fieldName])) {
-               /** @var PluginFormcreatorExportableInterface $parameter */
-               $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
-            } else {
-               // Import data incomplete, parameter not defined
-               // Adding an empty parameter (assuming the question is actually added or updated in DB)
-               $parameterInput = $parameter->fields;
-               $parameterInput['plugin_formcreator_questions_id'] = $itemId;
-               unset($parameterInput['id']);
-               $parameter->add($parameterInput);
-            }
-         }
-      }
+      $subItems = [
+         '_parameters' => PluginFormcreatorQuestion::getTargetTypes(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $item->importChildrenObjects($item, $linker, $subItems, $input);
 
       return $itemId;
    }
@@ -866,6 +859,7 @@ PluginFormcreatorTranslatableInterface
    public static function countItemsToImport(array $input) : int {
       // TODO: need improvement to handle parameters
       $subItems = [
+         '_parameters' => PluginFormcreatorQuestion::getTargetTypes(),
          '_conditions' => PluginFormcreatorCondition::class,
       ];
 
@@ -883,20 +877,11 @@ PluginFormcreatorTranslatableInterface
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       unset($export[$sectionFk]);
 
-      // get question conditions
-      $export['_conditions'] = [];
-      $all_conditions = PluginFormcreatorCondition::getConditionsFromItem($this);
-      foreach ($all_conditions as $condition) {
-         $export['_conditions'][] = $condition->export($remove_uuid);
-      }
-
-      // get question parameters
-      $export['_parameters'] = [];
-      $this->loadField($this->fields['fieldtype']);
-      $parameters = $this->field->getParameters();
-      foreach ($parameters as $fieldname => $parameter) {
-         $export['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
-      }
+      $subItems = [
+         '_parameters' => PluginFormcreatorQuestion::getTargetTypes(),
+         '_conditions' => PluginFormcreatorCondition::class,
+      ];
+      $export = $this->exportChildrenObjects($subItems, $export, $remove_uuid);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -1267,5 +1252,26 @@ PluginFormcreatorTranslatableInterface
             'data-itemtype' => $itemtype
          ],
       ] + $options);
+   }
+
+   /**
+    * Get supported question parameters
+    *
+    * @return array
+    */
+   public static function getTargetTypes() : array {
+      global $PLUGIN_HOOKS;
+
+      $parameters = [
+        PluginFormcreatorQuestionFilter::class,
+        PluginFormcreatorQuestionRange::class,
+        PluginFormcreatorQuestionRegex::class,
+      ];
+
+      foreach ($PLUGIN_HOOKS['formcreator_add_parameters'] ?? [] as $plugin_parameters) {
+         array_push($parameters, ...$plugin_parameters);
+      }
+
+      return $parameters;
    }
 }
