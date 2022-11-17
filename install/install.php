@@ -86,6 +86,21 @@ class PluginFormcreatorInstall {
    protected bool $resyncIssues = false;
 
    /**
+    * All upgradable versions
+    *
+    * used for unit tests
+    *
+    * @return array
+    */
+   public function getUpgradableVersions(): array {
+      $versions = $this->upgradeSteps;
+      unset($versions['0.0']);
+      $versions = array_keys($versions);
+
+      return $versions;
+   }
+
+   /**
     * Install the plugin
     * @param Migration $migration
     * @param array $args arguments passed to CLI

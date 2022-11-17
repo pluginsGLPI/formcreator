@@ -35,6 +35,7 @@ use Glpi\Dashboard\Dashboard;
 use Glpi\Dashboard\Item;
 use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorInstall;
 use Profile;
 use ProfileRight;
 use PluginFormcreatorEntityconfig;
@@ -362,5 +363,19 @@ class Config extends CommonTestCase {
          $this->integer((int) $row['rights'])->isEqualTo($expected);
       }
       $this->boolean($superAdminRightFound)->istrue();
+   }
+
+   public function testSchemaFiles() {
+      $install = new PluginFormcreatorInstall();
+      $versions = $install->getUpgradableVersions();
+
+      foreach ($versions as $version) {
+         if (substr_count($version, '.') == 1) {
+            $version .= '.0';
+         }
+         $this->boolean(file_exists(realpath(GLPI_ROOT) . "/plugins/formcreator/install/mysql/plugin_formcreator_${version}_empty.sql"))->isTrue();
+      }
+
+      $this->boolean((file_exists(realpath(GLPI_ROOT) . '/plugins/formcreator/install/mysql/plugin_formcreator_empty.sql')))->isTrue();
    }
 }
