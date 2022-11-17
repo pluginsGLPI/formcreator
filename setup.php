@@ -542,14 +542,20 @@ function plugin_formcreator_options() {
  * @return string|null
  */
 function plugin_formcreator_getSchemaPath(string $version = null): ?string {
-   if ($version === null) {
-      $version = PLUGIN_FORMCREATOR_VERSION;
-   }
+   $version = $version ?? PLUGIN_FORMCREATOR_VERSION;
 
    // Drop suffixes for alpha, beta, rc versions
    $matches = [];
    preg_match('/^(\d+\.\d+\.\d+)/', $version, $matches);
    $version = $matches[1];
+
+   $matches = [];
+   preg_match('/^(\d+\.\d+\.\d+)/', PLUGIN_FORMCREATOR_VERSION, $matches);
+   $current_version = $matches[1];
+
+   if ($version === $current_version) {
+      return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_empty.sql";
+   }
 
    return Plugin::getPhpDir('formcreator') . "/install/mysql/plugin_formcreator_{$version}_empty.sql";
 }
