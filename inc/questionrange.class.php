@@ -161,6 +161,9 @@ extends PluginFormcreatorAbstractQuestionParameter
       $field = $question->getSubField();
 
       $item = $field->getEmptyParameters();
+      if (!isset($item[$input['fieldname']])) {
+         throw new ImportFailureException(sprintf('Unsupported question parameter %1$s for %2$s', $input['fieldname'], static::getTypeName(1)));
+      }
       $item = $item[$input['fieldname']];
 
       // Find an existing condition to update, only if an UUID is available
