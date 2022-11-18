@@ -825,7 +825,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
             $ticket_opts = $ticket_opts + PluginFormcreatorFormAnswer::getStatuses();
-            unset($ticket_opts[PluginFormcreatorFormAnswer::STATUS_WAITING]);
             return Dropdown::showFromArray($name, $ticket_opts, ['display' => false,
                                                                  'value'   => $values[$field]]);
             break;
