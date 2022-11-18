@@ -367,6 +367,7 @@ PluginFormcreatorTranslatableInterface
          return [];
       }
 
+      $input['itemtype'] = $this->fields['itemtype'] ?? ($input['itemtype'] ?? '');
       $input = $this->field->prepareQuestionInputForSave($input);
       if ($input === false || !is_array($input)) {
          // Invalid data
