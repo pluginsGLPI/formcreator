@@ -967,12 +967,6 @@ PluginFormcreatorTranslatableInterface
                'searchtype' => 'equals',
                'value'      => 'myself',
             ],
-            1 => [
-               'link'       => 'OR',
-               'field'      => 7,
-               'searchtype' => 'equals',
-               'value'      => 'mygroups',
-            ],
          ],
          'sort' => [
             0 => 6
@@ -981,6 +975,15 @@ PluginFormcreatorTranslatableInterface
             0 => 'DESC'
          ],
       ];
+      if (count($_SESSION['glpigroups'] ?? []) > 0) {
+         // The user is member of some groups, then add criteria for those groups
+         $criteria['criteria'][] = [
+            'link'       => 'OR',
+            'field'      => 7,
+            'searchtype' => 'equals',
+            'value'      => 'mygroups',
+         ];
+      }
       $backupListLimit = $_SESSION['glpilist_limit'];
       $_SESSION['glpilist_limit'] = 5;
       $search = Search::getDatas(PluginFormcreatorFormAnswer::class, $criteria, $showColumns);
