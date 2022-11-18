@@ -76,6 +76,7 @@ class ActorField extends PluginFormcreatorAbstractField
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
          'params' => $options,
+         'no_header' => true,
       ]);
    }
 

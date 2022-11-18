@@ -59,6 +59,14 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
       $this->question = $question;
    }
 
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      return false;
+   }
+
    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void {
       $this->form_answer = $form_answer;
       if ($this->hasInput($this->form_answer->getAnswers())) {
@@ -220,6 +228,7 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
             'fieldname'                         => $fieldname,
          ]);
          if ($parameter->isNewItem()) {
+            // Create the missing parameter with defaults, but do not create it in DB
             $parameter->getEmpty();
          }
       }
@@ -241,9 +250,6 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
 
    public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {
       $fieldTypeName = $this->getFieldTypeName();
-      if (!isset($input['_parameters'][$fieldTypeName])) {
-         return;
-      }
 
       foreach ($this->getParameters() as $fieldName => $parameter) {
          if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
@@ -251,9 +257,11 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
          }
          $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
          $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
+         $parameterInput = array_merge($parameter->fields, $parameterInput);
          if ($parameter->isNewItem()) {
             // In case of the parameter vanished in DB, just recreate it
             unset($parameterInput['id']);
+            unset($parameterInput['uuid']); // uuid must be set automatically
             $parameter->add($parameterInput);
          } else {
             $parameterInput['id'] = $parameter->getID();

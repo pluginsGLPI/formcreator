@@ -311,4 +311,14 @@ interface PluginFormcreatorFieldInterface
     * @return void
     */
    public function setFormAnswer(PluginFormcreatorFormAnswer $form_answer): void;
+
+   /**
+    * define additional tab names to design the question
+    *
+    * @param array $tabs
+    * @return void
+    */
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array;
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool;
 }

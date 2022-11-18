@@ -84,16 +84,16 @@ class PluginFormcreatorSection extends CommonTestCase {
 
       // create objects
       $forms_id = $form->add(['name'                => "test clone form",
-                                   'is_active'           => true,
-                                   'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
+                              'is_active'           => true,
+                              'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
       $sections_id = $section->add(['name'                        => "test clone section",
-                                         'plugin_formcreator_forms_id' => $forms_id]);
+                                    'plugin_formcreator_forms_id' => $forms_id]);
       $question->add(['name'                           => "test clone question 1",
-                                             'fieldtype'                      => 'text',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
+                      'fieldtype'                      => 'text',
+                      'plugin_formcreator_sections_id' => $sections_id]);
       $question->add(['name'                           => "test clone question 2",
-                                             'fieldtype'                      => 'textarea',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
+                      'fieldtype'                      => 'textarea',
+                      'plugin_formcreator_sections_id' => $sections_id]);
 
       //get section
       $section->getFromDB($sections_id);
@@ -381,7 +381,7 @@ class PluginFormcreatorSection extends CommonTestCase {
            '471217363e6922ff6b1c9fd9cd57cd2a' => 'request type description',
            '64dfbbc489b074af269e0b0fbf0d901b' => 'select description',
            'b371eae37f18f0b6125002999b2404ba' => 'text description',
-           'f81bad6b9c8f01a40099a140881313a8' => 'textarea description',
+           '7e4dc84bec34373c30ee35b8c90a401c' => '&#60;p&#62;textarea description&#60;/p&#62;',
            '8d544ed7c846a47654b2f55db879d7b2' => 'time description',
            'e634ce2f4abe0deaa3f7cd44e13f4af6' => 'urgency description',
          ],
@@ -442,7 +442,7 @@ class PluginFormcreatorSection extends CommonTestCase {
            '6fd6eacf3005974a7489a199ed7b45ee' => 'itemlink',
            'b371eae37f18f0b6125002999b2404ba' => 'text',
            'b99b0833f1dab41a14eb421fa2ce690d' => 'itemlink',
-           'f81bad6b9c8f01a40099a140881313a8' => 'text',
+           '7e4dc84bec34373c30ee35b8c90a401c' => 'text',
            '4f87be8f6e593d167f5fd1ab238cfc2d' => 'string',
            'e3a0dfbc9d24603beddcbd1388808a7a' => 'itemlink',
            '8d544ed7c846a47654b2f55db879d7b2' => 'text',
