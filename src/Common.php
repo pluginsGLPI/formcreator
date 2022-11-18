@@ -35,6 +35,7 @@ use CommonDBTM;
 use CommonITILValidation;
 use Document;
 use Dropdown;
+use Glpi\Dashboard\Grid;
 use Glpi\Plugin\Hooks;
 use Gregwar\Captcha\CaptchaBuilder;
 use Html;
@@ -871,9 +872,9 @@ JAVASCRIPT;
 
       if (EntityConfig::getUsedConfig('is_dashboard_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_DASHBOARD_VISIBLE) {
          if (version_compare(GLPI_VERSION, '10.0.3') > 0) {
-            $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 1, 'mini_core');
+            $dashboard = new Grid('plugin_formcreator_issue_counters', 33, 1, 'mini_core');
          } else {
-            $dashboard = new Glpi\Dashboard\Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
+            $dashboard = new Grid('plugin_formcreator_issue_counters', 33, 0, 'mini_core');
          }
          echo "<div class='formcreator_dashboard_container'>";
          $dashboard->show(true);
@@ -885,7 +886,7 @@ JAVASCRIPT;
       //backup session value
       $save_session_fold_search = $_SESSION['glpifold_search'];
       //hide search if need
-      if (Entityconfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == Entityconfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
+      if (EntityConfig::getUsedConfig('is_search_issue_visible', Session::getActiveEntity()) == EntityConfig::CONFIG_SEARCH_ISSUE_HIDDEN) {
          $_SESSION['glpifold_search'] = true;
       }
 

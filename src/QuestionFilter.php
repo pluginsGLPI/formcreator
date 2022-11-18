@@ -43,13 +43,13 @@ if (!defined('GLPI_ROOT')) {
  * this case the question A has this parameter to maitnain the dependency to the
  * question B
  */
-class QuestionRange
+class QuestionFilter
 extends AbstractQuestionParameter
 {
    use TranslatableTrait;
 
    public static function getTypeName($nb = 0) {
-      return _n('Question range', 'Question ranges', $nb, 'formcreator');
+      return _n('Question filter', 'Question filters', $nb, 'formcreator');
    }
 
    public function rawSearchOptions() {
@@ -58,26 +58,17 @@ extends AbstractQuestionParameter
       $tab[] = [
          'id'                 => '4',
          'table'              => $this::getTable(),
-         'field'              => 'range_min',
-         'name'               => __('Minimum range', 'formcreator'),
-         'datatype'           => 'integer',
-         'massiveaction'      => false,
-      ];
-
-      $tab[] = [
-         'id'                 => '5',
-         'table'              => $this::getTable(),
-         'field'              => 'range_max',
-         'name'               => __('maximum range', 'formcreator'),
-         'datatype'           => 'integer',
+         'field'              => 'filter',
+         'name'               => __('Filter', 'formcreator'),
          'massiveaction'      => false,
       ];
 
       return $tab;
    }
 
+
    public function getParameterFormSize() {
-      return 0;
+      return 1;
    }
 
    public function getParameterForm(Question $question) {
@@ -85,34 +76,51 @@ extends AbstractQuestionParameter
       $name = '_parameters[' . $this->field->getFieldTypeName() . '][' . $this->fieldName . ']';
 
       // get the selected value in the dropdown
-      $rangeMin = '';
-      $rangeMax = '';
+      $selected = '';
       $this->getFromDBByCrit([
          'plugin_formcreator_questions_id' => $question->getID(),
          'fieldname' => $this->fieldName,
       ]);
-      if (!$this->isNewItem()) {
-         $rangeMin = $this->fields['range_min'];
-         $rangeMax = $this->fields['range_max'];
-      }
 
+      // build HTML code
+      // TODO: GLPI shoud be able to use predefinesd search criteria with very few changes
+      // @see Search::showGenericSearch() which calls Search::displayCriteria passing its criterias
+      // @see Search::displayCriteria() which may receives criterias in $request['criteria'] but fully ignores it
+      $criteria_backup = $_SESSION['glpisearch'][$question->fields['itemtype']]['criteria'] ?? [];
+      $_SESSION['glpisearch'][$question->fields['itemtype']]['criteria'] = $this->fields['filter'];
       $out = TemplateRenderer::getInstance()->render(
-         '@formcreator/questionparameter/range.html.twig',
+         '@formcreator/questionparameter/filter.html.twig',
          [
             'item'   => $this,
+            'question' => $question,
             'label'  => $this->label,
             'params' => [
                'name'  => $name,
             ],
          ]
       );
-
+      $_SESSION['glpisearch'][$question->fields['itemtype']]['criteria'] = $criteria_backup;
       return $out;
    }
 
    public function post_getEmpty() {
-      $this->fields['range_min'] = '0';
-      $this->fields['range_max'] = '0';
+      $this->fields['filter'] = [];
+   }
+
+   public function post_getFromDB() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   public function pre_addInDB() {
+      if (isset($this->input['filter'])) {
+         $this->input['filter'] = json_encode($this->input['filter']);
+      }
+   }
+
+   public function pre_updateInDB() {
+      if (isset($this->fields['filter'])) {
+         $this->fields['filter'] = json_encode($this->fields['filter']);
+      }
    }
 
    public function prepareInputForAdd($input) {
@@ -120,6 +128,19 @@ extends AbstractQuestionParameter
       $input['fieldname'] = $this->fieldName;
 
       return $input;
+   }
+
+   public function post_updateItem($history = 1) {
+      // filter was encoded in JSON in pre_updateInDB. Re-decode it again
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   private function encodeFilter() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
+   }
+
+   private function decodeFilter() {
+      $this->fields['filter'] = json_decode($this->fields['filter'] ?? '[]', true);
    }
 
    public function getFieldName() {
@@ -146,7 +167,7 @@ extends AbstractQuestionParameter
       return $parameter;
    }
 
-   public static function import(Linker $linker, $input = [], $containerId = 0) {
+   public static function import(Linker $linker, array $input = [], int $containerId = 0) {
       global $DB;
 
       if (!isset($input['uuid']) && !isset($input['id'])) {
@@ -181,7 +202,7 @@ extends AbstractQuestionParameter
       }
 
       // escape text fields
-      foreach (['range_min', 'range_max'] as $key) {
+      foreach (['regex'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
       }
 

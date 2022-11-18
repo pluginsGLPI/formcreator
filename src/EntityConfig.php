@@ -481,6 +481,22 @@ class EntityConfig extends CommonDBTM {
       }
       echo '</td></tr>';
 
+      // left menu visibility (foelded / unfolded)
+      $elements = self::getEnumLeftMenuVisibility();
+      if ($entityId == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Menu visibility (only for vertical menu)', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('is_folded_menu', $elements, ['value' => $this->fields['is_folded_menu']]);
+      if ($this->fields['is_folded_menu'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('is_folded_menu', $entityId);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
       // header
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . _n('Header', 'Headers', 1, 'formcreator') . "</td>";

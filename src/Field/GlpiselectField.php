@@ -33,6 +33,7 @@
 namespace GlpiPlugin\Formcreator\Field;
 
 use CommonDBTM;
+use CommonGLPI;
 use CommonTreeDropdown;
 use Dropdown;
 use Entity;
@@ -65,10 +66,23 @@ class GlpiselectField extends DropdownField
       $this->question->fields['default_values'] = Html::entities_deep($this->question->fields['default_values']);
       $this->deserializeValue($this->question->fields['default_values']);
 
+      $parameters = $this->getParameters();
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
+         'question_params' => $parameters,
          'params' => $options,
+         'no_header' => true,
       ]);
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      switch ($tabnum) {
+         case 1:
+            $this->showFilter();
+            return true;
+      }
+
+      return false;
    }
 
    public static function getName(): string {

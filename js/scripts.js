@@ -852,10 +852,14 @@ var plugin_formcreator = new function() {
    };
 
    this.showFields = function (form) {
+      var data = form.serializeArray();
+      data = this.serializeForAjax(form);
+
       $.ajax({
          url: formcreatorRootDoc + '/ajax/showfields.php',
          type: "POST",
-         data: form.serializeArray()
+         dataType: 'json',
+         data: data
       }).done(function(response){
          try {
             var itemToShow = JSON.parse(response);
@@ -1028,6 +1032,10 @@ var plugin_formcreator = new function() {
             });
          }
       });
+   };
+
+   this.showSearchFilter = function () {
+      // document.querySelector('#plugin_formcreator_filter_preview');
    };
 
    this.addSection = function (event) {
@@ -1416,7 +1424,7 @@ var plugin_formcreator = new function() {
             // We cannot use document.querySelector here
             $('form[name="asset_form"][data-itemtype="' + itemtype + '"]')
             .closest('div.asset')
-            .replaceWith(response);
+            .html(response);
          } catch (e) {
             console.log('Plugin Formcreator: Failed to get subtype fields');
             return;
@@ -1485,6 +1493,18 @@ var plugin_formcreator = new function() {
 
       return true;
    };
+
+   /**
+    * Serialize a form without its csrf token
+    * @param {*} form
+    * @returns
+    */
+   this.serializeForAjax = function (form) {
+      var serialized = form.serializeArray()
+      return serialized.filter( function( item ) {
+         return item.name != '_glpi_csrf_token';
+      });
+   }
 }
 
 // === TARGETS ===
@@ -2002,11 +2022,11 @@ function plugin_formcreator_change_contract(rand) {
    $('#contract_question_value').hide();
 
    switch($('#dropdown_contract_rule' + rand).val()) {
-      case '3' : // PluginFormcreatorAbstractTarget::CONTRACT_RULE_ANSWER
+      case '3' : // GlpiPlugin\Formcreator\AbstractTarget::CONTRACT_RULE_ANSWER
          $('#contract_question_title').show();
          $('#contract_question_value').show();
          break;
-      case '2' : // PluginFormcreatorAbstractTarget::CONTRACT_RULE_SPECIFIC
+      case '2' : // GlpiPlugin\Formcreator\AbstractTarget::CONTRACT_RULE_SPECIFIC
          $('#contract_specific_title').show();
          $('#contract_specific_value').show();
          break;

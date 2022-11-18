@@ -398,7 +398,7 @@ class Install {
       $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
                   (entities_id, replace_helpdesk, default_form_list_mode, sort_order, is_kb_separated, is_search_visible, is_dashboard_visible, is_header_visible, is_search_issue_visible, tile_design, home_page, is_category_visible, is_folded_menu)
                SELECT ent.id,
-                  IF(ent.id = 0, 0, -2),
+               IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
                   IF(ent.id = 0, 0, -2),
@@ -650,6 +650,7 @@ class Install {
          Item_TargetTicket::class,
          Issue::class,
          QuestionDependency::class,
+         QuestionFilter::class,
          QuestionRange::class,
          QuestionRegex::class,
          Form_Language::class,

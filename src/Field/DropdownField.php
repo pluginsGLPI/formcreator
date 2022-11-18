@@ -32,6 +32,7 @@
 
 namespace GlpiPlugin\Formcreator\Field;
 
+use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
 use CommonTreeDropdown;
@@ -42,6 +43,7 @@ use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Formcreator\AbstractField;
 use GlpiPlugin\Formcreator\Form;
 use GlpiPlugin\Formcreator\FormAnswer;
+use GlpiPlugin\Formcreator\QuestionFilter;
 use Group;
 use Group_Ticket;
 use Group_User;
@@ -49,11 +51,13 @@ use Html;
 use ITILCategory;
 use OLA;
 use Profile_User;
+use QueryExpression;
 use QuerySubQuery;
 use QueryUnion;
 use Search;
 use Session;
 use SLA;
+use SLM;
 use Ticket;
 use Ticket_User;
 use Toolbox;
@@ -74,6 +78,40 @@ class DropdownField extends AbstractField
       ];
    }
 
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [
+         1 => __('Search filter', 'formcreator'),
+      ];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      switch ($tabnum) {
+         case 1:
+            $this->showFilter();
+            return true;
+      }
+
+      return false;
+   }
+
+   protected function showFilter() {
+      $template = '@formcreator/field/' . $this->question->fields['fieldtype'] . 'field.filter.html.twig';
+      $parameters = $this->getParameters();
+      $options = [];
+      $options['candel'] = false;
+      $options['target'] = "javascript:;";
+      $options['formoptions'] = sprintf('onsubmit="plugin_formcreator.submitQuestion(this)" data-itemtype="%s" data-id="%s"', $this->question::getType(), $this->question->getID());
+
+      TemplateRenderer::getInstance()->display($template, [
+         'item' => $this->question,
+         'params' => $options,
+         'question_params' => $parameters,
+         'no_header' => true,
+      ]);
+
+      return true;
+   }
+
    public function isPrerequisites(): bool {
       $itemtype = $this->getSubItemtype();
 
@@ -89,6 +127,7 @@ class DropdownField extends AbstractField
       $this->question->fields['_tree_root_selectable'] = $decodedValues['selectable_tree_root'] ?? '0';
       $this->question->fields['_tree_max_depth'] = $decodedValues['show_tree_depth'] ?? Dropdown::EMPTY_VALUE;
       $this->question->fields['_show_ticket_categories'] = isset($decodedValues['show_ticket_categories']) ? $decodedValues['show_ticket_categories'] : 'both';
+      $this->question->fields['_show_service_level_types'] = isset($decodedValues['show_service_level_types']) ? $decodedValues['show_service_level_types'] : SLM::TTO;
       $this->question->fields['_entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
       $this->question->fields['_is_tree'] = '0';
       $this->question->fields['_is_entity_restrict'] = '0';
@@ -103,6 +142,7 @@ class DropdownField extends AbstractField
       TemplateRenderer::getInstance()->display($template, [
          'item' => $this->question,
          'params' => $options,
+         'no_header' => true,
       ]);
    }
 
@@ -329,7 +369,17 @@ class DropdownField extends AbstractField
          $dparams_cond_crit['level'] = ['<=', $decodedValues['show_tree_depth'] + $baseLevel];
       }
 
-      $dparams['condition'] = $dparams_cond_crit;
+      // search filter
+      $search_filter = $this->buildSearchFilter();
+      if (count($search_filter['LEFT JOIN']) > 0) {
+         $dparams['condition']['LEFT JOIN'] = $search_filter['LEFT JOIN'];
+      }
+      if (count($dparams_cond_crit) > 0) {
+         $dparams['condition']['WHERE'][] = $dparams_cond_crit;
+      }
+      if ($search_filter['WHERE'] != "") {
+         $dparams['condition']['WHERE'][] = new QueryExpression($search_filter['WHERE']);
+      }
 
       $dparams['display_emptychoice'] = false;
       if ($itemtype != Entity::class) {
@@ -352,6 +402,102 @@ class DropdownField extends AbstractField
       }
 
       return $dparams;
+   }
+
+   /**
+    * get all JOINS required for a search by the itemtype and the search criterias
+    *
+    * @return string
+    */
+   private function buildSearchFilter(): array {
+      $parameters = $this->getParameters();
+      $filter = $parameters['filter']->fields['filter'];
+
+      // @see Search::getDatas
+      $itemtype = $this->question->fields['itemtype'];
+      $data = Search::prepareDatasForSearch($itemtype, $filter);
+
+      $blacklist_tables = [];
+      $orig_table = Search::getOrigTableName($itemtype);
+      if (isset($CFG_GLPI['union_search_type'][$itemtype])) {
+          $itemtable          = $CFG_GLPI['union_search_type'][$itemtype];
+          $blacklist_tables[] = $orig_table;
+      } else {
+          $itemtable = $orig_table;
+      }
+
+      $already_link_tables = [];
+      // Put reference table
+      array_push($already_link_tables, $itemtable);
+
+      $default_join = Search::addDefaultJoin($itemtype, $itemtable, $already_link_tables);
+
+      $searchopt        = &Search::getOptions($itemtype);
+
+      $criteria_joins = '';
+      foreach ($filter as $criteria) {
+         $field_id = $criteria['field'];
+         // Find joins for each criteria
+         $criteria_joins .= Search::addLeftJoin(
+            $itemtype,
+            $itemtable,
+            $already_link_tables,
+            $searchopt[$field_id]['table'],
+            $searchopt[$field_id]['linkfield'],
+            0,
+            0,
+            $searchopt[$field_id]['joinparams']
+         );
+      }
+
+      $all_joins = $default_join . $criteria_joins;
+
+      foreach ($data['tocompute'] as $val) {
+         if (!in_array($searchopt[$val]["table"], $blacklist_tables)) {
+             $all_joins .= Search::addLeftJoin(
+                 $data['itemtype'],
+                 $itemtable,
+                 $already_link_tables,
+                 $searchopt[$val]["table"],
+                 $searchopt[$val]["linkfield"],
+                 0,
+                 0,
+                 $searchopt[$val]["joinparams"],
+                 $searchopt[$val]["field"]
+             );
+         }
+      }
+
+      $select = '';
+      Search::constructAdditionalSqlForMetacriteria($filter, $select, $all_joins, $already_link_tables, $data);
+
+      // we have all JOINS in a string.
+      // Trying now to convert them into a Query Builder compatible array
+
+      $joins = explode('LEFT JOIN', trim($all_joins));
+      $join_array = [];
+      foreach ($joins as $join) {
+         $join = trim($join);
+         if ($join == '') {
+            continue;
+         }
+         list($table, $join_condition) = explode('ON', $join, 2);
+         // $table may contain an alias expression
+         // $join_condition is the join condition in round brackets (included)
+         $table = str_replace('`', '', trim($table)); // also remove backquotes
+         $join_condition = trim($join_condition);
+         $join_array[$table] = [
+            new QueryExpression(($join_condition)),
+         ];
+      }
+
+      $where = Search::addDefaultWhere($itemtype);
+      $where .= Search::constructCriteriaSQL($filter, $data, $searchopt);
+
+      return [
+         'LEFT JOIN' => $join_array,
+         'WHERE'     => $where,
+      ];
    }
 
    public function getRenderedHtml($domain, $canEdit = true): string {
@@ -514,8 +660,8 @@ class DropdownField extends AbstractField
       } else if ($input['itemtype'] == SLA::getType()
          || $input['itemtype'] == OLA::getType()
       ) {
-         $input['values']['show_service_level_types'] = $input['show_service_level_types'];
-         unset($input['show_service_level_types']);
+         $input['values']['show_service_level_types'] = $input['_show_service_level_types'];
+         unset($input['_show_service_level_types']);
       }
 
       // Params for entity restrictables itemtypes
@@ -541,6 +687,18 @@ class DropdownField extends AbstractField
 
    public static function canRequire(): bool {
       return true;
+   }
+
+   public function getEmptyParameters(): array {
+      $filter = new QuestionFilter();
+      $filter->setField($this, [
+         'fieldName' => 'filter',
+         'label'     => __('Filter', 'formcreator'),
+         'fieldType' => ['text'],
+      ]);
+      return [
+         'filter' => $filter,
+      ];
    }
 
    /**

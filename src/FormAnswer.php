@@ -1616,7 +1616,7 @@ class FormAnswer extends CommonDBTM
             'internal_time_to_resolve'   => null,
             'solvedate'                  => null,
             'date'                       => null,
-            'takeintoaccount_delay_stat' => null,
+            'takeintoaccount_delay_stat' => '0',
          ]);
 
          return;

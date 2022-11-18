@@ -351,7 +351,7 @@ implements ExportableInterface
       $header = '<tr>';
       $header.= '<th>' . Html::getCheckAllAsCheckbox("translation_list$rand", $rand) . '</th>';
       $header.= '<th>' . __('Original string', 'formcreator') . '</th>';
-      $header.= '<th>' . Translation::getTypeName(1) . '</th>';
+      $header.= '<th>' . __('Translation', 'Translations', 1, 'formcreator') . '</th>';
       $header.= '</tr>';
       echo $header;
       echo '</thead>';
@@ -359,7 +359,7 @@ implements ExportableInterface
       echo '<tbody>';
       foreach ($translations as $original => $translated) {
          $id = Translation::getTranslatableStringId($original);
-         echo '<tr data-itemtype="' . str_replace('\\', '_', Translation::getType()) . '" data-id="' . $id . '">';
+         echo '<tr data-itemtype="' . str_replace('\\', '_', Translation::class) . '" data-id="' . $id . '">';
          echo '<td>'
          . Html::getCheckbox([
             'name'  => 'plugin_formcreator_translation[' . $id . ']',

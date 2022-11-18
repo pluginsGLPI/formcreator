@@ -59,6 +59,7 @@ class TextareaField extends TextField
          'item' => $this->question,
          'question_params' => $parameters,
          'params' => $options,
+         'no_header' => true,
       ]);
    }
 
@@ -268,7 +269,7 @@ class TextareaField extends TextField
          return [];
       }
 
-      $this->value = $input['default_values'];
+      $this->value = $input['default_values'] ?? '';
 
       // Handle uploads
       $key = 'formcreator_field_' . $this->question->getID();
@@ -277,7 +278,7 @@ class TextareaField extends TextField
          $this->uploads['_prefix_' . $key] = $input['_prefix_default_values'];
          $this->uploads['_tag_' . $key] = $input['_tag_default_values'];
       }
-      $input[$key] = $input['default_values'];
+      $input[$key] = $input['default_values'] ?? '';
 
       return $input;
    }

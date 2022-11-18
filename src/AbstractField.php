@@ -32,6 +32,7 @@
 
 namespace GlpiPlugin\Formcreator;
 
+use CommonGLPI;
 use Html;
 use Toolbox;
 
@@ -56,6 +57,14 @@ abstract class AbstractField implements FieldInterface
     */
    public function __construct(Question $question) {
       $this->question = $question;
+   }
+
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array {
+      return [];
+   }
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool {
+      return false;
    }
 
    public function setFormAnswer(FormAnswer $form_answer): void {
@@ -219,6 +228,7 @@ abstract class AbstractField implements FieldInterface
             'fieldname'                         => $fieldname,
          ]);
          if ($parameter->isNewItem()) {
+            // Create the missing parameter with defaults, but do not create it in DB
             $parameter->getEmpty();
          }
       }
@@ -240,9 +250,6 @@ abstract class AbstractField implements FieldInterface
 
    public final function updateParameters(Question $question, array $input) {
       $fieldTypeName = $this->getFieldTypeName();
-      if (!isset($input['_parameters'][$fieldTypeName])) {
-         return;
-      }
 
       foreach ($this->getParameters() as $fieldName => $parameter) {
          if (!isset($input['_parameters'][$fieldTypeName][$fieldName])) {
@@ -250,9 +257,11 @@ abstract class AbstractField implements FieldInterface
          }
          $parameterInput = $input['_parameters'][$fieldTypeName][$fieldName];
          $parameterInput['plugin_formcreator_questions_id'] = $this->question->getID();
+         $parameterInput = array_merge($parameter->fields, $parameterInput);
          if ($parameter->isNewItem()) {
             // In case of the parameter vanished in DB, just recreate it
             unset($parameterInput['id']);
+            unset($parameterInput['uuid']); // uuid must be set automatically
             $parameter->add($parameterInput);
          } else {
             $parameterInput['id'] = $parameter->getID();

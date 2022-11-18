@@ -31,6 +31,8 @@
 
 namespace GlpiPlugin\Formcreator;
 
+use CommonGLPI;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -313,4 +315,14 @@ interface FieldInterface
     * @return void
     */
    public function setFormAnswer(FormAnswer $form_answer): void;
+
+   /**
+    * define additional tab names to design the question
+    *
+    * @param array $tabs
+    * @return void
+    */
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): array;
+
+   public function displayTabContentForItem(CommonGLPI $item, int $tabnum): bool;
 }

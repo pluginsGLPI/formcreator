@@ -148,6 +148,7 @@ class Question extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => Condition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
             ],
             'expectedError' => null,
          ],
@@ -207,6 +208,7 @@ class Question extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => Condition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -236,6 +238,7 @@ class Question extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => Condition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -266,6 +269,7 @@ class Question extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => Condition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -938,12 +942,12 @@ class Question extends CommonTestCase {
                ],
                'text' =>
                [
-                  'f81bad6b9c8f01a40099a140881313a8' => 'textarea description',
+                  '7e4dc84bec34373c30ee35b8c90a401c' => '&#60;p&#62;textarea description&#60;/p&#62;',
                ],
                'id' =>
                [
                   'b99b0833f1dab41a14eb421fa2ce690d' => 'itemlink',
-                  'f81bad6b9c8f01a40099a140881313a8' => 'text',
+                  '7e4dc84bec34373c30ee35b8c90a401c' => 'text',
                   '4f87be8f6e593d167f5fd1ab238cfc2d' => 'string',
                ]
             ]
