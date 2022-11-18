@@ -1100,17 +1100,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getSolvedCriteria() {
-      return ['criteria' => [
-         [
-         'criteria' => [[
-            'link'       => 'OR',
-            'field' => 4,
-            'searchtype' => 'equals',
-            'value'      => Ticket::SOLVED, // see Ticket::getAllStatusArray()
-         ],
-         ]],
-      ],
-      'reset'    => 'reset'];
+      return ['criteria' => [['link'       => 'AND',
+                              'field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => Ticket::SOLVED, // see Ticket::getAllStatusArray()
+                              ],
+                            ],
+              'reset'    => 'reset'];
    }
 
    static function getClosedCriteria() {
