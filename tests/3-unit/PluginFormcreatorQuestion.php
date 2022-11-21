@@ -157,6 +157,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
             ],
             'expected' => [
                'plugin_formcreator_sections_id' => $section1->getID(),
@@ -171,6 +172,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
             ],
             'expectedError' => null,
          ],
@@ -204,6 +206,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -230,6 +233,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -259,6 +263,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -289,6 +294,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'width'                          => '4',
                'height'                         => '1',
                'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               'itemtype'                       => '',
                '_parameters'     => [
                   'text' => [
                      'range' => [
