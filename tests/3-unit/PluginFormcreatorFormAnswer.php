@@ -33,10 +33,12 @@ namespace tests\units;
 use CommonITILObject;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm;
+use PluginFormcreatorForm_Validator;
 use PluginFormcreatorTargetTicket;
 use PluginFormcreatorTargetChange;
 use PluginFormcreatorTargetProblem;
 use Ticket;
+use User;
 class PluginFormcreatorFormAnswer extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -99,12 +101,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $this->boolean($form->isNewItem())->isFalse();
       $user = new \User();
       $user->getFromDBbyName('tech');
-      $success = $form->update([
-         'id'                  => $form->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users'    => [$user->getID()] // glpi
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => $user->getType(),
+         'users_id'                    => $user->getID()
       ]);
-      $this->boolean($success)->isTrue();
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $data['unique validator user autoselection'] = [
          'input' => [
@@ -322,12 +325,15 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
    }
 
    public function providerCanValidate() {
-      $validatorUserId = 5; // normal
-      $form1 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => $validatorUserId
+      $validatorUserId = User::getIdByName('normal');
+      $form1 = $this->getForm();
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $form_validator->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => $validatorUserId
       ]);
-      $this->boolean($form1->isNewItem())->isFalse();
+      $this->boolean($form_validator->isNewItem())->isFalse();
 
       $group = new \Group();
       $group->add([
@@ -340,10 +346,17 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'groups_id' => $group->getID(),
       ]);
       $form2 = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP,
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
          '_validator_groups' => $group->getID()
       ]);
       $this->boolean($form2->isNewItem())->isFalse();
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $form_validator->add([
+         'plugin_formcreator_forms_id' => $form2->getID(),
+         'itemtype'                    => $group->getType(),
+         'groups_id'                   => $group->getID()
+      ]);
+      $this->boolean($form_validator->isNewItem())->isFalse();
 
       return [
          'having validate incident right, validator user can validate' => [
@@ -460,17 +473,13 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $question = $this->getQuestion(['fieldtype' => 'text']);
       $form = new PluginFormcreatorForm;
       $form = \PluginFormcreatorForm::getByItem($question);
-      // $formValidator = new \PluginFormcreatorForm_Validator();
-      // $formValidator->add([
-      //    'plugin_formcreator_forms_id' => $form->getID(),
-      //    'itemtype'                    => \User::class,
-      //    'items_id'                    => \Session::getLoginUserID(),
-      // ]);
-      $form->update([
-         'id' => $form->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => \Session::getLoginUserID(),
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => \Session::getLoginUserID()
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       /**
        * Test updating a simple form answer

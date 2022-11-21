@@ -29,37 +29,40 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+/**
+ * This class represents the supervisor of a requester in the list of
+ * validators of a form
+ *
+ * @see PluginFormcreatorForm_Validator
+ */
+class PluginFormcreatorSupervisorValidator extends CommonDBTM
+implements PluginFormcreatorSpecificValidator
+{
+   protected static $notable = true;
 
-Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
-
-// Check if plugin is activated...
-if (!(new Plugin())->isActivated('formcreator')) {
-   Html::displayNotFoundError();
-}
-
-if (!isset($_POST['plugin_formcreator_forms_id'])) {
-   // should not happen
-   Html::back();
-}
-$item = new PluginFormcreatorForm_Validator();
-if (isset($_POST['add'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   // $input = $_POST;
-   // $input['id'] = (int) $_POST['plugin_formcreator_forms_id'];
-   // unset($input['plugin_formcreator_forms_id']);
-   // $form->update($input);
-   $form = PluginFormcreatorForm::getById($_POST['plugin_formcreator_forms_id']);
-   unset($_POST['uuid']);
-   if ($newID = $item->add($_POST)) {
-      if ($_SESSION['glpibackcreated']) {
-         Html::redirect($form->getLinkURL());
-      }
+   public static function getTypeName($nb = 0) {
+       return _n('Requester supervisor', 'Requester supervisors', $nb, 'formcreator');
    }
-   Html::back();
-} else if (isset($_POST['delete'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
-   $item->delete($_POST);
-   Html::back();
+
+   public function getID() {
+       return 'supervisor';
+   }
+
+   public function computeFriendlyName() {
+       return __('My supervisor', 'formcreator');
+   }
+
+   public function MayBeResolvedIntoOneValidator(): bool {
+       return true;
+   }
+
+   public function getOneValidator($current_user_id): ?CommonDBTM {
+       $user = new User();
+       $user->getFromDB($current_user_id);
+       $supervisor = User::getById($user->fields['users_id_supervisor']);
+      if (!($supervisor instanceof User)) {
+          return null;
+      }
+       return $supervisor;
+   }
 }
-Html::back();

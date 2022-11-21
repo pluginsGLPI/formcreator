@@ -1058,9 +1058,9 @@ PluginFormcreatorTranslatableInterface
             $input['show_rule'] = PluginFormcreatorCondition::SHOW_RULE_ALWAYS;
          }
 
-         if (!$this->checkValidators($input)) {
-            $input['validation_required'] = self::VALIDATION_NONE;
-         }
+         // if (!$this->checkValidators($input)) {
+         //    $input['validation_required'] = self::VALIDATION_NONE;
+         // }
       }
 
       return $input;
@@ -1225,6 +1225,8 @@ PluginFormcreatorTranslatableInterface
     * @return bool
     */
    protected function checkValidators(array $input): bool {
+      global $DB;
+
       if (!isset($input['validation_required'])) {
          return true;
       }
@@ -1235,20 +1237,36 @@ PluginFormcreatorTranslatableInterface
             break;
 
          case self::VALIDATION_USER:
-            $fieldName = '_validator_users';
+            $not_users_count = $DB->request([
+               'COUNT' => 'c',
+               'FROM'  => PluginFormcreatorForm_Validator::getTable(),
+               'WHERE' => [
+                  self::getForeignKeyField() => $this->getID(),
+                  [
+                     'itemtype' => ['<>' => User::class],
+                  ], [
+                     'itemtype' => ['<>' => PluginFormcreatorSupervisorValidator::class]
+                  ],
+               ],
+            ]);
+            if ($not_users_count->current()['c'] > 0) {
+               return false;
+            }
             break;
 
          case self::VALIDATION_GROUP:
-            $fieldName = '_validator_groups';
+            $not_groups_count = $DB->request([
+               'COUNT' => 'c',
+               'FROM'  => PluginFormcreatorForm_Validator::getTable(),
+               'WHERE' => [
+                  self::getForeignKeyField() => $this->getID(),
+                  'itemtype' => ['<>' => Group::class],
+               ],
+            ]);
+            if ($not_groups_count->current()['c'] > 0) {
+               return false;
+            }
             break;
-      }
-
-      if (!isset($input[$fieldName])) {
-         return false;
-      }
-
-      if (is_array($input[$fieldName]) && count($input[$fieldName]) < 1) {
-         return false;
       }
 
       return true;
@@ -1292,6 +1310,9 @@ PluginFormcreatorTranslatableInterface
     * @return void
     */
    private function updateValidators() : void {
+      // method obsolete : disabled
+      return;
+
       if (!isset($this->input['validation_required'])) {
          return;
       }
@@ -2471,7 +2492,10 @@ PluginFormcreatorTranslatableInterface
     * @return bool true if valdiation required, false otherwise
     */
    public function validationRequired(): bool {
-      return $this->fields['validation_required'] != self::VALIDATION_NONE;
+      global $DB;
+
+      $result = $DB->request(PluginFormcreatorForm_Validator::getAllValidators($this, true));
+      return $result->current()['c'] > 0;
    }
 
    /**
