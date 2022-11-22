@@ -38,7 +38,7 @@ msgstr[1] "Formlar"
 
 #: hook.php:590
 msgid "Cancel my ticket"
-msgstr "Çağrı kaydımı iptal et"
+msgstr "Destek kaydımı iptal et"
 
 #: setup.php:274 inc/form.class.php:111 inc/formlist.class.php:55
 #: inc/formlist.class.php:56
@@ -201,7 +201,7 @@ msgstr "sorunun yanıtına eşit olan"
 
 #: inc/abstracttarget.class.php:233
 msgid "calculated from the ticket creation date"
-msgstr "çağrı oluşturma zamanından hesaplanan"
+msgstr "destek kaydı oluşturma zamanından hesaplanan"
 
 #: inc/abstracttarget.class.php:234
 msgid "calculated from the answer to the question"
@@ -300,7 +300,7 @@ msgstr "Önem düzeyi"
 
 #: inc/abstracttarget.class.php:1263
 msgid "Ticket tags"
-msgstr "Çağrı etiketleri"
+msgstr "Destek kaydı etiketleri"
 
 #: inc/abstracttarget.class.php:1311
 msgid "Tags"
@@ -961,11 +961,11 @@ msgstr[1] "Sorunlar"
 
 #: inc/issue.class.php:53
 msgid "Update issue data from tickets and form answers"
-msgstr "Sorun verileri çağrı kaydı ve form yanıtlarından güncellensin"
+msgstr "Sorun verileri destek kaydı ve form yanıtlarından güncellensin"
 
 #: inc/issue.class.php:612
 msgid "Ticket approver"
-msgstr "Çağrı kaydını onaylayan"
+msgstr "Destek kaydını onaylayan"
 
 #: inc/issue.class.php:730
 msgid "Not validated"
@@ -1234,8 +1234,8 @@ msgstr "Hedefin oluşturulacağı koşul"
 #: inc/targetticket.class.php:52 inc/targetticket.class.php:182
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] "Hedef çağrı"
-msgstr[1] "Hedef çağrılar"
+msgstr[0] "Hedef destek kaydı"
+msgstr[1] "Hedef destek kayıtları"
 
 #: inc/targetticket.class.php:94
 msgid "None"
@@ -1255,15 +1255,15 @@ msgstr "Belirli tür"
 
 #: inc/targetticket.class.php:125 inc/targetticket.class.php:185
 msgid "Ticket title"
-msgstr "Çağrı başlığı"
+msgstr "Destek kaydı başlığı"
 
 #: inc/targetticket.class.php:255
 msgid "Add validation message as first ticket followup"
-msgstr "İlk çağrı izlemesine değerlendirme iletisi eklensin"
+msgstr "İlk destek kaydı izlemesine değerlendirme iletisi eklensin"
 
 #: inc/targetticket.class.php:309
 msgid "Link to an other ticket"
-msgstr "Başka bir çağrıya bağlantı"
+msgstr "Başka bir destek kaydıyla bağlantı"
 
 #: inc/targetticket.class.php:318
 msgid "An other destination of this form"
@@ -1271,7 +1271,7 @@ msgstr "Bu form için farklı bir hedef"
 
 #: inc/targetticket.class.php:319
 msgid "An existing ticket"
-msgstr "Var olan bir çağrı"
+msgstr "Var olan bir destek kaydı"
 
 #: inc/targetticket.class.php:628
 msgid "Invalid link type"
@@ -1425,7 +1425,7 @@ msgstr "ODA"
 
 #: inc/field/dropdownfield.class.php:138
 msgid "Show ticket categories"
-msgstr "Çağrı kategorilerini görüntüle"
+msgstr "Destek kaydı kategorilerini görüntüle"
 
 #: inc/field/dropdownfield.class.php:143 inc/field/dropdownfield.class.php:145
 msgid "Request categories"
