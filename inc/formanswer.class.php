@@ -32,6 +32,7 @@
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Toolbox\Sanitizer;
 use GlpiPlugin\Formcreator\Field\DropdownField;
+use User;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -125,9 +126,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return true;
       }
 
-      $groupUser = new Group_User();
-      $groups = $groupUser->getUserGroups($currentUser);
-      if (in_array($this->fields['users_id_validator'], $groups)) {
+      $groups = Group_User::getUserGroups($currentUser);
+      if (in_array($this->fields['groups_id_validator'], $groups)) {
          return true;
       }
 
