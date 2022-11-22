@@ -1,3 +1,33 @@
+<a name="2.12.6"></a>
+## [2.12.6](https://github.com/pluginsglpi/formcreator/compare/v2.12.5..2.12.6) (2022-05-19)
+
+
+### Bug Fixes
+
+* **abstracttarget:** retrieve sub itemtype from question ([eccf3d1a](https://github.com/pluginsglpi/formcreator/commit/eccf3d1a))
+* **condition:** empty sql IN statement ([8e4d0491](https://github.com/pluginsglpi/formcreator/commit/8e4d0491))
+* **dropdownfield,glpiselectfield:** shiw item ID only on user preference ([53dc3aeb](https://github.com/pluginsglpi/formcreator/commit/53dc3aeb))
+* **form:** lightbulb always gray in darker theme ([76a42bb4](https://github.com/pluginsglpi/formcreator/commit/76a42bb4))
+* **glpiselectfield:** bad WHERE criteria with entities ([154a3531](https://github.com/pluginsglpi/formcreator/commit/154a3531))
+* **glpiselectfield:** comparison with regex ([e6986b04](https://github.com/pluginsglpi/formcreator/commit/e6986b04))
+* **issue:** performance problem in sync issue query ([0e1761c9](https://github.com/pluginsglpi/formcreator/commit/0e1761c9))
+* **issue:** performance problem in sync issue query ([74b38ec0](https://github.com/pluginsglpi/formcreator/commit/74b38ec0))
+* **issue:** requester replaced by author on ticket update ([a8580a79](https://github.com/pluginsglpi/formcreator/commit/a8580a79))
+* **issue:** sync issues problem when a ticket has several validators (backport 2.12) (#2971) ([e3011590](https://github.com/pluginsglpi/formcreator/commit/e3011590))
+* **radiosfield:** accessibility from keyboard ([e528aae7](https://github.com/pluginsglpi/formcreator/commit/e528aae7))
+* **targetticket:** assign group actor from object ([42aaadd4](https://github.com/pluginsglpi/formcreator/commit/42aaadd4))
+* **textareafield:** compatibility with GLPI 9.10 ([a325a948](https://github.com/pluginsglpi/formcreator/commit/a325a948))
+* **textareafield:** compatibility with GLPI 9.5.10 ([7f2ff1a9](https://github.com/pluginsglpi/formcreator/commit/7f2ff1a9))
+* **textfield:** remove invalid '\r\n' tokens (#3065) ([da9d8dca](https://github.com/pluginsglpi/formcreator/commit/da9d8dca))
+* **wizard:** bad label when searching KB items ([f469d048](https://github.com/pluginsglpi/formcreator/commit/f469d048))
+
+
+### Features
+
+* **ldapselectfield:** lazy loading ([1afc6753](https://github.com/pluginsglpi/formcreator/commit/1afc6753))
+
+
+
 <a name="v2.12.5"></a>
 ## [v2.12.5](https://github.com/pluginsglpi/formcreator/compare/v2.12.4..v2.12.5) (2022-02-23)
 
