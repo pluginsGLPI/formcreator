@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use atoum;
 use Ticket;
+use User;
 
 abstract class CommonTestCase extends atoum
 {
