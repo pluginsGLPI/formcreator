@@ -402,7 +402,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
          echo '#itil-object-container .form-buttons span { display: none !important }';
          echo '#itil-object-container .form-buttons { flex: inherit; width: auto}';
          echo "#itil-object-container .timeline-buttons { flex: 1 1 auto }";
-         echo "#itil-object-container button[type='submit'][name='update'] { display: none }";
+         // The following line becomes useless with GLPI 10.0.5 as the save button of side panel does no longer show for extended service catalog
+         // To drop when GLPI 10.0.5 is the minimum version
+         echo "#itil-object-container .form-buttons button[type='submit'][name='update'] { display: none }";
          echo '</style>';
          $item->showForm($item->getID());
          echo "</div>";
