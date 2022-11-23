@@ -33,7 +33,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-interface PluginFormcreatorPluginTarget
+interface PluginFormcreatorPluginTargetInterface
 {
    const ACTOR_TYPE_USER = 1;
    const ACTOR_TYPE_GROUP = 2;

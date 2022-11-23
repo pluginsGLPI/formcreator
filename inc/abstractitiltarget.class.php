@@ -589,15 +589,15 @@ PluginFormcreatorTranslatableInterface
             default:
                foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
                   foreach ($classes as $plugin_target) {
-                     if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
+                     if (!is_a($plugin_target, PluginFormcreatorPluginTargetInterface::class, true)) {
                         continue;
                      }
                      if ($actor['actor_type']== $plugin_target::getId()) {
                         $value = $plugin_target::getActorId($formanswer, $actor['actor_value']);
                         if ($value) {
-                           if ($plugin_target::getActorType() == PluginFormcreatorPluginTarget::ACTOR_TYPE_USER) {
+                           if ($plugin_target::getActorType() == PluginFormcreatorPluginTargetInterface::ACTOR_TYPE_USER) {
                               $this->addActor($actor['actor_role'], $value, $notify);
-                           } else if (PluginFormcreatorPluginTarget::ACTOR_TYPE_GROUP) {
+                           } else if (PluginFormcreatorPluginTargetInterface::ACTOR_TYPE_GROUP) {
                               $this->addGroupActor($actor['actor_role'], $value);
                            }
                         }
@@ -2043,7 +2043,7 @@ SCRIPT;
 
       foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
          foreach ($classes as $plugin_target) {
-            if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
+            if (!is_a($plugin_target, PluginFormcreatorPluginTargetInterface::class, true)) {
                continue;
             }
 
@@ -2140,7 +2140,7 @@ SCRIPT;
             default:
                foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
                   foreach ($classes as $plugin_target) {
-                     if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
+                     if (!is_a($plugin_target, PluginFormcreatorPluginTargetInterface::class, true)) {
                         continue;
                      }
 
