@@ -588,14 +588,14 @@ PluginFormcreatorTranslatableInterface
                break;
             default:
                foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
-                  foreach($classes as $plugin_target) {
+                  foreach ($classes as $plugin_target) {
                      if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
                         continue;
                      }
                      if ($actor['actor_type']== $plugin_target::getId()) {
                         $value = $plugin_target::getActorId($formanswer, $actor['actor_value']);
                         if ($value) {
-                           if ($plugin_target::getActorType() == PluginFormcreatorPluginTarget::ACTOR_TYPE_USER){
+                           if ($plugin_target::getActorType() == PluginFormcreatorPluginTarget::ACTOR_TYPE_USER) {
                               $this->addActor($actor['actor_role'], $value, $notify);
                            } else if (PluginFormcreatorPluginTarget::ACTOR_TYPE_GROUP) {
                               $this->addGroupActor($actor['actor_role'], $value);
@@ -2042,7 +2042,7 @@ SCRIPT;
       }
 
       foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
-         foreach($classes as $plugin_target) {
+         foreach ($classes as $plugin_target) {
             if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
                continue;
             }
@@ -2139,7 +2139,7 @@ SCRIPT;
                break;
             default:
                foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
-                  foreach($classes as $plugin_target) {
+                  foreach ($classes as $plugin_target) {
                      if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
                         continue;
                      }
@@ -2465,28 +2465,23 @@ SCRIPT;
       return $targets;
    }
 
-   public static function getUserImage()
-   {
+   public static function getUserImage() {
       return '<i class="fas fa-user" alt="' . __('User') . '" title="' . __('User') . '" width="20"></i>';
    }
 
-   public static function getGroupImage()
-   {
+   public static function getGroupImage() {
       return  '<i class="fas fa-users" alt="' . __('Group') . '" title="' . __('Group') . '" width="20"></i>';
    }
 
-   public static function getSupplierImage()
-   {
+   public static function getSupplierImage() {
       return '<i class="fas fa-suitcase" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20"></i>';
    }
 
-   public static function getMailImage()
-   {
+   public static function getMailImage() {
       return '<i class="fas fa-envelope pointer"  title="' . __('Email followup') . ' ' . __('Yes') . '" width="20"></i>';
    }
 
-   public static function getNoMailImage()
-   {
+   public static function getNoMailImage() {
       return '<i class="fas fa-envelope pointer" title="' . __('Email followup') . ' ' . __('No') . '" width="20"></i>';
    }
 }

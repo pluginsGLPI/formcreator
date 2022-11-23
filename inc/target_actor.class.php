@@ -81,7 +81,7 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
 
       // Add extra plugin types
       foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
-         foreach($classes as $plugin_target) {
+         foreach ($classes as $plugin_target) {
             if (!is_a($plugin_target, PluginFormcreatorPluginTarget::class, true)) {
                continue;
             }

@@ -35,13 +35,13 @@ if (!defined('GLPI_ROOT')) {
 
 interface PluginFormcreatorPluginTarget
 {
-    const ACTOR_TYPE_USER = 1;
-    const ACTOR_TYPE_GROUP = 2;
+   const ACTOR_TYPE_USER = 1;
+   const ACTOR_TYPE_GROUP = 2;
 
-    public static function getId(): int;
-    public static function getLabel(): string;
-    public static function getForm(PluginFormcreatorForm $form): string;
-    public static function getDisplayedValue($value): string;
-    public static function getActorType(): int;
-    public static function getActorId(PluginFormcreatorFormAnswer $formanswer, int $value): int;
+   public static function getId(): int;
+   public static function getLabel(): string;
+   public static function getForm(PluginFormcreatorForm $form): string;
+   public static function getDisplayedValue($value): string;
+   public static function getActorType(): int;
+   public static function getActorId(PluginFormcreatorFormAnswer $formanswer, int $value): int;
 }
