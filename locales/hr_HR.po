@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-14 17:09+0200\n"
+"POT-Creation-Date: 2022-10-26 14:38+0200\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>, 2022\n"
 "Language-Team: Croatian (Croatia) (https://www.transifex.com/teclib/teams/28042/hr_HR/)\n"
@@ -200,7 +200,7 @@ msgstr "Jedno obavezno polje je prazno:"
 msgid "The regular expression is invalid"
 msgstr "Regularni izraz nije ispravan"
 
-#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:46
+#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:48
 msgid "User and form"
 msgstr "Korisnik i obrazac"
 
@@ -287,7 +287,7 @@ msgid "Radios"
 msgstr "Izborni gumbovi"
 
 #: inc/field/radiosfield.class.php:115 inc/field/glpiselectfield.class.php:93
-#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:230
+#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:229
 msgid "The field value is required:"
 msgstr "Vrijednost polja je obavezna:"
 
@@ -465,7 +465,7 @@ msgstr "prikaži"
 #: inc/field/fieldsfield.class.php:389
 #, php-format
 msgid "Field '%1$s' type not implemented yet!"
-msgstr ""
+msgstr "Polje „%1$s” još nije implementirano!"
 
 #: inc/field/fieldsfield.class.php:466
 msgid "Some numeric fields contains non numeric values"
@@ -483,25 +483,25 @@ msgstr "Dodatna polja"
 msgid "Checkboxes"
 msgstr "Potvrdni okviri"
 
-#: inc/field/checkboxesfield.class.php:212
+#: inc/field/checkboxesfield.class.php:211
 #, php-format
 msgid "The following question needs at least %d answers"
 msgstr "Sljedeće pitanje treba barem%d odgovora"
 
-#: inc/field/checkboxesfield.class.php:218
+#: inc/field/checkboxesfield.class.php:217
 #, php-format
 msgid "The following question does not accept more than %d answers"
 msgstr "Sljedeće pitanje ne prihvaća više od %d odgovora"
 
-#: inc/field/checkboxesfield.class.php:290
+#: inc/field/checkboxesfield.class.php:289
 msgid "Range min"
 msgstr "Minimum raspona"
 
-#: inc/field/checkboxesfield.class.php:291
+#: inc/field/checkboxesfield.class.php:290
 msgid "Range max"
 msgstr "Maksimum raspona"
 
-#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1095
+#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1099
 msgid "Request type"
 msgstr "Vrsta zahtjeva"
 
@@ -572,7 +572,7 @@ msgstr "Prikazano, ukoliko"
 #: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
 #: inc/question.class.php:828 inc/questionparameter/range.class.php:202
 #: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
-#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1404
+#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1408
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "Neuspjelo dodavanje ili aktualiziranje: %1$s %2$s"
@@ -584,7 +584,7 @@ msgstr "Neuspjelo dodavanje ili aktualiziranje: %1$s %2$s"
 #: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
 #: inc/question.class.php:877 inc/questionparameter/range.class.php:137
 #: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
-#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1443
+#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1447
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "Nije moguće izvesti prazni objekt: %s"
@@ -949,7 +949,7 @@ msgstr "Nisi potvrditelj ovih odgovora"
 #: inc/formanswer.class.php:895
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
-msgstr ""
+msgstr "Predmet je uspješno dodan: %1$s (%2$s: %3$s)"
 
 #: inc/formanswer.class.php:977 inc/formanswer.class.php:979
 msgid "Form data"
@@ -1130,7 +1130,7 @@ msgid "Properties"
 msgstr "Svojstva"
 
 #: inc/targetproblem.class.php:522 inc/targetchange.class.php:285
-#: inc/targetticket.class.php:1386
+#: inc/targetticket.class.php:1390
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1672,8 +1672,8 @@ msgstr "Ugovor o razini usluge (SLA)"
 msgid "OLA"
 msgstr "Ugovor o operativnoj raznini (OLA)"
 
-#: inc/question.class.php:1197 inc/question.class.php:1237
-#: inc/question.class.php:1240
+#: inc/question.class.php:1197 inc/question.class.php:1238
+#: inc/question.class.php:1241
 msgid "Assets"
 msgstr "Inventar"
 
@@ -1681,27 +1681,27 @@ msgstr "Inventar"
 msgid "Assistance"
 msgstr "Pomoć"
 
-#: inc/question.class.php:1216
+#: inc/question.class.php:1217
 msgid "Management"
 msgstr "Upravljanje"
 
-#: inc/question.class.php:1225
+#: inc/question.class.php:1226
 msgid "Tools"
 msgstr "Alati"
 
-#: inc/question.class.php:1226
+#: inc/question.class.php:1227
 msgid "Notes"
 msgstr "Bilješke"
 
-#: inc/question.class.php:1227
+#: inc/question.class.php:1228
 msgid "RSS feed"
 msgstr "RSS vijest"
 
-#: inc/question.class.php:1229
+#: inc/question.class.php:1230
 msgid "Administration"
 msgstr "Administracija"
 
-#: inc/question.class.php:1237 inc/question.class.php:1240
+#: inc/question.class.php:1238 inc/question.class.php:1241
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] "Dodatak"
@@ -1930,19 +1930,19 @@ msgstr "Neuspjelo povezivanje predmeta"
 msgid "Your form has been accepted by the validator"
 msgstr "Potvrditelj je prihvatio tvoj obrazac"
 
-#: inc/targetticket.class.php:1082
+#: inc/targetticket.class.php:1086
 msgid "Request source"
 msgstr "Izvor zahtjeva"
 
-#: inc/targetticket.class.php:1107
+#: inc/targetticket.class.php:1111
 msgid "Type "
 msgstr "Vrsta "
 
-#: inc/targetticket.class.php:1135
+#: inc/targetticket.class.php:1139
 msgid "Associated elements"
 msgstr "Pridruženi elementi"
 
-#: inc/targetticket.class.php:1146
+#: inc/targetticket.class.php:1150
 msgid "Item "
 msgstr "Predmet "
 
@@ -2158,7 +2158,7 @@ msgstr "Tehnička grupa iz objekta"
 #: install/install.php:130
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
-msgstr ""
+msgstr "Nadogradi tablice u innoDB; pokreni %s"
 
 #: install/install.php:160
 #, php-format
@@ -2166,11 +2166,13 @@ msgid ""
 "The database schema is not consistent with the installed Formcreator %s. To "
 "see the logs run the command %s"
 msgstr ""
+"Shema baze podataka nije u skladu s instaliranim Formcreatorom %s. Za "
+"pregled zapisa pokreni naredbu %s"
 
 #: install/install.php:169
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
-msgstr ""
+msgstr "Za ignoriranje nedosljednosti i nadogradnju unatoč tomu, pokreni %s"
 
 #: install/install.php:187
 msgid ""
@@ -2178,6 +2180,9 @@ msgid ""
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
 " GLPI 10 or later and Formcreator 2.13 or later."
 msgstr ""
+"Nadogradnja s verzije starije od 2.5.0 više nije podržana. Nadogradi na GLPI"
+" 9.5.7, nadogradi Formcreator na verziju 2.12.5, zatim ponovo nadogradi na "
+"GLPI 10 i Formcreator 2.13 ili novije verzije."
 
 #: install/install.php:239
 #, php-format
@@ -2185,10 +2190,12 @@ msgid ""
 "The database schema is not consistent with the installed Formcreator %s. To "
 "see the logs enable the plugin and run the command %s"
 msgstr ""
+"Shema baze podataka nije u skladu s instaliranim Formcreatorom %s. Za "
+"pregled zapisa aktiviraj dodatak i pokreni naredbu %s"
 
 #: install/install.php:250
 msgid "The tables of the plugin passed the schema integrity check."
-msgstr ""
+msgstr "Tablice dodatka su prošle provjeru integriteta sheme."
 
 #: install/install.php:402
 msgid "A form has been created"
@@ -2264,22 +2271,22 @@ msgstr "Formcreator – Problemi sa sinkronizacijom kataloga usluga"
 
 #: install/install.php:842
 msgid "Failed to check the sanity of the tables!"
-msgstr ""
+msgstr "Neuspjela provjera ispravnosti tablica!"
 
 #: install/install.php:856
 #, php-format
 msgid "Table schema differs for table \"%s\"."
-msgstr ""
+msgstr "Shema tablice se razlikuje za tablicu „%s”."
 
 #: install/install.php:859
 #, php-format
 msgid "Table \"%s\" is missing."
-msgstr ""
+msgstr "Nedostaje tablica „%s”."
 
 #: install/install.php:862
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
-msgstr ""
+msgstr "U bazi podataka je pronađena nepoznata tablica „%s”."
 
 #: hook.php:317
 msgctxt "button"
@@ -2348,11 +2355,15 @@ msgstr "Dodaj prijevode"
 msgid "An error occured while querying forms"
 msgstr "Dogodila se greška prilikom traženja obrazaca"
 
-#: js/scripts.js:1400
-msgid "An internal error occurred. Please report it to administrator."
-msgstr ""
+#: js/scripts.js:1396 entrée standard:139
+msgid "Send"
+msgstr "Pošalji"
 
-#: js/scripts.js:1441
+#: js/scripts.js:1405
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "Dogodila se interna greška. Prijavi je administratoru."
+
+#: js/scripts.js:1446
 msgid "Are you sure you want to delete this target:"
 msgstr "Zaista želiš izbrisati ovaj cilj:"
 
@@ -2407,10 +2418,6 @@ msgstr "Standardni obrazac u katalogu usluga"
 #: entrée standard:113 standard:114
 msgid "Are you a robot ?"
 msgstr "Jesi li robot?"
-
-#: entrée standard:139
-msgid "Send"
-msgstr "Pošalji"
 
 #: entrée standard:64
 msgid "Condition to show the section"
