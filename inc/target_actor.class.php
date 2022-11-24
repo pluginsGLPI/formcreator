@@ -62,7 +62,9 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
    const ACTOR_ROLE_SUPPLIER = 4;
 
    static function getEnumActorType() {
-      return [
+      global $PLUGIN_HOOKS;
+
+      $types = [
          self::ACTOR_TYPE_AUTHOR                 => __('Form author', 'formcreator'),
          self::ACTOR_TYPE_VALIDATOR              => __('Form validator', 'formcreator'),
          self::ACTOR_TYPE_PERSON                 => __('Specific person', 'formcreator'),
@@ -76,6 +78,20 @@ class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormc
          self::ACTOR_TYPE_QUESTION_ACTORS        => __('Actors from the question', 'formcreator'),
          self::ACTOR_TYPE_AUTHORS_SUPERVISOR     => __('Form author\'s supervisor', 'formcreator'),
       ];
+
+      // Add extra plugin types
+      foreach (($PLUGIN_HOOKS['formcreator_actors_type'] ?? []) as $plugin => $classes) {
+         foreach ($classes as $plugin_target) {
+            if (!is_a($plugin_target, PluginFormcreatorPluginTargetInterface::class, true)) {
+               continue;
+            }
+
+            $types[$plugin_target::getId()] = $plugin_target::getLabel();
+         }
+      }
+
+      asort($types);
+      return $types;
    }
 
    static function getEnumRole() {

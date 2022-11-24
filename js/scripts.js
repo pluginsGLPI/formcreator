@@ -1243,29 +1243,9 @@ var plugin_formcreator = new function() {
    };
 
    this.changeActor = function(type, value) {
-      $('#block_' + type + '_user').hide();
-      $('#block_' + type + '_question_user').hide();
-      $('#block_' + type + '_group').hide();
-      $('#block_' + type + '_question_group').hide();
-      $('#block_' + type + '_group_from_object').hide();
-      $('#block_' + type + '_tech_group_from_object').hide();
-      $('#block_' + type + '_question_actors').hide();
-      $('#block_' + type + '_supplier').hide();
-      $('#block_' + type + '_question_supplier').hide();
-
-      // The numbers match PluginFormcreatorTarget_Actor::ACTOR_TYPE_* constants
-      switch (value) {
-         case '3' : $('#block_' + type + '_user').show();                   break;
-         case '4' : $('#block_' + type + '_question_user').show();          break;
-         case '5' : $('#block_' + type + '_group').show();                  break;
-         case '6' : $('#block_' + type + '_question_group').show();         break;
-         case '9' : $('#block_' + type + '_question_actors').show();        break;
-         case '7' : $('#block_' + type + '_supplier').show();               break;
-         case '8' : $('#block_' + type + '_question_supplier').show();      break;
-         case '10': $('#block_' + type + '_group_from_object').show();      break;
-         case '11': $('#block_' + type + '_tech_group_from_object').show(); break;
-      }
-   };
+      $('div[data-actor-type^=' + type + ']').hide();
+      $('div[data-actor-type=' + type + '_' + value + ']').show();
+   }
 
    this.updateWizardFormsView = function (item) {
       if (item) {
@@ -1314,31 +1294,6 @@ var plugin_formcreator = new function() {
             });
          }
       );
-   };
-
-   this.changeActor = function(type, value) {
-      $('#block_' + type + '_user').hide();
-      $('#block_' + type + '_question_user').hide();
-      $('#block_' + type + '_group').hide();
-      $('#block_' + type + '_question_group').hide();
-      $('#block_' + type + '_group_from_object').hide();
-      $('#block_' + type + '_tech_group_from_object').hide();
-      $('#block_' + type + '_question_actors').hide();
-      $('#block_' + type + '_supplier').hide();
-      $('#block_' + type + '_question_supplier').hide();
-
-      // The numbers match PluginFormcreatorTarget_Actor::ACTOR_TYPE_* constants
-      switch (value) {
-         case '3' : $('#block_' + type + '_user').show();                   break;
-         case '4' : $('#block_' + type + '_question_user').show();          break;
-         case '5' : $('#block_' + type + '_group').show();                  break;
-         case '6' : $('#block_' + type + '_question_group').show();         break;
-         case '9' : $('#block_' + type + '_question_actors').show();        break;
-         case '7' : $('#block_' + type + '_supplier').show();               break;
-         case '8' : $('#block_' + type + '_question_supplier').show();      break;
-         case '10': $('#block_' + type + '_group_from_object').show();      break;
-         case '11': $('#block_' + type + '_tech_group_from_object').show(); break;
-      }
    };
 
    this.deleteActor = function (item) {
