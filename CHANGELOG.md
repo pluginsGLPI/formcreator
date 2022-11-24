@@ -1,3 +1,47 @@
+<a name="2.13.3"></a>
+## [2.13.3](https://github.com/pluginsGLPI/formcreator/compare/2.13.2..2.13.3) (2022-11-24)
+
+
+### Bug Fixes
+
+* **abstractitiltarget:** copy may generate unwanted ouput to navigator ([8792ed3dc](https://github.com/pluginsGLPI/formcreator/commit/8792ed3dc))
+* **abstracttarget:** support for sla and ola from question ([e4c6ffeb6](https://github.com/pluginsGLPI/formcreator/commit/e4c6ffeb6))
+* **category:** do not access page if the plugin is not active ([a959839c7](https://github.com/pluginsGLPI/formcreator/commit/a959839c7))
+* **category:** don't activate plugin to access categories ([4cd4f600e](https://github.com/pluginsGLPI/formcreator/commit/4cd4f600e))
+* **checkboxesfield:** back to BR ([c8908f265](https://github.com/pluginsGLPI/formcreator/commit/c8908f265))
+* **checkboxesfield:** back to BR ([56d1e7e94](https://github.com/pluginsGLPI/formcreator/commit/56d1e7e94))
+* **checkboxesfield, radiosfield:** checkboxes and radios backslashes (#3050) ([47da0ea0a](https://github.com/pluginsGLPI/formcreator/commit/47da0ea0a))
+* **common:** captcha check ([b2b7efc89](https://github.com/pluginsGLPI/formcreator/commit/b2b7efc89))
+* **dashboard:** fix dashboard height ([712bdc8ad](https://github.com/pluginsGLPI/formcreator/commit/712bdc8ad))
+* **datefield:** change event and comparison ([9da947783](https://github.com/pluginsGLPI/formcreator/commit/9da947783))
+* **filefield:** do not assume index of files ([a02a9c7ce](https://github.com/pluginsGLPI/formcreator/commit/a02a9c7ce))
+* **form:** delete question does not reset preview tab ([ad87ddc87](https://github.com/pluginsGLPI/formcreator/commit/ad87ddc87))
+* **form:** prevent SQL error ([17aa94309](https://github.com/pluginsGLPI/formcreator/commit/17aa94309))
+* **form:** prevent sending two csrf tokens ([c04c71bab](https://github.com/pluginsGLPI/formcreator/commit/c04c71bab))
+* **form:** tab name must obey 'show count' setting ([b89232eb3](https://github.com/pluginsGLPI/formcreator/commit/b89232eb3))
+* **form_language:** call to undefined method ([137a66047](https://github.com/pluginsGLPI/formcreator/commit/137a66047))
+* **formanswer:** page switching loose filter ([14d3ed7ac](https://github.com/pluginsGLPI/formcreator/commit/14d3ed7ac))
+* **install:** bad command in error message ([f357d9ca4](https://github.com/pluginsGLPI/formcreator/commit/f357d9ca4))
+* **install:** handle possible null while changing fields ([0a847af4c](https://github.com/pluginsGLPI/formcreator/commit/0a847af4c))
+* **issue:** access to saved searches from service catalog ([b7481825a](https://github.com/pluginsGLPI/formcreator/commit/b7481825a))
+* **issue:** default joint for issue ([631888e47](https://github.com/pluginsGLPI/formcreator/commit/631888e47))
+* **issue:** show save button for followup edit ([810c854f1](https://github.com/pluginsGLPI/formcreator/commit/810c854f1))
+* **issue:** sync issue fails when a ticket has several validators ([3f51fbdd9](https://github.com/pluginsGLPI/formcreator/commit/3f51fbdd9))
+* **issue:** useless criteria nesting ([369fdb57b](https://github.com/pluginsGLPI/formcreator/commit/369fdb57b))
+* **selectfield:** too many unescaping ([706b70faa](https://github.com/pluginsGLPI/formcreator/commit/706b70faa))
+* **targetticket:** set request source if no rule specified ([2e04680eb](https://github.com/pluginsGLPI/formcreator/commit/2e04680eb))
+* **textareadifield:** error when deduplicating uploads ([666d81395](https://github.com/pluginsGLPI/formcreator/commit/666d81395))
+* **wizard:** consistent breadcrumb on several pages ([6639cda03](https://github.com/pluginsGLPI/formcreator/commit/6639cda03))
+
+
+### Features
+
+*  handle a new case in fix tool: litteral > sign (#3048) ([275c3506e](https://github.com/pluginsGLPI/formcreator/commit/275c3506e))
+* **install:** empty SQL schema ([aacccfd7f](https://github.com/pluginsGLPI/formcreator/commit/aacccfd7f))
+* **question:** new hooks for other plugins interaction (#3093) ([f9a23b646](https://github.com/pluginsGLPI/formcreator/commit/f9a23b646))
+
+
+
 <a name="2.13.2"></a>
 ## [2.13.2](https://github.com/pluginsGLPI/formcreator/compare/2.13.1..2.13.2) (2022-10-17)
 
