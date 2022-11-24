@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-14 17:09+0200\n"
+"POT-Creation-Date: 2022-10-26 14:38+0200\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
 "Last-Translator: SeongHyeon Cho <jaymz9634@gmail.com>, 2022\n"
 "Language-Team: Korean (Korea) (https://www.transifex.com/teclib/teams/28042/ko_KR/)\n"
@@ -196,7 +196,7 @@ msgstr "필수 항목이 비었습니다:"
 msgid "The regular expression is invalid"
 msgstr "정규식이 잘못되었습니다"
 
-#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:46
+#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:48
 msgid "User and form"
 msgstr "사용자와 양식"
 
@@ -279,7 +279,7 @@ msgid "Radios"
 msgstr "라디오"
 
 #: inc/field/radiosfield.class.php:115 inc/field/glpiselectfield.class.php:93
-#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:230
+#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:229
 msgid "The field value is required:"
 msgstr "항목 값은 필수입니다:"
 
@@ -463,25 +463,25 @@ msgstr "부가 항목"
 msgid "Checkboxes"
 msgstr "체크박스"
 
-#: inc/field/checkboxesfield.class.php:212
+#: inc/field/checkboxesfield.class.php:211
 #, php-format
 msgid "The following question needs at least %d answers"
 msgstr "다음 질문은 최소 %d개의 답변이 필요합니다"
 
-#: inc/field/checkboxesfield.class.php:218
+#: inc/field/checkboxesfield.class.php:217
 #, php-format
 msgid "The following question does not accept more than %d answers"
 msgstr "다음 질문은 %d개 이상의 답변이 허용되지 않습니다"
 
-#: inc/field/checkboxesfield.class.php:290
+#: inc/field/checkboxesfield.class.php:289
 msgid "Range min"
 msgstr "범위 최소값"
 
-#: inc/field/checkboxesfield.class.php:291
+#: inc/field/checkboxesfield.class.php:290
 msgid "Range max"
 msgstr "범위 최대값"
 
-#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1095
+#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1099
 msgid "Request type"
 msgstr "요청 유형"
 
@@ -548,7 +548,7 @@ msgstr "그 외에 표시됨"
 #: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
 #: inc/question.class.php:828 inc/questionparameter/range.class.php:202
 #: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
-#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1404
+#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1408
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "%1$s %2$s의 추가 또는 갱신에 실패함"
@@ -560,7 +560,7 @@ msgstr "%1$s %2$s의 추가 또는 갱신에 실패함"
 #: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
 #: inc/question.class.php:877 inc/questionparameter/range.class.php:137
 #: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
-#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1443
+#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1447
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "빈 객체를 불러올 수 없음: %s"
@@ -911,7 +911,7 @@ msgstr "당신은 이 질문들의 확인자가 아닙니다"
 #: inc/formanswer.class.php:895
 #, php-format
 msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
-msgstr ""
+msgstr "항목이 추가되었음: %1$s (%2$s:%3$s) "
 
 #: inc/formanswer.class.php:977 inc/formanswer.class.php:979
 msgid "Form data"
@@ -1082,7 +1082,7 @@ msgid "Properties"
 msgstr "속성"
 
 #: inc/targetproblem.class.php:522 inc/targetchange.class.php:285
-#: inc/targetticket.class.php:1386
+#: inc/targetticket.class.php:1390
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1605,8 +1605,8 @@ msgstr "SLA"
 msgid "OLA"
 msgstr "OLA"
 
-#: inc/question.class.php:1197 inc/question.class.php:1237
-#: inc/question.class.php:1240
+#: inc/question.class.php:1197 inc/question.class.php:1238
+#: inc/question.class.php:1241
 msgid "Assets"
 msgstr "자산"
 
@@ -1614,27 +1614,27 @@ msgstr "자산"
 msgid "Assistance"
 msgstr "보조"
 
-#: inc/question.class.php:1216
+#: inc/question.class.php:1217
 msgid "Management"
 msgstr "운영관리"
 
-#: inc/question.class.php:1225
+#: inc/question.class.php:1226
 msgid "Tools"
 msgstr "도구"
 
-#: inc/question.class.php:1226
+#: inc/question.class.php:1227
 msgid "Notes"
 msgstr "알림"
 
-#: inc/question.class.php:1227
+#: inc/question.class.php:1228
 msgid "RSS feed"
 msgstr "RSS 피드"
 
-#: inc/question.class.php:1229
+#: inc/question.class.php:1230
 msgid "Administration"
 msgstr "관리"
 
-#: inc/question.class.php:1237 inc/question.class.php:1240
+#: inc/question.class.php:1238 inc/question.class.php:1241
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] "플러그잉ㄴ"
@@ -1851,19 +1851,19 @@ msgstr "품목에 연결 실패함"
 msgid "Your form has been accepted by the validator"
 msgstr "당신의 양식이 확인자에 의해 승인되었습니다."
 
-#: inc/targetticket.class.php:1082
+#: inc/targetticket.class.php:1086
 msgid "Request source"
 msgstr "요청 소스"
 
-#: inc/targetticket.class.php:1107
+#: inc/targetticket.class.php:1111
 msgid "Type "
 msgstr "유형"
 
-#: inc/targetticket.class.php:1135
+#: inc/targetticket.class.php:1139
 msgid "Associated elements"
 msgstr "관련 요소"
 
-#: inc/targetticket.class.php:1146
+#: inc/targetticket.class.php:1150
 msgid "Item "
 msgstr "품목"
 
@@ -2068,19 +2068,19 @@ msgstr "객체에서의 기술 그룹"
 #: install/install.php:130
 #, php-format
 msgid "Upgrade tables to innoDB; run %s"
-msgstr ""
+msgstr "테이블을 innoDB로 업그레이드하세요; %s실행"
 
 #: install/install.php:160
 #, php-format
 msgid ""
 "The database schema is not consistent with the installed Formcreator %s. To "
 "see the logs run the command %s"
-msgstr ""
+msgstr "데이터베이스 스키마가 설치된 Formcreator %s과(와) 일치하지 않습니다. 로그를 보려면 %s 명령을 실행하세요"
 
 #: install/install.php:169
 #, php-format
 msgid "To ignore the inconsistencies and upgrade anyway run %s"
-msgstr ""
+msgstr "불일치를 무시하고 업그레이드하려면 %s을(를) 실행하세요"
 
 #: install/install.php:187
 msgid ""
@@ -2088,6 +2088,8 @@ msgid ""
 " to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
 " GLPI 10 or later and Formcreator 2.13 or later."
 msgstr ""
+"2.5.0 이전 버전에서의 업그레이드는 더 이상 지원되지 않습니다. GLPI 9.5.7로 업그레이드하고, Formcreator를 버전 "
+"2.12.5로 업그레이드 한 다음, GLPI 10 이상 및 Formcreator 2.13 이상으로 다시 업그레이드 하세요."
 
 #: install/install.php:239
 #, php-format
@@ -2095,10 +2097,12 @@ msgid ""
 "The database schema is not consistent with the installed Formcreator %s. To "
 "see the logs enable the plugin and run the command %s"
 msgstr ""
+"데이터베이스 스키마가 설치된 Formcreator %s과(와) 일치하지 않습니다. 로그를 보려면 플러그인을 활성화하고%s 명령을 "
+"실행하세요."
 
 #: install/install.php:250
 msgid "The tables of the plugin passed the schema integrity check."
-msgstr ""
+msgstr "플러그인의 테이블이 스키마 무결성 검사를 통과했습니다."
 
 #: install/install.php:402
 msgid "A form has been created"
@@ -2167,22 +2171,22 @@ msgstr "양식생성기 - 서비스 목록 문제 동기화"
 
 #: install/install.php:842
 msgid "Failed to check the sanity of the tables!"
-msgstr ""
+msgstr "테이블의 온전성 확인에 실패했습니다!"
 
 #: install/install.php:856
 #, php-format
 msgid "Table schema differs for table \"%s\"."
-msgstr ""
+msgstr "테이블 스키마가 테이블 \"%s\"와 다릅니다."
 
 #: install/install.php:859
 #, php-format
 msgid "Table \"%s\" is missing."
-msgstr ""
+msgstr "테이블 \"%s\" 이 없습니다."
 
 #: install/install.php:862
 #, php-format
 msgid "Unknown table \"%s\" has been found in database."
-msgstr ""
+msgstr "데이터베이스에서 알 수 없ㄴ느 테이블 \"%s\"이 발견되었습니다."
 
 #: hook.php:317
 msgctxt "button"
@@ -2249,11 +2253,15 @@ msgstr "번역 추가"
 msgid "An error occured while querying forms"
 msgstr "양식 질의 중 오류 발생함"
 
-#: js/scripts.js:1400
-msgid "An internal error occurred. Please report it to administrator."
-msgstr ""
+#: js/scripts.js:1396 entrée standard:139
+msgid "Send"
+msgstr "전송"
 
-#: js/scripts.js:1441
+#: js/scripts.js:1405
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "내부 오류 발생함. 관리자에게 보고해 주세요."
+
+#: js/scripts.js:1446
 msgid "Are you sure you want to delete this target:"
 msgstr "이 대상을 삭제 하시겠습니가:"
 
@@ -2306,10 +2314,6 @@ msgstr "서비스 목록 내의 기본 양식"
 #: entrée standard:113 standard:114
 msgid "Are you a robot ?"
 msgstr "당신은 로봇인가요?"
-
-#: entrée standard:139
-msgid "Send"
-msgstr "전송"
 
 #: entrée standard:64
 msgid "Condition to show the section"
