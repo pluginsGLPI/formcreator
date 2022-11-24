@@ -96,9 +96,17 @@ abstract class PluginFormcreatorAbstractField implements PluginFormcreatorFieldI
                continue;
             }
          }
+         $description = Plugin::doHookFunction('formcreator_question_description', [
+            'description' => $description,
+            'question'    => $this->getQuestion()
+         ])['description'];
          $html .= '<div class="help-block">' . html_entity_decode(__($description, $domain)) . '</div>';
       }
       $html .= '<div class="form_field">';
+      $this->value = Plugin::doHookFunction('formcreator_question_default_value', [
+         'value'    => $this->value,
+         'question' => $this->getQuestion()
+      ])['value'];
       $html .= $this->getRenderedHtml($domain, $canEdit);
       $html .= '</div>';
 
