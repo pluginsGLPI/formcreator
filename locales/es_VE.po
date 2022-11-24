@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-14 17:09+0200\n"
+"POT-Creation-Date: 2022-10-26 14:38+0200\n"
 "PO-Revision-Date: 2021-08-30 07:22+0000\n"
 "Last-Translator: Francisco Bolivar, 2022\n"
 "Language-Team: Spanish (Venezuela) (https://www.transifex.com/teclib/teams/28042/es_VE/)\n"
@@ -199,7 +199,7 @@ msgstr "Un campo requerido está vacío:"
 msgid "The regular expression is invalid"
 msgstr "La expresión regular no es válida"
 
-#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:46
+#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:48
 msgid "User and form"
 msgstr "Usuario y formulario"
 
@@ -287,7 +287,7 @@ msgid "Radios"
 msgstr "Radios"
 
 #: inc/field/radiosfield.class.php:115 inc/field/glpiselectfield.class.php:93
-#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:230
+#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:229
 msgid "The field value is required:"
 msgstr "El campo valor es requerido:"
 
@@ -484,25 +484,25 @@ msgstr "Campos Adicionales"
 msgid "Checkboxes"
 msgstr "Casillas de verificación"
 
-#: inc/field/checkboxesfield.class.php:212
+#: inc/field/checkboxesfield.class.php:211
 #, php-format
 msgid "The following question needs at least %d answers"
 msgstr "La siguiente pregunta necesita al menos %d respuestas"
 
-#: inc/field/checkboxesfield.class.php:218
+#: inc/field/checkboxesfield.class.php:217
 #, php-format
 msgid "The following question does not accept more than %d answers"
 msgstr "La siguiente pregunta no acepta más de %d respuestas"
 
-#: inc/field/checkboxesfield.class.php:290
+#: inc/field/checkboxesfield.class.php:289
 msgid "Range min"
 msgstr "Rango mínimo"
 
-#: inc/field/checkboxesfield.class.php:291
+#: inc/field/checkboxesfield.class.php:290
 msgid "Range max"
 msgstr "Rango máximo"
 
-#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1095
+#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1099
 msgid "Request type"
 msgstr "Tipo de solicitud"
 
@@ -573,7 +573,7 @@ msgstr "Desplegado a menos"
 #: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
 #: inc/question.class.php:828 inc/questionparameter/range.class.php:202
 #: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
-#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1404
+#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1408
 #, php-format
 msgid "Failed to add or update the %1$s %2$s"
 msgstr "No se pudo agregar o actualizar %1$s %2$s"
@@ -585,7 +585,7 @@ msgstr "No se pudo agregar o actualizar %1$s %2$s"
 #: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
 #: inc/question.class.php:877 inc/questionparameter/range.class.php:137
 #: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
-#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1443
+#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1447
 #, php-format
 msgid "Cannot export an empty object: %s"
 msgstr "No se puede exportar un objeto vacío: %s"
@@ -1131,7 +1131,7 @@ msgid "Properties"
 msgstr "Propiedades"
 
 #: inc/targetproblem.class.php:522 inc/targetchange.class.php:285
-#: inc/targetticket.class.php:1386
+#: inc/targetticket.class.php:1390
 #, php-format
 msgid ""
 "Failed to add or update the %1$s %2$s: a question is missing and is used in "
@@ -1672,8 +1672,8 @@ msgstr "ANS"
 msgid "OLA"
 msgstr "AOS"
 
-#: inc/question.class.php:1197 inc/question.class.php:1237
-#: inc/question.class.php:1240
+#: inc/question.class.php:1197 inc/question.class.php:1238
+#: inc/question.class.php:1241
 msgid "Assets"
 msgstr "Activos"
 
@@ -1681,27 +1681,27 @@ msgstr "Activos"
 msgid "Assistance"
 msgstr "Asistencia"
 
-#: inc/question.class.php:1216
+#: inc/question.class.php:1217
 msgid "Management"
 msgstr "Gestión"
 
-#: inc/question.class.php:1225
+#: inc/question.class.php:1226
 msgid "Tools"
 msgstr "Herramientas"
 
-#: inc/question.class.php:1226
+#: inc/question.class.php:1227
 msgid "Notes"
 msgstr "Notas"
 
-#: inc/question.class.php:1227
+#: inc/question.class.php:1228
 msgid "RSS feed"
 msgstr "Canal RSS"
 
-#: inc/question.class.php:1229
+#: inc/question.class.php:1230
 msgid "Administration"
 msgstr "Administración"
 
-#: inc/question.class.php:1237 inc/question.class.php:1240
+#: inc/question.class.php:1238 inc/question.class.php:1241
 msgid "Plugin"
 msgid_plural "Plugins"
 msgstr[0] "Complemento"
@@ -1932,19 +1932,19 @@ msgstr "Error al vincular el elemento"
 msgid "Your form has been accepted by the validator"
 msgstr "Su formulario ha sido aceptado por el validador"
 
-#: inc/targetticket.class.php:1082
+#: inc/targetticket.class.php:1086
 msgid "Request source"
 msgstr "Origen de la solicitud"
 
-#: inc/targetticket.class.php:1107
+#: inc/targetticket.class.php:1111
 msgid "Type "
 msgstr "Tipo "
 
-#: inc/targetticket.class.php:1135
+#: inc/targetticket.class.php:1139
 msgid "Associated elements"
 msgstr "Elementos asociados"
 
-#: inc/targetticket.class.php:1146
+#: inc/targetticket.class.php:1150
 msgid "Item "
 msgstr "Elemento "
 
@@ -2366,11 +2366,15 @@ msgstr "Agregar traducciones"
 msgid "An error occured while querying forms"
 msgstr "Se ha producido un error al consultar formularios"
 
-#: js/scripts.js:1400
+#: js/scripts.js:1396 entrée standard:139
+msgid "Send"
+msgstr "Enviar"
+
+#: js/scripts.js:1405
 msgid "An internal error occurred. Please report it to administrator."
 msgstr "Ha ocurrido un error interno. Por favor reportarlo al administrador."
 
-#: js/scripts.js:1441
+#: js/scripts.js:1446
 msgid "Are you sure you want to delete this target:"
 msgstr "¿Está seguro de que desea eliminar este objetivo?:"
 
@@ -2425,10 +2429,6 @@ msgstr "Formulario por defecto del catálogo de servicios"
 #: entrée standard:113 standard:114
 msgid "Are you a robot ?"
 msgstr "¿Eres un robot?"
-
-#: entrée standard:139
-msgid "Send"
-msgstr "Enviar"
 
 #: entrée standard:64
 msgid "Condition to show the section"
