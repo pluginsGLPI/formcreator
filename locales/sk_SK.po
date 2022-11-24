@@ -1,0 +1,2519 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Miroslav Hlohovsky, 2022
+# Radoslav Koren, 2022
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-26 14:38+0200\n"
+"PO-Revision-Date: 2021-08-30 07:22+0000\n"
+"Last-Translator: Radoslav Koren, 2022\n"
+"Language-Team: Slovak (Slovakia) (https://www.transifex.com/teclib/teams/28042/sk_SK/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sk_SK\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#: ajax/question_update.php:36 ajax/section_update.php:37
+msgid "Bad request"
+msgstr "Zlá požiadavka"
+
+#: ajax/question_update.php:45 ajax/question_move.php:45
+#: ajax/question_delete.php:42 ajax/question_toggle_required.php:49
+msgid "Question not found"
+msgstr "Otázka nebola nájdená"
+
+#: ajax/question_update.php:51 ajax/question_duplicate.php:49
+#: ajax/question_move.php:50 ajax/section_add.php:38
+#: ajax/section_delete.php:50 ajax/section_move.php:55
+#: ajax/section_duplicate.php:50 ajax/question_delete.php:49
+#: ajax/question_toggle_required.php:55 ajax/section_update.php:44
+msgid "You don't have right for this action"
+msgstr "Nemáte oprávnenie na vykonanie akcie"
+
+#: ajax/question_duplicate.php:43
+msgid "Source question not found"
+msgstr "Zdrojová otázka sa nenašla"
+
+#: ajax/question_move.php:73
+msgid "Could not move some questions"
+msgstr "Niektoré otázky sa nepodarilo presunúť"
+
+#: ajax/section_add.php:44
+msgid "Could not add the section"
+msgstr "Sekciu sa nepodarilo pridať"
+
+#: ajax/commontree.php:55 entrée standard:109 standard:92
+msgid "Subtree root"
+msgstr "Subtree root"
+
+#: ajax/commontree.php:59
+msgid "Selectable"
+msgstr "Voliteľné"
+
+#: ajax/commontree.php:74 entrée standard:118 standard:101
+msgid "Limit subtree depth"
+msgstr "Limit subtree depth"
+
+#: ajax/commontree.php:84
+msgid "No limit"
+msgstr "Bez obmedzenia"
+
+#: ajax/homepage_link.php:36 inc/formlist.class.php:46
+#: inc/entityconfig.class.php:82 inc/form.class.php:111 inc/form.class.php:569
+#: inc/form.class.php:1951
+msgid "Form"
+msgid_plural "Forms"
+msgstr[0] "Formulár"
+msgstr[1] "Formuláre"
+msgstr[2] "Formuláre"
+msgstr[3] "Formuláre"
+
+#: ajax/section_delete.php:44 ajax/section_move.php:49
+#: ajax/section_duplicate.php:44
+msgid "Source section not found"
+msgstr "Zdrojová sekcia sa nenašla"
+
+#: ajax/section_delete.php:56
+msgid "Could not delete the section"
+msgstr "Sekciu sa nepodarilo vymazať"
+
+#: ajax/question_add.php:45
+msgid "Could not add the question"
+msgstr "Otázku sa nepodarilo pridať"
+
+#: ajax/section_move.php:66
+msgid "Could not move the section"
+msgstr "Sekciu sa nepodarilo presunúť"
+
+#: ajax/target_actor.php:51
+msgid "Failed to add the actor"
+msgstr "Nepodarilo sa pridať účastníka"
+
+#: ajax/target_actor.php:62
+msgid "Failed to delete the actor"
+msgstr "Nepodarilo sa odstrániť účastníka"
+
+#: ajax/section_duplicate.php:56
+msgid "Could not duplicate the section"
+msgstr "Sekciu sa nepodarilo duplikovať"
+
+#: ajax/section_update.php:50
+msgid "Could not update the section"
+msgstr "Sekciu sa nepodarilo aktualizovať"
+
+#: front/knowbaseitem.php:41 front/knowbaseitem.php:43 front/wizard.php:44
+#: front/wizard.php:46 front/wizardfeeds.php:49 front/wizardfeeds.php:51
+#: front/issue.php:43 front/issue.php:46 front/formanswer.php:44
+#: front/reservation.php:46 front/reservation.php:48
+#: front/knowbaseitem.form.php:48 front/knowbaseitem.form.php:50
+#: front/reservationitem.php:42 front/reservationitem.php:44
+#: front/formanswer.form.php:75 front/reservation.form.php:46
+#: front/reservation.form.php:48
+msgid "Service catalog"
+msgstr "Katalóg služieb"
+
+#: front/issue.form.php:46
+msgid "Item not found"
+msgstr "Položka nebola nájdená"
+
+#: front/targetticket.form.php:46 front/targetticket.form.php:56
+#: front/targetticket.form.php:81 front/targetchange.form.php:46
+#: front/targetproblem.form.php:46
+msgid "No right to update this item."
+msgstr "Nedostatočné práva na úpravu položky"
+
+#: front/targetticket.form.php:75
+msgid "Bad request while deleting an actor."
+msgstr "Zlá požiadavka pri odstraňovaní účastníka"
+
+#: front/targetticket.form.php:95 front/targetchange.form.php:81
+#: front/formanswer.php:47 front/targetproblem.form.php:81
+#: front/formanswer.form.php:78 front/form.php:44 inc/common.class.php:689
+#: inc/common.class.php:696
+msgid "Form Creator"
+msgstr "Tvorba formulárov"
+
+#: front/targetticket.form.php:105 front/targetchange.form.php:90
+#: front/targetproblem.form.php:90
+#, php-format
+msgid "%1$s = %2$s"
+msgstr "%1$s = %2$s"
+
+#: front/formlist.php:45 front/formlist.php:48 inc/common.class.php:686
+msgid "Form list"
+msgstr "Zoznam formulárov"
+
+#: front/formdisplay.php:90 inc/formanswer.class.php:889
+#: inc/formanswer.class.php:1120 inc/formanswer.class.php:1170
+msgid "The form has been successfully saved!"
+msgstr "Formulár bol úspešne uložený!"
+
+#. TRANS: %s is the user login
+#: front/reservation.form.php:71
+#, php-format
+msgid "%1$s purges the reservation for item %2$s"
+msgstr "%1$s vymaže rezerváciu položky %2$s"
+
+#: front/reservation.form.php:124
+#, php-format
+msgid "%1$s adds the reservation %2$s for item %3$s"
+msgstr "%1$s pridá rezerváciu %2$s pre položku %3$s"
+
+#: inc/knowbase.class.php:60 inc/form.class.php:646
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] "Kategória"
+msgstr[1] "Kategórie"
+msgstr[2] "Kategórie"
+msgstr[3] "Kategórie"
+
+#: inc/knowbase.class.php:62 inc/form.class.php:649
+msgid "See all"
+msgstr "Zobraziť všetko"
+
+#: inc/knowbase.class.php:83
+msgid "Please, describe your need here"
+msgstr "Prosím, popíšte svoju požiadavku"
+
+#: inc/field/textareafield.class.php:183
+msgid "Textarea"
+msgstr "Textové pole"
+
+#: inc/field/textareafield.class.php:242 inc/field/dropdownfield.class.php:440
+#: inc/field/ldapselectfield.class.php:114 inc/field/textfield.class.php:125
+#: inc/field/urgencyfield.class.php:165 inc/field/tagfield.class.php:163
+#: inc/field/timefield.class.php:113 inc/field/fieldsfield.class.php:488
+#: inc/field/requesttypefield.class.php:160
+msgid "A required field is empty:"
+msgstr "Povinné pole je prázdne:"
+
+#: inc/field/textareafield.class.php:260 inc/field/textfield.class.php:178
+#: inc/field/integerfield.class.php:112 inc/field/floatfield.class.php:193
+#: inc/conditionnabletrait.class.php:70
+msgid "The regular expression is invalid"
+msgstr "Bežný výraz je neplatný"
+
+#: inc/field/dropdownfield.class.php:73 inc/filter/entityfilter.class.php:48
+msgid "User and form"
+msgstr "Používateľ a formulár"
+
+#: inc/field/dropdownfield.class.php:431 entrée standard:38
+msgid "Dropdown"
+msgid_plural "Dropdowns"
+msgstr[0] "Rozbaľovacia ponuka"
+msgstr[1] "Rozbaľovacie ponuky"
+msgstr[2] "Rozbaľovacích ponúk"
+msgstr[3] "Rozbaľovacia ponuka"
+
+#: inc/field/dropdownfield.class.php:462
+msgid "Invalid value for "
+msgstr "Neplatná hodnota pre"
+
+#: inc/field/dropdownfield.class.php:474
+#, php-format
+msgid "The itemtype field is required: %s"
+msgstr "Pole Typ položky je povinné: %s"
+
+#: inc/field/dropdownfield.class.php:490
+#, php-format
+msgid "Invalid dropdown type: %s"
+msgstr "Neplatný typ rozbaľovacej ponuky: %s "
+
+#: inc/field/dropdownfield.class.php:821 entrée standard:143 standard:126
+msgid "Entity restriction"
+msgstr "Obmedzenie entity"
+
+#: inc/field/dropdownfield.class.php:830
+msgid ""
+"To respect the GLPI entity system, \"Form\" should be selected. Others "
+"settings will break the entity restrictions"
+msgstr ""
+"Pre rešpektovanie systému entít GLPI, mali by ste zvoliť \"Formulár\". Iné "
+"nastavenia porušia obmedzenia entity."
+
+#: inc/field/ldapselectfield.class.php:95
+msgid "LDAP Select"
+msgstr "LDAP výber"
+
+#: inc/field/ldapselectfield.class.php:139
+msgid "LDAP directory not defined!"
+msgstr "LDAP adresár nie je definovaný!"
+
+#: inc/field/ldapselectfield.class.php:146
+msgid "LDAP directory not found!"
+msgstr "LDAP adresár nebol nájdený!"
+
+#: inc/field/textfield.class.php:146 inc/field/integerfield.class.php:71
+#: inc/field/floatfield.class.php:155
+#, php-format
+msgid "Specific format does not match: %s"
+msgstr "Špecifický formát sa nezhoduje: %s"
+
+#: inc/field/textfield.class.php:155
+#, php-format
+msgid "The text is too short (minimum %d characters): %s"
+msgstr "Text je príliš krátky (minimum %d znakov): %s"
+
+#: inc/field/textfield.class.php:160
+#, php-format
+msgid "The text is too long (maximum %d characters): %s"
+msgstr "Text je príliš dlhý (maximum %d znakov): %s"
+
+#: inc/field/textfield.class.php:168
+msgid "Text"
+msgstr "Text"
+
+#: inc/field/textfield.class.php:212 inc/field/floatfield.class.php:234
+#: inc/questionregex.class.php:62 entrée standard:42
+msgid "Regular expression"
+msgstr "Všeobecný výraz"
+
+#: inc/field/textfield.class.php:217 inc/field/floatfield.class.php:239
+msgid "Range"
+msgstr "Rozsah"
+
+#: inc/field/textfield.class.php:223 inc/field/floatfield.class.php:245
+msgid "Additional validation"
+msgstr "Dodatočné overenie"
+
+#: inc/field/radiosfield.class.php:109
+msgid "Radios"
+msgstr "Tlačidlá predvoľby"
+
+#: inc/field/radiosfield.class.php:115 inc/field/glpiselectfield.class.php:93
+#: inc/field/fieldsfield.class.php:512 inc/field/checkboxesfield.class.php:229
+msgid "The field value is required:"
+msgstr "Hodnota poľa je povinná:"
+
+#: inc/field/radiosfield.class.php:193 inc/field/selectfield.class.php:104
+#: inc/field/datetimefield.class.php:118 inc/field/actorfield.class.php:257
+#: inc/field/checkboxesfield.class.php:175 inc/field/floatfield.class.php:124
+#: inc/field/datefield.class.php:115
+#, php-format
+msgid "A required field is empty: %s"
+msgstr "Povinné pole je prázdne: %s"
+
+#: inc/field/integerfield.class.php:59
+#, php-format
+msgid "This is not an integer: %s"
+msgstr "Toto nie je číslo: %s"
+
+#: inc/field/integerfield.class.php:85 inc/field/floatfield.class.php:166
+#, php-format
+msgid "The following number must be greater than %d: %s"
+msgstr "Nasledujúce číslo musi byť väčšie ako %d: %s"
+
+#: inc/field/integerfield.class.php:91 inc/field/floatfield.class.php:172
+#, php-format
+msgid "The following number must be lower than %d: %s"
+msgstr "Nasledujúce číslo musí byť menšie ako %d: %s"
+
+#: inc/field/integerfield.class.php:101
+msgid "Integer"
+msgstr "Číslo"
+
+#: inc/field/undefinedfield.class.php:44
+msgid "Undefined"
+msgstr "Nedefinované"
+
+#: inc/field/ipfield.class.php:122
+msgid "IP address"
+msgid_plural "IP addresses"
+msgstr[0] "IP adresa"
+msgstr[1] "IP adries"
+msgstr[2] "IP adries"
+msgstr[3] "IP adresy"
+
+#: inc/field/urgencyfield.class.php:85 inc/abstractitiltarget.class.php:994
+msgid "Urgency"
+msgstr "Naliehavosť"
+
+#: inc/field/urgencyfield.class.php:119
+msgctxt "urgency"
+msgid "Very high"
+msgstr "Veľmi vysoká"
+
+#: inc/field/urgencyfield.class.php:120
+msgctxt "urgency"
+msgid "High"
+msgstr "Vysoká"
+
+#: inc/field/urgencyfield.class.php:121
+msgctxt "urgency"
+msgid "Medium"
+msgstr "Stredná"
+
+#: inc/field/urgencyfield.class.php:122
+msgctxt "urgency"
+msgid "Low"
+msgstr "Nízka"
+
+#: inc/field/urgencyfield.class.php:123
+msgctxt "urgency"
+msgid "Very low"
+msgstr "Veľmi nízka"
+
+#: inc/field/tagfield.class.php:51
+msgid "Warning: Tag plugin is disabled or missing"
+msgstr "Upozornenie: Tag plugin je zakázaný alebo chýba"
+
+#: inc/field/tagfield.class.php:197
+msgid "Tag"
+msgid_plural "Tags"
+msgstr[0] "Štítok"
+msgstr[1] "Štítky"
+msgstr[2] "Štítky"
+msgstr[3] "Štitky"
+
+#: inc/field/glpiselectfield.class.php:78 entrée standard:38
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "GLPI objekt"
+msgstr[1] "GLPI objekty"
+msgstr[2] "GLPI objekty"
+msgstr[3] "GLPI objekty"
+
+#: inc/field/hostnamefield.class.php:115
+msgid "Hostname"
+msgid_plural "Hostnames"
+msgstr[0] "Hostname"
+msgstr[1] "Hostnames"
+msgstr[2] "Hostnames"
+msgstr[3] "Hostnames"
+
+#: inc/field/timefield.class.php:129
+msgid "Time"
+msgstr "Čas"
+
+#: inc/field/emailfield.class.php:88
+#, php-format
+msgid "This is not a valid e-mail: %s"
+msgstr "Toto nie je platný email: %s"
+
+#: inc/field/emailfield.class.php:99
+msgid "Email"
+msgid_plural "Emails"
+msgstr[0] "Email"
+msgstr[1] "Emaily"
+msgstr[2] "Emailov"
+msgstr[3] "Emaily"
+
+#: inc/field/selectfield.class.php:97
+msgid "Select"
+msgstr "Vyber"
+
+#: inc/field/datetimefield.class.php:139
+msgid "Date & time"
+msgstr "Dátum a čas"
+
+#: inc/field/actorfield.class.php:83
+msgid "Actor"
+msgid_plural "Actors"
+msgstr[0] "Účastník"
+msgstr[1] "Účastníkov"
+msgstr[2] "Účastníkov"
+msgstr[3] "Účastníci"
+
+#: inc/field/actorfield.class.php:267
+#, php-format
+msgid "Invalid value: %s"
+msgstr "Neplatná hodnota: %s"
+
+#: inc/field/actorfield.class.php:290
+#, php-format
+msgid "User not found or invalid email address: %s"
+msgstr "Používateľ nebol nájdený, alebo neplatná emailová adresa: %s"
+
+#: inc/field/filefield.class.php:105
+msgid "No attached document"
+msgstr "Nebol priložený dokument"
+
+#: inc/field/filefield.class.php:114 inc/field/filefield.class.php:252
+#: inc/field/filefield.class.php:259
+msgid "Attached document"
+msgstr "Priložený dokument"
+
+#: inc/field/filefield.class.php:157
+#, php-format
+msgid "A required file is missing: %s"
+msgstr "Chýba požadovaný súbor: %s"
+
+#: inc/field/filefield.class.php:174
+msgid "File"
+msgstr "Súbor"
+
+#: inc/field/multiselectfield.class.php:86
+msgid "Multiselect"
+msgstr "Viacnásobný výber"
+
+#: inc/field/fieldsfield.class.php:154
+msgid "Warning: Additional Fields plugin is disabled or missing"
+msgstr "Upozornenie: Doplnkové polia pluginu sú zakázané alebo chýbajú"
+
+#: inc/field/fieldsfield.class.php:167
+msgid "Block"
+msgstr "Blok"
+
+#: inc/field/fieldsfield.class.php:171 inc/targetticket.class.php:339
+msgid "Field"
+msgstr "Pole"
+
+#: inc/field/fieldsfield.class.php:253
+msgid "show"
+msgstr "ukázať"
+
+#: inc/field/fieldsfield.class.php:389
+#, php-format
+msgid "Field '%1$s' type not implemented yet!"
+msgstr ""
+"Typ poľa '%1$s' ešte nie je implementovaný!\n"
+" "
+
+#: inc/field/fieldsfield.class.php:466
+msgid "Some numeric fields contains non numeric values"
+msgstr "Niektoré číselné polia obsahujú nečíselné hodnoty"
+
+#: inc/field/fieldsfield.class.php:471
+msgid "Some URL fields contains invalid links"
+msgstr "Niektoré polia adries URL obsahujú neplatné odkazy"
+
+#: inc/field/fieldsfield.class.php:565
+msgid "Additionnal fields"
+msgstr "Doplnkové polia"
+
+#: inc/field/checkboxesfield.class.php:117
+msgid "Checkboxes"
+msgstr "Zaškrtávacie políčka"
+
+#: inc/field/checkboxesfield.class.php:211
+#, php-format
+msgid "The following question needs at least %d answers"
+msgstr "Nasledujúca otázka vyžaduje aspoň %d reakcií"
+
+#: inc/field/checkboxesfield.class.php:217
+#, php-format
+msgid "The following question does not accept more than %d answers"
+msgstr "Nasledujúca otázka neprijíma viac ako %d reakcií"
+
+#: inc/field/checkboxesfield.class.php:289
+msgid "Range min"
+msgstr "Rozsah min"
+
+#: inc/field/checkboxesfield.class.php:290
+msgid "Range max"
+msgstr "Rozsah max"
+
+#: inc/field/requesttypefield.class.php:86 inc/targetticket.class.php:1099
+msgid "Request type"
+msgstr "Typ požiadavky"
+
+#: inc/field/floatfield.class.php:141
+#, php-format
+msgid "This is not a number: %s"
+msgstr "Toto nie je číslo: %s"
+
+#: inc/field/floatfield.class.php:182
+msgid "Float"
+msgstr "Pohyblivý"
+
+#: inc/field/datefield.class.php:136
+msgid "Date"
+msgstr "Dátum"
+
+#: inc/field/descriptionfield.class.php:105 inc/form.class.php:165
+#: inc/question.class.php:166 entrée standard:82 standard:52 standard:113
+msgid "Description"
+msgstr "Popis"
+
+#: inc/field/descriptionfield.class.php:112
+msgid "A description field should have a description:"
+msgstr "Pole popisu by malo obsahovať popis:"
+
+#: inc/field/hiddenfield.class.php:95
+msgid "Hidden field"
+msgid_plural "Hidden fields"
+msgstr[0] "Skryté pole"
+msgstr[1] "Skryté polia"
+msgstr[2] "Skryté polia"
+msgstr[3] "Skryté polia"
+
+#: inc/condition.class.php:65
+msgid "Condition"
+msgid_plural "Conditions"
+msgstr[0] "Podmienka"
+msgstr[1] "Podmienok"
+msgstr[2] "Podmienok"
+msgstr[3] "Podmienky"
+
+#: inc/condition.class.php:104
+msgid "is visible"
+msgstr "je viditeľný"
+
+#: inc/condition.class.php:105
+msgid "is not visible"
+msgstr "nie je viditeľný"
+
+#: inc/condition.class.php:106
+msgid "regular expression matches"
+msgstr "regular expression matches"
+
+#: inc/condition.class.php:117
+msgid "Always displayed"
+msgstr "Vždy zobrazené"
+
+#: inc/condition.class.php:118
+msgid "Hidden unless"
+msgstr "Skryté, pokiaľ"
+
+#: inc/condition.class.php:119
+msgid "Displayed unless"
+msgstr "Zobrazené pokiaľ"
+
+#: inc/condition.class.php:179 inc/target_actor.class.php:215
+#: inc/form_language.class.php:540 inc/form_validator.class.php:379
+#: inc/targetproblem.class.php:540 inc/questionrange.class.php:196
+#: inc/form.class.php:1844 inc/targetchange.class.php:303
+#: inc/section.class.php:379 inc/restrictedformcriteria.class.php:200
+#: inc/question.class.php:828 inc/questionparameter/range.class.php:202
+#: inc/questionregex.class.php:185 inc/questiondependency.class.php:196
+#: inc/item_targetticket.class.php:154 inc/targetticket.class.php:1408
+#, php-format
+msgid "Failed to add or update the %1$s %2$s"
+msgstr "Nepodarilo sa pridať alebo aktualizovať %1$s %2$s"
+
+#: inc/condition.class.php:201 inc/target_actor.class.php:236
+#: inc/form_language.class.php:556 inc/form_validator.class.php:403
+#: inc/targetproblem.class.php:375 inc/questionrange.class.php:131
+#: inc/form.class.php:1535 inc/targetchange.class.php:148
+#: inc/section.class.php:404 inc/restrictedformcriteria.class.php:226
+#: inc/question.class.php:877 inc/questionparameter/range.class.php:137
+#: inc/questionregex.class.php:120 inc/questiondependency.class.php:211
+#: inc/item_targetticket.class.php:64 inc/targetticket.class.php:1447
+#, php-format
+msgid "Cannot export an empty object: %s"
+msgstr "Nie je možné exportovať prázdny objekt: %s"
+
+#: inc/condition.class.php:269
+msgid "Conditions"
+msgstr "Podmienky"
+
+#: inc/linker.class.php:78
+msgid "Importing"
+msgstr "Importuje sa"
+
+#: inc/linker.class.php:80
+msgid "Import in progress"
+msgstr "Prebieha import"
+
+#: inc/issue.class.php:43
+msgid "Issue"
+msgid_plural "Issues"
+msgstr[0] "Issue"
+msgstr[1] "Issues"
+msgstr[2] "Issues"
+msgstr[3] "Issues"
+
+#: inc/issue.class.php:56
+msgid "Update issue data from tickets and form answers"
+msgstr "Aktualizujte issue z tiketov a reakcií formulárov"
+
+#: inc/issue.class.php:392
+msgid "Satisfaction survey expired"
+msgstr "Platnosť prieskumu spokojnosti vypršala"
+
+#: inc/issue.class.php:521 inc/form_language.class.php:213
+#: inc/form.class.php:156 inc/form.class.php:2148 entrée standard:52
+#: standard:49 standard:57 standard:38 standard:39
+msgid "Name"
+msgstr "Meno"
+
+#: inc/issue.class.php:534 inc/formanswer.class.php:199
+#: inc/formanswer.class.php:273 inc/targetproblem.class.php:623
+#: inc/form.class.php:147 inc/targetchange.class.php:334
+#: inc/section.class.php:95 inc/question.class.php:156
+#: inc/targetticket.class.php:178
+msgid "ID"
+msgstr "ID"
+
+#: inc/issue.class.php:543 inc/form.class.php:503 inc/form.class.php:2157
+#: entrée standard:65
+msgid "Type"
+msgid_plural "Types"
+msgstr[0] "Typ"
+msgstr[1] "Typov"
+msgstr[2] "Typov"
+msgstr[3] "Typy"
+
+#: inc/issue.class.php:556 inc/formanswer.class.php:260
+msgid "Status"
+msgstr "Stav"
+
+#: inc/issue.class.php:568
+msgid "Opening date"
+msgstr "Dátum otvorenia"
+
+#: inc/issue.class.php:577
+msgid "Last update"
+msgstr "Posledná aktualizácia"
+
+#: inc/issue.class.php:586 inc/abstracttarget.class.php:518
+msgid "Entity"
+msgid_plural "Entities"
+msgstr[0] "Entita"
+msgstr[1] "Entít"
+msgstr[2] "Entít"
+msgstr[3] "Entity"
+
+#: inc/issue.class.php:596 inc/notificationtargetformanswer.class.php:79
+#: inc/target_actor.class.php:83 inc/formanswer.class.php:219
+#: inc/formanswer.class.php:618 inc/abstractitiltarget.class.php:1724
+msgid "Requester"
+msgid_plural "Requesters"
+msgstr[0] "Žiadateľ"
+msgstr[1] "Žiadateľov"
+msgstr[2] "Žiadateľov"
+msgstr[3] "Žiadatelia"
+
+#: inc/issue.class.php:614 inc/formanswer.class.php:229
+msgid "Form approver"
+msgstr "Schvaľovateľ požiadavky"
+
+#: inc/issue.class.php:630 inc/formanswer.class.php:544
+#: inc/formanswer.class.php:551 inc/formanswer.class.php:633
+#: inc/form_language.class.php:227
+msgid "Comment"
+msgstr "Poznámka"
+
+#: inc/issue.class.php:642
+msgid "Ticket approver"
+msgstr "Schvaľovateľ tiketov"
+
+#: inc/issue.class.php:676
+msgid "Technician"
+msgstr "IT technik"
+
+#: inc/issue.class.php:708
+msgid "Technician group"
+msgstr "Skupina IT technikov"
+
+#: inc/issue.class.php:741 inc/formanswer.class.php:249
+msgid "Form approver group"
+msgstr "Skupina schvaľovateľov požiadavky"
+
+#: inc/issue.class.php:853
+#, php-format
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#: inc/issue.class.php:1115 inc/filter/itilcategoryfilter.class.php:56
+#: hook.php:629
+msgid "All"
+msgstr "Všetci"
+
+#: inc/issue.class.php:1121 hook.php:630
+msgid "New"
+msgstr "Nový"
+
+#: inc/issue.class.php:1127 hook.php:631
+msgid "Assigned"
+msgstr "Pridelený"
+
+#: inc/issue.class.php:1133 inc/formanswer.class.php:76
+#: inc/form_validator.class.php:69 hook.php:632
+msgid "Waiting"
+msgstr "Čakanie"
+
+#: inc/issue.class.php:1139 hook.php:633
+msgid "To validate"
+msgstr "Na overenie"
+
+#: inc/issue.class.php:1145 hook.php:634
+msgid "Solved"
+msgstr "Vyriešené"
+
+#: inc/issue.class.php:1151 hook.php:635
+msgid "Closed"
+msgstr "Uzavretý"
+
+#: inc/category.class.php:50 hook.php:72
+msgid "Form category"
+msgid_plural "Form categories"
+msgstr[0] "Kategória formulára"
+msgstr[1] "Kategórie formulára"
+msgstr[2] "Kategórie formulára"
+msgstr[3] "Kategórie formulára"
+
+#: inc/category.class.php:72
+msgid "Knowbase category"
+msgstr "Kategória znalostí"
+
+#: inc/category.class.php:78
+msgid "As child of"
+msgstr "As child of"
+
+#: inc/notificationtargetformanswer.class.php:43
+msgid "The form as been saved"
+msgstr "Formulár bol uložený."
+
+#: inc/notificationtargetformanswer.class.php:44 install/install.php:408
+msgid "A form need to be validate"
+msgstr "Formulár je potrebné overiť"
+
+#: inc/notificationtargetformanswer.class.php:45 install/install.php:414
+msgid "The form is refused"
+msgstr "Formulár je odmietnutý"
+
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:420
+msgid "The form is accepted"
+msgstr "Formulár je akceptovaný"
+
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:426
+msgid "The form is deleted"
+msgstr "Formulár je vymazaný"
+
+#: inc/notificationtargetformanswer.class.php:77
+msgid "Form #"
+msgstr "Formulár #"
+
+#: inc/notificationtargetformanswer.class.php:78
+msgid "Form name"
+msgstr "Názov formulára"
+
+#: inc/notificationtargetformanswer.class.php:80
+msgctxt "tag"
+msgid "Validator"
+msgstr "Overovateľ"
+
+#: inc/notificationtargetformanswer.class.php:81 inc/formanswer.class.php:240
+msgid "Creation date"
+msgstr "Dátum vytvorenia"
+
+#: inc/notificationtargetformanswer.class.php:82
+msgid "Full form answers"
+msgstr "Odpovede"
+
+#: inc/notificationtargetformanswer.class.php:83
+msgid "Refused comment"
+msgstr "Odmietnutý komentár"
+
+#: inc/notificationtargetformanswer.class.php:84
+msgid "Validation link"
+msgstr "Odkaz na overenie"
+
+#: inc/notificationtargetformanswer.class.php:85
+msgid "Request #"
+msgstr "Požiadavka #"
+
+#: inc/notificationtargetformanswer.class.php:97
+msgid "Author"
+msgstr "Autor"
+
+#: inc/notificationtargetformanswer.class.php:98
+#: inc/abstractitiltarget.class.php:1289
+msgid "Approver"
+msgstr "Schvaľovateľ"
+
+#: inc/target_actor.class.php:66 inc/abstractitiltarget.class.php:2048
+msgid "Form author"
+msgstr "Autor formulára"
+
+#: inc/target_actor.class.php:67 inc/abstractitiltarget.class.php:2051
+msgid "Form validator"
+msgstr "Overovateľ formulára"
+
+#: inc/target_actor.class.php:68
+msgid "Specific person"
+msgstr "Konkrétna osoba"
+
+#: inc/target_actor.class.php:69 inc/abstractitiltarget.class.php:2061
+msgid "Person from the question"
+msgstr "Osoby z otázky"
+
+#: inc/target_actor.class.php:70
+msgid "Specific group"
+msgstr "Špecifická skupina"
+
+#: inc/target_actor.class.php:71 inc/abstractitiltarget.class.php:2072
+msgid "Group from the question"
+msgstr "Skupina z otázky"
+
+#: inc/target_actor.class.php:72
+msgid "Group from an object"
+msgstr "Skupina z objektu"
+
+#: inc/target_actor.class.php:73
+msgid "Tech group from an object"
+msgstr "Technická skupina z objektu"
+
+#: inc/target_actor.class.php:74
+msgid "Specific supplier"
+msgstr "Konkrétny dodávateľ"
+
+#: inc/target_actor.class.php:75 inc/abstractitiltarget.class.php:2101
+msgid "Supplier from the question"
+msgstr "Dodávateľ z otázky"
+
+#: inc/target_actor.class.php:76 inc/abstractitiltarget.class.php:2090
+msgid "Actors from the question"
+msgstr "Účastník z otázky"
+
+#: inc/target_actor.class.php:77 inc/abstractitiltarget.class.php:2105
+msgid "Form author's supervisor"
+msgstr "Form author's supervisor"
+
+#: inc/target_actor.class.php:84
+msgid "Observer"
+msgstr "Pozorovateľ"
+
+#: inc/target_actor.class.php:85 inc/abstractitiltarget.class.php:1738
+msgid "Assigned to"
+msgstr "Priradený k"
+
+#: inc/target_actor.class.php:91
+msgid "Target actor"
+msgid_plural "Target actors"
+msgstr[0] "Cieľový účastník"
+msgstr[1] "Cieľový účastníci"
+msgstr[2] "Cieľový účastníci"
+msgstr[3] "Cieľový účastníci"
+
+#: inc/target_actor.class.php:97 inc/target_actor.class.php:113
+#: inc/target_actor.class.php:122
+msgid "Bad request while adding an actor."
+msgstr "Zlá požiadavka pre pridelení účastníka"
+
+#: inc/target_actor.class.php:179
+#, php-format
+msgid "Failed to find a user: %1$s"
+msgstr "Nepodarilo sa nájsť používateľa: %1$s"
+
+#: inc/target_actor.class.php:188
+#, php-format
+msgid "Failed to find a group: %1$s"
+msgstr "Nepodarilo sa nájsť skupinu: %1$s"
+
+#: inc/target_actor.class.php:197
+#, php-format
+msgid "Failed to find a supplier: %1$s"
+msgstr "Nepodarilo sa nájsť dodávateľa: %1$s"
+
+#: inc/formanswer.class.php:77 inc/form_validator.class.php:71
+msgid "Refused"
+msgstr "Odmietnuté"
+
+#: inc/formanswer.class.php:78 inc/form_validator.class.php:70
+msgid "Accepted"
+msgstr "Akceptované"
+
+#: inc/formanswer.class.php:184
+msgid "Form answer"
+msgid_plural "Form answers"
+msgstr[0] "Formulár"
+msgstr[1] "Formuláre"
+msgstr[2] "Formuláre"
+msgstr[3] "Formulár"
+
+#: inc/formanswer.class.php:529
+msgid "Print this form"
+msgstr "Tlačiť tento formulár"
+
+#: inc/formanswer.class.php:554
+msgid "Form accepted by validator."
+msgstr "Formulár akceptovaný overovateľom"
+
+#: inc/formanswer.class.php:556
+msgid "Form successfully saved."
+msgstr "Formulár úspešne uložený."
+
+#: inc/formanswer.class.php:626 inc/formaccesstype.class.php:122
+msgid "Save"
+msgstr "Uložiť"
+
+#: inc/formanswer.class.php:638
+msgid "Required if refused"
+msgstr "Vyžaduje sa v prípade odmietnutia"
+
+#: inc/formanswer.class.php:644
+msgid "Refuse"
+msgstr "Odmietnuť"
+
+#: inc/formanswer.class.php:652
+msgid "Edit answers"
+msgstr "Upraviť odpovede"
+
+#: inc/formanswer.class.php:658
+msgid "Cancel edition"
+msgstr "Zrušiť editáciu"
+
+#: inc/formanswer.class.php:665
+msgid "Accept"
+msgstr "Akceptovať"
+
+#: inc/formanswer.class.php:688
+msgid "Refused comment is required!"
+msgstr "Vyžaduje sa odmietnutý komentár!"
+
+#: inc/formanswer.class.php:762
+msgid "You are not the validator of these answers"
+msgstr "Nie ste overovateľom týchto reakcií"
+
+#: inc/formanswer.class.php:895
+#, php-format
+msgid "Item sucessfully added: %1$s (%2$s: %3$s)"
+msgstr "Položka úspešne pridaná: %1$s (%2$s: %3$s)"
+
+#: inc/formanswer.class.php:977 inc/formanswer.class.php:979
+msgid "Form data"
+msgstr "Údaje formulára"
+
+#: inc/formanswer.class.php:1105 inc/formanswer.class.php:1157
+msgid "Cannot generate targets!"
+msgstr "Nie je možné generovať ciele!"
+
+#: inc/formanswer.class.php:1281
+msgid "No turing test set"
+msgstr "No turing test set"
+
+#: inc/formanswer.class.php:1286
+msgid "You failed the Turing test"
+msgstr "You failed the Turing test"
+
+#: inc/formanswer.class.php:1326
+msgid "You must select validator!"
+msgstr "Musíte vybrať overenie!"
+
+#: inc/common.class.php:229
+msgid "You cannot delete this issue. Maybe it is taken into account."
+msgstr "Toto issue nemôžete odstrániť."
+
+#: inc/common.class.php:234
+msgid "Failed to delete this issue. An internal error occured."
+msgstr "Toto issue sa nepodarilo odstrániť. Vyskytla sa interná chyba."
+
+#: inc/common.class.php:780
+msgid "Seek assistance"
+msgstr "Vyhľadajte pomoc"
+
+#: inc/common.class.php:785
+msgid "My requests for assistance"
+msgstr "Moja požiadavka o pomoc"
+
+#: inc/common.class.php:815
+msgid "Consult feeds"
+msgstr "Consult feeds"
+
+#: inc/formaccesstype.class.php:39 inc/formaccesstype.class.php:64
+msgid "Access type"
+msgid_plural "Access types"
+msgstr[0] "Typ prístupu"
+msgstr[1] "Typov prístupov"
+msgstr[2] "Typov prístupov"
+msgstr[3] "Typy prístupov"
+
+#: inc/formaccesstype.class.php:78
+msgid "Link to the form"
+msgstr "Odkaz na formulár"
+
+#: inc/formaccesstype.class.php:91
+msgid "Please activate the form to view the link"
+msgstr "Pre zobrazenie odkazu prosím aktivujte formulár"
+
+#: inc/formaccesstype.class.php:99
+msgid "Enable captcha"
+msgstr "Povoliť captcha"
+
+#: inc/formaccesstype.class.php:109
+msgid "Restricted to"
+msgstr "Obmedzený na"
+
+#: inc/form_language.class.php:51
+msgid "Form language"
+msgid_plural "Form languages"
+msgstr[0] "Jazyk formulára"
+msgstr[1] "Jazyky formulárov"
+msgstr[2] "Jazyky formulárov"
+msgstr[3] "Jazyky formulára"
+
+#: inc/form_language.class.php:72
+msgid "Translation"
+msgid_plural "Translations"
+msgstr[0] "Preklad"
+msgstr[1] "Prekladov"
+msgstr[2] "Predkladov"
+msgstr[3] "Preklady"
+
+#: inc/form_language.class.php:111 inc/form.class.php:1076
+#: inc/form.class.php:1201 inc/abstracttarget.class.php:161
+#: inc/abstractitiltarget.class.php:1544
+msgid "The name cannot be empty!"
+msgstr "Názov nemôže byť prázdny"
+
+#: inc/form_language.class.php:119
+msgid "The language must be associated to a form!"
+msgstr "Jazyk musí byť prepojený na formulár"
+
+#: inc/form_language.class.php:249
+msgid "Add a translation"
+msgstr "Pridať preklad"
+
+#: inc/form_language.class.php:283 js/scripts.js:1156
+msgid "Update a translation"
+msgstr "Aktualizovať preklad"
+
+#: inc/form_language.class.php:313 inc/form_language.class.php:315
+msgid "New translation"
+msgstr "Nový preklad"
+
+#: inc/form_language.class.php:318
+msgid "Filter list"
+msgstr "Zoznam filtrov"
+
+#: inc/form_language.class.php:323 inc/form_language.class.php:413
+msgid "No translation found"
+msgstr "Nenašiel sa žiadny preklad"
+
+#: inc/form_language.class.php:328
+msgid "Do you want to delete the selected items?"
+msgstr "Chcete vymazať vybrané položky?"
+
+#: inc/form_language.class.php:337 inc/form_language.class.php:376
+#: inc/form.class.php:527 inc/abstractitiltarget.class.php:1629
+msgid "Delete"
+msgstr "Vymazať"
+
+#: inc/form_language.class.php:347
+msgid "Original string"
+msgstr "Original string"
+
+#: inc/form_language.class.php:399
+msgid "Add a new language"
+msgstr "Pridať nový jazyk"
+
+#: inc/form_language.class.php:432 inc/form_language.class.php:464
+#: inc/form.class.php:192 entrée standard:72
+msgid "Language"
+msgstr "Jazyk"
+
+#: inc/form_validator.class.php:68 inc/targetticket.class.php:97
+#: inc/abstractitiltarget.class.php:178
+msgid "None"
+msgstr "Žiadny"
+
+#: inc/form_validator.class.php:76
+msgid "Validator"
+msgid_plural "Validators"
+msgstr[0] "Overovateľ"
+msgstr[1] "Overovateľov"
+msgstr[2] "Overovateľov"
+msgstr[3] "Overovatelia"
+
+#: inc/form_validator.class.php:114
+msgid "Need validaton?"
+msgstr "Je potrebné overenie?"
+
+#: inc/form_validator.class.php:118 inc/abstractitiltarget.class.php:2042
+msgid "No"
+msgstr "Nie"
+
+#: inc/form_validator.class.php:295 inc/targetproblem.class.php:146
+#: inc/entityconfig.class.php:411 inc/targetchange.class.php:483
+#: inc/targetticket.class.php:316 inc/targetticket.class.php:351
+#: inc/abstractitiltarget.class.php:2031
+msgctxt "button"
+msgid "Save"
+msgstr "Uložiť"
+
+#: inc/form_validator.class.php:709 inc/abstractitiltarget.class.php:1269
+msgid "Validation"
+msgstr "Overenie"
+
+#: inc/form_validator.class.php:711
+msgid "Choose a validator"
+msgstr "Vyber overovateľa"
+
+#: inc/targetproblem.class.php:42 entrée standard:43
+msgid "Target problem"
+msgid_plural "Target problems"
+msgstr[0] "Target problem"
+msgstr[1] "Target problems"
+msgstr[2] "Target problems"
+msgstr[3] "Target problems"
+
+#: inc/targetproblem.class.php:108 inc/targetproblem.class.php:578
+#: inc/targetchange.class.php:104 inc/targetchange.class.php:440
+#: inc/targetticket.class.php:133 inc/targetticket.class.php:236
+msgid "Properties"
+msgstr "Vlastnosti"
+
+#: inc/targetproblem.class.php:522 inc/targetchange.class.php:285
+#: inc/targetticket.class.php:1390
+#, php-format
+msgid ""
+"Failed to add or update the %1$s %2$s: a question is missing and is used in "
+"a parameter of the target"
+msgstr ""
+"Nepodarilo sa pridať alebo aktualizovať %1$s %2$s: chýba otázka a používa sa"
+" v parametri cieľa"
+
+#: inc/targetproblem.class.php:579 inc/targetchange.class.php:105
+#: inc/targetticket.class.php:134 inc/abstractitiltarget.class.php:1171
+msgid "Actors"
+msgstr "Účastníci"
+
+#: inc/targetproblem.class.php:632 entrée standard:48
+msgid "Problem title"
+msgstr "Názov problému"
+
+#: inc/targetproblem.class.php:642 inc/targetchange.class.php:353
+#: inc/targetticket.class.php:197
+msgid "Content"
+msgstr "Obsah"
+
+#: inc/targetproblem.class.php:652 inc/targetchange.class.php:363
+msgid "Impact"
+msgstr "Dopad"
+
+#: inc/targetproblem.class.php:662 entrée standard:56
+msgid "Cause"
+msgstr "Príčina"
+
+#: inc/targetproblem.class.php:672 entrée standard:58
+msgid "Symptom"
+msgstr "Symptóm"
+
+#: inc/entityconfig.class.php:90 inc/entityconfig.class.php:99
+#: inc/entityconfig.class.php:107 inc/entityconfig.class.php:115
+#: inc/entityconfig.class.php:123 inc/entityconfig.class.php:131
+#: inc/entityconfig.class.php:139 inc/entityconfig.class.php:147
+#: inc/entityconfig.class.php:155
+msgid "Inheritance of the parent entity"
+msgstr "Dedičnosť nadradenej entity"
+
+#: inc/entityconfig.class.php:91
+msgid "GLPi's helpdesk"
+msgstr "GLPI service desk"
+
+#: inc/entityconfig.class.php:92
+msgid "Service catalog simplified"
+msgstr "Zjednodušený katalóg služieb"
+
+#: inc/entityconfig.class.php:93
+msgid "Service catalog extended"
+msgstr "Rozšírený katalóg služieb"
+
+#: inc/entityconfig.class.php:100
+msgid "All available forms"
+msgstr "Všetky dostupné formuláre"
+
+#: inc/entityconfig.class.php:101
+msgid "Only default forms"
+msgstr "Iba predvolené formuláre"
+
+#: inc/entityconfig.class.php:108
+msgid "Popularity sort"
+msgstr "Zoradiť podľa obľúbenosti"
+
+#: inc/entityconfig.class.php:109
+msgid "Alphabetic sort"
+msgstr "Zoradiť podľa abecedy"
+
+#: inc/entityconfig.class.php:116
+msgid "Merged with Forms"
+msgstr "Zlúčené s formulármi"
+
+#: inc/entityconfig.class.php:117
+msgid "Distinct menu entry"
+msgstr "Odlišný vstup do menu"
+
+#: inc/entityconfig.class.php:124 inc/entityconfig.class.php:132
+#: inc/entityconfig.class.php:140 inc/entityconfig.class.php:148
+#: inc/form.class.php:285 entrée standard:100
+msgid "Visible"
+msgstr "Viditeľné"
+
+#: inc/entityconfig.class.php:125 inc/entityconfig.class.php:133
+#: inc/entityconfig.class.php:141 inc/entityconfig.class.php:149
+msgid "Hidden"
+msgstr "Skryté"
+
+#: inc/entityconfig.class.php:156
+msgid "Variable height"
+msgstr "Variabilná výška"
+
+#: inc/entityconfig.class.php:157
+msgid "Uniform height"
+msgstr "Jednotná výška"
+
+#: inc/entityconfig.class.php:253
+msgid "Helpdesk"
+msgstr "Service Desk"
+
+#: inc/entityconfig.class.php:261 inc/entityconfig.class.php:425 entrée
+#: standard:44
+msgid "Helpdesk mode"
+msgstr "Režim Service Desku"
+
+#: inc/entityconfig.class.php:272
+msgid "Default Form list mode"
+msgstr "Predvolený režim zoznamu formulárov"
+
+#: inc/entityconfig.class.php:290 inc/entityconfig.class.php:435
+msgid "Sort order"
+msgstr "Zoradiť poradie"
+
+#: inc/entityconfig.class.php:306 inc/entityconfig.class.php:445
+msgid "Knowledge base"
+msgstr "Databáza znalostí"
+
+#: inc/entityconfig.class.php:321
+msgid "Search"
+msgstr "Vyhľadávanie"
+
+#: inc/entityconfig.class.php:337
+msgid "Counters dashboard"
+msgstr "Counters dashboard"
+
+#: inc/entityconfig.class.php:353
+msgid "Header message"
+msgstr "Hlavička správy"
+
+#: inc/entityconfig.class.php:369
+msgid "Search issue"
+msgstr "Problém s vyhľadávaním"
+
+#: inc/entityconfig.class.php:385
+msgid "Tile design"
+msgstr "Tile design"
+
+#: inc/entityconfig.class.php:397 inc/entityconfig.class.php:475
+#: inc/form.class.php:239 entrée standard:84
+msgid "Header"
+msgid_plural "Headers"
+msgstr[0] "Hlavička"
+msgstr[1] "Hlavičiek"
+msgstr[2] "Hlavičiek"
+msgstr[3] "Hlavičky"
+
+#: inc/entityconfig.class.php:455
+msgid "Display search field"
+msgstr "Zobraziť pole vyhľadávania"
+
+#: inc/entityconfig.class.php:465
+msgid "Display header"
+msgstr "Zobraziť hlavičku"
+
+#: inc/questionrange.class.php:52 inc/questionparameter/range.class.php:56
+msgid "Question range"
+msgid_plural "Question ranges"
+msgstr[0] "Rozsah otázky"
+msgstr[1] "Rozsahov otázok"
+msgstr[2] "Rozsahov otázok"
+msgstr[3] "Rozsah otázok"
+
+#: inc/questionrange.class.php:62 inc/questionparameter/range.class.php:66
+msgid "Minimum range"
+msgstr "Minimálny rozsah"
+
+#: inc/questionrange.class.php:71 inc/questionparameter/range.class.php:75
+msgid "maximum range"
+msgstr "Maximálny rozsah"
+
+#: inc/form.class.php:66 inc/form.class.php:432
+msgid "Public access"
+msgstr "Verejný prístup"
+
+#: inc/form.class.php:67 inc/form.class.php:436
+msgid "Private access"
+msgstr "Súkromný prístup"
+
+#: inc/form.class.php:68 inc/form.class.php:440
+msgid "Restricted access"
+msgstr "Obmedzený prístup"
+
+#: inc/form.class.php:122
+msgid "Answers waiting for validation"
+msgstr "Reakcie čakajúce na overenie"
+
+#: inc/form.class.php:124 inc/form.class.php:1619 inc/form.class.php:1645
+msgid "Import forms"
+msgstr "Importovať formuláre"
+
+#: inc/form.class.php:140
+msgid "Characteristics"
+msgstr "Charakteristika"
+
+#: inc/form.class.php:183
+msgid "Recursive"
+msgstr "Rekurzívne"
+
+#: inc/form.class.php:204
+msgid "Homepage"
+msgstr "Domovská stránka"
+
+#: inc/form.class.php:217
+msgid "Access"
+msgstr "Prístup"
+
+#: inc/form.class.php:248 inc/form.class.php:330 inc/form.class.php:397 entrée
+#: standard:54
+msgid "Active"
+msgstr "Aktívny"
+
+#: inc/form.class.php:261 entrée standard:65
+msgid "Icon"
+msgstr "Ikona"
+
+#: inc/form.class.php:269 entrée standard:67
+msgid "Icon color"
+msgstr "Farba ikony"
+
+#: inc/form.class.php:277 entrée standard:80
+msgid "Background color"
+msgstr "Farba pozadia"
+
+#: inc/form.class.php:300 inc/form.class.php:341 inc/form.class.php:416
+msgid "Default form"
+msgstr "Predvolený formulár"
+
+#: inc/form.class.php:329 inc/form.class.php:394
+msgid "Inactive"
+msgstr "Neaktívny"
+
+#: inc/form.class.php:340 inc/form.class.php:413
+msgid "Not default form"
+msgstr "Nie je to predvolený formulár"
+
+#: inc/form.class.php:364 inc/form.class.php:448 entrée standard:75
+msgid "All languages"
+msgstr "Všetky jazyky"
+
+#: inc/form.class.php:502 inc/form.class.php:561
+msgid "Target"
+msgid_plural "Targets"
+msgstr[0] "Cieľ"
+msgstr[1] "Cieľov"
+msgstr[2] "Cieľov"
+msgstr[3] "Ciele"
+
+#: inc/form.class.php:504
+msgid "Actions"
+msgstr "Akcie"
+
+#: inc/form.class.php:544 inc/form.class.php:2145
+msgid "Add a target"
+msgstr "Pridaj cieľ"
+
+#: inc/form.class.php:564
+msgid "Preview"
+msgstr "Náhľad"
+
+#: inc/form.class.php:565
+msgid "properties"
+msgstr "Vlastnosti"
+
+#: inc/form.class.php:884
+msgid "What are you looking for?"
+msgstr "Čo hľadáte?"
+
+#: inc/form.class.php:893
+#, php-format
+msgid "My %1$d last forms (requester)"
+msgstr "Mojich %1$d  posledných požiadaviek (žiadateľ)"
+
+#: inc/form.class.php:920
+msgid "No form posted yet"
+msgstr "Zatiaľ nebol odoslaný žiadny formulár"
+
+#: inc/form.class.php:948
+msgid "All my forms (requester)"
+msgstr "Všetky moje požiadavky (žiadateľ)"
+
+#: inc/form.class.php:961
+#, php-format
+msgid "My %1$d last forms (validator)"
+msgstr "Moje posledné formuláre : %1$d (overovateľ)"
+
+#: inc/form.class.php:988
+msgid "No form waiting for validation"
+msgstr "Žiadny formulár nečaká na overenie"
+
+#: inc/form.class.php:1016
+msgid "All my forms (validator)"
+msgstr "Všetky moje požiadavky (schvaľovateľ)"
+
+#: inc/form.class.php:1212
+msgid "Cannot use empty name for form answers. Keeping the previous value."
+msgstr ""
+"Pre odpovede vo formulári nemožno použiť prázdny názov. Ponechanie "
+"predchádzajúcej hodnoty."
+
+#: inc/form.class.php:1307
+#, php-format
+msgid "The question %s is not compatible with public forms"
+msgstr "Otázka %s nie je kompatibilná s verejnými formulármi"
+
+#: inc/form.class.php:1387
+msgid "Errored duplicate"
+msgstr "Chybný duplikát"
+
+#: inc/form.class.php:1398
+msgid "Duplicate"
+msgstr "Duplicitné"
+
+#: inc/form.class.php:1445
+msgctxt "button"
+msgid "Post"
+msgstr "Príspevok"
+
+#: inc/form.class.php:1463
+#, php-format
+msgid "Form duplicated: %s"
+msgstr "Duplikovaný formulár: %s"
+
+#: inc/form.class.php:1474
+#, php-format
+msgid "Form Transfered: %s"
+msgstr "Formulár bol prenesený: %s"
+
+#: inc/form.class.php:1493
+msgid "Back"
+msgstr "Späť"
+
+#: inc/form.class.php:1592
+msgid "Upload of JSON files not allowed."
+msgstr "Nahrávanie súborov JSON nie je povolené."
+
+#: inc/form.class.php:1595
+msgid "You may allow JSON files right now."
+msgstr "Súbory JSON môžete povoliť práve teraz."
+
+#: inc/form.class.php:1596
+msgctxt "button"
+msgid "Create"
+msgstr "Vytvoriť"
+
+#: inc/form.class.php:1599 inc/form.class.php:1610
+msgid "Please contact your GLPI administrator."
+msgstr "Kontaktujte svojho správcu GLPI."
+
+#: inc/form.class.php:1600 inc/form.class.php:1611
+msgctxt "button"
+msgid "Back"
+msgstr "Späť"
+
+#: inc/form.class.php:1603
+msgid "Upload of JSON files not enabled."
+msgstr "Nahrávanie súborov JSON nie je povolené."
+
+#: inc/form.class.php:1606 inc/form.class.php:1609
+msgid "You may enable JSON files right now."
+msgstr "Súbory JSON môžete povoliť hneď teraz."
+
+#: inc/form.class.php:1607
+msgctxt "button"
+msgid "Enable"
+msgstr "Povoliť"
+
+#: inc/form.class.php:1654
+msgctxt "button"
+msgid "Send"
+msgstr "Poslať"
+
+#: inc/form.class.php:1673
+msgid "Forms import impossible, the file is empty"
+msgstr "Import formulárov nie je možný, súbor je prázdny"
+
+#: inc/form.class.php:1677 inc/form.class.php:1681
+msgid "Forms import impossible, the file seems corrupt"
+msgstr "Import formulárov nie je možný, súbor sa zdá byť poškodený"
+
+#: inc/form.class.php:1687
+msgid "Forms import impossible, the file was generated with another version"
+msgstr "Import formulárov nie je možný, súbor bol vygenerovaný s inou verziou"
+
+#: inc/form.class.php:1694
+msgid ""
+"The file does not specifies the schema version. It was probably generated "
+"with a version older than 2.10. Giving up."
+msgstr ""
+"Súbor nešpecifikuje verziu schémy. Pravdepodobne bol vygenerovaný s verziou "
+"staršou ako 2.10."
+
+#: inc/form.class.php:1720
+#, php-format
+msgid "Failed to import %s"
+msgstr "Nepodarilo sa importovať %s"
+
+#: inc/form.class.php:1725
+#, php-format
+msgid "Forms successfully imported from %s"
+msgstr "Formuláre boli úspešne importované z %s"
+
+#: inc/form.class.php:1788
+#, php-format
+msgid "The form %1$s already exists and is in an unmodifiable entity."
+msgstr "Formulár %1$s už existuje a je v nemeniteľnej entite."
+
+#: inc/form.class.php:1796
+#, php-format
+msgid "You don't have right to update the entity %1$s."
+msgstr "Nemáte právo aktualizovať entitu %1$s."
+
+#: inc/form.class.php:1806
+#, php-format
+msgid "The entity %1$s is required for the form %2$s."
+msgstr "Pre formulár %2$s sa vyžaduje entita %1$s."
+
+#: inc/form.class.php:1888
+msgid "Failed to create JSON document type"
+msgstr "Nepodarilo sa vytvoriť typ dokumentu JSON"
+
+#: inc/form.class.php:1895
+msgid "JSON document type not found"
+msgstr "Typ dokumentu JSON sa nenašiel"
+
+#: inc/form.class.php:1902
+msgid "Failed to update JSON document type"
+msgstr "Nepodarilo sa aktualizovať typ dokumentu JSON"
+
+#: inc/form.class.php:1922
+msgid "Forms without category"
+msgstr "Formuláre bez kategórie"
+
+#: inc/form.class.php:1943
+msgid "No form available"
+msgstr "____________________________________"
+
+#: inc/form.class.php:2176 inc/targetticket.class.php:391
+#: inc/abstractitiltarget.class.php:1748 inc/abstractitiltarget.class.php:2031
+msgid "Add"
+msgstr "Pridať"
+
+#: inc/form.class.php:2194 inc/form.class.php:2217
+msgid "Unsupported target type."
+msgstr "Nepodporovaný typ cieľa."
+
+#: inc/form.class.php:2251
+msgid "plugin_formcreator_load_check"
+msgstr "plugin_formcreator_load_check"
+
+#: inc/targetchange.class.php:43 entrée standard:43
+msgid "Target change"
+msgid_plural "Target changes"
+msgstr[0] "Zmena cieľa"
+msgstr[1] "Cieľové zmeny"
+msgstr[2] "Cieľové zmeny"
+msgstr[3] "Cieľové zmeny"
+
+#: inc/targetchange.class.php:343 entrée standard:48
+msgid "Change title"
+msgstr "Zmeniť názov"
+
+#: inc/targetchange.class.php:373 entrée standard:56
+msgid "Control list"
+msgstr "Kontrolný zoznam"
+
+#: inc/targetchange.class.php:383 entrée standard:58
+msgid "Deployment plan"
+msgstr "Plán nasadenia"
+
+#: inc/targetchange.class.php:393 entrée standard:60
+msgid "Backup plan"
+msgstr "Zálohový plán"
+
+#: inc/targetchange.class.php:403
+msgid "Check list"
+msgstr "Kontrolný zoznam"
+
+#: inc/section.class.php:71 entrée standard:53 standard:44
+msgid "Section"
+msgid_plural "Sections"
+msgstr[0] "Sekcia"
+msgstr[1] "Sekcií"
+msgstr[2] "Sekcií"
+msgstr[3] "Sekcie"
+
+#: inc/section.class.php:123 inc/section.class.php:164
+#: inc/question.class.php:312
+msgid "The title is required"
+msgstr "Vyžaduje sa názov"
+
+#: inc/restrictedformcriteria.class.php:179
+#, php-format
+msgid "Failed to find %1$s %2$s"
+msgstr "%1$s %2$s sa nepodarilo nájsť"
+
+#: inc/question.class.php:70 inc/abstractitiltarget.class.php:1082 entrée
+#: standard:41
+msgid "Question"
+msgid_plural "Questions"
+msgstr[0] "Otázka"
+msgstr[1] "Otázok"
+msgstr[2] "Otázok"
+msgstr[3] "Otázky"
+
+#: inc/question.class.php:228 entrée standard:37
+msgid "Count of conditions"
+msgstr "Počet podmienok"
+
+#: inc/question.class.php:320
+msgid "The field type is required"
+msgstr "Vyžaduje sa typ poľa"
+
+#: inc/question.class.php:327
+msgid "The section is required"
+msgstr "Sekcia je povinná"
+
+#: inc/question.class.php:339
+#, php-format
+msgid "Field type %1$s is not available for question %2$s."
+msgstr "Typ poľa %1$s nie je k dispozícii pre otázku %2$s."
+
+#: inc/question.class.php:353
+msgid "This type of question is not compatible with public forms."
+msgstr "Tento typ otázok nie je kompatibilný s verejnými formulármi."
+
+#: inc/question.class.php:362
+msgid "This type of question requires parameters"
+msgstr "Tento typ otázky vyžaduje parametre"
+
+#: inc/question.class.php:368
+msgid "A parameter is missing for this question type"
+msgstr "Pre tento typ otázky chýba parameter"
+
+#: inc/question.class.php:1178
+msgid "Service levels"
+msgstr "Úrovne služieb"
+
+#: inc/question.class.php:1179 inc/abstractitiltarget.class.php:805
+msgid "SLA"
+msgstr "SLA"
+
+#: inc/question.class.php:1180 inc/abstractitiltarget.class.php:878
+msgid "OLA"
+msgstr "OLA"
+
+#: inc/question.class.php:1197 inc/question.class.php:1238
+#: inc/question.class.php:1241
+msgid "Assets"
+msgstr "Aktíva"
+
+#: inc/question.class.php:1211 hook.php:643 hook.php:660
+msgid "Assistance"
+msgstr "Pomoc"
+
+#: inc/question.class.php:1217
+msgid "Management"
+msgstr "Manažment"
+
+#: inc/question.class.php:1226
+msgid "Tools"
+msgstr "Nástroje"
+
+#: inc/question.class.php:1227
+msgid "Notes"
+msgstr "Poznámky"
+
+#: inc/question.class.php:1228
+msgid "RSS feed"
+msgstr "RSS zdroj"
+
+#: inc/question.class.php:1230
+msgid "Administration"
+msgstr "Administrácia"
+
+#: inc/question.class.php:1238 inc/question.class.php:1241
+msgid "Plugin"
+msgid_plural "Plugins"
+msgstr[0] "Plugin"
+msgstr[1] "Pluginov"
+msgstr[2] "Pluginov"
+msgstr[3] "Pluginy"
+
+#: inc/abstractquestionparameter.class.php:92
+msgid "Parameter"
+msgstr "Parameter"
+
+#: inc/abstractquestionparameter.class.php:99
+msgid "Field name"
+msgstr "Názov poľa"
+
+#: inc/abstracttarget.class.php:96
+msgid "Current active entity"
+msgstr "Aktuálna aktívna entita"
+
+#: inc/abstracttarget.class.php:97
+msgid "Default requester user's entity"
+msgstr "Predvolená používateľská entita žiadateľa"
+
+#: inc/abstracttarget.class.php:98
+msgid "First dynamic requester user's entity (alphabetical)"
+msgstr "First dynamic requester user's entity (alphabetical)"
+
+#: inc/abstracttarget.class.php:99
+msgid "Last dynamic requester user's entity (alphabetical)"
+msgstr "Last dynamic requester user's entity (alphabetical)"
+
+#: inc/abstracttarget.class.php:100
+msgid "The form entity"
+msgstr "Formulár entity"
+
+#: inc/abstracttarget.class.php:101
+msgid "Default entity of the validator"
+msgstr "Predvolená entita overovateľa"
+
+#: inc/abstracttarget.class.php:102
+msgid "Specific entity"
+msgstr "Konkrétna entita"
+
+#: inc/abstracttarget.class.php:103
+msgid "Default entity of a user type question answer"
+msgstr "Predvolená používateľská entita typu odpoved na otázku"
+
+#: inc/abstracttarget.class.php:104
+msgid "From a GLPI object > Entity type question answer"
+msgstr "Z objektu GLPI > Odpoveď na otázku typ entity"
+
+#: inc/abstracttarget.class.php:115
+msgid "Always generated"
+msgstr "Vždy generované"
+
+#: inc/abstracttarget.class.php:116
+msgid "Disabled unless"
+msgstr "Zakázané, pokiaľ"
+
+#: inc/abstracttarget.class.php:117
+msgid "Generated unless"
+msgstr "Generované pokiaľ"
+
+#: inc/abstracttarget.class.php:128
+msgid "A target must be associated to a form."
+msgstr "Cieľ musí byť priradený k formuláru."
+
+#: inc/abstracttarget.class.php:133
+msgid "A target must be associated to an existing form."
+msgstr "Cieľ musí byť priradený k existujúcemu formuláru."
+
+#: inc/abstracttarget.class.php:138
+msgid "Name is required."
+msgstr "Meno je povinné."
+
+#: inc/abstracttarget.class.php:503
+msgid "Destination entity"
+msgstr "Cieľová entita"
+
+#: inc/abstracttarget.class.php:519
+msgid "User type question"
+msgstr "Typ používateľa"
+
+#: inc/abstracttarget.class.php:520
+msgid "Entity type question"
+msgstr "Typ entity"
+
+#: inc/filter/itilcategoryfilter.class.php:52
+#: inc/filter/itilcategoryfilter.class.php:54
+msgid "Request categories"
+msgstr "Kategórie požiadaviek"
+
+#: inc/filter/itilcategoryfilter.class.php:53
+#: inc/filter/itilcategoryfilter.class.php:54
+msgid "Incident categories"
+msgstr "Kategórie incidentov"
+
+#: inc/filter/itilcategoryfilter.class.php:55
+msgid "Change categories"
+msgstr "Kategórie zmien"
+
+#: inc/questionregex.class.php:52
+msgid "Question regular expression"
+msgid_plural "Question regular expressions"
+msgstr[0] "Question regular expression"
+msgstr[1] "Question regular expressions"
+msgstr[2] "Question regular expressions"
+msgstr[3] "Question regular expressions"
+
+#: inc/questiondependency.class.php:66
+msgid "Question dependency"
+msgid_plural "Question dependencies"
+msgstr[0] "Závislosť"
+msgstr[1] "Závislosti"
+msgstr[2] "Závislosti"
+msgstr[3] "Závislosti"
+
+#: inc/answer.class.php:66 entrée standard:43
+msgid "Answer"
+msgid_plural "Answers"
+msgstr[0] "Reakcia"
+msgstr[1] "Reakcie"
+msgstr[2] "Reakcie"
+msgstr[3] "Reakcie"
+
+#: inc/item_targetticket.class.php:52
+msgid "Composite ticket relation"
+msgid_plural "Composite ticket relations"
+msgstr[0] "Vzťah zložených tiketov"
+msgstr[1] "Vzťahov zložených tiketov"
+msgstr[2] "Vzťahov zložených tiketov"
+msgstr[3] "Vzťahy zložených tiketov"
+
+#: inc/targetticket.class.php:55 entrée standard:43
+msgid "Target ticket"
+msgid_plural "Target tickets"
+msgstr[0] "Cieľový tiket"
+msgstr[1] "Cieľových tiketov"
+msgstr[2] "Cieľových tiketov"
+msgstr[3] "Cieľové tikety"
+
+#: inc/targetticket.class.php:98
+msgid "Specific asset"
+msgstr "Konkrétne aktívum"
+
+#: inc/targetticket.class.php:99 inc/targetticket.class.php:115
+#: inc/abstractitiltarget.class.php:198 inc/abstractitiltarget.class.php:206
+#: inc/abstractitiltarget.class.php:214 inc/abstractitiltarget.class.php:222
+#: inc/abstractitiltarget.class.php:231
+msgid "Equals to the answer to the question"
+msgstr "Rovná sa reakcie na otázku"
+
+#: inc/targetticket.class.php:100 inc/abstractitiltarget.class.php:223
+#: inc/abstractitiltarget.class.php:232
+msgid "Last valid answer"
+msgstr "Posledná platná odpoveď"
+
+#: inc/targetticket.class.php:106
+msgid "Source from template or user default or GLPI default"
+msgstr ""
+"Zdroj zo šablóny alebo predvoleného používateľa alebo predvoleného "
+"nastavenia GLPI"
+
+#: inc/targetticket.class.php:107
+msgid "Formcreator"
+msgstr "Tvorba formulárov"
+
+#: inc/targetticket.class.php:113
+msgid "Default or from a template"
+msgstr "Predvolené alebo zo šablóny"
+
+#: inc/targetticket.class.php:114
+msgid "Specific type"
+msgstr "Špecifický typ"
+
+#: inc/targetticket.class.php:187 entrée standard:48
+msgid "Ticket title"
+msgstr "Názov tiketu"
+
+#: inc/targetticket.class.php:300
+msgid "Add validation message as first ticket followup"
+msgstr "Pridajte overovaciu správu ako prvú kontrolu tiketu"
+
+#: inc/targetticket.class.php:334
+msgid "Add a field"
+msgstr "Pridaj pole"
+
+#: inc/targetticket.class.php:362
+msgid "Managed fields"
+msgstr "Editovateľné polia"
+
+#: inc/targetticket.class.php:369
+msgid "No managed field"
+msgstr "Needitovateľné polia"
+
+#: inc/targetticket.class.php:389
+msgid "Link to an other ticket"
+msgstr "Odkaz na iný tiket"
+
+#: inc/targetticket.class.php:398
+msgid "An other destination of this form"
+msgstr "Iný cieľ formulára"
+
+#: inc/targetticket.class.php:399
+msgid "An existing ticket"
+msgstr "Existujúci tiket"
+
+#: inc/targetticket.class.php:400
+msgid "A ticket from an answer to a question"
+msgstr "Tiket z odpovede na otázku"
+
+#: inc/targetticket.class.php:481
+msgctxt "button"
+msgid "Delete permanently"
+msgstr "Natrvalo odstrániť"
+
+#: inc/targetticket.class.php:722
+msgid "Invalid link type"
+msgstr "Neplatný typ odkazu"
+
+#: inc/targetticket.class.php:742
+msgid "Invalid linked item type"
+msgstr "Neplatné prepojenie Typ položky"
+
+#: inc/targetticket.class.php:755
+msgid "Linked item does not exists"
+msgstr "Prepojená položka neexistuje"
+
+#: inc/targetticket.class.php:768
+msgid "Failed to link the item"
+msgstr "Chyba prepojenia položky"
+
+#: inc/targetticket.class.php:924 install/install.php:421
+msgid "Your form has been accepted by the validator"
+msgstr "Váš formulár bol akceptovaný overovateľom"
+
+#: inc/targetticket.class.php:1086
+msgid "Request source"
+msgstr "Zdroj požiadavky"
+
+#: inc/targetticket.class.php:1111
+msgid "Type "
+msgstr "Typ"
+
+#: inc/targetticket.class.php:1139
+msgid "Associated elements"
+msgstr "Pridružené prvky"
+
+#: inc/targetticket.class.php:1150
+msgid "Item "
+msgstr "Položka"
+
+#: inc/translation.class.php:153
+msgid "No more string to translate"
+msgstr "Žiadny reťazec na preklad"
+
+#: inc/translation.class.php:216
+msgid "Language not found."
+msgstr "Jazyk sa nenašiel"
+
+#: inc/translation.class.php:221
+msgid "Form not found."
+msgstr "Formulár sa nenašiel"
+
+#: inc/translation.class.php:234
+msgid "Failed to add the translation."
+msgstr "Nepodarilo sa pridať preklad"
+
+#: inc/abstractitiltarget.class.php:179
+msgid "Tags from questions"
+msgstr "Štítky z otázok"
+
+#: inc/abstractitiltarget.class.php:180
+msgid "Specific tags"
+msgstr "Špecifické štítky"
+
+#: inc/abstractitiltarget.class.php:181
+msgid "Tags from questions and specific tags"
+msgstr "Tags from questions and specific tags"
+
+#: inc/abstractitiltarget.class.php:182
+msgid "Tags from questions or specific tags"
+msgstr "Tags from questions or specific tags"
+
+#: inc/abstractitiltarget.class.php:188
+msgid "equals to the answer to the question"
+msgstr "rovná sa odpovedi na reakciu"
+
+#: inc/abstractitiltarget.class.php:189
+msgid "calculated from the ticket creation date"
+msgstr "vypočítané od dátumu vytvorenia tiketu"
+
+#: inc/abstractitiltarget.class.php:190
+msgid "calculated from the answer to the question"
+msgstr "vypočítané z reakcie na otázku"
+
+#: inc/abstractitiltarget.class.php:196
+msgid "SLA from template or none"
+msgstr "SLA zo šablóny alebo žiadna"
+
+#: inc/abstractitiltarget.class.php:197
+msgid "Specific SLA"
+msgstr "Špecifická SLA"
+
+#: inc/abstractitiltarget.class.php:204
+msgid "OLA from template or none"
+msgstr "OLA zo šablóny alebo žiadna"
+
+#: inc/abstractitiltarget.class.php:205
+msgid "Specific OLA"
+msgstr "Špecifická OLA"
+
+#: inc/abstractitiltarget.class.php:212
+msgid "Urgency from template or Medium"
+msgstr "Naliehavosť zo šablóny alebo Medium"
+
+#: inc/abstractitiltarget.class.php:213
+msgid "Specific urgency"
+msgstr "Naliehavosť - špecifická"
+
+#: inc/abstractitiltarget.class.php:220
+msgid "Category from template or none"
+msgstr "Kategória zo šablóny alebo žiadna"
+
+#: inc/abstractitiltarget.class.php:221
+msgid "Specific category"
+msgstr "Špecifická kategória"
+
+#: inc/abstractitiltarget.class.php:229
+msgid "Location from template or none"
+msgstr "Umiestnenia zo šablóny alebo žiadne"
+
+#: inc/abstractitiltarget.class.php:230
+msgid "Specific location"
+msgstr "Špecifické umiestnenie"
+
+#: inc/abstractitiltarget.class.php:238
+msgid "No validation"
+msgstr "Žiadne overenie"
+
+#: inc/abstractitiltarget.class.php:239
+msgid "Specific user or group"
+msgstr "Konkrétny používateľ alebo skupina"
+
+#: inc/abstractitiltarget.class.php:240
+msgid "User from question answer"
+msgstr "Používateľ z reakcie na otázku"
+
+#: inc/abstractitiltarget.class.php:241
+msgid "Group from question answer"
+msgstr "Skupina z reakcie na otázku"
+
+#: inc/abstractitiltarget.class.php:740
+msgid "Time to resolve"
+msgstr "Čas na vyriešenie"
+
+#: inc/abstractitiltarget.class.php:793
+msgid "Minute"
+msgid_plural "Minutes"
+msgstr[0] "Minuta"
+msgstr[1] "Minút"
+msgstr[2] "Minút"
+msgstr[3] "Minúty"
+
+#: inc/abstractitiltarget.class.php:794
+msgid "Hour"
+msgid_plural "Hours"
+msgstr[0] "Hodina"
+msgstr[1] "Hodín"
+msgstr[2] "Hodín"
+msgstr[3] "Hodiny"
+
+#: inc/abstractitiltarget.class.php:795
+msgid "Day"
+msgid_plural "Days"
+msgstr[0] "Deň"
+msgstr[1] "Dní"
+msgstr[2] "Dní"
+msgstr[3] "Dni"
+
+#: inc/abstractitiltarget.class.php:796
+msgid "Month"
+msgid_plural "Months"
+msgstr[0] "Mesiac"
+msgstr[1] "Mesiacov"
+msgstr[2] "Mesiacov"
+msgstr[3] "Mesiace"
+
+#: inc/abstractitiltarget.class.php:828
+msgid "SLA (TTO/TTR)"
+msgstr "SLA (TTO/TTR)"
+
+#: inc/abstractitiltarget.class.php:829 inc/abstractitiltarget.class.php:902
+msgid "Question (TTO/TTR)"
+msgstr "Otázka (TTO/TTR)"
+
+#: inc/abstractitiltarget.class.php:901
+msgid "OLA (TTO/TTR)"
+msgstr "OLA (TTO/TTR)"
+
+#: inc/abstractitiltarget.class.php:1005
+msgid "Urgency "
+msgstr "Naliehavosť"
+
+#: inc/abstractitiltarget.class.php:1035
+msgid "Ticket tags"
+msgstr "Štítky tiketov"
+
+#: inc/abstractitiltarget.class.php:1083
+msgid "Tags"
+msgstr "Štitky"
+
+#: inc/abstractitiltarget.class.php:1202
+msgid "Location"
+msgstr "Umiestnenie"
+
+#: inc/abstractitiltarget.class.php:1214
+msgid "Location "
+msgstr "Poloha"
+
+#: inc/abstractitiltarget.class.php:1554
+msgid "The description cannot be empty!"
+msgstr "Popis nemôže byť prázdny!"
+
+#: inc/abstractitiltarget.class.php:1731
+msgid "Watcher"
+msgid_plural "Watchers"
+msgstr[0] "Sledovateľ"
+msgstr[1] "Sledovateľov"
+msgstr[2] "Sledovateľov"
+msgstr[3] "Sledovatelia"
+
+#: inc/abstractitiltarget.class.php:1750
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: inc/abstractitiltarget.class.php:2025 inc/abstractitiltarget.class.php:2041
+#: inc/abstractitiltarget.class.php:2042
+msgid "Email followup"
+msgstr "Sledovanie emailu"
+
+#: inc/abstractitiltarget.class.php:2038 inc/abstractitiltarget.class.php:2056
+msgid "User"
+msgstr "Používateľ"
+
+#: inc/abstractitiltarget.class.php:2039 inc/abstractitiltarget.class.php:2067
+msgid "Group"
+msgstr "Skupina"
+
+#: inc/abstractitiltarget.class.php:2040 inc/abstractitiltarget.class.php:2096
+msgid "Supplier"
+msgstr "Dodávateľ"
+
+#: inc/abstractitiltarget.class.php:2041
+msgid "Yes"
+msgstr "Áno"
+
+#: inc/abstractitiltarget.class.php:2078
+msgid "Group from the object"
+msgstr "Skupina z objektu"
+
+#: inc/abstractitiltarget.class.php:2084
+msgid "Tech group from the object"
+msgstr "Technická skupina z objektu"
+
+#: install/install.php:130
+#, php-format
+msgid "Upgrade tables to innoDB; run %s"
+msgstr "Aktualizujte tabuľky na innoDB; beží %s"
+
+#: install/install.php:160
+#, php-format
+msgid ""
+"The database schema is not consistent with the installed Formcreator %s. To "
+"see the logs run the command %s"
+msgstr ""
+"Schéma databázy nie je konzistentná s nainštalovaným tvorcom formulárov %s. "
+"Ak chcete zobraziť protokoly, spustite príkaz %s"
+
+#: install/install.php:169
+#, php-format
+msgid "To ignore the inconsistencies and upgrade anyway run %s"
+msgstr "Ak chcete ignorovať nezrovnalosti a upgradovať aj tak, spustite %s"
+
+#: install/install.php:187
+msgid ""
+"Upgrade from version older than 2.5.0 is no longer supported. Please upgrade"
+" to GLPI 9.5.7, upgrade Formcreator to version 2.12.5, then upgrade again to"
+" GLPI 10 or later and Formcreator 2.13 or later."
+msgstr ""
+"Aktualizácia z verzie staršej ako 2.5.0 už nie je podporovaná. Akualizujte "
+"na GLPI 9.5.7, upgradujte Tvorbu formulárov na verziu 2.12.5 a potom znova "
+"aktualizujte na GLPI 10 alebo novší a Tvorbu formulárov 2.13 alebo novší."
+
+#: install/install.php:239
+#, php-format
+msgid ""
+"The database schema is not consistent with the installed Formcreator %s. To "
+"see the logs enable the plugin and run the command %s"
+msgstr ""
+"Schéma databázy nie je konzistentná s nainštalovaným tvorcom formulárov %s. "
+"Ak chcete zobraziť protokoly, povoľte doplnok a spustite príkaz %s"
+
+#: install/install.php:250
+msgid "The tables of the plugin passed the schema integrity check."
+msgstr "Plugin prešiel kontrolou integrity."
+
+#: install/install.php:402
+msgid "A form has been created"
+msgstr "Formulár bol vytvorený"
+
+#: install/install.php:403
+msgid "Your request has been saved"
+msgstr "Vaša požiadavka bola uložená."
+
+#: install/install.php:404
+msgid ""
+"Hi,\\nYour request from GLPI has been successfully saved with number "
+"##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
+"see your answers onto the following link:\\n##formcreator.validation_link##"
+msgstr ""
+"Dobrý deň, Vaša žiadosť z GLPI bola úspešne uložená pod číslom "
+"##formcreator.request_id## a postúpená service desku. \\nReakcie na žiadosť "
+"si môžete pozrieť na nasledujúcom odkaze:\\n##formcreator.validation_link##"
+
+#: install/install.php:409
+msgid "A form from GLPI need to be validate"
+msgstr "Formulár z GLPI je potrebné overiť"
+
+#: install/install.php:410
+msgid ""
+"Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
+"validator.\\nYou can access it by clicking onto this "
+"link:\\n##formcreator.validation_link##"
+msgstr ""
+"Dobrý deň,\\nformulár z GLPI je potrebné overiť a vy ste boli vybratí ako "
+"overovateľ.\\nMôžete sa k nemu dostať kliknutím na tento "
+"odkaz:\\n##formcreator.validation_link##"
+
+#: install/install.php:415
+msgid "Your form has been refused by the validator"
+msgstr "Váš formulár bol odmietnutý overovateľom"
+
+#: install/install.php:416
+msgid ""
+"Hi,\\nWe are sorry to inform you that your form has been refused by the "
+"validator for the reason "
+"below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
+"resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
+msgstr ""
+"Dobrý deň,\\nOznamujeme Vám, že Váš formulár bol odmietnutý overovateľom z "
+"nižšie uvedeného dôvodu:\\n##formcreator.validation_comment##\\n\\nStále ho "
+"môžete upraviť a znova odoslať kliknutím na tento odkaz:\\n "
+"##formcreator.validation_link##"
+
+#: install/install.php:422
+msgid ""
+"Hi,\\nWe are pleased to inform you that your form has been accepted by the "
+"validator.\\nYour request will be considered soon."
+msgstr ""
+"Dobrý deň,\\nOznamujeme Vám, že overovateľ Váš formulár prijal.\\nVaša "
+"žiadosť bude čoskoro posúdená."
+
+#: install/install.php:427
+msgid "Your form has been deleted by an administrator"
+msgstr "Váš formulár bol odstránený administrátorom"
+
+#: install/install.php:428
+msgid ""
+"Hi,\\nWe are sorry to inform you that your request cannot be considered and "
+"has been deleted by an administrator."
+msgstr ""
+"Dobrý deň,\\nOznamujeme Vám, že Vašu žiadosť nemôžeme posúdiť a "
+"administrátor ju vymazal."
+
+#: install/install.php:654
+msgid "Formcreator - Sync service catalog issues"
+msgstr "Tvorba formulárov - Problémy so synchronizáciou katalógu služieb"
+
+#: install/install.php:842
+msgid "Failed to check the sanity of the tables!"
+msgstr "Nepodarilo sa skontrolovať logickosť tabuliek!"
+
+#: install/install.php:856
+#, php-format
+msgid "Table schema differs for table \"%s\"."
+msgstr "Schéma tabuľky je odlišná pre tabuľku \"%s\"."
+
+#: install/install.php:859
+#, php-format
+msgid "Table \"%s\" is missing."
+msgstr "Tabuľka „%s“ chýba."
+
+#: install/install.php:862
+#, php-format
+msgid "Unknown table \"%s\" has been found in database."
+msgstr "V databáze bola nájdená neznáma tabuľka \"%s\"."
+
+#: hook.php:317
+msgctxt "button"
+msgid "Duplicate"
+msgstr "Duplicitné"
+
+#: hook.php:318
+msgid "Transfer"
+msgstr "Prenos"
+
+#: hook.php:319
+msgctxt "button"
+msgid "Export"
+msgstr "Export"
+
+#: hook.php:619
+msgid "Cancel my ticket"
+msgstr "Zrušiť tiket"
+
+#: hook.php:637
+msgid "Old"
+msgstr "Starý"
+
+#: hook.php:644
+#, php-format
+msgid "Number of %s"
+msgstr "Počet %s"
+
+#: hook.php:661
+msgid "Issues summary"
+msgstr "Súhrn issues"
+
+#: hook.php:699
+msgid ""
+"Formcreator's mini dashboard not usable as default. This Setting has been "
+"ignored."
+msgstr ""
+"Mini dashboard tvorby fomulárov nie je možné použiť ako predvolený. Toto "
+"nastavenie bolo ignorované."
+
+#: js/scripts.js:296
+msgid "No form found. Please choose a form below instead."
+msgstr "Nenašiel sa žiadny formulár. Namiesto toho vyberte formulár nižšie."
+
+#: js/scripts.js:298
+msgid "No form found."
+msgstr "Nenašiel sa formulár"
+
+#: js/scripts.js:302
+msgid "No FAQ item found."
+msgstr "Nenašla sa žiadna položka v FAQ."
+
+#: js/scripts.js:686
+msgid "Are you sure you want to delete this question?"
+msgstr "Naozaj chcete odstrániť túto otázku?"
+
+#: js/scripts.js:869
+msgid "Are you sure you want to delete this section?"
+msgstr "Naozaj chcete odstrániť túto sekciu?"
+
+#: js/scripts.js:1109
+msgid "Add translations"
+msgstr "Pridajte preklady"
+
+#: js/scripts.js:1256 js/scripts.js:1280
+msgid "An error occured while querying forms"
+msgstr "Pri dopytovaní formulárov sa vyskytla chyba"
+
+#: js/scripts.js:1396 entrée standard:139
+msgid "Send"
+msgstr "Poslať"
+
+#: js/scripts.js:1405
+msgid "An internal error occurred. Please report it to administrator."
+msgstr "Vyskytla sa interná chyba. Nahláste to prosím správcovi."
+
+#: js/scripts.js:1446
+msgid "Are you sure you want to delete this target:"
+msgstr "Naozaj chcete odstrániť tento cieľ:"
+
+#: entrée standard:43 standard:50 standard:44 standard:49 standard:78
+msgid "Required"
+msgstr "Povinný"
+
+#: entrée standard:57 standard:61 standard:60 standard:59 standard:43
+#: standard:69 standard:52 standard:37
+msgid "Default values"
+msgstr "Prednastavené hodnoty"
+
+#: entrée standard:52 standard:59 standard:58
+msgid "Show empty"
+msgstr "Zobraziť prázdne"
+
+#: entrée standard:39
+msgid "LDAP directory"
+msgid_plural "LDAP directories"
+msgstr[0] "LDAP adresár"
+msgstr[1] "LDAP adresárov"
+msgstr[2] "LDAP adresárov"
+msgstr[3] "LDAP adresáre"
+
+#: entrée standard:68
+msgid "Filter"
+msgstr "Filter"
+
+#: entrée standard:78
+msgid "Attribute"
+msgstr "Atribút"
+
+#: entrée standard:70 standard:68
+msgid "Values"
+msgstr "Hodnoty"
+
+#: entrée standard:90
+msgid "Show ticket categories"
+msgstr "Zobraziť kategórie tiketov"
+
+#: entrée standard:127 standard:110
+msgid "Selectable root"
+msgstr "Selectable root"
+
+#: entrée standard:63
+msgid "Direct access on homepage"
+msgstr "Priamy prístup na domovskú stránku"
+
+#: entrée standard:86
+msgid "Default form in service catalog"
+msgstr "Predvolený formulár v katalógu služieb"
+
+#: entrée standard:113 standard:114
+msgid "Are you a robot ?"
+msgstr "Ste robot?"
+
+#: entrée standard:64
+msgid "Condition to show the section"
+msgstr "Podmienka na zobrazenie sekcie"
+
+#: entrée standard:40
+msgid "Condition to generate the target"
+msgstr "Podmienka na vytvorenie cieľa"
+
+#: entrée standard:127
+msgid "Condition to show the question"
+msgstr "Podmienka na zobrazenie otázky"
+
+#: entrée standard:54
+msgid "Impacts"
+msgstr "Dopady"
+
+#: entrée standard:62
+msgid "Checklist"
+msgstr "Kontrolný zoznam"
+
+#: entrée standard:36
+msgid "Answers title"
+msgstr "Názov reakcií"
+
+#: entrée standard:45
+msgid "Add a section"
+msgstr "Pridaj sekciu"
+
+#: entrée standard:55
+msgid "Condition to show the submit button"
+msgstr "Podmienka zobrazenia tlačidla Odoslať"
+
+#: entrée standard:83
+msgid "Add a question"
+msgstr "Pridaj otázku"
+
+#: entrée standard:39
+msgid "List of available tags"
+msgstr "Zoznam dostupných tagov"
+
+#: entrée standard:42
+msgid "Title"
+msgstr "Názov"
+
+#: entrée standard:47
+msgid "Full form"
+msgstr "Vyplnený formulár"
+
+#: entrée standard:42
+msgid "Min"
+msgstr "Min"
+
+#: entrée standard:53
+msgid "Max"
+msgstr "Max"
