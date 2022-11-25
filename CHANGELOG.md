@@ -1,3 +1,12 @@
+<a name="2.12.7"></a>
+## [2.12.7](https://github.com/pluginsglpi/formcreator/compare/v2.12.6..2.12.7) (2022-11-24)
+
+
+### Bug Fixes
+
+* **ldapquestion:** missing files ([4b4d801b](https://github.com/pluginsglpi/formcreator/commit/4b4d801b))
+
+
 <a name="2.12.6"></a>
 ## [2.12.6](https://github.com/pluginsglpi/formcreator/compare/v2.12.5..2.12.6) (2022-05-19)
 
