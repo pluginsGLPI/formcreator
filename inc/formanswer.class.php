@@ -847,6 +847,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['status'] = self::STATUS_WAITING;
       if (isset($input['refuse_formanswer']) || isset($input['accept_formanswer'])) {
          // The formanswer is being acepted or refused
+         $input['users_id_validator'] = Session::getLoginUserID();
 
          // Check the user haas right to validate the form answer
          if (!$this->canValidate()) {
