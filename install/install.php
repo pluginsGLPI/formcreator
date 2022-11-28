@@ -700,7 +700,7 @@ class PluginFormcreatorInstall {
          ],
       ]]);
 
-      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+      $this->addRightsToMiniDashboard($dashboard->fields['id']);
    }
 
    protected function createMiniDashboardBigNumbers() {
@@ -771,10 +771,10 @@ class PluginFormcreatorInstall {
          $x += ($w + $s);
       }
 
-      $this->adRightsToMiniDashboard($dashboard->fields['id']);
+      $this->addRightsToMiniDashboard($dashboard->fields['id']);
    }
 
-   protected function adRightsToMiniDashboard(int $dashboardId) {
+   protected function addRightsToMiniDashboard(int $dashboardId) {
       // Give rights to all self service profiles
       $profile = new Profile();
       $helpdeskProfiles = $profile->find([
