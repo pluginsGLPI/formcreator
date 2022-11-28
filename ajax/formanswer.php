@@ -59,7 +59,7 @@ $_SESSION['glpi_use_mode'] = \Session::NORMAL_MODE;
 $formAnswer = PluginFormcreatorCommon::getFormAnswer();
 if ($formAnswer->add($_POST) === false) {
    http_response_code(400);
-   if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
+   if ($_SESSION['glpiname'] == 'formcreator_public_user') {
       // Messages are for authenticated users. This is a workaround
       ob_start();
       Html::displayMessageAfterRedirect(filter_var(($_GET['display_container'] ?? true), FILTER_VALIDATE_BOOLEAN));
@@ -74,11 +74,12 @@ if ($formAnswer->add($_POST) === false) {
 $form->increaseUsageCount();
 $_SESSION['glpi_use_mode'] = $backup_debug;
 
-if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
+if ($_SESSION['glpiID'] == Config::getConfigurationValue('formcreator', 'public_user_id')) {
    // Form was saved by an annymous user
-   unset($_SESSION['glpiname']);
+   Session::destroy();
+   session_regenerate_id();
+   Session::start();
    // don't show notifications
-   unset($_SESSION['MESSAGE_AFTER_REDIRECT']);
    echo json_encode(
       [
          'redirect' => 'formdisplay.php?answer_saved',

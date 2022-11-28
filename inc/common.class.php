@@ -665,6 +665,9 @@ JAVASCRIPT;
    }
 
    public static function getInterface() {
+      if (isset($_SESSION['glpiID']) && $_SESSION['glpiID'] == Config::getConfigurationValue('formcreator', 'public_user_id')) {
+         return 'public';
+      }
       if (Session::getCurrentInterface() == 'helpdesk') {
          if (plugin_formcreator_replaceHelpdesk()) {
             return 'servicecatalog';

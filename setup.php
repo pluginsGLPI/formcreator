@@ -420,6 +420,27 @@ function plugin_formcreator_redirect() {
       return;
    }
 
+   if (Session::getLoginUserID() == Config::getConfigurationValue('formcreator', 'public_user_id')) {
+      $allowed_urls = [
+         'front/formdisplay.php',
+         'ajax/showfields.php',
+         'ajax/formanswer.php',
+         'fileupload.php',
+         'getFileTag.php',
+      ];
+      $redirect = true;
+      foreach ($allowed_urls as $allowed_url) {
+         if (strpos($_SERVER['REQUEST_URI'], $allowed_url) !== false) {
+            $redirect = false;
+            break;
+         }
+      }
+      if ($redirect) {
+         $url = Plugin::getWebDir('formcreator', true) . '/front/formdisplay.php?id=' . $_SESSION['formcreator_forms_id'];
+         Html::redirect($url);
+      }
+   }
+
    // Redirect to helpdesk replacement
    if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
       if (!isset($_REQUEST['newprofile']) && !isset($_REQUEST['active_entity'])) {

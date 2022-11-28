@@ -99,6 +99,7 @@ class PluginFormcreatorInstall {
       $this->createDefaultDisplayPreferences();
       $this->createCronTasks();
       $this->createNotifications();
+      $this->createPublicUser();
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
@@ -214,6 +215,7 @@ class PluginFormcreatorInstall {
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
       $this->createCronTasks();
+      $this->createPublicUser();
       $this->createMiniDashboard();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
       ob_get_flush();
@@ -789,6 +791,50 @@ class PluginFormcreatorInstall {
             'items_id'                => $helpdeskProfile['id'],
          ]);
       }
+   }
+
+   protected function createPublicUser(): bool {
+      $user_id = Config::getConfigurationValue('formcreator', 'public_user_id');
+      $user = new User();
+
+      if ($user->getFromDB($user_id)) {
+         // The user already exists, nothing to create
+         return true;
+      }
+
+      $profile = new Profile();
+      if (!$profile->getFromDBByCrit(['name' => 'formcreator_public_profile'])) {
+         // The profile does not exist
+         $profile_id = $profile->add([
+            'name' => 'formcreator_public_profile',
+            'interface' => 'helpdesk',
+         ]);
+         if ($profile_id === false) {
+            return false;
+         }
+      } else {
+         $profile_id = $profile->getID();
+      }
+
+      $user_id = $user->add([
+         'name'         => 'formcreator_public_user_' . Toolbox::getRandomString(8),
+         'authtype'     => Auth::DB_GLPI,
+         'is_active'    => 1,
+         'is_deleted'   => 0,
+         'is_helpdesk_visible' => 1,
+         'profiles_id'  => $profile_id,
+         'entities_id'  => 0,
+         '_profiles_id' => $profile_id,
+      ]);
+      if ($user_id === false) {
+         // Failed to create the user
+         Config::deleteConfigurationValues('formcreator', ['public_user_id']);
+         return false;
+      }
+
+      Config::setConfigurationValues('formcreator', ['public_user_id' => $user_id]);
+
+      return true;
    }
 
    public function deleteMiniDashboard(): bool {
