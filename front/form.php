@@ -31,12 +31,12 @@
 
 require_once ('../../../inc/includes.php');
 
-Session::checkRight(PluginFormcreatorForm::$rightname, READ);
-
 // Check if plugin is activated...
 if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
+
+Session::checkRight(PluginFormcreatorForm::$rightname, READ);
 
 if (PluginFormcreatorForm::canView()) {
    Html::header(
