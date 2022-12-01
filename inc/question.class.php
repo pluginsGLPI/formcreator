@@ -1224,6 +1224,7 @@ PluginFormcreatorTranslatableInterface
             Project::class            => Project::getTypeName($plural),
             Certificate::class        => Certificate::getTypeName($plural),
             Appliance::class          => Appliance::getTypeName($plural),
+            Database::class           => Database::getTypeName($plural),
          ],
          __("Tools") => [
             Reminder::class           => __("Notes"),
