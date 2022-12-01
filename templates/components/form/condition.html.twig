@@ -58,7 +58,7 @@
                 {% set excludeQuestions = call('PluginFormcreatorCondition::getQuestionsExclusion', [parent]) %}
                 {% set form = call('PluginFormcreatorForm::getByItem', [parent]) %}
                 {% set field %}
-                    {% do call('PluginFormcreatorQuestion::dropdownForForm', [form, excludeQuestions, '_conditions[plugin_formcreator_questions_id][]', condition.fields['plugin_formcreator_questions_id']]) %}
+                    {% do call('PluginFormcreatorQuestion::dropdownForForm', [form, excludeQuestions, '_conditions[plugin_formcreator_questions_id][]', condition.fields['plugin_formcreator_questions_id'], options]) %}
                 {% endset %}
                 {{ fields.field(name, field, label, options|merge({'id': 'dropdown_' ~ name ~ '_' ~ options.rand})) }}
 
