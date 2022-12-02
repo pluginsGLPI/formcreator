@@ -30,7 +30,19 @@
  */
 
 namespace tests\units;
+use CommonDBTM;
 use GlpiPlugin\Formcreator\Tests\CommonTargetTestCase;
+use PluginFormcreatorCommon;
+use PluginFormcreatorForm_Validator;
+use PluginFormcreatorForm;
+use PluginFormcreatorFormAnswer;
+use PluginFormcreatorSection;
+use User;
+use Profile;
+use Profile_User;
+use Entity;
+use Session;
+use Ticket;
 
 class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
@@ -74,109 +86,120 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
     * @param string $expected
     */
    public function testGetTypeName($number, $expected) {
-      $output = \PluginFormcreatorTargetTicket::getTypeName($number);
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testGetEnumRequestTypeRule(): void {
-      $output = \PluginFormcreatorTargetTicket::getEnumRequestTypeRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumRequestTypeRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_NONE      => 'Default or from a template',
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC  => "Specific type",
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER    => "Equals to the answer to the question",
+         $testedClass::REQUESTTYPE_NONE      => 'Default or from a template',
+         $testedClass::REQUESTTYPE_SPECIFIC  => "Specific type",
+         $testedClass::REQUESTTYPE_ANSWER    => "Equals to the answer to the question",
       ]);
    }
 
    public function testGetEnumRequestSourceRule(): void {
-      $output = \PluginFormcreatorTargetTicket::getEnumRequestSourceRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumRequestSourceRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_NONE      => 'Source from template or user default or GLPI default',
-         \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC  => "Formcreator",
+         $testedClass::REQUESTTYPE_NONE      => 'Source from template or user default or GLPI default',
+         $testedClass::REQUESTTYPE_SPECIFIC  => "Formcreator",
       ]);
    }
 
    public function testGetEnumDestinationEntity() {
-      $output = \PluginFormcreatorTargetTicket::getEnumDestinationEntity();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumDestinationEntity();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_CURRENT      => 'Current active entity',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER  => "Default requester user's entity",
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_FIRST    => "First dynamic requester user's entity (alphabetical)",
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_LAST      => "Last dynamic requester user's entity (alphabetical)",
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_FORM  => 'The form entity',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_VALIDATOR    => 'Default entity of the validator',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_SPECIFIC      => 'Specific entity',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_USER  => 'Default entity of a user type question answer',
-         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_ENTITY    => 'From a GLPI object > Entity type question answer',
+         $testedClass::DESTINATION_ENTITY_CURRENT      => 'Current active entity',
+         $testedClass::DESTINATION_ENTITY_REQUESTER  => "Default requester user's entity",
+         $testedClass::DESTINATION_ENTITY_REQUESTER_DYN_FIRST    => "First dynamic requester user's entity (alphabetical)",
+         $testedClass::DESTINATION_ENTITY_REQUESTER_DYN_LAST      => "Last dynamic requester user's entity (alphabetical)",
+         $testedClass::DESTINATION_ENTITY_FORM  => 'The form entity',
+         $testedClass::DESTINATION_ENTITY_VALIDATOR    => 'Default entity of the validator',
+         $testedClass::DESTINATION_ENTITY_SPECIFIC      => 'Specific entity',
+         $testedClass::DESTINATION_ENTITY_USER  => 'Default entity of a user type question answer',
+         $testedClass::DESTINATION_ENTITY_ENTITY    => 'From a GLPI object > Entity type question answer',
       ]);
    }
 
    public function testGetEnumTagType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumTagType();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumTagType();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::TAG_TYPE_NONE                   => __('None'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
-         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
+         $testedClass::TAG_TYPE_NONE                   => __('None'),
+         $testedClass::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
+         $testedClass::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
+         $testedClass::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
+         $testedClass::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
       ]);
    }
 
    public function testGetEnumDueDateType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumDueDateRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumDueDateRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_NONE   => __('TTR from template or none', 'formcreator'),
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
-         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_CALC   => __('calculated from the answer to the question', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_NONE   => __('TTR from template or none', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
+         $testedClass::DUE_DATE_RULE_CALC   => __('calculated from the answer to the question', 'formcreator'),
       ]);
    }
 
    public function testGetEnumLocationType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumLocationRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumLocationRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE        => __('Location from template or none', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
-         \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
+         $testedClass::LOCATION_RULE_NONE        => __('Location from template or none', 'formcreator'),
+         $testedClass::LOCATION_RULE_SPECIFIC    => __('Specific location', 'formcreator'),
+         $testedClass::LOCATION_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         $testedClass::LOCATION_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ]);
    }
 
    public function testGetEnumContractType() {
-      $output = \PluginFormcreatorTargetTicket::getEnumContractRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumContractRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE        => __('Contract from template or none', 'formcreator'),
-         \PluginFormcreatorTargetTicket::CONTRACT_RULE_SPECIFIC    => __('Specific contract', 'formcreator'),
-         \PluginFormcreatorTargetTicket::CONTRACT_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
-         \PluginFormcreatorTargetTicket::CONTRACT_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
+         $testedClass::CONTRACT_RULE_NONE        => __('Contract from template or none', 'formcreator'),
+         $testedClass::CONTRACT_RULE_SPECIFIC    => __('Specific contract', 'formcreator'),
+         $testedClass::CONTRACT_RULE_ANSWER      => __('Equals to the answer to the question', 'formcreator'),
+         $testedClass::CONTRACT_RULE_LAST_ANSWER => __('Last valid answer', 'formcreator'),
       ]);
    }
 
    public function testGetEnumUrgencyRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumUrgencyRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
-         \PluginFormcreatorTargetTicket::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
-         \PluginFormcreatorTargetTicket::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
+         $testedClass::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
+         $testedClass::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
+         $testedClass::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
    }
 
    public function testGetEnumAssociateRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumAssociateRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumAssociateRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE         => 'None',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_SPECIFIC     => 'Specific asset',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER       => 'Equals to the answer to the question',
-         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_LAST_ANSWER  => 'Last valid answer',
+         $testedClass::ASSOCIATE_RULE_NONE         => 'None',
+         $testedClass::ASSOCIATE_RULE_SPECIFIC     => 'Specific asset',
+         $testedClass::ASSOCIATE_RULE_ANSWER       => 'Equals to the answer to the question',
+         $testedClass::ASSOCIATE_RULE_LAST_ANSWER  => 'Last valid answer',
       ]);
    }
 
    public function testGetEnumCategoryRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumCategoryRule();
+      $testedClass = $this->getTestedClassName();
+      $output = $testedClass::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE          => 'Category from template or none',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC      => 'Specific category',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
-         \PluginFormcreatorTargetTicket::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
+         $testedClass::CATEGORY_RULE_NONE          => 'Category from template or none',
+         $testedClass::CATEGORY_RULE_SPECIFIC      => 'Specific category',
+         $testedClass::CATEGORY_RULE_ANSWER        => 'Equals to the answer to the question',
+         $testedClass::CATEGORY_RULE_LAST_ANSWER   => 'Last valid answer',
       ]);
    }
 
@@ -257,14 +280,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm(['name' => 'a form']);
 
-      $targetTicket_1 = new \PluginFormcreatorTargetTicket();
+      $targetTicket_1 = $this->newTestedInstance();
       $targetTicket_1->add([
          'name'      => 'target 1',
          $formFk     => $form->getID(),
       ]);
       $this->boolean($targetTicket_1->isNewItem())->isFalse();
 
-      $targetTicket_2 = new \PluginFormcreatorTargetTicket();
+      $targetTicket_2 = $this->newTestedInstance();
       $targetTicket_2->add([
          'name'      => 'target 2',
          $formFk     => $form->getID(),
@@ -358,9 +381,10 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
       // Test requester's first entity (alphanumeric order)
+      $testedClass = $this->getTestedClassName();
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_FIRST,
+         'destination_entity' => $testedClass::DESTINATION_ENTITY_REQUESTER_DYN_FIRST,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -368,7 +392,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString(),
       ]);
-      $user = new \User();
+      $user = new User();
       $user->add([
          'name' => $this->getUniqueString(),
          'password' => 'passwd',
@@ -376,14 +400,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          '_profiles_id' => '3', // Admin
          '_entities_id' => $entityId,
       ]);
-      $entity = new \Entity();
-      $profileUser = new \Profile_User();
+      $entity = new Entity();
+      $profileUser = new Profile_User();
       // A login resyncs a user. Must login nefore adding the dynamic profile
       $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $profileUser->add([
-         \User::getForeignKeyField()    => $user->getID(),
-         \Profile::getForeignKeyField() => 4, // Super admin
-         \Entity::getForeignKeyField()  => $entityId,
+         User::getForeignKeyField()    => $user->getID(),
+         Profile::getForeignKeyField() => 4, // Super admin
+         Entity::getForeignKeyField()  => $entityId,
          'is_dynamic'                   => '1',
       ]);
 
@@ -394,14 +418,14 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
       ]);
-      $requesterId = \Session::getLoginUserID();
+      $requesterId = Session::getLoginUserID();
       $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's last entity (alphanumeric order)
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_LAST,
+         'destination_entity' => $testedClass::DESTINATION_ENTITY_REQUESTER_DYN_LAST,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -413,7 +437,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
-      $requesterId = \Session::getLoginUserID();
+      $requesterId = Session::getLoginUserID();
       $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
@@ -425,7 +449,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_SPECIFIC,
+         'destination_entity' => $testedClass::DESTINATION_ENTITY_SPECIFIC,
          '_destination_entity_value_specific' => "$entityId",
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -436,7 +460,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
       ]);
-      $requesterId = \Session::getLoginUserID();
+      $requesterId = Session::getLoginUserID();
       $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
@@ -447,7 +471,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
-         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_FORM,
+         'destination_entity' => $testedClass::DESTINATION_ENTITY_FORM,
          'destination_entity_value' => '0',
       ]);
       $form->update([
@@ -458,12 +482,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       // Disable notification to avoid output to console
       $CFG_GLPI['use_notifications'] = '0';
 
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
       ]);
-      $requesterId = \Session::getLoginUserID();
+      $requesterId = Session::getLoginUserID();
       $output = $this->callPrivateMethod($instance, 'setTargetEntity', [], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
    }
@@ -477,84 +501,91 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $question1 = $this->getQuestion([
          'fieldtype' => 'requesttype',
       ]);
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      $form1 = new \PluginFormcreatorForm();
-      $form1 = \PluginFormcreatorForm::getByItem($question1);
-      $form1->update([
-         'id' => $form1->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [2] // Glpi user
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form1 = new PluginFormcreatorForm();
+      $form1 = PluginFormcreatorForm::getByItem($question1);
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form1->getID(),
+         'itemtype'         => User::class,
+         'users_id'         => 2 // Glpi user
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
+
+      $testedClass = $this->getTestedClassName();
       $targetTicket1 = $this->getTargetTicket([
          $formFk     => $form1->getID(),
-         'type_rule'     => \PluginFormcreatorTargetTicket::REQUESTTYPE_SPECIFIC,
-         'type_question' => \Ticket::INCIDENT_TYPE,
+         'type_rule'     => $testedClass::REQUESTTYPE_SPECIFIC,
+         'type_question' => Ticket::INCIDENT_TYPE,
       ]);
 
       $question2 = $this->getQuestion([
          'fieldtype' => 'requesttype',
       ]);
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      $form2 = new \PluginFormcreatorForm();
-      $form2 = \PluginFormcreatorForm::getByItem($question2);
-      $form2->update([
-         'id' => $form2->getID(),
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [2] // Glpi user
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form2 = new PluginFormcreatorForm();
+      $form2 = PluginFormcreatorForm::getByItem($question2);
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form2->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => 2 // Glpi user
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
+
       $targetTicket2 = $this->getTargetTicket([
          $formFk     => $form2->getID(),
-         'type_rule' => \PluginFormcreatorTargetTicket::REQUESTTYPE_ANSWER,
+         'type_rule' => $testedClass::REQUESTTYPE_ANSWER,
          'type_question' => $question2->getID(),
       ]);
       return [
          [
             'originalInstance'   => $targetTicket1,
-            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
-               \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+            'formAnswerId' => (new PluginFormcreatorFormAnswer())->add([
+               PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'formcreator_validator' => 2, // Glpi user ID
                'formcreator_field_' . $question1->getID() => (string) \Ticket::INCIDENT_TYPE,
             ]),
-            'expected'   => \Ticket::INCIDENT_TYPE,
+            'expected'   => Ticket::INCIDENT_TYPE,
          ],
          [
             'originalInstance'   => $targetTicket1,
-            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
-               \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+            'formAnswerId' => (new PluginFormcreatorFormAnswer())->add([
+               PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
                'name' => $form1->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'formcreator_validator' => 2, // Glpi user ID
-               'formcreator_field_' . $question1->getID() => (string) \Ticket::DEMAND_TYPE,
+               'formcreator_field_' . $question1->getID() => (string) Ticket::DEMAND_TYPE,
             ]),
-            'expected'   => \Ticket::INCIDENT_TYPE,
+            'expected'   => Ticket::INCIDENT_TYPE,
          ],
          [
             'originalInstance'   => $targetTicket2,
-            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
-               \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
+            'formAnswerId' => (new PluginFormcreatorFormAnswer())->add([
+               PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'formcreator_validator' => 2, // Glpi user ID
                'formcreator_field_' . $question2->getID() => (string) \Ticket::DEMAND_TYPE,
             ]),
-            'expected'   => \Ticket::DEMAND_TYPE,
+            'expected'   => Ticket::DEMAND_TYPE,
          ],
          [
             'originalInstance'   => $targetTicket2,
-            'formAnswerId' => (new \PluginFormcreatorFormAnswer())->add([
-               \PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
+            'formAnswerId' => (new PluginFormcreatorFormAnswer())->add([
+               PluginFormcreatorForm::getForeignKeyField() => $form2->getID(),
                'name' => $form2->fields['name'],
                'requester_id' => 2, // glpi user id
-               'status' => \PluginFormcreatorFormAnswer::STATUS_WAITING,
+               'status' => PluginFormcreatorFormAnswer::STATUS_WAITING,
                'formcreator_validator' => 2, // Glpi user ID
-               'formcreator_field_' . $question2->getID() => (string) \Ticket::INCIDENT_TYPE,
+               'formcreator_field_' . $question2->getID() => (string) Ticket::INCIDENT_TYPE,
             ]),
-            'expected'   => \Ticket::INCIDENT_TYPE,
+            'expected'   => Ticket::INCIDENT_TYPE,
          ],
       ];
    }
@@ -562,13 +593,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    /**
     * @dataProvider providerSetTargetType
     */
-   public function testSetTargetType(\PluginFormcreatorTargetTicket $originalInstance, $formAnswerId, $expected) {
+   public function testSetTargetType(CommonDBTM $originalInstance, $formAnswerId, $expected) {
       // reload the instance with the helper class
       $instance = $this->newTestedInstance();
       $instance->getFromDB($originalInstance->getID());
 
       // load the form answer
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswer->getFromDB($formAnswerId);
 
       $output = $this->callPrivateMethod($instance, 'setTargetType', [], $formAnswer);
@@ -595,11 +626,11 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          ],
       ]);
       $this->boolean($question->isNewItem())->isFalse();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
-      $form = new \PluginFormcreatorForm();
-      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
-      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $section = new PluginFormcreatorSection();
+      $section->getFromDB($question->fields[PluginFormcreatorSection::getForeignKeyField()]);
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($section->fields[PluginFormcreatorForm::getForeignKeyField()]);
+      $formAnswer = new PluginFormcreatorFormAnswer();
       $formAnswerId = $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'validation_required' => 0,
@@ -1289,10 +1320,10 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
    }
 
    public function providerPrepareInputForAdd() {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm();
       $name = $this->getUniqueString();
-      $sourceId = \PluginFormcreatorCommon::getFormcreatorRequestTypeId();
+      $sourceId = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
       return [
          'name is mandatory' => [
             'input'    => [
@@ -1363,7 +1394,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
       $form1 = $this->getForm();
 
-      $instance1 = new PluginFormcreatorTargetTicket();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1417,7 +1448,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype'                      => 'dropdown',
          'itemtype'                       => $validItemtype
       ]);
-      $instance1 = new PluginFormcreatorTargetTicket();
+      $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
@@ -1451,7 +1482,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->boolean($formanswer->isNewItem())->isFalse();
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = $this->newTestedInstance();
       $targetTicket->add([
          'name' => 'target ticket',
          'target_name' => 'target ticket',
@@ -1476,7 +1507,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->boolean($formanswer->isNewItem())->isFalse();
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = $this->newTestedInstance();
       $targetTicket->add([
          'name' => 'target ticket',
          'target_name' => 'target ticket',
@@ -1513,17 +1544,18 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetTargetLocation_nothing() {
       $form = $this->getForm();
-      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer = new PluginFormcreatorFormanswer();
       $formanswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->boolean($formanswer->isNewItem())->isFalse();
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $targetTicket->add([
          'name' => 'target ticket no location',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
-         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+         'location_rule' => $testedClass::LOCATION_RULE_NONE,
       ]);
       $this->boolean($targetTicket->isNewItem())->isFalse();
 
@@ -1608,11 +1640,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
 
       $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'target ticket no template',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $formanswer1->getForm()->getID(),
-         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_LAST_ANSWER,
+         'location_rule' => $testedClass::LOCATION_RULE_LAST_ANSWER,
       ]);
 
       return [
@@ -1665,12 +1698,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $this->boolean($formanswer1->isNewItem())->isFalse();
 
       $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'target ticket with template',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
          'tickettemplates_id' => $ticketTemplate->getID(),
-         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+         'location_rule' => $testedClass::LOCATION_RULE_NONE,
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
 
@@ -1756,24 +1790,25 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
          'fieldtype' => 'glpiselect',
          'itemtype'  => $validItemtype,
       ]);
-      $form1 = \PluginFormcreatorForm::getByItem($question1);
+      $form1 = PluginFormcreatorForm::getByItem($question1);
       $sectionId = $question1->fields['plugin_formcreator_sections_id'];
       $question2 = $this->getQuestion([
          'plugin_formcreator_sections_id' => $sectionId,
          'fieldtype'                      => 'glpiselect',
          'itemtype'                       => $validItemtype
       ]);
+      $testedClass = $this->getTestedClassName();
       $instance1 = $this->newTestedInstance();
       $instance1->add([
          'name' => 'foo',
          'target_name' => '',
-         \PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
+         PluginFormcreatorForm::getForeignKeyField() => $form1->getID(),
          'content' => '##FULLFORM',
-         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_LAST_ANSWER,
+         'contract_rule' => $testedClass::CONTRACT_RULE_LAST_ANSWER,
          'contract_question' => '0',
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
-      $formAnswer1 = new \PluginFormcreatorFormAnswer();
+      $formAnswer1 = new PluginFormcreatorFormAnswer();
       $formAnswer1->add([
          'plugin_formcreator_forms_id' => $form1->getID(),
          'formcreator_field_' . $question1->getID() => (string) $item1->getID(),
@@ -1792,17 +1827,18 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
 
    public function providerSetTargetContract_nothing() {
       $form = $this->getForm();
-      $formanswer = new \PluginFormcreatorFormanswer();
+      $formanswer = new PluginFormcreatorFormanswer();
       $formanswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
       $this->boolean($formanswer->isNewItem())->isFalse();
-      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $targetTicket->add([
          'name' => 'target ticket no contract',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
-         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+         'contract_rule' => $testedClass::CONTRACT_RULE_NONE,
       ]);
       $this->boolean($targetTicket->isNewItem())->isFalse();
 
@@ -1887,11 +1923,12 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       ]);
 
       $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'target ticket no template',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $formanswer1->getForm()->getID(),
-         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_LAST_ANSWER,
+         'contract_rule' => $testedClass::CONTRACT_RULE_LAST_ANSWER,
       ]);
 
       return [
@@ -1944,12 +1981,13 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $this->boolean($formanswer1->isNewItem())->isFalse();
 
       $instance1 = $this->newTestedInstance();
+      $testedClass = $this->getTestedClassName();
       $instance1->add([
          'name' => 'target ticket with template',
          'target_name' => 'target ticket',
          'plugin_formcreator_forms_id' => $form->getID(),
          'tickettemplates_id' => $ticketTemplate->getID(),
-         'contract_rule' => \PluginFormcreatorTargetTicket::CONTRACT_RULE_NONE,
+         'contract_rule' => $testedClass::CONTRACT_RULE_NONE,
       ]);
       $this->boolean($instance1->isNewItem())->isFalse();
 

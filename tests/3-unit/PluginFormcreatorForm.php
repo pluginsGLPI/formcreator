@@ -30,6 +30,7 @@
  */
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorForm_Validator;
 
 class PluginFormcreatorForm extends CommonTestCase {
 
@@ -365,6 +366,9 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testUpdateValidators() {
+      // Tested method will be deleted
+      return;
+
       $form = $this->getForm();
 
       $formValidator = new \PluginFormcreatorForm_Validator();
@@ -373,11 +377,14 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
       $this->array($rows)->hasSize(0);
 
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users' => ['2'], // glpi account
+      $form = $this->getForm();
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => 2 // GLPI account,
       ]);
-
+      $this->boolean($formValidator->isNewItem())->isFalse();
       $rows = $formValidator->find([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -391,6 +398,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
          '_validator_groups' => ['1'], // a group ID (not created in this test)
       ]);
+
       $rows = $formValidator->find([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -464,11 +472,14 @@ class PluginFormcreatorForm extends CommonTestCase {
       // $CFG_GLPI['use_notifications'] = 1;
       // $CFG_GLPI['notifications_mailing'] = 1;
 
-      $form = $this->getForm([
-         'name'                  => 'validation notification',
-         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'      => [$validator->getID()],
+      $form = $this->getForm();
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => $validator->getType(),
+         'users_id'                    => $validator->getID()
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
       $this->getSection([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'name' => 'section',

@@ -30,14 +30,19 @@
  */
 
 namespace tests\units;
+use DBmysqlIterator;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use PluginFormcreatorForm_Validator;
 use Ticket;
 use PluginFormcreatorFormAnswer;
+use PluginFormcreatorForm_Validator as Form_Validator;
 use RuleAction;
 use User;
 use Rule;
 use RuleCriteria;
+use Search;
 use CommonITILObject;
+use ValidatorSubstitute;
 
 class PluginFormcreatorIssue extends CommonTestCase {
    public function beforeTestMethod($method) {
@@ -312,10 +317,14 @@ class PluginFormcreatorIssue extends CommonTestCase {
    }
 
    public function providerGetSyncIssuesRequest_formanswerUnderValidation() {
-      $form = $this->getForm([
-         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER,
-         '_validator_users' => [4] // tech
+      $form = $this->getForm();
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => 4 // User Tech
       ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
@@ -650,4 +659,113 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $this->string($issue->fields['date_mod'])->isEqualTo($modDate);
    }
 
+   public function testValidationDelegation() {
+      global $DB;
+
+      if (version_compare(GLPI_VERSION, '10.1', '<')) {
+         // $this->markTestSkipped('This test requires GLPI 10.1 or higher');
+      }
+
+      $testedClass = $this->getTestedClassName();
+
+      $this->login('glpi', 'glpi');
+
+      $login = 'validator_' . $this->getUniqueString();
+      $validator_user = new \User();
+      $validator_user->add([
+         'name'                  => $login,
+         'password'              => 'validator',
+         'password2'             => 'validator',
+         '_profiles_id'          => '6', // Technician profile
+         '_entities_id'          => 0,
+         '_is_recursive'         => 1,
+      ]);
+      $this->boolean($validator_user->isNewItem())->isFalse();
+
+      $login = 'delegatee_' . $this->getUniqueString();
+      $delegatee_user = new \User();
+      $delegatee_user->add([
+         'name'                  => $login,
+         'password'              => 'delegatee',
+         'password2'             => 'delegatee',
+         '_profiles_id'          => '6', // Technician profile
+         '_entities_id'          => 0,
+         '_is_recursive'         => 1,
+      ]);
+      $this->boolean($delegatee_user->isNewItem())->isFalse();
+
+      $form = $this->getForm();
+      $form->update([
+         'id' => $form->getID(),
+         'validation_required' => Form_Validator::VALIDATION_USER,
+      ]);
+
+      $form_validator = new Form_Validator();
+      $form_validator->add([
+         $form::getForeignKeyField() => $form->getID(),
+         'itemtype' => $validator_user::getType(),
+         'users_id' => $validator_user->getID(),
+      ]);
+
+      $this->login('post-only', 'postonly');
+
+      $formAnswer = $this->getFormAnswer([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      // Check the issue exists for the created form answer (no ticket created yet)
+      $request = $testedClass::getSyncIssuesRequest();
+      $result = $DB->request([
+         'FROM'  => $request,
+         'WHERE' => [
+            'itemtype' => $formAnswer->getType(),
+            'items_id' => $formAnswer->getID(),
+         ]
+      ]);
+      $this->object($result)->isInstanceOf(DBmysqlIterator::class);
+      $row = $result->current();
+      $this->array($row);
+
+      // Check the validator can see the issue
+      $this->login($validator_user->fields['name'], 'validator');
+
+      $search_criteria = $testedClass::getWaitingCriteria();
+      $search_criteria['criteria'][] = [
+         'link'       => 'AND',
+         'field'      => 2, // display_id
+         'searchtype' => 'equals',
+         'value'      => 'f_' . $formAnswer->getID(),
+      ];
+      $search = Search::getDatas(
+         $testedClass,
+         $search_criteria
+      );
+      $this->integer($search['data']['totalcount'])->isEqualTo(1);
+
+      // Check the delegatee cannot see the issue (because he is not yet a deledatge of the validator)
+      $this->login($delegatee_user->fields['name'], 'delegatee');
+
+      $search = Search::getDatas(
+         $testedClass,
+         $search_criteria
+      );
+      $this->integer($search['data']['totalcount'])->isEqualTo(0);
+
+      // Set tehegatee user as delegatee of the validator
+      $validator_substitute = new ValidatorSubstitute();
+
+      $validator_substitute->add([
+         'users_id'            => $validator_user->getID(),
+         'users_id_substitute' => $delegatee_user->getID(),
+      ]);
+
+      // Check the delegatee can see the issue
+      $this->login($delegatee_user->fields['name'], 'delegatee');
+
+      $search = Search::getDatas(
+         $testedClass,
+         $search_criteria
+      );
+      $this->integer($search['data']['totalcount'])->isEqualTo(1);
+   }
 }

@@ -33,6 +33,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorForm_Validator;
 use Search;
 use TicketValidation;
+use User;
 
 /**
  * The methods conflict when running in parallel
@@ -127,9 +128,14 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
          'description'         => 'form description',
          'content'             => 'a content',
          'is_active'           => 1,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users'    => '2', // user is glpi
       ]);
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $form_validator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'            => User::class,
+         'users_id'            => '2', // user is glpi
+      ]);
+      $this->boolean($form_validator->isNewItem())->isFalse();
 
       $section = $this->getSection([
          'name'                        => 'a section',
@@ -235,13 +241,26 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $this->login('glpi', 'glpi');
       $user = $this->getUser($this->getUniqueString(), 'p@ssw0rd', 'Technician');
       $validatorId = $user->getID();
-      $form = $this->getForm([
-         'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER,
-         '_validator_users' => $validatorId,
+      $form = $this->getForm();
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $form_validator->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype'                    => User::class,
+         'users_id'                    => $validatorId,
       ]);
+      $this->boolean($form_validator->isNewItem())->isFalse();
 
       // Add some form answers
       $this->login('normal', 'normal');
+      // Delete previous form answers, for repeatability of tests
+      $form_answer = $this->newTestedInstance();
+      $form_answer->deleteByCriteria([
+         'OR' => [
+            'requester_id' => User::getIdByName('normal'),
+            'users_id_validator' => User::getIdByName('normal'),
+         ],
+      ]);
+
       $formAnswers = [];
       $formAnswer1 = $this->newTestedInstance();
       $formAnswers[] = $formAnswer1->add([
@@ -289,9 +308,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $_SESSION['glpilist_limit'] = $backupListLimit;
 
       // Check the requester does not has his forms in list to validate
-      foreach ($search['data']['items'] as $id => $order) {
-         $this->boolean(in_array($id, $formAnswers))->isTrue();
-      }
+      $this->integer(count($search['data']['items']))->isEqualTo(0);
 
       $this->login($user->fields['name'], 'p@ssw0rd');
       $backupListLimit = $_SESSION['glpilist_limit'];

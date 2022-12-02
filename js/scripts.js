@@ -1431,7 +1431,36 @@ var plugin_formcreator = new function() {
       return serialized.filter( function( item ) {
          return item.name != '_glpi_csrf_token';
       });
-   }
+   };
+
+   this.deleteFormValidator = function (target) {
+      if(confirm(i18n.textdomain('formcreator').__('Are you sure you want to delete this validator ?', 'formcreator'))) {
+         $.post({
+            url: formcreatorRootDoc + '/ajax/form_validator.php',
+            data: {
+               action: 'delete',
+               id: $(target).data('items-id'),
+            }
+         }).done(function () {
+            reloadTab();
+         }).fail(function () {
+            displayAjaxMessageAfterRedirect();
+         });
+      }
+   };
+
+   this.changeValidators = function (value) {
+      if (typeof(value) == 'undefined' || value == 'User') { // PluginFormcreatorForm_Validator::VALIDATION_USER
+         document.getElementById("validators_users").style.display  = "block";
+         document.getElementById("validators_groups").style.display = "none";
+      } else if (value == 'Group') { // PluginFormcreatorForm_Validator::VALIDATION_GROUP
+         document.getElementById("validators_users").style.display  = "none";
+         document.getElementById("validators_groups").style.display = "block";
+      } else {
+         document.getElementById("validators_users").style.display  = "none";
+         document.getElementById("validators_groups").style.display = "none";
+      }
+   };
 }
 
 // === TARGETS ===
@@ -2015,19 +2044,6 @@ function plugin_formcreator_change_entity(rand) {
          $('#entity_entity_title').show();
          $('#entity_entity_value').show();
          break;
-   }
-}
-
-function plugin_formcreator_changeValidators(value) {
-   if (value == 1) {
-      document.getElementById("validators_users").style.display  = "block";
-      document.getElementById("validators_groups").style.display = "none";
-   } else if (value == 2) {
-      document.getElementById("validators_users").style.display  = "none";
-      document.getElementById("validators_groups").style.display = "block";
-   } else {
-      document.getElementById("validators_users").style.display  = "none";
-      document.getElementById("validators_groups").style.display = "none";
    }
 }
 
