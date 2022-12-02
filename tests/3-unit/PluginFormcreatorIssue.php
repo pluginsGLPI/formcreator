@@ -663,7 +663,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       global $DB;
 
       if (version_compare(GLPI_VERSION, '10.1', '<')) {
-         // $this->markTestSkipped('This test requires GLPI 10.1 or higher');
+         $this->skip('This test requires GLPI 10.1 or higher');
       }
 
       $testedClass = $this->getTestedClassName();
