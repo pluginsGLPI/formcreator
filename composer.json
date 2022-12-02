@@ -6,7 +6,7 @@
     "prefer-stable": true,
     "config": {
       "platform": {
-          "php": "7.4"
+          "php": "8.0.2"
       },
       "allow-plugins": {
          "allow-plugins.dealerdirect/phpcod": true,
@@ -16,7 +16,7 @@
       "apcu-autoloader": true
   },
   "require": {
-      "php": ">= 7.2",
+      "php": ">= 8.0.2",
       "ext-xml": "*",
       "gregwar/captcha": "^1.1",
       "xylemical/php-expressions": "^1.0.3",

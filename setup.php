@@ -72,7 +72,10 @@ function plugin_version_formcreator() {
       'requirements'   => [
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
-         ]
+         ],
+         'php'          => [
+            'min'            => '8.0.2',
+         ],
       ]
    ];
 
