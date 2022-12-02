@@ -193,7 +193,7 @@ class DropdownField extends PluginFormcreatorAbstractField
             $dparams['right'] = 'all';
             $currentEntity = Session::getActiveEntity();
             $ancestorEntities = getAncestorsOf(Entity::getTable(), $currentEntity);
-            $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? 2;
+            $decodedValues['entity_restrict'] = $decodedValues['entity_restrict'] ?? self::ENTITY_RESTRICT_FORM;
             switch ($decodedValues['entity_restrict']) {
                case self::ENTITY_RESTRICT_FORM:
                   $currentEntity = $form->fields['entities_id'];
@@ -279,14 +279,17 @@ class DropdownField extends PluginFormcreatorAbstractField
                ];
             }
             if (Session::haveRight(Ticket::$rightname, Ticket::READGROUP)) {
-               $requestersObserversGroupsQuery = new QuerySubQuery([
+               $sub_query = [
                   'SELECT' => 'tickets_id',
                   'FROM' => Group_Ticket::getTable(),
                   'WHERE' => [
-                     'groups_id' => $_SESSION['glpigroups'],
                      'type' => [CommonITILActor::REQUESTER, CommonITILActor::OBSERVER]
                   ],
-               ]);
+               ];
+               if (count($_SESSION['glpigroups']) > '0') {
+                  $sub_query['WHERE']['groups_id'] = $_SESSION['glpigroups'];
+               }
+               $requestersObserversGroupsQuery = new QuerySubQuery($sub_query);
                if (!isset($dparams_cond_crit['OR']['id'])) {
                   $dparams_cond_crit['OR'] = [
                      'id' => $requestersObserversGroupsQuery,
