@@ -1401,13 +1401,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form = $this->getForm($input['plugin_formcreator_forms_id']);
       if ($this->isAnswersValid && $form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC && $form->fields['is_captcha_enabled'] != '0') {
          if (!isset($_SESSION['plugin_formcreator']['captcha'])) {
-            Session::addMessageAfterRedirect(__('No turing test set', 'formcreator'));
+            Session::addMessageAfterRedirect(__('No captcha set.', 'formcreator'));
             $this->isAnswersValid = false;
             return false;
          }
          $this->isAnswersValid = PluginFormcreatorCommon::checkCaptcha($input['plugin_formcreator_captcha_id'], $input['plugin_formcreator_captcha']);
          if (!$this->isAnswersValid) {
-            Session::addMessageAfterRedirect(__('You failed the Turing test', 'formcreator'));
+            Session::addMessageAfterRedirect(__('You failed the captcha test.', 'formcreator'));
             return false;
          }
       }
