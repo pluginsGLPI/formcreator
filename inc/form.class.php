@@ -469,7 +469,7 @@ PluginFormcreatorTranslatableInterface
    /**
     * Show the Form for the adminsitrator to edit in the config page
     *
-    * @param  Array  $options Optional options
+    * @param  array  $options Optional options
     *
     * @return NULL   Nothing, just display the form
     */
@@ -2650,5 +2650,33 @@ PluginFormcreatorTranslatableInterface
       }
 
       return $extra_header;
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param array $options
+    * @return string
+    */
+   public static function dropdownAccessType(array $options = []): string {
+      $options['value'] = $options['value'] ?? self::ACCESS_PRIVATE;
+      return Dropdown::showFromArray(
+         $options['name'],
+         self::getEnumAccessType(),
+         $options
+      );
+   }
+
+   public function getUserFormUrl() {
+      global $CFG_GLPI;
+
+      $parsedBaseUrl = parse_url($CFG_GLPI['url_base']);
+      $baseUrl = $parsedBaseUrl['scheme'] . '://' . $parsedBaseUrl['host'];
+      if (isset($parsedBaseUrl['port'])) {
+         $baseUrl .= ':' . $parsedBaseUrl['port'];
+      }
+      $form_url = $baseUrl . FORMCREATOR_ROOTDOC . '/front/formdisplay.php?id=' . $this->getID();
+
+      return $form_url;
    }
 }

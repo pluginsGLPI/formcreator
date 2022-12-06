@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+ use Glpi\Application\View\TemplateRenderer;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -54,8 +56,17 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      global $CFG_GLPI;
+      $item->initForm($item->getID());
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form_accesstype.html.twig', [
+         'item' => $item,
+         'params' => [
+            'target' => Toolbox::getItemTypeFormURL(__CLASS__),
+            'candel' => false,
+         ],
+      ]);
+   }
 
+   public  function functionToDelete() {
       echo "<form name='form_profiles_form' id='form_profiles_form'
              method='post' action='";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
@@ -92,28 +103,58 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
       }
       echo '</td>';
       echo '</tr>';
+   }
 
-      // Captcha
-      if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_PUBLIC) {
-         echo '<tr>';
-         echo '<td>' . __('Enable captcha', 'formcreator') . '</td>';
-         echo '<td>';
-         Dropdown::showYesNo('is_captcha_enabled', $item->fields['is_captcha_enabled']);
-         echo '</td>';
-         echo '</tr>';
-      }
+   /**
+    * Show the access type options which varies depending on the access type
+    *
+    * @param CommonDBTM $form
+    * @return void
+    */
+   public static function showAccessTypeOption(CommonDBTM $form): void {
+      switch ($form->fields['access_rights']) {
+         case PluginFormcreatorForm::ACCESS_PUBLIC:
+             PluginFormcreatorFormAccessType::showPublicAccessTypeOptions($form);
+             break;
 
-      if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
-         echo '<tr>';
-         echo '<td><label>' . __('Restricted to') . '</label></td>';
-         echo '<td class="restricted-form">' . PluginFormcreatorRestrictedFormDropdown::show('restrictions', [
-            'users_id'    => $item->fields['users'] ?? [],
-            'groups_id'   => $item->fields['groups'] ?? [],
-            'profiles_id' => $item->fields['profiles'] ?? [],
-         ]) . '</td>';
-         echo '</tr>';
+         case PluginFormcreatorForm::ACCESS_RESTRICTED:
+             PluginFormcreatorFormAccessType::showRestrictedAccessTypeOptions($form);
+             break;
       }
+   }
+
+   public static function showPublicAccessTypeOptions(CommonDBTM $item) {
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form_accesstype.public.html.twig', [
+         'item' => $item,
+         'params' => [
+            'target' => Toolbox::getItemTypeFormURL(__CLASS__),
+            'candel' => false,
+         ],
+      ]);
+
+      return true;
+   }
+
+   public static function showRestrictedAccessTypeOptions(CommonDBTM $item) {
+      TemplateRenderer::getInstance()->display('@formcreator/pages/form_accesstype.restricted.html.twig', [
+         'item' => $item,
+         'params' => [
+            'target' => Toolbox::getItemTypeFormURL(__CLASS__),
+            'candel' => false,
+         ],
+      ]);
+
+      return true;
+
+      echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
+      echo '<tr>';
+      echo '<td><label>' . __('Restricted to') . '</label></td>';
+      echo '<td class="restricted-form">' . PluginFormcreatorRestrictedFormDropdown::show('restrictions', [
+         'users_id'    => $item->fields['users'] ?? [],
+         'groups_id'   => $item->fields['groups'] ?? [],
+         'profiles_id' => $item->fields['profiles'] ?? [],
+      ]) . '</td>';
+      echo '</tr>';
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       echo '<tr>';

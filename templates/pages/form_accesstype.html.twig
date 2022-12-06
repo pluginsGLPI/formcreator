@@ -1,0 +1,79 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% extends "generic_show_form.html.twig" %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
+
+{% set accesstype_options_ajax_url = get_plugin_web_dir('formcreator') ~ '/ajax/get_accesstype_options.php' %}
+
+{% block form_fields %}
+    {{ formcreatorFields.dropdownAccessType(
+        'access_rights',
+        item.fields['access_rights'],
+        _n('Access type', 'Access types', 1, 'formcreator'),
+        {
+            'rand': rand,
+        }
+    ) }}
+    {% do call('Ajax::updateItemOnSelectEvent', [
+        'dropdown_access_rights' ~ rand,
+        'accesstype_options',
+        accesstype_options_ajax_url,
+        {
+            'access_rights': '__VALUE__',
+            'extraparams': {
+                'plugin_formcreator_forms_id': item.fields['id'],
+            },
+            'rand': rand,
+        }
+    ]) %}
+
+    {% if item.fields['is_active'] %}
+        {% set form_url = item.getUserFormUrl() %}
+        <a href="{{ form_url }}">{{ form_url }}</a>
+        <a href="mailto:?subject={{ item.getName() }}&body={{ form_url }}" target="_blank">
+            <i class="fas fa-envelope"></i>
+        </a>
+    {% else %}
+        <label class="form-label">
+            {{ __('Please activate the form to view the link', 'formcreator') }}
+        </label>
+    {% endif %}
+
+    <div id='accesstype_options'>
+    {{ call('PluginFormcreatorFormAccessType::showAccessTypeOption', [item]) }}
+    </div>
+
+    {{ fields.hiddenField(
+        'plugin_formcreator_forms_id',
+        item.fields['id']
+    )}}
+{% endblock %}
