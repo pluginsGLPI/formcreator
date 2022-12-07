@@ -66,45 +66,6 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
       ]);
    }
 
-   public  function functionToDelete() {
-      echo "<form name='form_profiles_form' id='form_profiles_form'
-             method='post' action='";
-      echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="2">'._n('Access type', 'Access types', 1, 'formcreator').'</th>';
-      echo '</tr>';
-
-      // Access type
-      echo '<tr>';
-      echo '<td>';
-      Dropdown::showFromArray(
-         'access_rights',
-         PluginFormcreatorForm::getEnumAccessType(),
-         [
-            'value' => (isset($item->fields['access_rights'])) ? $item->fields['access_rights'] : '1',
-         ]
-      );
-      echo '</td>';
-      echo '<td>'.__('Link to the form', 'formcreator').': ';
-      if ($item->fields['is_active']) {
-         $parsedBaseUrl = parse_url($CFG_GLPI['url_base']);
-         $baseUrl = $parsedBaseUrl['scheme'] . '://' . $parsedBaseUrl['host'];
-         if (isset($parsedBaseUrl['port'])) {
-            $baseUrl .= ':' . $parsedBaseUrl['port'];
-         }
-         $form_url = $baseUrl . FORMCREATOR_ROOTDOC . '/front/formdisplay.php?id='.$item->getID();
-         echo '<a href="'.$form_url.'">'.$form_url.'</a>&nbsp;';
-         echo '<a href="mailto:?subject='.$item->getName().'&body='.$form_url.'" target="_blank">';
-         echo '<i class="fas fa-envelope"><i/>';
-         echo '</a>';
-      } else {
-         echo __('Please activate the form to view the link', 'formcreator');
-      }
-      echo '</td>';
-      echo '</tr>';
-   }
-
    /**
     * Show the access type options which varies depending on the access type
     *
@@ -145,27 +106,6 @@ class PluginFormcreatorFormAccessType extends CommonGLPI
       ]);
 
       return true;
-
-      echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
-      echo '<tr>';
-      echo '<td><label>' . __('Restricted to') . '</label></td>';
-      echo '<td class="restricted-form">' . PluginFormcreatorRestrictedFormDropdown::show('restrictions', [
-         'users_id'    => $item->fields['users'] ?? [],
-         'groups_id'   => $item->fields['groups'] ?? [],
-         'profiles_id' => $item->fields['profiles'] ?? [],
-      ]) . '</td>';
-      echo '</tr>';
-
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      echo '<tr>';
-      echo '<td class="center" colspan="2">';
-      echo Html::hidden($formFk, ['value' => $item->fields['id']]);
-      echo '<input type="submit" class="btn btn-primary me-2" name="update" value="'.__('Save').'" class="submit" />';
-      echo "</td>";
-      echo "</tr>";
-
-      echo "</table>";
-      Html::closeForm();
    }
 
    /**
