@@ -1554,38 +1554,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
             0,
             $issueSo[16]['joinparams']
          );
-         if (version_compare(GLPI_VERSION, '10.1') >= 0) {
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[30]['table'],
-               'users_id_substitute',
-               0,
-               0,
-               $issueSo[30]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[31]['table'],
-               'users_id_substitute',
-               0,
-               0,
-               $issueSo[31]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[32]['table'],
-               'users_id_substitute',
-               0,
-               0,
-               $issueSo[32]['joinparams']
-            );
-         }
       }
       return $join;
    }
