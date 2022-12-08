@@ -87,78 +87,10 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
    $join = '';
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
-         // Get default joins for tickets
-         $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
-         // but we want to join in issues
-         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`items_id`', $join);
-         $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
-         $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
-         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-            $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
+         if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+            $join = PluginFormcreatorIssue::getDefaultJoin($itemtype, $ref_table, $already_link_tables);
          } else {
-            $issueSo = Search::getOptions($itemtype);
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[9]['table'],
-               'users_id_validator',
-               0,
-               0,
-               $issueSo[9]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[11]['table'],
-               'users_id_validate',
-               0,
-               0,
-               $issueSo[11]['joinparams']
-            );
-            $join .= Search::addLeftJoin(
-               $itemtype,
-               $ref_table,
-               $already_link_tables,
-               $issueSo[16]['table'],
-               'groups_id_validator',
-               0,
-               0,
-               $issueSo[16]['joinparams']
-            );
-            if (version_compare(GLPI_VERSION, '10.1') >= 0) {
-               $join .= Search::addLeftJoin(
-                  $itemtype,
-                  $ref_table,
-                  $already_link_tables,
-                  $issueSo[30]['table'],
-                  'users_id_substitute',
-                  0,
-                  0,
-                  $issueSo[30]['joinparams']
-               );
-               $join .= Search::addLeftJoin(
-                  $itemtype,
-                  $ref_table,
-                  $already_link_tables,
-                  $issueSo[31]['table'],
-                  'users_id_substitute',
-                  0,
-                  0,
-                  $issueSo[31]['joinparams']
-               );
-               $join .= Search::addLeftJoin(
-                  $itemtype,
-                  $ref_table,
-                  $already_link_tables,
-                  $issueSo[32]['table'],
-                  'users_id_substitute',
-                  0,
-                  0,
-                  $issueSo[32]['joinparams']
-               );
-            }
+            $join = PluginFormcreatorIssue::getDefaultJoinLegacy($itemtype, $ref_table, $already_link_tables);
          }
          break;
 

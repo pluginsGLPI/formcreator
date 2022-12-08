@@ -34,6 +34,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 use Glpi\RichText\RichText;
+use Glpi\Search\Provider\SQLProvider;
 class PluginFormcreatorIssue extends CommonDBTM {
    static $rightname = 'ticket';
 
@@ -1502,5 +1503,187 @@ class PluginFormcreatorIssue extends CommonDBTM {
          // 'label' => '$params['label']',
          'icon'  => $params['icon'],
       ];
+   }
+
+   /**
+    * Get default join for legacy search engine (up to GLPI 10.0)
+    *
+    * @param string $itemtype
+    * @param string $ref_table
+    * @param array $already_link_tables
+    * @return string
+    */
+   public static function getDefaultJoinLegacy($itemtype, $ref_table, &$already_link_tables) {
+      // Get default joins for tickets
+      $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
+      // but we want to join in issues
+      $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`items_id`', $join);
+      $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
+      $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
+      } else {
+         $issueSo = Search::getOptions($itemtype);
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[9]['table'],
+            'users_id_validator',
+            0,
+            0,
+            $issueSo[9]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[11]['table'],
+            'users_id_validate',
+            0,
+            0,
+            $issueSo[11]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[16]['table'],
+            'groups_id_validator',
+            0,
+            0,
+            $issueSo[16]['joinparams']
+         );
+         if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[30]['table'],
+               'users_id_substitute',
+               0,
+               0,
+               $issueSo[30]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[31]['table'],
+               'users_id_substitute',
+               0,
+               0,
+               $issueSo[31]['joinparams']
+            );
+            $join .= Search::addLeftJoin(
+               $itemtype,
+               $ref_table,
+               $already_link_tables,
+               $issueSo[32]['table'],
+               'users_id_substitute',
+               0,
+               0,
+               $issueSo[32]['joinparams']
+            );
+         }
+      }
+      return $join;
+   }
+
+   public static function getDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
+      $join = [];
+      // Get default joins for tickets
+      $ticket_joins = SQLProvider::getDefaultJoinCriteria(Ticket::getType(), Ticket::getTable(), $already_link_tables);
+      // but we want to join in issues
+      foreach ($ticket_joins['LEFT JOIN'] as $new_table => $ticket_join) {
+         foreach ($ticket_join['ON'] as $table => $column) {
+            $last_backtick = strrpos($new_table, '`');
+            $other_backtick = strrpos($new_table, '`', $last_backtick - strlen($new_table) - 1);
+            $new_table_alias = substr($new_table, $other_backtick + 1, $last_backtick - $other_backtick - 1);
+            if ($table == 'glpi_tickets' && $column == 'id') {
+               $join['LEFT JOIN'][$new_table]['ON']['glpi_plugin_formcreator_issues'] = [
+                  'items_id' => "{$new_table_alias}.tickets_id",
+               ];
+               $join['LEFT JOIN'][$new_table]['ON']['AND'][] = [
+                  'itemtype' => Ticket::class,
+               ];
+            } else {
+               if ($column == 'users_id_recipient') {
+                  $column = 'requester_id';
+               }
+               if ($table == 'glpi_tickets') {
+                  $table = 'glpi_plugin_formcreator_issues';
+               }
+               $join['LEFT JOIN'][$new_table]['ON'][$table] = $column;
+            }
+         }
+      }
+      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         $join = array_merge_recursive($join, PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables));
+      } else {
+         $join = [];
+         $issueSo = Search::getOptions($itemtype);
+         $join = array_merge_recursive($join, SQLProvider::getLeftJoinCriteria(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[9]['table'],
+            'users_id_validator',
+            0,
+            0,
+            $issueSo[9]['joinparams']
+         ));
+         $join = array_merge_recursive($join, SQLProvider::getLeftJoinCriteria(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[11]['table'],
+            'users_id_validate',
+            0,
+            0,
+            $issueSo[11]['joinparams']
+         ));
+         $join = array_merge_recursive($join, SQLProvider::getLeftJoinCriteria(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[16]['table'],
+            'groups_id_validator',
+            0,
+            0,
+            $issueSo[16]['joinparams']
+         ));
+         $join = array_merge_recursive($join, SQLProvider::getLeftJoinCriteria(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[30]['table'],
+            'users_id_substitute',
+            0,
+            0,
+            $issueSo[30]['joinparams']
+         ));
+         $join = array_merge_recursive($join, SQLProvider::getLeftJoinCriteria(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[31]['table'],
+            'users_id_substitute',
+            0,
+            0,
+            $issueSo[31]['joinparams']
+         ));
+         $join = array_merge_recursive($join, SQLProvider::getLeftJoinCriteria(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[32]['table'],
+            'users_id_substitute',
+            0,
+            0,
+            $issueSo[32]['joinparams']
+         ));
+      }
+      return $join;
    }
 }
