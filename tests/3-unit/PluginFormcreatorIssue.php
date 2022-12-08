@@ -751,7 +751,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       );
       $this->integer($search['data']['totalcount'])->isEqualTo(0);
 
-      // Set tehegatee user as delegatee of the validator
+      // Set the delegatee user as delegatee of the validator
       $validator_substitute = new ValidatorSubstitute();
 
       $validator_substitute->add([
