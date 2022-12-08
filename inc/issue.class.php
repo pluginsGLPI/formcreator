@@ -1513,7 +1513,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @param array $already_link_tables
     * @return string
     */
-   public static function getDefaultJoinLegacy($itemtype, $ref_table, &$already_link_tables) {
+   public static function getDefaultJoinLegacy($itemtype, $ref_table, &$already_link_tables): string {
       // Get default joins for tickets
       $join = Search::addDefaultJoin(Ticket::getType(), Ticket::getTable(), $already_link_tables);
       // but we want to join in issues
@@ -1590,7 +1590,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $join;
    }
 
-   public static function getDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
+   /**
+    * Get default join for search engine
+    *
+    * @param string $itemtype
+    * @param string $ref_table
+    * @param array $already_link_tables
+    * @return array
+    */
+   public static function getDefaultJoin($itemtype, $ref_table, &$already_link_tables): array {
       $join = [];
       // Get default joins for tickets
       $ticket_joins = SQLProvider::getDefaultJoinCriteria(Ticket::getType(), Ticket::getTable(), $already_link_tables);
