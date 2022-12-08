@@ -1571,26 +1571,29 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // Get default joins for tickets
       $ticket_joins = SQLProvider::getDefaultJoinCriteria(Ticket::getType(), Ticket::getTable(), $already_link_tables);
       // but we want to join in issues
-      foreach ($ticket_joins['LEFT JOIN'] as $new_table => $ticket_join) {
-         foreach ($ticket_join['ON'] as $table => $column) {
-            $last_backtick = strrpos($new_table, '`');
-            $other_backtick = strrpos($new_table, '`', $last_backtick - strlen($new_table) - 1);
-            $new_table_alias = substr($new_table, $other_backtick + 1, $last_backtick - $other_backtick - 1);
-            if ($table == 'glpi_tickets' && $column == 'id') {
-               $join['LEFT JOIN'][$new_table]['ON']['glpi_plugin_formcreator_issues'] = [
-                  'items_id' => "{$new_table_alias}.tickets_id",
-               ];
-               $join['LEFT JOIN'][$new_table]['ON']['AND'][] = [
-                  'itemtype' => Ticket::class,
-               ];
-            } else {
-               if ($column == 'users_id_recipient') {
-                  $column = 'requester_id';
+      if (isset($ticket_joins['LEFT JOIN'])) {
+         // Replace tickets table with issues table
+         foreach ($ticket_joins['LEFT JOIN'] as $new_table => $ticket_join) {
+            foreach ($ticket_join['ON'] as $table => $column) {
+               $last_backtick = strrpos($new_table, '`');
+               $other_backtick = strrpos($new_table, '`', $last_backtick - strlen($new_table) - 1);
+               $new_table_alias = substr($new_table, $other_backtick + 1, $last_backtick - $other_backtick - 1);
+               if ($table == 'glpi_tickets' && $column == 'id') {
+                  $join['LEFT JOIN'][$new_table]['ON']['glpi_plugin_formcreator_issues'] = [
+                     'items_id' => "{$new_table_alias}.tickets_id",
+                  ];
+                  $join['LEFT JOIN'][$new_table]['ON']['AND'][] = [
+                     'itemtype' => Ticket::class,
+                  ];
+               } else {
+                  if ($column == 'users_id_recipient') {
+                     $column = 'requester_id';
+                  }
+                  if ($table == 'glpi_tickets') {
+                     $table = 'glpi_plugin_formcreator_issues';
+                  }
+                  $join['LEFT JOIN'][$new_table]['ON'][$table] = $column;
                }
-               if ($table == 'glpi_tickets') {
-                  $table = 'glpi_plugin_formcreator_issues';
-               }
-               $join['LEFT JOIN'][$new_table]['ON'][$table] = $column;
             }
          }
       }
