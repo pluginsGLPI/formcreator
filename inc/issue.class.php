@@ -1576,8 +1576,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
          foreach ($ticket_joins['LEFT JOIN'] as $new_table => $ticket_join) {
             foreach ($ticket_join['ON'] as $table => $column) {
                $last_backtick = strrpos($new_table, '`');
-               $other_backtick = strrpos($new_table, '`', $last_backtick - strlen($new_table) - 1);
-               $new_table_alias = substr($new_table, $other_backtick + 1, $last_backtick - $other_backtick - 1);
+               $second_last_backtick = strrpos($new_table, '`', $last_backtick - strlen($new_table) - 1);
+               $new_table_alias = substr($new_table, $second_last_backtick + 1, $last_backtick - $second_last_backtick - 1);
                if ($table == 'glpi_tickets' && $column == 'id') {
                   $join['LEFT JOIN'][$new_table]['ON']['glpi_plugin_formcreator_issues'] = [
                      'items_id' => "{$new_table_alias}.tickets_id",
