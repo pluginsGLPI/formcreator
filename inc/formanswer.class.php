@@ -131,7 +131,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return true;
       }
 
-      if (true || version_compare(GLPI_VERSION, '10.1') >= 0) {
+      if (version_compare(GLPI_VERSION, '10.1') >= 0) {
          $request = [
             'SELECT' => self::getTableField('id'),
             'FROM'  => self::getTable(),
