@@ -1145,11 +1145,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
 
          // Don't save tags in "full form"
-         if ($question_line['fieldtype'] == 'tag') {
-            continue;
-         }
-
-         if ($question_line['fieldtype'] == 'fields') {
+         if (in_array($question_line['fieldtype'], ['tag', 'fields', 'description'])) {
             continue;
          }
 
@@ -1157,17 +1153,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
 
-         if ($question_line['fieldtype'] != 'description') {
-            $question_no++;
-            if ($richText) {
-               $output .= '<div>';
-               $output .= '<b>' . $question_no . ') ##question_' . $question_line['id'] . '## : </b>';
-               $output .= '##answer_' . $question_line['id'] . '##';
-               $output .= '</div>';
-            } else {
-               $output .= $question_no . ') ##question_' . $question_line['id'] . '## : ';
-               $output .= '##answer_' . $question_line['id'] . '##' . $eol . $eol;
-            }
+         $question_no++;
+         if ($richText) {
+            $output .= '<div>';
+            $output .= '<b>' . $question_no . ') ##question_' . $question_line['id'] . '## : </b>';
+            $output .= '##answer_' . $question_line['id'] . '##';
+            $output .= '</div>';
+         } else {
+            $output .= $question_no . ') ##question_' . $question_line['id'] . '## : ';
+            $output .= '##answer_' . $question_line['id'] . '##' . $eol . $eol;
          }
       }
 

@@ -43,11 +43,6 @@ jobs:
         php-versions: [8.1]
         glpi-branch: [10.0/bugfixes]
         glpi-package: [10.0.tar.gz]
-        include:
-          - php-versions: 8.1
-            glpi-branch: main
-            glpi-package: main.tar.gz
-            # glpi-use-repo: true
 
     services:
       db:
