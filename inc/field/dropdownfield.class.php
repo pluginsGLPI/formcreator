@@ -340,7 +340,7 @@ class DropdownField extends PluginFormcreatorAbstractField
       if ($itemtype != Entity::class) {
          $dparams['display_emptychoice'] = ($this->question->fields['show_empty'] !== '0');
       } else {
-         if ($this->question->fields['show_empty'] !== '0') {
+         if ($this->question->fields['show_empty'] != '0') {
             $dparams['toadd'] = [
                -1 => Dropdown::EMPTY_VALUE,
             ];
