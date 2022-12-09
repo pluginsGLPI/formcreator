@@ -2837,10 +2837,17 @@ PluginFormcreatorTranslatableInterface
       }
 
       // Check restrictions if needed
-      if ($this->fields['access_rights'] == self::ACCESS_RESTRICTED
-        && !PluginFormcreatorFormAccessType::canSeeRestrictedForm($this)
-      ) {
-         return false;
+      if ($this->fields['access_rights'] == self::ACCESS_RESTRICTED) {
+         $found = (new DbUtils)->countElementsInTable(
+            PluginFormcreatorForm_Profile::getTable(),
+            [
+               'plugin_formcreator_forms_id' => $this->getID(),
+               'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
+            ]
+         );
+         if ($found == 0) {
+            return false;
+         }
       }
 
       // Check plugins restrictions
