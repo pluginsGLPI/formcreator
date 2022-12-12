@@ -809,7 +809,12 @@ PluginFormcreatorTranslatableInterface
             'faq'      => '1',
             'contains' => $keywords
          ];
-         $params['knowbaseitemcategories_id'] = 0;
+         try {
+            $params['knowbaseitemcategories_id'] = KnowbaseItemCategory::SEEALL;
+         } catch (Throwable $e) {
+            // GLPI < 10.0.6
+            $params['knowbaseitemcategories_id'] = 0;
+         }
          if (count($selectedCategories) > 0) {
             $iterator = $DB->request($table_cat, [
                'WHERE' => [
