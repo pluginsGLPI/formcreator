@@ -206,10 +206,9 @@ class PluginFormcreatorKnowbase {
          'faq'      => '1',
          'contains' => $keywords
       ];
-      try {
+      if (version_compare(GLPI_VERSION, '10.0.5') > 0) {
          $params['knowbaseitemcategories_id'] = KnowbaseItemCategory::SEEALL;
-      } catch (Throwable $e) {
-         // GLPI < 10.0.6
+      } else {
          $params['knowbaseitemcategories_id'] = 0;
       }
       if (count($selectedCategories) > 0) {

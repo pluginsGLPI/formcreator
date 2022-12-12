@@ -93,10 +93,9 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $form_table = PluginFormcreatorForm::getTable();
       $table_fp   = PluginFormcreatorForm_Profile::getTable();
 
-      try {
+      if (version_compare(GLPI_VERSION, '10.0.5') > 0) {
          $kbcat = KnowbaseItemCategory::SEEALL;
-      } catch (Throwable $e) {
-         // GLPI < 10.0.6
+      } else {
          $kbcat = 0;
       }
 
