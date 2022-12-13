@@ -69,6 +69,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    const CONFIG_UI_FORM_MASONRY = 0;
    const CONFIG_UI_FORM_UNIFORM_HEIGHT = 1;
 
+   const CONFIG_SERVICE_CATALOG_HOME_SEARCH = 0;
+   const CONFIG_SERVICE_CATALOG_HOME_ISSUE = 1;
 
    /**
     * @var bool $dohistory maintain history
@@ -155,6 +157,12 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          self::CONFIG_PARENT                 => __('Inheritance of the parent entity'),
          self::CONFIG_UI_FORM_MASONRY        => __('Variable height', 'formcreator'),
          self::CONFIG_UI_FORM_UNIFORM_HEIGHT => __('Uniform height', 'formcreator'),
+      ];
+   }
+   public static function getEnumServiceCatalogHome() : array {
+      return [
+         self::CONFIG_SERVICE_CATALOG_HOME_SEARCH => __('Search for assistance', 'formcreator'),
+         self::CONFIG_SERVICE_CATALOG_HOME_ISSUE => __('User\'s assistance requests', 'formcreator'),
       ];
    }
 
@@ -376,6 +384,22 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
       echo '</td></tr>';
 
+      // Service catalog home page
+      $elements = self::getEnumServiceCatalogHome();
+      if ($entityId == 0) {
+         unset($elements[self::CONFIG_PARENT]);
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".__('Service catalog home page', 'formcreator')."</td>";
+      echo "<td>";
+      Dropdown::showFromArray('service_catalog_home', $elements, ['value' => $this->fields['service_catalog_home']]);
+      if ($this->fields['service_catalog_home'] == self::CONFIG_PARENT) {
+         $tid = self::getUsedConfig('service_catalog_home', $entityId);
+         echo '<br>';
+         Entity::inheritedValue($elements[$tid], true);
+      }
+      echo '</td></tr>';
+
       // Tiles Design
       $elements = self::getEnumUIForm();
       if ($entityId == 0) {
@@ -477,6 +501,56 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          'datatype'        => 'text',
          'nosearch'        => true,
          'massiveaction'   => true,
+      ];
+
+      $tab[] = [
+         'id'              => '9',
+         'table'           => self::getTable(),
+         'name'            => __('Service catalog home page', 'formcreator'),
+         'field'           => 'service_catalog_home',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '10',
+         'table'           => self::getTable(),
+         'name'            => __('Default Form list mode', 'formcreator'),
+         'field'           => 'default_form_list_mode',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '11',
+         'table'           => self::getTable(),
+         'name'            => __('Counters dashboard', 'formcreator'),
+         'field'           => 'is_dashboard_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '12',
+         'table'           => self::getTable(),
+         'name'            => __('Search issue', 'formcreator'),
+         'field'           => 'is_search_issue_visible',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
+      ];
+
+      $tab[] = [
+         'id'              => '13',
+         'table'           => self::getTable(),
+         'name'            => __('Tile design', 'formcreator'),
+         'field'           => 'tile_design',
+         'datatype'        => 'integer',
+         'nosearch'        => true,
+         'massiveaction'   => false,
       ];
 
       return $tab;

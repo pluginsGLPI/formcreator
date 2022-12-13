@@ -425,7 +425,16 @@ function plugin_formcreator_redirect() {
                && isset($_SESSION['glpiactive_entity'])) {
             // Interface and active entity are set in session
             if (plugin_formcreator_replaceHelpdesk()) {
-               Html::redirect(FORMCREATOR_ROOTDOC."/front/wizard.php");
+               switch (PluginFormcreatorEntityConfig::getUsedConfig('service_catalog_home', $_SESSION['glpiactive_entity'])) {
+                  case PluginFormcreatorEntityConfig::CONFIG_SERVICE_CATALOG_HOME_SEARCH:
+                     $homepage = '/front/wizard.php';
+                     break;
+
+                  case PluginFormcreatorEntityConfig::CONFIG_SERVICE_CATALOG_HOME_ISSUE:
+                     $homepage = '/front/issue.php';
+                     break;
+               }
+               Html::redirect(Plugin::getWebDir('formcreator') . $homepage);
             }
          }
       }
