@@ -202,17 +202,17 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          if (Session::haveRight('config', UPDATE)) {
             return '';
          }
-         if (!PluginFormcreatorCommon::canValidate()) {
-            return "`$table`.`requester_id` = $currentUser";
-         }
+
+         // Check the user is a requester
+         $condition = "`$table`.`requester_id` = $currentUser";
 
          if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
             return PluginAdvformCommon::addDefaultWhere($itemtype);
          } else {
-            // check the user
-            $condition = " (`$table`.`users_id_validator` = $currentUser";
+            // Check the user is a validator of the form answer
+            $condition .= " OR (`$table`.`users_id_validator` = $currentUser";
 
-            // check groups of the user
+            // check user is a member of validator groups of the form answer
             $groups = Group_User::getUserGroups($currentUser);
             if (count($groups) < 1) {
                // The user is not a member of any group
