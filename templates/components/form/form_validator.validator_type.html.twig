@@ -28,31 +28,32 @@
  # ---------------------------------------------------------------------
  #}
 
-<table class="tab_cadrehov">
-   <thead>
-      <tr>
-         <th>{{ __('Type', 'formcreator') }}</th>
-         <th>{{ __('Name', 'formcreator') }}</th>
-         <th class="right">{{ __('Actions', 'formcreator') }}</th>
-      </tr>
-   </thead>
-   <tbody>
-      {% set i = 0 %}
-      {% for validator in all_validators %}
-         {% set i = i + 1 %}
-         {% if (validator['itemtype'] != 'PluginFormcreatorSupervisorValidator') %}
-            {% set validator_item = get_item(validator['itemtype'], validator['items_id'])%}
-            {% set item_name = get_item_name(validator_item) %}
-         {% else %}
-            {% set item_name = '' %}
-         {% endif %}
-         <tr class="tab_bg_{{ i % 2 }}">
-            <td>{{ validator['itemtype']|itemtype_name() }}</td>
-            <td>{{ item_name }}</td>
-            <td align="center" width="32">
-               <i class="far fa-trash-alt" onclick="plugin_formcreator.deleteFormValidator(this)" alt="*" title="{{ __('Delete', 'formcreator') }}" data-itemtype="{{ item.getType() }}" data-items-id="{{ validator['id'] }}" align="absmiddle" style="cursor: pointer"></i>
-            </td>
-         </tr>
-      {% endfor %}
-   </tbody>
-</table>
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
+
+{% if (type == 'User') %}
+    {{ fields.dropdownField(
+        'User',
+        '_validator_users',
+        {},
+        'User'|itemtype_name, {
+            entity_restrict: '-1',
+            right: [ 'validate_request', 'validate_incident' ],
+            multiple: true,
+            valuesnames: {},
+    }) }}
+{% elseif (type == 'Group') %}
+    {{ fields.dropdownField(
+        'Group',
+        '_validator_groups',
+        {},
+        'Group'|itemtype_name, {
+            entity_restrict: '-1',
+            itemtype: 'User',
+            right: [ 'validate_request', 'validate_incident' ],
+            multiple: true,
+            valuesnames: {},
+    }) }}
+{% elseif (type == 'PluginFormcreatorSupervisorValidator') %}
+
+{% endif %}

@@ -47,7 +47,7 @@ if (isset($_REQUEST['id'])
       'is_active' => '1',
       'is_deleted'=> '0',
    ];
-   $form = PluginFormcreatorCommon::getForm();
+   $form = new PluginFormcreatorForm();
    if (!$form->getFromDBByCrit($criteria)) {
       Html::displayNotFoundError();
    }

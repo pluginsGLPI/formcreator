@@ -626,44 +626,6 @@ JAVASCRIPT;
       return $document;
    }
 
-   /**
-    * Get an empty form answer object from Formcreator or Advanced Formcreator
-    * Advanced Formcreator redefines some methods of thos class
-    *
-    * TODO: This method is unful as lon tehre is no dependency injection in
-    * GLPI
-    *
-    * @return PluginFormcreatorFormAnswer
-    */
-   public static function getFormAnswer(): PluginFormcreatorFormAnswer {
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         return new PluginAdvformFormAnswer();
-      }
-
-      return new PluginFormcreatorFormAnswer();
-   }
-
-   /**
-    * Get the real itemtype for form answer implementation, depending on the availability of Advanced Formcreator
-    *
-    * @return string
-    */
-   public static function getFormanswerItemtype() {
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         return PluginAdvformFormAnswer::class;
-      }
-
-      return PluginFormcreatorFormAnswer::class;
-   }
-
-   public static function getForm() {
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         return new PluginAdvformForm();
-      }
-
-      return new PluginFormcreatorForm();
-   }
-
    public static function getInterface() {
       if (Session::getCurrentInterface() == 'helpdesk') {
          if (plugin_formcreator_replaceHelpdesk()) {

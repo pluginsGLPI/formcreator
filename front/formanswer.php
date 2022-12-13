@@ -51,7 +51,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    );
 }
 
-Search::show(PluginFormcreatorCommon::getFormanswerItemtype());
+Search::show(PluginFormcreatorFormAnswer::class);
 
 if (Session::getCurrentInterface() == 'helpdesk') {
    Html::helpFooter();

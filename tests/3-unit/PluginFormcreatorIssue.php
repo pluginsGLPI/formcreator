@@ -322,7 +322,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => User::class,
-         'users_id'                    => 4 // User Tech
+         'items_id'                    => User::getIdByName('tech'),
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
 
@@ -704,7 +704,7 @@ class PluginFormcreatorIssue extends CommonTestCase {
       $form_validator->add([
          $form::getForeignKeyField() => $form->getID(),
          'itemtype' => $validator_user::getType(),
-         'users_id' => $validator_user->getID(),
+         'items_id' => $validator_user->getID(),
       ]);
 
       $this->login('post-only', 'postonly');

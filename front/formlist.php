@@ -52,7 +52,7 @@ if (Session::getCurrentInterface() == 'helpdesk') {
    Html::header(__('Form list', 'formcreator'));
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm();
 $form->showList();
 
 if (Session::getCurrentInterface() == "helpdesk") {

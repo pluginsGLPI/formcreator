@@ -111,7 +111,7 @@ PluginFormcreatorExportableInterface
 
    public function prepareInputForAdd($input) {
       // Check the form exists
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       if (!$form->getFromDB($input[PluginFormcreatorForm::getForeignKeyField()])) {
          Session::addMessageAfterRedirect(__('Form not found.', 'formcreator'), false, ERROR);
          return [];
@@ -124,24 +124,31 @@ PluginFormcreatorExportableInterface
 
       switch ($input['itemtype']) {
          case User::class:
-            $input['items_id'] = $input['users_id'];
             $user = User::getById($input['items_id']);
             if (!($user instanceof User)) {
                Session::addMessageAfterRedirect(__('Invalid validator.', 'formcreator'), false, ERROR);
                return [];
             }
+            // TODO: check if the user has at least 1 profile with validation right
             break;
 
          case Group::class:
-            $input['items_id'] = $input['groups_id'];
             $group = Group::getById($input['items_id']);
             if (!($group instanceof Group)) {
                Session::addMessageAfterRedirect(__('Invalid validator.', 'formcreator'), false, ERROR);
                return [];
             }
+            // TODO: check if the group has at least one member with validation right
             break;
 
          case PluginFormcreatorSupervisorValidator::class:
+            if ($input['level'] != 1) {
+               Session::addMessageAfterRedirect(sprintf(
+                  __('Only level 1 is allowed for %s.', 'formcreator'),
+                  PluginFormcreatorSupervisorValidator::getTypeName(1)
+               ), false, ERROR);
+               return [];
+            }
             $input['items_id'] = 0;
             break;
 
@@ -163,121 +170,34 @@ PluginFormcreatorExportableInterface
    public function showForForm(PluginFormcreatorForm $item, $options = []) {
       global $DB, $CFG_GLPI;
 
-      echo "<form method='post' action='".self::getFormURL()."'>";
-      echo "<div class='spaced'><table class='tab_cadre_fixe'>";
+      $canEdit = Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE);
 
-      echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Need validaton?', 'formcreator') . '</td>';
-      echo '<td class="validators_bloc">';
+      if ($canEdit) {
 
-      $availableTypes = self::getEnumValidation();
-      unset($availableTypes[self::VALIDATION_NONE]);
-      $availableTypes = [
-         User::class => User::getTypeName(1),
-         Group::class => Group::getTypeName(1),
-         PluginFormcreatorSupervisorValidator::class => PluginFormcreatorSupervisorValidator::getTypeName(1),
+         TemplateRenderer::getInstance()->display('@formcreator/pages/form.validation.html.twig', [
+            'item'           => $item,
+            'options'        => $options,
+            'params'         => [
+               'candel'         => false,
+            ],
+            'all_validators' => $DB->request(self::getAllValidators($item)),
+         ]);
+      }
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => self::getTable(),
+         'field'              => 'level',
+         'name'               => __('Level', 'formcreator'),
+         'datatype'           => 'integer',
+         'massiveaction'      => false,
       ];
-      $selectedType = User::class;
-      Dropdown::showFromArray(
-         'itemtype',
-         $availableTypes, [
-            'value'     =>  $selectedType,
-            'on_change' => 'plugin_formcreator.changeValidators(this.value)'
-         ]
-      );
-      echo '</td>';
-      echo '<td colspan="2">';
 
-      // Select all users with ticket validation right and the groups
-      $selectedValidatorUsers = [];
-      $validator_users = PluginFormcreatorForm_Validator::getValidatorsForForm($item)[User::class] ?? [];
-      foreach ($validator_users as $user) {
-         if ($user::getType() != User::getType()) {
-            continue;
-         }
-         $selectedValidatorUsers[$user->getID()] = $user->computeFriendlyName();
-      }
-      $usersCondition = self::getValidatorUsersQueryCondition();
-      $users = $DB->request([
-         'SELECT' => ['id', 'name', User::getFriendlyNameFields('friendly_name')],
-         'FROM'   => User::getTable(),
-         'WHERE'  => $usersCondition,
-      ]);
-      $validatorUsers = [];
-      foreach ($users as $user) {
-         $validatorUsers[$user['id']] = $user['friendly_name'];
-      }
-      echo '<div id="validators_users">';
-      echo User::getTypeName() . '&nbsp';
-      $params = [
-         'entity_restrict' => -1,
-         'itemtype'        => User::getType(),
-
-      ];
-      $params['_idor_token'] = Session::getNewIDORToken(User::getType());
-
-      $params['name'] = 'users_id';
-      // $params['value'] = $params['values'];
-      $params['right'] = ['validate_request', 'validate_incident'];
-      User::dropdown($params);
-      echo '</div>';
-
-      $groupsCondition = self::getValidatorGroupsQueryCondition();
-      $groups = $DB->request([
-         'SELECT' => ['id' ,'name'],
-         'FROM'   => Group::getTable(),
-         'WHERE'  => $groupsCondition,
-      ]);
-      $selectecValidatorGroups = [];
-      $validator_groups = PluginFormcreatorForm_Validator::getValidatorsForForm($item)[Group::class] ?? [];
-      foreach ($validator_groups as $group) {
-         if ($group::getType() != Group::getType()) {
-            continue;
-         }
-         $selectecValidatorGroups[$group->getID()] = $group->fields['name'];
-      }
-      $validatorGroups = [];
-      foreach ($groups as $group) {
-         $validatorGroups[$group['id']] = $group['name'];
-      }
-      echo '<div id="validators_groups" style="width: 100%">';
-      echo Group::getTypeName() . '&nbsp';
-      $params = [
-         'entity_restrict' => -1,
-         'itemtype'        => Group::getType(),
-         'condition'       => Dropdown::addNewCondition($groupsCondition),
-         'display_emptychoice' => false,
-      ];
-      $params['_idor_token'] = Session::getNewIDORToken(Group::getType());
-      echo Html::jsAjaxDropdown(
-         'groups_id',
-         'groups_id' . mt_rand(),
-         $CFG_GLPI['root_doc']."/ajax/getDropdownValue.php",
-         $params
-      );
-      echo '</div>';
-
-      $script = '$(document).ready(function() {plugin_formcreator.changeValidators("' . $selectedType . '");});';
-      echo Html::scriptBlock($script);
-
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr>';
-      echo "<td colspan='4' class='center'>";
-      echo Html::hidden(PluginFormcreatorForm::getForeignKeyField(), ['value' => $item->getID()]);
-      echo Html::submit(_x('button', 'Add'), ['name' => 'add']);
-      echo "</td>";
-      echo '</tr>';
-
-      echo "</table></div>";
-      Html::closeForm();
-
-      TemplateRenderer::getInstance()->display('@formcreator/pages/form_validator.html.twig', [
-         'item'           => $this,
-         'options'        => $options,
-         'all_validators' => $DB->request(self::getAllValidators($item)),
-      ]);
+      return $tab;
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
@@ -403,8 +323,9 @@ PluginFormcreatorExportableInterface
     * @param PluginFormcreatorForm $form
     * @return array of User or Group objects. 1st dimension is the itemtype
     *               2nd dimension is the items_id
+    * @param array  $condition
     */
-   public static function getValidatorsForForm(PluginFormcreatorForm $form): array {
+   public static function getValidatorsForForm(PluginFormcreatorForm $form, array $condition = []): array {
       global $DB;
 
       $formValidatorTable = PluginFormcreatorForm_Validator::getTable();
@@ -426,7 +347,7 @@ PluginFormcreatorExportableInterface
                ]
             ],
          ],
-         'WHERE' => [
+         'WHERE' => $condition + [
            "$formValidatorTable.$formFk" => $form->getID(),
          ],
       ]);
@@ -436,7 +357,6 @@ PluginFormcreatorExportableInterface
          if (!isset($result[$itemtype])) {
             $result[$itemtype] = [];
          }
-         $item = new $itemtype();
          if (in_array(PluginFormcreatorSpecificValidator::class, class_implements($itemtype))) {
             if (($current_user_id = Session::getLoginUserID()) === false) {
                continue;
@@ -448,11 +368,13 @@ PluginFormcreatorExportableInterface
             if (User::isNewID($current_user->fields['users_id_supervisor'])) {
                continue;
             }
-            $result[$itemtype][$item->getID()] = $item;
+            $result[$itemtype][0] = new $itemtype();
          } else {
-            if ($item->getFromDB($row['items_id'])) {
-               $result[$itemtype][$row['items_id']] = $item;
+            $item = $itemtype::getById($row['items_id']);
+            if (!($item instanceof $itemtype)) {
+               continue;
             }
+            $result[$itemtype][$row['items_id']] = $item;
          }
       }
 
@@ -611,23 +533,37 @@ PluginFormcreatorExportableInterface
    }
 
    /**
-    * Get HTML ffor a dropdown to select one validator among valdiator groups or users
+    * Get HTML for a dropdown to select one validator among valdiator groups or users
+    *
+    * If the supervisor of the user is also a declared validator, this
+    * supervisor will appear only once in the dropdown.
+    *
     * @return string
     *
     */
    public static function dropdownValidator(PluginFormcreatorForm $form): string {
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         return PluginAdvformForm_Validator::dropdownValidator($form);
-      }
-
       if (!$form->validationRequired()) {
          return '';
       }
 
       $validators = [];
 
-      $result = PluginFormcreatorForm_Validator::getValidatorsForForm($form);
+      $result = PluginFormcreatorForm_Validator::getValidatorsForForm($form, ['level' => '1']);
       foreach ($result as $itemtype => $items) {
+         if (in_array(PluginFormcreatorSpecificValidator::class, class_implements($itemtype))) {
+            if (!(new $itemtype())->MayBeResolvedIntoOneValidator()) {
+               continue;
+            }
+            $validator = (new PluginFormcreatorSupervisorValidator())->getOneValidator(
+               Session::getLoginUserID()
+            );
+            if ($validator === null) {
+               continue;
+            }
+            $items = [
+               $validator->getID() => $validator,
+            ];
+         }
          foreach ($items as $key => $validator) {
             if (is_numeric($key)) {
                $itemtype = $validator::getType();
@@ -641,7 +577,7 @@ PluginFormcreatorExportableInterface
          }
       }
 
-      $totalCount = count($result);
+      $totalCount = count($validators);
 
       if ($totalCount < 1) {
          return '';
@@ -752,6 +688,7 @@ PluginFormcreatorExportableInterface
          'WHERE' => [
             PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          ],
+         'ORDER' => ['level ASC']
       ];
       if ($count) {
          unset($query['SELECT']);
@@ -806,5 +743,126 @@ PluginFormcreatorExportableInterface
       ];
 
       return $usersCondition;
+   }
+
+   /**
+    * Get HTML of dropdown to select a validation level
+    *
+    * @param PluginFormcreatorForm $form
+    * @param array $options
+    * @return string
+    */
+   public static function dropdownLevel(PluginFormcreatorForm $form, $options = []): string {
+      global $DB;
+
+      $params = [
+        'display'      => false,
+      ];
+      $options = array_merge($params, $options);
+
+      $out = '';
+
+      // Find current maximum valdiation level
+      $formTable = PluginFormcreatorForm::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $formValidatorTable = self::getTable();
+      $result = $DB->request([
+         'SELECT' => ['MAX' => 'level as m'],
+         'FROM' => $formValidatorTable,
+         'INNER JOIN' => [
+            $formTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formValidatorTable => "$formFk",
+               ],
+            ],
+         ],
+         'WHERE' => [
+            "$formValidatorTable.$formFk" => $form->getID(),
+         ]
+      ]);
+      $maxLevel = $result->current();
+      $maxLevel = $maxLevel === null ? 0 : $maxLevel['m'];
+      $maxLevel = $maxLevel > 4 ? 4 : $maxLevel;
+      $options['min'] = 1;
+      $options['max'] = $maxLevel + 1;
+
+      $out .= Dropdown::showNumber($options['name'], $options);
+      return $out;
+   }
+
+   public static function dropdownValidatorItemtype($options = []) {
+      $params = [
+         'display'      => false,
+      ];
+      $options = array_merge($params, $options);
+
+      $availableTypes = [
+         User::class => User::getTypeName(1),
+         Group::class => Group::getTypeName(1),
+         PluginFormcreatorSupervisorValidator::class => PluginFormcreatorSupervisorValidator::getTypeName(1),
+      ];
+
+      $selectedType = User::class;
+      return Dropdown::showFromArray(
+         $options['name'],
+         $availableTypes,
+         array_merge($options, [
+            'value'     =>  $selectedType,
+            // 'on_change' => 'plugin_formcreator.changeValidators(this.value)'
+         ])
+      );
+   }
+
+   /**
+    * Add several users and groups at once
+    *
+    * @param array $input
+    * @return bool true on success, false otherwise
+    */
+   public function addMultipleItems($input): bool {
+      if (!isset($input['_validator_users']) && !isset($input['_validator_groups'])) {
+         // Fallback to single item add
+         return $this->add($input);
+      }
+
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $success = true;
+      if (isset($input['_validator_users']) && is_array($input['_validator_users'])) {
+         $newItems = [];
+         foreach ($input['_validator_users'] as $userId) {
+            if (User::isNewID($userId)) {
+               continue;
+            }
+            $newId = $this->add([
+               $formFk    => $input[$formFk],
+               'itemtype' => User::getType(),
+               'items_id' => $userId,
+               'level'    => $input['level'],
+            ]);
+            if ($newId === false) {
+               $success = false;
+            } else {
+               $newItems[] = $newId;
+            }
+         }
+      }
+      if (isset($input['_validator_groups']) && is_array($input['_validator_groups'])) {
+         foreach ($input['_validator_groups'] as $groupId) {
+            if (Group::isNewID($groupId)) {
+               continue;
+            }
+            $newId = $this->add([
+              $formFk    => $input[$formFk],
+              'itemtype' => Group::getType(),
+              'items_id' => $groupId,
+              'level'    => $input['level'],
+            ]);
+            if ($newId === false) {
+               $success = false;
+            }
+         }
+      }
+      return $success;
    }
 }

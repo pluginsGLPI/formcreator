@@ -44,6 +44,7 @@ class PluginFormcreatorUpgradeTo2_14 {
        $this->addTargetActorUnicity();
        $this->addTargetContract();
        $this->addEntityOption();
+       $this->addMultiLevelValidation();
    }
 
    public function addEntityOption() {
@@ -177,5 +178,20 @@ class PluginFormcreatorUpgradeTo2_14 {
 
       $this->migration->addField($table, 'contract_rule', 'integer', ['after' => 'location_question', 'value' => '1']);
       $this->migration->addField($table, 'contract_question', $unsignedIntType, ['after' => 'contract_rule']);
+   }
+
+   public function addMultiLevelValidation() {
+      $this->migration->addField('glpi_plugin_formcreator_forms', 'validation_percent', 'integer', [
+         'after' => 'validation_required',
+         'value' => '100',
+      ]);
+      $this->migration->addField('glpi_plugin_formcreator_formanswers', 'validation_percent', 'integer', [
+         'after' => 'requester_id',
+         'value' => '100',
+      ]);
+      $this->migration->addField('glpi_plugin_formcreator_forms_validators', 'level', 'integer', [
+         'after' => 'items_id',
+         'value' => '1',
+      ]);
    }
 }

@@ -52,7 +52,7 @@ class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
    public function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
       $link = $CFG_GLPI['url_base'] . $this->obj->getFormURLWithID($this->obj->getID(), false);
 

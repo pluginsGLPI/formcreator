@@ -35,7 +35,7 @@ if (!Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
    die();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm;
 
 if (!isset($_REQUEST['id']) || !isset($_REQUEST['action'])) {
    http_response_code(400);

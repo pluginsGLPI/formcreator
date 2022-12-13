@@ -36,7 +36,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm();
 
 if (isset($_POST['add'])) {
    // Add a new Form
@@ -76,6 +76,14 @@ if (isset($_POST['add'])) {
 } else if (isset($_POST['add_target'])) {
    Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
    $form->addTarget($_POST);
+   Html::back();
+
+} else if (isset($_POST['add_validator'])) {
+   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
+   $form->getFromDB($_POST['id']);
+   unset($_POST['uuid']);
+   $formValidator = new PluginFormcreatorForm_Validator();
+   $formValidator->addMultipleItems($_POST);
    Html::back();
 
 } else if (isset($_POST['filetype_create'])) {

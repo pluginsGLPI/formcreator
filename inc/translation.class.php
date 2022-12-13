@@ -92,7 +92,7 @@ class PluginFormcreatorTranslation
       }
       $post['searchText'] = $post['searchText'] ?? '';
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
       $strings = $form->getTranslatableStrings([
          'language' => $formLanguage->fields['name'],
@@ -141,7 +141,7 @@ class PluginFormcreatorTranslation
     */
    public static function getEditorFieldsHtml(PluginFormcreatorForm_Language $formLanguage, string $id = '') {
       $out = '';
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id']);
 
       // Find the strings to translate
@@ -216,7 +216,7 @@ class PluginFormcreatorTranslation
          Session::addMessageAfterRedirect(__('Language not found.', 'formcreator'), false, ERROR);
          return false;
       }
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       if (!$form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id'])) {
          Session::addMessageAfterRedirect(__('Form not found.', 'formcreator'), false, ERROR);
          return false;
@@ -249,7 +249,7 @@ class PluginFormcreatorTranslation
    public function delete(PluginFormcreatorForm_Language $formLanguage, $input) : bool {
       global $TRANSLATE;
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       if (!$form->getFromDB($formLanguage->fields['plugin_formcreator_forms_id'])) {
          return false;
       }

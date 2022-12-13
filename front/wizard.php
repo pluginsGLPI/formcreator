@@ -54,7 +54,7 @@ if (PluginFormcreatorEntityconfig::getUsedConfig('is_dashboard_visible', Session
    PluginFormcreatorCommon::showMiniDashboard();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm();
 $form->showServiceCatalog();
 
 if (Session::getCurrentInterface() == "helpdesk") {

@@ -42,7 +42,7 @@ if (!isset($_POST['submit_formcreator']) || !isset($_POST['plugin_formcreator_fo
    die();
 }
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm();
 if (!$form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
    http_response_code(500);
    die();
@@ -56,7 +56,7 @@ if (!isset($_SESSION['glpiname'])) {
 // Save form
 $backup_debug = $_SESSION['glpi_use_mode'];
 $_SESSION['glpi_use_mode'] = \Session::NORMAL_MODE;
-$formAnswer = PluginFormcreatorCommon::getFormAnswer();
+$formAnswer = new PluginFormcreatorFormAnswer();
 if ($formAnswer->add($_POST) === false) {
    http_response_code(400);
    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {

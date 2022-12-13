@@ -39,8 +39,9 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $output = $instance->prepareInputForAdd([
          'plugin_formcreator_forms_id' => 1,
          'itemtype' => User::class,
-         'users_id' => 2,
-         'uuid' => '0000',
+         'items_id' => User::getIdByName('glpi'),
+         'level'    => '1',
+         'uuid'     => '0000',
       ]);
 
       $this->array($output)->HasKey('uuid');
@@ -58,7 +59,8 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $form_validator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => User::class,
-         'users_id'                    => $user->getID(),
+         'items_id'                    => $user->getID(),
+         'level'                       => '1',
       ]);
       $this->boolean($form_validator->isNewItem())->isFalse();
       $instance = $this->newTestedInstance();
@@ -81,6 +83,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       // Test the exported data
       $fieldsWithoutID = [
          'itemtype',
+         'level',
       ];
       $extraFields = [
          '_item',
@@ -90,8 +93,9 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
       $this->array($output)->isEqualTo([
          'itemtype' => \User::class,
-         '_item' => $user->fields['name'],
-         'uuid'  => $instance->fields['uuid'],
+         'level'    => '1',
+         '_item'    => $user->fields['name'],
+         'uuid'     => $instance->fields['uuid'],
       ]);
 
       // Export the item without the UUID and with ID
@@ -101,8 +105,9 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
       $this->array($output)->isEqualTo([
          'itemtype' => \User::class,
-         '_item' => $user->fields['name'],
-         'id'  => $instance->fields['id'],
+         'level'    => '1',
+         '_item'    => $user->fields['name'],
+         'id'       => $instance->fields['id'],
       ]);
    }
 
@@ -161,26 +166,30 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype' => $groupA->gettype(),
-         'groups_id' => $groupA->getID(),
+         'items_id' => $groupA->getID(),
+         'level'    => '1',
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype' => $groupB->gettype(),
-         'groups_id' => $groupB->getID(),
+         'items_id' => $groupB->getID(),
+         'level'    => '1',
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
 
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => $userC::getType(),
-         'users_id'                    => $userC->getID(),
+         'items_id'                    => $userC->getID(),
+         'level'                       => '1',
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => $userD::getType(),
-         'users_id'                    => $userD->getID(),
+         'items_id'                    => $userD->getID(),
+         'level'                       => '1',
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
       $output = $formValidator::getValidatorsForForm($form);

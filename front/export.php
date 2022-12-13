@@ -38,7 +38,7 @@ if (!(new Plugin())->isActivated('formcreator')) {
 
 Session::checkRight(PluginFormcreatorForm::$rightname, UPDATE);
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm();
 $export_array = ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION, 'forms' => []];
 foreach ($_GET['plugin_formcreator_forms_id'] as $id) {
    $form->getFromDB($id);

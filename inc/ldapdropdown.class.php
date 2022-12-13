@@ -79,7 +79,7 @@ class PluginFormcreatorLdapDropdown extends CommonGLPI
          return [];
       }
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form = $form::getByItem($question);
       if (!$form->canViewForRequest()) {
          return [];

@@ -629,6 +629,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorQuestionRange',
          'PluginFormcreatorQuestionRegex',
          'PluginFormcreatorForm_Language',
+         'PluginFormcreatorFormanswerValidation',
       ];
 
       foreach ($itemtypes as $itemtype) {

@@ -38,7 +38,7 @@ if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
 }
 $formId = $_REQUEST['plugin_formcreator_forms_id'];
 
-$form = PluginFormcreatorCommon::getForm();
+$form = new PluginFormcreatorForm();
 if (!$form->getFromDB($formId)) {
     http_response_code(400);
     exit;

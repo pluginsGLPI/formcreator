@@ -508,7 +508,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form1->getID(),
          'itemtype'         => User::class,
-         'users_id'         => 2 // Glpi user
+         'items_id'         => User::getIdByName('glpi')
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
 
@@ -529,7 +529,7 @@ class PluginFormcreatorTargetTicket extends CommonTargetTestCase {
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form2->getID(),
          'itemtype'                    => User::class,
-         'users_id'                    => 2 // Glpi user
+         'items_id'                    => User::getIdByName('glpi'),
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
 

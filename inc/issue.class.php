@@ -503,6 +503,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public function rawSearchOptions() {
+      global $DB;
+
       $tab = [];
       $hide_technician = false;
       if (!Session::isCron()) {
@@ -605,28 +607,54 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
       $tab[] = $newtab;
 
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         $newtab = PluginAdvformIssue::rawSearchOptionFormApprover();
-      } else {
-         $newtab = [
-            'id'                 => '9',
-            'table'              => User::getTable(),
-            'field'              => 'name',
-            'linkfield'          => 'users_id_validator',
-            'name'               => __('Form approver', 'formcreator'),
-            'datatype'           => 'dropdown',
-            'massiveaction'      => false,
-            'joinparams'         => [
-               'beforejoin'          => [
-                  'table'                => PluginFormcreatorFormAnswer::getTable(),
-                  'joinparams'           => [
-                     'jointype'          => 'itemtype_item_revert',
-                     'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
-                  ]
+      // if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+      //    $newtab = PluginAdvformIssue::rawSearchOptionFormApprover();
+      // } else {
+      //    $newtab = [
+      //       'id'                 => '9',
+      //       'table'              => User::getTable(),
+      //       'field'              => 'name',
+      //       'linkfield'          => 'users_id_validator',
+      //       'name'               => __('Form approver', 'formcreator'),
+      //       'datatype'           => 'dropdown',
+      //       'massiveaction'      => false,
+      //       'joinparams'         => [
+      //          'beforejoin'          => [
+      //             'table'                => PluginFormcreatorFormAnswer::getTable(),
+      //             'joinparams'           => [
+      //                'jointype'          => 'itemtype_item_revert',
+      //                'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+      //             ]
+      //          ],
+      //       ],
+      //    ];
+      // }
+      $newtab = [
+         'id'                 => '9',
+         'table'              => User::getTable(),
+         'field'              => 'name',
+         'name'               => __('Form approver', 'formcreator'),
+         'massiveaction'      => false,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'itemtype_item_revert',
+            'specific_itemtype' => User::getType(),
+            'beforejoin' => [
+               'table'      => PluginFormcreatorFormanswerValidation::getTable(),
+               'joinparams'    => [
+                  'jointype'   => 'child',
+                  'beforejoin' => [
+                     'table'              => PluginFormcreatorFormAnswer::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     ],
+                  ],
                ],
             ],
-         ];
-      }
+         ],
+      ];
       if (!Session::isCron() // no filter for cron
           && Session::getCurrentInterface() == 'helpdesk') {
          $newtab['right']       = 'id';
@@ -748,28 +776,54 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ];
       }
 
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         $newtab = PluginAdvformIssue::rawSearchOptionFormApproverGroup();
-      } else {
-         $newtab = [
-            'id'                 => '16',
-            'table'              => Group::getTable(),
-            'field'              => 'completename',
-            'linkfield'          => 'groups_id_validator',
-            'name'               => __('Form approver group', 'formcreator'),
-            'datatype'           => 'itemlink',
-            'massiveaction'      => false,
-            'joinparams'         => [
-               'beforejoin'          => [
-                  'table'                => PluginFormcreatorFormAnswer::getTable(),
-                  'joinparams'           => [
-                     'jointype'          => 'itemtype_item_revert',
-                     'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
-                  ]
+      // if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+      //    $newtab = PluginAdvformIssue::rawSearchOptionFormApproverGroup();
+      // } else {
+      //    $newtab = [
+      //       'id'                 => '16',
+      //       'table'              => Group::getTable(),
+      //       'field'              => 'completename',
+      //       'linkfield'          => 'groups_id_validator',
+      //       'name'               => __('Form approver group', 'formcreator'),
+      //       'datatype'           => 'itemlink',
+      //       'massiveaction'      => false,
+      //       'joinparams'         => [
+      //          'beforejoin'          => [
+      //             'table'                => PluginFormcreatorFormAnswer::getTable(),
+      //             'joinparams'           => [
+      //                'jointype'          => 'itemtype_item_revert',
+      //                'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+      //             ]
+      //          ],
+      //       ],
+      //    ];
+      // }
+      $newtab = [
+         'id'                 => '16',
+         'table'              => Group::getTable(),
+         'field'              => 'completename',
+         'name'               => __('Form approver group', 'formcreator'),
+         'massiveaction'      => false,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'itemtype_item_revert',
+            'specific_itemtype' => Group::getType(),
+            'beforejoin' => [
+               'table'      => PluginFormcreatorFormanswerValidation::getTable(),
+               'joinparams'    => [
+                  'jointype'   => 'child',
+                  'beforejoin' => [
+                     'table'              => PluginFormcreatorFormAnswer::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     ],
+                  ],
                ],
             ],
-         ];
-      }
+         ],
+      ];
       $tab[] = $newtab;
 
       if (version_compare(GLPI_VERSION, '10.1') >= 0) {
@@ -859,8 +913,49 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'massiveaction'      => false
       ];
 
+      $tab[] = [
+         'id'                 => '25',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_own',
+         'name'               => __('Internal time to own'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['date', 'status', 'takeintoaccount_delay_stat'],
+      ];
+
+      $tab[] = [
+         'id'                 => '26',
+         'table'              => $this->getTable(),
+         'field'              => 'internal_time_to_own',
+         'name'               => __('Internal time to own + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '27',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_own',
+         'name'               => __('Time to own'),
+         'datatype'           => 'datetime',
+         'maybefuture'        => true,
+         'massiveaction'      => false,
+         'additionalfields'   => ['status']
+      ];
+
+      $tab[] = [
+         'id'                 => '28',
+         'table'              => $this->getTable(),
+         'field'              => 'time_to_own',
+         'name'               => __('Time to own + Progress'),
+         'massiveaction'      => false,
+         'nosearch'           => true,
+         'additionalfields'   => ['status']
+      ];
+
       if (version_compare(GLPI_VERSION, '10.1') >= 0) {
-         // Forced to true for backport in GLPI 10.0 of substitutes
          $tab[] = [
             'id'                 => '30',
             'table'              => User::getTable(),
@@ -900,10 +995,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
                         'table'              => User::getTable(),
                         'linkfield'          => ((version_compare(GLPI_VERSION, '10.1') >= 0) ? 'items_id_target' : 'users_id_validate'),
                         'joinparams'             => [
-                           // Diabled for compatibility woith GLPI 10.0 backport of substitutes
-                           // 'condition'                  => [
-                           //    'REFTABLE.itemtype_target' => User::class,
-                           // ],
+                           // Disabled for compatibility with GLPI 10.0 backport of substitutes
+                           'condition'                  => (version_compare(GLPI_VERSION, '10.1') >= 0) ? [
+                              'REFTABLE.itemtype_target' => User::class,
+                           ] : [],
                            'beforejoin'             => [
                               'table'                  => TicketValidation::getTable(),
                               'linkfield'              => 'items_id',
@@ -1054,53 +1149,83 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         foreach (PluginAdvformIssue::rawSearchOptions() as $so) {
-            $tab[] = $so;
-         }
+      // This search option is identical to 'Form approver group'
+      // With a filter limiting to the levels waiting for validation
+      $filter = new DBmysqlIterator($DB);
+      $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+      $filter->buildQuery([
+         'SELECT' => new QueryExpression("COALESCE(MAX(`level`), 0) + 1 AS `level`"),
+         'FROM' => PluginFormcreatorFormanswerValidation::getTable(),
+         'WHERE' => [
+            "$formAnswerFk" => new QueryExpression(PluginFormcreatorFormAnswer::getTable() .".id"),
+            ['NOT' => [
+               'status' => PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING,
+            ]],
+         ],
+      ]);
+      $filter = $filter->getSQL();
+      $tab[] = [
+         'id'                 => '40',
+         'table'              => Group::getTable(),
+         'field'              => 'completename',
+         'name'               => __('Current form approver group', 'formcreator'),
+         'massiveaction'      => false,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'itemtype_item_revert',
+            'specific_itemtype' => Group::getType(),
+            'beforejoin' => [
+               'table'      => PluginFormcreatorFormanswerValidation::getTable(),
+               'joinparams'    => [
+                  'jointype'   => 'child',
+                  'condition'  => "AND NEWTABLE.level = ($filter)",
+                  'beforejoin' => [
+                     'table'              => PluginFormcreatorFormAnswer::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     ],
+                  ],
+               ],
+            ],
+         ],
+      ];
+
+      // This search option is identical to 'Form approver'
+      // With a filter limiting to the levels waiting for validation
+      $newtab = [
+         'id'                 => '41',
+         'table'              => User::getTable(),
+         'field'              => 'name',
+         'name'               => __('Current form approver', 'formcreator'),
+         'massiveaction'      => false,
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => true,
+         'joinparams'         => [
+            'jointype'        => 'itemtype_item_revert',
+            'specific_itemtype' => User::getType(),
+            'beforejoin' => [
+               'table'      => PluginFormcreatorFormanswerValidation::getTable(),
+               'joinparams'    => [
+                  'jointype'   => 'child',
+                  'condition'  => "AND NEWTABLE.level = ($filter)",
+                  'beforejoin' => [
+                     'table'              => PluginFormcreatorFormAnswer::getTable(),
+                     'joinparams'         => [
+                        'jointype'           => 'itemtype_item_revert',
+                        'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
+                     ],
+                  ],
+               ],
+            ],
+         ],
+      ];
+      if (!Session::isCron() // no filter for cron
+          && Session::getCurrentInterface() == 'helpdesk') {
+         $newtab['right']       = 'id';
       }
-
-      $tab[] = [
-         'id'                 => '25',
-         'table'              => $this->getTable(),
-         'field'              => 'internal_time_to_own',
-         'name'               => __('Internal time to own'),
-         'datatype'           => 'datetime',
-         'maybefuture'        => true,
-         'massiveaction'      => false,
-         'additionalfields'   => ['date', 'status', 'takeintoaccount_delay_stat'],
-      ];
-
-      $tab[] = [
-         'id'                 => '26',
-         'table'              => $this->getTable(),
-         'field'              => 'internal_time_to_own',
-         'name'               => __('Internal time to own + Progress'),
-         'massiveaction'      => false,
-         'nosearch'           => true,
-         'additionalfields'   => ['status']
-      ];
-
-      $tab[] = [
-         'id'                 => '27',
-         'table'              => $this->getTable(),
-         'field'              => 'time_to_own',
-         'name'               => __('Time to own'),
-         'datatype'           => 'datetime',
-         'maybefuture'        => true,
-         'massiveaction'      => false,
-         'additionalfields'   => ['status']
-      ];
-
-      $tab[] = [
-         'id'                 => '28',
-         'table'              => $this->getTable(),
-         'field'              => 'time_to_own',
-         'name'               => __('Time to own + Progress'),
-         'massiveaction'      => false,
-         'nosearch'           => true,
-         'additionalfields'   => ['status']
-      ];
+      $tab[] = $newtab;
 
       return $tab;
    }
@@ -1179,7 +1304,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   break;
 
                case PluginFormcreatorFormAnswer::class:
-                  $formAnswer = PluginFormcreatorCommon::getFormAnswer();
+                  $formAnswer = new PluginFormcreatorFormAnswer();
                   if (!$formAnswer->getFromDB($id)) {
                      trigger_error(sprintf("Formanswer ID %s not found", $id), E_USER_WARNING);
                      break;

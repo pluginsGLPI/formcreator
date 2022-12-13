@@ -1,0 +1,130 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% extends "generic_show_form.html.twig" %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import '@formcreator/components/form/fields_macros.html.twig' as formcreatorFields %}
+
+{% set validator_itemtype_ajax_url = get_plugin_web_dir('formcreator') ~ '/ajax/get_validator_itemtype_dropdown.php' %}
+
+{% block form_fields %}
+    <input type="hidden" name="plugin_formcreator_forms_id" value="{{ item.getID() }}">
+
+    {{ fields.smallTitle(__('General', 'formcreator')) }}
+
+    {{ fields.dropdownNumberField(
+        'validation_percent',
+        item.fields['validation_percent'],
+        __('validation percent', 'formcreator'), {
+            unit: '%',
+            min: 0,
+            max: 100,
+            step: 20,
+    }) }}
+
+    {{ fields.smallTitle(__('Add a validator', 'formcreator')) }}
+
+    {{ formcreatorFields.dropdownValidationLevel(
+        'level',
+        0,
+        __('Validation level', 'formcreator'), {
+            form: item
+    }) }}
+
+    {{ fields.nullField({
+        label_class: 'col-xxl-4',
+        input_class: 'col-xxl-8',
+    }) }}
+
+    {% set rand_itemtype = call('mt_rand') %}
+    {% set rand_users = call('mt_rand') %}
+    {% set rand_groups = call('mt_rand') %}
+
+    {{ formcreatorFields.dropdownValidationItemtype(
+        'itemtype',
+        '',
+        __('Validator type', 'formcreator'),
+        { rand: rand_itemtype }
+    ) }}
+    {% do call('Ajax::updateItemOnSelectEvent', [
+        'dropdown_itemtype' ~ rand_itemtype,
+        'selected_validator_itemtype',
+        validator_itemtype_ajax_url,
+        {
+            'itemtype': '__VALUE__',
+            'extraparams': {},
+        }
+    ]) %}
+
+    <span id="selected_validator_itemtype">
+        {% set type = 'User' %}
+        {{ include('@formcreator/components/form/form_validator.validator_type.html.twig') }}
+    </span>
+
+    <div class="card-body mx-n2 mb-4 border-top d-flex flex-row-reverse align-items-start flex-wrap">
+        <button class="btn btn-primary me-2" type="submit" name="add_validator" value="1" title= {{ __('Add') }}>
+            <i class="far fa-save"></i>
+            <span>{{ __('Add') }}</span>
+        </button>
+    </div>
+
+    {{ fields.smallTitle(__('Validators', 'formcreator')) }}
+
+    <table class="tab_cadrehov">
+    <thead>
+        <tr>
+            <th>{{ __('Level', 'formcreator') }}</th>
+            <th>{{ __('Type', 'formcreator') }}</th>
+            <th>{{ __('Name', 'formcreator') }}</th>
+            <th class="right">{{ __('Actions', 'formcreator') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set i = 0 %}
+        {% for validator in all_validators %}
+            {% set i = i + 1 %}
+            {% if (validator['itemtype'] != 'PluginFormcreatorSupervisorValidator') %}
+                {% set validator_item = get_item(validator['itemtype'], validator['items_id'])%}
+                {% set item_name = get_item_name(validator_item) %}
+            {% else %}
+                {% set item_name = '' %}
+            {% endif %}
+            <tr class="tab_bg_{{ i % 2 }}">
+                <td>{{ validator['level'] }}</td>
+                <td>{{ validator['itemtype']|itemtype_name() }}</td>
+                <td>{{ item_name }}</td>
+                <td align="center" width="32">
+                <i class="far fa-trash-alt" onclick="plugin_formcreator.deleteFormValidator(this)" alt="*" title="{{ __('Delete', 'formcreator') }}" data-itemtype="{{ item.getType() }}" data-items-id="{{ validator['id'] }}" align="absmiddle" style="cursor: pointer"></i>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

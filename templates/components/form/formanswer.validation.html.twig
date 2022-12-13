@@ -1,0 +1,51 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% set statuses = call('PluginFormcreatorForm_Validator::getEnumValidationStatus') %}
+
+<table class="tab_cadre_fixehov">
+<tbody>
+    <tr>
+        <th>{{ __('Validation level', 'formcreator') }}</th>
+        <th>{{ __('Validation status', 'formcreator') }}</th>
+    </tr>
+    {% for itemtype in validations|keys %}
+        {% for items_id, row in validations[itemtype] %}
+            {% set item = get_item(itemtype, items_id) %}
+            {% if not (item is null) %}
+                <tr class="tab_bg_1">
+                    <td>{{ row['level'] }}</td>
+                    <td>{{ statuses[row['status']] }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</tbody>
+</table>
