@@ -208,7 +208,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'table'              => 'glpi_plugin_formcreator_forms',
          'field'              => 'name',
          'name'               => PluginFormcreatorForm::getTypeName(1),
-         'datatype'           => 'string',
+         'datatype'           => 'dropdown',
          'massiveaction'      => false
       ];
 
