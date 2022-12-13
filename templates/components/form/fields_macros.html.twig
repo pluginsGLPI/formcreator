@@ -363,3 +363,43 @@
    {% endset %}
    {{ fields.field(name, field, label, options) }}
 {% endmacro %}
+
+{% macro dropdownValidationLevel(name, value, label = '', options = {}) %}
+   {% import 'components/form/fields_macros.html.twig' as fields %}
+   {% set options = {'rand': random()}|merge(options) %}
+
+   {% if options.disabled %}
+      {% set options = options|merge({specific_tags: {'disabled': 'disabled'}}) %}
+   {% endif %}
+   {% if options.fields_template.isMandatoryField(name) %}
+      {% set options = {'specific_tags': {'required': true}}|merge(options) %}
+   {% endif %}
+
+   {% set field %}
+      {{ call('PluginFormcreatorForm_Validator::dropdownLevel', [options.form, {
+         name: name,
+         value: value}
+      ])|raw }}
+   {% endset %}
+   {{ fields.field(name, field, label, options) }}
+{% endmacro %}
+
+{% macro dropdownValidationItemtype(name, value, label = '', options = {}) %}
+   {% import 'components/form/fields_macros.html.twig' as fields %}
+   {% set options = {'rand': random()}|merge(options) %}
+
+   {% if options.disabled %}
+      {% set options = options|merge({specific_tags: {'disabled': 'disabled'}}) %}
+   {% endif %}
+   {% if options.fields_template.isMandatoryField(name) %}
+      {% set options = {'specific_tags': {'required': true}}|merge(options) %}
+   {% endif %}
+
+   {% set field %}
+      {{ call('PluginFormcreatorForm_Validator::dropdownValidatorItemtype', [{
+      name: name,
+      value: value
+      }|merge(options)])|raw }}
+   {% endset %}
+   {{ fields.field(name, field, label, options) }}
+{% endmacro %}

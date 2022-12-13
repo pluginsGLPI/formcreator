@@ -101,12 +101,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function canViewItem() {
       global $DB;
 
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         $advFormAnswer = new PluginAdvformFormanswer();
-         $advFormAnswer->getFromDB($this->getID());
-         return $advFormAnswer->canViewItem();
-      }
-
       $currentUser = Session::getLoginUserID();
 
       if ($currentUser === false) {
@@ -125,11 +119,31 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return true;
       }
 
-      $groupUser = new Group_User();
-      $groups = $groupUser->getUserGroups($currentUser);
-      if (in_array($this->fields['users_id_validator'], $groups)) {
+      $approvers = $this->getApprovers();
+      if ($approvers === null) {
+         return false;
+      }
+
+      // Check if the current user is a validator user
+      $validatorUsers = array_keys($approvers[User::getType()]);
+      if (in_array($currentUser, $validatorUsers)) {
          return true;
       }
+
+      // Check if the current user is a member of a validator group
+      $groupList = Group_User::getUserGroups($currentUser);
+      $validatorGroups = array_keys($approvers[Group::getType()]);
+      foreach ($groupList as $group) {
+         if (in_array($group['id'], $validatorGroups)) {
+            // one of the groups of the user is a validator group
+            return true;
+         }
+      }
+
+      // $groups = Group_User::getUserGroups($currentUser);
+      // if (in_array($this->fields['users_id_validator'], $groups)) {
+      //    return true;
+      // }
 
       if (version_compare(GLPI_VERSION, '10.1') >= 0) {
          $request = [
@@ -245,7 +259,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'datatype'           => 'itemlink',
          'forcegroupby'       => true,
          'massiveaction'      => false,
-         'linkfield'          => 'users_id_validator',
+         'joinparams'         => [
+            'jointype'        => 'itemtype_item_revert',
+            'specific_itemtype' => User::getType(),
+            'beforejoin' => [
+               'table'      => PluginFormcreatorFormanswerValidation::getTable(),
+               'joinparams'    => [
+                  'jointype'   => 'child',
+               ],
+            ],
+         ]
       ];
 
       $tab[] = [
@@ -265,7 +288,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          'datatype'      => 'itemlink',
          'forcegroupby'  => true,
          'massiveaction' => false,
-         'linkfield'     => 'groups_id_validator',
+         'joinparams'         => [
+            'jointype'        => 'itemtype_item_revert',
+            'specific_itemtype' => Group::getType(),
+            'beforejoin' => [
+               'table'      => PluginFormcreatorFormanswerValidation::getTable(),
+               'joinparams'    => [
+                  'jointype'   => 'child',
+               ],
+            ],
+         ],
       ];
 
       $tab[] = [
@@ -521,25 +553,54 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Can the current user validate the form ?
     */
    public function canValidate(): bool {
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         $formAnswer = new PluginAdvformFormAnswer();
-         $formAnswer->getFromDB($this->getID());
-         return $formAnswer->canValidate($this);
-      }
-
       if (!PluginFormcreatorCommon::canValidate()) {
          return false;
       }
 
-      if (!User::isNewId($this->fields['users_id_validator'])) {
-         if (Session::getLoginUserID() == $this->fields['users_id_validator']) {
-            // The current user is a valdiator
+      // Find the validators for the current validation level
+      $approvers = $this->getApprovers([
+         'level' => [
+            '=', PluginFormcreatorFormanswerValidation::getCurrentValidationLevel($this)
+         ],
+      ]);
+      if ($approvers === null) {
+         return false;
+      }
+
+      // Check the current user is a validator for the current validation level
+      $currentUser = Session::getLoginUserID();
+      $validatorUsers = array_keys($approvers[User::getType()]);
+      if (in_array($currentUser, $validatorUsers)) {
+         return true;
+      }
+
+      // Check if the user is a member of validator groups for the current validation level
+      $groupList = Group_User::getUserGroups($currentUser);
+      $validatorGroups = array_keys($approvers[Group::getType()]);
+      foreach ($groupList as $group) {
+         if (in_array($group['id'], $validatorGroups)) {
+            // one of the groups of the user is a validator group
             return true;
          }
-         if (version_compare(GLPI_VERSION, '10.1') >= 0) {
-            $user = User::getById(Session::getLoginUserID());
-            if (($user instanceof User)) {
-               if ($user->isSubstituteOf($this->fields['users_id_validator'])) {
+      }
+
+      // if (!Group::isNewID($this->fields['groups_id_validator'])) {
+      //    $groupList = Group_User::getUserGroups(
+      //       $currentUser,
+      //       ['glpi_groups.id' => $this->fields['groups_id_validator']]
+      //    );
+      //    if (count($groupList) > 0) {
+      //       // The current user is a member of a validator group
+      //       return true;
+      //    }
+      // }
+
+      // Check if the current user is a substitue of one of the validator users
+      if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+         $user = User::getById($currentUser);
+         if (($user instanceof User)) {
+            foreach ($validatorUsers as $validatorUser) {
+               if ($user->isSubstituteOf($validatorUser)) {
                   // The curent user is a substitute of the validator user
                   return true;
                }
@@ -547,16 +608,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
-      if (!Group::isNewID($this->fields['groups_id_validator'])) {
-         $groupList = Group_User::getUserGroups(
-            Session::getLoginUserID(),
-            ['glpi_groups.id' => $this->fields['groups_id_validator']]
-         );
-         if (count($groupList) > 0) {
-            // The current user is a member of a validator group
-            return true;
-         }
-      }
+      // if (!User::isNewId($this->fields['users_id_validator'])) {
+      //    if ($currentUser == $this->fields['users_id_validator']) {
+      //       // The current user is a valdiator
+      //       return true;
+      //    }
+      //    if (version_compare(GLPI_VERSION, '10.1') >= 0) {
+      //       $user = User::getById($currentUser);
+      //       if (($user instanceof User)) {
+      //          if ($user->isSubstituteOf($this->fields['users_id_validator'])) {
+      //             // The curent user is a substitute of the validator user
+      //             return true;
+      //          }
+      //       }
+      //    }
+      // }
+
+      // TODO: check if the current user is a substitute of a member of a validator group
 
       return false;
    }
@@ -744,11 +812,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
       }
 
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         $formAnswer = PluginFormcreatorCommon::getFormAnswer();
-         $formAnswer->getFromDB($this->getID());
-         PluginAdvformFormanswerValidation::showValidationStatuses($formAnswer);
-      }
+      PluginFormcreatorFormanswerValidation::showValidationStatuses($this);
       $options['canedit'] = true;
       $options['candel'] = false;
 
@@ -790,6 +854,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $form = $this->getForm($input['plugin_formcreator_forms_id']);
+      $input['validation_percent'] = $form->fields['validation_percent'];
 
       if ($form->validationRequired()) {
          if (($validator = $this->getUniqueValidator($form)) !== null) {
@@ -833,6 +898,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['request_date']                = $_SESSION['glpi_currenttime'];
       $input['comment']                     = '';
 
+      $input['validation_percent'] = $form->fields['validation_percent'];
+
       return $input;
    }
 
@@ -856,10 +923,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $newStatus = isset($input['refuse_formanswer'])
             ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED
             : PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
-         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-            PluginAdvformFormanswerValidation::updateValidationStatus($this, $newStatus);
-         }
-         $computedStatus = self::getValidationStatus($this);
+         PluginFormcreatorFormanswerValidation::updateValidationStatus($this, $newStatus);
+         $computedStatus = $this->getValidationStatus();
 
          switch ($computedStatus) {
             case PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED:
@@ -910,10 +975,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return boolean true if pre_delete actions succeeded, false if not
     */
    public function pre_deleteItem() {
+      global $DB;
+
       $issue = new PluginFormcreatorIssue();
       $issue->deleteByCriteria([
          'items_id'    => $this->getID(),
          'itemtype'    => self::getType(),
+      ]);
+
+      $formanswerValidation = new PluginFormcreatorFormanswerValidation();
+      $formanswerValidation->deleteByCriteria([
+         self::getForeignKeyField() => $this->getID(),
       ]);
 
       return true;
@@ -926,21 +998,21 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return null|User|Group|PluginFormcreatorSpecificValidator
     */
    protected function getUniqueValidator(PluginFormcreatorForm $form): ?CommonDBTM {
-      $all_validators = PluginFormcreatorForm_Validator::getValidatorsForForm(
-         $form
+      $validValidators = PluginFormcreatorForm_Validator::getValidatorsForForm(
+         $form,
+         ['level' => 1]
       );
 
-      if (count($all_validators) != 1) {
-         // not one type of validators
+      if (count($validValidators) != 1) {
          return null;
       }
 
-      $validators = array_pop($all_validators);
-      if (count($validators) != 1) {
-         // not one validator of the only itemtype
+      $validators_of_type = array_pop($validValidators);
+      if (count($validators_of_type) != 1) {
          return null;
       }
-      return array_pop($validators);
+
+      return array_pop($validators_of_type);
    }
 
    /**
@@ -1053,7 +1125,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($formId ?? $this->fields[$formFk]);
       if ($form === false) {
          return null;
@@ -1192,6 +1264,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          }
       }
 
+      PluginFormcreatorFormanswerValidation::copyValidatorsToValidation($this);
+
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
@@ -1246,6 +1320,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             }
          }
       }
+
       $this->sendNotification();
       $formAnswer = clone $this;
       if ($this->input['status'] == self::STATUS_ACCEPTED) {
@@ -1430,14 +1505,45 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
+      // find possible validators for level 1
+      $validatorItem = explode('_', $input['formcreator_validator']);
+      if (!in_array($validatorItem[0], [User::class, Group::class])) {
+         // Invalid itemtype
+         return false;
+      }
+      $validValidators = PluginFormcreatorForm_Validator::getValidatorsForForm(
+         $form,
+         [
+            'level'    => 1,
+            'itemtype' => $validatorItem[0],
+            'items_id' => $validatorItem[1],
+         ]
+      );
+      if (count($validValidators) <= 0) {
+         // Item not found in the table
+         return false;
+      }
+      $itemtype = $validatorItem[0];
+      $validator = $itemtype::getById((int) $validatorItem[1]);
+      if ($validator === false) {
+         // Non existing validator (then the DB is broken)
+         return false;
+      }
+
       return true;
    }
 
    private function sendNotification() {
       switch ($this->input['status']) {
          case self::STATUS_WAITING :
-            // Notify the requester
-            NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+            $validations = $this->getApprovers([
+               'status' => ['<>', PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING]
+            ]);
+            if ($validations === null) {
+               // No validation done, then the formanswer has been created
+               // Notify the requester
+               NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+            }
             // Notify the validator
             NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
             break;
@@ -1692,7 +1798,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return $this->questionFields;
       }
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       if ($form->isNewID($formId)) {
          return [];
       }
@@ -1823,19 +1929,63 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Undocumented function
+    * Compute the validation status of the form answer
+    * by counting accepted and refused validations
     *
-    * @param array $input
     * @return integer
     */
-   protected static function getValidationStatus(PluginFormcreatorFormAnswer $formAnswer): int {
-      if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-         return PluginAdvformFormAnswer::getValidationStatus($formAnswer);
+   protected function getValidationStatus(): int {
+      global $DB;
+
+      // Get validation entries
+      $result = $DB->request([
+         'FROM' => PluginFormcreatorFormanswerValidation::getTable(),
+         'WHERE' => [
+            self::getForeignKeyField() => $this->getID(),
+         ],
+         'GROUPBY' => ['level'],
+         'ORDERBY' => 'level ASC'
+      ]);
+
+      // Count accepted and refused validations
+      // Get the highest level of completed validation
+      $acceptedCount = $refusedCount = 0;
+      $maxLevel = 0;
+      foreach ($result as $row) {
+         switch ($row['status']) {
+            case PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED:
+               $acceptedCount++;
+               break;
+
+            case PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED:
+               $refusedCount++;
+               break;
+         }
+         $maxLevel = $row['level']; // depends on ORDERBY clause
       }
 
-      return isset($formAnswer->input['refuse_formanswer'])
-             ? PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED
-             : PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
+      $validationPercent = $this->fields['validation_percent'];
+      if ($validationPercent > 0 && $maxLevel > 0) {
+         // A validation percent is defined
+         $acceptedRatio = $acceptedCount * 100 / $maxLevel;
+         $refusedRatio = $refusedCount * 100 / $maxLevel;
+         if ($acceptedRatio >= $validationPercent) {
+            // We have reached the acceptation threshold
+            return PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
+         } else if ($refusedRatio + $validationPercent > 100) {
+            // We can no longer reach the acceptation threshold
+            return PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED;
+         }
+      } else {
+         // No validation threshold set, one approval or denial is enough
+         if ($acceptedCount > 0) {
+            return PluginFormcreatorForm_Validator::VALIDATION_STATUS_ACCEPTED;
+         } else if ($refusedCount > 0) {
+            return PluginFormcreatorForm_Validator::VALIDATION_STATUS_REFUSED;
+         }
+      }
+
+      return PluginFormcreatorForm_Validator::VALIDATION_STATUS_WAITING;
    }
 
    /**
@@ -1849,33 +1999,28 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return null;
       }
 
-      if ($this->fields['users_id_validator'] > 0) {
-         $id = $this->fields['users_id_validator'];
-         return [
-            User::class => [
-               $id => [
-                  'pluginformcreator_formanswers_id' => $this->getID(),
-                  'itemtype' => User::class,
-                  'items_id' => $id,
-               ],
-            ]
-         ];
+      $formAnswerValidation = new PluginFormcreatorFormanswerValidation();
+      $rows = $formAnswerValidation->find(
+         $crit + [
+            PluginFormcreatorFormAnswer::getForeignKeyField() => $this->getID(),
+         ],
+         [
+            'level ASC',
+         ]
+      );
+      if (count($rows) < 1) {
+         return null;
       }
 
-      if ($this->fields['groups_id_validator'] > 0) {
-         $id = $this->fields['groups_id_validator'];
-         return [
-            Group::class => [
-               $id => [
-                  'pluginformcreator_formanswers_id' => $this->getID(),
-                  'itemtype' => Group::class,
-                  'items_id' => $id,
-               ],
-            ]
-         ];
+      $approvers = [
+         User::getType()  => [],
+         Group::getType() => [],
+      ];
+      foreach ($rows as $row) {
+         $approvers[$row['itemtype']][$row['items_id']] = $row;
       }
 
-      return null;
+      return $approvers;
    }
 
    /**
@@ -1888,8 +2033,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return null;
       }
 
-      // the form answers are waiting for validation
-      return $this->getApprovers();
+      return $this->getApprovers([
+         'level' => ['=', PluginFormcreatorFormanswerValidation::getCurrentValidationLevel($this)],
+      ]);
    }
 
    /**
@@ -2105,7 +2251,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       ]);
    }
 
+   /**
+    * Undocumented function
+    *
+    * @param integer $users_id ID of the user to check for validation rights
+    * @param boolean $search_in_groups
+    * @return array
+    */
    protected function getValidatorCriteria(int $users_id, bool $search_in_groups = true): array {
+      $approvers = $this->getApprovers();
+      if (count($approvers) === 0) {
+         return [];
+      }
+
       $substitute_subQuery = new QuerySubQuery([
          'SELECT'     => 'validator_users.id',
          'FROM'       => User::getTable() . ' as validator_users',
@@ -2146,13 +2304,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ],
       ]);
 
+      $validatorUsers = array_keys($approvers[User::getType()]);
       $target_criteria = [
          'OR' => [
             [
-               static::getTableField('users_id_validator') => $users_id,
+               self::getTableField('users_id_validator') => $users_id,
             ],
             [
-               static::getTableField('users_id_validator') => $substitute_subQuery,
+               self::getTableField('users_id_validator') => $substitute_subQuery,
             ],
          ],
       ];
@@ -2162,7 +2321,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             'OR' => [
                $target_criteria,
                [
-                  static::getTableField('groups_id_validator') => new \QuerySubQuery([
+                  self::getTableField('groups_id_validator') => new \QuerySubQuery([
                      'SELECT' => Group_User::getTableField('groups_id'),
                      'FROM'   => Group_User::getTable(),
                      'WHERE'  => [

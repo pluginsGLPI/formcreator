@@ -93,79 +93,96 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
          $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`itemtype` = "Ticket" AND `glpi_plugin_formcreator_issues`.`items_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
-         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-            $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
-         } else {
-            $issueSo = Search::getOptions($itemtype);
+         $issueSo = Search::getOptions($itemtype);
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[9]['table'],
+            'users_id',
+            0,
+            0,
+            $issueSo[9]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[11]['table'],
+            'users_id_validate',
+            0,
+            0,
+            $issueSo[11]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $issueSo[16]['table'],
+            'groups_id',
+            0,
+            0,
+            $issueSo[16]['joinparams']
+         );
+         if (version_compare(GLPI_VERSION, '10.1') >= 0) {
             $join .= Search::addLeftJoin(
                $itemtype,
                $ref_table,
                $already_link_tables,
-               $issueSo[9]['table'],
-               'users_id_validator',
+               $issueSo[30]['table'],
+               'users_id_substitute',
                0,
                0,
-               $issueSo[9]['joinparams']
+               $issueSo[30]['joinparams']
             );
             $join .= Search::addLeftJoin(
                $itemtype,
                $ref_table,
                $already_link_tables,
-               $issueSo[11]['table'],
-               'users_id_validate',
+               $issueSo[31]['table'],
+               'users_id_substitute',
                0,
                0,
-               $issueSo[11]['joinparams']
+               $issueSo[31]['joinparams']
             );
             $join .= Search::addLeftJoin(
                $itemtype,
                $ref_table,
                $already_link_tables,
-               $issueSo[16]['table'],
-               'groups_id_validator',
+               $issueSo[32]['table'],
+               'users_id_substitute',
                0,
                0,
-               $issueSo[16]['joinparams']
+               $issueSo[32]['joinparams']
             );
-            if (version_compare(GLPI_VERSION, '10.1') >= 0) {
-               $join .= Search::addLeftJoin(
-                  $itemtype,
-                  $ref_table,
-                  $already_link_tables,
-                  $issueSo[30]['table'],
-                  'users_id_substitute',
-                  0,
-                  0,
-                  $issueSo[30]['joinparams']
-               );
-               $join .= Search::addLeftJoin(
-                  $itemtype,
-                  $ref_table,
-                  $already_link_tables,
-                  $issueSo[31]['table'],
-                  'users_id_substitute',
-                  0,
-                  0,
-                  $issueSo[31]['joinparams']
-               );
-               $join .= Search::addLeftJoin(
-                  $itemtype,
-                  $ref_table,
-                  $already_link_tables,
-                  $issueSo[32]['table'],
-                  'users_id_substitute',
-                  0,
-                  0,
-                  $issueSo[32]['joinparams']
-               );
-            }
          }
          break;
 
       case PluginFormcreatorFormAnswer::class:
-         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-            $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
-         }
+         // if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
+         //    $join .= PluginAdvformCommon::addDefaultJoin($itemtype, $ref_table, $already_link_tables);
+         // }
+         $formanswerSo = Search::getOptions(PluginFormcreatorFormAnswer::class);
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $formanswerSo[5]['table'],
+            'users_id_validator',
+            0,
+            0,
+            $formanswerSo[5]['joinparams']
+         );
+         $join .= Search::addLeftJoin(
+            $itemtype,
+            $ref_table,
+            $already_link_tables,
+            $formanswerSo[7]['table'],
+            'groups_id_validator',
+            0,
+            0,
+            $formanswerSo[7]['joinparams']
+         );
          break;
    }
    return $join;
@@ -195,11 +212,10 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             $condition .= ' OR ';
          }
          // condition where current user is a validator of the issue
-         // Search optin ID 9 is either from Formcreator, either from AdvForms
          $issueSearchOptions = Search::getOptions($itemtype);
          $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[9]['joinparams']);
          $colname = $issueSearchOptions[9]['linkfield'];
-         $condition .= "`glpi_users_${colname}_$complexJoinId`.`id` = '$currentUser'";
+         $condition .= "`glpi_users_$complexJoinId`.`id` = '$currentUser'";
 
          // condition where current user is a member of a validator group of the issue
          $groupList = [];
@@ -208,10 +224,9 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          }
          if (count($groupList) > 0) {
             $groupList = implode("', '", $groupList);
-            // Search option ID 16 is either from Formcreator, either from AdvForms
             $complexJoinId = Search::computeComplexJoinID($issueSearchOptions[16]['joinparams']);
             $colname = $issueSearchOptions[16]['linkfield'];
-            $condition .= " OR `glpi_groups_${colname}_$complexJoinId`.`id` IN ('$groupList')";
+            $condition .= " OR `glpi_groups_$complexJoinId`.`id` IN ('$groupList')";
          }
 
          // condition where current user is a validator of a issue of type ticket
@@ -254,30 +269,25 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             return "`$table`.`requester_id` = $currentUser";
          }
 
-         if (Plugin::isPluginActive(PLUGIN_FORMCREATOR_ADVANCED_VALIDATION)) {
-            return PluginAdvformCommon::addDefaultWhere($itemtype);
-         } else {
-            // check the user
-            $condition = " (`$table`.`users_id_validator` = $currentUser";
+         // check the user
+         $formanswerValidationTable = PluginFormcreatorFormanswerValidation::getTable();
+         $userType = User::getType();
+         $groupType = Group::getType();
+         $condition = "`$formanswerValidationTable`.`itemtype` = '$userType' AND `$formanswerValidationTable`.`items_id` = '$currentUser'";
 
-            // check groups of the user
-            $groups = Group_User::getUserGroups($currentUser);
-            if (count($groups) < 1) {
-               // The user is not a member of any group
-               $condition .= ")";
-               return $condition;
-            }
-
-            $groupIDs = [];
-            foreach ($groups as $group) {
-               $groupIDs[] = $group['id'];
-            }
-            $groupIDs = implode(',', $groupIDs);
-            $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs)";
-            $condition .= ")";
-
-            return "$condition";
+         // check groups of the user
+         $groupList = [];
+         foreach (Group_User::getUserGroups($currentUser) as $group) {
+            $groupList[] = $group['id'];
          }
+         if (count($groupList) <= 0) {
+            // The user is not a member of any group
+            return "($condition)";
+         }
+
+         $groupList = implode("', '", $groupList);
+         $condition .= " OR `$formanswerValidationTable`.`itemtype` = '$groupType' AND `$formanswerValidationTable`.`items_id` IN ('$groupList')";
+         return "($condition)";
          break;
    }
    return '';
@@ -661,7 +671,7 @@ function plugin_formcreator_dynamicReport($params) {
                        Toolbox::getItemTypeFormURL(PluginFormcreatorForm::class)) !== false) {
                parse_str($url['query'], $query);
                if (isset($query['id'])) {
-                  $item = PluginFormcreatorCommon::getForm();
+                  $item = new PluginFormcreatorForm();
                   $item->getFromDB($query['id']);
                   PluginFormcreatorFormAnswer::showForForm($item, $params);
                   return true;

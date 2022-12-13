@@ -31,6 +31,7 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use PluginFormcreatorIssue;
+use PluginFormcreatorFormAnswer;
 use RSSFeed;
 use Ticket;
 use User;
@@ -417,16 +418,6 @@ class PluginFormcreatorCommon extends CommonTestCase {
    public function testGetTicketStatusForIssue($ticket, $expected) {
       $output = \PluginFormcreatorCommon::getTicketStatusForIssue($ticket);
       $this->integer((int) $output)->isEqualTo($expected);
-   }
-
-   public function testGetFormAnswer() {
-      $output = \PluginFormcreatorCommon::getFormAnswer();
-      $this->string($output->getType())->isEqualTo(\PluginFormcreatorFormAnswer::class);
-   }
-
-   public function testGetFormanswerItemtype() {
-      $output = \PluginFormcreatorCommon::getFormanswerItemtype();
-      $this->string($output)->isEqualTo(\PluginFormcreatorFormAnswer::class);
    }
 
    public function testGetInterface() {

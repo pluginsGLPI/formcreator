@@ -16,6 +16,10 @@ abstract class CommonTestCase extends atoum
    /** @var integer $debugMode save state of GLPI debug mode */
    private $debugMode = null;
 
+   // public function setup() {
+   //    $this->testedClassName = $this->getTestedClassName();
+   // }
+
    public function beforeTestMethod($method) {
       $this->resetGLPILogs();
    }

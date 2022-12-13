@@ -133,7 +133,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $form_validator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'            => User::class,
-         'users_id'            => '2', // user is glpi
+         'items_id'            => '2', // user is glpi
       ]);
       $this->boolean($form_validator->isNewItem())->isFalse();
 
@@ -246,7 +246,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $form_validator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => User::class,
-         'users_id'                    => $validatorId,
+         'items_id'                    => $validatorId,
       ]);
       $this->boolean($form_validator->isNewItem())->isFalse();
 

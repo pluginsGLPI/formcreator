@@ -170,7 +170,7 @@ implements PluginFormcreatorExportableInterface
    public function massDeleteTranslations($post) {
       global $TRANSLATE;
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       if (!$form->getFromDB($this->fields['plugin_formcreator_forms_id'])) {
          return;
       }
@@ -195,7 +195,7 @@ implements PluginFormcreatorExportableInterface
          if (!$this->getFromDB($ID)) {
             return false;
          }
-         $item = PluginFormcreatorCommon::getForm();
+         $item = new PluginFormcreatorForm();
          $item->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
       } else {
          $this->getEmpty();
@@ -242,7 +242,7 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function showNewTranslation($options = []) {
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
 
       echo '<div data-itemtype="PluginFormcreatorForm_Language" data-id="' . $this->getID() . '">';
@@ -301,7 +301,7 @@ implements PluginFormcreatorExportableInterface
    }
 
    public function showTranslations($options = []) {
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
       $this->showFormHeader($options);
       $this->initForm($this->getID());
@@ -543,7 +543,7 @@ implements PluginFormcreatorExportableInterface
       // add the form language to the linker
       $linker->addObject($originalId, $item);
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($input[$formFk]);
       $translations = $input['_strings'] ?? [];
       $form->setTranslations($input['name'], $translations);
@@ -569,7 +569,7 @@ implements PluginFormcreatorExportableInterface
       }
       unset($export[$idToRemove]);
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields[$formFk]);
       $export['_strings'] = $form->getTranslations($this->fields['name']);
 

@@ -133,12 +133,7 @@ PluginFormcreatorTranslatableInterface
    }
 
    public function rawSearchOptions() {
-      $tab = [];
-
-      $tab[] = [
-         'id'                 => 'common',
-         'name'               => __('Characteristics')
-      ];
+      $tab = parent::rawSearchOptions();
 
       $tab[] = [
          'id'                 => '2',
@@ -146,15 +141,6 @@ PluginFormcreatorTranslatableInterface
          'field'              => 'id',
          'name'               => __('ID'),
          'searchtype'         => 'contains',
-         'massiveaction'      => false
-      ];
-
-      $tab[] = [
-         'id'                 => '1',
-         'table'              => $this::getTable(),
-         'field'              => 'name',
-         'name'               => __('Name'),
-         'datatype'           => 'itemlink',
          'massiveaction'      => false
       ];
 
@@ -553,7 +539,7 @@ PluginFormcreatorTranslatableInterface
          return;
       }
       if ($item->getType() == Central::getType()) {
-         $form = PluginFormcreatorCommon::getForm();
+         $form = new PluginFormcreatorForm();
          $form->showForCentral();
       }
    }
@@ -992,6 +978,10 @@ PluginFormcreatorTranslatableInterface
 
       if (!isset($input['formanswer_name']) || strlen($input['formanswer_name']) < 1) {
          $input['formanswer_name'] = $input['name'] ?? $this->fields['formanswer_name'];
+      }
+
+      if (!isset($input['validation_percent'])) {
+         $input['validation_percent'] = 100;
       }
 
       if (!$this->skipChecks) {
@@ -1979,7 +1969,7 @@ PluginFormcreatorTranslatableInterface
          return $item;
       }
 
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       $formFk = self::getForeignKeyField();
       switch ($item::getType()) {
          case PluginFormcreatorSection::getType():
@@ -2444,8 +2434,18 @@ PluginFormcreatorTranslatableInterface
    public function validationRequired(): bool {
       global $DB;
 
-      $result = $DB->request(PluginFormcreatorForm_Validator::getAllValidators($this, true));
-      return $result->current()['c'] > 0;
+      // $result = $DB->request(PluginFormcreatorForm_Validator::getAllValidators($this, true));
+      // return $result->current()['c'] > 0;
+      $count = count($DB->request([
+         'SELECT' => 'id',
+         'FROM' => PluginFormcreatorForm_Validator::getTable(),
+         'WHERE' => [
+            PluginFormcreatorForm::getForeignKeyField() => $this->getID(),
+            'level' => 1,
+         ]
+      ]));
+
+      return ($count > 0);
    }
 
    /**

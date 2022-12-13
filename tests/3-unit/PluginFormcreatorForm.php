@@ -477,7 +477,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $formValidator->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'itemtype'                    => $validator->getType(),
-         'users_id'                    => $validator->getID()
+         'items_id'                    => $validator->getID()
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
       $this->getSection([
@@ -544,6 +544,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'profiles',
          'users',
          'groups',
+         'validation_percent',
       ];
       $extraFields = [
          '_entity',

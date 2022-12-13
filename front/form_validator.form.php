@@ -43,21 +43,7 @@ if (!isset($_POST['plugin_formcreator_forms_id'])) {
    Html::back();
 }
 $item = new PluginFormcreatorForm_Validator();
-if (isset($_POST['add'])) {
-   Session::checkRight(PluginFormcreatorForm::$rightname, CREATE);
-   // $input = $_POST;
-   // $input['id'] = (int) $_POST['plugin_formcreator_forms_id'];
-   // unset($input['plugin_formcreator_forms_id']);
-   // $form->update($input);
-   $form = PluginFormcreatorForm::getById($_POST['plugin_formcreator_forms_id']);
-   unset($_POST['uuid']);
-   if ($newID = $item->add($_POST)) {
-      if ($_SESSION['glpibackcreated']) {
-         Html::redirect($form->getLinkURL());
-      }
-   }
-   Html::back();
-} else if (isset($_POST['delete'])) {
+if (isset($_POST['delete'])) {
    Session::checkRight(PluginFormcreatorForm::$rightname, DELETE);
    $item->delete($_POST);
    Html::back();

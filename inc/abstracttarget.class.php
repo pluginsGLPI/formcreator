@@ -128,7 +128,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
          Session::addMessageAfterRedirect(__('A target must be associated to a form.', 'formcreator'));
          return false;
       }
-      $form = PluginFormcreatorCommon::getForm();
+      $form = new PluginFormcreatorForm();
       if (!$form->getFromDB((int) $input[$formFk])) {
          Session::addMessageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'), false, ERROR);
          return false;
@@ -362,7 +362,7 @@ abstract class PluginFormcreatorAbstractTarget extends CommonDBChild implements
     */
    public function getForm() {
       if ($this->form === null) {
-         $form = PluginFormcreatorCommon::getForm();
+         $form = new PluginFormcreatorForm();
          if (!$form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()])) {
             return null;
          }
