@@ -247,7 +247,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
             return "`$table`.`$formFk` = ".
                          $_SESSION['formcreator']['form_search_answers'];
          }
-         if (Session::haveRight('config', UPDATE)) {
+         if (Session::haveRight(PluginFormcreatorForm::$rightname, UPDATE)) {
             return '';
          }
          if (!PluginFormcreatorCommon::canValidate()) {
