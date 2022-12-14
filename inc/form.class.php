@@ -853,12 +853,26 @@ PluginFormcreatorTranslatableInterface
       echo '</form>';
    }
 
-   protected function showMyLastForms() : void {
-      $limit = 5;
-      $formanswerUrl = PluginFormcreatorFormAnswer::getSearchURL();
-      $rawKeyBase = 'ITEM_' . PluginFormcreatorFormAnswer::class;
-      echo '<div id="plugin_formcreator_last_req_forms" class="card">';
-      echo '<div class="card-title">'.sprintf(__('My %1$d last forms (requester)', 'formcreator'), $limit).'</div>';
+   /**
+    * Undocumented function
+    *
+    * @param integer $limit max count of items to show
+    * @return void
+    */
+   protected function showMyLastForms(int $limit = 5) : void {
+      $showColumns = [
+         2, // id
+         1, // name
+         6, // request date
+         8, // status
+      ];
+      $this->showMyLastFormsAsRequester($showColumns, $limit);
+      if (PluginFormcreatorCommon::canValidate()) {
+         $this->showMyLastFormsAsValidator($showColumns, $limit);
+      }
+
+   }
+   protected function showMyLastFormsAsRequester(array $showColumns, $limit) {
       $criteria = [
          'criteria' => [
             0 => [
@@ -874,59 +888,20 @@ PluginFormcreatorTranslatableInterface
             0 => 'DESC'
          ],
       ];
-      $showColumns = [
-         2, // id
-         1, // name
-         6, // request date
-         8, // status
-      ];
+
       $backupListLimit = $_SESSION['glpilist_limit'];
-      $_SESSION['glpilist_limit'] = 5;
+      $_SESSION['glpilist_limit'] = $limit;
       $search = Search::getDatas(PluginFormcreatorFormAnswer::class, $criteria, $showColumns);
       $_SESSION['glpilist_limit'] = $backupListLimit;
-      if ($search['data']['count'] == 0) {
-         echo '<div class="card-body text-center text-muted">'.__('No form posted yet', 'formcreator').'</div>';
-      } else {
-         echo '<div class="card-body">';
-         echo '<ul class="list-group">';
-         foreach ($search['data']['rows'] as $formAnswer) {
-            switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
-               case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                  $status = CommonITILObject::WAITING;
-                  break;
-               case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                  $status = Change::REFUSED;
-                  break;
-               case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                  $status = CommonITILObject::ACCEPTED;
-                  break;
-               default:
-                  $status = $formAnswer['raw']["{$rawKeyBase}_8"];
-            }
-            $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["{$rawKeyBase}_2"] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["{$rawKeyBase}_2"] .'">'. $formAnswer['raw']["{$rawKeyBase}_1"] .'</a>';
-            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["{$rawKeyBase}_6"]).'</span>';
-            echo '</li>';
-         }
-         echo '</ul>';
-         echo '<div class="text-center  card-footer">';
-         $criteria = Toolbox::append_params($criteria, '&amp;');
-         echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
-         echo __('All my forms (requester)', 'formcreator');
-         echo '</a>';
-         echo '</div>';
-         echo '</div>';
-      }
-      echo '</div>';
 
-      if (!PluginFormcreatorCommon::canValidate()) {
-         // The user cannot validate, then do not show the next card
-         return;
-      }
+      TemplateRenderer::getInstance()->display('@formcreator/components/card/formanswer.requester-last.html.twig', [
+         'search' => $search,
+         'criteria' => $criteria,
+         'limit'    => $limit,
+      ]);
+   }
 
-      echo '<div id="plugin_formcreator_val_forms" class="card mt-0 mt-sm-2">';
-      echo '<div class="card-title">'.sprintf(__('My %1$d last forms (validator)', 'formcreator'), $limit).'</div>';
+   public function showMyLastFormsAsValidator(array $showColumns, $limit) {
       $criteria = [
          'criteria' => [
             0 => [
@@ -942,54 +917,17 @@ PluginFormcreatorTranslatableInterface
             0 => 'DESC'
          ],
       ];
-      if (count($_SESSION['glpigroups'] ?? []) > 0) {
-         // The user is member of some groups, then add criteria for those groups
-         $criteria['criteria'][] = [
-            'link'       => 'OR',
-            'field'      => 7,
-            'searchtype' => 'equals',
-            'value'      => 'mygroups',
-         ];
-      }
+
       $backupListLimit = $_SESSION['glpilist_limit'];
-      $_SESSION['glpilist_limit'] = 5;
+      $_SESSION['glpilist_limit'] = $limit;
       $search = Search::getDatas(PluginFormcreatorFormAnswer::class, $criteria, $showColumns);
       $_SESSION['glpilist_limit'] = $backupListLimit;
-      if ($search['data']['count'] == 0) {
-         echo '<div class="card-body text-center text-muted" >'.__('No form waiting for validation', 'formcreator').'</div>';
-      } else {
-         echo '<div class="card-body">';
-         echo '<ul class="list-group">';
-         foreach ($search['data']['rows'] as $formAnswer) {
-            switch ($formAnswer['raw']["{$rawKeyBase}_8"]) {
-               case PluginFormcreatorFormAnswer::STATUS_WAITING:
-                  $status = CommonITILObject::WAITING;
-                  break;
-               case PluginFormcreatorFormAnswer::STATUS_REFUSED:
-                  $status = Change::REFUSED;
-                  break;
-               case PluginFormcreatorFormAnswer::STATUS_ACCEPTED:
-                  $status = CommonITILObject::ACCEPTED;
-                  break;
-               default:
-                  $status = $formAnswer['raw']["{$rawKeyBase}_8"];
-            }
-            $status = CommonITILObject::getStatusClass($status);
-            echo '<li data-itemtype="PluginFormcreatorFormanswer" data-id="'  . $formAnswer['raw']["{$rawKeyBase}_2"] . '">';
-            echo '<i class="'.$status.'"></i><a href="formanswer.form.php?id='. $formAnswer['raw']["{$rawKeyBase}_2"] .'">'. $formAnswer['raw']["{$rawKeyBase}_1"] .'</a>';
-            echo '<span class="plugin_formcreator_date">'.Html::convDateTime($formAnswer['raw']["{$rawKeyBase}_6"]).'</span>';
-            echo '</li>';
-         }
-         echo '</ul>';
-         echo '<div class="text-center card-footer">';
-         $criteria = Toolbox::append_params($criteria, '&amp;');
-         echo '<a href="' . $formanswerUrl . '?' . $criteria . '">';
-         echo __('All my forms (validator)', 'formcreator');
-         echo '</a>';
-         echo '</div>';
-         echo '</div>';
-      }
-      echo '</div>';
+
+      TemplateRenderer::getInstance()->display('@formcreator/components/card/formanswer.validator-last.html.twig', [
+         'search'   => $search,
+         'criteria' => $criteria,
+         'limit'    => $limit,
+      ]);
    }
 
    /**

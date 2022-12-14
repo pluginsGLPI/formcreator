@@ -1,0 +1,68 @@
+{#
+ # ---------------------------------------------------------------------
+ # Formcreator is a plugin which allows creation of custom forms of
+ # easy access.
+ # ---------------------------------------------------------------------
+ # LICENSE
+ #
+ # This file is part of Formcreator.
+ #
+ # Formcreator is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # Formcreator is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ # ---------------------------------------------------------------------
+ # @copyright Copyright © 2011 - 2021 Teclib'
+ # @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
+ # @link      https://github.com/pluginsGLPI/formcreator/
+ # @link      https://pluginsglpi.github.io/formcreator/
+ # @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ # ---------------------------------------------------------------------
+ #}
+
+{% set rawKeyBase = 'ITEM_' ~ 'PluginFormcreatorFormAnswer' %}
+{% set formanswer_url = call('PluginFormcreatorFormAnswer::getSearchURL') %}
+
+<div id="plugin_formcreator_last_val_forms" class="card mt-0 mt-sm-2">
+    <div class="card-title">
+        {{ __('My %1$d last forms (validator)', 'formcreator')|format(limit) }}
+    </div>
+    {% if (search.data.count == 0) %}
+        <div class="card-body text-center text-muted">{{ __('No form posted yet', 'formcreator') }}</div>
+    {% else %}
+        <div class="card-body">
+            <ul class="list-group">
+                {% for row in search['data']['rows'] %}
+                    {% if row['raw'][rawKeyBase ~ '_8'] == constant('PluginFormcreatorFormAnswer::STATUS_WAITING') %}
+                        {% set status = constant('CommonITILObject::WAITING') %}
+                    {% elseif row['raw'][rawKeyBase ~ '_8'] == constant('PluginFormcreatorFormAnswer::STATUS_REFUSED') %}
+                        {% set status = constant('Change::REFUSED') %}
+                    {% elseif row['raw'][rawKeyBase ~ '_8'] == constant('PluginFormcreatorFormAnswer::STATUS_ACCEPTED') %}
+                        {% set status = constant('CommonITILObject::ACCEPTED') %}
+                    {% else %}
+                        {% set status = row['raw'][rawKeyBase ~ '_8'] %}
+                    {% endif %}
+
+                    <li data-itemtype="PluginFormcreatorFormanswer" data-id="{{ row['raw'][rawKeyBase ~ '_2']}}">
+                        <i class="{{ call('CommonITILObject::getStatusClass', [status]) }}"></i>
+                        <a href="formanswer.form.php?id={{ row['raw'][rawKeyBase ~ '_2'] }}">{{ row['raw'][rawKeyBase ~ '_1'] }}</a>
+                        <span class="plugin_formcreator_date">{{ row['raw'][rawKeyBase ~ '_6']|formatted_datetime }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="text-center card-footer">
+                <a href="{{ formanswer_url }}?{{ call('Toolbox::append_params', [criteria, '&amp;']) }}">
+                    {{ __('All my forms (validator)', 'formcreator') }}
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
