@@ -52,7 +52,7 @@
                     {% endif %}
 
                     <li data-itemtype="PluginFormcreatorFormanswer" data-id="{{ row['raw'][rawKeyBase ~ '_2']}}">
-                        <i class="{{ status }}"></i>
+                        <i class="{{ call('CommonITILObject::getStatusClass', [status]) }}"></i>
                         <a href="formanswer.form.php?id={{ row['raw'][rawKeyBase ~ '_2'] }}">{{ row['raw'][rawKeyBase ~ '_1'] }}</a>
                         <span class="plugin_formcreator_date">{{ row['raw'][rawKeyBase ~ '_6']|formatted_datetime }}</span>
                     </li>
