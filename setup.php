@@ -305,6 +305,9 @@ function plugin_formcreator_permanent_hook(): void {
    ];
    // hook to add custom actions on a ticket in service catalog
    $PLUGIN_HOOKS[Hooks::TIMELINE_ACTIONS]['formcreator'] = 'plugin_formcreator_timelineActions';
+
+   $PLUGIN_HOOKS[Hooks::ITEM_TRANSFER]['formcreator'] = 'plugin_formcreator_transfer';
+
 }
 
 /**
