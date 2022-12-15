@@ -441,6 +441,10 @@ class DropdownField extends PluginFormcreatorAbstractField
       $criteria_joins = '';
       foreach ($filter as $criteria) {
          $field_id = $criteria['field'];
+         if (!is_numeric($field_id)) {
+            // Field ID invalid, we must ignore it or we will raise an exceptin for sure
+            continue;
+         }
          // Find joins for each criteria
          $criteria_joins .= Search::addLeftJoin(
             $itemtype,
