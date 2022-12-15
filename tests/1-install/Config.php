@@ -36,6 +36,8 @@ use Glpi\Dashboard\Item;
 use Glpi\Dashboard\Right;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 use Profile;
+use Profile_User;
+use User;
 
 /**
  * @engine inline
@@ -119,6 +121,7 @@ class Config extends CommonTestCase {
       $this->checkPluginName();
       $this->checkAutomaticAction();
       $this->checkDashboard();
+      $this->checkFileUploadUser();
    }
 
    public function testUpgradedPlugin() {
@@ -156,6 +159,7 @@ class Config extends CommonTestCase {
       $this->checkPluginName();
       $this->checkAutomaticAction();
       $this->checkDashboard();
+      $this->checkFileUploadUser();
    }
 
    public function checkPluginName() {
@@ -310,5 +314,31 @@ class Config extends CommonTestCase {
          'dashboards_dashboards_id' => $dashboard->fields['id'],
       ]);
       $this->array($rows)->hasSize(7);
+   }
+
+   public function checkFileUploadUser() {
+      // Check a user is created
+      $testedClassName = $this->getTestedClassName();
+      $public_users_id = $testedClassName::getConfigurationValue('formcreator', 'public_user_id', 0);
+      $this->integer((int) $public_users_id)->isGreaterThan(0);
+      $user = User::getById($public_users_id);
+      $this->object($user)->isInstanceOf(User::class);
+
+      // Check the profile is created
+      $profile = new Profile();
+      $profile->getFromDBByCrit([
+         'name' => 'formcreator_public_profile'
+      ]);
+      $this->boolean($profile->isNewItem())->isFalse();
+
+      // Cehck the user is linked to the profile
+      $profile_user = new Profile_User();
+      $profile_user->getFromDBByCrit([
+         'users_id'     => $public_users_id,
+         'profiles_id'  => $profile->getID(),
+         'entities_id'  => 0,
+         'is_recursive' => 1,
+         'is_dynamic'   => 0,
+      ]);
    }
 }

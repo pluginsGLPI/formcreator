@@ -817,14 +817,16 @@ class PluginFormcreatorInstall {
       }
 
       $user_id = $user->add([
-         'name'         => 'formcreator_public_user_' . Toolbox::getRandomString(8),
-         'authtype'     => Auth::DB_GLPI,
-         'is_active'    => 1,
-         'is_deleted'   => 0,
+         'name'                => 'formcreator_public_user_' . Toolbox::getRandomString(8),
+         'authtype'            => Auth::DB_GLPI,
+         'is_active'           => 1,
+         'is_deleted'          => 0,
          'is_helpdesk_visible' => 1,
-         'profiles_id'  => $profile_id,
-         'entities_id'  => 0,
-         '_profiles_id' => $profile_id,
+         'profiles_id'         => $profile_id,
+         'entities_id'         => 0,
+         '_profiles_id'        => $profile_id,
+         '_entities_id'        => 0,
+         '_is_recursive'       => 1,
       ]);
       if ($user_id === false) {
          // Failed to create the user
