@@ -716,3 +716,38 @@ function plugin_formcreator_hook_update_user(CommonDBTM $item) {
       }
    }
 }
+
+function plugin_formcreator_transfer(array $options) {
+   if ($options['type'] != Ticket::class) {
+      return;
+   }
+
+   if ($options['id'] == $options['newID']) {
+      $issue = new PluginFormcreatorIssue();
+      if (!$issue->getFromDbByCrit([
+         'itemtype' => $options['type'],
+         'items_id' => $options['id'],
+      ])) {
+         // No matching issue found
+         return;
+      }
+      $issue->update([
+         'id' => $issue->getID(),
+         'entities_id' => $options['entities_id'],
+      ]);
+   } else {
+      $item_ticket = new Item_Ticket();
+      if (!$item_ticket->getFromDBByCrit([
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
+         'tickets_id' => $options['id'],
+      ])) {
+         // No matching form answer found
+         return;
+      }
+      $item_ticket->add([
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
+         'items_id'   => $item_ticket->fields['items_id'],
+         'tickets_id' => $options['newID'],
+      ]);
+   }
+}
