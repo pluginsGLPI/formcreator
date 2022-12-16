@@ -31,15 +31,35 @@
 
 namespace tests\units;
 
+use DbUtils;
 use Glpi\Dashboard\Dashboard;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+use Notification;
+use NotificationTemplate;
+use Profile;
+use RequestType;
+use User;
 
 class Config extends CommonTestCase
 {
 
+   private int $profiles_count = 0;
+   private int $users_count = 0;
+
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       $this->setupGLPIFramework();
+      switch ($method) {
+         case 'testUninstallPlugin':
+            $this->beforeUninstallPlugin();
+            break;
+      }
+   }
+
+   public function beforeUninstallPlugin() {
+      $dbUtils = new DbUtils();
+      $this->users_count = $dbUtils->countElementsInTable(User::getTable());
+      $this->profiles_count = $dbUtils->countElementsInTable(Profile::getTable());
    }
 
    public function testUninstallPlugin() {
@@ -74,7 +94,7 @@ class Config extends CommonTestCase
       // Check the notifications of the plugin no longer exist
       $rows = $DB->request([
          'COUNT' => 'cpt',
-         'FROM'  => \Notification::getTable(),
+         'FROM'  => Notification::getTable(),
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ]
@@ -83,7 +103,7 @@ class Config extends CommonTestCase
 
       $rows = $DB->request([
          'COUNT' => 'cpt',
-         'FROM'  => \NotificationTemplate::getTable(),
+         'FROM'  => NotificationTemplate::getTable(),
          'WHERE' => [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ]
@@ -92,6 +112,7 @@ class Config extends CommonTestCase
 
       $this->checkRequestType();
       $this->checkDashboard();
+      $this->checkPublicUser();
 
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
@@ -107,8 +128,35 @@ class Config extends CommonTestCase
 
    public function checkRequestType() {
       // request type must persist after uninstall
-      $requestType = new \RequestType();
+      $requestType = new RequestType();
       $requestType->getFromDBByCrit(['name' => 'Formcreator']);
       $this->boolean($requestType->isNewItem())->isFalse();
+   }
+
+   public function checkPublicUser() {
+      global $DB;
+
+      // Check that only one user and one profile have been deleted
+      $dbUtils = new DbUtils();
+      $new_users_count = $dbUtils->countElementsInTable(User::getTable());
+      $new_profiles_count = $dbUtils->countElementsInTable(Profile::getTable());
+      $this->integer($new_users_count)->isEqualTo($this->users_count - 1);
+      $this->integer($new_profiles_count)->isEqualTo($this->profiles_count - 1);
+
+      $result = $DB->request([
+         'FROM' => User::getTable(),
+         'WHERE' => [
+            'name' => ['LIKE', 'formcreator_public_%'],
+         ]
+      ]);
+      $this->integer(count($result))->isEqualTo(0);
+
+      $result = $DB->request([
+         'FROM' => Profile::getTable(),
+         'WHERE' => [
+            'name' => ['formcreator_public_profile'],
+         ]
+      ]);
+      $this->integer(count($result))->isEqualTo(0);
    }
 }

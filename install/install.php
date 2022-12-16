@@ -644,6 +644,7 @@ class PluginFormcreatorInstall {
       $this->deleteTables();
       $this->deleteNotifications();
       $this->deleteMiniDashboard();
+      $this->deletePublicUser();
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
@@ -818,6 +819,7 @@ class PluginFormcreatorInstall {
 
       $user_id = $user->add([
          'name'                => 'formcreator_public_user_' . Toolbox::getRandomString(8),
+         'realname'            => 'Formcreator public user',
          'authtype'            => Auth::DB_GLPI,
          'is_system'           => 1,
          'is_active'           => 1,
@@ -836,6 +838,31 @@ class PluginFormcreatorInstall {
       }
 
       Config::setConfigurationValues('formcreator', ['public_user_id' => $user_id]);
+
+      return true;
+   }
+
+   public function deletePublicUser(): bool {
+      $user_id = Config::getConfigurationValue('formcreator', 'public_user_id');
+      $user = User::getById($user_id);
+      if (($user instanceof User)) {
+         if (!$user->delete(['id' => $user_id], 1)) {
+            return false;
+         }
+      }
+      Config::deleteConfigurationValues('formcreator', ['public_user_id']);
+
+      $profile = new Profile();
+      $profile->getFromDbByCrit([
+         'name' => 'formcreator_public_profile',
+         'interface' => 'helpdesk',
+      ]);
+      if ($profile->isNewItem() === true) {
+         return false;
+      }
+      if (!$profile->delete(['id' => $profile->getID()], 1)) {
+         return false;
+      }
 
       return true;
    }

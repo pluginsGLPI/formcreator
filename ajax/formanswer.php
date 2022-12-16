@@ -48,18 +48,13 @@ if (!$form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
    die();
 }
 
-// If user is not authenticated, create temporary user
-if (!isset($_SESSION['glpiname'])) {
-   $_SESSION['glpiname'] = 'formcreator_temp_user';
-}
-
 // Save form
 $backup_debug = $_SESSION['glpi_use_mode'];
 $_SESSION['glpi_use_mode'] = \Session::NORMAL_MODE;
 $formAnswer = PluginFormcreatorCommon::getFormAnswer();
 if ($formAnswer->add($_POST) === false) {
    http_response_code(400);
-   if ($_SESSION['glpiname'] == 'formcreator_public_user') {
+   if (Session::getLoginUserID() == Config::getConfigurationValue('formcreator', 'public_user_id')) {
       // Messages are for authenticated users. This is a workaround
       ob_start();
       Html::displayMessageAfterRedirect(filter_var(($_GET['display_container'] ?? true), FILTER_VALIDATE_BOOLEAN));
