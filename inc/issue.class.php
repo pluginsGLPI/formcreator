@@ -893,9 +893,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
             }
 
             $key = 'id';
-            $tooltip = Html::showToolTip(nl2br(RichText::getTextFromHtml($content)), [
-               'applyto' => $itemtype.$data['raw'][$key],
-               'display' => false,
+            $tooltip = Html::showToolTip(RichText::getEnhancedHtml($content), [
+               'applyto'        => $itemtype.$data['raw'][$key],
+               'display'        => false,
+               'images_gallery' => false
             ]);
             return '<a id="' . $itemtype.$data['raw'][$key] . '" href="' . $link . '">'
                . sprintf(__('%1$s %2$s'), $name, $tooltip)
