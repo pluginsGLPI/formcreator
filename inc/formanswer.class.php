@@ -1100,6 +1100,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                // The section is not visible, skip it as well all its questions
                continue;
             }
+            if ($last_section !== -1) {
+               $output .= ($richText ? '<p>&nbsp;</p>' : $eol);
+            }
             if ($richText) {
                $output .= '<h2>' . $question_line['section_name'] . '</h2>';
             } else {
