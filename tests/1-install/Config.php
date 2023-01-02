@@ -214,6 +214,7 @@ class Config extends CommonTestCase {
          'is_category_visible' => 1,
          'is_folded_menu' => 0,
          'header' => null,
+         'service_catalog_home' => 0,
       ];
       $fields = $entityConfig->fields;
       unset($fields['id']);
