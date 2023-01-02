@@ -431,6 +431,7 @@ function plugin_formcreator_redirect() {
             // Interface and active entity are set in session
             if (plugin_formcreator_replaceHelpdesk()) {
                switch (PluginFormcreatorEntityConfig::getUsedConfig('service_catalog_home', $_SESSION['glpiactive_entity'])) {
+                  default:
                   case PluginFormcreatorEntityConfig::CONFIG_SERVICE_CATALOG_HOME_SEARCH:
                      $homepage = '/front/wizard.php';
                      break;
